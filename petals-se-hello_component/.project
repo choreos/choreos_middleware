@@ -1,0 +1,15 @@
+<projectDescription>
+  <name>petals-se-hello_component</name>
+  <comment>petals-se-hello_component Service Engine description</comment>
+  <projects/>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+    <nature>com.atlassw.tools.eclipse.checkstyle.CheckstyleNature</nature>
+    <nature>net.sourceforge.pmd.runtime.pmdNature</nature>
+  </natures>
+</projectDescription>
