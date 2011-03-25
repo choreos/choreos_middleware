@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	PETALS: PETALS Services Platform Copyright (C) 2007 EBM WebSourcing This library is free software; you can redistribute it and/or modify it
+	under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or
+	any later version. This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+	of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. You should have received a
+	copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 59 Temple Place,
+	Suite 330, Boston, MA 02111-1307 USA. Initial developer(s): EBM WebSourcing
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>petals-parent</artifactId>
+		<groupId>org.ow2.petals</groupId>
+		<version>18</version>
+	</parent>
+	<!-- ============== -->
+	<!-- Identification -->
+	<!-- ============== -->
+	<name>SE :: petals-se-hello_component</name>
+	<artifactId>petals-se-hello_component</artifactId>
+	<groupId>org.ow2.petals.se.hello_component</groupId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>jbi-component</packaging>
+	<description>petals-se-hello_component Service Engine description</description>
+	<!-- ============ -->
+	<!-- Dependencies -->
+	<!-- ============ -->
+	<dependencies>
+		<!-- Unit tests dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+
+		<!-- Petals Component dependencies -->
+		<dependency>
+			<groupId>org.ow2.petals</groupId>
+			<artifactId>petals-cdk-core</artifactId>
+			<version>5.0.2</version>
+		</dependency>
+	</dependencies>
+	<!-- ===== -->
+	<!-- Build -->
+	<!-- ===== -->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.ow2.petals</groupId>
+				<artifactId>maven-petals-plugin</artifactId>
+				<version>2.1.2</version>
+				<extensions>true</extensions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

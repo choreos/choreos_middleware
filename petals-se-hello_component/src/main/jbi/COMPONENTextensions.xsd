@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://petals.ow2.org/components/petals-se-hello_component/version-1.0-SNAPSHOT"
+	xmlns:petalsCDK="http://petals.ow2.org/components/extensions/version-5"
+	xmlns:petals-se-hello_component="http://petals.ow2.org/components/petals-se-hello_component/version-1.0-SNAPSHOT"
+	elementFormDefault="qualified">
+	<xs:import namespace="http://petals.ow2.org/components/extensions/version-5"
+		schemaLocation="CDKextensions.xsd" />
+	</xs:element>
+</xs:schema>
