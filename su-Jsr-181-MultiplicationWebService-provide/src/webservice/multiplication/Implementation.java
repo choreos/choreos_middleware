@@ -1,7 +1,7 @@
 package webservice.multiplication;
 
-import calculatorserviceprovider.AdditionService;
 import calculatorserviceprovider.CalculatorWebService;
+import calculatorserviceprovider.AdditionService;
 
 public class Implementation {
 
