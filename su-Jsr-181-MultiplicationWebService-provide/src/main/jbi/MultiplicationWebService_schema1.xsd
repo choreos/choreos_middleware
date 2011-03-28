@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://webservice.multiplication/" xmlns:tns="http://webservice.multiplication/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="operationMultiply" type="tns:operationMultiply"/>
+
+  <xs:element name="operationMultiplyResponse" type="tns:operationMultiplyResponse"/>
+
+  <xs:complexType name="operationMultiply">
+    <xs:sequence>
+      <xs:element name="term1" type="xs:int"/>
+      <xs:element name="term2" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="operationMultiplyResponse">
+    <xs:sequence>
+      <xs:element name="product" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

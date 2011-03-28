@@ -37,43 +37,23 @@ import org.ow2.petals.component.framework.se.AbstractServiceEngine;
  */
 public class ServiceEngine extends AbstractServiceEngine {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.ow2.petals.component.framework.AbstractComponent#doInit()
-     */
     @Override
     protected void doInit() throws JBIException {
-        // TODO implement the specific initialisation of the component
+    	System.out.println("INICIOU A BAGA‚A");
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.ow2.petals.component.framework.AbstractComponent#doStart()
-     */
     @Override
     protected void doStart() throws JBIException {
-        // TODO implement the specific start of the component
+    	System.out.println("DEU START NA BAGA‚A");
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.ow2.petals.component.framework.AbstractComponent#doStop()
-     */
     @Override
     protected void doStop() throws JBIException {
-        // TODO implement the specific stop of the component
+    	System.out.println("PAROU A BAGA‚A");
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.ow2.petals.component.framework.AbstractComponent#doShutdown()
-     */
     @Override
     protected void doShutdown() throws JBIException {
-        // TODO implement the specific shutdown of the component
+    	System.out.println("MATOU O ELEMENTO!");
     }
 }

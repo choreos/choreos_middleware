@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	JBI descriptor for the Petals' "petals-bc-soap" component (SOAP).
+	Originally created for the version 4.0 of the component.
+ -->
+<jbi:jbi version="1.0" 
+	xmlns:generatedNs="http://CalculatorServiceProvider/"
+	xmlns:jbi="http://java.sun.com/xml/ns/jbi"
+	xmlns:petalsCDK="http://petals.ow2.org/components/extensions/version-5"
+	xmlns:soap="http://petals.ow2.org/components/soap/version-4"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	
+	<!-- Import a Service into Petals or Expose a Petals Service => use a BC. -->
+	<jbi:services binding-component="true">
+	
+		<!-- Import a Service into Petals => provides a Service. -->
+		<jbi:provides 		
+			interface-name="generatedNs:CalculatorWebService"
+			service-name="generatedNs:AdditionService"
+			endpoint-name="CalculatorWebServicePort">
+	
+			<!-- CDK specific elements -->
+			<petalsCDK:timeout>30000</petalsCDK:timeout>
+			<petalsCDK:validate-wsdl>true</petalsCDK:validate-wsdl>
+			<petalsCDK:forward-security-subject>false</petalsCDK:forward-security-subject>
+			<petalsCDK:forward-message-properties>false</petalsCDK:forward-message-properties>
+			<petalsCDK:forward-attachments>false</petalsCDK:forward-attachments>
+			<petalsCDK:wsdl>CalculatorWebService.wsdl</petalsCDK:wsdl>
+		
+			<!-- Component specific elements -->	
+			<soap:address>http://localhost:8801/CalculatorWebService</soap:address>
+			<soap:soap-version>1.1</soap:soap-version>
+			<soap:chunked-mode>false</soap:chunked-mode>
+			<soap:cleanup-transport>true</soap:cleanup-transport>
+			<soap:mode>SOAP</soap:mode>			
+		</jbi:provides>
+	</jbi:services>
+</jbi:jbi>

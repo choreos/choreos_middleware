@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>su-SOAP-MultiplicationWebService-consume</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>com.ebmwebsourcing.petals.tools.eclipse.su.main.suBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>com.ebmwebsourcing.petals.tools.eclipse.su.main.nature</nature>
+	</natures>
+</projectDescription>

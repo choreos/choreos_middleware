@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- JBI descriptor for the Petals component petals-se-jsr181  -->
+<jbi:jbi version="1.0" 
+	xmlns:jbi="http://java.sun.com/xml/ns/jbi"
+	xmlns:jsr181="http://petals.ow2.org/components/jsr181/version-1"
+	xmlns:petalsCDK="http://petals.ow2.org/components/extensions/version-5"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<jbi:services binding-component="false">
+
+		<jbi:provides
+			interface-name="generatedNs:Multiplication"
+			service-name="generatedNs:MultiplicationWebService"
+			endpoint-name="MultiplicationPort"
+			xmlns:generatedNs="http://webservice.multiplication/">
+
+			<!-- CDK elements -->
+			<petalsCDK:wsdl>MultiplicationWebService.wsdl</petalsCDK:wsdl>
+
+			<!-- Component specific elements -->
+			<jsr181:class>webservice.multiplication.Multiplication</jsr181:class>
+
+		</jbi:provides>
+
+	</jbi:services>
+</jbi:jbi>

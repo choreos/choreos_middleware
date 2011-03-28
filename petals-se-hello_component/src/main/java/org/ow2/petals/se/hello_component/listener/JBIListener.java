@@ -46,6 +46,7 @@ public class JBIListener extends AbstractJBIListener {
      * @see org.ow2.petals.component.framework.listener.AbstractJBIListener#onJBIMessage(org.objectweb.petals.component.framework.util.Exchange)
      */
     public boolean onJBIMessage(final Exchange exchange) {
+    	System.out.println("VEIO ALGUMA COISA!!!");
         try {
             if (component.getNativeWsdl() != null
                     && UtilFactory.getWSDLUtil().isDescriptionContaining(
