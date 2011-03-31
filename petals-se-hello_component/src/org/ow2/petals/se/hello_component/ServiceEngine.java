@@ -39,17 +39,17 @@ public class ServiceEngine extends AbstractServiceEngine {
 
     @Override
     protected void doInit() throws JBIException {
-    	System.out.println("INICIOU A BAGA‚A");
+    	System.out.println("INICIOU A BAGAÃ‡A");
     }
 
     @Override
     protected void doStart() throws JBIException {
-    	System.out.println("DEU START NA BAGA‚A");
+    	System.out.println("DEU START NA BAGAÃ‡A");
     }
 
     @Override
     protected void doStop() throws JBIException {
-    	System.out.println("PAROU A BAGA‚A");
+    	System.out.println("PAROU A BAGAÃ‡A");
     }
 
     @Override
