@@ -1,0 +1,4 @@
+<namespace:operationAdd xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:namespace="http://CalculatorServiceProvider/" xsi:type="operationAdd">
+  <term1 xsi:type="int">3</term1>
+  <term2 xsi:type="int">3</term2>
+</namespace:operationAdd>
