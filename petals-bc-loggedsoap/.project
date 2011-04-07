@@ -1,0 +1,15 @@
+<projectDescription>
+  <name>petals-bc-loggedsoap</name>
+  <comment>petals-bc-loggedsoap Binding Component description</comment>
+  <projects/>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+    <nature>com.atlassw.tools.eclipse.checkstyle.CheckstyleNature</nature>
+    <nature>net.sourceforge.pmd.runtime.pmdNature</nature>
+  </natures>
+</projectDescription>
