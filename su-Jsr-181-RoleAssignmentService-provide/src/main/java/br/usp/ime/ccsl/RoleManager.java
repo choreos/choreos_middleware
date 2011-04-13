@@ -25,14 +25,14 @@ public class RoleManager {
     }
 
     @SuppressWarnings("unchecked")
-    public void assignRole(String uri, String roleName) {
-	List<String> uriList = uriRole.get(roleName);
+    public void assignRole(RoleAssignment roleAssigment) {
+	List<String> uriList = uriRole.get(roleAssigment.getRole());
 	if (uriList == null) {
 	    uriList = new ArrayList<String>();
 	    List<String> threadSafeUriList = Collections.synchronizedList(uriList);
-	    uriRole.put(roleName, threadSafeUriList);
+	    uriRole.put(roleAssigment.getRole(), threadSafeUriList);
 	}
-	uriList.add(uri);
+	uriList.add(roleAssigment.getUri());
     }
 
     public List<String> getUriList(String roleName) {
