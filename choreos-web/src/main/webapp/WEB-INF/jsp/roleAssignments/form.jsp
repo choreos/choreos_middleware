@@ -28,8 +28,13 @@
 				<table border="0" width="100%" cellpadding="0" cellspacing="0">
 					<tr valign="top">
 						<td>
+							<div style="color: red; margin-bottom: 2em">
+								<c:forEach var="error" items="${errors}">
+	    							${error.category}: ${error.message}<br />
+								</c:forEach>
+							</div>
 							<!--  start step-holder -->
-							<form action="<c:url value='/roleAssignments/add.jsp'/>">
+							<form action="<c:url value='/roleAssignments/add'/>">
 								<table border="0" cellpadding="0" cellspacing="0" id="id-form">
 									<tr>
 										<th valign="top">Role:</th>

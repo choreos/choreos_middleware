@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div id="page-heading">
-	<h1>Add role assignment</h1>
+	<h1>List role assignments</h1>
 </div>
 
 <table border="0" width="100%" cellpadding="0" cellspacing="0"

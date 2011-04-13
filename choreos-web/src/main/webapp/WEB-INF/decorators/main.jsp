@@ -46,7 +46,6 @@
 	});
 </script>
 
-
 <![endif]>
 
 
@@ -223,8 +222,8 @@
 							<!--<![endif]--> <!--[if lte IE 6]><table><tr><td><![endif]-->
 							<div class="select_sub show">
 								<ul class="sub">
-									<li><a href="#nogo">List all</a></li>
-									<li class="sub_show"><a href="#nogo">Add role
+									<li><a href="<c:url value='/roleAssignments/list'/>">List all</a></li>
+									<li><a href="<c:url value='/roleAssignments/form'/>">Add role
 											assignment</a></li>
 									<li><a href="#nogo">Delete assignment</a></li>
 								</ul>
