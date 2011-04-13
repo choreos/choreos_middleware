@@ -12,19 +12,6 @@
 	</context-param>
 
 	<filter>
-		<filter-name>vraptor</filter-name>
-		<filter-class>br.com.caelum.vraptor.VRaptor</filter-class>
-	</filter>
-
-	<filter-mapping>
-		<filter-name>vraptor</filter-name>
-		<url-pattern>*.jsp</url-pattern>
-		<dispatcher>FORWARD</dispatcher>
-		<dispatcher>REQUEST</dispatcher>
-	</filter-mapping>
-	
-	
-	<filter>
 		<filter-name>sitemesh</filter-name>
 		<filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
 	</filter>
@@ -32,6 +19,19 @@
 	<filter-mapping>
 		<filter-name>sitemesh</filter-name>
 		<url-pattern>/*</url-pattern>
+		<dispatcher>FORWARD</dispatcher> 
+	</filter-mapping>
+
+	<filter>
+		<filter-name>vraptor</filter-name>
+		<filter-class>br.com.caelum.vraptor.VRaptor</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>vraptor</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
 	</filter-mapping>
 
 	<error-page>
