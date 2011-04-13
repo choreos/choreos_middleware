@@ -11,26 +11,25 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class RoleAssignmentTest {
-    private static RoleAssignment roleAssignment;
+    private static RoleAssignmentService roleAssignmentService;
     private static Endpoint endpoint;
-    
+
     @BeforeClass
     public static void initWebService() {
-	roleAssignment = new RoleAssignment();
-	 endpoint =
-	     Endpoint.publish("http://localhost:8080/roleAssignment", roleAssignment);     
+	roleAssignmentService = new RoleAssignmentService();
+	endpoint = Endpoint.publish("http://localhost:8080/roleAssignment", roleAssignmentService);
     }
-    
+
     @Test
-    public void testAssign(){
+    public void testAssign() {
 	final String uri = "uri";
 	final String roleName = "rolename";
-	
-	roleAssignment.assignRole(uri, roleName);
-	List<String> uris = roleAssignment.get(roleName);
-	assertEquals(uri,uris.get(0));
+
+	roleAssignmentService.assignRole(new RoleAssignment(uri, roleName));
+	List<String> uris = roleAssignmentService.get(roleName);
+	assertEquals(uri, uris.get(0));
     }
-    
+
     @AfterClass
     public static void shutDownWebService() {
 	try {
