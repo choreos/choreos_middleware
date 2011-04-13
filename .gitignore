@@ -5,3 +5,5 @@
 .PEtALS_su_cache/
 **/bin
 **/*.zip
+*.swp
+*~
