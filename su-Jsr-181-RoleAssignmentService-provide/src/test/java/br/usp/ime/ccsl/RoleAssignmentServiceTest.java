@@ -17,7 +17,7 @@ public class RoleAssignmentServiceTest {
     @BeforeClass
     public static void initWebService() {
 	roleAssignmentService = new RoleAssignmentService();
-	endpoint = Endpoint.publish("http://localhost:8080/roleAssignment", roleAssignmentService);
+	endpoint = Endpoint.publish("http://localhost:60080/roleAssignment", roleAssignmentService);
     }
 
     @Test
