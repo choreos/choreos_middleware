@@ -10,7 +10,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class RoleAssignmentTest {
+public class RoleAssignmentServiceTest {
     private static RoleAssignmentService roleAssignmentService;
     private static Endpoint endpoint;
 
@@ -32,12 +32,6 @@ public class RoleAssignmentTest {
 
     @AfterClass
     public static void shutDownWebService() {
-	try {
-	    Thread.sleep(30000);
-	} catch (InterruptedException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
 	endpoint.stop();
     }
 }
