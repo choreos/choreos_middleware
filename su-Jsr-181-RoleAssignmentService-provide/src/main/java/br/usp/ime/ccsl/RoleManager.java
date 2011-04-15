@@ -1,11 +1,10 @@
 package br.usp.ime.ccsl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 public class RoleManager {
 
@@ -24,7 +23,6 @@ public class RoleManager {
 	return instance;
     }
 
-    @SuppressWarnings("unchecked")
     public void assignRole(RoleAssignment roleAssigment) {
 	List<String> uriList = uriRole.get(roleAssigment.getRole());
 	if (uriList == null) {
