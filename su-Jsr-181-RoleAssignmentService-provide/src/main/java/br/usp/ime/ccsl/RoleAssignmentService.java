@@ -7,7 +7,7 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.ws.Endpoint;
 
-@WebService(serviceName = "RoleAssignment", targetNamespace = "http://ccsl.ime.usp.br", portName = "RoleAssignmentPort")
+@WebService(serviceName = "RoleAssignmentService", targetNamespace = "http://ccsl.ime.usp.br", portName = "RoleAssignmentServicePort")
 public class RoleAssignmentService {
 
     @WebMethod(operationName = "assignRole")
@@ -25,7 +25,7 @@ public class RoleAssignmentService {
     public static void main(String[] args) {
 	// create and publish an endpoint
 	RoleAssignmentService calculator = new RoleAssignmentService();
-	Endpoint.publish("http://localhost:8080/roleAssignment", calculator);
+	Endpoint.publish("http://localhost:18080/roleAssignmentService", calculator);
     }
 
 }
