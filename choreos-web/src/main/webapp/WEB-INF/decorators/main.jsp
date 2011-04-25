@@ -222,8 +222,8 @@
 							<!--<![endif]--> <!--[if lte IE 6]><table><tr><td><![endif]-->
 							<div class="select_sub show">
 								<ul class="sub">
-									<li><a href="<c:url value='/roleAssignments/list'/>">List all</a></li>
-									<li><a href="<c:url value='/roleAssignments/form'/>">Add role
+									<li><a href="<c:url value='/roleAssignments/list'/>" id="list_role_assignments">List all</a></li>
+									<li><a href="<c:url value='/roleAssignments/form'/>" id="add_role_assignment">Add role
 											assignment</a></li>
 									<li><a href="#nogo">Delete assignment</a></li>
 								</ul>
