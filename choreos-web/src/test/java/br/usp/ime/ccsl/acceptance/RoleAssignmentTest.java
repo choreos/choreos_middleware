@@ -16,7 +16,18 @@ public class RoleAssignmentTest extends WebTestCase {
     @Test
     public void testFormPresence() {
 	beginAt("/roleAssignments/form");
-	assertTextPresent("Role:");
-	assertTextPresent("URI:");
+
+	clickLink("add_role_assignment");
+
+	setTextField("roleAssignment.role", "myRole");
+	setTextField("roleAssignment.uri", "myURI");
+	submit();
+
+	assertTextPresent("Service myURI registered with role myRole");
+
+	clickLink("list_role_assignments");
+
+	assertTextPresent("myRole");
+	assertTextPresent("myURI");
     }
 }
