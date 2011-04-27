@@ -1,8 +1,5 @@
 package br.usp.ime.ccsl.model;
 
-import javax.persistence.Entity;
-
-@Entity
 public class RoleAssignment {
     private String uri;
     private String role;
