@@ -13,7 +13,6 @@ public class HelloWorld8081 {
     private int reqCount = 0;
 
     public HelloWorld8081(String name) {
-	// TODO Auto-generated constructor stub
 	this.instanceName = name;
     }
 
@@ -23,6 +22,12 @@ public class HelloWorld8081 {
 	System.out.println(this.instanceName + ": Requisition number: " + reqCount++);
 	
 	return "Hello from " + instanceName + " " + param;
+    }
+
+    public static void publishService(int port) {
+	HelloWorld8081 service = new HelloWorld8081("" + port);
+	Endpoint endpoint = Endpoint.create(service);
+	endpoint.publish("http://localhost:" + port + "/hello");
     }
 
     public static void main(String[] args) {
