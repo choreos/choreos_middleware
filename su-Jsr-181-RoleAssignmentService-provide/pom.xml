@@ -20,6 +20,14 @@
 			<name>JBoss repository</name>
 			<url>http://repository.jboss.org/maven2</url>
 		</repository>
+
+		<repository>
+			<id>eviwarePluginRepository</id>
+			<name>eviWare</name>
+			<url>http://www.eviware.com/repository/maven2/</url>
+		</repository>
+
+
 	</repositories>
 
 	<dependencies>
@@ -64,6 +72,49 @@
 			<optional>true</optional>
 		</dependency>
 
+		<!-- Evilware (soapui) repository -->
+		<dependency>
+			<groupId>eviware</groupId>
+			<artifactId>soapui-xmlbeans</artifactId>
+			<version>3.6.1</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>eviware</groupId>
+			<artifactId>soap-xmlbeans</artifactId>
+			<version>1.2</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>eviware</groupId>
+			<artifactId>soapui</artifactId>
+			<version>3.6</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15</artifactId>
+			<version>1.44</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>xmlbeans</groupId>
+			<artifactId>xbean</artifactId>
+			<version>fixed-2.4.0</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>xmlbeans</groupId>
+			<artifactId>xbean_xpath</artifactId>
+			<version>2.4.0</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>xmlbeans</groupId>
+			<artifactId>xmlpublic</artifactId>
+			<version>2.4.0</version>
+			<type>jar</type>
+		</dependency>
 	</dependencies>
 
 	<build>
