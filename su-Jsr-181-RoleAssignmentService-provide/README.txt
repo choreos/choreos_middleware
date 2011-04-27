@@ -13,6 +13,6 @@ GRANT ALL PRIVILEGES ON  `choreos` . * TO  'choreos'@'localhost';
 
 Configure hibernate
 -------------------
-$ cp src/main/resources/
+$ cd src/main/resources/
 $ cp hibernate.cfg.template.xml hibernate.cfg.xml
 Edit hibernate.cfg.xml and change database (choreos), user (root) and password (empty).
