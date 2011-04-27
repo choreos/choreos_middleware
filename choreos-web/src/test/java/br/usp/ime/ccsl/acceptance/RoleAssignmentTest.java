@@ -14,7 +14,7 @@ public class RoleAssignmentTest extends WebTestCase {
     }
 
     @Test
-    public void testFormPresence() {
+    public void testCreateAndListRoleAssignments() {
 	beginAt("/roleAssignments/form");
 
 	clickLink("add_role_assignment");
