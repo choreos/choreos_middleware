@@ -138,6 +138,13 @@
 			<version>2.4.0</version>
 			<type>jar</type>
 		</dependency>
+		<dependency>
+			<groupId>org.mod4j.org.apache.commons</groupId>
+			<artifactId>cli</artifactId>
+			<version>1.0.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
