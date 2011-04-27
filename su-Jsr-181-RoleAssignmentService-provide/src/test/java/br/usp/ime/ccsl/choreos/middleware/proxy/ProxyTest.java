@@ -8,8 +8,6 @@ import static org.mockito.Mockito.verify;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.ws.Endpoint;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -112,6 +110,56 @@ public class ProxyTest {
 	} catch (Exception e) {
 	    // e.printStackTrace();
 	    fail(e.getMessage());
+	}
+    }
+
+    @Test
+    public void shouldMakeARequestWithOneParameterToTheOnlyAssignedWebService() {
+	WSClient wsMock = mock(WSClient.class);
+	proxy.addService(wsMock);
+
+	try {
+	    proxy.request("hello", "world");
+	} catch (InvalidOperationName e) {
+	    e.printStackTrace();
+	} catch (NoWebServiceException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+
+	try {
+	    verify(wsMock).request("hello", "world");
+	} catch (InvalidOperationName e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} catch (FrameworkException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+    }
+
+    @Test
+    public void shouldMakeARequestWithTwoParametersToTheOnlyAssignedWebService() {
+	WSClient wsMock = mock(WSClient.class);
+	proxy.addService(wsMock);
+
+	try {
+	    proxy.request("hello", "world", "!");
+	} catch (InvalidOperationName e) {
+	    e.printStackTrace();
+	} catch (NoWebServiceException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+
+	try {
+	    verify(wsMock).request("hello", "world", "!");
+	} catch (InvalidOperationName e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} catch (FrameworkException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
     }
 }
