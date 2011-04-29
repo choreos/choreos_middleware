@@ -83,7 +83,7 @@ public class ProxyTest {
 
     @Test(expected = NoWebServiceException.class)
     public void shouldThrowNoWebServiceExceptionWhenInvokingProxyWithoutWS()
-	    throws NoWebServiceException {
+    throws NoWebServiceException {
 	try {
 	    proxy.request("hello");
 	} catch (InvalidOperationName e) {
@@ -146,13 +146,32 @@ public class ProxyTest {
 	} catch (FrameworkException e) {
 	    e.printStackTrace();
 	}
-	
+
 	proxy.addService(wsMock);
+	
 	try {
 	    String actual = proxy.request("hello");
 	    assertEquals(expected, actual);
 	} catch (InvalidOperationName e) {
 	    e.printStackTrace();
+	} catch (NoWebServiceException e) {
+	    e.printStackTrace();
+	}
+    }
+
+    @Test(expected = InvalidOperationName.class)
+    public void shouldThrowInvalidOperationName() throws InvalidOperationName {
+	WSClient wsMock = mock(WSClient.class);
+	try {
+	    when(wsMock.request("foo")).thenThrow(new InvalidOperationName());
+	} catch (FrameworkException e) {
+	    e.printStackTrace();
+	}
+	
+	proxy.addService(wsMock);
+	
+	try {
+	    proxy.request("foo");
 	} catch (NoWebServiceException e) {
 	    e.printStackTrace();
 	}
