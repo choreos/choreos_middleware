@@ -68,26 +68,68 @@ public class ProxyTest {
 	} catch (InvalidOperationName e) {
 	    e.printStackTrace();
 	} catch (NoWebServiceException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
 
 	try {
 	    verify(wsMock).request("hello");
 	} catch (InvalidOperationName e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	} catch (FrameworkException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
     }
 
     @Test(expected = NoWebServiceException.class)
-    public void shouldThrowNoWebServiceExceptionWhenInvokingProxyWithoutWS() throws NoWebServiceException {
+    public void shouldThrowNoWebServiceExceptionWhenInvokingProxyWithoutWS()
+	    throws NoWebServiceException {
 	try {
 	    proxy.request("hello");
 	} catch (InvalidOperationName e) {
+	    e.printStackTrace();
+	}
+    }
+
+    @Test
+    public void shouldMakeARequestWithOneParameterToTheOnlyAssignedWebService() {
+	WSClient wsMock = mock(WSClient.class);
+	proxy.addService(wsMock);
+
+	try {
+	    proxy.request("hello", "world");
+	} catch (InvalidOperationName e) {
+	    e.printStackTrace();
+	} catch (NoWebServiceException e) {
+	    e.printStackTrace();
+	}
+
+	try {
+	    verify(wsMock).request("hello", "world");
+	} catch (InvalidOperationName e) {
+	    e.printStackTrace();
+	} catch (FrameworkException e) {
+	    e.printStackTrace();
+	}
+    }
+
+    @Test
+    public void shouldMakeARequestWithTwoParametersToTheOnlyAssignedWebService() {
+	WSClient wsMock = mock(WSClient.class);
+	proxy.addService(wsMock);
+
+	try {
+	    proxy.request("hello", "world", "!");
+	} catch (InvalidOperationName e) {
+	    e.printStackTrace();
+	} catch (NoWebServiceException e) {
+	    e.printStackTrace();
+	}
+
+	try {
+	    verify(wsMock).request("hello", "world", "!");
+	} catch (InvalidOperationName e) {
+	    e.printStackTrace();
+	} catch (FrameworkException e) {
 	    e.printStackTrace();
 	}
     }
@@ -108,58 +150,7 @@ public class ProxyTest {
 
 	    assertEquals(expected, proxy.getWebServiceList());
 	} catch (Exception e) {
-	    // e.printStackTrace();
 	    fail(e.getMessage());
-	}
-    }
-
-    @Test
-    public void shouldMakeARequestWithOneParameterToTheOnlyAssignedWebService() {
-	WSClient wsMock = mock(WSClient.class);
-	proxy.addService(wsMock);
-
-	try {
-	    proxy.request("hello", "world");
-	} catch (InvalidOperationName e) {
-	    e.printStackTrace();
-	} catch (NoWebServiceException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
-
-	try {
-	    verify(wsMock).request("hello", "world");
-	} catch (InvalidOperationName e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	} catch (FrameworkException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
-    }
-
-    @Test
-    public void shouldMakeARequestWithTwoParametersToTheOnlyAssignedWebService() {
-	WSClient wsMock = mock(WSClient.class);
-	proxy.addService(wsMock);
-
-	try {
-	    proxy.request("hello", "world", "!");
-	} catch (InvalidOperationName e) {
-	    e.printStackTrace();
-	} catch (NoWebServiceException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
-
-	try {
-	    verify(wsMock).request("hello", "world", "!");
-	} catch (InvalidOperationName e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	} catch (FrameworkException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
 	}
     }
 }
