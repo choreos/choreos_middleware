@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,11 +18,17 @@ import br.usp.ime.ccsl.choreos.middleware.exceptions.InvalidOperationName;
 import br.usp.ime.ccsl.choreos.middleware.proxy.genericHelloWorldService.HelloWorld8081;
 
 public class ProxyTest {
-    Proxy proxy;
+    private Proxy proxy;
+    private Logger logger;
+    private TestingAppender testingAppender;
 
     @Before
     public void setUp() {
-	proxy = new Proxy();
+	logger = Logger.getLogger(Proxy.class);
+	testingAppender = new TestingAppender();
+	logger.addAppender(testingAppender);
+	
+	proxy = new Proxy(logger);
     }
 
     @Test
@@ -175,6 +182,25 @@ public class ProxyTest {
 	} catch (NoWebServiceException e) {
 	    e.printStackTrace();
 	}
+    }
+    
+    @Test
+    public void shouldLogOperationNameOfTheRequest() {
+	WSClient wsMock = mock(WSClient.class);
+	proxy.addService(wsMock);
+	
+	String operation = "foo";
+	
+	try {
+	    proxy.request(operation);
+	} catch (InvalidOperationName e) {
+	    e.printStackTrace();
+	} catch (NoWebServiceException e) {
+	    e.printStackTrace();
+	}
+	
+	List<String> messages = TestingAppender.getMessages();
+	assertEquals("Request received: " + operation + "; no parameters.", messages.get(messages.size() - 1));
     }
 
     @Test
