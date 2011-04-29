@@ -32,11 +32,6 @@ public class RoleManagerTest {
     }
 
     @Test
-    public void testGetUriListIsEmptyAtFirst() {
-	assertEquals(0, roleManager.getUriList("rolename").size());
-    }
-
-    @Test
     public void testGetAssignedUriList() {
 	roleManager.assignRole(new RoleAssignment("uri", "rolename"));
 	List<String> result = roleManager.getUriList("rolename");
