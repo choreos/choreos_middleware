@@ -21,14 +21,16 @@ public class Proxy {
 	wsList.add(ws);
     }
 
-    public void request(String webMethod, String... params) throws InvalidOperationName, NoWebServiceException {
+    public String request(String webMethod, String... params) throws InvalidOperationName, NoWebServiceException {
+	String response = null;
 	try {
 	    WSClient ws = wsList.get(0);
-	    ws.request(webMethod, params);
+	    response = ws.request(webMethod, params);
 	} catch (FrameworkException e) {
 	    e.printStackTrace();
 	} catch (IndexOutOfBoundsException e) {
 	    throw new NoWebServiceException();
 	}
+	return response;
     }
 }
