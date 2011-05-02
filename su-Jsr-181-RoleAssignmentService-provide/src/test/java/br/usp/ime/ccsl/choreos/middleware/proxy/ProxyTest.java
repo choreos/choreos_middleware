@@ -142,7 +142,6 @@ public class ProxyTest {
 	proxy.request("foo");
 	verify(wsClientMock2).request("foo");
     }
-    
 
     @Test
     public void shouldLogOperationNameOfTheRequest() throws Exception {
