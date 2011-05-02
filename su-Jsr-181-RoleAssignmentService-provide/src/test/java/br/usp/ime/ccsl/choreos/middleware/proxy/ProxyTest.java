@@ -1,7 +1,6 @@
 package br.usp.ime.ccsl.choreos.middleware.proxy;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -15,7 +14,6 @@ import org.junit.Test;
 
 import br.usp.ime.ccsl.choreos.middleware.exceptions.FrameworkException;
 import br.usp.ime.ccsl.choreos.middleware.exceptions.InvalidOperationName;
-import br.usp.ime.ccsl.choreos.middleware.proxy.genericHelloWorldService.HelloWorld8081;
 
 public class ProxyTest {
     private Proxy proxy;
@@ -203,23 +201,4 @@ public class ProxyTest {
 	assertEquals("Request received: " + operation + "; no parameters.", messages.get(messages.size() - 1));
     }
 
-    @Test
-    public void shouldAddOneRealWebService() {
-	HelloWorld8081.publishService(8081);
-	System.out.println("Serviço disponibilizado na porta 8081");
-
-	List<WSClient> expected = new ArrayList<WSClient>();
-
-	try {
-	    WSClient ws;
-	    ws = new WSClient("http://localhost:8081/hello?wsdl");
-
-	    expected.add(ws);
-	    proxy.addService(ws);
-
-	    assertEquals(expected, proxy.getWebServiceList());
-	} catch (Exception e) {
-	    fail(e.getMessage());
-	}
-    }
 }
