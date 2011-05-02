@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
+import br.usp.ime.ccsl.choreos.middleware.exceptions.FrameworkException;
 import br.usp.ime.ccsl.choreos.middleware.exceptions.InvalidOperationName;
 
 public class ProxyTest {
@@ -114,6 +115,34 @@ public class ProxyTest {
 
 	proxy.request("foo");
     }
+
+    @Test(expected = NoWebServiceException.class)
+    public void shouldThrowNoWebServiceExceptionWhenAllWSClientFails() throws Exception {
+	WSClient wsClientMock1 = mock(WSClient.class);
+	WSClient wsClientMock2 = mock(WSClient.class);
+	when(wsClientMock1.request("foo")).thenThrow(new FrameworkException(new Exception()));
+	when(wsClientMock2.request("foo")).thenThrow(new FrameworkException(new Exception()));
+
+	proxy.addService(wsClientMock1);
+	proxy.addService(wsClientMock2);
+
+	proxy.request("foo");
+    }
+    
+    @Test
+    public void shouldUseASecondWebServiceWhenTheFirstFails() throws Exception {
+	WSClient wsClientMock1 = mock(WSClient.class);
+	WSClient wsClientMock2 = mock(WSClient.class);
+	when(wsClientMock1.request("foo")).thenThrow(new FrameworkException(new Exception()));
+	when(wsClientMock2.request("foo")).thenReturn("ok");
+
+	proxy.addService(wsClientMock1);
+	proxy.addService(wsClientMock2);
+
+	proxy.request("foo");
+	verify(wsClientMock2).request("foo");
+    }
+    
 
     @Test
     public void shouldLogOperationNameOfTheRequest() throws Exception {

@@ -11,12 +11,12 @@ import br.usp.ime.ccsl.choreos.middleware.exceptions.InvalidOperationName;
 
 public class Proxy {
     private Logger logger;
-    
+
     private List<WSClient> wsList;
 
     public Proxy(Logger logger) {
 	this.logger = logger;
-	
+
 	wsList = new ArrayList<WSClient>();
     }
 
@@ -29,11 +29,10 @@ public class Proxy {
     }
 
     public String request(String webMethod, String... params) throws InvalidOperationName, NoWebServiceException {
-	String response = null;
-	
+
 	StringBuilder sb = new StringBuilder();
 	sb.append("Request received: " + webMethod + "; ");
-	
+
 	if (params.length > 0) {
 	    sb.append("parameters: " + StringUtils.join(params, ", "));
 	    sb.append(".");
@@ -41,13 +40,20 @@ public class Proxy {
 	    sb.append("no parameters.");
 	}
 	logger.info(sb.toString());
+
+	String response = null;
+	boolean success = false;
 	
-	try {
-	    WSClient ws = wsList.get(0);
-	    response = ws.request(webMethod, params);
-	} catch (FrameworkException e) {
-	    e.printStackTrace();
-	} catch (IndexOutOfBoundsException e) {
+	for (WSClient client : wsList) {
+	    try {
+		response = client.request(webMethod, params);
+		success = true;
+		break;
+	    } catch (FrameworkException e) {
+		//we are dealing with this by trying other services
+	    }
+	}
+	if (!success){
 	    throw new NoWebServiceException();
 	}
 	return response;
