@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -179,9 +180,15 @@ public class ProxyTest {
 
     @Test
     public void shouldAddOneRealWebService() {
-	HelloWorld8081.publishService(8081);
-	System.out.println("Serviço disponibilizado na porta 8081");
-
+	
+	Runtime rt = Runtime.getRuntime();
+	try {
+	    Process p = rt.exec("java -jar src/main/resources/hello.jar");
+	} catch (IOException e1) {
+	    // TODO Auto-generated catch block
+	    e1.printStackTrace();
+	}
+	
 	List<WSClient> expected = new ArrayList<WSClient>();
 
 	try {
