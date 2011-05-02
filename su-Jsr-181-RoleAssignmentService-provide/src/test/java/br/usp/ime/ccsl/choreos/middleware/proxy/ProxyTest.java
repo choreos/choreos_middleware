@@ -21,7 +21,7 @@ public class ProxyTest {
 
     @Before
     public void setUp() {
-	logger = Logger.getLogger(Proxy.class);
+	logger = mock(Logger.class);
 	proxy = new Proxy(logger);
     }
 
@@ -180,9 +180,6 @@ public class ProxyTest {
     
     @Test
     public void shouldLogOperationNameOfTheRequest() {
-	TestingAppender testingAppender = new TestingAppender();
-	logger.addAppender(testingAppender);
-	
 	WSClient wsMock = mock(WSClient.class);
 	proxy.addService(wsMock);
 	
@@ -196,8 +193,7 @@ public class ProxyTest {
 	    e.printStackTrace();
 	}
 	
-	List<String> messages = TestingAppender.getMessages();
-	assertEquals("Request received: " + operation + "; no parameters.", messages.get(messages.size() - 1));
+	verify(logger).info("Request received: " + operation + "; no parameters.");
     }
 
 }
