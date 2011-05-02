@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.usp.ime.ccsl.choreos.middleware.exceptions.FrameworkException;
 import br.usp.ime.ccsl.choreos.middleware.exceptions.InvalidOperationName;
 
 public class ProxyTest {
@@ -26,174 +25,104 @@ public class ProxyTest {
     }
 
     @Test
-    public void shouldGetEmptyListAtBegining() {
+    public void shouldGetEmptyListAtBegining() throws Exception {
 	List<WSClient> expected = new ArrayList<WSClient>();
 	assertEquals(expected, proxy.getWebServiceList());
     }
 
     @Test
-    public void shouldAddOneWebService() {
-	List<WSClient> expected = new ArrayList<WSClient>();
+    public void shouldAddOneWebService() throws Exception {
 	WSClient wsMock = mock(WSClient.class);
 
+	List<WSClient> expected = new ArrayList<WSClient>();
 	expected.add(wsMock);
+
 	proxy.addService(wsMock);
 
 	assertEquals(expected, proxy.getWebServiceList());
     }
 
     @Test
-    public void shouldAddManyWebServices() {
-
-	List<WSClient> expected = new ArrayList<WSClient>();
+    public void shouldAddManyWebServices() throws Exception {
 	WSClient wsMock1 = mock(WSClient.class);
 	WSClient wsMock2 = mock(WSClient.class);
-	WSClient wsMock3 = mock(WSClient.class);
 
+	List<WSClient> expected = new ArrayList<WSClient>();
 	expected.add(wsMock1);
 	expected.add(wsMock2);
-	expected.add(wsMock3);
+
 	proxy.addService(wsMock1);
 	proxy.addService(wsMock2);
-	proxy.addService(wsMock3);
 
 	assertEquals(expected, proxy.getWebServiceList());
     }
 
     @Test
-    public void shouldMakeARequestToTheOnlyAssignedWebService() {
+    public void shouldMakeARequestToTheOnlyAssignedWebService() throws Exception {
 	WSClient wsMock = mock(WSClient.class);
 	proxy.addService(wsMock);
 
-	try {
-	    proxy.request("hello");
-	} catch (InvalidOperationName e) {
-	    e.printStackTrace();
-	} catch (NoWebServiceException e) {
-	    e.printStackTrace();
-	}
+	proxy.request("hello");
 
-	try {
-	    verify(wsMock).request("hello");
-	} catch (InvalidOperationName e) {
-	    e.printStackTrace();
-	} catch (FrameworkException e) {
-	    e.printStackTrace();
-	}
+	verify(wsMock).request("hello");
     }
 
     @Test(expected = NoWebServiceException.class)
-    public void shouldThrowNoWebServiceExceptionWhenInvokingProxyWithoutWS()
-    throws NoWebServiceException {
-	try {
-	    proxy.request("hello");
-	} catch (InvalidOperationName e) {
-	    e.printStackTrace();
-	}
+    public void shouldThrowNoWebServiceExceptionWhenInvokingProxyWithoutWS() throws Exception {
+	proxy.request("hello");
     }
 
     @Test
-    public void shouldMakeARequestWithOneParameterToTheOnlyAssignedWebService() {
+    public void shouldMakeARequestWithOneParameterToTheOnlyAssignedWebService() throws Exception {
 	WSClient wsMock = mock(WSClient.class);
 	proxy.addService(wsMock);
 
-	try {
-	    proxy.request("hello", "world");
-	} catch (InvalidOperationName e) {
-	    e.printStackTrace();
-	} catch (NoWebServiceException e) {
-	    e.printStackTrace();
-	}
+	proxy.request("hello", "world");
 
-	try {
-	    verify(wsMock).request("hello", "world");
-	} catch (InvalidOperationName e) {
-	    e.printStackTrace();
-	} catch (FrameworkException e) {
-	    e.printStackTrace();
-	}
+	verify(wsMock).request("hello", "world");
     }
 
     @Test
-    public void shouldMakeARequestWithTwoParametersToTheOnlyAssignedWebService() {
+    public void shouldMakeARequestWithTwoParametersToTheOnlyAssignedWebService() throws Exception {
 	WSClient wsMock = mock(WSClient.class);
 	proxy.addService(wsMock);
 
-	try {
-	    proxy.request("hello", "world", "!");
-	} catch (InvalidOperationName e) {
-	    e.printStackTrace();
-	} catch (NoWebServiceException e) {
-	    e.printStackTrace();
-	}
+	proxy.request("hello", "world", "!");
 
-	try {
-	    verify(wsMock).request("hello", "world", "!");
-	} catch (InvalidOperationName e) {
-	    e.printStackTrace();
-	} catch (FrameworkException e) {
-	    e.printStackTrace();
-	}
+	verify(wsMock).request("hello", "world", "!");
     }
 
     @Test
-    public void shouldReturnExpectedResponse() {
+    public void shouldReturnExpectedResponse() throws Exception {
 	final String expected = "Hello test!";
 	WSClient wsMock = mock(WSClient.class);
-	try {
-	    when(wsMock.request("hello")).thenReturn(expected);
-	} catch (InvalidOperationName e) {
-	    e.printStackTrace();
-	} catch (FrameworkException e) {
-	    e.printStackTrace();
-	}
+	when(wsMock.request("hello")).thenReturn(expected);
 
 	proxy.addService(wsMock);
-	
-	try {
-	    String actual = proxy.request("hello");
-	    assertEquals(expected, actual);
-	} catch (InvalidOperationName e) {
-	    e.printStackTrace();
-	} catch (NoWebServiceException e) {
-	    e.printStackTrace();
-	}
+
+	String actual = proxy.request("hello");
+
+	assertEquals(expected, actual);
     }
 
     @Test(expected = InvalidOperationName.class)
-    public void shouldThrowInvalidOperationName() throws InvalidOperationName {
+    public void shouldThrowInvalidOperationName() throws Exception {
 	WSClient wsMock = mock(WSClient.class);
-	try {
-	    when(wsMock.request("foo")).thenThrow(new InvalidOperationName());
-	} catch (FrameworkException e) {
-	    e.printStackTrace();
-	}
-	
+	when(wsMock.request("foo")).thenThrow(new InvalidOperationName());
+
 	proxy.addService(wsMock);
-	
-	try {
-	    proxy.request("foo");
-	} catch (NoWebServiceException e) {
-	    e.printStackTrace();
-	}
+
+	proxy.request("foo");
     }
-    
+
     @Test
-    public void shouldLogOperationNameOfTheRequest() {
+    public void shouldLogOperationNameOfTheRequest() throws Exception {
 	WSClient wsMock = mock(WSClient.class);
 	proxy.addService(wsMock);
-	
-	String operation = "foo";
-	
-	try {
-	    proxy.request(operation);
-	} catch (InvalidOperationName e) {
-	    e.printStackTrace();
-	} catch (NoWebServiceException e) {
-	    e.printStackTrace();
-	}
-	
-	verify(logger).info("Request received: " + operation + "; no parameters.");
+
+	proxy.request("foo");
+
+	verify(logger).info("Request received: foo; no parameters.");
     }
 
 }
