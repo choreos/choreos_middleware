@@ -182,6 +182,21 @@
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
+	
+	<pluginRepositories>
+    <pluginRepository>
+      <id>apache.snapshots</id>
+      <name>Maven Central Plugins Development Repository</name>
+      <url>http://cvs.apache.org/maven-snapshot-repository</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+         <enabled>false</enabled>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
+	
 
 	<build>
 		<plugins>
