@@ -28,7 +28,7 @@
 			<petalsCDK:wsdl xsi:nil="true" />
 		
 			<!-- Component specific elements -->	
-			<jsr181:class>br.usp.ime.ccsl.RoleAssignment</jsr181:class>			
+			<jsr181:class>br.usp.ime.ccsl.roleAssignment.RoleAssignmentService</jsr181:class>			
 		</jbi:provides>
 	</jbi:services>
 </jbi:jbi>
