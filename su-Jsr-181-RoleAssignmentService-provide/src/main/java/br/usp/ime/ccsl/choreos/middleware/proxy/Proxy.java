@@ -10,7 +10,7 @@ import br.usp.ime.ccsl.choreos.middleware.exceptions.FrameworkException;
 import br.usp.ime.ccsl.choreos.middleware.exceptions.InvalidOperationName;
 
 public class Proxy {
-    private static Logger logger;
+    private Logger logger;
     
     private List<WSClient> wsList;
 

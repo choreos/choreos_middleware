@@ -18,14 +18,10 @@ import br.usp.ime.ccsl.choreos.middleware.exceptions.InvalidOperationName;
 public class ProxyTest {
     private Proxy proxy;
     private Logger logger;
-    private TestingAppender testingAppender;
 
     @Before
     public void setUp() {
 	logger = Logger.getLogger(Proxy.class);
-	testingAppender = new TestingAppender();
-	logger.addAppender(testingAppender);
-	
 	proxy = new Proxy(logger);
     }
 
@@ -184,6 +180,9 @@ public class ProxyTest {
     
     @Test
     public void shouldLogOperationNameOfTheRequest() {
+	TestingAppender testingAppender = new TestingAppender();
+	logger.addAppender(testingAppender);
+	
 	WSClient wsMock = mock(WSClient.class);
 	proxy.addService(wsMock);
 	
