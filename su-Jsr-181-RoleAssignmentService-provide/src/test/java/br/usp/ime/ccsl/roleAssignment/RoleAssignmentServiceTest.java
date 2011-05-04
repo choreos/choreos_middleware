@@ -14,27 +14,27 @@ import br.usp.ime.ccsl.roleAssignment.RoleAssignment;
 import br.usp.ime.ccsl.roleAssignment.RoleAssignmentService;
 
 public class RoleAssignmentServiceTest {
-    private static RoleAssignmentService roleAssignmentService;
-    private static Endpoint endpoint;
+	private static RoleAssignmentService roleAssignmentService;
+	private static Endpoint endpoint;
 
-    @BeforeClass
-    public static void initWebService() {
-	roleAssignmentService = new RoleAssignmentService();
-	endpoint = Endpoint.publish("http://localhost:60080/roleAssignment", roleAssignmentService);
-    }
+	@BeforeClass
+	public static void initWebService() {
+		roleAssignmentService = new RoleAssignmentService();
+		endpoint = Endpoint.publish("http://localhost:60080/roleAssignment", roleAssignmentService);
+	}
 
-    @Test
-    public void testAssign() {
-	final String uri = "uri";
-	final String roleName = "rolename";
+	@Test
+	public void testAssign() {
+		final String uri = "uri";
+		final String roleName = "rolename";
 
-	roleAssignmentService.assignRole(new RoleAssignment(uri, roleName));
-	List<String> uris = roleAssignmentService.get(roleName);
-	assertEquals(uri, uris.get(0));
-    }
+		roleAssignmentService.assignRole(new RoleAssignment(uri, roleName));
+		List<String> uris = roleAssignmentService.get(roleName);
+		assertEquals(uri, uris.get(0));
+	}
 
-    @AfterClass
-    public static void shutDownWebService() {
-	endpoint.stop();
-    }
+	@AfterClass
+	public static void shutDownWebService() {
+		endpoint.stop();
+	}
 }
