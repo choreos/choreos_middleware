@@ -22,7 +22,7 @@ public class ProxyTest {
     @Before
     public void setUp() {
 	logger = mock(Logger.class);
-	proxy = new Proxy(logger);
+	proxy = new Proxy("roleName", logger);
     }
 
     @Test
@@ -128,7 +128,7 @@ public class ProxyTest {
 
 	proxy.request("foo");
     }
-    
+
     @Test
     public void shouldUseASecondWebServiceWhenTheFirstFails() throws Exception {
 	WSClient wsClientMock1 = mock(WSClient.class);
@@ -144,13 +144,19 @@ public class ProxyTest {
     }
 
     @Test
-    public void shouldLogOperationNameOfTheRequest() throws Exception {
+    public void shouldLogTheRequestInTheCorrectFormat() throws Exception {
+	String roleName = "roleName";
+	String receiverEndpoint = "receiverEndpoint";
+	String operationName = "operationName";
+	String content = "(parameter1; parameter2)";
+	
 	WSClient wsMock = mock(WSClient.class);
+	when(wsMock.getWsdl()).thenReturn(receiverEndpoint);
 	proxy.addService(wsMock);
 
-	proxy.request("foo");
+	proxy.request(operationName, "parameter1", "parameter2");
 
-	verify(logger).info("Request received: foo; no parameters.");
+	verify(logger).info(roleName + ", " + receiverEndpoint + ", " + operationName + ", " + content);
     }
 
 }
