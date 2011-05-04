@@ -1,12 +1,12 @@
-package br.usp.ime.ccsl.roleAssignment;
+package br.usp.ime.ccsl.choreos.middleware.roleassignment;
 
 import static org.junit.Assert.assertNotNull;
 
 import org.hibernate.Session;
 import org.junit.Test;
 
-import br.usp.ime.ccsl.roleAssignment.ChoreosSessionFactory;
-import br.usp.ime.ccsl.roleAssignment.RoleAssignment;
+import br.usp.ime.ccsl.choreos.middleware.roleassignment.ChoreosSessionFactory;
+import br.usp.ime.ccsl.choreos.middleware.roleassignment.RoleAssignment;
 
 public class ChoreosSessionFactoryTest {
 

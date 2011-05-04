@@ -1,4 +1,4 @@
-package br.usp.ime.ccsl.roleAssignment;
+package br.usp.ime.ccsl.choreos.middleware.roleassignment;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

@@ -1,4 +1,4 @@
-package br.usp.ime.ccsl.roleAssignment;
+package br.usp.ime.ccsl.choreos.middleware.roleassignment;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -8,8 +8,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.usp.ime.ccsl.roleAssignment.RoleAssignment;
-import br.usp.ime.ccsl.roleAssignment.RoleManager;
+import br.usp.ime.ccsl.choreos.middleware.roleassignment.RoleAssignment;
+import br.usp.ime.ccsl.choreos.middleware.roleassignment.RoleManager;
 
 public class RoleManagerTest {
 

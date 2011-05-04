@@ -1,4 +1,4 @@
-package br.usp.ime.ccsl.roleAssignment;
+package br.usp.ime.ccsl.choreos.middleware.roleassignment;
 
 import static org.junit.Assert.assertEquals;
 
@@ -10,8 +10,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import br.usp.ime.ccsl.roleAssignment.RoleAssignment;
-import br.usp.ime.ccsl.roleAssignment.RoleAssignmentService;
+import br.usp.ime.ccsl.choreos.middleware.roleassignment.RoleAssignment;
+import br.usp.ime.ccsl.choreos.middleware.roleassignment.RoleAssignmentService;
 
 public class RoleAssignmentServiceTest {
 	private static RoleAssignmentService roleAssignmentService;

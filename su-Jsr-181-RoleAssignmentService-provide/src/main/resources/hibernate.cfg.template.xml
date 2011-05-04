@@ -52,7 +52,7 @@
         <property name="hbm2ddl.auto">create</property>
 
         <!-- Names the annotated entity class -->
-        <mapping class="br.usp.ime.ccsl.roleAssignment.RoleAssignment"/>
+        <mapping class="br.usp.ime.ccsl.choreos.middleware.roleassignment.RoleAssignment"/>
 
     </session-factory>
 
