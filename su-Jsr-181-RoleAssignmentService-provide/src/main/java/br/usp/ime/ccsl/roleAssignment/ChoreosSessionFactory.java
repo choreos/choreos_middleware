@@ -6,14 +6,14 @@ import org.hibernate.cfg.AnnotationConfiguration;
 
 public class ChoreosSessionFactory {
 
-    private static SessionFactory sessionFactory;
+	private static SessionFactory sessionFactory;
 
-    static {
-	sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
-    }
+	static {
+		sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
+	}
 
-    public static Session getSession() {
-	return sessionFactory.openSession();
-    }
+	public static Session getSession() {
+		return sessionFactory.openSession();
+	}
 
 }
