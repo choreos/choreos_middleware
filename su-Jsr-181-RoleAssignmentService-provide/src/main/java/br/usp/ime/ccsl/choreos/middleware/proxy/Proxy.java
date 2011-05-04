@@ -14,7 +14,10 @@ public class Proxy {
 
     private List<WSClient> wsList;
 
-    public Proxy(Logger logger) {
+    private final String roleName;
+
+    public Proxy(String roleName, Logger logger) {
+	this.roleName = roleName;
 	this.logger = logger;
 
 	wsList = new ArrayList<WSClient>();
@@ -29,33 +32,30 @@ public class Proxy {
     }
 
     public String request(String webMethod, String... params) throws InvalidOperationName, NoWebServiceException {
-
-	StringBuilder sb = new StringBuilder();
-	sb.append("Request received: " + webMethod + "; ");
-
-	if (params.length > 0) {
-	    sb.append("parameters: " + StringUtils.join(params, ", "));
-	    sb.append(".");
-	} else {
-	    sb.append("no parameters.");
-	}
-	logger.info(sb.toString());
-
 	String response = null;
-	boolean success = false;
 	
+	WSClient receiverClient = null;
 	for (WSClient client : wsList) {
 	    try {
 		response = client.request(webMethod, params);
-		success = true;
+		receiverClient = client;
 		break;
 	    } catch (FrameworkException e) {
-		//we are dealing with this by trying other services
+		// we are dealing with this by trying other services
 	    }
 	}
-	if (!success){
+	if (receiverClient == null) {
 	    throw new NoWebServiceException();
 	}
+
+	StringBuilder sb = new StringBuilder();
+	sb.append(roleName).append(", ").append(receiverClient.getWsdl()).append(", ").append(webMethod).append(", (");
+	if (params.length > 0) {
+	    sb.append(StringUtils.join(params, "; "));
+	}
+	sb.append(")");
+	logger.info(sb.toString());
+
 	return response;
     }
 }
