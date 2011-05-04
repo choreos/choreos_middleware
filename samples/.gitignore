@@ -1,0 +1,11 @@
+.metadata/
+**/.classpath
+**/.settings/
+**/target/
+.PEtALS_su_cache/
+**/bin
+**/*.zip
+*.swp
+*~
+**/.project
+*.log
