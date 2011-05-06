@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project>
+
+ <poweredBy>
+    <logo name="CHOReOS Middleware" href="http://ccsl.ime.usp.br/"
+          img="http://www.choreos.eu/bin/download/ColorThemes/Choreos%20New%20Theme/logo.png"/>
+  </poweredBy>
+
+  <body>
+    <links>
+      <item name="Maven" href="http://maven.apache.org/"/>
+      <item name="CCSL" href="http://ccsl.ime.usp.br/"/>
+      <item name="CHOReOS" href="http://www.choreos.eu/"/>
+    </links>
+
+    ${reports}
+
+  </body>
+</project>
+

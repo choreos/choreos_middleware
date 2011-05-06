@@ -5,9 +5,16 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+	  <groupId>br.usp.ime.ccsl.choreos</groupId>
+  	<artifactId>middleware</artifactId>
+  	<version>0.2-SNAPSHOT</version>
+	</parent>
+
+
 	<groupId>br.usp.ime.ccsl</groupId>
 	<artifactId>choreos-web</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>0.2-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<name></name>
