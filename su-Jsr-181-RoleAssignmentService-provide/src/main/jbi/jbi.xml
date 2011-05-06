@@ -4,7 +4,7 @@
 	Originally created for the version 1.1 of the component.
  -->
 <jbi:jbi version="1.0" 
-	xmlns:generatedNs="http://ccsl.ime.usp.br"
+	xmlns:generatedNs="http://roleassignment.middleware.choreos.ccsl.ime.usp.br"
 	xmlns:jbi="http://java.sun.com/xml/ns/jbi"
 	xmlns:jsr181="http://petals.ow2.org/components/jsr181/version-1"
 	xmlns:petalsCDK="http://petals.ow2.org/components/extensions/version-5"
@@ -15,9 +15,9 @@
 	
 		<!-- Import a Service into Petals => provides a Service. -->
 		<jbi:provides 		
-			interface-name="generatedNs:RoleAssignment"
-			service-name="generatedNs:RoleAssignment"
-			endpoint-name="RoleAssignmentPort">
+			interface-name="generatedNs:RoleAssignmentService"
+			service-name="generatedNs:RoleAssignmentService"
+			endpoint-name="RoleAssignmentServicePort">
 	
 			<!-- CDK specific elements -->
 			<petalsCDK:timeout>30000</petalsCDK:timeout>

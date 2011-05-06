@@ -1,0 +1,309 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>br.usp.ime.ccsl.choreos</groupId>
+  <artifactId>middleware</artifactId>
+  <packaging>pom</packaging>
+  <version>0.2-SNAPSHOT</version>
+  <name>CHOReOS Middleware</name>
+
+  <modules>
+    <module>choreos-web</module>
+    <module>su-Jsr-181-RoleAssignmentService-provide</module>
+  </modules>
+  <scm>
+    <connection>scm:git@github.com:choreos/choreos_middleware.git</connection>
+    <developerConnection>scm:git@github.com:choreos/choreos_middleware.git</developerConnection>
+    <url>https://github.com/choreos/choreos_middleware</url>
+  </scm>
+  <ciManagement>
+    <system>Hudson</system>
+    <notifiers>
+      <notifier>
+        <configuration>
+          <address>baile-xp-middleware@googlegroups.com</address>
+        </configuration>
+      </notifier>
+    </notifiers>
+  </ciManagement>
+  <issueManagement>
+    <system>Xplanner</system>
+    <url>http://eclipse.ime.usp.br/xplanner/do/view/project?oid=7214</url>
+  </issueManagement>
+  <repositories>
+    <!-- <repository>
+      <id>maven-restlet</id>
+      <name>Public online Restlet repository</name>
+      <url>http://maven.restlet.org</url>
+    </repository> -->
+    <repository>
+      <id>jboss</id>
+      <name>JBoss repository</name>
+      <url>http://repository.jboss.org/maven2</url>
+      <releases>
+        <enabled>false</enabled>
+        <updatePolicy>always</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+    </repository>
+    <repository>
+      <id>eviwarePluginRepository</id>
+      <name>eviWare</name>
+      <url>http://www.eviware.com/repository/maven2/</url>
+    </repository>
+    <repository>
+      <id>petals</id>
+      <url>http://maven.ow2.org/maven2</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>Codehaus repository</id>
+      <url>http://repository.codehaus.org/</url>
+    </pluginRepository>
+
+    <pluginRepository>
+      <id>apache.snapshots</id>
+      <name>Maven Central Plugins Development Repository</name>
+      <url>http://cvs.apache.org/maven-snapshot-repository</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </pluginRepository>
+    <!-- <pluginRepository>
+    <id>telecom</id>
+    <name>telecom</name>
+    <releases>
+    <checksumPolicy>ignore</checksumPolicy>
+    </releases>
+    <url>http://voipteste01.locawebtelecom.com.br:7070/archiva/repository/telecom/</url>
+    </pluginRepository> -->
+  </pluginRepositories>
+  <developers>
+    <developer>
+      <id>daniel.cukier</id>
+      <name>Daniel cukier</name>
+      <email>danicuki@ime.usp.br</email>
+      <organization>IME-USP</organization>
+    </developer>
+    <developer>
+      <id>thiago.colucci</id>
+      <name>Thiago Colucci</name>
+      <email>colucci@ime.usp.br</email>
+      <organization>IME-USP</organization>
+    </developer>
+  </developers>
+
+  <build>
+    <plugins>
+      <plugin>
+				<groupId>org.ow2.petals</groupId>
+				<artifactId>maven-petals-plugin</artifactId>
+				<version>2.1.2</version>
+				<extensions>true</extensions>
+				<configuration>
+					<updateJBIXml>true</updateJBIXml>
+				</configuration>
+			</plugin>
+			
+      <!-- <plugin>
+      <artifactId>maven-antrun-plugin</artifactId>
+      <dependencies>
+      <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant-jsch</artifactId>
+      <version>1.7.1</version>
+      </dependency>
+      </dependencies>
+      </plugin> -->
+      <!-- <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-eclipse-plugin</artifactId>
+      <version>2.5.1</version>
+      <executions>
+      <execution>
+      <phase>install</phase>
+      <goals>
+      <goal>eclipse</goal>
+      </goals>
+      </execution>
+      </executions>
+      <configuration>
+      <workspace>~/workspace/</workspace>
+      <downloadSources>true</downloadSources>
+      <wtpContextName>PabxManagement</wtpContextName>
+      <wtpversion>2.0</wtpversion>
+      </configuration>
+      </plugin> -->
+
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.0-beta-3</version>
+        <configuration>
+          <reportPlugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-project-info-reports-plugin</artifactId>
+              <version>2.2</version>
+              <configuration>
+                <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+                <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+              </configuration>
+              <reports>
+                <report>index</report>
+                <report>scm</report>
+                <report>plugin-management</report>
+                <report>mailing-list</report>
+                <report>issue-tracking</report>
+                <report>help</report>
+                <report>plugins</report>
+                <report>dependency-convergence</report>
+                <report>summary</report>
+                <report>dependency-management</report>
+                <report>license</report>
+                <report>modules</report>
+                <report>project-team</report>
+                <report>cim</report>
+              </reports>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-javadoc-plugin</artifactId>
+              <version>2.7</version>
+            </plugin>
+            
+            <!-- <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>dashboard-maven-plugin</artifactId>
+              <dependencies>
+                <dependency>
+                  <groupId>mysql</groupId>
+                  <artifactId>mysql-connector-java</artifactId>
+                  <version>5.0.5</version>
+                </dependency>
+              </dependencies>
+              <configuration>
+                <dialect>org.hibernate.dialect.MySQLDialect</dialect>
+                <driverClass>com.mysql.jdbc.Driver</driverClass>
+                <username>root</username>
+                <password></password>
+                <connectionUrl>
+                  jdbc:mysql://localhost:3306/choreos
+                </connectionUrl>
+              </configuration>
+            </plugin> -->
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>findbugs-maven-plugin</artifactId>
+              <configuration>
+                <xmlOutput>true</xmlOutput>
+                <effort>Max</effort>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-checkstyle-plugin</artifactId>
+              <configuration>
+                <configLocation>checkstyle.xml</configLocation>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>javancss-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>cobertura-maven-plugin</artifactId>
+              <version>2.4</version>
+              <configuration>
+                <formats>
+                  <format>xml</format>
+                  <format>html</format>
+                </formats>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-project-info-reports-plugin</artifactId>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-pmd-plugin</artifactId>
+              <configuration>
+                <minimumTokens>30</minimumTokens>
+                <targetJdk>1.6</targetJdk>
+                <excludes>
+                  <exclude>**/*Test.java</exclude>
+                </excludes>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-surefire-report-plugin</artifactId>
+              <version>2.4.1</version>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-changes-plugin</artifactId>
+              <configuration>
+                <issueLinkTemplate>%URL%/userstory?oid=%ISSUE%</issueLinkTemplate>
+                <introduction>
+                  Bem vindo ao CHOReOS Middleware
+                </introduction>
+                <mailSender>
+                  <name>CHOReOS Middleware</name>
+                  <email>baile-xp-middleware@googlegroups.com</email>
+                </mailSender>
+                <templateDirectory>/</templateDirectory>
+                <developmentTeam>CHOReOS USP TEam</developmentTeam>
+                <finalName>${project.build.finalName}</finalName>
+                <urlDownload>${project.url}</urlDownload>
+                <smtpHost>?</smtpHost>
+                <username>?</username>
+                <password>?</password>
+                <smtpPort implementation="java.lang.Integer">25</smtpPort>
+                <toAddresses>
+                  <toAddress implementation="java.lang.String">
+                    baile-xp-middleware@googlegroups.com
+                  </toAddress>
+                </toAddresses>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>taglist-maven-plugin</artifactId>
+            </plugin>
+          </reportPlugins>
+        </configuration>
+      </plugin>
+
+
+    </plugins>
+  </build>
+  <properties>
+    <eclipse.dependency>true</eclipse.dependency>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <!-- <distributionManagement>
+  <site>
+  <id>PabxManagement</id>
+  <url>
+  scp://deploy:userdeploy@voipteste01.locawebtelecom.com.br/opt/jakarta-tomcat/webapps/ROOT/doc/pabx
+  </url>
+  </site>
+  </distributionManagement> -->
+</project>
