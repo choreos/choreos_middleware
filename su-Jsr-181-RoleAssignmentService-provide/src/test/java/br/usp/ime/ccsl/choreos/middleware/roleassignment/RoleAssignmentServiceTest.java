@@ -32,6 +32,16 @@ public class RoleAssignmentServiceTest {
 		List<String> uris = roleAssignmentService.get(roleName);
 		assertEquals(uri, uris.get(0));
 	}
+	
+	@Test
+	public void testAssignStr() {
+		final String uri = "uri";
+		final String roleName = "rolename";
+
+		roleAssignmentService.assignRole(roleName, uri);
+		List<String> uris = roleAssignmentService.get(roleName);
+		assertEquals(uri, uris.get(0));
+	}
 
 	@AfterClass
 	public static void shutDownWebService() {

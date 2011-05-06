@@ -9,6 +9,8 @@ public class RoleAssignmentIntegrationTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
+	
+	
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {

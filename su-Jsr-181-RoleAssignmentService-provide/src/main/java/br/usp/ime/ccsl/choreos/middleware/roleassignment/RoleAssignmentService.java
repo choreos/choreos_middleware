@@ -7,25 +7,33 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.ws.Endpoint;
 
-@WebService(serviceName = "RoleAssignmentService", targetNamespace = "http://ccsl.ime.usp.br", portName = "RoleAssignmentServicePort")
+@WebService(serviceName = "RoleAssignmentService", targetNamespace = "http://roleassignment.middleware.choreos.ccsl.ime.usp.br", portName = "RoleAssignmentServicePort")
 public class RoleAssignmentService {
 
-    @WebMethod(operationName = "assignRole")
-    public void assignRole(@WebParam(name = "roleAssignment") RoleAssignment roleAssignment) {
-	RoleManager roleManager = RoleManager.getInstance();
-	roleManager.assignRole(roleAssignment);
-    }
+//	@WebMethod(operationName = "assignRole")
+	public void assignRole(/*@WebParam(name = "roleAssignment")*/ RoleAssignment roleAssignment) {
+		RoleManager roleManager = RoleManager.getInstance();
+		roleManager.assignRole(roleAssignment);
+	}
+	
+	@WebMethod(operationName = "assignRole")
+	public void assignRole(@WebParam(name = "role") String role, @WebParam(name = "role") String uri) {
+		RoleAssignment roleAssignment = new RoleAssignment();
+		roleAssignment.setRole(role);
+		roleAssignment.setUri(uri);
+		assignRole(roleAssignment);
+	}
 
-    @WebMethod(operationName = "get")
-    public List<String> get(@WebParam(name = "roleName") String roleName) {
-	RoleManager roleManager = RoleManager.getInstance();
-	return roleManager.getUriList(roleName);
-    }
+	@WebMethod(operationName = "get")
+	public List<String> get(@WebParam(name = "roleName") String roleName) {
+		RoleManager roleManager = RoleManager.getInstance();
+		return roleManager.getUriList(roleName);
+	}
 
-    public static void main(String[] args) {
-	// create and publish an endpoint
-	RoleAssignmentService calculator = new RoleAssignmentService();
-	Endpoint.publish("http://localhost:18080/roleAssignmentService", calculator);
-    }
+	public static void main(String[] args) {
+		// create and publish an endpoint
+		RoleAssignmentService calculator = new RoleAssignmentService();
+		Endpoint.publish("http://localhost:18080/roleAssignmentService", calculator);
+	}
 
 }
