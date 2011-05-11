@@ -104,6 +104,17 @@
       <organization>IME-USP</organization>
     </developer>
   </developers>
+  
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.0</version>
+      <type>jar</type>
+      <scope>test</scope>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
@@ -185,29 +196,10 @@
               <version>2.7</version>
             </plugin>
             
-            <!-- <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>dashboard-maven-plugin</artifactId>
-              <dependencies>
-                <dependency>
-                  <groupId>mysql</groupId>
-                  <artifactId>mysql-connector-java</artifactId>
-                  <version>5.0.5</version>
-                </dependency>
-              </dependencies>
-              <configuration>
-                <dialect>org.hibernate.dialect.MySQLDialect</dialect>
-                <driverClass>com.mysql.jdbc.Driver</driverClass>
-                <username>root</username>
-                <password></password>
-                <connectionUrl>
-                  jdbc:mysql://localhost:3306/choreos
-                </connectionUrl>
-              </configuration>
-            </plugin> -->
             <plugin>
               <groupId>org.codehaus.mojo</groupId>
               <artifactId>findbugs-maven-plugin</artifactId>
+              <version>2.3.2</version>
               <configuration>
                 <xmlOutput>true</xmlOutput>
                 <effort>Max</effort>
@@ -216,6 +208,7 @@
             <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-checkstyle-plugin</artifactId>
+              <version>2.6</version>
               <configuration>
                 <configLocation>checkstyle.xml</configLocation>
               </configuration>
@@ -223,6 +216,7 @@
             <plugin>
               <groupId>org.codehaus.mojo</groupId>
               <artifactId>javancss-maven-plugin</artifactId>
+              <version>2.0</version>
             </plugin>
             <plugin>
               <groupId>org.codehaus.mojo</groupId>
@@ -286,6 +280,21 @@
               <groupId>org.codehaus.mojo</groupId>
               <artifactId>taglist-maven-plugin</artifactId>
             </plugin>
+            
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>dashboard-maven-plugin</artifactId>
+              <configuration>
+                <dialect>org.hibernate.dialect.MySQLDialect</dialect>
+                <driverClass>com.mysql.jdbc.Driver</driverClass>
+                <username>root</username>
+                <password></password>
+                <connectionUrl>
+                  jdbc:mysql://localhost:3306/choreos
+                </connectionUrl>
+              </configuration>
+            </plugin>
+            
           </reportPlugins>
         </configuration>
       </plugin>
