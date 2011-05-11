@@ -1,5 +1,9 @@
 package br.usp.choreos.examples.auctionhouse;
 
-public class AuctionHouseWSTest {
+import org.junit.Test;
 
+public class AuctionHouseWSTest {
+    @Test
+    public void shouldPublishTheRightWS() throws Exception {
+    }
 }

@@ -67,17 +67,23 @@ public class AuctionHouseTest {
 	    ah.publishAuction(pi);
 	    fail("Expected to launch an Exception");
 	} catch (AuctionHouseException ae) {
-	    assertEquals("invalid initial bid", ae.getMessage());
+	    assertEquals("invalid starting price", ae.getMessage());
 	}
 
     }
 
-    @Test(expected = AuctionHouseException.class)
+    @Test
     public void publishedAuctionShouldHaveDescription() throws Exception {
 	ProductInfo pi = new ProductInfo();
 	pi.setHeadline("teste");
 	pi.setStartingPrice(BigDecimal.valueOf(5));
-	ah.publishAuction(pi);
+
+	try {
+	    ah.publishAuction(pi);
+	    fail("Expected to launch an Exception");
+	} catch (AuctionHouseException ae) {
+	    assertEquals("invalid description", ae.getMessage());
+	}
     }
 
 }

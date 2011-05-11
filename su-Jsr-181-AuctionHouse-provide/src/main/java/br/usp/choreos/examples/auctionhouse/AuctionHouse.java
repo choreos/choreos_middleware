@@ -11,7 +11,7 @@ public class AuctionHouse {
 	if (pi.getDescription() == null || pi.getDescription().equals(""))
 	    throw new AuctionHouseException("invalid description");
 	if (pi.getStartingPrice() == null)
-	    throw new AuctionHouseException("invalid initial bid");
+	    throw new AuctionHouseException("invalid starting price");
 
 	return nextId++;
     }

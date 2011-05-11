@@ -18,25 +18,15 @@ import javax.jws.WebService;
 @WebService(serviceName = "AuctionHouseWS", targetNamespace = "http://auctionhouse.examples.choreos.usp.br", portName = "AuctionHouseWSPort")
 public class AuctionHouseWS {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see JaxWSInterface#HelloWorld()
-     */
     @WebMethod(operationName = "helloWorld")
     @WebResult(name = "returnMessage")
     public String helloWorld() {
 	return "Hello World!";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see toto.JaxWSInterface #listenToTheWorld(java.lang.String)
-     */
     @WebMethod(operationName = "listenToTheWorld")
     @Oneway
     public void listenToTheWorld(@WebParam(name = "message") String message) {
-	// We here illustrate a method that do not return anything.
+	// TODO: We here illustrate a method that do not return anything.
     }
 }
