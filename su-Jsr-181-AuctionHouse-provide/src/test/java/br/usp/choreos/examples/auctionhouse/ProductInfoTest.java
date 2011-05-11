@@ -2,6 +2,8 @@ package br.usp.choreos.examples.auctionhouse;
 
 import static org.junit.Assert.assertEquals;
 
+import java.math.BigDecimal;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,8 +35,8 @@ public class ProductInfoTest {
     public void productInfoShouldHaveInitialBid() {
 	ProductInfo pi = new ProductInfo();
 
-	pi.setInitialBid(10.5);
+	pi.setStartingPrice(BigDecimal.valueOf(10.5));
 
-	assertEquals(10.5, pi.getInitialBid());
+	assertEquals(BigDecimal.valueOf(10.5), pi.getStartingPrice());
     }
 }

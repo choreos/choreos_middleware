@@ -3,6 +3,8 @@ package br.usp.choreos.examples.auctionhouse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.math.BigDecimal;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,11 +18,11 @@ public class AuctionHouseTest {
     }
 
     @Test
-    public void firstAuctionPublishedIDShouldBe0() throws AuctionHouseException {
+    public void firstAuctionPublishedIDShouldBe0() throws Exception {
 	ProductInfo pi = new ProductInfo();
 	pi.setHeadline("teste");
 	pi.setDescription("teste");
-	pi.setInitialBid(5.5);
+	pi.setStartingPrice(BigDecimal.valueOf(5));
 
 	int id = ah.publishAuction(pi);
 
@@ -28,11 +30,11 @@ public class AuctionHouseTest {
     }
 
     @Test
-    public void secondAuctionPublishedIDShouldBe1() throws AuctionHouseException {
+    public void secondAuctionPublishedIDShouldBe1() throws Exception {
 	ProductInfo pi = new ProductInfo();
 	pi.setHeadline("teste");
 	pi.setDescription("teste");
-	pi.setInitialBid(5.5);
+	pi.setStartingPrice(BigDecimal.valueOf(5));
 
 	ah.publishAuction(pi);
 	int id = ah.publishAuction(pi);
@@ -41,35 +43,41 @@ public class AuctionHouseTest {
     }
 
     @Test
-    public void publishedAuctionShouldHaveHeadline() {
+    public void publishedAuctionProductInfoShouldHaveHeadline() throws Exception {
 	ProductInfo pi = new ProductInfo();
+	pi.setDescription("teste");
+	pi.setStartingPrice(BigDecimal.valueOf(5));
 
 	try {
 	    ah.publishAuction(pi);
-	    pi.setDescription("teste");
-	    pi.setInitialBid(5.5);
+	} catch (AuctionHouseException ae) {
+	    assertEquals("invalid headline", ae.getMessage());
+	}
+    }
 
-	    fail("published Auction should fail because it has not a Headline");
-	} catch (AuctionHouseException e) {
+    @Test
+    public void publishedAuctionProductInfoShouldHaveValidInitialBid() throws Exception {
+	ProductInfo pi = new ProductInfo();
+	pi.setHeadline("teste");
+	pi.setDescription("teste");
 
+	pi.setStartingPrice(null);
+
+	try {
+	    ah.publishAuction(pi);
+	    fail("Expected to launch an Exception");
+	} catch (AuctionHouseException ae) {
+	    assertEquals("invalid initial bid", ae.getMessage());
 	}
 
     }
 
-    @Test
-    public void publishedAuctionShouldHaveDescription() {
+    @Test(expected = AuctionHouseException.class)
+    public void publishedAuctionShouldHaveDescription() throws Exception {
 	ProductInfo pi = new ProductInfo();
-
-	try {
-	    ah.publishAuction(pi);
-	    pi.setHeadline("teste");
-	    pi.setInitialBid(5.5);
-
-	    fail("published Auction should fail because it has not a Description");
-	} catch (AuctionHouseException e) {
-
-	}
-
+	pi.setHeadline("teste");
+	pi.setStartingPrice(BigDecimal.valueOf(5));
+	ah.publishAuction(pi);
     }
 
 }

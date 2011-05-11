@@ -10,6 +10,8 @@ public class AuctionHouse {
 	    throw new AuctionHouseException("invalid headline");
 	if (pi.getDescription() == null || pi.getDescription().equals(""))
 	    throw new AuctionHouseException("invalid description");
+	if (pi.getStartingPrice() == null)
+	    throw new AuctionHouseException("invalid initial bid");
 
 	return nextId++;
     }

@@ -1,10 +1,12 @@
 package br.usp.choreos.examples.auctionhouse;
 
+import java.math.BigDecimal;
+
 public class ProductInfo {
 
     private String headline;
     private String description;
-    private double initialBid;
+    private BigDecimal startingPrice;
 
     public void setHeadline(String headline) {
 	this.headline = headline;
@@ -22,12 +24,12 @@ public class ProductInfo {
 	return description;
     }
 
-    public void setInitialBid(double initialBid) {
-	this.initialBid = initialBid;
+    public void setStartingPrice(BigDecimal startingPrice) {
+	this.startingPrice = startingPrice;
     }
 
-    public Object getInitialBid() {
-	return initialBid;
+    public BigDecimal getStartingPrice() {
+	return startingPrice;
     }
 
 }
