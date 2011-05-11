@@ -1,33 +1,33 @@
 package br.usp.choreos.examples.auctionhouse;
 
 public class ProductInfo {
-	
-	private String headline;
-	private String description;
-	private double initialBid;
 
-	public void setHeadline(String headline) {
-		this.headline = headline;
-	}
+    private String headline;
+    private String description;
+    private double initialBid;
 
-	public String getHeadline() {
-		return headline;
-	}
+    public void setHeadline(String headline) {
+	this.headline = headline;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getHeadline() {
+	return headline;
+    }
 
-	public Object getDescription() {
-		return description;
-	}
+    public void setDescription(String description) {
+	this.description = description;
+    }
 
-	public void setInitialBid(double initialBid) {
-		this.initialBid = initialBid;
-	}
+    public Object getDescription() {
+	return description;
+    }
 
-	public Object getInitialBid() {
-		return initialBid;
-	}
+    public void setInitialBid(double initialBid) {
+	this.initialBid = initialBid;
+    }
+
+    public Object getInitialBid() {
+	return initialBid;
+    }
 
 }
