@@ -4,13 +4,13 @@ public class AuctionHouse {
 
     private int nextId = 0;
 
-    public int publishAuction(ProductInfo pi) throws AuctionHouseException {
+    public int publishAuction(ProductInfo productInfo) throws AuctionHouseException {
 
-	if (pi.getHeadline() == null || pi.getHeadline().equals(""))
+	if (productInfo.getHeadline() == null || productInfo.getHeadline().equals(""))
 	    throw new AuctionHouseException("invalid headline");
-	if (pi.getDescription() == null || pi.getDescription().equals(""))
+	if (productInfo.getDescription() == null || productInfo.getDescription().equals(""))
 	    throw new AuctionHouseException("invalid description");
-	if (pi.getStartingPrice() == null)
+	if (productInfo.getStartingPrice() == null)
 	    throw new AuctionHouseException("invalid starting price");
 
 	return nextId++;
