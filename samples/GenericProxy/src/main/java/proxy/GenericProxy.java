@@ -6,11 +6,8 @@
  */
 package proxy;
 
-import javax.xml.messaging.Endpoint;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.Call;
-import javax.xml.rpc.ParameterMode;
-import javax.xml.rpc.Service;
 import javax.xml.rpc.ServiceFactory;
 
 import org.apache.log4j.Logger;

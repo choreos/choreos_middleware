@@ -1,4 +1,4 @@
-package test;
+package proxy;
 
 import org.junit.After;
 import org.junit.AfterClass;
