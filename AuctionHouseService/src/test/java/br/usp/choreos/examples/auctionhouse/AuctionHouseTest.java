@@ -104,5 +104,22 @@ public class AuctionHouseTest {
 	    assertEquals("offer is less than or equal to current price", e.getMessage());
 	}
     }
-    
+
+    @Test
+    public void offerShouldBeStored() throws Exception {
+	int auctionId = ah.publishAuction(pi, BigDecimal.valueOf(1));
+	ah.placeOffer(auctionId, BigDecimal.valueOf(2));
+	assertEquals(BigDecimal.valueOf(2), ah.getCurrentPrice(auctionId));
+    }
+
+    @Test
+    public void auctionMustExistToPlaceAnOffer() throws Exception {
+	int auctionId = ah.publishAuction(pi, BigDecimal.valueOf(1));
+	try {
+	    ah.placeOffer(auctionId + 1, BigDecimal.valueOf(2));
+	} catch (AuctionHouseException e) {
+	    assertEquals("invalid auction id", e.getMessage());
+	}
+    }
+
 }

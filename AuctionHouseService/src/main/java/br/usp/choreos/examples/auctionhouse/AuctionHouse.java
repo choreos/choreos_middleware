@@ -27,7 +27,7 @@ public class AuctionHouse {
 
     public void placeOffer(int auctionId, BigDecimal offer) throws AuctionHouseException {
 
-	Auction auction = auctions.get(auctionId);
+	Auction auction = getAuction(auctionId);
 
 	if (auction.getCurrentPrice() == null) {
 	    // No offers have been placed yet
@@ -45,30 +45,44 @@ public class AuctionHouse {
 	}
     }
 
-    private class Auction {
-	private BigDecimal startingPrice;
-	private BigDecimal currentPrice;
-	private ProductInfo productInfo;
+    public BigDecimal getCurrentPrice(int auctionId) throws AuctionHouseException {
+	Auction auction = getAuction(auctionId);
+	return auction.getCurrentPrice();
+    }
+    
+    private Auction getAuction(int auctionId) throws AuctionHouseException {
+	Auction auction = auctions.get(auctionId);
+	if (auction == null)
+	    throw new AuctionHouseException("invalid auction id");
+	return auction;
 
-	public Auction(ProductInfo productInfo, BigDecimal startingPrice) {
-	    this.startingPrice = startingPrice;
-	    this.productInfo = productInfo;
-	}
+    }
 
-	public BigDecimal getStartingPrice() {
-	    return startingPrice;
-	}
+}
 
-	public ProductInfo getProductInfo() {
-	    return productInfo;
-	}
+class Auction {
+    private BigDecimal startingPrice;
+    private BigDecimal currentPrice;
+    private ProductInfo productInfo;
 
-	public BigDecimal getCurrentPrice() {
-	    return currentPrice;
-	}
+    public Auction(ProductInfo productInfo, BigDecimal startingPrice) {
+	this.startingPrice = startingPrice;
+	this.productInfo = productInfo;
+    }
 
-	public void setCurrentPrice(BigDecimal currentPrice) {
-	    this.currentPrice = currentPrice;
-	}
+    public BigDecimal getStartingPrice() {
+	return startingPrice;
+    }
+
+    public ProductInfo getProductInfo() {
+	return productInfo;
+    }
+
+    public BigDecimal getCurrentPrice() {
+	return currentPrice;
+    }
+
+    public void setCurrentPrice(BigDecimal currentPrice) {
+	this.currentPrice = currentPrice;
     }
 }
