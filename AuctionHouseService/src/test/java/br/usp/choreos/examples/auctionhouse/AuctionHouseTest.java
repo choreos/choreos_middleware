@@ -92,4 +92,35 @@ public class AuctionHouseTest {
 	    assertEquals("invalid description", ae.getMessage());
 	}
     }
+
+    @Test
+    public void firstOfferShouldNotBeLessThanStartingPrice() throws Exception {
+	ProductInfo productInfo = new ProductInfo();
+	productInfo.setHeadline("headline");
+	productInfo.setDescription("description");
+
+	try {
+	    int auctionId = ah.publishAuction(productInfo, BigDecimal.valueOf(2));
+	    ah.placeOffer(auctionId, BigDecimal.valueOf(1));
+	    fail("Expected an Exception");
+	} catch (AuctionHouseException e) {
+	    assertEquals("offer is less than starting price", e.getMessage());
+	}
+    }
+
+    @Test
+    public void offerShouldBeGreaterThanCurrentPrice() throws Exception {
+	ProductInfo productInfo = new ProductInfo();
+	productInfo.setHeadline("headline");
+	productInfo.setDescription("description");
+
+	try {
+	    int auctionId = ah.publishAuction(productInfo, BigDecimal.valueOf(1));
+	    ah.placeOffer(auctionId, BigDecimal.valueOf(1));
+	    ah.placeOffer(auctionId, BigDecimal.valueOf(1));
+	    fail("Expected an Exception");
+	} catch (AuctionHouseException e) {
+	    assertEquals("offer is less than or equal to current price", e.getMessage());
+	}
+    }
 }
