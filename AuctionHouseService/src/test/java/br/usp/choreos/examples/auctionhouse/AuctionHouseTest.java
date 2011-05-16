@@ -11,18 +11,19 @@ import org.junit.Test;
 public class AuctionHouseTest {
 
     private AuctionHouse ah;
+    private ProductInfo pi;
 
     @Before
     public void setUp() throws Exception {
 	ah = new AuctionHouse();
+
+	pi = new ProductInfo();
+	pi.setHeadline("teste");
+	pi.setDescription("teste");
     }
 
     @Test
     public void firstAuctionPublishedIDShouldBe0() throws Exception {
-	ProductInfo pi = new ProductInfo();
-	pi.setHeadline("teste");
-	pi.setDescription("teste");
-
 	int id = ah.publishAuction(pi, BigDecimal.valueOf(0));
 
 	assertEquals(0, id);
@@ -30,10 +31,6 @@ public class AuctionHouseTest {
 
     @Test
     public void secondAuctionPublishedIDShouldBe1() throws Exception {
-	ProductInfo pi = new ProductInfo();
-	pi.setHeadline("teste");
-	pi.setDescription("teste");
-
 	ah.publishAuction(pi, BigDecimal.valueOf(0));
 	int id = ah.publishAuction(pi, BigDecimal.valueOf(0));
 
@@ -54,10 +51,6 @@ public class AuctionHouseTest {
 
     @Test
     public void startingPriceShouldNotBeNull() throws Exception {
-	ProductInfo pi = new ProductInfo();
-	pi.setHeadline("teste");
-	pi.setDescription("teste");
-
 	try {
 	    ah.publishAuction(pi, null);
 	    fail("Expected an Exception");
@@ -68,10 +61,6 @@ public class AuctionHouseTest {
 
     @Test
     public void startingPriceShouldNotBeNegative() throws Exception {
-	ProductInfo pi = new ProductInfo();
-	pi.setHeadline("headline");
-	pi.setDescription("description");
-
 	try {
 	    ah.publishAuction(pi, BigDecimal.valueOf(-1));
 	    fail("Expected an Exception");
@@ -95,12 +84,8 @@ public class AuctionHouseTest {
 
     @Test
     public void firstOfferShouldNotBeLessThanStartingPrice() throws Exception {
-	ProductInfo productInfo = new ProductInfo();
-	productInfo.setHeadline("headline");
-	productInfo.setDescription("description");
-
 	try {
-	    int auctionId = ah.publishAuction(productInfo, BigDecimal.valueOf(2));
+	    int auctionId = ah.publishAuction(pi, BigDecimal.valueOf(2));
 	    ah.placeOffer(auctionId, BigDecimal.valueOf(1));
 	    fail("Expected an Exception");
 	} catch (AuctionHouseException e) {
@@ -110,12 +95,8 @@ public class AuctionHouseTest {
 
     @Test
     public void offerShouldBeGreaterThanCurrentPrice() throws Exception {
-	ProductInfo productInfo = new ProductInfo();
-	productInfo.setHeadline("headline");
-	productInfo.setDescription("description");
-
 	try {
-	    int auctionId = ah.publishAuction(productInfo, BigDecimal.valueOf(1));
+	    int auctionId = ah.publishAuction(pi, BigDecimal.valueOf(1));
 	    ah.placeOffer(auctionId, BigDecimal.valueOf(1));
 	    ah.placeOffer(auctionId, BigDecimal.valueOf(1));
 	    fail("Expected an Exception");
@@ -123,4 +104,5 @@ public class AuctionHouseTest {
 	    assertEquals("offer is less than or equal to current price", e.getMessage());
 	}
     }
+    
 }
