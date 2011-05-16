@@ -23,7 +23,7 @@ public class AuctionHouseWSTest {
     }
     
     @Test
-    public void firstRequestShouldReturnTheFirstId() throws Exception {
+    public void firstPublishShouldReturnTheFirstId() throws Exception {
 	ResponseItem responseItem = wsClient.request("publishAuction", "test_headline", "test_description", "1");
 	int auctionId = responseItem.getChild("auctionId").getContentAsInt();
 	assertEquals(0, auctionId);

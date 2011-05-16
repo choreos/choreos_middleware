@@ -19,14 +19,12 @@ public class AuctionHouseWS {
 	ProductInfo productInfo = new ProductInfo();
 	productInfo.setHeadline(headline);
 	productInfo.setDescription(description);
+	
 	try {
-	    productInfo.setStartingPrice(new BigDecimal(startingPrice));
+	    int auctionId = auctionHouse.publishAuction(productInfo, new BigDecimal(startingPrice));
+	    return auctionId;
 	} catch (NumberFormatException e) {
 	    throw new AuctionHouseException(e);
 	}
-
-	int auctionId = auctionHouse.publishAuction(productInfo);
-
-	return auctionId;
     }
 }
