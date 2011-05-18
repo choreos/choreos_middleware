@@ -6,6 +6,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
+import javax.xml.ws.Endpoint;
 
 @WebService(serviceName = "AuctionHouseWS", targetNamespace = "http://auctionhouse.examples.choreos.usp.br", portName = "AuctionHouseWSPort")
 public class AuctionHouseWS {
@@ -26,5 +27,10 @@ public class AuctionHouseWS {
 	} catch (NumberFormatException e) {
 	    throw new AuctionHouseException(e);
 	}
+    }
+    
+    public static void main(String[] args) {
+	AuctionHouseWS auctionHouseWS = new AuctionHouseWS();
+	Endpoint.publish("http://localhost:8081/auction-house-service", auctionHouseWS);
     }
 }
