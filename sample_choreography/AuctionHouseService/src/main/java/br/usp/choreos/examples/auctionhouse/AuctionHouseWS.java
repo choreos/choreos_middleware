@@ -20,7 +20,7 @@ public class AuctionHouseWS {
 	ProductInfo productInfo = new ProductInfo();
 	productInfo.setHeadline(headline);
 	productInfo.setDescription(description);
-	
+
 	try {
 	    int auctionId = auctionHouse.publishAuction(productInfo, new BigDecimal(startingPrice));
 	    return auctionId;
@@ -28,7 +28,27 @@ public class AuctionHouseWS {
 	    throw new AuctionHouseException(e);
 	}
     }
-    
+
+    @WebMethod(operationName = "placeOffer")
+    public void placeOffer(@WebParam(name = "auctionId") String auctionId, @WebParam(name = "offer") String offer)
+	    throws AuctionHouseException {
+	try {
+	    auctionHouse.placeOffer(Integer.valueOf(auctionId), new BigDecimal(offer));
+	} catch (NumberFormatException e) {
+	    throw new AuctionHouseException(e);
+	}
+    }
+
+    @WebMethod(operationName = "getCurrentPrice")
+    @WebResult(name = "currentPrice")
+    public BigDecimal getCurrentPrice(@WebParam(name = "auctionId") String auctionId) throws AuctionHouseException {
+	try {
+	    return auctionHouse.getCurrentPrice(Integer.valueOf(auctionId));
+	} catch (NumberFormatException e) {
+	    throw new AuctionHouseException(e);
+	}
+    }
+
     public static void main(String[] args) {
 	AuctionHouseWS auctionHouseWS = new AuctionHouseWS();
 	Endpoint.publish("http://localhost:8081/auction-house-service", auctionHouseWS);

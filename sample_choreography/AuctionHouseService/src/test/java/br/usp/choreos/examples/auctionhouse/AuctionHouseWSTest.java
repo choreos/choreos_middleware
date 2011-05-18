@@ -8,7 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.usp.ime.choreos.vv.Item;
+import br.usp.ime.choreos.vv.ResponseItem;
 import br.usp.ime.choreos.vv.WSClient;
 
 public class AuctionHouseWSTest {
@@ -24,15 +24,27 @@ public class AuctionHouseWSTest {
 	wsClient = new WSClient("http://localhost:6166/AuctionHouseService?wsdl");
     }
 
+    @After
+    public void tearDown() {
+	endpoint.stop();
+    }
+
     @Test
     public void firstPublishShouldReturnTheFirstId() throws Exception {
-	Item item = wsClient.request("publishAuction", "test_headline", "test_description", "1");
+	ResponseItem item = wsClient.request("publishAuction", "test_headline", "test_description", "1");
 	int auctionId = item.getChild("auctionId").getContentAsInt();
 	assertEquals(0, auctionId);
     }
-    
-    @After
-    public void tearDown(){
-	endpoint.stop();
+
+    @Test
+    public void getCurrentPriceShouldReturnTheOffer() throws Exception {
+	ResponseItem item = wsClient.request("publishAuction", "test_headline", "test_description", "1");
+	String auctionId = item.getChild("auctionId").getContent();
+
+	wsClient.request("placeOffer", auctionId, "42");
+	ResponseItem priceResponseItem = wsClient.request("getCurrentPrice", auctionId);
+
+	int currentPrice = priceResponseItem.getChild("currentPrice").getContentAsInt();
+	assertEquals(42, currentPrice);
     }
 }
