@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	JBI descriptor for the Petals' "petals-se-jsr181" component (Jsr-181).
+	Originally created for the version 1.1 of the component.
+ -->
+<jbi:jbi version="1.0" 
+	xmlns:generatedNs="http://proxy.middleware.choreos.ccsl.ime.usp.br"
+	xmlns:jbi="http://java.sun.com/xml/ns/jbi"
+	xmlns:jsr181="http://petals.ow2.org/components/jsr181/version-1"
+	xmlns:petalsCDK="http://petals.ow2.org/components/extensions/version-5"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	
+	<!-- Import a Service into Petals or Expose a Petals Service => use a BC. -->
+	<jbi:services binding-component="false">
+	
+		<!-- Import a Service into Petals => provides a Service. -->
+		<jbi:provides 		
+			interface-name="generatedNs:Proxy"
+			service-name="generatedNs:Proxy"
+			endpoint-name="ProxyPort">
+	
+			<!-- CDK specific elements -->
+			<petalsCDK:timeout>30000</petalsCDK:timeout>
+			<petalsCDK:validate-wsdl>true</petalsCDK:validate-wsdl>
+			<petalsCDK:forward-security-subject>false</petalsCDK:forward-security-subject>
+			<petalsCDK:forward-message-properties>false</petalsCDK:forward-message-properties>
+			<petalsCDK:forward-attachments>false</petalsCDK:forward-attachments>
+			<petalsCDK:wsdl xsi:nil="true" />
+		
+			<!-- Component specific elements -->	
+			<jsr181:class>br.usp.ime.ccsl.choreos.middleware.proxy.Proxy</jsr181:class>			
+		</jbi:provides>
+	</jbi:services>
+</jbi:jbi>
