@@ -1,0 +1,13 @@
+First clone choreos_v_v repository:
+	git clone https://github.com/choreos/choreos_v-v.git
+
+Then create the choreosvv jar:
+	cd choreos_v-v/choreosvv
+	mvn install
+	
+If the build is not successful, try this and then try `mvn install` again:
+	cp resources/musicstore.jar ~/.m2/repository/br/usp/ime/choreos/vvws/webservice/1.0-SNAPSHOT/webservice-1.0-SNAPSHOT.jar 
+
+Finally, as usual:
+	mvn eclipse:eclipse
+	mvn install
