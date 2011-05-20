@@ -10,29 +10,29 @@ import org.junit.Test;
 
 public class AuctionHouseTest {
 
-    private AuctionHouse ah;
-    private ProductInfo pi;
+    private AuctionHouse auctionHouse;
+    private ProductInfo productInfo;
 
     @Before
     public void setUp() throws Exception {
-	ah = new AuctionHouse();
+	auctionHouse = new AuctionHouse();
 
-	pi = new ProductInfo();
-	pi.setHeadline("teste");
-	pi.setDescription("teste");
+	productInfo = new ProductInfo();
+	productInfo.setHeadline("teste");
+	productInfo.setDescription("teste");
     }
 
     @Test
     public void firstAuctionPublishedIDShouldBe0() throws Exception {
-	int id = ah.publishAuction(pi, BigDecimal.valueOf(0));
+	int id = auctionHouse.publishAuction(productInfo, BigDecimal.valueOf(0));
 
 	assertEquals(0, id);
     }
 
     @Test
     public void secondAuctionPublishedIDShouldBe1() throws Exception {
-	ah.publishAuction(pi, BigDecimal.valueOf(0));
-	int id = ah.publishAuction(pi, BigDecimal.valueOf(0));
+	auctionHouse.publishAuction(productInfo, BigDecimal.valueOf(0));
+	int id = auctionHouse.publishAuction(productInfo, BigDecimal.valueOf(0));
 
 	assertEquals(1, id);
     }
@@ -43,7 +43,7 @@ public class AuctionHouseTest {
 	pi.setDescription("teste");
 
 	try {
-	    ah.publishAuction(pi, BigDecimal.valueOf(0));
+	    auctionHouse.publishAuction(pi, BigDecimal.valueOf(0));
 	} catch (AuctionHouseException ae) {
 	    assertEquals("invalid headline", ae.getMessage());
 	}
@@ -52,7 +52,7 @@ public class AuctionHouseTest {
     @Test
     public void startingPriceShouldNotBeNull() throws Exception {
 	try {
-	    ah.publishAuction(pi, null);
+	    auctionHouse.publishAuction(productInfo, null);
 	    fail("Expected an Exception");
 	} catch (AuctionHouseException ae) {
 	    assertEquals("invalid starting price", ae.getMessage());
@@ -62,7 +62,7 @@ public class AuctionHouseTest {
     @Test
     public void startingPriceShouldNotBeNegative() throws Exception {
 	try {
-	    ah.publishAuction(pi, BigDecimal.valueOf(-1));
+	    auctionHouse.publishAuction(productInfo, BigDecimal.valueOf(-1));
 	    fail("Expected an Exception");
 	} catch (AuctionHouseException ae) {
 	    assertEquals("invalid starting price", ae.getMessage());
@@ -75,7 +75,7 @@ public class AuctionHouseTest {
 	pi.setHeadline("teste");
 
 	try {
-	    ah.publishAuction(pi, BigDecimal.valueOf(0));
+	    auctionHouse.publishAuction(pi, BigDecimal.valueOf(0));
 	    fail("Expected an Exception");
 	} catch (AuctionHouseException ae) {
 	    assertEquals("invalid description", ae.getMessage());
@@ -85,8 +85,8 @@ public class AuctionHouseTest {
     @Test
     public void firstOfferShouldNotBeLessThanStartingPrice() throws Exception {
 	try {
-	    int auctionId = ah.publishAuction(pi, BigDecimal.valueOf(2));
-	    ah.placeOffer(auctionId, BigDecimal.valueOf(1));
+	    int auctionId = auctionHouse.publishAuction(productInfo, BigDecimal.valueOf(2));
+	    auctionHouse.placeOffer(auctionId, BigDecimal.valueOf(1));
 	    fail("Expected an Exception");
 	} catch (AuctionHouseException e) {
 	    assertEquals("offer is less than starting price", e.getMessage());
@@ -96,9 +96,9 @@ public class AuctionHouseTest {
     @Test
     public void offerShouldBeGreaterThanCurrentPrice() throws Exception {
 	try {
-	    int auctionId = ah.publishAuction(pi, BigDecimal.valueOf(1));
-	    ah.placeOffer(auctionId, BigDecimal.valueOf(1));
-	    ah.placeOffer(auctionId, BigDecimal.valueOf(1));
+	    int auctionId = auctionHouse.publishAuction(productInfo, BigDecimal.valueOf(1));
+	    auctionHouse.placeOffer(auctionId, BigDecimal.valueOf(1));
+	    auctionHouse.placeOffer(auctionId, BigDecimal.valueOf(1));
 	    fail("Expected an Exception");
 	} catch (AuctionHouseException e) {
 	    assertEquals("offer is less than or equal to current price", e.getMessage());
@@ -107,16 +107,16 @@ public class AuctionHouseTest {
 
     @Test
     public void offerShouldBeStored() throws Exception {
-	int auctionId = ah.publishAuction(pi, BigDecimal.valueOf(1));
-	ah.placeOffer(auctionId, BigDecimal.valueOf(2));
-	assertEquals(BigDecimal.valueOf(2), ah.getCurrentPrice(auctionId));
+	int auctionId = auctionHouse.publishAuction(productInfo, BigDecimal.valueOf(1));
+	auctionHouse.placeOffer(auctionId, BigDecimal.valueOf(2));
+	assertEquals(BigDecimal.valueOf(2), auctionHouse.getCurrentPrice(auctionId));
     }
 
     @Test
     public void auctionMustExistToPlaceAnOffer() throws Exception {
-	int auctionId = ah.publishAuction(pi, BigDecimal.valueOf(1));
+	int auctionId = auctionHouse.publishAuction(productInfo, BigDecimal.valueOf(1));
 	try {
-	    ah.placeOffer(auctionId + 1, BigDecimal.valueOf(2));
+	    auctionHouse.placeOffer(auctionId + 1, BigDecimal.valueOf(2));
 	} catch (AuctionHouseException e) {
 	    assertEquals("invalid auction id", e.getMessage());
 	}

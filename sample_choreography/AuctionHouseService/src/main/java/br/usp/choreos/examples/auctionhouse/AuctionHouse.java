@@ -7,7 +7,7 @@ public class AuctionHouse {
 
     private int nextId = 0;
 
-    HashMap<Integer, Auction> auctions = new HashMap<Integer, Auction>();
+    private HashMap<Integer, Auction> auctions = new HashMap<Integer, Auction>();
 
     public int publishAuction(ProductInfo productInfo, BigDecimal startingPrice) throws AuctionHouseException {
 
@@ -58,31 +58,4 @@ public class AuctionHouse {
 
     }
 
-}
-
-class Auction {
-    private BigDecimal startingPrice;
-    private BigDecimal currentPrice;
-    private ProductInfo productInfo;
-
-    public Auction(ProductInfo productInfo, BigDecimal startingPrice) {
-	this.startingPrice = startingPrice;
-	this.productInfo = productInfo;
-    }
-
-    public BigDecimal getStartingPrice() {
-	return startingPrice;
-    }
-
-    public ProductInfo getProductInfo() {
-	return productInfo;
-    }
-
-    public BigDecimal getCurrentPrice() {
-	return currentPrice;
-    }
-
-    public void setCurrentPrice(BigDecimal currentPrice) {
-	this.currentPrice = currentPrice;
-    }
 }
