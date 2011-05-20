@@ -17,7 +17,7 @@ public class RoleAssignmentService {
 	}
 	
 	@WebMethod(operationName = "assignRole")
-	public void assignRole(@WebParam(name = "role") String role, @WebParam(name = "role") String uri) {
+	public void assignRole(@WebParam(name = "role") String role, @WebParam(name = "uri") String uri) {
 		RoleAssignment roleAssignment = new RoleAssignment();
 		roleAssignment.setRole(role);
 		roleAssignment.setUri(uri);
