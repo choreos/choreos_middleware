@@ -21,7 +21,7 @@ public class AuctionHouse {
 	if (startingPrice == null || startingPrice.compareTo(BigDecimal.valueOf(0)) < 0)
 	    throw new AuctionHouseException("invalid starting price");
 
-	Auction auction = new Auction(productInfo, startingPrice);
+	Auction auction = new Auction(seller, productInfo, startingPrice);
 	int id = nextId++;
 	auctions.put(id, auction);
 
@@ -32,22 +32,17 @@ public class AuctionHouse {
 
 	if (bidder == null || bidder.getUri() == null)
 	    throw new AuctionHouseException("invalid bidder");
-	
+
 	Auction auction = getAuction(auctionId);
 
-	if (auction.getCurrentPrice() == null) {
-	    // No offers have been placed yet
-	    if (auction.getStartingPrice().compareTo(offer) <= 0) {
-		auction.setCurrentPrice(offer);
-	    } else {
-		throw new AuctionHouseException("offer is less than starting price");
-	    }
+	if (auction.isBetterOffer(offer)) {
+	    auction.setCurrentPrice(offer);
+	    auction.setCurrentBidder(bidder);
 	} else {
-	    if (auction.getCurrentPrice().compareTo(offer) == -1) {
-		auction.setCurrentPrice(offer);
-	    } else {
+	    if (auction.hasOffer())
 		throw new AuctionHouseException("offer is less than or equal to current price");
-	    }
+	    else
+		throw new AuctionHouseException("offer is less than starting price");
 	}
     }
 
