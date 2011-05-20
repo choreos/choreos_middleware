@@ -28,8 +28,11 @@ public class AuctionHouse {
 	return id;
     }
 
-    public void placeOffer(int auctionId, BigDecimal offer) throws AuctionHouseException {
+    public void placeOffer(int auctionId, Bidder bidder, BigDecimal offer) throws AuctionHouseException {
 
+	if (bidder == null || bidder.getUri() == null)
+	    throw new AuctionHouseException("invalid bidder");
+	
 	Auction auction = getAuction(auctionId);
 
 	if (auction.getCurrentPrice() == null) {

@@ -32,10 +32,11 @@ public class AuctionHouseWS {
     }
 
     @WebMethod(operationName = "placeOffer")
-    public void placeOffer(@WebParam(name = "auctionId") String auctionId, @WebParam(name = "offer") String offer)
+    public void placeOffer(@WebParam(name = "auctionId") String auctionId,
+	    @WebParam(name = "bidderUri") String bidderUri, @WebParam(name = "offer") String offer)
 	    throws AuctionHouseException {
 	try {
-	    auctionHouse.placeOffer(Integer.valueOf(auctionId), new BigDecimal(offer));
+	    auctionHouse.placeOffer(Integer.valueOf(auctionId), new Bidder(bidderUri), new BigDecimal(offer));
 	} catch (NumberFormatException e) {
 	    throw new AuctionHouseException(e);
 	}

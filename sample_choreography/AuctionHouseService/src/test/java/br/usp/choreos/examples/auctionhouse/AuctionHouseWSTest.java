@@ -43,7 +43,7 @@ public class AuctionHouseWSTest {
 		"test_description", "1");
 	String auctionId = item.getChild("auctionId").getContent();
 
-	wsClient.request("placeOffer", auctionId, "42");
+	wsClient.request("placeOffer", auctionId, "http://test_uri", "42");
 	ResponseItem priceResponseItem = wsClient.request("getCurrentPrice", auctionId);
 
 	int currentPrice = priceResponseItem.getChild("currentPrice").getContentAsInt();
