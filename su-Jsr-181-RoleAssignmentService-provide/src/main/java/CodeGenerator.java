@@ -4,7 +4,7 @@ public class CodeGenerator {
         public static void main(String[] args) {
                 WSDLToJava.main(new String[] { "-server", "-d",
                                 "src/main/java",
-                                "src/main/resources/RoleAssignmentServiceService.wsdl" });
+                                "src/main/resources/RoleAssignmentService.wsdl" });
                 System.out.println("Done!");
         }
 }
