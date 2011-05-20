@@ -14,7 +14,8 @@ public class AuctionHouseWS {
 
     @WebMethod(operationName = "publishAuction")
     @WebResult(name = "auctionId")
-    public int publishAuction(@WebParam(name = "headline") String headline,
+    public int publishAuction(@WebParam(name = "sellerUri") String sellerUri,
+	    @WebParam(name = "sellerId") String sellerId, @WebParam(name = "headline") String headline,
 	    @WebParam(name = "description") String description, @WebParam(name = "startingPrice") String startingPrice)
 	    throws AuctionHouseException {
 	ProductInfo productInfo = new ProductInfo();
@@ -22,7 +23,8 @@ public class AuctionHouseWS {
 	productInfo.setDescription(description);
 
 	try {
-	    int auctionId = auctionHouse.publishAuction(productInfo, new BigDecimal(startingPrice));
+	    int auctionId = auctionHouse.publishAuction(new Seller(sellerUri), productInfo, new BigDecimal(
+		    startingPrice));
 	    return auctionId;
 	} catch (NumberFormatException e) {
 	    throw new AuctionHouseException(e);
@@ -30,10 +32,11 @@ public class AuctionHouseWS {
     }
 
     @WebMethod(operationName = "placeOffer")
-    public void placeOffer(@WebParam(name = "auctionId") String auctionId, @WebParam(name = "offer") String offer)
+    public void placeOffer(@WebParam(name = "auctionId") String auctionId,
+	    @WebParam(name = "bidderUri") String bidderUri, @WebParam(name = "offer") String offer)
 	    throws AuctionHouseException {
 	try {
-	    auctionHouse.placeOffer(Integer.valueOf(auctionId), new BigDecimal(offer));
+	    auctionHouse.placeOffer(Integer.valueOf(auctionId), new Bidder(bidderUri), new BigDecimal(offer));
 	} catch (NumberFormatException e) {
 	    throw new AuctionHouseException(e);
 	}

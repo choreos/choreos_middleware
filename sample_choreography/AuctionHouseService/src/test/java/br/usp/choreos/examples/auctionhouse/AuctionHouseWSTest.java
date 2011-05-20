@@ -31,17 +31,19 @@ public class AuctionHouseWSTest {
 
     @Test
     public void firstPublishShouldReturnTheFirstId() throws Exception {
-	ResponseItem item = wsClient.request("publishAuction", "test_headline", "test_description", "1");
+	ResponseItem item = wsClient.request("publishAuction", "http://test_uri", "test_seller_id", "test_headline",
+		"test_description", "1");
 	int auctionId = item.getChild("auctionId").getContentAsInt();
 	assertEquals(0, auctionId);
     }
 
     @Test
     public void getCurrentPriceShouldReturnTheOffer() throws Exception {
-	ResponseItem item = wsClient.request("publishAuction", "test_headline", "test_description", "1");
+	ResponseItem item = wsClient.request("publishAuction", "http://test_uri", "test_seller_id", "test_headline",
+		"test_description", "1");
 	String auctionId = item.getChild("auctionId").getContent();
 
-	wsClient.request("placeOffer", auctionId, "42");
+	wsClient.request("placeOffer", auctionId, "http://test_uri", "42");
 	ResponseItem priceResponseItem = wsClient.request("getCurrentPrice", auctionId);
 
 	int currentPrice = priceResponseItem.getChild("currentPrice").getContentAsInt();

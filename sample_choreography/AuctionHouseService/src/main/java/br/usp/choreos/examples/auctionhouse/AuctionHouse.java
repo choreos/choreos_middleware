@@ -7,41 +7,42 @@ public class AuctionHouse {
 
     private int nextId = 0;
 
-    HashMap<Integer, Auction> auctions = new HashMap<Integer, Auction>();
+    private HashMap<Integer, Auction> auctions = new HashMap<Integer, Auction>();
 
-    public int publishAuction(ProductInfo productInfo, BigDecimal startingPrice) throws AuctionHouseException {
+    public int publishAuction(Seller seller, ProductInfo productInfo, BigDecimal startingPrice)
+	    throws AuctionHouseException {
 
+	if (seller == null || seller.getUri() == null)
+	    throw new AuctionHouseException("invalid seller");
 	if (productInfo.getHeadline() == null || productInfo.getHeadline().equals(""))
 	    throw new AuctionHouseException("invalid headline");
 	if (productInfo.getDescription() == null || productInfo.getDescription().equals(""))
 	    throw new AuctionHouseException("invalid description");
-	if (startingPrice == null || startingPrice.compareTo(BigDecimal.valueOf(0)) == -1)
+	if (startingPrice == null || startingPrice.compareTo(BigDecimal.valueOf(0)) < 0)
 	    throw new AuctionHouseException("invalid starting price");
 
-	Auction auction = new Auction(productInfo, startingPrice);
+	Auction auction = new Auction(seller, productInfo, startingPrice);
 	int id = nextId++;
 	auctions.put(id, auction);
 
 	return id;
     }
 
-    public void placeOffer(int auctionId, BigDecimal offer) throws AuctionHouseException {
+    public void placeOffer(int auctionId, Bidder bidder, BigDecimal offer) throws AuctionHouseException {
+
+	if (bidder == null || bidder.getUri() == null)
+	    throw new AuctionHouseException("invalid bidder");
 
 	Auction auction = getAuction(auctionId);
 
-	if (auction.getCurrentPrice() == null) {
-	    // No offers have been placed yet
-	    if (auction.getStartingPrice().compareTo(offer) <= 0) {
-		auction.setCurrentPrice(offer);
-	    } else {
-		throw new AuctionHouseException("offer is less than starting price");
-	    }
+	if (auction.isBetterOffer(offer)) {
+	    auction.setCurrentPrice(offer);
+	    auction.setCurrentBidder(bidder);
 	} else {
-	    if (auction.getCurrentPrice().compareTo(offer) == -1) {
-		auction.setCurrentPrice(offer);
-	    } else {
+	    if (auction.hasOffer())
 		throw new AuctionHouseException("offer is less than or equal to current price");
-	    }
+	    else
+		throw new AuctionHouseException("offer is less than starting price");
 	}
     }
 
@@ -49,7 +50,7 @@ public class AuctionHouse {
 	Auction auction = getAuction(auctionId);
 	return auction.getCurrentPrice();
     }
-    
+
     private Auction getAuction(int auctionId) throws AuctionHouseException {
 	Auction auction = auctions.get(auctionId);
 	if (auction == null)
@@ -58,31 +59,4 @@ public class AuctionHouse {
 
     }
 
-}
-
-class Auction {
-    private BigDecimal startingPrice;
-    private BigDecimal currentPrice;
-    private ProductInfo productInfo;
-
-    public Auction(ProductInfo productInfo, BigDecimal startingPrice) {
-	this.startingPrice = startingPrice;
-	this.productInfo = productInfo;
-    }
-
-    public BigDecimal getStartingPrice() {
-	return startingPrice;
-    }
-
-    public ProductInfo getProductInfo() {
-	return productInfo;
-    }
-
-    public BigDecimal getCurrentPrice() {
-	return currentPrice;
-    }
-
-    public void setCurrentPrice(BigDecimal currentPrice) {
-	this.currentPrice = currentPrice;
-    }
 }
