@@ -14,7 +14,8 @@ public class AuctionHouseWS {
 
     @WebMethod(operationName = "publishAuction")
     @WebResult(name = "auctionId")
-    public int publishAuction(@WebParam(name = "headline") String headline,
+    public int publishAuction(@WebParam(name = "sellerUri") String sellerUri,
+	    @WebParam(name = "sellerId") String sellerId, @WebParam(name = "headline") String headline,
 	    @WebParam(name = "description") String description, @WebParam(name = "startingPrice") String startingPrice)
 	    throws AuctionHouseException {
 	ProductInfo productInfo = new ProductInfo();
@@ -22,7 +23,8 @@ public class AuctionHouseWS {
 	productInfo.setDescription(description);
 
 	try {
-	    int auctionId = auctionHouse.publishAuction(null, productInfo, new BigDecimal(startingPrice));
+	    int auctionId = auctionHouse.publishAuction(new Seller(sellerUri), productInfo, new BigDecimal(
+		    startingPrice));
 	    return auctionId;
 	} catch (NumberFormatException e) {
 	    throw new AuctionHouseException(e);
