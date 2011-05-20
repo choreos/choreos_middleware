@@ -22,7 +22,7 @@ public class AuctionHouseWS {
 	productInfo.setDescription(description);
 
 	try {
-	    int auctionId = auctionHouse.publishAuction(productInfo, new BigDecimal(startingPrice));
+	    int auctionId = auctionHouse.publishAuction(null, productInfo, new BigDecimal(startingPrice));
 	    return auctionId;
 	} catch (NumberFormatException e) {
 	    throw new AuctionHouseException(e);

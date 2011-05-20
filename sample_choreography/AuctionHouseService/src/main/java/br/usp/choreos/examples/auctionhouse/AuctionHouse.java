@@ -9,13 +9,16 @@ public class AuctionHouse {
 
     private HashMap<Integer, Auction> auctions = new HashMap<Integer, Auction>();
 
-    public int publishAuction(ProductInfo productInfo, BigDecimal startingPrice) throws AuctionHouseException {
+    public int publishAuction(Seller seller, ProductInfo productInfo, BigDecimal startingPrice)
+	    throws AuctionHouseException {
 
+	if (seller == null || seller.getUri() == null)
+	    throw new AuctionHouseException("invalid seller");
 	if (productInfo.getHeadline() == null || productInfo.getHeadline().equals(""))
 	    throw new AuctionHouseException("invalid headline");
 	if (productInfo.getDescription() == null || productInfo.getDescription().equals(""))
 	    throw new AuctionHouseException("invalid description");
-	if (startingPrice == null || startingPrice.compareTo(BigDecimal.valueOf(0)) == -1)
+	if (startingPrice == null || startingPrice.compareTo(BigDecimal.valueOf(0)) < 0)
 	    throw new AuctionHouseException("invalid starting price");
 
 	Auction auction = new Auction(productInfo, startingPrice);
@@ -49,7 +52,7 @@ public class AuctionHouse {
 	Auction auction = getAuction(auctionId);
 	return auction.getCurrentPrice();
     }
-    
+
     private Auction getAuction(int auctionId) throws AuctionHouseException {
 	Auction auction = auctions.get(auctionId);
 	if (auction == null)
