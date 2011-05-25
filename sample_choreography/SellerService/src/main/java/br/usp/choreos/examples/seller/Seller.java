@@ -21,7 +21,7 @@ public class Seller {
 	this.paymentInformation = paymentInformation;
     }
 
-    public void sell(String auctionHouseUri, ProductInfo productInfo, BigDecimal startingPrice) throws SellerException {
+    public int sell(String auctionHouseUri, ProductInfo productInfo, BigDecimal startingPrice) throws SellerException {
 	try {
 	    WSClient wsClient = new WSClient(auctionHouseUri);
 	    ResponseItem item = wsClient.request("publishAuction", uri, id, productInfo.getHeadline(), productInfo
@@ -31,9 +31,11 @@ public class Seller {
 
 	    Auction auction = new Auction();
 	    auction.setProductInfo(productInfo);
+	    auction.setStartingPrice(startingPrice);
 	    auction.setAuctionHouseUri(auctionHouseUri);
 	    auction.setAuctionId(auctionId);
 	    auctions.put(Integer.parseInt(auctionId), auction);
+	    return Integer.parseInt(auctionId);
 	} catch (Exception e) {
 	    throw new SellerException(e);
 	}
@@ -41,9 +43,7 @@ public class Seller {
 
     public void informAuctionResult(int auctionId, boolean isSold, String bidderUri, BigDecimal finalPrice)
 	    throws SellerException {
-	Auction auction = auctions.get(auctionId);
-	if (auction == null)
-	    throw new SellerException("unknown auction id");
+	Auction auction = getAuction(auctionId);
 
 	auction.setBidderUri(bidderUri);
 	auction.setFinalPrice(finalPrice);
@@ -56,6 +56,23 @@ public class Seller {
 	    throw new SellerException(e);
 	}
 
+    }
+
+    public void confirmPayment(int auctionId, String paymentConfirmation) throws SellerException {
+	Auction auction = getAuction(auctionId);
+	auction.setPaymentConfirmation(paymentConfirmation);
+    }
+
+    public void informDelivery(int auctionId, String deliveryInformation) throws SellerException {
+	Auction auction = getAuction(auctionId);
+	auction.setDeliveryInformation(deliveryInformation);
+    }
+
+    public Auction getAuction(int auctionId) throws SellerException {
+	Auction auction = auctions.get(auctionId);
+	if (auction == null)
+	    throw new SellerException("unknown auction id");
+	return auction;
     }
 
     public void setUri(String uri) {
@@ -89,6 +106,8 @@ public class Seller {
 	private BigDecimal startingPrice;
 	private String bidderUri;
 	private BigDecimal finalPrice;
+	private String paymentConfirmation;
+	private String deliveryInformation;
 
 	public void setProductInfo(ProductInfo productInfo) {
 	    this.productInfo = productInfo;
@@ -136,6 +155,22 @@ public class Seller {
 
 	public BigDecimal getFinalPrice() {
 	    return finalPrice;
+	}
+
+	public void setPaymentConfirmation(String paymentConfirmation) {
+	    this.paymentConfirmation = paymentConfirmation;
+	}
+
+	public String getPaymentConfirmation() {
+	    return paymentConfirmation;
+	}
+
+	public void setDeliveryInformation(String deliveryInformation) {
+	    this.deliveryInformation = deliveryInformation;
+	}
+
+	public String getDeliveryInformation() {
+	    return deliveryInformation;
 	}
     }
 

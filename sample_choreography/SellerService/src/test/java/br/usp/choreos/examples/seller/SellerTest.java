@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import br.usp.choreos.examples.auctionhouse.ProductInfo;
+import br.usp.choreos.examples.seller.Seller.Auction;
 
 public class SellerTest {
 
@@ -44,7 +45,7 @@ public class SellerTest {
     }
 
     @Test
-    public void sellerShouldPublishAnAuction() throws Exception {
+    public void sellShouldPublishAnAuctionToAuctionHouse() throws Exception {
 	seller.sell(auctionHouseUri, productInfo, startingPrice);
 
 	testAuctionHouseWS.getLastPublishAuctionParameters();
@@ -53,31 +54,55 @@ public class SellerTest {
 		+ productInfo.getDescription() + "," + startingPrice, testAuctionHouseWS
 		.getLastPublishAuctionParameters());
     }
-
+    
     @Test
-    public void informAuctionResultAuctionShouldBelongToThisSeller() throws Exception {
-	seller.sell(auctionHouseUri, productInfo, startingPrice);
-
+    public void getAuctionShouldThrowExceptionWhenAuctionIdIsNotFound() throws Exception {
 	try {
-	    int unknownAuctionId = 42;
-	    seller.informAuctionResult(unknownAuctionId, true, "http://bidder_uri", BigDecimal.valueOf(1));
+	    seller.getAuction(42);
 	    Assert.fail("Expected an exception");
-	} catch (Exception e) {
+	} catch (SellerException e) {
 	    Assert.assertEquals("unknown auction id", e.getMessage());
 	}
+    }
+    
+    @Test
+    public void sellShouldSaveAuctionUnderTheReturnedAuctionId() throws Exception {
+	int auctionId = seller.sell(auctionHouseUri, productInfo, startingPrice);
+	
+	Auction auction = seller.getAuction(auctionId);
+	Assert.assertEquals(productInfo, auction.getProductInfo());
+	Assert.assertEquals(startingPrice, auction.getStartingPrice());
     }
 
     @Test
     public void informAuctionResultShouldSendPaymentInformationToBidder() throws Exception {
-	seller.sell(auctionHouseUri, productInfo, startingPrice);
+	int auctionId = seller.sell(auctionHouseUri, productInfo, startingPrice);
 
 	TestBidderWS testBidderWS = new TestBidderWS();
 	Endpoint endpoint = Endpoint.publish("http://localhost:6167/TestBidderService", testBidderWS);
 
 	BigDecimal finalPrice = BigDecimal.valueOf(1);
-	seller.informAuctionResult(0, true, "http://localhost:6167/TestBidderService?wsdl", finalPrice);
+	seller.informAuctionResult(auctionId, true, "http://localhost:6167/TestBidderService?wsdl", finalPrice);
 
-	Assert.assertEquals(0 + "," + finalPrice + "," + seller.getPaymentInformation() + "," + seller.getUri(),
+	Assert.assertEquals(auctionId + "," + finalPrice + "," + seller.getPaymentInformation() + "," + seller.getUri(),
 		testBidderWS.getLastSendPaymentInformationParameters());
+    }
+
+    @Test
+    public void confirmPaymentShouldStorePaymentConfirmation() throws Exception {
+	int auctionId = seller.sell(auctionHouseUri, productInfo, startingPrice);
+	seller.confirmPayment(auctionId, "payment_confirmation");
+
+	Auction auction = seller.getAuction(auctionId);
+	Assert.assertEquals("payment_confirmation", auction.getPaymentConfirmation());
+    }
+
+    @Test
+    public void informDeliveryShouldStoreDeliveryInformation() throws Exception {
+	int auctionId = seller.sell(auctionHouseUri, productInfo, startingPrice);
+	seller.informDelivery(auctionId, "delivery_information");
+
+	Auction auction = seller.getAuction(auctionId);
+	Assert.assertEquals("delivery_information", auction.getDeliveryInformation());
     }
 }
