@@ -3,6 +3,8 @@ package br.usp.choreos.examples.auctionhouse;
 import java.math.BigDecimal;
 import java.util.HashMap;
 
+import br.usp.ime.choreos.vv.WSClient;
+
 public class AuctionHouse {
 
     private int nextId = 0;
@@ -49,6 +51,25 @@ public class AuctionHouse {
     public BigDecimal getCurrentPrice(int auctionId) throws AuctionHouseException {
 	Auction auction = getAuction(auctionId);
 	return auction.getCurrentPrice();
+    }
+
+    public void finishAuction(int auctionId) throws AuctionHouseException {
+	Auction auction = getAuction(auctionId);
+
+	Seller seller = auction.getSeller();
+	try {
+	    WSClient wsClient = new WSClient(seller.getUri());
+	    if (!auction.hasOffer()) {
+		// Product was not sold
+		wsClient.request("informAuctionResult", "" + auctionId, "" + false, null, null);
+	    } else {
+		// Product was sold
+		wsClient.request("informAuctionResult", "" + auctionId, "" + true, auction.getCurrentBidder().getUri(),
+			auction.getCurrentPrice().toString());
+	    }
+	} catch (Exception e) {
+	    throw new AuctionHouseException(e);
+	}
     }
 
     private Auction getAuction(int auctionId) throws AuctionHouseException {
