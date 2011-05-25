@@ -8,13 +8,14 @@ import javax.jws.WebService;
 public class TestSellerWS {
 
     private String lastAuctionResult;
-    
+
     @WebMethod(operationName = "informAuctionResult")
-    public void informAuctionResult(@WebParam(name = "auctionId") String auctionId, @WebParam(name = "isSold") String isSold,
-	    @WebParam(name = "bidderUri") String bidderUri, @WebParam(name = "finalPrice") String finalPrice) {
+    public void informAuctionResult(@WebParam(name = "auctionId") String auctionId,
+	    @WebParam(name = "isSold") String isSold, @WebParam(name = "bidderUri") String bidderUri,
+	    @WebParam(name = "finalPrice") String finalPrice) {
 	lastAuctionResult = auctionId + "," + isSold + "," + bidderUri + "," + finalPrice;
     }
-    
+
     public String getLastAuctionResult() {
 	return lastAuctionResult;
     }

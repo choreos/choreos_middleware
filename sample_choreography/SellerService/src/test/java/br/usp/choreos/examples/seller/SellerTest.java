@@ -68,7 +68,7 @@ public class SellerTest {
     }
 
     @Test
-    public void contactBidderShouldCallBidder() throws Exception {
+    public void informAuctionResultShouldSendPaymentInformationToBidder() throws Exception {
 	seller.sell(auctionHouseUri, productInfo, startingPrice);
 
 	TestBidderWS testBidderWS = new TestBidderWS();
