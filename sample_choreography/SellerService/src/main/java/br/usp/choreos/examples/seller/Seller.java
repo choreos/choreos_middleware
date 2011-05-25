@@ -15,6 +15,9 @@ public class Seller {
     private String paymentInformation;
     private Map<Integer, Auction> auctions = new HashMap<Integer, Auction>();
 
+    public Seller() {
+    }
+    
     public Seller(String uri, String id, String paymentInformation) {
 	this.uri = uri;
 	this.id = id;
