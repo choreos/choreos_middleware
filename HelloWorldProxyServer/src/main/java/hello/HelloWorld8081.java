@@ -6,16 +6,9 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
-import javax.xml.ws.Endpoint;
 
-//import org.apache.cxf.endpoint.*;
 import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.frontend.ServerFactoryBean;
-import org.apache.cxf.phase.Phase;
-import org.apache.cxf.service.factory.AbstractServiceConfiguration;
-import org.apache.cxf.service.factory.ReflectionServiceFactoryBean;
-import org.apache.cxf.ws.addressing.AttributedURIType;
-import org.apache.cxf.ws.addressing.EndpointReferenceType;
 
 @WebService
 public class HelloWorld8081 {
@@ -38,23 +31,29 @@ public class HelloWorld8081 {
 	}
 
 	public static void main(String[] args) {
-		HelloWorld8081[] service = new HelloWorld8081[4];
-
-		for (int i = 8081; i <= 8082; i++) {
-			service[i - 8081] = new HelloWorld8081(i + "");
+		
+		final int initialPort = 8085;
+		final int servers = 4;
+		
+		HelloWorld8081[] service = new HelloWorld8081[servers];
+		
+		for (int i = 0; i < servers; i++) {
+			int currentPort = initialPort + i;
+			service[i] = new HelloWorld8081(currentPort + "");
+			
 
 			ProxyInterceptor tie = new ProxyInterceptor();
 
 			ServerFactoryBean serverFactoryBean = new ServerFactoryBean();
 			serverFactoryBean.setServiceClass(HelloWorld8081.class);
-			serverFactoryBean.setAddress("http://localhost:" + i + "/hello");
-			serverFactoryBean.setServiceBean(service[i - 8081]);
+			serverFactoryBean.setAddress("http://localhost:" + currentPort + "/hello");
+			serverFactoryBean.setServiceBean(service[i]);
 
 			Server server = serverFactoryBean.create();
 
 			server.getEndpoint().getInInterceptors().add(tie);
 
-			System.out.println("Serviço disponibilizado na porta " + i);
+			System.out.println("Serviço disponibilizado na porta " + currentPort);
 
 		}
 
