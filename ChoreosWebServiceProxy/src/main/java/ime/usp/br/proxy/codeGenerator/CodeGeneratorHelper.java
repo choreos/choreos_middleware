@@ -9,7 +9,7 @@ import org.apache.cxf.tools.wsdlto.WSDLToJava;
 
 public class CodeGeneratorHelper {
     public void generateJavaCode(URL wsdlInterfaceDescriptor) {
-	WSDLToJava.main(new String[] { "-server", "-d", "src/main/java", "-compile",
+	WSDLToJava.main(new String[] { "-server", "-d", "src/generated/java", "-compile",
 		wsdlInterfaceDescriptor.toExternalForm() });
     }
 

@@ -12,9 +12,10 @@ public class CodeGeneratorTest {
     @Test
     public void generateServerCodeTest() throws Exception {
 	CodeGeneratorHelper cgh = mock(CodeGeneratorHelper.class);
-	CodeGenerator.setCodeGeneratorHelper(cgh);
+	CodeGenerator cg = new CodeGenerator();
+	cg.setCodeGeneratorHelper(cgh);
 	URL url = new URL("http://bla.br");
-	CodeGenerator.generateServerCode(url);
+	cg.generateServerCode(url);
 	
 	verify(cgh).generateJavaCode(url);
 	verify(cgh).includeProxyCodeIntoGeneratedJavaFiles(url);

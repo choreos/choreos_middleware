@@ -45,13 +45,13 @@ import org.apache.cxf.tools.wsdlto.WSDLToJava;
  * */
 public class CodeGenerator {
 
-    private static CodeGeneratorHelper codeGeneratorHelper = new CodeGeneratorHelper();
+    private CodeGeneratorHelper codeGeneratorHelper = new CodeGeneratorHelper();
 
-    public static void setCodeGeneratorHelper(CodeGeneratorHelper cgh) {
+    public void setCodeGeneratorHelper(CodeGeneratorHelper cgh) {
 	codeGeneratorHelper = cgh;
     }
     
-    public static void generateServerCode(URL wsdlInterfaceDescriptor) {
+    public void generateServerCode(URL wsdlInterfaceDescriptor) {
 	codeGeneratorHelper.generateJavaCode(wsdlInterfaceDescriptor);
 	codeGeneratorHelper.includeProxyCodeIntoGeneratedJavaFiles(wsdlInterfaceDescriptor);
     }
