@@ -36,12 +36,22 @@ public class BidderTest {
     }
 
     @Test
-    public void requestPaymentShouldSendPaymentConfirmationAndDeliveryInformationToSeller() throws Exception {
+    public void paymentInformationShouldBeSetBeforePay() throws Exception {
+	try {
+	    bidder.pay(1, "payment_confirmation", "delivery_information");
+	    Assert.fail("Expected an exception");
+	} catch (BidderException e) {
+	    Assert.assertEquals("Payment information for this auction not found", e.getMessage());
+	}
+    }
+    
+    @Test
+    public void payShouldSendPaymentConfirmationAndDeliveryInformationToSeller() throws Exception {
 	TestSellerWS testSellerWS = new TestSellerWS();
 	Endpoint endpoint = Endpoint.publish("http://localhost:6166/TestSellerService", testSellerWS);
 
-	bidder.pay(0, "http://localhost:6166/TestSellerService?wsdl", "payment_information", BigDecimal.valueOf(1),
-		"payment_confirmation", "delivery_information");
+	bidder.setPaymentInformation(0, "http://localhost:6166/TestSellerService?wsdl", "payment_information", BigDecimal.valueOf(1));
+	bidder.pay(0, "payment_confirmation", "delivery_information");
 
 	Assert.assertEquals("0,payment_confirmation,delivery_information", testSellerWS
 		.getLastInformPaymentAndDeliveryInformationRequestParameters());
