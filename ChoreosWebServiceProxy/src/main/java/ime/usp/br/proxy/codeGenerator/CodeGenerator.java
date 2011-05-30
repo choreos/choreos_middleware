@@ -1,10 +1,10 @@
 package ime.usp.br.proxy.codeGenerator;
 
 import java.io.BufferedReader;
-import java.io.Console;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+
 import org.apache.cxf.tools.wsdlto.WSDLToJava;
 
 /*
@@ -45,43 +45,15 @@ import org.apache.cxf.tools.wsdlto.WSDLToJava;
  * */
 public class CodeGenerator {
 
-    public static void generateServerCode(URL WsdlInterfaceDescriptor) {
-	WSDLToJava.main(new String[] { "-server", "-d", "src/main/java", "-compile",
-		WsdlInterfaceDescriptor.toExternalForm() });
+    private static CodeGeneratorHelper codeGeneratorHelper = new CodeGeneratorHelper();
 
-	String command = "solveServerInconsistency.sh  src/main/java/hello/*Server.java";
-
-	runProcessAndPrintOutput(command);
-
+    public static void setCodeGeneratorHelper(CodeGeneratorHelper cgh) {
+	codeGeneratorHelper = cgh;
     }
-
-    private static void runProcessAndPrintOutput(String command) {
-	Runtime run = Runtime.getRuntime();
-
-	Process pr;
-	try {
-	    pr = run.exec(command);
-	    pr.waitFor();
-	} catch (InterruptedException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	    return;
-	} catch (IOException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	    return;
-	}
-	BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-
-	String line;
-	try {
-	    while ((line = buf.readLine()) != null) {
-		System.out.println(line);
-	    }
-	} catch (IOException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
+    
+    public static void generateServerCode(URL wsdlInterfaceDescriptor) {
+	codeGeneratorHelper.generateJavaCode(wsdlInterfaceDescriptor);
+	codeGeneratorHelper.includeProxyCodeIntoGeneratedJavaFiles(wsdlInterfaceDescriptor);
     }
 
     public static void generateClientCode(URL WsdlInterfaceDescriptor) {
