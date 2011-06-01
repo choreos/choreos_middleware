@@ -17,7 +17,7 @@ public class CodeGeneratorTest {
 	URL url = new URL("http://bla.br");
 	cg.generateServerCode(url);
 	
-	verify(cgh).generateJavaCode(url);
+	verify(cgh).generateJavaCode(url, true);
 	verify(cgh).includeProxyCodeIntoGeneratedJavaFiles(url);
     }
 }

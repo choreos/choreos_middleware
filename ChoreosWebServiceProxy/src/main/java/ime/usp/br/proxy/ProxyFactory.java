@@ -38,7 +38,7 @@ public class ProxyFactory {
 
     private static void generateServerCode(String host) {
 	try {
-	    CodeGenerator.generateServerCode(new URL(host));
+	    new CodeGenerator().generateServerCode(new URL(host));
 	} catch (MalformedURLException e) {
 	    System.out.println("Verify that the URL " + host + " is not worng.");
 	    e.printStackTrace();

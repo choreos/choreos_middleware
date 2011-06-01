@@ -52,13 +52,12 @@ public class CodeGenerator {
     }
     
     public void generateServerCode(URL wsdlInterfaceDescriptor) {
-	codeGeneratorHelper.generateJavaCode(wsdlInterfaceDescriptor);
+	codeGeneratorHelper.generateJavaCode(wsdlInterfaceDescriptor, true);
 	codeGeneratorHelper.includeProxyCodeIntoGeneratedJavaFiles(wsdlInterfaceDescriptor);
     }
 
-    public static void generateClientCode(URL WsdlInterfaceDescriptor) {
-	WSDLToJava.main(new String[] { "-client", "-d", "src/main/java", "-compile",
-		WsdlInterfaceDescriptor.toExternalForm() });
+    public void generateClientCode(URL wsdlInterfaceDescriptor) {
+	codeGeneratorHelper.generateJavaCode(wsdlInterfaceDescriptor, false);
     }
 
     public static void main(String[] args) {

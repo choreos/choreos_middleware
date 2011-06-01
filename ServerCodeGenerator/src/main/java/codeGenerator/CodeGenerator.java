@@ -1,4 +1,4 @@
-package com.ttdev;
+package codeGenerator;
 
 import org.apache.cxf.tools.wsdlto.*;
 import ime.usp.br.proxy.generic.*;

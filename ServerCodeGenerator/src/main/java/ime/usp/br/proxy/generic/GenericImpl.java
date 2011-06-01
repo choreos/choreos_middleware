@@ -1,21 +1,18 @@
 package ime.usp.br.proxy.generic;
 
-import javax.jws.WebMethod;
+import java.lang.reflect.*;
 
-import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
-import org.apache.cxf.common.i18n.Message; //import javax.jws.WebService;
-import org.apache.cxf.interceptor.Fault;
+public class GenericImpl implements InvocationHandler {
 
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.ws.Provider;
-import javax.xml.ws.handler.soap.SOAPMessageContext;
-
-public class GenericImpl extends AbstractSoapInterceptor{
-
-	public void handleMessage(SoapMessage message) throws Fault {
-		System.out.println(message.toString());
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+	System.out.println("WSClient.request(" + method.getName() + ", " + args.toString() + ");");
+	System.out.println("Method name: " + method.getName());
+	System.out.print("Arguments:   ");
+	for (int i = 0; i < args.length; i++) {
+	    System.out.print(args[i]);
 	}
+	System.out.println();
+	return null;
+    }
 
 }
