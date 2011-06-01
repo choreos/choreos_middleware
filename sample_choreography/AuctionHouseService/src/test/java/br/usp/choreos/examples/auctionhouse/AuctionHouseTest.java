@@ -5,8 +5,12 @@ import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
 
+import javax.xml.ws.Endpoint;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import br.usp.ime.choreos.vv.WSClient;
 
 public class AuctionHouseTest {
 
@@ -173,4 +177,38 @@ public class AuctionHouseTest {
 	}
     }
 
+    @Test
+    public void auctionFinishShouldInformSellerProductWasNotSold() throws Exception {
+	TestSellerWS testSellerWS = new TestSellerWS();
+	Endpoint endpoint = Endpoint.create(testSellerWS);
+	endpoint.publish("http://localhost:6166/TestSellerService");
+	WSClient wsClient = new WSClient("http://localhost:6166/TestSellerService?wsdl");
+	Seller seller = new Seller("http://localhost:6166/TestSellerService?wsdl");
+
+	int auctionId = auctionHouse.publishAuction(seller, productInfo, BigDecimal.valueOf(1));
+
+	auctionHouse.finishAuction(auctionId);
+
+	assertEquals(auctionId + ",false,null,null", testSellerWS.getLastAuctionResult());
+
+	endpoint.stop();
+    }
+
+    @Test
+    public void auctionFinishShouldInformSellerProductWasSold() throws Exception {
+	TestSellerWS testSellerWS = new TestSellerWS();
+	Endpoint endpoint = Endpoint.create(testSellerWS);
+	endpoint.publish("http://localhost:6166/TestSellerService");
+	WSClient wsClient = new WSClient("http://localhost:6166/TestSellerService?wsdl");
+	Seller seller = new Seller("http://localhost:6166/TestSellerService?wsdl");
+
+	int auctionId = auctionHouse.publishAuction(seller, productInfo, BigDecimal.valueOf(1));
+	auctionHouse.placeOffer(auctionId, bidder, BigDecimal.valueOf(1));
+
+	auctionHouse.finishAuction(auctionId);
+
+	assertEquals(auctionId + ",true," + bidder.getUri() + ",1", testSellerWS.getLastAuctionResult());
+
+	endpoint.stop();
+    }
 }

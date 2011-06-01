@@ -1,28 +1,61 @@
 package br.usp.choreos.examples.bidder;
 
-import static org.junit.Assert.*;
-
 import java.math.BigDecimal;
 
+import javax.xml.ws.Endpoint;
+
+import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
-import br.usp.choreos.examples.auctionhouse.AuctionHouse;
-import br.usp.choreos.examples.auctionhouse.ProductInfo;
-
 public class BidderTest {
-    @Test
-    public void shouldSendPlaceAnOfferToTheAuctionHouse() throws Exception {
-	ProductInfo productInfo = new ProductInfo();
-	productInfo.setDescription("test");
-	productInfo.setHeadline("test");
 
-	AuctionHouse auctionHouse = new AuctionHouse();
-	int auctionId = auctionHouse.publishAuction(productInfo , BigDecimal.valueOf(0));	
-	
-	Bidder bidder = new Bidder();
-	BigDecimal bidValue = BigDecimal.valueOf(10);
-	bidder.placeOffer(auctionId, bidValue);
-	
-	assertEquals(bidValue, auctionHouse.getCurrentPrice(auctionId));
+    private Bidder bidder;
+
+    @Before
+    public void setUp() throws Exception {
+	bidder = new Bidder("http://test_bidder");
+    }
+
+    @After
+    public void tearDown() {
+    }
+
+    @Test
+    public void buyShouldPlaceAnOfferToAuctionHouse() throws Exception {
+	TestAuctionHouseWS testAuctionHouseWS = new TestAuctionHouseWS();
+	Endpoint endpoint = Endpoint.publish("http://localhost:6166/TestAuctionHouseService", testAuctionHouseWS);
+
+	bidder.buy(0, "http://localhost:6166/TestAuctionHouseService?wsdl", BigDecimal.valueOf(1));
+
+	Assert.assertEquals("0,http://test_bidder,1", testAuctionHouseWS.getLastPlaceOfferRequestParameters());
+
+	endpoint.stop();
+    }
+
+    @Test
+    public void paymentInformationShouldBeSetBeforePay() throws Exception {
+	try {
+	    bidder.pay(1, "payment_confirmation", "delivery_information");
+	    Assert.fail("Expected an exception");
+	} catch (BidderException e) {
+	    Assert.assertEquals("Payment information for this auction not found", e.getMessage());
+	}
+    }
+    
+    @Test
+    public void payShouldSendPaymentConfirmationAndDeliveryInformationToSeller() throws Exception {
+	TestSellerWS testSellerWS = new TestSellerWS();
+	Endpoint endpoint = Endpoint.publish("http://localhost:6166/TestSellerService", testSellerWS);
+
+	bidder.setPaymentInformation(0, "http://localhost:6166/TestSellerService?wsdl", "payment_information", BigDecimal.valueOf(1));
+	bidder.pay(0, "payment_confirmation", "delivery_information");
+
+	Assert.assertEquals("0,payment_confirmation,delivery_information", testSellerWS
+		.getLastInformPaymentAndDeliveryInformationRequestParameters());
+
+	endpoint.stop();
     }
 }
