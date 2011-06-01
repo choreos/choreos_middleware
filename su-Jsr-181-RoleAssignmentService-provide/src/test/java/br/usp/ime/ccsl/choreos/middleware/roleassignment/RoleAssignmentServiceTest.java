@@ -11,37 +11,37 @@ import org.junit.Test;
 import br.usp.ime.ccsl.choreos.middleware.roleassignmentservice.ArrayOfStrings;
 
 public class RoleAssignmentServiceTest {
-	private static RoleAssignmentServiceImpl roleAssignmentService;
-	private static Endpoint endpoint;
+    private static RoleAssignmentServiceImpl roleAssignmentService;
+    private static Endpoint endpoint;
 
-	@BeforeClass
-	public static void initWebService() {
-		roleAssignmentService = new RoleAssignmentServiceImpl();
-		endpoint = Endpoint.publish("http://localhost:60080/roleAssignment", roleAssignmentService);
-	}
+    @BeforeClass
+    public static void initWebService() {
+        roleAssignmentService = new RoleAssignmentServiceImpl();
+        endpoint = Endpoint.publish("http://localhost:60080/roleAssignment", roleAssignmentService);
+    }
 
-	@Test
-	public void testAssign() {
-		final String uri = "uri";
-		final String roleName = "rolename";
+    @Test
+    public void testAssign() {
+        final String uri = "uri";
+        final String roleName = "rolename";
 
-		roleAssignmentService.assignRole(new RoleAssignment(uri, roleName));
-		ArrayOfStrings uris = roleAssignmentService.get(roleName);
-		assertEquals(uri, uris.getUri().get(0));
-	}
-	
-	@Test
-	public void testAssignStr() {
-		final String uri = "uri";
-		final String roleName = "rolename";
+        roleAssignmentService.assignRole(new RoleAssignment(uri, roleName));
+        ArrayOfStrings uris = roleAssignmentService.get(roleName);
+        assertEquals(uri, uris.getUri().get(0));
+    }
 
-		roleAssignmentService.assignRole(roleName, uri);
-		ArrayOfStrings uris = roleAssignmentService.get(roleName);
-		assertEquals(uri, uris.getUri().get(0));
-	}
+    @Test
+    public void testAssignStr() {
+        final String uri = "uri";
+        final String roleName = "rolename";
 
-	@AfterClass
-	public static void shutDownWebService() {
-		endpoint.stop();
-	}
+        roleAssignmentService.assignRole(roleName, uri);
+        ArrayOfStrings uris = roleAssignmentService.get(roleName);
+        assertEquals(uri, uris.getUri().get(0));
+    }
+
+    @AfterClass
+    public static void shutDownWebService() {
+        endpoint.stop();
+    }
 }
