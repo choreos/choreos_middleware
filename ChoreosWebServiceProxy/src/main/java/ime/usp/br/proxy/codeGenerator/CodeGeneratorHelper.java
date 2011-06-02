@@ -1,6 +1,10 @@
 package ime.usp.br.proxy.codeGenerator;
 
 import java.io.File;
+
+import javax.tools.*;
+import com.sun.tools.javac.*;
+
 import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -10,25 +14,25 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import com.ibm.wsdl.util.xml.DOMUtils;
+import com.sun.org.apache.xerces.internal.*;
+import com.sun.tools.xjc.api.JavaCompiler;
+import com.sun.tools.xjc.api.impl.j2s.JavaCompilerImpl;
+
+import javax.xml.namespace.NamespaceContext;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.cxf.tools.wsdlto.WSDLToJava;
+import org.ow2.easywsdl.wsdl.api.Description;
+import org.ow2.easywsdl.wsdl.api.WSDLException;
 import org.ow2.easywsdl.wsdl.impl.generic.WSDLReaderImpl;
-import org.w3c.dom.Document;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import com.sun.xml.xsom.parser.XMLParser;
+import org.ow2.easywsdl.wsdl.impl.wsdl11.DescriptionImpl;
 
 public class CodeGeneratorHelper {
     public static final String SRC_GENERATED_CLIENT_JAVA = "src/generated/client/java";
     public static final String SRC_GENERATED_SERVER_JAVA = "src/generated/server/java";
+    public static final String SRC_GENERATED_SERVER_JAVA_CODE = "target/classes/generated";
+
     public static final boolean SERVER = true;
     public static final boolean CLIENT = false;
 
@@ -45,6 +49,7 @@ public class CodeGeneratorHelper {
     }
 
     public void includeProxyCodeIntoGeneratedJavaFiles(URL wsdlInterfaceDescriptor) {
+	System.out.println(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA + "/" + getNamespace(wsdlInterfaceDescriptor));
 	File fileDirectory = new File(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA + "/"
 		+ getNamespace(wsdlInterfaceDescriptor));
 
@@ -124,46 +129,97 @@ public class CodeGeneratorHelper {
 
     public String getNamespace(URL wsdlInterfaceDescriptor) {
 
+	Pattern pattern = Pattern.compile(".*namespace=['\"].*?['\"].*");
+
+	try {
+	    File file = new File(wsdlInterfaceDescriptor.toURI());
+	    List<String> lines = getLines(file);
+
+	    for (String string : lines) {
+
+		Matcher matcher = pattern.matcher(string);
+
+		if (matcher.matches()) {
+
+		    int j = 0;
+		    System.out.println(string);
+		    String[] pieces = string.split("namespace=")[1].split("\"");
+
+		    if (pieces[1].matches("http://.*/")) {
+			System.out.println(pieces[1].split("/")[2]);
+			return pieces[1].split("/")[2];
+		    }
+		    return pieces[1];
+		}
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
 	return "hello";
-//	Pattern pattern = Pattern.compile(".*namespace=['\"].*?['\"].*");
-//	
-//	
-//	try {
-//	    File file = new File(wsdlInterfaceDescriptor.toURI());
-//	    List<String> lines = getLines(file);
-//	    
-//	    
-//	    
-//	    for (String string : lines) {
-//		string.
-//		Matcher matcher = pattern.matcher(string);
-//		if (matcher.matches())
-//		    matcher.
-//	    }
+    }
+
+    public void compileJavaFiles(String sourcesDir, String classesDestinationDir) {
+	/*
+	 * Usage: javac <options> <source files> where possible options include:
+	 * -g Generate all debugging info -g:none Generate no debugging info
+	 * -g:{lines,vars,source} Generate only some debugging info -nowarn
+	 * Generate no warnings -verbose Output messages about what the compiler
+	 * is doing -deprecation Output source locations where deprecated APIs
+	 * are used -classpath <path> Specify where to find user class files and
+	 * annotation processors -cp <path> Specify where to find user class
+	 * files and annotation processors -sourcepath <path> Specify where to
+	 * find input source files -bootclasspath <path> Override location of
+	 * bootstrap class files -extdirs <dirs> Override location of installed
+	 * extensions -endorseddirs <dirs> Override location of endorsed
+	 * standards path -proc:{none,only} Control whether annotation
+	 * processing and/or compilation is done. -processor
+	 * <class1>[,<class2>,<class3>...]Names of the annotation processors to
+	 * run; bypasses default discovery process -processorpath <path> Specify
+	 * where to find annotation processors -d <directory> Specify where to
+	 * place generated class files -s <directory> Specify where to place
+	 * generated source files -implicit:{none,class} Specify whether or not
+	 * to generate class files for implicitly referenced files -encoding
+	 * <encoding> Specify character encoding used by source files -source
+	 * <release> Provide source compatibility with specified release -target
+	 * <release> Generate class files for specific VM version -version
+	 * Version information -help Print a synopsis of standard options
+	 * -Akey[=value] Options to pass to annotation processors -X Print a
+	 * synopsis of nonstandard options -J<flag> Pass <flag> directly to the
+	 * runtime system
+	 */
+	createDirectory(classesDestinationDir);
+
+	String[] args = new String[] { "-nowarn", "-sourcepath ./" + sourcesDir, "-d ./" + classesDestinationDir };
+
+	System.out.print("javac ");
+	for (String string : args) {
+	    System.out.print(string + " ");
+	}
+	Main.compile(args);
+    }
+
+    private void createDirectory(String directory) {
+	try {
+	    File destination = new File(directory);
+
+	    if (destination.exists()) {
+		if (destination.isDirectory()) {
+		    FileUtils.deleteDirectory(destination);
+		}
+	    } else {
+		System.out.println("Directory " + directory + " does not exist.");
+	    }
+
+	    System.out.println("Running mkdir ./" + directory);
+	    Process pr = Runtime.getRuntime().exec("mkdir ./" + directory);
+	    pr.waitFor();
 	    
-	    
-//	    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-//	    DocumentBuilder db = dbf.newDocumentBuilder();
-//	    Document doc;
-//	    doc = db.parse();
-//	    System.out.println(wsdlInterfaceDescriptor.toURI());
-//	    doc.getDocumentElement().normalize();
-//	    System.out.println(doc.getNamespaceURI());
-//	    return doc.getNamespaceURI();
-//	} catch (SAXException e) {
-//	    // TODO Auto-generated catch block
-//	    e.printStackTrace();
-//	} catch (IOException e) {
-//	    // TODO Auto-generated catch block
-//	    e.printStackTrace();
-//	} catch (URISyntaxException e) {
-//	    // TODO Auto-generated catch block
-//	    e.printStackTrace();
-//	} catch (ParserConfigurationException e) {
-//	    // TODO Auto-generated catch block
-//	    e.printStackTrace();
-//	}
-//
-//	return null;
+	} catch (IOException e) {
+	    System.out.println("Couldn't create " + directory + " directory.");
+	    e.printStackTrace();
+	} catch (InterruptedException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
     }
 }

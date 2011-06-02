@@ -26,6 +26,7 @@ public class CodeGeneratorHelperTest {
     @BeforeClass
     public static void cleanPreviouslyGeneratedCode() throws IOException {
 	FileUtils.cleanDirectory(new File(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA));
+	//FileUtils.cleanDirectory(new File(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA_CODE));
     }
 
     @Test
@@ -34,7 +35,7 @@ public class CodeGeneratorHelperTest {
 
 	URL wsdlInterfaceDescriptor = Object.class.getResource("/hello.wsdl");
 
-	//TODO: colocar true = SERVER e false = CLIENT na classe de constantes
+	// TODO: colocar true = SERVER e false = CLIENT na classe de constantes
 	cg.generateJavaCode(wsdlInterfaceDescriptor, CodeGeneratorHelper.SERVER);
 
 	// TODO: Create a constants class in which we describe the default path
@@ -67,12 +68,23 @@ public class CodeGeneratorHelperTest {
 
 	}
     }
-    
+
     @Test
-    public void testGetNamespace() throws Exception{
+    public void testGetNamespace() throws Exception {
 	CodeGeneratorHelper cg = new CodeGeneratorHelper();
 	assertEquals("oi", cg.getNamespace(Object.class.getResource("/oi.wsdl")));
-	
+	assertEquals("hello", cg.getNamespace(Object.class.getResource("/hello.wsdl")));
+
     }
 
+    @Test
+    public void testCompileJavaFiles() throws Exception {
+	CodeGeneratorHelper cgh = new CodeGeneratorHelper();
+
+	cgh.compileJavaFiles(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA + "/hello/",
+		CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA_CODE + "/hello/");
+
+	assertTrue(new File(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA_CODE
+		+ "/hello/HelloWorld8081_HelloWorld8081Port_Server.class").exists());
+    }
 }
