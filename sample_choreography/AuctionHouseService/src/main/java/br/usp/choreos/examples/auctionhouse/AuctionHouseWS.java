@@ -51,6 +51,10 @@ public class AuctionHouseWS {
 	    throw new AuctionHouseException(e);
 	}
     }
+    
+    public AuctionHouse getAuctionHouse() {
+	return auctionHouse;
+    }
 
     public static void main(String[] args) {
 	AuctionHouseWS auctionHouseWS = new AuctionHouseWS();
