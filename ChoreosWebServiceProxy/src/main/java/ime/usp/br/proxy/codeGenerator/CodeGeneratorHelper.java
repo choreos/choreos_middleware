@@ -1,40 +1,31 @@
 package ime.usp.br.proxy.codeGenerator;
 
 import java.io.File;
-
-import javax.tools.*;
-import com.sun.tools.javac.*;
-
 import java.io.FileFilter;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.ibm.wsdl.util.xml.DOMUtils;
-import com.sun.org.apache.xerces.internal.*;
-import com.sun.tools.xjc.api.JavaCompiler;
-import com.sun.tools.xjc.api.impl.j2s.JavaCompilerImpl;
-
-import javax.xml.namespace.NamespaceContext;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.cxf.tools.wsdlto.WSDLToJava;
-import org.ow2.easywsdl.wsdl.api.Description;
-import org.ow2.easywsdl.wsdl.api.WSDLException;
-import org.ow2.easywsdl.wsdl.impl.generic.WSDLReaderImpl;
-import org.ow2.easywsdl.wsdl.impl.wsdl11.DescriptionImpl;
+import org.apache.velocity.texen.util.FileUtil;
+
+import com.sun.tools.javac.Main;
 
 public class CodeGeneratorHelper {
     public static final String SRC_GENERATED_CLIENT_JAVA = "src/generated/client/java";
     public static final String SRC_GENERATED_SERVER_JAVA = "src/generated/server/java";
-    public static final String SRC_GENERATED_SERVER_JAVA_CODE = "target/classes/generated";
+    public static final String TARGET_GENERATED_SERVER_JAVA_CODE = "target/classes/generated";
 
+    private static final String CLASSPATH = "target/classes";
+    
     public static final boolean SERVER = true;
     public static final boolean CLIENT = false;
+
 
     public void generateJavaCode(URL wsdlInterfaceDescriptor, boolean server) {
 	String[] parameters = null;
@@ -48,7 +39,7 @@ public class CodeGeneratorHelper {
 	WSDLToJava.main(parameters);
     }
 
-    public void includeProxyCodeIntoGeneratedJavaFiles(URL wsdlInterfaceDescriptor) {
+    public String includeProxyCodeIntoGeneratedJavaFiles(URL wsdlInterfaceDescriptor) {
 	System.out.println(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA + "/" + getNamespace(wsdlInterfaceDescriptor));
 	File fileDirectory = new File(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA + "/"
 		+ getNamespace(wsdlInterfaceDescriptor));
@@ -58,13 +49,16 @@ public class CodeGeneratorHelper {
 	List<String> fileLinesCopy = new ArrayList<String>(fileLines);
 
 	for (String currentLine : fileLines) {
-	    addImportOfReflections(fileLinesCopy, currentLine);
+	    addImportOf(fileLinesCopy, currentLine, "import java.lang.reflect.*;");
+	    addImportOf(fileLinesCopy, currentLine, "import ime.usp.br.proxy.generic.GenericImpl;");
 	    adaptImplementorLine(fileLinesCopy, currentLine);
 	}
 
 	fileHandler.delete();
 	createNewFile(fileHandler);
 	writeLines(fileHandler, fileLinesCopy);
+	
+	return fileDirectory.getPath();
     }
 
     private void writeLines(File fileHandler, List<String> fileLinesCopy) {
@@ -85,16 +79,17 @@ public class CodeGeneratorHelper {
 	}
     }
 
-    private void addImportOfReflections(List<String> fileLines, String currentLine) {
+    private void addImportOf(List<String> fileLines, String currentLine, String packageName) {
 	if (currentLine.matches("package .*;")) {
-	    fileLines.add(fileLines.indexOf(currentLine) + 1, "import java.lang.reflect.*;");
+	    fileLines.add(fileLines.indexOf(currentLine) + 1, packageName);
 	}
     }
 
     private void adaptImplementorLine(List<String> fileLines, String currentLine) {
 	if (currentLine.matches(".*Object implementor = new .*")) {
 
-	    int classnameStartIndex = currentLine.lastIndexOf("Object implementor = new ");
+	    int classnameStartIndex = currentLine.indexOf("Object implementor = new ")
+		    + "Object implementor = new ".length();
 	    int classNameEndIndex = currentLine.indexOf("Impl();");
 
 	    String className = currentLine.substring(classnameStartIndex, classNameEndIndex);
@@ -189,13 +184,40 @@ public class CodeGeneratorHelper {
 	 */
 	createDirectory(classesDestinationDir);
 
-	String[] args = new String[] { "-nowarn", "-sourcepath ./" + sourcesDir, "-d ./" + classesDestinationDir };
+	List<String> argsList = listFiles(sourcesDir);
 
+	//argsList.add(0, "-nowarn");
+	argsList.add(0, "-d");
+	argsList.add(1, classesDestinationDir);
+	
+	String[] args = convertStringListToStringArray(argsList);
+	
 	System.out.print("javac ");
 	for (String string : args) {
 	    System.out.print(string + " ");
 	}
 	Main.compile(args);
+    }
+
+    private String[] convertStringListToStringArray(List<String> list) {
+	String[] array = new String[list.size()] ;
+	int i = 0;
+	
+	for (String file : list) {
+	    array[i++] = file;
+	}
+	return array;
+    }
+
+    private List<String> listFiles(String sourcesDir) {
+	List<String> files = new ArrayList<String>();
+	
+	for (Iterator iterator = FileUtils.listFiles(new File(sourcesDir), new String[] {"java"}, false).iterator(); iterator.hasNext();) {
+	    File file = (File) iterator.next();
+	    files.add(file.getPath());
+	}
+	return files;
+	
     }
 
     private void createDirectory(String directory) {
@@ -211,14 +233,13 @@ public class CodeGeneratorHelper {
 	    }
 
 	    System.out.println("Running mkdir ./" + directory);
-	    Process pr = Runtime.getRuntime().exec("mkdir ./" + directory);
+	    Process pr = Runtime.getRuntime().exec("mkdir -p ./" + directory);
 	    pr.waitFor();
-	    
+
 	} catch (IOException e) {
 	    System.out.println("Couldn't create " + directory + " directory.");
 	    e.printStackTrace();
 	} catch (InterruptedException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
     }

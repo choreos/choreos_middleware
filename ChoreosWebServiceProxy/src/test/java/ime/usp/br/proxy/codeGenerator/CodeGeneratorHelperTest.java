@@ -82,9 +82,9 @@ public class CodeGeneratorHelperTest {
 	CodeGeneratorHelper cgh = new CodeGeneratorHelper();
 
 	cgh.compileJavaFiles(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA + "/hello/",
-		CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA_CODE + "/hello/");
+		CodeGeneratorHelper.TARGET_GENERATED_SERVER_JAVA_CODE);
 
-	assertTrue(new File(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA_CODE
+	assertTrue(new File(CodeGeneratorHelper.TARGET_GENERATED_SERVER_JAVA_CODE
 		+ "/hello/HelloWorld8081_HelloWorld8081Port_Server.class").exists());
     }
 }
