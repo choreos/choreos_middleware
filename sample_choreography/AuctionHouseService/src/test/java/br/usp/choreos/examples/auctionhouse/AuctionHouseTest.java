@@ -10,8 +10,6 @@ import javax.xml.ws.Endpoint;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.usp.ime.choreos.vv.WSClient;
-
 public class AuctionHouseTest {
 
     private AuctionHouse auctionHouse;
@@ -182,7 +180,6 @@ public class AuctionHouseTest {
 	TestSellerWS testSellerWS = new TestSellerWS();
 	Endpoint endpoint = Endpoint.create(testSellerWS);
 	endpoint.publish("http://localhost:6166/TestSellerService");
-	WSClient wsClient = new WSClient("http://localhost:6166/TestSellerService?wsdl");
 	Seller seller = new Seller("http://localhost:6166/TestSellerService?wsdl");
 
 	int auctionId = auctionHouse.publishAuction(seller, productInfo, BigDecimal.valueOf(1));
@@ -199,7 +196,6 @@ public class AuctionHouseTest {
 	TestSellerWS testSellerWS = new TestSellerWS();
 	Endpoint endpoint = Endpoint.create(testSellerWS);
 	endpoint.publish("http://localhost:6166/TestSellerService");
-	WSClient wsClient = new WSClient("http://localhost:6166/TestSellerService?wsdl");
 	Seller seller = new Seller("http://localhost:6166/TestSellerService?wsdl");
 
 	int auctionId = auctionHouse.publishAuction(seller, productInfo, BigDecimal.valueOf(1));

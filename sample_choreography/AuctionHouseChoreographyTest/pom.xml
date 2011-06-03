@@ -25,5 +25,26 @@
 			<scope>test</scope>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>br.usp.ime.ccsl.choreos.samples</groupId>
+			<artifactId>AuctionHouseService</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>br.usp.ime.ccsl.choreos.samples</groupId>
+			<artifactId>BidderService</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>br.usp.ime.ccsl.choreos.samples</groupId>
+			<artifactId>SellerService</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 </project>
