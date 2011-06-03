@@ -30,5 +30,21 @@
 			<scope>test</scope>
 			<optional>true</optional>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans</artifactId>
+			<version>2.4.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans</artifactId>
+			<version>2.4.0</version>
+			<type>jar</type>
+			<classifier>sources</classifier>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 </project>
