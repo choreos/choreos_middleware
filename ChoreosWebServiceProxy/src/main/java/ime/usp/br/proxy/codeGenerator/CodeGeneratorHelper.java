@@ -124,7 +124,7 @@ public class CodeGeneratorHelper {
 
     public String getNamespace(URL wsdlInterfaceDescriptor) {
 
-	Pattern pattern = Pattern.compile(".*namespace=['\"].*?['\"].*");
+	Pattern pattern = Pattern.compile(".*[N\n]amespace=['\"].*?['\"].*");
 
 	try {
 	    File file = new File(wsdlInterfaceDescriptor.toURI());
@@ -138,11 +138,11 @@ public class CodeGeneratorHelper {
 
 		    int j = 0;
 		    System.out.println(string);
-		    String[] pieces = string.split("namespace=")[1].split("\"");
+		    String[] pieces = string.split("[N\n]amespace=")[1].split("\"");
 
 		    if (pieces[1].matches("http://.*/")) {
 			System.out.println(pieces[1].split("/")[2]);
-			return pieces[1].split("/")[2];
+			return pieces[1].split("/")[2].replace('.', '/');
 		    }
 		    return pieces[1];
 		}
