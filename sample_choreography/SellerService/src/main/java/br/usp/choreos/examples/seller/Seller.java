@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.usp.choreos.examples.auctionhouse.ProductInfo;
-import br.usp.ime.choreos.vv.ResponseItem;
+import br.usp.ime.choreos.vv.Item;
 import br.usp.ime.choreos.vv.WSClient;
 
 public class Seller {
@@ -17,7 +17,7 @@ public class Seller {
 
     public Seller() {
     }
-    
+
     public Seller(String uri, String id, String paymentInformation) {
 	this.uri = uri;
 	this.id = id;
@@ -27,8 +27,8 @@ public class Seller {
     public int sell(String auctionHouseUri, ProductInfo productInfo, BigDecimal startingPrice) throws SellerException {
 	try {
 	    WSClient wsClient = new WSClient(auctionHouseUri);
-	    ResponseItem item = wsClient.request("publishAuction", uri, id, productInfo.getHeadline(), productInfo
-		    .getDescription(), startingPrice.toString());
+	    Item item = wsClient.request("publishAuction", uri, id, productInfo.getHeadline(),
+		    productInfo.getDescription(), startingPrice.toString());
 
 	    String auctionId = item.getChild("auctionId").getContent();
 
