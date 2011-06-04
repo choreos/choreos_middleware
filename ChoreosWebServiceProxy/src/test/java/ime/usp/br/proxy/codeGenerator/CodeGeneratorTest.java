@@ -1,5 +1,6 @@
 package ime.usp.br.proxy.codeGenerator;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,5 +39,11 @@ public class CodeGeneratorTest {
 	verify(cgh).generateJavaCode(url, true);
 	verify(cgh).includeProxyCodeIntoGeneratedJavaFiles(url);
 	verify(cgh).compileJavaFiles("generateServerCodeReturn", CodeGeneratorHelper.TARGET_GENERATED_SERVER_JAVA_CODE);
+    }
+    
+    @Test
+    public void simpleRun() throws Exception {
+	CodeGenerator cg = new CodeGenerator();
+	cg.generateServerClasses(new URL("http://localhost:8081/auction-house-service?wsdl"));
     }
 }
