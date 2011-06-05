@@ -2,25 +2,27 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<parent>
-		<groupId>br.usp.choreos.examples</groupId>
-		<artifactId>sample_choreography</artifactId>
-		<version>0.1-SNAPSHOT</version>
-	</parent>
-
 	<modelVersion>4.0.0</modelVersion>
-	<name>AuctionHouseService</name>
-	<artifactId>AuctionHouseService</artifactId>
 	<groupId>br.usp.choreos.examples</groupId>
+	<artifactId>sample_choreography</artifactId>
 	<version>0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
-	<description></description>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>AuctionHouseService</module>
+		<module>BidderService</module>
+		<module>SellerService</module>
+		<module>AuctionHouseChoreographyTest</module>
+	</modules>
 
 	<dependencies>
 		<dependency>
-			<groupId>br.usp.ime.choreos</groupId>
-			<artifactId>choreosvv</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>6.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 </project>
+
