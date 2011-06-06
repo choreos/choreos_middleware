@@ -2,8 +2,9 @@ package ime.usp.br.proxy;
 
 import ime.usp.br.proxy.codeGenerator.CodeGenerator;
 import ime.usp.br.proxy.codeGenerator.CodeGeneratorHelper;
-import ime.usp.br.proxy.interceptor.ProxyInterceptor;
+import ime.usp.br.proxy.generic.GenericImpl;
 
+import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -11,16 +12,19 @@ import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.frontend.ServerFactoryBean;
 
 public class ProxyFactory {
-    public void generateProxy(URL wsdlLocation) {
+    public Server generateProxy(URL wsdlLocation, int port) {
 
-	int initialPort = wsdlLocation.getPort()+1;
+	int initialPort;
+	
+	initialPort = (port == 0 ) ? wsdlLocation.getPort() + 1 : port;
 
 	generateServerClasses(wsdlLocation.toExternalForm());
 
-	String address = instantiateProxy(wsdlLocation, initialPort);
+	Server proxyServer = instantiateProxy(wsdlLocation, initialPort);
 
-	System.out.println("Service available at: " + address);
+	System.out.println("Service available at: " + proxyServer.getEndpoint().getEndpointInfo().getAddress());
 
+	return proxyServer;
     }
 
     private void generateServerClasses(String host) {
@@ -40,29 +44,33 @@ public class ProxyFactory {
 
     @SuppressWarnings("unchecked")
     // The Class variable cls is ** SUPPOSED ** to be a generic type.
-    public String instantiateProxy(URL wsdlLocation, int port) {
+    public Server instantiateProxy(URL wsdlLocation, int port) {
 	Class cls = null;
 	String address = "http://localhost:" + port + "/" + getPortName(wsdlLocation);
 	String className = getClassLocation(wsdlLocation);
-
+	Server server = null;
+	ServerFactoryBean serverFactoryBean = null;
+	
 	try {
 	    cls = Class.forName(className);
+
+	    Object implementor = Proxy.newProxyInstance(cls.getClassLoader(), cls.getClasses(), new GenericImpl());
+
+	    serverFactoryBean = new ServerFactoryBean();
+	    serverFactoryBean.setAddress(address);
+	    serverFactoryBean.setServiceBean(implementor);
+	    
+	    server = serverFactoryBean.create();
+	    
 	} catch (ClassNotFoundException e) {
 	    System.out.println("Found no such class " + className + " in current directory");
 	    e.printStackTrace();
 	    return null;
 	}
+	// ProxyInterceptor proxyService = new ProxyInterceptor();
 
-	ProxyInterceptor proxyService = new ProxyInterceptor();
-
-	ServerFactoryBean serverFactoryBean = new ServerFactoryBean();
-	serverFactoryBean.setAddress(address);
-	serverFactoryBean.setServiceBean(cls);
-
-	Server server = serverFactoryBean.create();
-
-	server.getEndpoint().getInInterceptors().add(proxyService);
-	return address;
+	// server.getEndpoint().getInInterceptors().add(proxyService);
+	return server;
     }
 
     public String getClassLocation(URL wsdlLocation) {

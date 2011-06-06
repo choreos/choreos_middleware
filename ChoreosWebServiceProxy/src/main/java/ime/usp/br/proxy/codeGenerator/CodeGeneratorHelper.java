@@ -10,11 +10,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.wsdl.Definition;
-import javax.wsdl.PortType;
 import javax.wsdl.WSDLException;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
-import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.cxf.tools.wsdlto.WSDLToJava;
@@ -149,6 +147,7 @@ public class CodeGeneratorHelper {
 
     }
 
+    @SuppressWarnings("unchecked")
     public String getPortName(URL wsdlInterfaceDescriptor) {
 	Definition def = null;
 	try {

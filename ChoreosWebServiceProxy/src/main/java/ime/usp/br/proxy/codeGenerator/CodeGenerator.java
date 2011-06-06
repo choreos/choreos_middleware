@@ -54,7 +54,7 @@ public class CodeGenerator {
     }
 
     public String generateServerCode(URL wsdlInterfaceDescriptor) {
-	codeGeneratorHelper.generateJavaCode(wsdlInterfaceDescriptor, true);
+	codeGeneratorHelper.generateJavaCode(wsdlInterfaceDescriptor, CodeGeneratorHelper.SERVER);
 	return codeGeneratorHelper.includeProxyCodeIntoGeneratedJavaFiles(wsdlInterfaceDescriptor);
     }
 
