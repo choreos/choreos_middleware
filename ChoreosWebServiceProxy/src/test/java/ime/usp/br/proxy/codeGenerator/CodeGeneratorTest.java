@@ -1,11 +1,9 @@
 package ime.usp.br.proxy.codeGenerator;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import ime.usp.br.proxy.support.webservice.HelloWorld8081;
+import ime.usp.br.proxy.support.webservice.HelloWorldService;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +12,6 @@ import java.net.URL;
 import javax.xml.ws.Endpoint;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -26,7 +23,7 @@ public class CodeGeneratorTest {
     
     @BeforeClass
     public static void cleanPreviouslyGeneratedCode() throws IOException, InterruptedException {
-	HelloWorld8081 service = new HelloWorld8081("1");
+	HelloWorldService service = new HelloWorldService("1");
 	Endpoint endpoint = Endpoint.create(service);
 	endpoint.publish("http://localhost:8085/hello");
 	System.out.println("Serviço disponibilizado na porta 8085");

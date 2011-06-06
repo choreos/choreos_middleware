@@ -3,18 +3,16 @@
  */
 package ime.usp.br.proxy;
 
-import static org.junit.Assert.*;
-import ime.usp.br.proxy.support.webservice.HelloWorld8081;
-
-import javax.xml.ws.Endpoint;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import ime.usp.br.proxy.support.webservice.HelloWorldService;
 
 import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.frontend.ServerFactoryBean;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class TestProxyController {
+public class ProxyControllerTest {
 
     ProxyController proxy = null;
     static Server service1, service2;
@@ -27,17 +25,17 @@ public class TestProxyController {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-	HelloWorld8081 wsProvider1 = new HelloWorld8081("service1");
+	HelloWorldService wsProvider1 = new HelloWorldService("service1");
 
 	ServerFactoryBean serverFactoryBean = new ServerFactoryBean();
-	serverFactoryBean.setServiceClass(HelloWorld8081.class);
+	serverFactoryBean.setServiceClass(HelloWorldService.class);
 	serverFactoryBean.setAddress("http://localhost:8085/hello");
 	serverFactoryBean.setServiceBean(wsProvider1);
 
 	service1 = serverFactoryBean.create();
 
 	serverFactoryBean = new ServerFactoryBean();
-	serverFactoryBean.setServiceClass(HelloWorld8081.class);
+	serverFactoryBean.setServiceClass(HelloWorldService.class);
 	serverFactoryBean.setAddress("http://localhost:8090/hello");
 	serverFactoryBean.setServiceBean(service2);
 
@@ -54,14 +52,14 @@ public class TestProxyController {
 
     @Test
     public void testAddNewServer() throws Exception {
-	ProxyController proxy = new ProxyController(TestProxyController.service1);
-	proxy.addNewServer(TestProxyController.service2);
-	assertTrue(proxy.knownWebServices.contains(TestProxyController.service2));
+	ProxyController proxy = new ProxyController(ProxyControllerTest.service1);
+	proxy.addNewServer(ProxyControllerTest.service2);
+	assertTrue(proxy.knownWebServices.contains(ProxyControllerTest.service2));
     }
 
     @Test
     public void testGetServerList() throws Exception {
-	ProxyController proxy = new ProxyController(TestProxyController.service1);
+	ProxyController proxy = new ProxyController(ProxyControllerTest.service1);
 	assertEquals(proxy.getServerList(), proxy.knownWebServices);
     }
 
@@ -72,8 +70,8 @@ public class TestProxyController {
      */
     @Test
     public final void testSwitchWSImplementation() {
-	ProxyController proxy = new ProxyController(TestProxyController.service1);
-	proxy.switchWSImplementation(TestProxyController.service2);
-	assertEquals(TestProxyController.service2, proxy.currentServer);
+	ProxyController proxy = new ProxyController(ProxyControllerTest.service1);
+	proxy.switchWSImplementation(ProxyControllerTest.service2);
+	assertEquals(ProxyControllerTest.service2, proxy.currentServer);
     }
 }
