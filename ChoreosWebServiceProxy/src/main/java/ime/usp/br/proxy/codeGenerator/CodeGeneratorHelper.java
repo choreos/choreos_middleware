@@ -1,19 +1,17 @@
 package ime.usp.br.proxy.codeGenerator;
 
 import java.io.File;
-
 import java.io.FileFilter;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import javax.wsdl.*;
+import javax.wsdl.Definition;
+import javax.wsdl.PortType;
+import javax.wsdl.WSDLException;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
@@ -21,6 +19,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.FileUtils;
 import org.apache.cxf.tools.wsdlto.WSDLToJava;
 
+import com.ibm.wsdl.BindingImpl;
 import com.sun.tools.javac.Main;
 
 public class CodeGeneratorHelper {
@@ -28,7 +27,7 @@ public class CodeGeneratorHelper {
     public static final String SRC_GENERATED_SERVER_JAVA = "src/generated/server/java";
     public static final String TARGET_GENERATED_SERVER_JAVA_CODE = "target/classes/generated";
 
-    private static final String CLASSPATH = "target/classes";
+    public static final String CLASSPATH = "target/classes";
 
     public static final boolean SERVER = true;
     public static final boolean CLIENT = false;
@@ -112,6 +111,7 @@ public class CodeGeneratorHelper {
 	}
     }
 
+    @SuppressWarnings("unchecked")
     private List<String> getLines(File fileHandler) {
 	List<String> fileLines = null;
 	try {
@@ -146,6 +146,29 @@ public class CodeGeneratorHelper {
 	}
 
 	return def.getTargetNamespace();
+
+    }
+
+    public String getPortName(URL wsdlInterfaceDescriptor) {
+	Definition def = null;
+	try {
+	    WSDLFactory factory = WSDLFactory.newInstance();
+	    WSDLReader reader = factory.newWSDLReader();
+	    reader.setFeature("javax.wsdl.verbose", false);
+	    reader.setFeature("javax.wsdl.importDocuments", true);
+	    def = reader.readWSDL(null, wsdlInterfaceDescriptor.toExternalForm());
+	} catch (WSDLException e) {
+	    e.printStackTrace();
+	}
+
+	Collection bindingList = def.getBindings().values();
+	for (Iterator bindingIterator = bindingList.iterator(); bindingIterator.hasNext();) {
+	    BindingImpl bind = (BindingImpl) bindingIterator.next();
+	    if (!bind.getPortType().isUndefined())
+		return bind.getPortType().getQName().getLocalPart();
+	}
+	
+	return "";
 
     }
 
@@ -222,11 +245,12 @@ public class CodeGeneratorHelper {
 	return array;
     }
 
+    @SuppressWarnings("unchecked")
     private List<String> listFiles(String sourcesDir) {
 	List<String> files = new ArrayList<String>();
 
 	if (new File(sourcesDir).isDirectory()) {
-	    for (Iterator iterator = FileUtils.listFiles(new File(sourcesDir), new String[] { "java" }, false)
+	    for (Iterator<File> iterator = FileUtils.listFiles(new File(sourcesDir), new String[] { "java" }, false)
 		    .iterator(); iterator.hasNext();) {
 		File file = (File) iterator.next();
 		files.add(file.getPath());

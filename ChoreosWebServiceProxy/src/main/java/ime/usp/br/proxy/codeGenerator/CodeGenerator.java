@@ -1,8 +1,5 @@
 package ime.usp.br.proxy.codeGenerator;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
 
 import org.apache.cxf.tools.wsdlto.WSDLToJava;
