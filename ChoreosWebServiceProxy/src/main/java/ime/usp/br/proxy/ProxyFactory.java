@@ -1,93 +1,68 @@
 package ime.usp.br.proxy;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Map;
-
-import javax.wsdl.Service;
-import javax.wsdl.WSDLException;
-
 import ime.usp.br.proxy.codeGenerator.CodeGenerator;
-import ime.usp.br.proxy.interceptor.ProxyInterceptor;
+import ime.usp.br.proxy.codeGenerator.CodeGeneratorHelper;
+import ime.usp.br.proxy.generic.GenericImpl;
 
-import org.apache.cxf.endpoint.Server;
-import org.apache.cxf.frontend.ServerFactoryBean;
-
-import org.ow2.easywsdl.schema.api.SchemaReader.FeatureConstants;
-import org.ow2.easywsdl.wsdl.*;
-import org.ow2.easywsdl.wsdl.impl.wsdl20.WSDLReaderImpl;
-
-import com.sun.tools.xjc.generator.util.ExistingBlockReference;
+import java.lang.reflect.Proxy;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class ProxyFactory {
-    public static void generateProxy(URL wsdlLocation) {
+    public Object generateProxyImplementor(URL wsdlLocation) {
 
-	int initialPort = wsdlLocation.getPort();
+	generateServerClasses(wsdlLocation.toExternalForm());
+	Object proxyInstance = getProxyInstance(wsdlLocation);
 
-	generateServerCode(wsdlLocation.getHost());
-
-	getServiceName(wsdlLocation);
-
-	String address = instantiateProxy(wsdlLocation, initialPort);
-
-	System.out.println("Service available at: " + address);
-
+	return proxyInstance;
     }
 
-    private static void generateServerCode(String host) {
-	try {
-	    new CodeGenerator().generateServerCode(new URL(host));
-	} catch (MalformedURLException e) {
-	    System.out.println("Verify that the URL " + host + " is not worng.");
-	    e.printStackTrace();
-	}
+    public static String getPortName(URL wsdlLocation) {
+	CodeGeneratorHelper cgh = new CodeGeneratorHelper();
+	return cgh.getPortName(wsdlLocation);
     }
 
-    private static String getServiceName(URL wsdlLocation) {
-	WSDLReaderImpl wsdlModel = null;
+    public String getClassLocation(URL wsdlLocation) {
+	CodeGeneratorHelper cgh = new CodeGeneratorHelper();
 
-	try {
-	    wsdlModel = new WSDLReaderImpl();
-	    wsdlModel.readWSDL(new URI(wsdlLocation.toExternalForm()));
-	} catch (org.ow2.easywsdl.wsdl.api.WSDLException e) {
-	    System.out.println("Error while reading WSDL at " + wsdlLocation.getHost());
-	    e.printStackTrace();
-	} catch (URISyntaxException e) {
-	    System.out.println("Error while reading WSDL at " + wsdlLocation.getHost());
-	    e.printStackTrace();
-	}
+	String namespace = cgh.getNamespace(wsdlLocation);
+	String destinationFolder = cgh.getDestinationFolder("", namespace);
+	String packageName = destinationFolder.substring(1).replaceAll("/", "\\.");
+	String className = packageName + getPortName(wsdlLocation);
 
-	Map<org.ow2.easywsdl.wsdl.api.WSDLReader.FeatureConstants, Object> allFeatures = wsdlModel.getFeatures();
-
-	return null;
+	return className;
     }
 
-    private static String instantiateProxy(URL wsdlLocation, int port) {
+    // Class is ** SUPPOSED ** to be generic. No need for a warning!
+    @SuppressWarnings("unchecked")
+    public Object getProxyInstance(URL wsdlLocation) {
 	Class cls = null;
-	String address = "http://localhost:" + port + "/hello";
-
-	generateServerCode(wsdlLocation.toExternalForm());
-
+	String className = getClassLocation(wsdlLocation);
+	Object implementor = null;
 	try {
-	    cls = Class.forName(getServiceName(wsdlLocation));
+	    cls = Class.forName(className);
+
+	    implementor = Proxy.newProxyInstance(cls.getClassLoader(), cls.getClasses(), new GenericImpl());
+
 	} catch (ClassNotFoundException e) {
-	    System.out.println("Found no such class " + getServiceName(wsdlLocation) + ".class in current directory");
+	    System.out.println("Found no such class " + className + " in current directory");
 	    e.printStackTrace();
 	    return null;
 	}
+	// ProxyInterceptor proxyService = new ProxyInterceptor();
 
-	ProxyInterceptor proxyService = new ProxyInterceptor();
+	// server.getEndpoint().getInInterceptors().add(proxyService);
+	return implementor;
+    }
 
-	ServerFactoryBean serverFactoryBean = new ServerFactoryBean();
-	serverFactoryBean.setAddress(address);
-	serverFactoryBean.setServiceBean(cls);
-
-	Server server = serverFactoryBean.create();
-
-	server.getEndpoint().getInInterceptors().add(proxyService);
-	return address;
+    private void generateServerClasses(String host) {
+	CodeGenerator codeGenerator = new CodeGenerator();
+	try {
+	    codeGenerator.generateServerClasses(new URL(host));
+	} catch (MalformedURLException e) {
+	    System.out.println("Verify that the URL " + host + " is not wrong.");
+	    e.printStackTrace();
+	}
     }
 
 }

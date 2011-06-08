@@ -10,3 +10,6 @@
 **/.project
 *.log
 target/
+src/generated/server/java/*
+.thisDirectoryMustExist
+src/generated/

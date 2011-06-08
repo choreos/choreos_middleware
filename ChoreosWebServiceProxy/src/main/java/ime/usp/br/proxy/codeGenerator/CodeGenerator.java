@@ -1,8 +1,5 @@
 package ime.usp.br.proxy.codeGenerator;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
 
 import org.apache.cxf.tools.wsdlto.WSDLToJava;
@@ -57,7 +54,7 @@ public class CodeGenerator {
     }
 
     public String generateServerCode(URL wsdlInterfaceDescriptor) {
-	codeGeneratorHelper.generateJavaCode(wsdlInterfaceDescriptor, true);
+	codeGeneratorHelper.generateJavaCode(wsdlInterfaceDescriptor, CodeGeneratorHelper.SERVER);
 	return codeGeneratorHelper.includeProxyCodeIntoGeneratedJavaFiles(wsdlInterfaceDescriptor);
     }
 

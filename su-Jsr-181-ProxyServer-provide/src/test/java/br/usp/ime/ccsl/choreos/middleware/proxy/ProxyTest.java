@@ -12,8 +12,10 @@ import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.usp.ime.ccsl.choreos.middleware.exceptions.FrameworkException;
-import br.usp.ime.ccsl.choreos.middleware.exceptions.InvalidOperationName;
+import br.usp.ime.choreos.vv.Item;
+import br.usp.ime.choreos.vv.WSClient;
+import br.usp.ime.choreos.vv.exceptions.FrameworkException;
+import br.usp.ime.choreos.vv.exceptions.InvalidOperationNameException;
 
 public class ProxyTest {
     private Proxy proxy;
@@ -95,21 +97,21 @@ public class ProxyTest {
 
     @Test
     public void shouldReturnExpectedResponse() throws Exception {
-	final String expected = "Hello test!";
 	WSClient wsMock = mock(WSClient.class);
-	when(wsMock.request("hello")).thenReturn(expected);
-
+	Item itemMock = mock(Item.class);
+	when(wsMock.request("hello")).thenReturn(itemMock);
+	
 	proxy.addService(wsMock);
-
-	String actual = proxy.request("hello");
-
-	assertEquals(expected, actual);
+	
+	Item actual = proxy.request("hello");
+	
+	assertEquals(itemMock, actual);
     }
 
-    @Test(expected = InvalidOperationName.class)
+    @Test(expected = InvalidOperationNameException.class)
     public void shouldThrowInvalidOperationName() throws Exception {
 	WSClient wsMock = mock(WSClient.class);
-	when(wsMock.request("foo")).thenThrow(new InvalidOperationName());
+	when(wsMock.request("foo")).thenThrow(new InvalidOperationNameException());
 
 	proxy.addService(wsMock);
 
@@ -134,7 +136,6 @@ public class ProxyTest {
 	WSClient wsClientMock1 = mock(WSClient.class);
 	WSClient wsClientMock2 = mock(WSClient.class);
 	when(wsClientMock1.request("foo")).thenThrow(new FrameworkException(new Exception()));
-	when(wsClientMock2.request("foo")).thenReturn("ok");
 
 	proxy.addService(wsClientMock1);
 	proxy.addService(wsClientMock2);

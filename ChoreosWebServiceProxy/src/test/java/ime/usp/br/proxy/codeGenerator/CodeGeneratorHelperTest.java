@@ -1,60 +1,75 @@
 package ime.usp.br.proxy.codeGenerator;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import ime.usp.br.proxy.support.webservice.HelloWorldService;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 
-import javax.naming.ldap.SortResponseControl;
+import javax.xml.ws.Endpoint;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.commons.io.filefilter.IOFileFilter;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.sun.xml.bind.v2.TODO;
-
 public class CodeGeneratorHelperTest {
+    CodeGeneratorHelper cgh = new CodeGeneratorHelper();
 
     @BeforeClass
-    public static void cleanPreviouslyGeneratedCode() throws IOException {
+    public static void cleanPreviouslyGeneratedCode() throws IOException, InterruptedException {
+
+	HelloWorldService service = new HelloWorldService("1");
+	Endpoint endpoint = Endpoint.create(service);
+	endpoint.publish("http://localhost:8091/hello");
+	System.out.println("Serviço disponibilizado na porta 8091");
+
 	FileUtils.cleanDirectory(new File(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA));
-	//FileUtils.cleanDirectory(new File(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA_CODE));
+	//FileUtils.cleanDirectory(new File(CodeGeneratorHelper.TARGET_GENERATED_SERVER_JAVA_CODE));
     }
 
     @Test
-    public void testGenerateJavaCode() {
-	CodeGeneratorHelper cg = new CodeGeneratorHelper();
+    public void testGenerateServerJavaCode() throws MalformedURLException {
 
-	URL wsdlInterfaceDescriptor = Object.class.getResource("/hello.wsdl");
+	URL wsdlInterfaceDescriptor = new URL("http://localhost:8091/hello?wsdl");
 
-	// TODO: colocar true = SERVER e false = CLIENT na classe de constantes
-	cg.generateJavaCode(wsdlInterfaceDescriptor, CodeGeneratorHelper.SERVER);
+	cgh.generateJavaCode(wsdlInterfaceDescriptor, CodeGeneratorHelper.SERVER);
 
-	// TODO: Create a constants class in which we describe the default path
-	// for generated files
-	String pathname = CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA
-		+ "/hello/HelloWorld8081_HelloWorld8081Port_Server.java";
+	String namespace = cgh.getNamespace(wsdlInterfaceDescriptor);
+	String directory = cgh.getDestinationFolder(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA, namespace);
+	String pathname = directory + "HelloWorld8081_HelloWorld8081Port_Server.java";
 
-	System.out.println("File Path: " + pathname);
+	assertTrue(new File(pathname).exists());
+
+    }
+    
+    @Test
+    public void testGenerateClientJavaCode() throws MalformedURLException {
+
+	URL wsdlInterfaceDescriptor = new URL("http://localhost:8091/hello?wsdl");
+
+	cgh.generateJavaCode(wsdlInterfaceDescriptor, CodeGeneratorHelper.CLIENT);
+
+	String namespace = cgh.getNamespace(wsdlInterfaceDescriptor);
+	String directory = cgh.getDestinationFolder(CodeGeneratorHelper.SRC_GENERATED_CLIENT_JAVA, namespace);
+	String pathname = directory + "HelloWorld8081_HelloWorld8081Port_Client.java";
+
 	assertTrue(new File(pathname).exists());
 
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testIncludeProxyCodeIntoGeneratedJavaFiles() throws IOException {
-	CodeGeneratorHelper cg = new CodeGeneratorHelper();
-	cg.includeProxyCodeIntoGeneratedJavaFiles(Object.class.getResource("/hello.wsdl"));
+	cgh.includeProxyCodeIntoGeneratedJavaFiles(new URL("http://localhost:8091/hello?wsdl"));
 
-	File fileHandler = new File(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA
-		+ "/hello/HelloWorld8081_HelloWorld8081Port_Server.java");
+	File fileHandler = new File(cgh.getDestinationFolder(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA, cgh
+		.getNamespace(new URL("http://localhost:8091/hello?wsdl")))
+		+ "HelloWorld8081_HelloWorld8081Port_Server.java");
 
 	List<String> fileLines = FileUtils.readLines(fileHandler);
 
@@ -70,21 +85,47 @@ public class CodeGeneratorHelperTest {
     }
 
     @Test
-    public void testGetNamespace() throws Exception {
-	CodeGeneratorHelper cg = new CodeGeneratorHelper();
-	assertEquals("oi", cg.getNamespace(Object.class.getResource("/oi.wsdl")));
-	assertEquals("hello", cg.getNamespace(Object.class.getResource("/hello.wsdl")));
+    public void testGetNamespaceFromURL() throws Exception {
+	assertEquals("http://webservice.support.proxy.br.usp.ime/", cgh.getNamespace(new URL(
+		"http://localhost:8091/hello?wsdl")));
+    }
 
+    @Test
+    public void testGetNamespaceFromFile() throws Exception {
+	assertEquals("http://webservice.support.proxy.br.usp.ime/", cgh.getNamespace(Object.class
+		.getResource("/hello.wsdl")));
+    }
+
+    @Test
+    public void testGetDestinationFolder() throws Exception {
+	String actualDestination = cgh.getDestinationFolder(CodeGeneratorHelper.TARGET_GENERATED_SERVER_JAVA_CODE,
+		"http://webservice.support.proxy.br.usp.ime/");
+
+	String expectedDestination = CodeGeneratorHelper.TARGET_GENERATED_SERVER_JAVA_CODE
+		+ "/ime/usp/br/proxy/support/webservice/";
+
+	assertEquals(expectedDestination, actualDestination);
     }
 
     @Test
     public void testCompileJavaFiles() throws Exception {
-	CodeGeneratorHelper cgh = new CodeGeneratorHelper();
-
-	cgh.compileJavaFiles(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA + "/hello/",
+	cgh.compileJavaFiles(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA + "/ime/usp/br/proxy/support/webservice/",
 		CodeGeneratorHelper.TARGET_GENERATED_SERVER_JAVA_CODE);
 
 	assertTrue(new File(CodeGeneratorHelper.TARGET_GENERATED_SERVER_JAVA_CODE
-		+ "/hello/HelloWorld8081_HelloWorld8081Port_Server.class").exists());
+		+ "/ime/usp/br/proxy/support/webservice/HelloWorld8081_HelloWorld8081Port_Server.class").exists());
     }
+    
+    @Test
+    public void testGetPortNameFromURL() throws Exception {
+	assertEquals("HelloWorld8081", cgh.getPortName(new URL(
+		"http://localhost:8091/hello?wsdl")));
+    }
+
+    @Test
+    public void testGetPortNameFromFile() throws Exception {
+	assertEquals("HelloWorld8081", cgh.getPortName(Object.class
+		.getResource("/hello.wsdl")));
+    }
+
 }

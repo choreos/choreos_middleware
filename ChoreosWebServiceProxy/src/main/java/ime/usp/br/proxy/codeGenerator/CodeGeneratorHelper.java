@@ -5,15 +5,19 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import javax.wsdl.Definition;
+import javax.wsdl.WSDLException;
+import javax.wsdl.factory.WSDLFactory;
+import javax.wsdl.xml.WSDLReader;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.cxf.tools.wsdlto.WSDLToJava;
-import org.apache.velocity.texen.util.FileUtil;
 
+import com.ibm.wsdl.BindingImpl;
 import com.sun.tools.javac.Main;
 
 public class CodeGeneratorHelper {
@@ -21,11 +25,10 @@ public class CodeGeneratorHelper {
     public static final String SRC_GENERATED_SERVER_JAVA = "src/generated/server/java";
     public static final String TARGET_GENERATED_SERVER_JAVA_CODE = "target/classes/generated";
 
-    private static final String CLASSPATH = "target/classes";
-    
+    public static final String CLASSPATH = "target/classes";
+
     public static final boolean SERVER = true;
     public static final boolean CLIENT = false;
-
 
     public void generateJavaCode(URL wsdlInterfaceDescriptor, boolean server) {
 	String[] parameters = null;
@@ -40,24 +43,29 @@ public class CodeGeneratorHelper {
     }
 
     public String includeProxyCodeIntoGeneratedJavaFiles(URL wsdlInterfaceDescriptor) {
-	System.out.println(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA + "/" + getNamespace(wsdlInterfaceDescriptor));
-	File fileDirectory = new File(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA + "/"
-		+ getNamespace(wsdlInterfaceDescriptor));
 
-	File fileHandler = findServerFile(fileDirectory);
-	List<String> fileLines = getLines(fileHandler);
-	List<String> fileLinesCopy = new ArrayList<String>(fileLines);
+	String namespace = getNamespace(wsdlInterfaceDescriptor);
+	String destinationFolder = getDestinationFolder(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA, namespace);
 
-	for (String currentLine : fileLines) {
-	    addImportOf(fileLinesCopy, currentLine, "import java.lang.reflect.*;");
-	    addImportOf(fileLinesCopy, currentLine, "import ime.usp.br.proxy.generic.GenericImpl;");
-	    adaptImplementorLine(fileLinesCopy, currentLine);
-	}
+	File fileDirectory = new File(destinationFolder);
 
-	fileHandler.delete();
-	createNewFile(fileHandler);
-	writeLines(fileHandler, fileLinesCopy);
-	
+	if (fileDirectory.exists() && fileDirectory.isDirectory()) {
+	    File fileHandler = findServerFile(fileDirectory);
+
+	    List<String> fileLines = getLines(fileHandler);
+	    List<String> fileLinesCopy = new ArrayList<String>(fileLines);
+
+	    for (String currentLine : fileLines) {
+		addImportOf(fileLinesCopy, currentLine, "import java.lang.reflect.*;");
+		addImportOf(fileLinesCopy, currentLine, "import ime.usp.br.proxy.generic.GenericImpl;");
+		adaptImplementorLine(fileLinesCopy, currentLine);
+	    }
+
+	    fileHandler.delete();
+	    createNewFile(fileHandler);
+	    writeLines(fileHandler, fileLinesCopy);
+	} else
+	    System.out.println(fileDirectory.getPath() + " is not a directory!");
 	return fileDirectory.getPath();
     }
 
@@ -101,6 +109,7 @@ public class CodeGeneratorHelper {
 	}
     }
 
+    @SuppressWarnings("unchecked")
     private List<String> getLines(File fileHandler) {
 	List<String> fileLines = null;
 	try {
@@ -123,34 +132,64 @@ public class CodeGeneratorHelper {
     }
 
     public String getNamespace(URL wsdlInterfaceDescriptor) {
-
-	Pattern pattern = Pattern.compile(".*namespace=['\"].*?['\"].*");
-
+	Definition def = null;
 	try {
-	    File file = new File(wsdlInterfaceDescriptor.toURI());
-	    List<String> lines = getLines(file);
-
-	    for (String string : lines) {
-
-		Matcher matcher = pattern.matcher(string);
-
-		if (matcher.matches()) {
-
-		    int j = 0;
-		    System.out.println(string);
-		    String[] pieces = string.split("namespace=")[1].split("\"");
-
-		    if (pieces[1].matches("http://.*/")) {
-			System.out.println(pieces[1].split("/")[2]);
-			return pieces[1].split("/")[2];
-		    }
-		    return pieces[1];
-		}
-	    }
-	} catch (Exception e) {
+	    WSDLFactory factory = WSDLFactory.newInstance();
+	    WSDLReader reader = factory.newWSDLReader();
+	    reader.setFeature("javax.wsdl.verbose", false);
+	    reader.setFeature("javax.wsdl.importDocuments", true);
+	    def = reader.readWSDL(null, wsdlInterfaceDescriptor.toExternalForm());
+	} catch (WSDLException e) {
 	    e.printStackTrace();
 	}
-	return "hello";
+
+	return def.getTargetNamespace();
+
+    }
+
+    @SuppressWarnings("unchecked")
+    public String getPortName(URL wsdlInterfaceDescriptor) {
+	Definition def = null;
+	try {
+	    WSDLFactory factory = WSDLFactory.newInstance();
+	    WSDLReader reader = factory.newWSDLReader();
+	    reader.setFeature("javax.wsdl.verbose", false);
+	    reader.setFeature("javax.wsdl.importDocuments", true);
+	    def = reader.readWSDL(null, wsdlInterfaceDescriptor.toExternalForm());
+	} catch (WSDLException e) {
+	    e.printStackTrace();
+	}
+
+	Collection bindingList = def.getBindings().values();
+	for (Iterator bindingIterator = bindingList.iterator(); bindingIterator.hasNext();) {
+	    BindingImpl bind = (BindingImpl) bindingIterator.next();
+	    if (!bind.getPortType().isUndefined())
+		return bind.getPortType().getQName().getLocalPart();
+	}
+	
+	return "";
+
+    }
+
+    public String getDestinationFolder(String destinationPrefix, String namespace) {
+	String destinationFolder = destinationPrefix;
+
+	if (namespace.matches("http://.*")) {
+	    String[] pieces = namespace.split("//")[1].split("\\.");
+	    String invertedPieces = "";
+
+	    for (int i = pieces.length - 1; i >= 0; i--) {
+		invertedPieces = invertedPieces + "/" + pieces[i].replace("/", "");
+	    }
+
+	    return destinationFolder.concat(invertedPieces + "/");
+	    // return
+	    // destinationFolder.concat(namespace.split("//")[1].replace(".",
+	    // "/"));
+
+	} else
+	    return namespace;
+
     }
 
     public void compileJavaFiles(String sourcesDir, String classesDestinationDir) {
@@ -186,38 +225,42 @@ public class CodeGeneratorHelper {
 
 	List<String> argsList = listFiles(sourcesDir);
 
-	//argsList.add(0, "-nowarn");
+	// argsList.add(0, "-nowarn");
 	argsList.add(0, "-d");
 	argsList.add(1, classesDestinationDir);
-	
+
 	String[] args = convertStringListToStringArray(argsList);
-	
-	System.out.print("javac ");
-	for (String string : args) {
-	    System.out.print(string + " ");
-	}
+
 	Main.compile(args);
     }
 
     private String[] convertStringListToStringArray(List<String> list) {
-	String[] array = new String[list.size()] ;
+	String[] array = new String[list.size()];
 	int i = 0;
-	
+
 	for (String file : list) {
 	    array[i++] = file;
 	}
 	return array;
     }
 
+    @SuppressWarnings("unchecked")
     private List<String> listFiles(String sourcesDir) {
 	List<String> files = new ArrayList<String>();
-	
-	for (Iterator iterator = FileUtils.listFiles(new File(sourcesDir), new String[] {"java"}, false).iterator(); iterator.hasNext();) {
-	    File file = (File) iterator.next();
-	    files.add(file.getPath());
+
+	if (new File(sourcesDir).isDirectory()) {
+	    for (Iterator<File> iterator = FileUtils.listFiles(new File(sourcesDir), new String[] { "java" }, false)
+		    .iterator(); iterator.hasNext();) {
+		File file = (File) iterator.next();
+		files.add(file.getPath());
+	    }
+	} else {
+	    System.out.println("Argument " + sourcesDir + " is not a directory");
+	    return null;
 	}
+
 	return files;
-	
+
     }
 
     private void createDirectory(String directory) {
@@ -232,7 +275,6 @@ public class CodeGeneratorHelper {
 		System.out.println("Directory " + directory + " does not exist.");
 	    }
 
-	    System.out.println("Running mkdir ./" + directory);
 	    Process pr = Runtime.getRuntime().exec("mkdir -p ./" + directory);
 	    pr.waitFor();
 
