@@ -22,11 +22,11 @@ public class ProxyFactory {
 	return cgh.getPortName(wsdlLocation);
     }
 
+    // TODO: Test!
     public String getClassLocation(URL wsdlLocation) {
 	CodeGeneratorHelper cgh = new CodeGeneratorHelper();
 
-	String namespace = cgh.getNamespace(wsdlLocation);
-	String destinationFolder = cgh.getDestinationFolder("", namespace);
+	String destinationFolder = cgh.getDestinationFolder("", wsdlLocation);
 	String packageName = destinationFolder.substring(1).replaceAll("/", "\\.");
 	String className = packageName + getPortName(wsdlLocation);
 
@@ -35,23 +35,28 @@ public class ProxyFactory {
 
     // Class is ** SUPPOSED ** to be generic. No need for a warning!
     @SuppressWarnings("unchecked")
-    public Object getProxyInstance(URL wsdlLocation) {
-	Class cls = null;
-	String className = getClassLocation(wsdlLocation);
+    private Object getProxyInstance(URL wsdlLocation) {
+	Class clazz = null;
+	String className = getClassLocation(wsdlLocation)+"Impl";
 	Object implementor = null;
 	try {
-	    cls = Class.forName(className);
+	    clazz = Class.forName(className);
 
-	    implementor = Proxy.newProxyInstance(cls.getClassLoader(), cls.getClasses(), new GenericImpl());
+	    //implementor = Proxy.newProxyInstance(clazz.getClassLoader(), clazz.getInterfaces(), new GenericImpl());
+	    implementor = clazz.newInstance();
 
+	    
 	} catch (ClassNotFoundException e) {
 	    System.out.println("Found no such class " + className + " in current directory");
 	    e.printStackTrace();
 	    return null;
+	} catch (InstantiationException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} catch (IllegalAccessException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
-	// ProxyInterceptor proxyService = new ProxyInterceptor();
-
-	// server.getEndpoint().getInInterceptors().add(proxyService);
 	return implementor;
     }
 
