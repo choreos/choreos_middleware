@@ -23,20 +23,6 @@ import org.junit.Test;
 
 import com.ibm.wsdl.BindingImpl;
 
-/**
- * Short Description
- * 
- * Optional: Longer description
- * 
- * @author (classes and interfaces only, required; Multiple authors must be
- *         listed as new @author tag)
- * @version (classes and interfaces only, required)
- * @param (methods and constructors only)
- * @return (methods only)
- * @throws
- * @see
- * @since
- */
 public class ProxyFactoryTest {
 
     ProxyFactory factory = new ProxyFactory();
@@ -44,7 +30,7 @@ public class ProxyFactoryTest {
     /**
      * Sets up a HelloWorld Web Server to run tests on.
      * 
-     * A web server is raised at http://localhost:8085/hello to allow for WSDL
+     * A web server is raised at http://localhost:8089/hello to allow for WSDL
      * check and usage.
      * 
      * @throws java.lang.Exception
@@ -53,20 +39,20 @@ public class ProxyFactoryTest {
     public static void setUpBeforeClass() throws Exception {
 	HelloWorldService service = new HelloWorldService("1");
 	Endpoint endpoint = Endpoint.create(service);
-	endpoint.publish("http://localhost:8085/hello");
-	System.out.println("Serviço disponibilizado na porta 8085");
+	endpoint.publish("http://localhost:8089/hello");
+	System.out.println("Serviço disponibilizado na porta 8089");
     }
 
     /**
      * Test method for
-     * {@link ime.usp.br.proxy.ProxyFactory#generateProxy(java.net.URL, int)}.
+     * {@link ime.usp.br.proxy.ProxyFactory#generateProxyImplementor(java.net.URL, int)}.
      * 
      * @throws MalformedURLException
      */
     @Test
     public void testGenerateProxy() throws MalformedURLException {
-	URL wsdlLocation = new URL("http://localhost:8085/hello?wsdl");
-	factory.generateProxy(wsdlLocation, 0);
+	URL wsdlLocation = new URL("http://localhost:8089/hello?wsdl");
+	factory.generateProxyImplementor(wsdlLocation);
 	CodeGeneratorHelper cgh = new CodeGeneratorHelper();
 	assertEquals("HelloWorld8081", cgh.getPortName(wsdlLocation));
 	assertEquals("http://webservice.support.proxy.br.usp.ime/", cgh.getNamespace(wsdlLocation));
@@ -74,7 +60,7 @@ public class ProxyFactoryTest {
 
     /**
      * Test method for
-     * {@link ime.usp.br.proxy.ProxyFactory#instantiateProxy(java.net.URL, int)}
+     * {@link ime.usp.br.proxy.ProxyFactory#getProxyInstance(java.net.URL, int)}
      * .
      * 
      * @throws MalformedURLException
@@ -83,9 +69,9 @@ public class ProxyFactoryTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testInstantiateProxy() throws MalformedURLException, InterruptedException {
-	URL wsdlLocation = new URL("http://localhost:8085/hello?wsdl");
+	URL wsdlLocation = new URL("http://localhost:8089/hello?wsdl");
 
-	factory.instantiateProxy(wsdlLocation, 8089);
+	factory.getProxyInstance(wsdlLocation);
 
 	Definition def = null;
 	try {

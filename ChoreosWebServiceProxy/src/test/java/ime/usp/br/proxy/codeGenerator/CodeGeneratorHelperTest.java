@@ -25,8 +25,8 @@ public class CodeGeneratorHelperTest {
 
 	HelloWorldService service = new HelloWorldService("1");
 	Endpoint endpoint = Endpoint.create(service);
-	endpoint.publish("http://localhost:8085/hello");
-	System.out.println("Serviço disponibilizado na porta 8085");
+	endpoint.publish("http://localhost:8091/hello");
+	System.out.println("Serviço disponibilizado na porta 8091");
 
 	FileUtils.cleanDirectory(new File(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA));
 	//FileUtils.cleanDirectory(new File(CodeGeneratorHelper.TARGET_GENERATED_SERVER_JAVA_CODE));
@@ -35,7 +35,7 @@ public class CodeGeneratorHelperTest {
     @Test
     public void testGenerateServerJavaCode() throws MalformedURLException {
 
-	URL wsdlInterfaceDescriptor = new URL("http://localhost:8085/hello?wsdl");
+	URL wsdlInterfaceDescriptor = new URL("http://localhost:8091/hello?wsdl");
 
 	cgh.generateJavaCode(wsdlInterfaceDescriptor, CodeGeneratorHelper.SERVER);
 
@@ -50,7 +50,7 @@ public class CodeGeneratorHelperTest {
     @Test
     public void testGenerateClientJavaCode() throws MalformedURLException {
 
-	URL wsdlInterfaceDescriptor = new URL("http://localhost:8085/hello?wsdl");
+	URL wsdlInterfaceDescriptor = new URL("http://localhost:8091/hello?wsdl");
 
 	cgh.generateJavaCode(wsdlInterfaceDescriptor, CodeGeneratorHelper.CLIENT);
 
@@ -65,10 +65,10 @@ public class CodeGeneratorHelperTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testIncludeProxyCodeIntoGeneratedJavaFiles() throws IOException {
-	cgh.includeProxyCodeIntoGeneratedJavaFiles(new URL("http://localhost:8085/hello?wsdl"));
+	cgh.includeProxyCodeIntoGeneratedJavaFiles(new URL("http://localhost:8091/hello?wsdl"));
 
 	File fileHandler = new File(cgh.getDestinationFolder(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA, cgh
-		.getNamespace(new URL("http://localhost:8085/hello?wsdl")))
+		.getNamespace(new URL("http://localhost:8091/hello?wsdl")))
 		+ "HelloWorld8081_HelloWorld8081Port_Server.java");
 
 	List<String> fileLines = FileUtils.readLines(fileHandler);
@@ -87,7 +87,7 @@ public class CodeGeneratorHelperTest {
     @Test
     public void testGetNamespaceFromURL() throws Exception {
 	assertEquals("http://webservice.support.proxy.br.usp.ime/", cgh.getNamespace(new URL(
-		"http://localhost:8085/hello?wsdl")));
+		"http://localhost:8091/hello?wsdl")));
     }
 
     @Test
@@ -119,7 +119,7 @@ public class CodeGeneratorHelperTest {
     @Test
     public void testGetPortNameFromURL() throws Exception {
 	assertEquals("HelloWorld8081", cgh.getPortName(new URL(
-		"http://localhost:8085/hello?wsdl")));
+		"http://localhost:8091/hello?wsdl")));
     }
 
     @Test

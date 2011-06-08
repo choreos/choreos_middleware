@@ -5,10 +5,12 @@ package ime.usp.br.proxy;
 
 import ime.usp.br.proxy.interceptor.ProxyInterceptor;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.cxf.endpoint.Server;
+import org.apache.cxf.frontend.ServerFactoryBean;
 
 /**
  * The Proxy service provider.
@@ -47,7 +49,8 @@ public class ProxyController {
      * @param serviceProvider
      *            The service provider that will, from now on, receive requests
      *            from the role's clients
-     * @return True, if successfully changed the service provider. False otherwise.
+     * @return True, if successfully changed the service provider. False
+     *         otherwise.
      */
     public void switchWSImplementation(Server serviceProvider) {
 	if (!knownWebServices.contains(serviceProvider)) {
@@ -60,7 +63,7 @@ public class ProxyController {
      * Short description
      * 
      * Longer description.
-     *
+     * 
      * @param service2
      */
     public boolean addNewServer(Server newServiceProvider) {
@@ -71,12 +74,31 @@ public class ProxyController {
      * Short description
      * 
      * Longer description.
-     *
+     * 
      * @return
      */
     public List<Server> getServerList() {
 	return knownWebServices;
     }
 
+    public Server instantiateProxy(URL wsdlLocation, int port) {
+	String address = "http://localhost:" + port + "/" + ProxyFactory.getPortName(wsdlLocation);
 
+	// 1st step: WSDL -> POJO
+	ProxyFactory factory = new ProxyFactory();
+	Object proxyInstance = factory.getProxyInstance(wsdlLocation);
+
+	// 2nd step POJO -> WS without implementation
+	ServerFactoryBean serverFactoryBean = new ServerFactoryBean();
+
+	serverFactoryBean.setAddress(address);
+	serverFactoryBean.setServiceBean(proxyInstance);
+
+	Server server = serverFactoryBean.create();
+
+	// ProxyInterceptor proxyService = new ProxyInterceptor();
+
+	// server.getEndpoint().getInInterceptors().add(proxyService);
+	return server;
+    }
 }

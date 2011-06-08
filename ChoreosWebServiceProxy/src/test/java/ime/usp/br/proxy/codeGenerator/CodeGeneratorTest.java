@@ -23,11 +23,6 @@ public class CodeGeneratorTest {
     
     @BeforeClass
     public static void cleanPreviouslyGeneratedCode() throws IOException, InterruptedException {
-	HelloWorldService service = new HelloWorldService("1");
-	Endpoint endpoint = Endpoint.create(service);
-	endpoint.publish("http://localhost:8085/hello");
-	System.out.println("Serviço disponibilizado na porta 8085");
-
 	FileUtils.cleanDirectory(new File(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA));
     }
     
