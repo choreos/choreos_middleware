@@ -62,6 +62,12 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
+    <repository>
+      <id>ccslrepository</id>
+      <name>ccsl</name>
+      <url>http://valinhos.ime.usp.br:54080/maven/</url>
+    </repository>
+
   </repositories>
 
 
