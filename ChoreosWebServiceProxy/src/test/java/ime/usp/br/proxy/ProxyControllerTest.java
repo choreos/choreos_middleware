@@ -11,7 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import ime.usp.br.proxy.codeGenerator.CodeGeneratorHelper;
+import ime.usp.br.proxy.codegenerator.CodeGeneratorHelper;
 import ime.usp.br.proxy.support.webservice.HelloWorldService;
 
 import org.apache.cxf.endpoint.Server;

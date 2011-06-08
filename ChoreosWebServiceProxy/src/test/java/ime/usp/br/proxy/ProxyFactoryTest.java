@@ -5,10 +5,9 @@ package ime.usp.br.proxy;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import ime.usp.br.proxy.codeGenerator.CodeGeneratorHelper;
+import ime.usp.br.proxy.codegenerator.CodeGeneratorHelper;
 import ime.usp.br.proxy.support.webservice.HelloWorld8081;
 
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;

@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import ime.usp.br.proxy.codegenerator.CodeGeneratorHelper;
 import ime.usp.br.proxy.support.webservice.HelloWorld8081;
 import ime.usp.br.proxy.support.webservice.HelloWorldService;
 

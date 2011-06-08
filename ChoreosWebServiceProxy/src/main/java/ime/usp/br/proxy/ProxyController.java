@@ -3,7 +3,7 @@
  */
 package ime.usp.br.proxy;
 
-import ime.usp.br.proxy.codeGenerator.CodeGeneratorHelper;
+import ime.usp.br.proxy.codegenerator.CodeGeneratorHelper;
 import ime.usp.br.proxy.interceptor.ProxyInterceptor;
 
 import java.net.MalformedURLException;

@@ -1,8 +1,9 @@
-package ime.usp.br.proxy.codeGenerator;
+package ime.usp.br.proxy.codegenerator;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,44 +31,127 @@ public class CodeGeneratorHelper {
     public static final boolean SERVER = true;
     public static final boolean CLIENT = false;
 
-    public void generateJavaCode(URL wsdlInterfaceDescriptor, boolean server) {
+    private List<String> implementation;
+
+    @SuppressWarnings("unchecked")
+    private void createImplementationClass(URL wsdlInterfaceDescriptor) {
+
+	implementation = new ArrayList<String>();
+
+	String packageName = getPackage(wsdlInterfaceDescriptor);
+
+	implementation.add("package " + packageName.substring(0, packageName.length() - 1) + ";");
+	implementation.add("");
+	implementation.add("public class " + getPortName(wsdlInterfaceDescriptor) + "Impl implements "
+		+ getPortName(wsdlInterfaceDescriptor) + "{");
+	implementation.add("");
+
+	String className = packageName + getPortName(wsdlInterfaceDescriptor);
+	System.out.println(className);
+	Class implementedInterface = getInterfaceClass(className);
+
+	for (int i = 0; i < implementedInterface.getMethods().length; i++) {
+	    generateMethod(implementedInterface.getMethods()[i]);
+	}
+
+	implementation.add("}");
+
+	String fileName = getDestinationFolder(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA, wsdlInterfaceDescriptor)
+		+ getPortName(wsdlInterfaceDescriptor) + "Impl.java";
+	File output = new File(fileName);
+
+	System.out.println(fileName);
+	writeLines(output, implementation);
+    }
+
+    private String getPackage(URL wsdlInterfaceDescriptor) {
+	return getDestinationFolder("", wsdlInterfaceDescriptor).replace('/', '.').substring(1);
+    }
+
+    private void generateMethod(Method method) {
+	String line = "public " + method.getReturnType().getSimpleName() + " " + method.getName() + "(";
+
+	for (int i = 0; i < method.getParameterTypes().length; i++) {
+	    line = line + method.getParameterTypes()[i].getSimpleName() + " param" + i;
+	    line = (i == method.getParameterTypes().length) ? line + ", " : line;
+	}
+	line = line + "){";
+	implementation.add(line);
+	
+	
+	line = "Exception e = new Exception(\"There is no web service active for this role\");";
+	implementation.add(line);
+	implementation.add("return null;");
+	implementation.add("}");
+
+    }
+
+    /**
+     * Short description
+     * 
+     * Longer description.
+     * 
+     * @param portName
+     * @return
+     */
+    private Class getInterfaceClass(String portName) {
+
+	Class clazz = null;
+	try {
+	    clazz = Class.forName(portName);
+	} catch (ClassNotFoundException e) {
+	    e.printStackTrace();
+	}
+	if (clazz == null)
+	    System.out.println("Class " + portName + " was not found.");
+	return clazz;
+    }
+
+    public String generateJavaCode(URL wsdlInterfaceDescriptor, boolean server) {
 	String[] parameters = null;
 	if (server) {
 	    parameters = new String[] { "-server", "-d", SRC_GENERATED_SERVER_JAVA,
 		    wsdlInterfaceDescriptor.toExternalForm() };
+	    WSDLToJava.main(parameters);
+	    createImplementationClass(wsdlInterfaceDescriptor);
+	    return SRC_GENERATED_SERVER_JAVA;
 	} else {
 	    parameters = new String[] { "-client", "-d", SRC_GENERATED_CLIENT_JAVA, "-compile",
 		    wsdlInterfaceDescriptor.toExternalForm() };
+	    return SRC_GENERATED_CLIENT_JAVA;
 	}
-	WSDLToJava.main(parameters);
+
     }
 
-    public String includeProxyCodeIntoGeneratedJavaFiles(URL wsdlInterfaceDescriptor) {
-
-	String namespace = getNamespace(wsdlInterfaceDescriptor);
-	String destinationFolder = getDestinationFolder(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA, namespace);
-
-	File fileDirectory = new File(destinationFolder);
-
-	if (fileDirectory.exists() && fileDirectory.isDirectory()) {
-	    File fileHandler = findServerFile(fileDirectory);
-
-	    List<String> fileLines = getLines(fileHandler);
-	    List<String> fileLinesCopy = new ArrayList<String>(fileLines);
-
-	    for (String currentLine : fileLines) {
-		addImportOf(fileLinesCopy, currentLine, "import java.lang.reflect.*;");
-		addImportOf(fileLinesCopy, currentLine, "import ime.usp.br.proxy.generic.GenericImpl;");
-		adaptImplementorLine(fileLinesCopy, currentLine);
-	    }
-
-	    fileHandler.delete();
-	    createNewFile(fileHandler);
-	    writeLines(fileHandler, fileLinesCopy);
-	} else
-	    System.out.println(fileDirectory.getPath() + " is not a directory!");
-	return fileDirectory.getPath();
-    }
+    // public String includeProxyCodeIntoGeneratedJavaFiles(URL
+    // wsdlInterfaceDescriptor) {
+    //
+    // String destinationFolder =
+    // getDestinationFolder(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA,
+    // wsdlInterfaceDescriptor);
+    //
+    // File fileDirectory = new File(destinationFolder);
+    //
+    // if (fileDirectory.exists() && fileDirectory.isDirectory()) {
+    // File fileHandler = findServerFile(fileDirectory);
+    //
+    // List<String> fileLines = getLines(fileHandler);
+    // List<String> fileLinesCopy = new ArrayList<String>(fileLines);
+    //
+    // for (String currentLine : fileLines) {
+    // addImportOf(fileLinesCopy, currentLine, "import java.lang.reflect.*;");
+    // addImportOf(fileLinesCopy, currentLine,
+    // "import ime.usp.br.proxy.generic.GenericImpl;");
+    // adaptImplementorLine(fileLinesCopy, currentLine);
+    // }
+    //
+    // fileHandler.delete();
+    // createNewFile(fileHandler);
+    // writeLines(fileHandler, fileLinesCopy);
+    // } else
+    // System.out.println(fileDirectory.getPath() + " is not a directory!");
+    // return fileDirectory.getPath();
+    // }
 
     private void writeLines(File fileHandler, List<String> fileLinesCopy) {
 	try {
@@ -87,49 +171,56 @@ public class CodeGeneratorHelper {
 	}
     }
 
-    private void addImportOf(List<String> fileLines, String currentLine, String packageName) {
-	if (currentLine.matches("package .*;")) {
-	    fileLines.add(fileLines.indexOf(currentLine) + 1, packageName);
-	}
-    }
-
-    private void adaptImplementorLine(List<String> fileLines, String currentLine) {
-	if (currentLine.matches(".*Object implementor = new .*")) {
-
-	    int classnameStartIndex = currentLine.indexOf("Object implementor = new ")
-		    + "Object implementor = new ".length();
-	    int classNameEndIndex = currentLine.indexOf("Impl();");
-
-	    String className = currentLine.substring(classnameStartIndex, classNameEndIndex);
-
-	    String modifiedFileLine = "Object implementor = Proxy.newProxyInstance(" + className
-		    + ".class.getClassLoader(), new Class[] { " + className + ".class }, new GenericImpl());";
-
-	    fileLines.set(fileLines.indexOf(currentLine), modifiedFileLine);
-	}
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<String> getLines(File fileHandler) {
-	List<String> fileLines = null;
-	try {
-	    fileLines = FileUtils.readLines(fileHandler);
-	} catch (IOException e) {
-	    System.out.println("File not Found: " + fileHandler.getName());
-	    e.printStackTrace();
-	}
-	return fileLines;
-    }
-
-    private File findServerFile(File fileDirectory) {
-	File[] files = fileDirectory.listFiles(new FileFilter() {
-
-	    public boolean accept(File pathname) {
-		return pathname.getName().matches(".*Server.java");
-	    }
-	});
-	return (files.length > 0) ? files[0] : null;
-    }
+    //
+    // private void addImportOf(List<String> fileLines, String currentLine,
+    // String packageName) {
+    // if (currentLine.matches("package .*;")) {
+    // fileLines.add(fileLines.indexOf(currentLine) + 1, packageName);
+    // }
+    // }
+    //
+    // private void adaptImplementorLine(List<String> fileLines, String
+    // currentLine) {
+    // if (currentLine.matches(".*Object implementor = new .*")) {
+    //
+    // int classnameStartIndex =
+    // currentLine.indexOf("Object implementor = new ")
+    // + "Object implementor = new ".length();
+    // int classNameEndIndex = currentLine.indexOf("Impl();");
+    //
+    // String className = currentLine.substring(classnameStartIndex,
+    // classNameEndIndex);
+    //
+    // String modifiedFileLine = "Object implementor = Proxy.newProxyInstance("
+    // + className
+    // + ".class.getClassLoader(), new Class[] { " + className +
+    // ".class }, new GenericImpl());";
+    //
+    // fileLines.set(fileLines.indexOf(currentLine), modifiedFileLine);
+    // }
+    // }
+    //
+    // @SuppressWarnings("unchecked")
+    // private List<String> getLines(File fileHandler) {
+    // List<String> fileLines = null;
+    // try {
+    // fileLines = FileUtils.readLines(fileHandler);
+    // } catch (IOException e) {
+    // System.out.println("File not Found: " + fileHandler.getName());
+    // e.printStackTrace();
+    // }
+    // return fileLines;
+    // }
+    //
+    // private File findServerFile(File fileDirectory) {
+    // File[] files = fileDirectory.listFiles(new FileFilter() {
+    //
+    // public boolean accept(File pathname) {
+    // return pathname.getName().matches(".*Server.java");
+    // }
+    // });
+    // return (files.length > 0) ? files[0] : null;
+    // }
 
     public String getNamespace(URL wsdlInterfaceDescriptor) {
 	Definition def = null;
@@ -166,12 +257,13 @@ public class CodeGeneratorHelper {
 	    if (!bind.getPortType().isUndefined())
 		return bind.getPortType().getQName().getLocalPart();
 	}
-	
+
 	return "";
 
     }
 
-    public String getDestinationFolder(String destinationPrefix, String namespace) {
+    public String getDestinationFolder(String destinationPrefix, URL wsdlInterfaceDescriptor) {
+	String namespace = getNamespace(wsdlInterfaceDescriptor);
 	String destinationFolder = destinationPrefix;
 
 	if (namespace.matches("http://.*")) {
@@ -183,10 +275,6 @@ public class CodeGeneratorHelper {
 	    }
 
 	    return destinationFolder.concat(invertedPieces + "/");
-	    // return
-	    // destinationFolder.concat(namespace.split("//")[1].replace(".",
-	    // "/"));
-
 	} else
 	    return namespace;
 

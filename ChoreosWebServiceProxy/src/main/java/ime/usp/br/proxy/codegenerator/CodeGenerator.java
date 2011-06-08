@@ -1,4 +1,4 @@
-package ime.usp.br.proxy.codeGenerator;
+package ime.usp.br.proxy.codegenerator;
 
 import java.net.URL;
 
@@ -54,8 +54,7 @@ public class CodeGenerator {
     }
 
     public String generateServerCode(URL wsdlInterfaceDescriptor) {
-	codeGeneratorHelper.generateJavaCode(wsdlInterfaceDescriptor, CodeGeneratorHelper.SERVER);
-	return codeGeneratorHelper.includeProxyCodeIntoGeneratedJavaFiles(wsdlInterfaceDescriptor);
+	return codeGeneratorHelper.generateJavaCode(wsdlInterfaceDescriptor, CodeGeneratorHelper.SERVER);
     }
 
     public void generateClientCode(URL wsdlInterfaceDescriptor) {
