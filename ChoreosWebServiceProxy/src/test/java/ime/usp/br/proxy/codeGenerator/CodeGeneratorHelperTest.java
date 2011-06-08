@@ -4,12 +4,14 @@ import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import ime.usp.br.proxy.support.webservice.HelloWorld8081;
 import ime.usp.br.proxy.support.webservice.HelloWorldService;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.ws.Endpoint;
@@ -24,7 +26,8 @@ public class CodeGeneratorHelperTest {
     @BeforeClass
     public static void cleanPreviouslyGeneratedCode() throws IOException, InterruptedException {
 	FileUtils.cleanDirectory(new File(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA));
-	//FileUtils.cleanDirectory(new File(CodeGeneratorHelper.TARGET_GENERATED_SERVER_JAVA_CODE));
+	// FileUtils.cleanDirectory(new
+	// File(CodeGeneratorHelper.TARGET_GENERATED_SERVER_JAVA_CODE));
     }
 
     @Test
@@ -34,13 +37,14 @@ public class CodeGeneratorHelperTest {
 
 	cgh.generateJavaCode(wsdlInterfaceDescriptor, CodeGeneratorHelper.SERVER);
 
-	String directory = cgh.getDestinationFolder(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA, wsdlInterfaceDescriptor);
+	String directory = cgh.getDestinationFolder(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA,
+		wsdlInterfaceDescriptor);
 	String pathname = directory + "HelloWorld8081_HelloWorld8081Port_Server.java";
 
 	assertTrue(new File(pathname).exists());
 
     }
-    
+
     @Test
     public void testGenerateClientJavaCode() throws MalformedURLException {
 
@@ -48,7 +52,8 @@ public class CodeGeneratorHelperTest {
 
 	cgh.generateJavaCode(wsdlInterfaceDescriptor, CodeGeneratorHelper.CLIENT);
 
-	String directory = cgh.getDestinationFolder(CodeGeneratorHelper.SRC_GENERATED_CLIENT_JAVA, wsdlInterfaceDescriptor);
+	String directory = cgh.getDestinationFolder(CodeGeneratorHelper.SRC_GENERATED_CLIENT_JAVA,
+		wsdlInterfaceDescriptor);
 	String pathname = directory + "HelloWorld8081_HelloWorld8081Port_Client.java";
 
 	assertTrue(new File(pathname).exists());
@@ -56,7 +61,8 @@ public class CodeGeneratorHelperTest {
 
     @Test
     public void testGetNamespaceFromURL() throws Exception {
-	assertEquals("http://webservice.support.proxy.br.usp.ime/", cgh.getNamespace(Object.class.getResource("/role.wsdl")));
+	assertEquals("http://webservice.support.proxy.br.usp.ime/", cgh.getNamespace(Object.class
+		.getResource("/role.wsdl")));
     }
 
     @Test
@@ -84,7 +90,7 @@ public class CodeGeneratorHelperTest {
 	assertTrue(new File(CodeGeneratorHelper.TARGET_GENERATED_SERVER_JAVA_CODE
 		+ "/ime/usp/br/proxy/support/webservice/HelloWorld8081_HelloWorld8081Port_Server.class").exists());
     }
-    
+
     @Test
     public void testGetPortNameFromURL() throws Exception {
 	assertEquals("HelloWorld8081", cgh.getPortName(Object.class.getResource("/role.wsdl")));
@@ -92,13 +98,28 @@ public class CodeGeneratorHelperTest {
 
     @Test
     public void testGetPortNameFromFile() throws Exception {
-	assertEquals("HelloWorld8081", cgh.getPortName(Object.class
-		.getResource("/hello.wsdl")));
+	assertEquals("HelloWorld8081", cgh.getPortName(Object.class.getResource("/hello.wsdl")));
     }
 
     @Test
     public void shouldCreateAJavaImplementationSourceFile() throws Exception {
 	cgh.generateJavaCode(Object.class.getResource("/role.wsdl"), CodeGeneratorHelper.SERVER);
-	assertTrue(new File("src/generated/server/java/ime/usp/br/proxy/support/webservice/HelloWorld8081Impl.java").exists());
+	File sourceFile = new File(
+		"src/generated/server/java/ime/usp/br/proxy/support/webservice/HelloWorld8081Impl.java");
+	assertTrue(sourceFile.exists());
+	List<String> lines = FileUtils.readLines(sourceFile);
+
+	List<String> expected = new ArrayList<String>();
+	expected.add("package ime.usp.br.proxy.support.webservice;");
+	expected.add("");
+	expected.add("public class HelloWorld8081Impl implements HelloWorld8081{");
+	expected.add("");
+	expected.add("public String sayHello(String param0){");
+	expected.add("Exception e = new Exception(\"There is no web service active for this role\");");
+	expected.add("return null;");
+	expected.add("}");
+	expected.add("}");
+
+	assertEquals(expected, lines);
     }
 }

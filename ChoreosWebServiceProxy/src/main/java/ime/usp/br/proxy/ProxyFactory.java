@@ -40,21 +40,17 @@ public class ProxyFactory {
 	String className = getClassLocation(wsdlLocation)+"Impl";
 	Object implementor = null;
 	try {
+
 	    clazz = Class.forName(className);
-
-	    //implementor = Proxy.newProxyInstance(clazz.getClassLoader(), clazz.getInterfaces(), new GenericImpl());
 	    implementor = clazz.newInstance();
-
 	    
 	} catch (ClassNotFoundException e) {
 	    System.out.println("Found no such class " + className + " in current directory");
 	    e.printStackTrace();
 	    return null;
 	} catch (InstantiationException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	} catch (IllegalAccessException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
 	return implementor;

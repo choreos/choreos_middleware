@@ -275,10 +275,6 @@ public class CodeGeneratorHelper {
 	    }
 
 	    return destinationFolder.concat(invertedPieces + "/");
-	    // return
-	    // destinationFolder.concat(namespace.split("//")[1].replace(".",
-	    // "/"));
-
 	} else
 	    return namespace;
 

@@ -4,10 +4,15 @@
 package ime.usp.br.proxy;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import ime.usp.br.proxy.codeGenerator.CodeGeneratorHelper;
+import ime.usp.br.proxy.support.webservice.HelloWorld8081;
 
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.cxf.frontend.ServerFactoryBean;
 import org.junit.Test;
@@ -19,10 +24,22 @@ public class ProxyFactoryTest {
     @Test
     public void testGenerateProxy() throws MalformedURLException {
 	URL wsdlLocation = Object.class.getResource("/role.wsdl");
-	factory.generateProxyImplementor(wsdlLocation);
-	CodeGeneratorHelper cgh = new CodeGeneratorHelper();
-	assertEquals("HelloWorld8081", cgh.getPortName(wsdlLocation));
-	assertEquals("http://webservice.support.proxy.br.usp.ime/", cgh.getNamespace(wsdlLocation));
+	Object proxy = factory.generateProxyImplementor(wsdlLocation);
+	List<String> methods = new ArrayList<String>();
+	
+	for (int i = 0; i < proxy.getClass().getMethods().length; i++) {
+	    methods.add(proxy.getClass().getMethods()[i].getName());
+	    System.out.println(proxy.getClass().getMethods()[i].getName());
+	}
+	
+	for (int i = 0; i < HelloWorld8081.class.getMethods().length; i++) {
+	    
+	    System.out.println(HelloWorld8081.class.getMethods()[i].getName());
+	    System.out.println(methods.contains(HelloWorld8081.class.getMethods()[i].getName()));
+	    
+	    assertTrue(methods.contains(HelloWorld8081.class.getMethods()[i].getName()));
+	    
+	}
     }
 
     @Test

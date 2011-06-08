@@ -67,7 +67,6 @@ public class ProxyControllerTest {
 	URL serviceURL = controller.instantiateProxy(wsdl, proxyPort);
 
 	System.out.println(serviceURL.toExternalForm());
-	//Thread.sleep(5*60*1000);
 	
 	CodeGeneratorHelper cgh = new CodeGeneratorHelper();
 

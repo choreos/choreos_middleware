@@ -3,6 +3,7 @@
  */
 package ime.usp.br.proxy;
 
+import ime.usp.br.proxy.codeGenerator.CodeGeneratorHelper;
 import ime.usp.br.proxy.interceptor.ProxyInterceptor;
 
 import java.net.MalformedURLException;
@@ -124,10 +125,11 @@ public class ProxyController {
 	return url;
     }
     public URL instantiateProxy(URL wsdlLocation, int port) {
+	CodeGeneratorHelper cgh = new CodeGeneratorHelper();
 	if (currentServer != null)
 	    return getServerURL();
 
-	String address = "http://localhost:" + port + "/" + ProxyFactory.getPortName(wsdlLocation);
+	String address = "http://localhost:" + port + "/"+ cgh.getDestinationFolder("", wsdlLocation)+ ProxyFactory.getPortName(wsdlLocation);
 
 	ProxyFactory factory = new ProxyFactory();
 	Object proxyInstance = factory.generateProxyImplementor(wsdlLocation);
@@ -141,11 +143,4 @@ public class ProxyController {
 
 	return getServerURL();
     }
-
-    private void changeHandlingInterceptor(String url) {
-	// ProxyInterceptor proxyService = new ProxyInterceptor(/*url*/);
-
-	// server.getEndpoint().getInInterceptors().add(proxyService);
-    }
-
 }
