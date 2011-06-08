@@ -6,8 +6,10 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import br.usp.ime.ccsl.choreos.middleware.exceptions.FrameworkException;
-import br.usp.ime.ccsl.choreos.middleware.exceptions.InvalidOperationName;
+import br.usp.ime.choreos.vv.Item;
+import br.usp.ime.choreos.vv.WSClient;
+import br.usp.ime.choreos.vv.exceptions.FrameworkException;
+import br.usp.ime.choreos.vv.exceptions.InvalidOperationNameException;
 
 public class Proxy {
     private Logger logger;
@@ -31,8 +33,8 @@ public class Proxy {
 	wsList.add(ws);
     }
 
-    public String request(String webMethod, String... params) throws InvalidOperationName, NoWebServiceException {
-	String response = null;
+    public Item request(String webMethod, String... params) throws InvalidOperationNameException, NoWebServiceException {
+	Item response = null;
 	
 	WSClient receiverClient = null;
 	for (WSClient client : wsList) {
