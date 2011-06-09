@@ -1,4 +1,4 @@
-package ime.usp.br.proxy.codeGenerator;
+package ime.usp.br.proxy.codegenerator;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

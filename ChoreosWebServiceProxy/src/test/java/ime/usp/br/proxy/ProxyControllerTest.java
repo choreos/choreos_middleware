@@ -106,5 +106,11 @@ public class ProxyControllerTest {
 
 	controller.switchWSImplementation(url2);
 	assertEquals(url2, controller.currentInterceptorURL);
+	
+	controller.switchWSImplementation(url1);
+	assertEquals(url1, controller.currentInterceptorURL);
+	
+	controller.switchWSImplementation(url2);
+	assertEquals(url2, controller.currentInterceptorURL);
     }
 }
