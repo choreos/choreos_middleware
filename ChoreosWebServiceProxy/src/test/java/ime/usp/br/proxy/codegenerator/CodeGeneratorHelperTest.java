@@ -2,7 +2,6 @@ package ime.usp.br.proxy.codegenerator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import ime.usp.br.proxy.codegenerator.CodeGeneratorHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,12 +29,14 @@ public class CodeGeneratorHelperTest {
 
 	URL wsdlInterfaceDescriptor = Object.class.getResource("/role.wsdl");
 
-	cgh.generateJavaCode(wsdlInterfaceDescriptor, CodeGeneratorHelper.SERVER);
+	String directory = cgh.generateJavaCode(wsdlInterfaceDescriptor, CodeGeneratorHelper.SERVER);
 
-	String directory = cgh.getDestinationFolder(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA,
-		wsdlInterfaceDescriptor);
 	String pathname = directory + "HelloWorld8081_HelloWorld8081Port_Server.java";
 
+	assertEquals(cgh.getDestinationFolder(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA, wsdlInterfaceDescriptor),
+		directory);
+
+	System.out.println(pathname);
 	assertTrue(new File(pathname).exists());
 
     }
@@ -117,5 +118,12 @@ public class CodeGeneratorHelperTest {
 	expected.add("}");
 
 	assertEquals(expected, lines);
+    }
+
+    @Test
+    public void shouldCreateJavaSourceAndCompiledForClient() throws Exception {
+	String path = cgh.generateJavaCode(Object.class.getResource("/role.wsdl"), CodeGeneratorHelper.CLIENT);
+	System.out.println(path);
+	assertTrue(new File(path + "HelloWorld8081_HelloWorld8081Port_Client.java").exists());
     }
 }

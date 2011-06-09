@@ -21,7 +21,7 @@ public class ProxyFactory {
     }
 
     // TODO: Test!
-    public String getClassLocation(URL wsdlLocation) {
+    public String getClassName(URL wsdlLocation) {
 	CodeGeneratorHelper cgh = new CodeGeneratorHelper();
 
 	String destinationFolder = cgh.getDestinationFolder("", wsdlLocation);
@@ -32,10 +32,14 @@ public class ProxyFactory {
     }
 
     // Class is ** SUPPOSED ** to be generic. No need for a warning!
-    @SuppressWarnings("unchecked")
     private Object getProxyInstance(URL wsdlLocation) {
+	String className = getClassName(wsdlLocation)+"Impl";
+	return getClassByName(className);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Object getClassByName(String className) {
 	Class clazz = null;
-	String className = getClassLocation(wsdlLocation)+"Impl";
 	Object implementor = null;
 	try {
 

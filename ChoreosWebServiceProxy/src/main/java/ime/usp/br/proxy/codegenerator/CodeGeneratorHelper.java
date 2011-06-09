@@ -109,13 +109,14 @@ public class CodeGeneratorHelper {
 	String[] parameters = null;
 	if (server) {
 	    parameters = new String[] { "-server", "-d", SRC_GENERATED_SERVER_JAVA,
-		    wsdlInterfaceDescriptor.toExternalForm(), "-compile" };
+		    wsdlInterfaceDescriptor.toExternalForm()};
 	    WSDLToJava.main(parameters);
 	    createImplementationClass(wsdlInterfaceDescriptor);
 	    return getDestinationFolder(SRC_GENERATED_SERVER_JAVA, wsdlInterfaceDescriptor);
 	} else {
-	    parameters = new String[] { "-client", "-d", SRC_GENERATED_CLIENT_JAVA, "-compile",
+	    parameters = new String[] { "-client", "-d", SRC_GENERATED_CLIENT_JAVA,
 		    wsdlInterfaceDescriptor.toExternalForm() };
+	    WSDLToJava.main(parameters);
 	    return getDestinationFolder(SRC_GENERATED_CLIENT_JAVA, wsdlInterfaceDescriptor);
 	}
 

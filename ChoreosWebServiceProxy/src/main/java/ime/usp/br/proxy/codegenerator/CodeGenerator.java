@@ -57,8 +57,8 @@ public class CodeGenerator {
 	return codeGeneratorHelper.generateJavaCode(wsdlInterfaceDescriptor, CodeGeneratorHelper.SERVER);
     }
 
-    public void generateClientCode(URL wsdlInterfaceDescriptor) {
-	codeGeneratorHelper.generateJavaCode(wsdlInterfaceDescriptor, false);
+    public String generateClientCode(URL wsdlInterfaceDescriptor) {
+	return codeGeneratorHelper.generateJavaCode(wsdlInterfaceDescriptor, false);
     }
 
     public static void main(String[] args) {
