@@ -28,14 +28,9 @@ public class ProxyFactoryTest {
 	
 	for (int i = 0; i < proxy.getClass().getMethods().length; i++) {
 	    methods.add(proxy.getClass().getMethods()[i].getName());
-	    System.out.println(proxy.getClass().getMethods()[i].getName());
 	}
 	
 	for (int i = 0; i < HelloWorld8081.class.getMethods().length; i++) {
-	    
-	    System.out.println(HelloWorld8081.class.getMethods()[i].getName());
-	    System.out.println(methods.contains(HelloWorld8081.class.getMethods()[i].getName()));
-	    
 	    assertTrue(methods.contains(HelloWorld8081.class.getMethods()[i].getName()));
 	    
 	}
@@ -50,10 +45,6 @@ public class ProxyFactoryTest {
 	ProxyFactory factory = new ProxyFactory();
 	Object proxyInstance = factory.generateProxyImplementor(wsdlLocation);
 
-	for (int i = 0; i < proxyInstance.getClass().getDeclaredMethods().length; i++) {
-	    System.out.println(proxyInstance.getClass().getDeclaredMethods()[i]);
-	}
-	
 	ServerFactoryBean serverFactoryBean = raiseWebServer(address, proxyInstance);
 
 	CodeGeneratorHelper cgh = new CodeGeneratorHelper();

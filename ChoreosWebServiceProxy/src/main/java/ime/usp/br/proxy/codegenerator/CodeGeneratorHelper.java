@@ -46,7 +46,6 @@ public class CodeGeneratorHelper {
 	implementation.add("");
 
 	String className = packageName + getPortName(wsdlInterfaceDescriptor);
-	System.out.println(className);
 	Class implementedInterface = getInterfaceClass(className);
 
 	for (int i = 0; i < implementedInterface.getMethods().length; i++) {
@@ -59,7 +58,6 @@ public class CodeGeneratorHelper {
 		+ getPortName(wsdlInterfaceDescriptor) + "Impl.java";
 	File output = new File(fileName);
 
-	System.out.println(fileName);
 	writeLines(output, implementation);
     }
 

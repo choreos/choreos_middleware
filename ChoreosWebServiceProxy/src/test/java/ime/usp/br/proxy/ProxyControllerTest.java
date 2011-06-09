@@ -52,8 +52,6 @@ public class ProxyControllerTest {
 	url2 = service2.getEndpoint().getEndpointInfo().getAddress();
 
 	proxyPort = 9123;
-
-	System.out.println("Services available at http://localhost/hello on ports 8085 and 8086");
     }
 
     @Test
@@ -63,8 +61,6 @@ public class ProxyControllerTest {
 
 	URL serviceURL = controller.instantiateProxy(wsdl, proxyPort);
 
-	System.out.println(serviceURL.toExternalForm());
-	
 	CodeGeneratorHelper cgh = new CodeGeneratorHelper();
 
 	assertEquals(cgh.getNamespace(wsdl), cgh.getNamespace(new URL(serviceURL
