@@ -96,11 +96,6 @@ public class ProxyControllerTest {
     }
 
     @Test
-    public void shouldInstantiate() throws Exception {
-
-    }
-
-    @Test
     public final void testSwitchWSImplementation() throws Exception {
 	ProxyController controller = new ProxyController();
 	
