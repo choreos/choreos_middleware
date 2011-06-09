@@ -1,7 +1,6 @@
 package ime.usp.br.proxy.codegenerator;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -94,6 +93,7 @@ public class CodeGeneratorHelper {
      * @param portName
      * @return
      */
+    @SuppressWarnings("unchecked")
     private Class getInterfaceClass(String portName) {
 
 	Class clazz = null;
@@ -162,14 +162,14 @@ public class CodeGeneratorHelper {
 	}
     }
 
-    private void createNewFile(File fileHandler) {
-	try {
-	    fileHandler.createNewFile();
-	} catch (IOException e) {
-	    System.out.println("Problem Creating file: " + fileHandler.getName());
-	    e.printStackTrace();
-	}
-    }
+//    private void createNewFile(File fileHandler) {
+//	try {
+//	    fileHandler.createNewFile();
+//	} catch (IOException e) {
+//	    System.out.println("Problem Creating file: " + fileHandler.getName());
+//	    e.printStackTrace();
+//	}
+//    }
 
     //
     // private void addImportOf(List<String> fileLines, String currentLine,

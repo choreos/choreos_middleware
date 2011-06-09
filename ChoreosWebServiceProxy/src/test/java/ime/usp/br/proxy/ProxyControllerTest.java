@@ -3,16 +3,13 @@
  */
 package ime.usp.br.proxy;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-
 import ime.usp.br.proxy.codegenerator.CodeGeneratorHelper;
 import ime.usp.br.proxy.support.webservice.HelloWorldService;
+
+import java.net.URL;
+import java.util.ArrayList;
 
 import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.frontend.ServerFactoryBean;
