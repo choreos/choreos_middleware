@@ -16,7 +16,22 @@
 	<packaging>jbi-service-unit</packaging>
 	<description></description>
 
+<repositories>
+    <repository>
+        <id>PetalsLink</id>
+        <name>Petalslink</name>
+        <url>http://maven.petalslink.com/public/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </repository>
+    <repository>
+      <id>eviware</id>
+      <name>eviWare</name>
+      <url>http://www.eviware.com/repository/maven2/</url>
+    </repository>
 
+</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
@@ -32,7 +47,7 @@
 		<dependency>
 			<groupId>org.ow2.petals</groupId>
 			<artifactId>petals-se-jsr181</artifactId>
-			<version>1.1</version>
+			<version>1.1.2</version>
 			<scope>provided</scope>
 			<type>jbi-component</type>
 		</dependency>

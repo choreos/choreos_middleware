@@ -32,11 +32,11 @@
     <url>http://eclipse.ime.usp.br/xplanner/do/view/project?oid=7214</url>
   </issueManagement>
   <repositories>
-    <!-- <repository>
+    <repository>
       <id>maven-restlet</id>
       <name>Public online Restlet repository</name>
       <url>http://maven.restlet.org</url>
-    </repository> -->
+    </repository> 
     <repository>
       <id>jboss</id>
       <name>JBoss repository</name>
@@ -48,7 +48,7 @@
       </releases>
     </repository>
     <repository>
-      <id>eviwarePluginRepository</id>
+      <id>eviware</id>
       <name>eviWare</name>
       <url>http://www.eviware.com/repository/maven2/</url>
     </repository>
@@ -63,16 +63,18 @@
       </snapshots>
     </repository>
     <repository>
-        <id>PetalsLink</id>
+        <id>petalslink</id>
         <name>Petalslink</name>
         <url>http://maven.petalslink.com/public/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
     </repository>
     <repository>
       <id>ccslrepository</id>
       <name>ccsl</name>
       <url>http://valinhos.ime.usp.br:54080/maven/</url>
     </repository>
-
   </repositories>
 
 
@@ -93,14 +95,6 @@
         <enabled>false</enabled>
       </releases>
     </pluginRepository>
-    <!-- <pluginRepository>
-    <id>telecom</id>
-    <name>telecom</name>
-    <releases>
-    <checksumPolicy>ignore</checksumPolicy>
-    </releases>
-    <url>http://voipteste01.locawebtelecom.com.br:7070/archiva/repository/telecom/</url>
-    </pluginRepository> -->
   </pluginRepositories>
   <developers>
     <developer>
