@@ -4,96 +4,70 @@
 package ime.usp.br.proxy;
 
 import static org.junit.Assert.assertEquals;
-import ime.usp.br.proxy.codeGenerator.CodeGeneratorHelper;
-import ime.usp.br.proxy.support.webservice.HelloWorldService;
+import static org.junit.Assert.assertTrue;
+import ime.usp.br.proxy.codegenerator.CodeGeneratorHelper;
+import ime.usp.br.proxy.support.webservice.HelloWorld8081;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.wsdl.Definition;
-import javax.wsdl.WSDLException;
-import javax.wsdl.factory.WSDLFactory;
-import javax.wsdl.xml.WSDLReader;
-import javax.xml.ws.Endpoint;
-
-import org.junit.BeforeClass;
+import org.apache.cxf.frontend.ServerFactoryBean;
 import org.junit.Test;
-
-import com.ibm.wsdl.BindingImpl;
 
 public class ProxyFactoryTest {
 
     ProxyFactory factory = new ProxyFactory();
 
-    /**
-     * Sets up a HelloWorld Web Server to run tests on.
-     * 
-     * A web server is raised at http://localhost:8089/hello to allow for WSDL
-     * check and usage.
-     * 
-     * @throws java.lang.Exception
-     */
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-	HelloWorldService service = new HelloWorldService("1");
-	Endpoint endpoint = Endpoint.create(service);
-	endpoint.publish("http://localhost:8089/hello");
-	System.out.println("Serviço disponibilizado na porta 8089");
-    }
-
-    /**
-     * Test method for
-     * {@link ime.usp.br.proxy.ProxyFactory#generateProxyImplementor(java.net.URL, int)}.
-     * 
-     * @throws MalformedURLException
-     */
     @Test
     public void testGenerateProxy() throws MalformedURLException {
-	URL wsdlLocation = new URL("http://localhost:8089/hello?wsdl");
-	factory.generateProxyImplementor(wsdlLocation);
-	CodeGeneratorHelper cgh = new CodeGeneratorHelper();
-	assertEquals("HelloWorld8081", cgh.getPortName(wsdlLocation));
-	assertEquals("http://webservice.support.proxy.br.usp.ime/", cgh.getNamespace(wsdlLocation));
+	URL wsdlLocation = Object.class.getResource("/role.wsdl");
+	Object proxy = factory.generateProxyImplementor(wsdlLocation);
+	List<String> methods = new ArrayList<String>();
+	
+	for (int i = 0; i < proxy.getClass().getMethods().length; i++) {
+	    methods.add(proxy.getClass().getMethods()[i].getName());
+	}
+	
+	for (int i = 0; i < HelloWorld8081.class.getMethods().length; i++) {
+	    assertTrue(methods.contains(HelloWorld8081.class.getMethods()[i].getName()));
+	    
+	}
     }
 
-    /**
-     * Test method for
-     * {@link ime.usp.br.proxy.ProxyFactory#getProxyInstance(java.net.URL, int)}
-     * .
-     * 
-     * @throws MalformedURLException
-     * @throws InterruptedException
-     */
-    @SuppressWarnings("unchecked")
     @Test
-    public void testInstantiateProxy() throws MalformedURLException, InterruptedException {
-	URL wsdlLocation = new URL("http://localhost:8089/hello?wsdl");
+    public void shouldProvideAProxyInstanceForAGivenWSDL() throws MalformedURLException, InterruptedException {
+	URL wsdlLocation = Object.class.getResource("/role.wsdl");
 
-	factory.getProxyInstance(wsdlLocation);
+	String address = "http://localhost:9124/" + ProxyFactory.getPortName(wsdlLocation);
 
-	Definition def = null;
-	try {
-	    WSDLFactory factory = WSDLFactory.newInstance();
-	    WSDLReader reader = factory.newWSDLReader();
-	    reader.setFeature("javax.wsdl.verbose", false);
-	    reader.setFeature("javax.wsdl.importDocuments", true);
-	    def = reader.readWSDL(null, wsdlLocation.toExternalForm());
-	} catch (WSDLException e) {
-	    e.printStackTrace();
-	}
-	assertEquals("http://webservice.support.proxy.br.usp.ime/", def.getTargetNamespace());
+	ProxyFactory factory = new ProxyFactory();
+	Object proxyInstance = factory.generateProxyImplementor(wsdlLocation);
 
-	String serviceName = "";
-	Collection bindingList = def.getBindings().values();
-	for (Iterator bindingIterator = bindingList.iterator(); bindingIterator.hasNext();) {
-	    BindingImpl bind = (BindingImpl) bindingIterator.next();
-	    if (!bind.getPortType().isUndefined())
-		serviceName = bind.getPortType().getQName().getLocalPart();
-	}
+	ServerFactoryBean serverFactoryBean = raiseWebServer(address, proxyInstance);
 
-	assertEquals("HelloWorld8081", serviceName);
+	CodeGeneratorHelper cgh = new CodeGeneratorHelper();
+	assertEquals(cgh.getNamespace(wsdlLocation), cgh.getNamespace(new URL(address + "?wsdl")));
+	serverFactoryBean.destroy();
+
+    }
+
+    private ServerFactoryBean raiseWebServer(String address, Object proxyInstance) {
+	ServerFactoryBean serverFactoryBean = new ServerFactoryBean();
+
+	serverFactoryBean.setAddress(address);
+	serverFactoryBean.setServiceBean(proxyInstance);
+
+	serverFactoryBean.create();
+
+	return serverFactoryBean;
+    }
+
+    @Test
+    public void shouldGiveTheCorrectPortName() throws Exception {
+	String portName = ProxyFactory.getPortName(Object.class.getResource("/role.wsdl"));
+	assertEquals("HelloWorld8081", portName);
     }
 
 }

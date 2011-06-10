@@ -2,6 +2,8 @@ package ime.usp.br.proxy.interceptor;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.Bus;
 import org.apache.cxf.binding.Binding;
 import org.apache.cxf.binding.soap.SoapMessage;
@@ -18,61 +20,49 @@ import org.apache.cxf.service.Service;
 
 public class ProxyInterceptor extends AbstractSoapInterceptor {
 
-    public ProxyInterceptor() {
+    private static Log log = LogFactory.getLog(ProxyInterceptor.class);
+
+    private Endpoint epDestination;
+
+    public ProxyInterceptor(String destination) {
 	super(Phase.READ);
+
+	epDestination = chooseServerEndpoint(destination);
     }
 
     public void handleMessage(SoapMessage message) throws Fault {
 	Exchange ex = message.getExchange();
 
+	ex.put(Endpoint.class, epDestination);
+	ex.put(Binding.class, epDestination.getBinding());
+	ex.put(Service.class, epDestination.getService());
+
+	InterceptorChain chain = message.getInterceptorChain();
+	chain.add(epDestination.getInInterceptors());
+	chain.add(epDestination.getBinding().getInInterceptors());
+	chain.add(epDestination.getService().getInInterceptors());
+
+	chain.setFaultObserver(epDestination.getOutFaultObserver());
+
+	log.debug(String.format("Changed the endpoint from \"%s\" to \"%s\"\n", ex.getEndpoint().getEndpointInfo()
+		.getAddress(), epDestination.getEndpointInfo().getAddress()));
+    }
+
+    private Endpoint chooseServerEndpoint(String destinationAddress) {
+
 	Bus bus = CXFBusFactory.getDefaultBus();
 
 	ServerRegistry serverRegistry = bus.getExtension(ServerRegistry.class);
 	List<Server> servers = serverRegistry.getServers();
-	Endpoint ep = ex.getEndpoint();
-	ep = chooseServerEndpoint(servers, ep);
 
-	ex.put(Endpoint.class, ep);
-	ex.put(Binding.class, ep.getBinding());
-	ex.put(Service.class, ep.getService());
-
-	InterceptorChain chain = message.getInterceptorChain();
-	chain.add(ep.getInInterceptors());
-	chain.add(ep.getBinding().getInInterceptors());
-	chain.add(ep.getService().getInInterceptors());
-
-	chain.setFaultObserver(ep.getOutFaultObserver());
-    }
-
-    private Endpoint chooseServerEndpoint(List<Server> servers, Endpoint ep) {
-
-	/*
-	 * TODO: This method should actually be refactored to return an
-	 * specific, preset server which can be updated through methods exposed
-	 * in a default interface.
-	 * 
-	 * This default interface should be available as a WS interface, for
-	 * external control of the default server to be possible.
-	 * 
-	 * This way we prevent the need to actually code intelligence inside the
-	 * proxy's code. This is not desired since the Proxy is thought to be a
-	 * "hands-on" mechanism with no intelligence inside it.
-	 */
+	Endpoint ep = null;
 
 	for (Server server : servers) {
-	    if (meetChangingCriteria(ep, server.getEndpoint())) {
-		System.out.println("Troquei o ep do address de " + server.getEndpoint().getEndpointInfo().getAddress());
+	    if (server.getEndpoint().getEndpointInfo().getAddress().equals(destinationAddress)) {
 		ep = server.getEndpoint();
-		System.out.println("para");
+		log.debug(String.format("Destination has been set to \"%s\"\n", ep.getEndpointInfo().getAddress()));
 	    }
-	    System.out.println(server.getEndpoint().getEndpointInfo().getAddress());
 	}
 	return ep;
     }
-
-    private boolean meetChangingCriteria(Endpoint original, Endpoint destination) {
-
-	return !destination.getEndpointInfo().getAddress().equals(original.getEndpointInfo().getAddress());
-    }
-
 }

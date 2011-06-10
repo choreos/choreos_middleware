@@ -13,49 +13,45 @@ import org.apache.cxf.frontend.ServerFactoryBean;
 @WebService
 public class HelloWorld8081 {
 
-	private String instanceName;
-	private int reqCount = 0;
+    private String instanceName;
+    private int reqCount = 0;
 
-	public HelloWorld8081(String name) {
-		// TODO Auto-generated constructor stub
-		this.instanceName = name;
-	}
+    public HelloWorld8081(String name) {
+	this.instanceName = name;
+    }
 
-	@WebMethod
-	@WebResult(name = "greeting")
-	public String sayHello(@WebParam(name = "yourName") String param) {
-		System.out.println(this.instanceName + ": Requisition number: "
-				+ reqCount++);
+    @WebMethod
+    @WebResult(name = "greeting")
+    public String sayHello(@WebParam(name = "yourName") String param) {
+	System.out.println(this.instanceName + ": Requisition number: " + reqCount++);
 
-		return "Hello from " + instanceName + " " + param;
-	}
+	return "Hello from " + instanceName + " " + param;
+    }
 
-	public static void main(String[] args) {
-		
-		final int initialPort = 8085;
-		final int servers = 4;
-		
-		HelloWorld8081[] service = new HelloWorld8081[servers];
-		
-		for (int i = 0; i < servers; i++) {
-			int currentPort = initialPort + i;
-			service[i] = new HelloWorld8081(currentPort + "");
-			
+    public static void main(String[] args) {
 
-			ProxyInterceptor tie = new ProxyInterceptor();
+	final int initialPort = 8085;
+	final int servers = 4;
 
-			ServerFactoryBean serverFactoryBean = new ServerFactoryBean();
-			serverFactoryBean.setServiceClass(HelloWorld8081.class);
-			serverFactoryBean.setAddress("http://localhost:" + currentPort + "/hello");
-			serverFactoryBean.setServiceBean(service[i]);
+	HelloWorld8081[] service = new HelloWorld8081[servers];
 
-			Server server = serverFactoryBean.create();
+	for (int i = 0; i < servers; i++) {
+	    int currentPort = initialPort + i;
+	    service[i] = new HelloWorld8081(currentPort + "");
 
-			server.getEndpoint().getInInterceptors().add(tie);
+	    ProxyInterceptor tie = new ProxyInterceptor();
 
-			System.out.println("Serviço disponibilizado na porta " + currentPort);
+	    ServerFactoryBean serverFactoryBean = new ServerFactoryBean();
+	    serverFactoryBean.setServiceClass(HelloWorld8081.class);
+	    serverFactoryBean.setAddress("http://localhost:" + currentPort + "/hello");
+	    serverFactoryBean.setServiceBean(service[i]);
 
-		}
+	    Server server = serverFactoryBean.create();
+
+	    server.getEndpoint().getInInterceptors().add(tie);
+
+	    System.out.println("Serviço disponibilizado na porta " + currentPort);
 
 	}
+    }
 }
