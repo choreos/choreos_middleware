@@ -63,6 +63,11 @@
       </snapshots>
     </repository>
     <repository>
+        <id>PetalsLink</id>
+        <name>Petalslink</name>
+        <url>http://maven.petalslink.com/public/</url>
+    </repository>
+    <repository>
       <id>ccslrepository</id>
       <name>ccsl</name>
       <url>http://valinhos.ime.usp.br:54080/maven/</url>
