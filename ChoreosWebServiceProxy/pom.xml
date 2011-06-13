@@ -3,7 +3,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>br.usp.ime.ccsl.choreos.proxy</groupId>
+	<groupId>br.usp.ime.ccsl.choreos.middleware.proxy</groupId>
 	<artifactId>ChoreosWebServiceProxy</artifactId>
 	<packaging>jar</packaging>
 	<version>0.2-SNAPSHOT</version>

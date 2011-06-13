@@ -1,6 +1,6 @@
-<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="HelloWorld8081Service" targetNamespace="http://webservice.support.proxy.br.usp.ime/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://webservice.support.proxy.br.usp.ime/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="HelloWorld8081Service" targetNamespace="http://webservice.support.proxy.middleware.choreos.ccsl.ime.usp.br/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://webservice.support.proxy.middleware.choreos.ccsl.ime.usp.br/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <wsdl:types>
-<xs:schema elementFormDefault="unqualified" targetNamespace="http://webservice.support.proxy.br.usp.ime/" version="1.0" xmlns:tns="http://webservice.support.proxy.br.usp.ime/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema elementFormDefault="unqualified" targetNamespace="http://webservice.support.proxy.middleware.choreos.ccsl.ime.usp.br/" version="1.0" xmlns:tns="http://webservice.support.proxy.middleware.choreos.ccsl.ime.usp.br/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:element name="sayHello" type="tns:sayHello"/>
 <xs:element name="sayHelloResponse" type="tns:sayHelloResponse"/>
 <xs:complexType name="sayHello">
