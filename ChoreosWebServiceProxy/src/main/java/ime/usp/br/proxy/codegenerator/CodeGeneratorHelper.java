@@ -47,7 +47,7 @@ public class CodeGeneratorHelper {
 
 	String className = packageName + getPortName(wsdlInterfaceDescriptor);
 	Class implementedInterface = getInterfaceClass(className);
-
+	
 	for (int i = 0; i < implementedInterface.getMethods().length; i++) {
 	    generateMethod(implementedInterface.getMethods()[i]);
 	}

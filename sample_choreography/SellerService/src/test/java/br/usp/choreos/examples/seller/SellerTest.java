@@ -79,7 +79,7 @@ public class SellerTest {
 	int auctionId = seller.sell(auctionHouseUri, productInfo, startingPrice);
 
 	TestBidderWS testBidderWS = new TestBidderWS();
-	Endpoint endpoint = Endpoint.publish("http://localhost:6167/TestBidderService", testBidderWS);
+	Endpoint.publish("http://localhost:6167/TestBidderService", testBidderWS);
 
 	BigDecimal finalPrice = BigDecimal.valueOf(1);
 	seller.informAuctionResult(auctionId, true, "http://localhost:6167/TestBidderService?wsdl", finalPrice);

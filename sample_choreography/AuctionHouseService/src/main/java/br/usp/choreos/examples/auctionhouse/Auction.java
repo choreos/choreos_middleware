@@ -9,6 +9,7 @@ public class Auction {
     private BigDecimal currentPrice;
     private ProductInfo productInfo;
 
+  
     public Auction(Seller seller, ProductInfo productInfo, BigDecimal startingPrice) {
 	this.seller = seller;
 	this.startingPrice = startingPrice;
