@@ -2,6 +2,8 @@ package br.usp.ime.ccsl.acceptance;
 
 import net.sourceforge.jwebunit.junit.WebTestCase;
 
+import org.junit.Test;
+
 public class RoleAssignmentTest extends WebTestCase {
     
 
@@ -13,8 +15,8 @@ public class RoleAssignmentTest extends WebTestCase {
     // setBaseUrl("http://localhost:8089/choreos-web");
     // }
     //
-    // @Test
-    // public void testCreateAndListRoleAssignments() {
+    @Test
+    public void testCreateAndListRoleAssignments() {
     // beginAt("/roleAssignments/form");
     //
     // clickLink("add_role_assignment");
@@ -29,5 +31,5 @@ public class RoleAssignmentTest extends WebTestCase {
     //
     // assertTextPresent("myRole");
     // assertTextPresent("myURI");
-    // }
+    }
 }
