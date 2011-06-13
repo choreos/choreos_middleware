@@ -5,7 +5,7 @@ package ime.usp.br.proxy;
 
 import static org.junit.Assert.assertEquals;
 import ime.usp.br.proxy.codegenerator.CodeGeneratorHelper;
-import ime.usp.br.proxy.support.classes.*;
+import ime.usp.br.proxy.support.webservice.*;
 
 import java.net.MalformedURLException;
 import java.net.URL;

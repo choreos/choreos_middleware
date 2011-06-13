@@ -1,4 +1,4 @@
-package ime.usp.br.proxy.support.classes;
+package ime.usp.br.proxy.support.webservice;
 
 public class HelloWorld8081Impl implements HelloWorld8081{
 

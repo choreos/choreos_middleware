@@ -1,5 +1,5 @@
 
-package ime.usp.br.proxy.support.classes;
+package ime.usp.br.proxy.support.webservice;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

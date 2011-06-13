@@ -3,7 +3,7 @@
  * 
  */
 
-package ime.usp.br.proxy.support.classes;
+package ime.usp.br.proxy.support.webservice;
 
 import java.net.MalformedURLException;
 import java.net.URL;
