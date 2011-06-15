@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://roleassignment.middleware.choreos.ccsl.ime.usp.br/RoleAssignmentService" xmlns:ns1="http://middleware.choreos.ccsl.ime.usp.br/RoleAssignmentService" xmlns:tns="http://roleassignment.middleware.choreos.ccsl.ime.usp.br/RoleAssignmentService" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:import namespace="http://middleware.choreos.ccsl.ime.usp.br/RoleAssignmentService" schemaLocation="RoleAssignmentServiceImplService_schema2.xsd"/>
+
+  <xs:element name="assignRole" type="tns:assignRole"/>
+
+  <xs:element name="assignRoleResponse" type="tns:assignRoleResponse"/>
+
+  <xs:element name="get" type="tns:get"/>
+
+  <xs:element name="getResponse" type="tns:getResponse"/>
+
+  <xs:element name="saveRoleAssignment" type="tns:saveRoleAssignment"/>
+
+  <xs:element name="saveRoleAssignmentResponse" type="tns:saveRoleAssignmentResponse"/>
+
+  <xs:complexType name="assignRole">
+    <xs:sequence>
+      <xs:element name="role" type="xs:string" minOccurs="0"/>
+      <xs:element name="uri" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="assignRoleResponse">
+    <xs:sequence>
+      <xs:element name="responseMessage" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="saveRoleAssignment">
+    <xs:sequence>
+      <xs:element name="arg0" type="tns:roleAssignment" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="roleAssignment">
+    <xs:sequence>
+      <xs:element name="id" type="xs:long" minOccurs="0"/>
+      <xs:element name="role" type="xs:string" minOccurs="0"/>
+      <xs:element name="uri" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="saveRoleAssignmentResponse">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="get">
+    <xs:sequence>
+      <xs:element name="roleName" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getResponse">
+    <xs:sequence>
+      <xs:element name="uris" type="ns1:ArrayOfStrings" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

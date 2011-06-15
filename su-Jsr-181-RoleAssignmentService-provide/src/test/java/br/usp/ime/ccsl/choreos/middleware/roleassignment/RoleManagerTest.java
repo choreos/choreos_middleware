@@ -17,6 +17,11 @@ public class RoleManagerTest {
         roleManager = RoleManager.getInstance();
     }
 
+    @Before
+    public void cleanDB(){
+        ChoreosSessionFactory.getSession().createSQLQuery("delete from RoleAssignment").executeUpdate();
+    }
+
     @Test
     public void testGetInstanceNotNull() {
         roleManager = RoleManager.getInstance();

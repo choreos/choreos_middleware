@@ -6,12 +6,11 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.xml.ws.Endpoint;
 
-import br.usp.ime.ccsl.choreos.middleware.roleassignmentservice.ArrayOfStrings;
 
 @WebService(targetNamespace = "http://roleassignment.middleware.choreos.ccsl.ime.usp.br/RoleAssignmentService", name = "RoleAssignmentService")
 public class RoleAssignmentServiceImpl {
 
-    public void assignRole(RoleAssignment roleAssignment) {
+    public void saveRoleAssignment(RoleAssignment roleAssignment) {
         RoleManager roleManager = RoleManager.getInstance();
         roleManager.assignRole(roleAssignment);
     }
@@ -24,7 +23,7 @@ public class RoleAssignmentServiceImpl {
         RoleAssignment roleAssignment = new RoleAssignment();
         roleAssignment.setRole(role);
         roleAssignment.setUri(uri);
-        assignRole(roleAssignment);
+        saveRoleAssignment(roleAssignment);
         return "Created";
     }
 

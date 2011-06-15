@@ -8,7 +8,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import br.usp.ime.ccsl.choreos.middleware.roleassignmentservice.ArrayOfStrings;
 
 public class RoleAssignmentServiceTest {
     private static RoleAssignmentServiceImpl roleAssignmentService;
@@ -25,7 +24,7 @@ public class RoleAssignmentServiceTest {
         final String uri = "uri";
         final String roleName = "rolename";
 
-        roleAssignmentService.assignRole(new RoleAssignment(uri, roleName));
+        roleAssignmentService.saveRoleAssignment(new RoleAssignment(uri, roleName));
         ArrayOfStrings uris = roleAssignmentService.get(roleName);
         assertEquals(uri, uris.getUri().get(0));
     }
