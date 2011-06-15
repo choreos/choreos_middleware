@@ -42,6 +42,7 @@ public class RoleManager {
         for (RoleAssignment roleAssignment : roleAssigments) {
             uriList.add(roleAssignment.getUri());
         }
+        session.close();
         
         return uriList;
     }

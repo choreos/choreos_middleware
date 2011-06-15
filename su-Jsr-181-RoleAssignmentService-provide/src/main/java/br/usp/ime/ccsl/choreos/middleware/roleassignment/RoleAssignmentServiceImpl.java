@@ -6,7 +6,6 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.xml.ws.Endpoint;
 
-import br.usp.ime.ccsl.choreos.middleware.roleassignmentservice.ArrayOfStrings;
 
 @WebService(targetNamespace = "http://roleassignment.middleware.choreos.ccsl.ime.usp.br/RoleAssignmentService", name = "RoleAssignmentService")
 public class RoleAssignmentServiceImpl {

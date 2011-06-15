@@ -8,7 +8,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import br.usp.ime.ccsl.choreos.middleware.roleassignmentservice.ArrayOfStrings;
 
 public class RoleAssignmentServiceTest {
     private static RoleAssignmentServiceImpl roleAssignmentService;

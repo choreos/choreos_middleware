@@ -11,6 +11,7 @@ public class ChoreosSessionFactoryTest {
     public void getEntityManager() throws Exception {
         Session s = ChoreosSessionFactory.getSession();
         assertNotNull(s);
+        s.close();
     }
 
     @Test
@@ -20,5 +21,6 @@ public class ChoreosSessionFactoryTest {
         s.save(ra);
         RoleAssignment ra1 = (RoleAssignment) s.get(RoleAssignment.class, ra.getId());
         assertEquals(ra, ra1);
+        s.close();
     }
 }

@@ -9,7 +9,9 @@ import org.junit.Test;
 public class PersistenceRoleAssignmentListTest {
     @Before
     public void cleanDB(){
-        ChoreosSessionFactory.getSession().createSQLQuery("delete from RoleAssignment").executeUpdate();
+        Session session = ChoreosSessionFactory.getSession();
+        session.createSQLQuery("delete from RoleAssignment").executeUpdate();
+        session.close();
     }
     
     @Test
@@ -23,5 +25,6 @@ public class PersistenceRoleAssignmentListTest {
         Session session = ChoreosSessionFactory.getSession();
         RoleAssignment roleAssignmentFromDB = (RoleAssignment) session.createQuery("from RoleAssignment").list().get(0);
         assertEquals(roleAssignment, roleAssignmentFromDB);
+        session.close();
     }
 }

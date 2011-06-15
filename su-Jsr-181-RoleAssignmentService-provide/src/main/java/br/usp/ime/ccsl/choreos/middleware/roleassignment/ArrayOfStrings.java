@@ -1,4 +1,4 @@
-package br.usp.ime.ccsl.choreos.middleware.roleassignmentservice;
+package br.usp.ime.ccsl.choreos.middleware.roleassignment;
 
 import java.util.ArrayList;
 import java.util.List;
