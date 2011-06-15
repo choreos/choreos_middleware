@@ -25,7 +25,7 @@ public class RoleAssignmentServiceTest {
         final String uri = "uri";
         final String roleName = "rolename";
 
-        roleAssignmentService.assignRole(new RoleAssignment(uri, roleName));
+        roleAssignmentService.saveRoleAssignment(new RoleAssignment(uri, roleName));
         ArrayOfStrings uris = roleAssignmentService.get(roleName);
         assertEquals(uri, uris.getUri().get(0));
     }
