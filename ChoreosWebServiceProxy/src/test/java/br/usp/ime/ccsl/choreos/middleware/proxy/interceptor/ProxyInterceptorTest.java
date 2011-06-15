@@ -1,47 +1,47 @@
 package br.usp.ime.ccsl.choreos.middleware.proxy.interceptor;
 
+import static org.junit.Assert.assertEquals;
 
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebService;
-
+import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.frontend.ServerFactoryBean;
+import org.apache.cxf.jaxws.endpoint.dynamic.JaxWsDynamicClientFactory;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
-
-import br.usp.ime.ccsl.choreos.middleware.proxy.interceptor.ProxyInterceptor;
+import org.junit.Ignore;
 
 public class ProxyInterceptorTest {
-
-    private WSInterceptorTest service1;
-    private WSInterceptorTest service2;
     private Server server1;
     private Server server2;
-    private ProxyInterceptor tie;
+    private final static int server1Port = 8081;
+    private final static int server2Port = 8082;
 
     @Before
     public void setUp() throws Exception {
-	service1 = new WSInterceptorTest("8081");
-	service2 = new WSInterceptorTest("8082");
+	server1 = createServer(server1Port);
+	server2 = createServer(server2Port);
 
-	ServerFactoryBean serverFactoryBean1 = new ServerFactoryBean();
-	serverFactoryBean1.setServiceClass(WSInterceptorTest.class);
-	serverFactoryBean1.setAddress(service1.getAddress());
-	serverFactoryBean1.setServiceBean(service1);
+	final String server2Address = InterceptorTestWS.getAddress(server2Port);
+	final ProxyInterceptor tie = new ProxyInterceptor(server2Address);
 
-	server1 = serverFactoryBean1.create();
-
-	ServerFactoryBean serverFactoryBean2 = new ServerFactoryBean();
-	serverFactoryBean2.setServiceClass(WSInterceptorTest.class);
-	serverFactoryBean2.setAddress(service2.getAddress());
-	serverFactoryBean2.setServiceBean(service2);
-
-	server2 = serverFactoryBean2.create();
-
-	tie = new ProxyInterceptor(service2.getAddress());
 	server1.getEndpoint().getInInterceptors().add(tie);
+    }
+
+    private Server createServer(int port) {
+	final InterceptorTestWS service = new InterceptorTestWS(port);
+	final ServerFactoryBean serverFactoryBean = getServerFactoryBean(service);
+
+	return serverFactoryBean.create();
+    }
+
+    private ServerFactoryBean getServerFactoryBean(final InterceptorTestWS service) {
+	final ServerFactoryBean serverFactoryBean = new ServerFactoryBean();
+
+	serverFactoryBean.setServiceClass(InterceptorTestWS.class);
+	serverFactoryBean.setAddress(service.getAddress());
+	serverFactoryBean.setServiceBean(service);
+
+	return serverFactoryBean;
     }
 
     @After
@@ -52,26 +52,15 @@ public class ProxyInterceptorTest {
 	server2.destroy();
     }
 
-    @Test
+    @Ignore
     public void shouldChangeEndpoint() throws Exception {
-	// TODO
-    }
-}
+	JaxWsDynamicClientFactory dcf = JaxWsDynamicClientFactory.newInstance();
+	String wsdlURL = InterceptorTestWS.getAddress(server1Port) + "?wsdl";
+	Client client = dcf.createClient(wsdlURL);
 
-@WebService
-class WSInterceptorTest {
-    private String instancePort;
+	Object[] res = client.invoke("getPort");
+	int result = (Integer) res[0];
 
-    public WSInterceptorTest(String port) {
-	this.instancePort = port;
-    }
-
-    @WebMethod
-    public String sendMessage(@WebParam(name = "message") String message) {
-	return instancePort;
-    }
-
-    public String getAddress() {
-	return "http://localhost:" + instancePort + "/hello";
+	assertEquals(8082, result);
     }
 }
