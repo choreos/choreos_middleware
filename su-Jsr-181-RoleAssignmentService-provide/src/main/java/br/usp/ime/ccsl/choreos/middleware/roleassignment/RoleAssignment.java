@@ -9,6 +9,37 @@ import javax.persistence.Id;
 @Entity
 public class RoleAssignment implements Serializable {
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((role == null) ? 0 : role.hashCode());
+        result = prime * result + ((uri == null) ? 0 : uri.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        RoleAssignment other = (RoleAssignment) obj;
+        if (role == null) {
+            if (other.role != null)
+                return false;
+        } else if (!role.equals(other.role))
+            return false;
+        if (uri == null) {
+            if (other.uri != null)
+                return false;
+        } else if (!uri.equals(other.uri))
+            return false;
+        return true;
+    }
+
     private static final long serialVersionUID = 485321587419877511L;
 
     @Id

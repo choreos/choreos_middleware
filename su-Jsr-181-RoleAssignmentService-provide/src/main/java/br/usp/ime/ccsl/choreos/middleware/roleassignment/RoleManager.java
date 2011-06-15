@@ -1,10 +1,12 @@
 package br.usp.ime.ccsl.choreos.middleware.roleassignment;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 public class RoleManager {
 
@@ -23,20 +25,24 @@ public class RoleManager {
         return instance;
     }
 
-    public void assignRole(RoleAssignment roleAssigment) {
-        List<String> uriList = uriRole.get(roleAssigment.getRole());
-        if (uriList == null) {
-            uriList = new ArrayList<String>();
-            List<String> threadSafeUriList = Collections.synchronizedList(uriList);
-            uriRole.put(roleAssigment.getRole(), threadSafeUriList);
-        }
-        uriList.add(roleAssigment.getUri());
+    public void assignRole(RoleAssignment roleAssignment) {
+        Session session = ChoreosSessionFactory.getSession();
+        session.save(roleAssignment);
+        session.close();
     }
 
+    @SuppressWarnings("unchecked")
     public List<String> getUriList(String roleName) {
-        List<String> uriList = uriRole.get(roleName);
-        if (uriList == null)
-            uriList = new ArrayList<String>();
+        Session session = ChoreosSessionFactory.getSession();
+        Query query = session.createQuery("from RoleAssignment ra where ra.role like :roleName").setString("roleName", roleName);
+        List<RoleAssignment> roleAssigments = query.list();
+        
+        List<String> uriList = new ArrayList<String>();
+        
+        for (RoleAssignment roleAssignment : roleAssigments) {
+            uriList.add(roleAssignment.getUri());
+        }
+        
         return uriList;
     }
 }
