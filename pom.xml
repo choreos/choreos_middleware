@@ -312,12 +312,13 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <!-- <distributionManagement>
+  <distributionManagement>
   <site>
   <id>PabxManagement</id>
   <url>
-  scp://deploy:userdeploy@voipteste01.locawebtelecom.com.br/opt/jakarta-tomcat/webapps/ROOT/doc/pabx
+     scp://danicuki@valinhos.ime.usp.br:54022/var/www/choreos/
   </url>
   </site>
-  </distributionManagement> -->
+  </distributionManagement>
+
 </project>
