@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	JBI descriptor for the Petals' "petals-bc-soap" component (SOAP).
+	Originally created for the version 4.0 of the component.
+ -->
+<jbi:jbi version="1.0" 
+	xmlns:generatedNs="http://roleassignmentservice.middleware.choreos.ccsl.ime.usp.br"
+	xmlns:jbi="http://java.sun.com/xml/ns/jbi"
+	xmlns:petalsCDK="http://petals.ow2.org/components/extensions/version-5"
+	xmlns:soap="http://petals.ow2.org/components/soap/version-4"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	
+	<!-- Import a Service into Petals or Expose a Petals Service => use a BC. -->
+	<jbi:services binding-component="true">
+	
+		<!-- Expose a Petals Service => consumes a Service. -->
+		<jbi:consumes
+			interface-name="generatedNs:RoleAssignmentService"
+			service-name="generatedNs:RoleAssignmentService"
+			endpoint-name="RoleAssignmentServicePort">
+	
+			<!-- CDK specific elements -->
+			<petalsCDK:timeout>30000</petalsCDK:timeout>
+			<petalsCDK:mep xsi:nil="true" />
+		
+			<!-- Component specific elements -->	
+			<soap:service-name>RoleAssignmentConsumer</soap:service-name>
+			<soap:mode>SOAP</soap:mode>
+			<soap:enable-http-transport>true</soap:enable-http-transport>
+			<soap:enable-jms-transport>false</soap:enable-jms-transport>
+		</jbi:consumes>
+	</jbi:services>
+</jbi:jbi>
