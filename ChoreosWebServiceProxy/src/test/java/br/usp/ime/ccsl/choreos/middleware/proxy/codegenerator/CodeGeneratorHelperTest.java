@@ -56,15 +56,9 @@ public class CodeGeneratorHelperTest {
     }
 
     @Test
-    public void testGetNamespaceFromURL() throws Exception {
-	assertEquals("http://webservice.support.proxy.middleware.choreos.ccsl.ime.usp.br/", cgh.getNamespace(Object.class
-		.getResource("/role.wsdl")));
-    }
-
-    @Test
     public void testGetNamespaceFromFile() throws Exception {
-	assertEquals("http://webservice.support.proxy.middleware.choreos.ccsl.ime.usp.br/", cgh.getNamespace(Object.class
-		.getResource("/hello.wsdl")));
+        assertEquals("http://webservice.support.proxy.middleware.choreos.ccsl.ime.usp.br/",
+                cgh.getNamespace(Object.class.getResource("/role.wsdl")));
     }
 
     @Test
