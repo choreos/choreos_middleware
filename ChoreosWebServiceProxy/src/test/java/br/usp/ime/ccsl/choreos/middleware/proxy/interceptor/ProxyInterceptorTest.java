@@ -8,7 +8,10 @@ import org.apache.cxf.frontend.ServerFactoryBean;
 import org.apache.cxf.jaxws.endpoint.dynamic.JaxWsDynamicClientFactory;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.Test;
+
+import br.usp.ime.choreos.vv.Item;
+import br.usp.ime.choreos.vv.WSClient;
 
 public class ProxyInterceptorTest {
     private Server server1;
@@ -52,15 +55,13 @@ public class ProxyInterceptorTest {
 	server2.destroy();
     }
 
-    @Ignore
+    @Test
     public void shouldChangeEndpoint() throws Exception {
-	JaxWsDynamicClientFactory dcf = JaxWsDynamicClientFactory.newInstance();
 	String wsdlURL = InterceptorTestWS.getAddress(server1Port) + "?wsdl";
-	Client client = dcf.createClient(wsdlURL);
-
-	Object[] res = client.invoke("getPort");
-	int result = (Integer) res[0];
-
-	assertEquals(8082, result);
+	WSClient wsClient = new WSClient(wsdlURL);
+	
+	Item response = wsClient.request("getPort");
+	int port = response.getChild("return").getContentAsInt();
+	assertEquals(server2Port, port);	
     }
 }
