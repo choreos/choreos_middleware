@@ -11,20 +11,20 @@ import java.util.ArrayList;
 
 import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.frontend.ServerFactoryBean;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
-import br.usp.ime.ccsl.choreos.middleware.proxy.ProxyController;
 import br.usp.ime.ccsl.choreos.middleware.proxy.codegenerator.CodeGeneratorHelper;
 import br.usp.ime.ccsl.choreos.middleware.proxy.support.webservice.HelloWorldService;
 
 public class ProxyControllerTest {
 
-    ProxyController proxy = null;
-    private static int proxyPort;
-    private static String url1;
-    static Server service1, service2;
-    private static String url2;
+    private ProxyController proxy = null;
+    private int proxyPort;
+    private String url1;
+    private Server service1, service2;
+    private String url2;
 
     /**
      * Creates and sets up two different WS providers for the HelloWorld8081
@@ -32,8 +32,8 @@ public class ProxyControllerTest {
      * 
      * @throws java.lang.Exception
      */
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    @Before
+    public void setUpBeforeClass() throws Exception {
 	HelloWorldService wsProvider1 = new HelloWorldService("service1");
 
 	ServerFactoryBean serverFactoryBean = new ServerFactoryBean();
@@ -52,8 +52,13 @@ public class ProxyControllerTest {
 
 	url1 = service1.getEndpoint().getEndpointInfo().getAddress();
 	url2 = service2.getEndpoint().getEndpointInfo().getAddress();
-
 	proxyPort = 9123;
+    }
+    
+    @After
+    public void tearDown() {
+	service1.destroy();
+	service2.destroy();
     }
 
     @Test

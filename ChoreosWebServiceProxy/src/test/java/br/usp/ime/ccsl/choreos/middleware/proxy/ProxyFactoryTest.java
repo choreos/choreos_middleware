@@ -13,9 +13,7 @@ import java.util.List;
 import org.apache.cxf.frontend.ServerFactoryBean;
 import org.junit.Test;
 
-import br.usp.ime.ccsl.choreos.middleware.proxy.ProxyFactory;
 import br.usp.ime.ccsl.choreos.middleware.proxy.codegenerator.CodeGeneratorHelper;
-import br.usp.ime.ccsl.choreos.middleware.proxy.support.webservice.*;
 
 public class ProxyFactoryTest {
 
@@ -30,11 +28,13 @@ public class ProxyFactoryTest {
 	for (int i = 0; i < proxy.getClass().getMethods().length; i++) {
 	    methods.add(proxy.getClass().getMethods()[i].getName());
 	}
+    }
 
-	// for (int i = 0; i < HelloWorld8081.class.getMethods().length; i++) {
-	// assertTrue(methods.contains(HelloWorld8081.class.getMethods()[i].getName()));
-	//	    
-	// }
+    @Test
+    public void shouldReturnAClassnameWithThePackage() throws Exception {
+	ProxyFactory factory = new ProxyFactory();
+	assertEquals("br.usp.ime.ccsl.choreos.middleware.proxy.support.webservice.HelloWorld8081", factory
+		.getClassName(getClass().getResource("/role.wsdl")));
     }
 
     @Test

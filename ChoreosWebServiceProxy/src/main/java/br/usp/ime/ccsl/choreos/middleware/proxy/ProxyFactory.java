@@ -32,15 +32,13 @@ public class ProxyFactory {
 	return className;
     }
 
-    // Class is ** SUPPOSED ** to be generic. No need for a warning!
     private Object getProxyInstance(URL wsdlLocation) {
 	String className = getClassName(wsdlLocation)+"Impl";
 	return getClassByName(className);
     }
 
-    @SuppressWarnings("unchecked")
     public Object getClassByName(String className) {
-	Class clazz = null;
+	Class<?> clazz = null;
 	Object implementor = null;
 	try {
 

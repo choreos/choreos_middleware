@@ -47,7 +47,7 @@ public class CodeGeneratorHelper {
 
 	String className = packageName + getPortName(wsdlInterfaceDescriptor);
 	Class implementedInterface = getInterfaceClass(className);
-	
+
 	for (int i = 0; i < implementedInterface.getMethods().length; i++) {
 	    generateMethod(implementedInterface.getMethods()[i]);
 	}
@@ -74,8 +74,7 @@ public class CodeGeneratorHelper {
 	}
 	line = line + "){";
 	implementation.add(line);
-	
-	
+
 	line = "Exception e = new Exception(\"There is no web service active for this role\");";
 	implementation.add(line);
 	implementation.add("return null;");
@@ -109,7 +108,7 @@ public class CodeGeneratorHelper {
 	String[] parameters = null;
 	if (server) {
 	    parameters = new String[] { "-server", "-d", SRC_GENERATED_SERVER_JAVA,
-		    wsdlInterfaceDescriptor.toExternalForm()};
+		    wsdlInterfaceDescriptor.toExternalForm() };
 	    WSDLToJava.main(parameters);
 	    createImplementationClass(wsdlInterfaceDescriptor);
 	    return getDestinationFolder(SRC_GENERATED_SERVER_JAVA, wsdlInterfaceDescriptor);
@@ -161,14 +160,14 @@ public class CodeGeneratorHelper {
 	}
     }
 
-//    private void createNewFile(File fileHandler) {
-//	try {
-//	    fileHandler.createNewFile();
-//	} catch (IOException e) {
-//	    System.out.println("Problem Creating file: " + fileHandler.getName());
-//	    e.printStackTrace();
-//	}
-//    }
+    // private void createNewFile(File fileHandler) {
+    // try {
+    // fileHandler.createNewFile();
+    // } catch (IOException e) {
+    // System.out.println("Problem Creating file: " + fileHandler.getName());
+    // e.printStackTrace();
+    // }
+    // }
 
     //
     // private void addImportOf(List<String> fileLines, String currentLine,
@@ -331,12 +330,11 @@ public class CodeGeneratorHelper {
 	return array;
     }
 
-    @SuppressWarnings("unchecked")
     private List<String> listFiles(String sourcesDir) {
 	List<String> files = new ArrayList<String>();
 
 	if (new File(sourcesDir).isDirectory()) {
-	    for (Iterator<File> iterator = FileUtils.listFiles(new File(sourcesDir), new String[] { "java" }, false)
+	    for (Iterator<?> iterator = FileUtils.listFiles(new File(sourcesDir), new String[] { "java" }, false)
 		    .iterator(); iterator.hasNext();) {
 		File file = (File) iterator.next();
 		files.add(file.getPath());
@@ -347,7 +345,6 @@ public class CodeGeneratorHelper {
 	}
 
 	return files;
-
     }
 
     private void createDirectory(String directory) {
