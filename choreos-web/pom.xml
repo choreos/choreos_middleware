@@ -6,9 +6,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-	  <groupId>br.usp.ime.ccsl.choreos</groupId>
-  	<artifactId>middleware</artifactId>
-  	<version>0.2-SNAPSHOT</version>
+		<groupId>br.usp.ime.ccsl.choreos</groupId>
+		<artifactId>middleware</artifactId>
+		<version>0.2-SNAPSHOT</version>
 	</parent>
 
 
@@ -31,6 +31,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>br.usp.ime.choreos</groupId>
+			<artifactId>choreosvv</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>br.com.caelum</groupId>
 			<artifactId>vraptor</artifactId>
 			<version>3.2.0</version>
@@ -41,14 +46,21 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-		
+
 		<dependency>
-            <groupId>net.sourceforge.jwebunit</groupId>
-            <artifactId>jwebunit-htmlunit-plugin</artifactId>
-            <version>2.5</version>
-            <scope>test</scope>
-        </dependency>
-		
+			<groupId>net.sourceforge.jwebunit</groupId>
+			<artifactId>jwebunit-htmlunit-plugin</artifactId>
+			<version>2.5</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.8.5</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -101,7 +113,7 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
@@ -116,9 +128,10 @@
 				</executions>
 				<configuration>
 					<downloadSources>true</downloadSources>
+					<wtpversion>2.0</wtpversion>
 				</configuration>
 			</plugin>
-			
+
 
 			<!-- Java Sources Compilation -->
 			<plugin>
