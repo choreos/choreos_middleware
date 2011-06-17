@@ -82,14 +82,6 @@ public class CodeGeneratorHelper {
 
     }
 
-    /**
-     * Short description
-     * 
-     * Longer description.
-     * 
-     * @param portName
-     * @return
-     */
     @SuppressWarnings("unchecked")
     private Class getInterfaceClass(String portName) {
 
@@ -121,36 +113,6 @@ public class CodeGeneratorHelper {
 
     }
 
-    // public String includeProxyCodeIntoGeneratedJavaFiles(URL
-    // wsdlInterfaceDescriptor) {
-    //
-    // String destinationFolder =
-    // getDestinationFolder(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA,
-    // wsdlInterfaceDescriptor);
-    //
-    // File fileDirectory = new File(destinationFolder);
-    //
-    // if (fileDirectory.exists() && fileDirectory.isDirectory()) {
-    // File fileHandler = findServerFile(fileDirectory);
-    //
-    // List<String> fileLines = getLines(fileHandler);
-    // List<String> fileLinesCopy = new ArrayList<String>(fileLines);
-    //
-    // for (String currentLine : fileLines) {
-    // addImportOf(fileLinesCopy, currentLine, "import java.lang.reflect.*;");
-    // addImportOf(fileLinesCopy, currentLine,
-    // "import ime.usp.br.proxy.generic.GenericImpl;");
-    // adaptImplementorLine(fileLinesCopy, currentLine);
-    // }
-    //
-    // fileHandler.delete();
-    // createNewFile(fileHandler);
-    // writeLines(fileHandler, fileLinesCopy);
-    // } else
-    // System.out.println(fileDirectory.getPath() + " is not a directory!");
-    // return fileDirectory.getPath();
-    // }
-
     private void writeLines(File fileHandler, List<String> fileLinesCopy) {
 	try {
 	    FileUtils.writeLines(fileHandler, fileLinesCopy);
@@ -159,66 +121,6 @@ public class CodeGeneratorHelper {
 	    e.printStackTrace();
 	}
     }
-
-    // private void createNewFile(File fileHandler) {
-    // try {
-    // fileHandler.createNewFile();
-    // } catch (IOException e) {
-    // System.out.println("Problem Creating file: " + fileHandler.getName());
-    // e.printStackTrace();
-    // }
-    // }
-
-    //
-    // private void addImportOf(List<String> fileLines, String currentLine,
-    // String packageName) {
-    // if (currentLine.matches("package .*;")) {
-    // fileLines.add(fileLines.indexOf(currentLine) + 1, packageName);
-    // }
-    // }
-    //
-    // private void adaptImplementorLine(List<String> fileLines, String
-    // currentLine) {
-    // if (currentLine.matches(".*Object implementor = new .*")) {
-    //
-    // int classnameStartIndex =
-    // currentLine.indexOf("Object implementor = new ")
-    // + "Object implementor = new ".length();
-    // int classNameEndIndex = currentLine.indexOf("Impl();");
-    //
-    // String className = currentLine.substring(classnameStartIndex,
-    // classNameEndIndex);
-    //
-    // String modifiedFileLine = "Object implementor = Proxy.newProxyInstance("
-    // + className
-    // + ".class.getClassLoader(), new Class[] { " + className +
-    // ".class }, new GenericImpl());";
-    //
-    // fileLines.set(fileLines.indexOf(currentLine), modifiedFileLine);
-    // }
-    // }
-    //
-    // @SuppressWarnings("unchecked")
-    // private List<String> getLines(File fileHandler) {
-    // List<String> fileLines = null;
-    // try {
-    // fileLines = FileUtils.readLines(fileHandler);
-    // } catch (IOException e) {
-    // System.out.println("File not Found: " + fileHandler.getName());
-    // e.printStackTrace();
-    // }
-    // return fileLines;
-    // }
-    //
-    // private File findServerFile(File fileDirectory) {
-    // File[] files = fileDirectory.listFiles(new FileFilter() {
-    //
-    // public boolean accept(File pathname) {
-    // return pathname.getName().matches(".*Server.java");
-    // }
-    // });
-    // return (files.length > 0) ? files[0] : null;
-    // }
 
     public String getNamespace(URL wsdlInterfaceDescriptor) {
 	Definition def = null;
