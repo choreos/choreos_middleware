@@ -14,6 +14,7 @@ import org.apache.cxf.frontend.ServerFactoryBean;
 import org.junit.Test;
 
 import br.usp.ime.ccsl.choreos.middleware.proxy.codegenerator.CodeGeneratorHelper;
+import br.usp.ime.ccsl.choreos.wsdl.WsdlUtils;
 
 public class ProxyFactoryTest {
 
@@ -49,7 +50,7 @@ public class ProxyFactoryTest {
 	ServerFactoryBean serverFactoryBean = raiseWebServer(address, proxyInstance);
 
 	CodeGeneratorHelper cgh = new CodeGeneratorHelper();
-	assertEquals(cgh.getNamespace(wsdlLocation), cgh.getNamespace(new URL(address + "?wsdl")));
+	assertEquals(WsdlUtils.getNamespace(wsdlLocation), WsdlUtils.getNamespace(new URL(address + "?wsdl")));
 	serverFactoryBean.destroy();
 
     }

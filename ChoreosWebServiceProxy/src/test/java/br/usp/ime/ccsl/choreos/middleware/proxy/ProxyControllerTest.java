@@ -15,12 +15,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.usp.ime.ccsl.choreos.middleware.proxy.codegenerator.CodeGeneratorHelper;
 import br.usp.ime.ccsl.choreos.middleware.proxy.support.webservice.HelloWorldService;
+import br.usp.ime.ccsl.choreos.wsdl.WsdlUtils;
 
 public class ProxyControllerTest {
 
-    private ProxyController proxy = null;
     private int proxyPort;
     private String url1;
     private Server service1, service2;
@@ -54,7 +53,7 @@ public class ProxyControllerTest {
 	url2 = service2.getEndpoint().getEndpointInfo().getAddress();
 	proxyPort = 9123;
     }
-    
+
     @After
     public void tearDown() {
 	service1.destroy();
@@ -68,11 +67,8 @@ public class ProxyControllerTest {
 
 	URL serviceURL = controller.instantiateProxy(wsdl, proxyPort);
 
-	CodeGeneratorHelper cgh = new CodeGeneratorHelper();
-
-	assertEquals(cgh.getNamespace(wsdl), cgh.getNamespace(new URL(serviceURL
-		.toExternalForm()
-		+ "?wsdl")));
+	assertEquals(WsdlUtils.getNamespace(wsdl), WsdlUtils
+		.getNamespace(new URL(serviceURL.toExternalForm() + "?wsdl")));
 
     }
 
@@ -105,7 +101,7 @@ public class ProxyControllerTest {
     @Test
     public final void testSwitchWSImplementation() throws Exception {
 	ProxyController controller = new ProxyController();
-	
+
 	controller.instantiateProxy(Object.class.getResource("/role.wsdl"), 5558);
 
 	controller.addNewWebService(url1);
@@ -113,10 +109,10 @@ public class ProxyControllerTest {
 
 	controller.switchWSImplementation(url2);
 	assertEquals(url2, controller.currentInterceptorURL);
-	
+
 	controller.switchWSImplementation(url1);
 	assertEquals(url1, controller.currentInterceptorURL);
-	
+
 	controller.switchWSImplementation(url2);
 	assertEquals(url2, controller.currentInterceptorURL);
     }

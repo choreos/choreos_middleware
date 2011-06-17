@@ -5,19 +5,14 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.wsdl.Definition;
-import javax.wsdl.WSDLException;
-import javax.wsdl.factory.WSDLFactory;
-import javax.wsdl.xml.WSDLReader;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.cxf.tools.wsdlto.WSDLToJava;
 
-import com.ibm.wsdl.BindingImpl;
+import br.usp.ime.ccsl.choreos.wsdl.WsdlUtils;
+
 import com.sun.tools.javac.Main;
 
 public class CodeGeneratorHelper {
@@ -39,11 +34,11 @@ public class CodeGeneratorHelper {
 
 	implementation.add("package " + packageName.substring(0, packageName.length() - 1) + ";");
 	implementation.add("");
-	implementation.add("public class " + getPortName(wsdlInterfaceDescriptor) + "Impl implements "
-		+ getPortName(wsdlInterfaceDescriptor) + "{");
+	implementation.add("public class " + WsdlUtils.getPortName(wsdlInterfaceDescriptor) + "Impl implements "
+		+ WsdlUtils.getPortName(wsdlInterfaceDescriptor) + "{");
 	implementation.add("");
 
-	String className = packageName + getPortName(wsdlInterfaceDescriptor);
+	String className = packageName + WsdlUtils.getPortName(wsdlInterfaceDescriptor);
 	Class<?> implementedInterface = getInterfaceClass(className);
 
 	for (int i = 0; i < implementedInterface.getMethods().length; i++) {
@@ -53,7 +48,7 @@ public class CodeGeneratorHelper {
 	implementation.add("}");
 
 	String fileName = getDestinationFolder(CodeGeneratorHelper.SRC_GENERATED_SERVER_JAVA, wsdlInterfaceDescriptor)
-		+ getPortName(wsdlInterfaceDescriptor) + "Impl.java";
+		+ WsdlUtils.getPortName(wsdlInterfaceDescriptor) + "Impl.java";
 	File output = new File(fileName);
 
 	writeLines(output, implementation);
@@ -118,45 +113,8 @@ public class CodeGeneratorHelper {
 	}
     }
 
-    public String getNamespace(URL wsdlInterfaceDescriptor) {
-	Definition def = null;
-	try {
-	    WSDLFactory factory = WSDLFactory.newInstance();
-	    WSDLReader reader = factory.newWSDLReader();
-	    reader.setFeature("javax.wsdl.verbose", false);
-	    reader.setFeature("javax.wsdl.importDocuments", true);
-	    def = reader.readWSDL(null, wsdlInterfaceDescriptor.toExternalForm());
-	} catch (WSDLException e) {
-	    e.printStackTrace();
-	}
-
-	return def.getTargetNamespace();
-    }
-
-    public String getPortName(URL wsdlInterfaceDescriptor) {
-	Definition def = null;
-	try {
-	    WSDLFactory factory = WSDLFactory.newInstance();
-	    WSDLReader reader = factory.newWSDLReader();
-	    reader.setFeature("javax.wsdl.verbose", false);
-	    reader.setFeature("javax.wsdl.importDocuments", true);
-	    def = reader.readWSDL(null, wsdlInterfaceDescriptor.toExternalForm());
-	} catch (WSDLException e) {
-	    e.printStackTrace();
-	}
-
-	Collection<?> bindingList = def.getBindings().values();
-	for (Iterator<?> bindingIterator = bindingList.iterator(); bindingIterator.hasNext();) {
-	    BindingImpl bind = (BindingImpl) bindingIterator.next();
-	    if (!bind.getPortType().isUndefined())
-		return bind.getPortType().getQName().getLocalPart();
-	}
-
-	return "";
-    }
-
     public String getDestinationFolder(String destinationPrefix, URL wsdlInterfaceDescriptor) {
-	String namespace = getNamespace(wsdlInterfaceDescriptor);
+	String namespace = WsdlUtils.getNamespace(wsdlInterfaceDescriptor);
 	String destinationFolder = destinationPrefix;
 
 	if (namespace.matches("http://.*")) {

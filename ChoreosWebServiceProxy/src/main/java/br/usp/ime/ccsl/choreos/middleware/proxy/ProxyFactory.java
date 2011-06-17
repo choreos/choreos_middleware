@@ -6,6 +6,7 @@ import java.net.URL;
 
 import br.usp.ime.ccsl.choreos.middleware.proxy.codegenerator.CodeGenerator;
 import br.usp.ime.ccsl.choreos.middleware.proxy.codegenerator.CodeGeneratorHelper;
+import br.usp.ime.ccsl.choreos.wsdl.WsdlUtils;
 
 public class ProxyFactory {
     public Object generateProxyImplementor(URL wsdlLocation) {
@@ -17,8 +18,7 @@ public class ProxyFactory {
     }
 
     public static String getPortName(URL wsdlLocation) {
-	CodeGeneratorHelper cgh = new CodeGeneratorHelper();
-	return cgh.getPortName(wsdlLocation);
+	return WsdlUtils.getPortName(wsdlLocation);
     }
 
     // TODO: Test!

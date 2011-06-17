@@ -56,12 +56,6 @@ public class CodeGeneratorHelperTest {
     }
 
     @Test
-    public void testGetNamespaceFromFile() throws Exception {
-        assertEquals("http://webservice.support.proxy.middleware.choreos.ccsl.ime.usp.br/",
-                cgh.getNamespace(Object.class.getResource("/role.wsdl")));
-    }
-
-    @Test
     public void testGetDestinationFolder() throws Exception {
 	String actualDestination = cgh.getDestinationFolder(CodeGeneratorHelper.TARGET_GENERATED_SERVER_JAVA_CODE,
 		Object.class.getResource("/role.wsdl"));
@@ -79,11 +73,6 @@ public class CodeGeneratorHelperTest {
 
 	assertTrue(new File(CodeGeneratorHelper.TARGET_GENERATED_SERVER_JAVA_CODE
 		+ "/br/usp/ime/ccsl/choreos/middleware/proxy/support/webservice/HelloWorld8081_HelloWorld8081Port_Server.class").exists());
-    }
-
-    @Test
-    public void testGetPortNameFromFile() throws Exception {
-	assertEquals("HelloWorld8081", cgh.getPortName(Object.class.getResource("/role.wsdl")));
     }
 
     @SuppressWarnings("unchecked")
