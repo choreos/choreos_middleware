@@ -32,9 +32,7 @@ public class CodeGeneratorHelper {
 
     private List<String> implementation;
 
-    @SuppressWarnings("unchecked")
     private void createImplementationClass(URL wsdlInterfaceDescriptor) {
-
 	implementation = new ArrayList<String>();
 
 	String packageName = getPackage(wsdlInterfaceDescriptor);
@@ -46,7 +44,7 @@ public class CodeGeneratorHelper {
 	implementation.add("");
 
 	String className = packageName + getPortName(wsdlInterfaceDescriptor);
-	Class implementedInterface = getInterfaceClass(className);
+	Class<?> implementedInterface = getInterfaceClass(className);
 
 	for (int i = 0; i < implementedInterface.getMethods().length; i++) {
 	    generateMethod(implementedInterface.getMethods()[i]);
@@ -82,10 +80,8 @@ public class CodeGeneratorHelper {
 
     }
 
-    @SuppressWarnings("unchecked")
-    private Class getInterfaceClass(String portName) {
-
-	Class clazz = null;
+    private Class<?> getInterfaceClass(String portName) {
+	Class<?> clazz = null;
 	try {
 	    clazz = Class.forName(portName);
 	} catch (ClassNotFoundException e) {
@@ -135,10 +131,8 @@ public class CodeGeneratorHelper {
 	}
 
 	return def.getTargetNamespace();
-
     }
 
-    @SuppressWarnings("unchecked")
     public String getPortName(URL wsdlInterfaceDescriptor) {
 	Definition def = null;
 	try {
@@ -151,15 +145,14 @@ public class CodeGeneratorHelper {
 	    e.printStackTrace();
 	}
 
-	Collection bindingList = def.getBindings().values();
-	for (Iterator bindingIterator = bindingList.iterator(); bindingIterator.hasNext();) {
+	Collection<?> bindingList = def.getBindings().values();
+	for (Iterator<?> bindingIterator = bindingList.iterator(); bindingIterator.hasNext();) {
 	    BindingImpl bind = (BindingImpl) bindingIterator.next();
 	    if (!bind.getPortType().isUndefined())
 		return bind.getPortType().getQName().getLocalPart();
 	}
 
 	return "";
-
     }
 
     public String getDestinationFolder(String destinationPrefix, URL wsdlInterfaceDescriptor) {
