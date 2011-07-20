@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/Node/" targetNamespace="http://www.example.org/Node/">
+    <element name="node">
+	    <complexType>
+	    	<sequence>
+	    		<element name="cpus" type="int" />
+	    		<element name="ram" type="int" />
+	    		<element name="storage" type="int" />
+	    		<element name="so" type="string" />
+	    		<element name="zone" type="string" />
+	    		<element name="ip" type="string" />
+	    		<element name="hostname" type="string" />
+	    	</sequence>
+	    </complexType>
+    </element>    
+</schema>
