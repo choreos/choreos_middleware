@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/Node/" targetNamespace="http://www.example.org/Node/">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+xmlns:tns="http://choreos.ime.usp.br/NodePoolManager/" targetNamespace="http://choreos.ime.usp.br/NodePoolManager/">
     <element name="node">
 	    <complexType>
 	    	<sequence>
+				<element name="id" type="long" />
 	    		<element name="cpus" type="int" />
 	    		<element name="ram" type="int" />
 	    		<element name="storage" type="int" />

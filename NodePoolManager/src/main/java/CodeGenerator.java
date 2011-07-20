@@ -6,5 +6,4 @@ public class CodeGenerator {
         XJCFacade.main(new String[] { "-d", "src/main/java", "src/main/resources/NodePoolManager.xsd" });
         System.out.println("Done!");
     }
-
 }
