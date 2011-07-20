@@ -23,4 +23,5 @@ public class NodesResource {
         nodes.add(node);
         return node;
     }
+
 }

@@ -2,6 +2,8 @@ package br.usp.ime.choreos.nodepoolmanager;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Iterator;
+
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -20,7 +22,7 @@ public class NodesResourceTest {
     }
 
     @Test
-    public void testGetNodes() throws Exception {
+    public void createNode() throws Exception {
         WebClient client = WebClient.create("http://localhost:8080/");
         client.path("nodes");
         Node n = new Node();
@@ -33,10 +35,31 @@ public class NodesResourceTest {
 
         client.back(true);
         client.path("nodes/1");
-        c = client.get(Node.class);
-        assertEquals(2, c.getCpus());
 
-        System.out.println(client.get().getEntity());
-
+        client.delete();
     }
+    
+    @Test
+    public void listNodes() throws Exception {
+        WebClient client = WebClient.create("http://localhost:8080/");
+        client.path("nodes");
+        Node n = new Node();
+        n.setCpus(2);
+        client.post(n, Node.class);
+
+        client.back(true);
+        client.path("nodes");
+        n.setSo("Linux");
+        Node c = client.post(n, Node.class);
+
+        client.back(true);
+        client.path("nodes");
+
+        Iterator<? extends Node> i = client.getCollection(Node.class).iterator();
+
+        assertEquals(2, i.next().getCpus());
+        assertEquals("Linux", i.next().getSo());
+    }
+
+    
 }
