@@ -19,6 +19,7 @@ public class NodesResource {
 
     @POST
     public Node createNode(Node node) {
+        node.setIp("fakeIp");
         nodes.add(node);
         return node;
     }

@@ -36,4 +36,8 @@ public class NodePoolManagerStandaloneServer implements Runnable {
         System.out.println("Finalizou...");
 
     }
+
+    public static void main(String[] args) throws InterruptedException {
+        NodePoolManagerStandaloneServer.start();
+    }
 }
