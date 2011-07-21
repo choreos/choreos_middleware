@@ -38,7 +38,7 @@ public class NodesResourceTest {
         client = WebClient.create(url);
         Node node = client.get(Node.class);
 
-        assertEquals(2, node.getCpus());
+        assertEquals(2, node.getCpus().intValue());
         assertEquals("fakeIp", node.getIp());
 
         client.delete();
@@ -62,7 +62,7 @@ public class NodesResourceTest {
 
         Iterator<? extends Node> i = client.getCollection(Node.class).iterator();
 
-        assertEquals(2, i.next().getCpus());
+        assertEquals(2, i.next().getCpus().intValue());
         assertEquals("Linux", i.next().getSo());
     }
 

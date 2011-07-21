@@ -115,18 +115,11 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.0</version>
+      <version>4.8.2</version>
       <type>jar</type>
       <scope>test</scope>
       <optional>true</optional>
     </dependency>
-    <dependency>
-		<groupId>javax</groupId>
-		<artifactId>javaee-api</artifactId>
-		<version>6.0</version>
-		<type>jar</type>
-		<scope>compile</scope>
-	</dependency>
   </dependencies>
 
   <build>

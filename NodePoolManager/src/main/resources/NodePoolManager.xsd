@@ -5,13 +5,13 @@ xmlns:tns="http://choreos.ime.usp.br/NodePoolManager/" targetNamespace="http://c
 	    <complexType>
 	    	<sequence>
 				<element name="id" type="long" />
-	    		<element name="cpus" type="int" />
-	    		<element name="ram" type="int" />
-	    		<element name="storage" type="int" />
-	    		<element name="so" type="string" />
-	    		<element name="zone" type="string" />
-	    		<element name="ip" type="string" />
-	    		<element name="hostname" type="string" />
+	    		<element name="cpus" type="int" minOccurs="0" />
+	    		<element name="ram" type="int" minOccurs="0" />
+	    		<element name="storage" type="int" minOccurs="0" />
+	    		<element name="so" type="string" minOccurs="0" />
+	    		<element name="zone" type="string" minOccurs="0" />
+	    		<element name="ip" type="string" minOccurs="0" />
+	    		<element name="hostname" type="string"  minOccurs="0" />
 	    	</sequence>
 	    </complexType>
     </element>    
