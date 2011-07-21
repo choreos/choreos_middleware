@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" 
-xmlns:tns="http://choreos.ime.usp.br/NodePoolManager/" targetNamespace="http://choreos.ime.usp.br/NodePoolManager/">
-    <element name="node">
-	    <complexType>
-	    	<sequence>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://choreos.ime.usp.br/NodePoolManager/"
+	targetNamespace="http://choreos.ime.usp.br/NodePoolManager/">
+	<element name="node">
+		<complexType>
+			<sequence>
 				<element name="id" type="long" />
-	    		<element name="cpus" type="int" minOccurs="0" />
-	    		<element name="ram" type="int" minOccurs="0" />
-	    		<element name="storage" type="int" minOccurs="0" />
-	    		<element name="so" type="string" minOccurs="0" />
-	    		<element name="zone" type="string" minOccurs="0" />
-	    		<element name="ip" type="string" minOccurs="0" />
-	    		<element name="hostname" type="string"  minOccurs="0" />
-	    	</sequence>
-	    </complexType>
-    </element>    
+				<element name="cpus" type="int" minOccurs="0" />
+				<element name="ram" type="int" minOccurs="0" />
+				<element name="storage" type="int" minOccurs="0" />
+				<element name="so" type="string" minOccurs="0" />
+				<element name="zone" type="string" minOccurs="0" />
+				<element name="ip" type="string" minOccurs="0" />
+				<element name="hostname" type="string" minOccurs="0" />
+			</sequence>
+		</complexType>
+	</element>
+	<element name="configs">
+		<complexType>
+			<sequence>
+				<element ref="tns:config" minOccurs="0" maxOccurs="unbounded">
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+	<element name="config">
+		<complexType>
+			<sequence>
+				<element name="name" type="string" />
+			</sequence>
+		</complexType>
+	</element>
 </schema>
