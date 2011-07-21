@@ -8,16 +8,17 @@
 	<name>NodePoolManager</name>
 	<url>http://valinhos.ime.usp.br:54080/hudson/</url>
 
-	<repositories>
-	</repositories>
-
-
+	<parent>
+		<groupId>br.usp.ime.ccsl.choreos</groupId>
+		<artifactId>middleware</artifactId>
+		<version>0.2-SNAPSHOT</version>
+	</parent>
 
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.0</version>
+			<version>4.8.2</version>
 			<scope>test</scope>
 		</dependency>
 
