@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Iterator;
 
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -27,14 +30,16 @@ public class NodesResourceTest {
         client.path("nodes");
         Node n = new Node();
         n.setCpus(2);
-        n.setId(1);
-        Node c = client.post(n, Node.class);
+        Response response = client.post(n);
 
-        assertEquals(2, c.getCpus());
-        assertEquals("fakeIp", c.getIp());
+        assertEquals(Status.CREATED.getStatusCode(), response.getStatus());
 
-        client.back(true);
-        client.path("nodes/1");
+        String url = (String) response.getMetadata().get("Location").get(0);
+        client = WebClient.create(url);
+        Node node = client.get(Node.class);
+
+        assertEquals(2, node.getCpus());
+        assertEquals("fakeIp", node.getIp());
 
         client.delete();
     }
@@ -45,12 +50,12 @@ public class NodesResourceTest {
         client.path("nodes");
         Node n = new Node();
         n.setCpus(2);
-        client.post(n, Node.class);
+        client.post(n);
 
         client.back(true);
         client.path("nodes");
         n.setSo("Linux");
-        Node c = client.post(n, Node.class);
+        client.post(n);
 
         client.back(true);
         client.path("nodes");

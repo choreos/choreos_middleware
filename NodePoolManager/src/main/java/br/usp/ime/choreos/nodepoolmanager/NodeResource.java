@@ -7,22 +7,24 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 @Path("/nodes/{node_id}")
 public class NodeResource {
 
     @GET
-    public Node getNode(@PathParam("node_id") Long id) {
+    public Response getNode(@PathParam("node_id") Long id) {
         for (Node n : NodesResource.nodes) {
             if (n.getId() == id) {
-                return n;
+                return Response.ok(n).build();
             }
         }
-        return null;
+        return Response.status(Status.NOT_FOUND).build();
     }
 
     @DELETE
-    public void deleteNode(@PathParam("node_id") Long id) {
+    public Response deleteNode(@PathParam("node_id") Long id) {
         List<Node> toDelete = new ArrayList<Node>();
 
         for (Node n : NodesResource.nodes) {
@@ -32,6 +34,7 @@ public class NodeResource {
         }
 
         NodesResource.nodes.removeAll(toDelete);
+        return Response.status(Status.OK).build();
     }
 
 }
