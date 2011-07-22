@@ -7,6 +7,8 @@
 # All rights reserved - Do Not Redistribute
 #
 include_recipe "java"
+include_recipe "mysql"
+include_recipe "mysql::server"
 
 PETALS_URL = "http://maven.ow2.org/maven2/org/ow2/petals/petals-platform/3.1.1/petals-platform-3.1.1.zip"
 
