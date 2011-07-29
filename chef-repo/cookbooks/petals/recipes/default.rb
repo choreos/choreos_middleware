@@ -2,9 +2,9 @@
 # Cookbook Name:: petals
 # Recipe:: default
 #
-# Copyright 2011, YOUR_COMPANY_NAME
+# Copyright 2011, USP
 #
-# All rights reserved - Do Not Redistribute
+# LGPL 2.0 or, at your option, any later version
 #
 include_recipe "java"
 include_recipe "mysql::server"
