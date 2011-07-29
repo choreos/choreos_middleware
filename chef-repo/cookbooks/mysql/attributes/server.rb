@@ -19,6 +19,7 @@
 
 default['mysql']['bind_address']               = attribute?('cloud') ? cloud['local_ipv4'] : ipaddress
 default['mysql']['data_dir']                   = "/var/lib/mysql"
+default['mysql']['server_root_password']       = "petals"
 
 case node["platform"]
 when "centos", "redhat", "fedora", "suse"

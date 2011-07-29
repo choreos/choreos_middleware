@@ -34,3 +34,14 @@ execute "unzip" do
   creates "/var/petals-platform-3.1.1"
   action :run
 end
+
+mysql_database "creates petals database" do
+  host "localhost"
+  username "root"
+  password node[:mysql][:server_root_password]
+  database "petals"
+  action :create_db
+end
+
+
+
