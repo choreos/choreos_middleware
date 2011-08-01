@@ -9,10 +9,11 @@
 include_recipe "java"
 include_recipe "mysql::server"
 
-PETALS_URL = "http://maven.ow2.org/maven2/org/ow2/petals/petals-platform/3.1.1/petals-platform-3.1.1.zip"
+ZIP_FILE = "petals-platform-3.1.1.zip"
+PETALS_URL = "http://maven.ow2.org/maven2/org/ow2/petals/petals-platform/3.1.1/#{ZIP_FILE}"
 
 #download petals zip file
-remote_file "/var/petals-platform-3.1.1.zip" do
+remote_file "#{node['petals']['install_dir']}/#{ZIP_FILE}" do
   source PETALS_URL
   action :nothing
 end
@@ -22,16 +23,16 @@ http_request "HEAD #{PETALS_URL}" do
   message ""
   url PETALS_URL
   action :head
-  if File.exists?("/var/petals-platform-3.1.1.zip")
-    headers "If-Modified-Since" => File.mtime("/var/petals-platform-3.1.1.zip").httpdate
+  if File.exists?("#{node['petals']['install_dir']}/#{ZIP_FILE}")
+    headers "If-Modified-Since" => File.mtime("#{node['petals']['install_dir']}/#{ZIP_FILE}").httpdate
   end
-  notifies :create, resources(:remote_file => "/var/petals-platform-3.1.1.zip"), :immediately
+  notifies :create, resources(:remote_file => "#{node['petals']['install_dir']}/#{ZIP_FILE}"), :immediately
 end
 
 #unzip petals
 execute "unzip" do
-  command "unzip /var/petals-platform-3.1.1.zip -d /var"
-  creates "/var/petals-platform-3.1.1"
+  command "unzip #{node['petals']['install_dir']}/#{ZIP_FILE} -d #{node['petals']['install_dir']}"
+  creates "#{node['petals']['install_dir']}/#{ZIP_FILE.gsub('.zip', '')}"
   action :run
 end
 
