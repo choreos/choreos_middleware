@@ -1,0 +1,150 @@
+# PETALS: PETALS Services Platform
+# Copyright (C) 2005  EBM WebSourcing
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1300
+# USA.
+#
+# Initial developer(s): EBM WebSourcing
+
+# -----------------------------------------------------------------------
+# PEtALS properties
+# -----------------------------------------------------------------------
+
+#This property specifies the name of the container. In distributed mode, this property is mandatory
+# and must match a container name in the topology.xml file
+petals.container.name=<%= node['petals']['container_name'] %>
+
+#This property set the maximum duration of the processing of a life-cycle operation on a JBI
+# components and SAs (start, stop, ...). It prevents from hanging threads. 
+petals.task.timeout=120000
+
+#This property specifies the URL path to the PEtALS repository. PEtALS holds its JBI configuration 
+# in this repository and can recover this configuration from it.
+#If not specified, the default repository is in $PETALS_HOME/repository.
+#petals.repository.path=file:///home/test/repository
+
+#This property is used to activate the control of exchange acceptance by target component when
+# the NMR routes messages (see isExchangeWithConsumerOkay and isExchangeWithProviderOkay methods
+# in JBI Component interface)
+# If not specified, the false value is selected by default.
+#petals.exchange.validation=true
+
+# This property is used to isolate the ClassLoaders created for Shared Libraries and Components 
+# from the PEtALS container one.
+# It can be useful to avoid concurrent libraries loading issues.
+# If not specified, the false value is selected by default
+petals.classloaders.isolated=true
+
+# This property is used to unactivate the autoloader service.
+#It can be useful in production environment to unactivate this service.
+petals.autoloader=true
+
+# Alternate topology configuration file URL. This value must be a valid URL like :
+#  - http://localhost:8080/petals/topology.xml
+#  - file:///home/petals/config/topology.xml
+#  - or any valid URL (java.net.URL validation)
+# If not specified, the local topology.xml file is used
+#petals.topology.url=
+
+# This property defines the strategy of the router
+# Two kind of strategy can be defines: 'highest' or 'random'.
+# The following parameters, separated by commas, represent respectively the weighting for a local
+# endpoint, the weighting for a remote active endpoint and the weighting for a remote inactive endpoint.
+# The 'random' strategy chooses an endpoint randomly in function of the defined weightings.
+# Every endpoint has a chance to be elected, but the more the weight is strong, the more the endpoint
+# can be elected.
+# The 'highest' strategy chooses an endpoint amongst the endpoints with the strongest weight.
+# If not specified, the strategy 'highest,3,2,1' is selected by default
+#petals.router.strategy=highest,3,2,1
+
+# This property defines the number of attempt to send a message to an endpoint.
+# Several attempts can be done when there is transport failure during the convey of a message
+# If not specified, 2 attempts is selected by default 
+#petals.router.send.attempt=2
+
+# This property defines the delay between the send attempts, in milliseconds.
+# If not specified, 1 second is selected by default 
+#petals.router.send.delay=1000
+
+
+#Set the following properties in order to establish SSL connections.
+
+# This property defines the key password to retrieve the private key.
+#petals.ssl.key.password=yourKeyPassword
+
+# This property defines the keystore file where the keys are stored.
+#petals.ssl.keystore.file=/yourPath/yourKeystoreFile
+
+# This property defines the keystore password.
+#petals.ssl.keystore.password=yourKeystorePassword
+
+# This property defines the truststore file where the signatures are verified.
+#petals.ssl.truststore.file=/yourPath/yourTruststoreFile
+
+# This property defines the truststore password.
+#petals.ssl.truststore.password=yourTruststorePassword
+
+
+#Transporter configuration
+#This property defines the number of message that can be received via TCP at the same time.
+# If not specified, '10' receivers is selected by default
+#petals.transport.tcp.receivers=10
+
+#This property defines the number of message that can be send via TCP at the same time, per component.
+#petals.transport.tcp.senders=10
+# If not specified, '10' senders is selected by default
+
+#This property defines the timeout to establish a connection, for a sender, in millisecond.
+# If not specified, 5000 milliseconds is selected by default
+#petals.transport.tcp.connection.timeout=5000
+
+#This property defines the timeout to send a TCP packet, for a sender, in millisecond.
+# If not specified, 5000 milliseconds is selected by default
+#petals.transport.tcp.send.timeout=5000
+
+#This property defines the delay before running the 'sender' eviction thread, in millisecond.
+# If not specified, 1 minute is selected by default
+#petals.transport.tcp.send.evictor.delay=60000
+
+#This property defines the delay before an idle 'sender' is set evictable, in millisecond.
+# If not specified, 1 minute is selected by default
+#petals.transport.tcp.send.evictable.delay=60000
+
+#This property defines the duration of temporary persisted data, such as Message Exchange, in millisecond.
+# If not specified, 1 hour is selected by default
+#petals.persistence.duration=3600000
+
+#Topology update period (in s)
+topology.update.period=101
+
+# Registry configuration
+
+#Registry transporter timeout (in ms)
+registry.transport.timeout=5000
+
+#Synchro period (in s)
+registry.synchro.period=113
+
+#To use mySQL
+#registry.db.driver=com.mysql.jdbc.Driver
+#registry.db.url=jdbc:mysql://localhost:3306/petalsRegistry
+#registry.db.password=petals
+#registry.db.user=petals
+#registry.db.dialect=org.hibernate.dialect.MySQLInnoDBDialect
+#registry.db.caching.enabled=true
+#registry.db.c3p0.enabled=true
+
+
+

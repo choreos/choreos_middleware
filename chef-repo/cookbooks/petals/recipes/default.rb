@@ -36,6 +36,21 @@ execute "unzip" do
   action :run
 end
 
+template "#{node['petals']['install_dir']}/#{ZIP_FILE.gsub('.zip', '')}/conf/server.properties" do
+  source "server.properties.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+end
+
+template "#{node['petals']['install_dir']}/#{ZIP_FILE.gsub('.zip', '')}/conf/topology.xml" do
+  source "topology.xml.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+end
+
+
 mysql_database "creates petals database" do
   host "localhost"
   username "root"

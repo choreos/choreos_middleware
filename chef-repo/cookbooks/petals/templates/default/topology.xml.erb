@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:topology xmlns:tns="http://petals.ow2.org/topology"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://petals.ow2.org/topology petalsTopology.xsd">
+	<tns:domain mode="static" name="PEtALS">
+		<tns:description>The static domain configuration</tns:description>
+		<!--
+			defaut configuration to use MySql as centralize petals registry
+			<tns:jndi>
+			<tns:factory>org.ow2.petals.registry.database.RegistryInitialContextFactory</tns:factory>
+			<tns:provider-url>jdbc:mysql://localhost:3306/mysql</tns:provider-url>
+			<tns:security-principal>root</tns:security-principal>
+			<tns:security-credentials>mysql</tns:security-credentials>
+			<tns:pool-size>5</tns:pool-size> <tns:batch-size>10</tns:batch-size>
+			</tns:jndi>
+		-->
+		<tns:sub-domain name="subdomain1" mode="master-slave">
+			<tns:description>description of the subdomain</tns:description>
+			<tns:container name="<%= node['petals']['container_name'] %>" type="master">
+				<tns:description>description of the container <%= node['petals']['container_name'] %></tns:description>
+				<tns:host>localhost</tns:host>
+				<tns:user>petals</tns:user>
+				<tns:password>petals</tns:password>
+				<tns:webservice-service>
+					<tns:port>7600</tns:port>
+					<tns:prefix>petals/ws</tns:prefix>
+				</tns:webservice-service>
+				<tns:jmx-service>
+					<tns:rmi-port>7700</tns:rmi-port>
+				</tns:jmx-service>
+				<tns:transport-service>
+					<tns:tcp-port>7800</tns:tcp-port>
+				</tns:transport-service>
+				<tns:registry-service>
+					<tns:port>7900</tns:port>
+				</tns:registry-service>
+			</tns:container>
+			<!--
+			<tns:container name="1" type="slave">
+				<tns:description>description of the container 1</tns:description>
+				<tns:host>localhost</tns:host>
+				<tns:user>petals</tns:user>
+				<tns:password>petals</tns:password>
+				<tns:webservice-service>
+					<tns:port>7601</tns:port>
+					<tns:prefix>petals/ws</tns:prefix>
+				</tns:webservice-service>
+				<tns:jmx-service>
+					<tns:rmi-port>7701</tns:rmi-port>
+				</tns:jmx-service>
+				<tns:transport-service>
+					<tns:tcp-port>7801</tns:tcp-port>
+				</tns:transport-service>
+				<tns:registry-service>
+					<tns:port>7901</tns:port>
+				</tns:registry-service>
+			</tns:container>
+			-->
+			<!--
+			<tns:container name="2" type="slave">
+				<tns:description>description of the container 2</tns:description>
+				<tns:host>localhost</tns:host>
+				<tns:user>petals</tns:user>
+				<tns:password>petals</tns:password>
+				<tns:webservice-service>
+					<tns:port>7602</tns:port>
+					<tns:prefix>petals/ws</tns:prefix>
+				</tns:webservice-service>
+				<tns:jmx-service>
+					<tns:rmi-port>7702</tns:rmi-port>
+				</tns:jmx-service>
+				<tns:transport-service>
+					<tns:tcp-port>7802</tns:tcp-port>
+				</tns:transport-service>
+				<tns:registry-service>
+					<tns:port>7902</tns:port>
+				</tns:registry-service>
+			</tns:container>
+			-->					
+		</tns:sub-domain>
+	</tns:domain>
+</tns:topology>
