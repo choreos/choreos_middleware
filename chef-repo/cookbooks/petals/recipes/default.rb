@@ -29,6 +29,10 @@ http_request "HEAD #{PETALS_URL}" do
   notifies :create, resources(:remote_file => "#{node['petals']['install_dir']}/#{ZIP_FILE}"), :immediately
 end
 
+package "unzip" do
+  action :install
+end
+
 #unzip petals
 execute "unzip" do
   command "unzip #{node['petals']['install_dir']}/#{ZIP_FILE} -d #{node['petals']['install_dir']}"
