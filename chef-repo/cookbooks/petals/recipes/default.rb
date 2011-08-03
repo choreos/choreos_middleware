@@ -63,7 +63,7 @@ template "#{node['petals']['install_dir']}/#{ZIP_FILE.gsub('.zip', '')}/conf/top
   owner "root"
   group "root"
   mode "0644"
-  variables({:master => node})
+  variables({:master => @@master})
 end
 
 
