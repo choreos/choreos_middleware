@@ -4,7 +4,7 @@
   "long_description": "Description\n====\n\nThis cookbook installs Petals Enterprise Service Bus. \n\nMore information about Petals ESB at http://http://petals.ow2.org/\n\nRequirements\n====\n\nWorks on any platform with Java Sun SDK installed.\n\nUsage\n====\n\nMost often this will be used to generate a secure password for an attribute.\n\n    include Opscode::OpenSSL::Password\n\n    set_unless[:my_password] = secure_password\n\nLicense and Author\n====\n\nDaniel Cukier\nCCSL - Centro de Competencia de Software Livre - IME/USP\nUniversity of Sao Paulo\nhttp://ccsl.ime.usp.br\nApache 2.0 License\n\nCHOReOS Project\nhttp://choreos.eu/\n\n",
   "maintainer": "CCSL - Centro de Competencia de Software Livre - IME/USP",
   "maintainer_email": "ccsl@ime.usp.br",
-  "license": "Apache 2.0",
+  "license": "LGPL 2.0 or, at your option, any later version",
   "platforms": {
   },
   "dependencies": {
@@ -27,5 +27,5 @@
   },
   "recipes": {
   },
-  "version": "0.0.3"
+  "version": "0.0.4"
 }
