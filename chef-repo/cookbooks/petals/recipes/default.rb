@@ -47,11 +47,23 @@ template "#{node['petals']['install_dir']}/#{ZIP_FILE.gsub('.zip', '')}/conf/ser
   mode "0644"
 end
 
+@@master = node
+
+search(:node, 'role:petals') do |n|
+  if n['petals']['container_type'] == "master"
+    @@master = n
+    if n.name != node.name
+      node.set['petals']['container_type'] = "slave"
+    end
+  end
+end
+
 template "#{node['petals']['install_dir']}/#{ZIP_FILE.gsub('.zip', '')}/conf/topology.xml" do
   source "topology.xml.erb"
   owner "root"
   group "root"
   mode "0644"
+  variables({:master => node})
 end
 
 

@@ -7,7 +7,7 @@
 		<tns:sub-domain name="subdomain1" mode="master-slave">
 			<tns:description>description of the subdomain</tns:description>
 			<tns:container name="<%= node['hostname'] %>" type="<%= node['petals']['container_type']  %>">
-				<tns:description>description of the container <%= node['petals']['container_name'] %></tns:description>
+				<tns:description>description of the container <%= node['hostname'] %></tns:description>
 				<tns:host><%= node['ipaddress'] %></tns:host>
 				<tns:user>petals</tns:user>
 				<tns:password>petals</tns:password>
@@ -25,6 +25,28 @@
 					<tns:port>7900</tns:port>
 				</tns:registry-service>
 			</tns:container>
+			<% if node['petals']['container_type'] == "slave" %>
+			<tns:container name="<%= @master['hostname'] %>" type="master">
+				<tns:description>description of the container <%= @master['hostname'] %></tns:description>
+				<tns:host><%= @master['ipaddress'] %></tns:host>
+				<tns:user>petals</tns:user>
+				<tns:password>petals</tns:password>
+				<tns:webservice-service>
+					<tns:port>7600</tns:port>
+					<tns:prefix>petals/ws</tns:prefix>
+				</tns:webservice-service>
+				<tns:jmx-service>
+					<tns:rmi-port>7700</tns:rmi-port>
+				</tns:jmx-service>
+				<tns:transport-service>
+					<tns:tcp-port>7800</tns:tcp-port>
+				</tns:transport-service>
+				<tns:registry-service>
+					<tns:port>7900</tns:port>
+				</tns:registry-service>
+			</tns:container>
+			
+			<% end %>
 		</tns:sub-domain>
 	</tns:domain>
 </tns:topology>
