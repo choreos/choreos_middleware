@@ -24,7 +24,7 @@
 
 #This property specifies the name of the container. In distributed mode, this property is mandatory
 # and must match a container name in the topology.xml file
-petals.container.name=<%= node['petals']['container_name'] %>
+petals.container.name=<%= node['hostname'] %>
 
 #This property set the maximum duration of the processing of a life-cycle operation on a JBI
 # components and SAs (start, stop, ...). It prevents from hanging threads. 
