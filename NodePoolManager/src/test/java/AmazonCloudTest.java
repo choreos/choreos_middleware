@@ -9,7 +9,6 @@ import org.jclouds.compute.domain.Template;
 import org.jclouds.domain.Location;
 import org.jclouds.ec2.EC2Client;
 import org.jclouds.ec2.compute.options.EC2TemplateOptions;
-import org.junit.Test;
 
 import br.usp.ime.choreos.nodepoolmanager.Configuration;
 
@@ -17,7 +16,7 @@ import com.google.common.collect.Iterables;
 
 public class AmazonCloudTest {
 
-    @Test
+
     public void testCloud() throws Exception {
         // get a context with ec2 that offers the portable ComputeService api
         ComputeServiceContext context = new ComputeServiceContextFactory().createContext("aws-ec2",
