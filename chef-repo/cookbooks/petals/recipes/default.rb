@@ -58,6 +58,10 @@ search(:node, 'role:petals') do |n|
   end
 end
 
+if @@master == node
+  node.set['petals']['container_type'] = "master"
+end
+
 template "#{node['petals']['install_dir']}/#{ZIP_FILE.gsub('.zip', '')}/conf/topology.xml" do
   source "topology.xml.erb"
   owner "root"
