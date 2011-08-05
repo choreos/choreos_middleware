@@ -15,7 +15,7 @@ public class NodeResourceTest {
 
     private final WebClient client = WebClient.create("http://localhost:8080/");
 
-    private Node sample;
+    private Node nodeSample;
 
     @BeforeClass
     public static void startServer() throws InterruptedException {
@@ -33,13 +33,13 @@ public class NodeResourceTest {
         Node n = new Node();
         n.setZone("myZone");
         Response r = client.post(n);
-        sample = WebClient.create((String) r.getMetadata().get("Location").get(0)).get(Node.class);
+        nodeSample = WebClient.create((String) r.getMetadata().get("Location").get(0)).get(Node.class);
         client.back(true);
     }
 
     @Test
     public void testGetNode() throws Exception {
-        client.path("nodes/" + sample.getId());
+        client.path("nodes/" + nodeSample.getId());
         Node c = client.get(Node.class);
         assertEquals("myZone", c.getZone());
     }
@@ -53,12 +53,12 @@ public class NodeResourceTest {
 
     @Test
     public void deleteNode() throws Exception {
-        client.path("nodes/" + sample.getId());
+        client.path("nodes/" + nodeSample.getId());
         Response response = client.delete();
         assertEquals(Status.OK.getStatusCode(), response.getStatus());
 
         client.back(true);
-        client.path("nodes/" + sample.getId());
+        client.path("nodes/" + nodeSample.getId());
         response = client.get();
         assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
     }

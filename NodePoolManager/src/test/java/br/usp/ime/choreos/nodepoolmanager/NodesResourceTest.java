@@ -49,7 +49,7 @@ public class NodesResourceTest {
         WebClient client = WebClient.create("http://localhost:8080/");
         client.path("nodes");
         Node n = new Node();
-        n.setCpus(2);
+        n.setRam(1024);
         client.post(n);
 
         client.back(true);
@@ -62,7 +62,7 @@ public class NodesResourceTest {
 
         Iterator<? extends Node> i = client.getCollection(Node.class).iterator();
 
-        assertEquals(2, i.next().getCpus().intValue());
+        assertEquals(1024, i.next().getRam().intValue());
         assertEquals("Linux", i.next().getSo());
     }
 

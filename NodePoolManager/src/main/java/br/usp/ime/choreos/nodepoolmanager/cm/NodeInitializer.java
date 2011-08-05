@@ -12,28 +12,20 @@ public class NodeInitializer {
     }
 
     public void cleanPetals() throws Exception {
-        new SshUtil(nodeName).runCommand("sudo rm -rf /opt/petals-platform*\n");
+        new SshUtil(nodeName).runCommand("sudo rm -rf /opt/*\n");
     }
 
-    public boolean isInitialized() {
+    public boolean isInitialized() throws Exception {
         String returnText = "";
-        try {
-            returnText = new SshUtil(nodeName).runCommand("ls /opt");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        returnText = new SshUtil(nodeName).runCommand("ls /opt");
         System.out.println(returnText);
         return !returnText.equals("");
     }
 
-    public void initialize() {
-        try {
-            String command = new ScriptsProvider().chefStartupScript("chef/key.pem");
-            String output = new SshUtil(nodeName).runCommand(command);
-            System.out.println(output);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void initialize() throws Exception {
+        String command = new ScriptsProvider().chefStartupScript("chef/key.pem");
+        String output = new SshUtil(nodeName).runCommand(command);
+        System.out.println(output);
     }
 
 }
