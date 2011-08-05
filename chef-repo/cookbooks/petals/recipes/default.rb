@@ -9,8 +9,8 @@
 include_recipe "java"
 include_recipe "mysql::server"
 
-ZIP_FILE = "petals-platform-3.1.1.zip"
-PETALS_URL = "http://maven.ow2.org/maven2/org/ow2/petals/petals-platform/3.1.1/#{ZIP_FILE}"
+ZIP_FILE = "dsb-distribution-1.0-SNAPSHOT.zip"
+PETALS_URL = "http://maven.petalslink.com/public-snapshot/org/petalslink/dsb/dsb-distribution/1.0-SNAPSHOT/#{ZIP_FILE}"
 
 #download petals zip file
 remote_file "#{node['petals']['install_dir']}/#{ZIP_FILE}" do
