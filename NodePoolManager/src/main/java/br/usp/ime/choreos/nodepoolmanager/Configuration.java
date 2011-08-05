@@ -25,7 +25,6 @@ public class Configuration {
         try {
             properties.load(ClassLoader.getSystemResourceAsStream("nodepoolmanager.properties"));
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

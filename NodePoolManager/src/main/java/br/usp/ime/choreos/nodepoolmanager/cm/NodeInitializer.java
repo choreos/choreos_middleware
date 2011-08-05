@@ -1,10 +1,6 @@
 package br.usp.ime.choreos.nodepoolmanager.cm;
 
-import java.io.File;
-import java.net.URL;
-
-import org.apache.commons.io.FileUtils;
-
+import br.usp.ime.choreos.nodepoolmanager.utils.ScriptsProvider;
 import br.usp.ime.choreos.nodepoolmanager.utils.SshUtil;
 
 public class NodeInitializer {
@@ -15,6 +11,10 @@ public class NodeInitializer {
         this.nodeName = nodeName;
     }
 
+    public void cleanPetals() throws Exception {
+        new SshUtil(nodeName).runCommand("sudo rm -rf /opt/petals-platform*\n");
+    }
+
     public boolean isInitialized() {
         String returnText = "";
         try {
@@ -22,15 +22,15 @@ public class NodeInitializer {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        System.out.println(returnText);
         return !returnText.equals("");
     }
 
     public void initialize() {
         try {
-            URL scriptFile = ClassLoader.getSystemResource("chef/startup_script.sh");
-            String command = FileUtils.readFileToString(new File(scriptFile.getFile()));
-            new SshUtil(nodeName).runCommand(command);
+            String command = new ScriptsProvider().chefStartupScript("chef/key.pem");
+            String output = new SshUtil(nodeName).runCommand(command);
+            System.out.println(output);
         } catch (Exception e) {
             e.printStackTrace();
         }

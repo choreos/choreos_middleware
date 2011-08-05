@@ -10,7 +10,7 @@ public class SshUtilTest {
 
     @Test
     public void runCommand() throws Exception {
-        String host = "ec2-50-16-158-242.compute-1.amazonaws.com";
+        String host = "ec2-50-16-165-94.compute-1.amazonaws.com";
         double rand = Math.random();
         String command = "mkdir tmp1\ncd tmp1\ntouch a" + rand + "\nls\ncd ..\nrm -rf tmp1\n";
         String runReturn =  new SshUtil(host).runCommand(command);
