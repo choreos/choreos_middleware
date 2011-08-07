@@ -1,48 +1,79 @@
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Properties;
 import java.util.Set;
 
+import org.jclouds.aws.ec2.reference.AWSEC2Constants;
+import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.ComputeServiceContextFactory;
 import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.NodeState;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.ec2.compute.options.EC2TemplateOptions;
+import org.jclouds.ec2.domain.InstanceType;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import br.usp.ime.choreos.nodepoolmanager.Configuration;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.inject.Module;
 
 public class AmazonCloudTest {
+    private static ComputeService client;
+    private static NodeMetadata node;
+    private static final String IMAGE = "ami-ccf405a5";
+
+    @BeforeClass
+    public static void initClient() {
+        // If we specify the image, it doesn't download info about all others
+        Properties overrides = new Properties();
+        overrides.setProperty(AWSEC2Constants.PROPERTY_EC2_AMI_QUERY, "image-id=" + IMAGE);
+
+        // get a context with ec2 that offers the portable ComputeService api
+        ComputeServiceContext context = new ComputeServiceContextFactory().createContext("aws-ec2",
+                Configuration.get("AMAZON_ACCESSKEYID"), Configuration.get("AMAZON_SECRETKEY"),
+                ImmutableSet.<Module> of(), overrides);
+
+        client = context.getComputeService();
+    }
+
+    @AfterClass
+    public static void closeContext() {
+        client.getContext().close();
+    }
 
     @Test
-    public void testCloud() throws Exception {
-        // get a context with ec2 that offers the portable ComputeService api
+    public void testCreateNode() throws Exception {
+        Set<? extends NodeMetadata> createdNodes = client.createNodesInGroup("default", 1, getTemplate());
 
-        ComputeServiceContext context = new ComputeServiceContextFactory().createContext("aws-ec2",
-                Configuration.get("AMAZON_ACCESSKEYID"), Configuration.get("AMAZON_SECRETKEY")); // ,
-        // ImmutableSet.<Module> of(new Log4JLoggingModule(), new
-        // JschSshClientModule()));
+        node = Iterables.get(createdNodes, 0);
 
-        Template template = context.getComputeService().templateBuilder().imageId("us-east-1/ami-ccf405a5").build();
-        template.getOptions().as(EC2TemplateOptions.class).securityGroups("default");
-        template.getOptions().as(EC2TemplateOptions.class).keyPair("amazon");
-        Set<? extends NodeMetadata> nodes = context.getComputeService().createNodesInGroup("default", 1);
+        assertTrue(client.listNodes().contains(node));
+    }
 
-        // EC2Client ec2Client =
-        // EC2Client.class.cast(context.getProviderSpecificContext().getApi());
+    @Test
+    // This test depends on the above
+    public void testDestroyNode() {
+        client.destroyNode(node.getId());
 
-        NodeMetadata node = Iterables.get(nodes, 0);
-        String ip = node.getPublicAddresses().iterator().next();
+        node = client.getNodeMetadata(node.getId());
+        assertTrue(node == null || node.getState() != NodeState.RUNNING);
+    }
 
-        assertTrue(ip.contains("."));
-        assertTrue(context.getComputeService().listNodes().contains(node));
+    private Template getTemplate() {
+        Template template = client.templateBuilder().hardwareId(InstanceType.M1_SMALL).imageId("us-east-1/" + IMAGE)
+                .build();
 
-        context.getComputeService().destroyNode(node.getId());
+        EC2TemplateOptions options = template.getOptions().as(EC2TemplateOptions.class);
+        options.securityGroups("default");
+        options.keyPair(Configuration.get("AMAZON_KEYPAIR"));
+        options.blockUntilRunning(false);
 
-        assertFalse(context.getComputeService().listNodes().contains(node));
-        context.close();
+        return template;
     }
 
 }
