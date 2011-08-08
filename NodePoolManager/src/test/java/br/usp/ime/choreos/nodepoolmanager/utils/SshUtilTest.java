@@ -18,7 +18,7 @@ public class SshUtilTest {
         Node node = createNode();
 
         // Waiting sshd to start
-        Thread.sleep(25000);
+        Thread.sleep(30000);
 
         double rand = Math.random();
         String command = "mkdir tmp1\ncd tmp1\ntouch a" + rand + "\nls\ncd ..\nrm -rf tmp1\n";

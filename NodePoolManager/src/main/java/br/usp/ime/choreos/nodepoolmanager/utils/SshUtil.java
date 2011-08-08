@@ -21,10 +21,10 @@ public class SshUtil {
         String user = "ubuntu";
 
         JSch jsch = new JSch();
-        JSch.setConfig("StrictHostKeyChecking", "no");
         jsch.addIdentity(Configuration.get("AMAZON_SSH_IDENTITY"));
         jsch.setKnownHosts(Configuration.get("SSH_KNOWN_HOSTS"));
         Session session = jsch.getSession(user, hostname);
+        session.setConfig("StrictHostKeyChecking", "no");
 
         session.connect(10000);
 
