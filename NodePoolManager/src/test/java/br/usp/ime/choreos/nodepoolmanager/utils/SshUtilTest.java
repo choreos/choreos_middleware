@@ -11,24 +11,26 @@ import br.usp.ime.choreos.nodepoolmanager.Node;
 import com.jcraft.jsch.JSchException;
 
 public class SshUtilTest {
+    private final InfrastructureService infra = new InfrastructureService();
 
     @Test
     public void runCommand() throws Exception {
-        //Node node = createNode();
+        Node node = createNode();
         double rand = Math.random();
         String command = "mkdir tmp1\ncd tmp1\ntouch a" + rand + "\nls\ncd ..\nrm -rf tmp1\n";
-        String runReturn =  new SshUtil("ec2-50-19-132-35.compute-1.amazonaws.com").runCommand(command);
+        String runReturn = new SshUtil(node.getIp()).runCommand(command);
 
         assertEquals("a" + rand + "\n", runReturn);
+
+        infra.unDeploy(node.getId());
     }
 
     private Node createNode() throws RunNodesException {
         Node node = new Node();
         node.setImage("us-east-1/ami-ccf405a5");
-        
-        InfrastructureService infra = new InfrastructureService();
+
         infra.create(node);
-        
+
         return node;
     }
 
