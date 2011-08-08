@@ -16,13 +16,18 @@ public class SshUtilTest {
     @Test
     public void runCommand() throws Exception {
         Node node = createNode();
+
+        // Waiting sshd to start
+        Thread.sleep(25000);
+
         double rand = Math.random();
         String command = "mkdir tmp1\ncd tmp1\ntouch a" + rand + "\nls\ncd ..\nrm -rf tmp1\n";
         String runReturn = new SshUtil(node.getIp()).runCommand(command);
 
+        infra.unDeploy(node.getId());
+
         assertEquals("a" + rand + "\n", runReturn);
 
-        infra.unDeploy(node.getId());
     }
 
     private Node createNode() throws RunNodesException {

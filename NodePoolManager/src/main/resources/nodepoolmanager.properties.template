@@ -2,3 +2,4 @@ AMAZON_ACCESS_KEY_ID=ABCDEF1HIJ2LM34PQ5ST
 AMAZON_SECRET_KEY=eix4Ahsorei4Thie5nochevei6Sai3chee0Ieth4
 AMAZON_KEY_PAIR=my_amazon_key_pair_name
 AMAZON_SSH_IDENTITY=/home/user/.ssh/amazon.pem
+SSH_KNOWN_HOSTS=/home/user/.ssh/known_hosts
