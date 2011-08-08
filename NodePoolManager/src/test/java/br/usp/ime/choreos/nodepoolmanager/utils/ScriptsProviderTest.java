@@ -11,11 +11,12 @@ public class ScriptsProviderTest {
 
     @Test
     public void chefScript() throws Exception {
-        String result = new ScriptsProvider().chefStartupScript("chef/testkey.txt");
+        String testKeyFile = ClassLoader.getSystemResource("chef/testkey.txt").getFile();
+        String result = new ScriptsProvider().chefStartupScript(testKeyFile);
 
-        File f = new File(ClassLoader.getSystemResource("chef/test_startup_script_result.txt").getFile());
-        String expected = FileUtils.readFileToString(f);
-        
+        String scriptFile = ClassLoader.getSystemResource("chef/test_startup_script_result.txt").getFile();
+        String expected = FileUtils.readFileToString(new File(scriptFile));
+
         assertEquals(expected, result);
     }
 
