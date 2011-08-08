@@ -12,8 +12,7 @@ public class ScriptsProvider {
         URL scriptFile = ClassLoader.getSystemResource("chef/startup_script.sh");
         String command = FileUtils.readFileToString(new File(scriptFile.getFile()));
 
-        URL keyFile = ClassLoader.getSystemResource(keyFileName);
-        String pkey = FileUtils.readFileToString(new File(keyFile.getFile()));
+        String pkey = FileUtils.readFileToString(new File(keyFileName));
 
         return command.replace("$pkey", pkey);
     }

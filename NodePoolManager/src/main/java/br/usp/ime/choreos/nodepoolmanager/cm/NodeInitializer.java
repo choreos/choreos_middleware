@@ -1,5 +1,6 @@
 package br.usp.ime.choreos.nodepoolmanager.cm;
 
+import br.usp.ime.choreos.nodepoolmanager.Configuration;
 import br.usp.ime.choreos.nodepoolmanager.utils.ScriptsProvider;
 import br.usp.ime.choreos.nodepoolmanager.utils.SshUtil;
 
@@ -23,7 +24,7 @@ public class NodeInitializer {
     }
 
     public void initialize() throws Exception {
-        String command = new ScriptsProvider().chefStartupScript("chef/key.pem");
+        String command = new ScriptsProvider().chefStartupScript(Configuration.get("CHEF_KEY_FILE"));
         String output = new SshUtil(nodeName).runCommand(command);
         System.out.println(output);
     }
