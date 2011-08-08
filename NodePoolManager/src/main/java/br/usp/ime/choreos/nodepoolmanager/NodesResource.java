@@ -33,7 +33,7 @@ public class NodesResource {
         System.out.println("NodesResource createNode: " + node.getImage());
 
         try {
-            infrastructure.create(node);
+            infrastructure.createNode(node);
             nodes.add(node);
             UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
             uriBuilder.path(NodeResource.class);

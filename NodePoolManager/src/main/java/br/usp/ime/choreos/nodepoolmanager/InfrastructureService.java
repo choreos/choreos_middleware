@@ -36,7 +36,7 @@ public class InfrastructureService {
         return context.getComputeService();
     }
 
-    public void create(Node node) throws RunNodesException {
+    public void createNode(Node node) throws RunNodesException {
         String imageId = node.getImage();
         String image = imageId.substring(imageId.indexOf('/') + 1);
         System.out.println("deployer create " + imageId);
@@ -68,7 +68,26 @@ public class InfrastructureService {
         return node;
     }
 
-    public void unDeploy(String id) {
+    public List<Node> getNodes() {
+        List<Node> nodeList = new ArrayList<Node>();
+        Node node;
+        NodeMetadata cloudNode;
+
+        ComputeService client = getClient("");
+        Set<? extends ComputeMetadata> cloudNodes = client.listNodes();
+        for (ComputeMetadata computeMetadata : cloudNodes) {
+            cloudNode = client.getNodeMetadata(computeMetadata.getId());
+            node = new Node();
+
+            setNodeProperties(node, cloudNode);
+            nodeList.add(node);
+        }
+
+        client.getContext().close();
+        return nodeList;
+    }
+
+    public void destroyNode(String id) {
         ComputeService client = getClient("");
         client.destroyNode(id);
 
@@ -100,24 +119,5 @@ public class InfrastructureService {
         options.keyPair(Configuration.get("AMAZON_KEY_PAIR"));
 
         return template;
-    }
-
-    public List<Node> getNodes() {
-        List<Node> nodeList = new ArrayList<Node>();
-        Node node;
-        NodeMetadata cloudNode;
-
-        ComputeService client = getClient("");
-        Set<? extends ComputeMetadata> cloudNodes = client.listNodes();
-        for (ComputeMetadata computeMetadata : cloudNodes) {
-            cloudNode = client.getNodeMetadata(computeMetadata.getId());
-            node = new Node();
-
-            setNodeProperties(node, cloudNode);
-            nodeList.add(node);
-        }
-
-        client.getContext().close();
-        return nodeList;
     }
 }

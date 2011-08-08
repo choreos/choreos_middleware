@@ -24,7 +24,7 @@ public class SshUtilTest {
         String command = "mkdir tmp1\ncd tmp1\ntouch a" + rand + "\nls\ncd ..\nrm -rf tmp1\n";
         String runReturn = new SshUtil(node.getIp()).runCommand(command);
 
-        infra.unDeploy(node.getId());
+        infra.destroyNode(node.getId());
 
         assertEquals("a" + rand + "\n", runReturn);
 
@@ -34,7 +34,7 @@ public class SshUtilTest {
         Node node = new Node();
         node.setImage("us-east-1/ami-ccf405a5");
 
-        infra.create(node);
+        infra.createNode(node);
 
         return node;
     }

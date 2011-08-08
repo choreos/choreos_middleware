@@ -32,7 +32,7 @@ public class NodeResource {
     @DELETE
     public Response deleteNode(@PathParam("node_id") String id) {
         InfrastructureService infrastructure = new InfrastructureService();
-        infrastructure.unDeploy(id);
+        infrastructure.destroyNode(id);
 
         return Response.status(Status.OK).build();
     }

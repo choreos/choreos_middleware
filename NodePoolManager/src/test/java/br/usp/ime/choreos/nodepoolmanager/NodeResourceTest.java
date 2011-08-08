@@ -32,7 +32,7 @@ public class NodeResourceTest {
         sampleNode.setImage(IMAGE);
 
         InfrastructureService infrastructure = new InfrastructureService();
-        infrastructure.create(sampleNode);
+        infrastructure.createNode(sampleNode);
     }
 
     @AfterClass
