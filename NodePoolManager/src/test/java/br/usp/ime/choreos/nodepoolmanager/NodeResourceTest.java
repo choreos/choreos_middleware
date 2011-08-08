@@ -55,7 +55,6 @@ public class NodeResourceTest {
     @Test
     public void testGetNode() throws Exception {
         client.path("nodes/" + sampleNode.getId());
-        System.out.println("NodeResourceTest.testGetNode will get " + client.getCurrentURI());
         Node node = client.get(Node.class);
 
         assertEquals(sampleNode.getId(), node.getId());
@@ -66,7 +65,6 @@ public class NodeResourceTest {
     @Test
     public void deleteNode() {
         client.path("nodes/" + sampleNode.getId());
-        System.out.println("NodeResourceTest.deleteNode will delete " + client.getCurrentURI());
         Response response = client.delete();
         assertEquals(Status.OK.getStatusCode(), response.getStatus());
 

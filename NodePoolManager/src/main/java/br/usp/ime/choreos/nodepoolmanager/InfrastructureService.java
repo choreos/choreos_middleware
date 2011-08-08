@@ -39,7 +39,6 @@ public class InfrastructureService {
     public void createNode(Node node) throws RunNodesException {
         String imageId = node.getImage();
         String image = imageId.substring(imageId.indexOf('/') + 1);
-        System.out.println("deployer create " + imageId);
 
         ComputeService client = getClient(image);
         Set<? extends NodeMetadata> createdNodes = client
@@ -52,14 +51,12 @@ public class InfrastructureService {
     }
 
     public Node getNode(String nodeId) throws NodeNotFoundException {
-        System.out.println("Deployer getNode " + nodeId);
         ComputeService client = getClient("");
 
         Node node = new Node();
 
         try {
             NodeMetadata cloudNode = client.getNodeMetadata(nodeId);
-            System.out.println("Deployer getNode: " + cloudNode.getState());
             setNodeProperties(node, cloudNode);
         } catch (Exception e) {
             throw new NodeNotFoundException();

@@ -30,7 +30,6 @@ public class NodesResource {
     public Response createNode(Node node, @Context UriInfo uriInfo) throws URISyntaxException {
         Response response;
         InfrastructureService infrastructure = new InfrastructureService();
-        System.out.println("NodesResource createNode: " + node.getImage());
 
         try {
             infrastructure.createNode(node);
@@ -38,7 +37,6 @@ public class NodesResource {
             UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
             uriBuilder.path(NodeResource.class);
             response = Response.created(uriBuilder.build(node.getId())).build();
-            System.out.println("NodesResource.createNode created " + node.getId());
         } catch (RunNodesException e) {
             response = Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }

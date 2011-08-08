@@ -12,7 +12,6 @@ public class NodeResource {
 
     @GET
     public Response getNode(@PathParam("node_id") String id) {
-        System.out.println("NodeResource getNode " + id);
         InfrastructureService infrastructure = new InfrastructureService();
         Node node;
         Response response;

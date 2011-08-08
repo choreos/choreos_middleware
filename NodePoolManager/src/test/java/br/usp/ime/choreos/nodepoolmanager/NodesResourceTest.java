@@ -59,7 +59,6 @@ public class NodesResourceTest {
     private static Node getNodeFromResponse(Response response) {
         String location = (String) response.getMetadata().get("Location").get(0);
         WebClient webClient = WebClient.create(location);
-        System.out.println("NodesResourceTest, location = " + location);
         return webClient.get(Node.class);
     }
 
