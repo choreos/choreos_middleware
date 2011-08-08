@@ -30,7 +30,7 @@ public class InfrastructureService {
 
         // get a context with ec2 that offers the portable ComputeService api
         ComputeServiceContext context = new ComputeServiceContextFactory().createContext("aws-ec2",
-                Configuration.get("AMAZON_ACCESSKEYID"), Configuration.get("AMAZON_SECRETKEY"),
+                Configuration.get("AMAZON_ACCESS_KEY_ID"), Configuration.get("AMAZON_SECRET_KEY"),
                 ImmutableSet.<Module> of(), overrides);
 
         return context.getComputeService();
@@ -97,7 +97,7 @@ public class InfrastructureService {
 
         EC2TemplateOptions options = template.getOptions().as(EC2TemplateOptions.class);
         options.securityGroups("default");
-        options.keyPair(Configuration.get("AMAZON_KEYPAIR"));
+        options.keyPair(Configuration.get("AMAZON_KEY_PAIR"));
 
         return template;
     }

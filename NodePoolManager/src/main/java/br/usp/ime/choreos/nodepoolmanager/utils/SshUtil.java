@@ -2,6 +2,8 @@ package br.usp.ime.choreos.nodepoolmanager.utils;
 
 import org.apache.geronimo.mail.util.StringBufferOutputStream;
 
+import br.usp.ime.choreos.nodepoolmanager.Configuration;
+
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
@@ -21,8 +23,8 @@ public class SshUtil {
         String user = "ubuntu";
 
         Session session = jsch.getSession(user, hostname);
-        jsch.setKnownHosts("/Users/danicuki/.ssh/known_hosts"); // TODO put these things in a config file
-        jsch.addIdentity("/Users/danicuki/.ssh/amazon.pem");
+        JSch.setConfig("StrictHostKeyChecking", "no");
+        jsch.addIdentity(Configuration.get("AMAZON_SSH_IDENTITY"));
 
         session.connect(3000);
 
