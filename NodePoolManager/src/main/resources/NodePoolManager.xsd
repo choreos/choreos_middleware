@@ -4,7 +4,7 @@
 	<element name="node">
 		<complexType>
 			<sequence>
-				<element name="id" type="long" />
+				<element name="id" type="string" />
 				<element name="cpus" type="int" minOccurs="0" />
 				<element name="ram" type="int" minOccurs="0" />
 				<element name="storage" type="int" minOccurs="0" />
@@ -12,6 +12,8 @@
 				<element name="zone" type="string" minOccurs="0" />
 				<element name="ip" type="string" minOccurs="0" />
 				<element name="hostname" type="string" minOccurs="0" />
+				<element name="image" type="string" minOccurs="0" />
+				<element name="state" type="int" minOccurs="0" />
 			</sequence>
 		</complexType>
 	</element>

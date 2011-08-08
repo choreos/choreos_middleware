@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}long"/>
+ *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="cpus" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="ram" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="storage" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
@@ -32,6 +32,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="zone" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="ip" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="hostname" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="image" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -49,12 +50,14 @@ import javax.xml.bind.annotation.XmlType;
     "so",
     "zone",
     "ip",
-    "hostname"
+    "hostname",
+    "image",
+    "state"
 })
 @XmlRootElement(name = "node")
 public class Node {
 
-    protected long id;
+    protected String id;
     protected Integer cpus;
     protected Integer ram;
     protected Integer storage;
@@ -62,12 +65,14 @@ public class Node {
     protected String zone;
     protected String ip;
     protected String hostname;
+    protected String image;
+    protected Integer state;
 
     /**
      * Gets the value of the id property.
      * 
      */
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -75,8 +80,8 @@ public class Node {
      * Sets the value of the id property.
      * 
      */
-    public void setId(long value) {
-        this.id = value;
+    public void setId(String string) {
+        this.id = string;
     }
 
     /**
@@ -246,5 +251,52 @@ public class Node {
     public void setHostname(String value) {
         this.hostname = value;
     }
+    
+    /**
+     * Gets the value of the image property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getImage() {
+        return image;
+    }
 
+    /**
+     * Sets the value of the image property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setImage(String value) {
+        this.image = value;
+    }
+
+    /**
+     * Gets the value of the state property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getState() {
+        return state;
+    }
+
+    /**
+     * Sets the value of the image property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setState(Integer value) {
+        this.state = value;
+    }
 }

@@ -9,8 +9,11 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+
+import org.jclouds.compute.RunNodesException;
 
 @Path("/nodes")
 public class NodesResource {
@@ -19,17 +22,27 @@ public class NodesResource {
 
     @GET
     public List<Node> getNodes() {
-        return nodes;
+        InfrastructureService infrastructure = new InfrastructureService();
+        return infrastructure.getNodes();
     }
 
     @POST
     public Response createNode(Node node, @Context UriInfo uriInfo) throws URISyntaxException {
-        node.setIp("fakeIp");
-        node.setId((long) (Math.random() * 100000));
-        nodes.add(node);
-        UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-        uriBuilder.path(NodeResource.class);
-        return Response.created(uriBuilder.build(node.getId())).build();
-    }
+        Response response;
+        InfrastructureService infrastructure = new InfrastructureService();
+        System.out.println("NodesResource createNode: " + node.getImage());
 
+        try {
+            infrastructure.create(node);
+            nodes.add(node);
+            UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+            uriBuilder.path(NodeResource.class);
+            response = Response.created(uriBuilder.build(node.getId())).build();
+            System.out.println("NodesResource.createNode created " + node.getId());
+        } catch (RunNodesException e) {
+            response = Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return response;
+    }
 }

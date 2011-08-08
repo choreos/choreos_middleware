@@ -1,8 +1,5 @@
 package br.usp.ime.choreos.nodepoolmanager;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -10,31 +7,33 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-@Path("/nodes/{node_id}")
+@Path("/nodes/{node_id:.+}")
 public class NodeResource {
 
     @GET
-    public Response getNode(@PathParam("node_id") Long id) {
-        for (Node n : NodesResource.nodes) {
-            if (n.getId() == id) {
-                return Response.ok(n).build();
-            }
+    public Response getNode(@PathParam("node_id") String id) {
+        System.out.println("NodeResource getNode " + id);
+        InfrastructureService infrastructure = new InfrastructureService();
+        Node node;
+        Response response;
+
+        try {
+            node = infrastructure.getNode(id);
+            response = Response.ok(node).build();
+        } catch (NodeNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            response = Response.status(Status.NOT_FOUND).build();
         }
-        return Response.status(Status.NOT_FOUND).build();
+
+        return response;
     }
 
     @DELETE
-    public Response deleteNode(@PathParam("node_id") Long id) {
-        List<Node> toDelete = new ArrayList<Node>();
+    public Response deleteNode(@PathParam("node_id") String id) {
+        InfrastructureService infrastructure = new InfrastructureService();
+        infrastructure.unDeploy(id);
 
-        for (Node n : NodesResource.nodes) {
-            if (n.getId() == id) {
-                toDelete.add(n);
-            }
-        }
-
-        NodesResource.nodes.removeAll(toDelete);
         return Response.status(Status.OK).build();
     }
-
 }
