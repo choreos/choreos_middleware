@@ -16,7 +16,9 @@ import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeState;
 import org.jclouds.compute.domain.Template;
+import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.ec2.compute.options.EC2TemplateOptions;
+import org.jclouds.ec2.domain.InstanceType;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -120,13 +122,17 @@ public class InfrastructureService {
     }
 
     private Template getTemplate(ComputeService client, String imageId) {
-        Template template = client.templateBuilder().imageId(imageId).build();
+        TemplateBuilder builder = client.templateBuilder().imageId(imageId);
         if (client instanceof AWSEC2ComputeService) {
+            builder.hardwareId(InstanceType.M1_SMALL);
+            Template template = builder.build();
             EC2TemplateOptions options = template.getOptions().as(EC2TemplateOptions.class);
             options.securityGroups("default");
             options.keyPair(Configuration.get("AMAZON_KEY_PAIR"));
+            return template;
         }
-        return template;
+
+        return builder.build();
     }
 
     public Node createOrUseExistingNode(Node node) throws RunNodesException {

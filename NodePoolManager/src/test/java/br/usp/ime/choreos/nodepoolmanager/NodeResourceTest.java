@@ -22,8 +22,8 @@ public class NodeResourceTest {
     @BeforeClass
     public static void startServer() throws InterruptedException, RunNodesException {
         NodePoolManagerStandaloneServer.start();
-        createSampleNode();
         Configuration.set("DEFAULT_PROVIDER", "stub");
+        createSampleNode();
     }
 
     public static void createSampleNode() throws RunNodesException {
