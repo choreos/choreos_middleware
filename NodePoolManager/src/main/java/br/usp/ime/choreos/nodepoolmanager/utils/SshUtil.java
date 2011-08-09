@@ -29,11 +29,11 @@ public class SshUtil {
         Session session;
         try {
             session = jsch.getSession("ubuntu", hostname);
+            session.setConfig("StrictHostKeyChecking", "no");
             session.connect(5000);
         } catch (JSchException e) {
             return false;
         }
-        session.setConfig("StrictHostKeyChecking", "no");
         return true;
     }
 
