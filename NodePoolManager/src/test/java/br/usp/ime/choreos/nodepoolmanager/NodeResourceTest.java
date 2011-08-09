@@ -19,17 +19,16 @@ public class NodeResourceTest {
     private static final WebClient client = WebClient.create("http://localhost:8080/");
     private static Node sampleNode;
 
-    private static final String IMAGE = "us-east-1/ami-ccf405a5";
-
     @BeforeClass
     public static void startServer() throws InterruptedException, RunNodesException {
         NodePoolManagerStandaloneServer.start();
         createSampleNode();
+        Configuration.set("DEFAULT_PROVIDER", "stub");
     }
 
     public static void createSampleNode() throws RunNodesException {
         sampleNode = new Node();
-        sampleNode.setImage(IMAGE);
+        sampleNode.setImage("1");
 
         InfrastructureService infrastructure = new InfrastructureService();
         infrastructure.createNode(sampleNode);
@@ -59,7 +58,7 @@ public class NodeResourceTest {
 
         assertEquals(sampleNode.getId(), node.getId());
         assertEquals(sampleNode.getHostname(), node.getHostname());
-        assertEquals(IMAGE, node.getImage());
+        assertEquals("1", node.getImage());
     }
 
     @Test

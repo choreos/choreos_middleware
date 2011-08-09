@@ -20,16 +20,20 @@ public class NodesResource {
 
     public static List<Node> nodes = new ArrayList<Node>();
 
+    private InfrastructureService infrastructure = new InfrastructureService();
+
+    public void setInfrastructure(InfrastructureService infrastructure) {
+        this.infrastructure = infrastructure;
+    }
+
     @GET
     public List<Node> getNodes() {
-        InfrastructureService infrastructure = new InfrastructureService();
         return infrastructure.getNodes();
     }
 
     @POST
     public Response createNode(Node node, @Context UriInfo uriInfo) throws URISyntaxException {
         Response response;
-        InfrastructureService infrastructure = new InfrastructureService();
 
         try {
             infrastructure.createNode(node);

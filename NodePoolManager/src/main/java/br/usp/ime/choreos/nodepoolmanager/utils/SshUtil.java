@@ -7,6 +7,7 @@ import br.usp.ime.choreos.nodepoolmanager.Configuration;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 public class SshUtil {
@@ -15,6 +16,25 @@ public class SshUtil {
 
     public SshUtil(String hostname) {
         this.hostname = hostname;
+    }
+
+    public boolean isAccessible() {
+        JSch jsch = new JSch();
+        try {
+            jsch.addIdentity(Configuration.get("AMAZON_SSH_IDENTITY"));
+            jsch.setKnownHosts(Configuration.get("SSH_KNOWN_HOSTS"));
+        } catch (JSchException e) {
+            e.printStackTrace();
+        }
+        Session session;
+        try {
+            session = jsch.getSession("ubuntu", hostname);
+            session.connect(5000);
+        } catch (JSchException e) {
+            return false;
+        }
+        session.setConfig("StrictHostKeyChecking", "no");
+        return true;
     }
 
     public String runCommand(String command) throws Exception {
@@ -26,7 +46,7 @@ public class SshUtil {
         Session session = jsch.getSession(user, hostname);
         session.setConfig("StrictHostKeyChecking", "no");
 
-        session.connect(10000);
+        session.connect(5000);
 
         Channel channel = session.openChannel("exec");
         ((ChannelExec) channel).setCommand(command);

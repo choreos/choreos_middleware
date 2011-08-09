@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+import org.jclouds.aws.ec2.compute.AWSEC2ComputeService;
 import org.jclouds.aws.ec2.reference.AWSEC2Constants;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
@@ -13,9 +14,9 @@ import org.jclouds.compute.ComputeServiceContextFactory;
 import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.NodeState;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.ec2.compute.options.EC2TemplateOptions;
-import org.jclouds.ec2.domain.InstanceType;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -24,19 +25,28 @@ import com.google.inject.Module;
 public class InfrastructureService {
 
     private ComputeService getClient(String imageId) {
+        String provider = Configuration.get("DEFAULT_PROVIDER");
+        if ("".equals(provider)) {
+            provider = "aws-ec2";
+        }
+
+        return getClient(imageId, provider);
+    }
+
+    private ComputeService getClient(String imageId, String provider) {
         // If we specify the image, it doesn't download info about all others
         Properties overrides = new Properties();
         overrides.setProperty(AWSEC2Constants.PROPERTY_EC2_AMI_QUERY, "image-id=" + imageId);
 
         // get a context with ec2 that offers the portable ComputeService api
-        ComputeServiceContext context = new ComputeServiceContextFactory().createContext("aws-ec2",
+        ComputeServiceContext context = new ComputeServiceContextFactory().createContext(provider,
                 Configuration.get("AMAZON_ACCESS_KEY_ID"), Configuration.get("AMAZON_SECRET_KEY"),
                 ImmutableSet.<Module> of(), overrides);
 
         return context.getComputeService();
     }
 
-    public void createNode(Node node) throws RunNodesException {
+    public Node createNode(Node node) throws RunNodesException {
         String imageId = node.getImage();
         String image = imageId.substring(imageId.indexOf('/') + 1);
 
@@ -48,6 +58,7 @@ public class InfrastructureService {
         setNodeProperties(node, cloudNode);
 
         client.getContext().close();
+        return node;
     }
 
     public Node getNode(String nodeId) throws NodeNotFoundException {
@@ -109,12 +120,21 @@ public class InfrastructureService {
     }
 
     private Template getTemplate(ComputeService client, String imageId) {
-        Template template = client.templateBuilder().hardwareId(InstanceType.M1_SMALL).imageId(imageId).build();
-
-        EC2TemplateOptions options = template.getOptions().as(EC2TemplateOptions.class);
-        options.securityGroups("default");
-        options.keyPair(Configuration.get("AMAZON_KEY_PAIR"));
-
+        Template template = client.templateBuilder().imageId(imageId).build();
+        if (client instanceof AWSEC2ComputeService) {
+            EC2TemplateOptions options = template.getOptions().as(EC2TemplateOptions.class);
+            options.securityGroups("default");
+            options.keyPair(Configuration.get("AMAZON_KEY_PAIR"));
+        }
         return template;
+    }
+
+    public Node createOrUseExistingNode(Node node) throws RunNodesException {
+        for (Node n : getNodes()) {
+            if (n.getImage().equals(node.getImage()) && NodeState.RUNNING.ordinal() == n.getState()) {
+                return n;
+            }
+        }
+        return createNode(node);
     }
 }

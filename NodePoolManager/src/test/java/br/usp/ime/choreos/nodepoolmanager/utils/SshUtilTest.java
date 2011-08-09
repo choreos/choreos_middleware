@@ -3,41 +3,42 @@ package br.usp.ime.choreos.nodepoolmanager.utils;
 import static org.junit.Assert.assertEquals;
 
 import org.jclouds.compute.RunNodesException;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import br.usp.ime.choreos.nodepoolmanager.Configuration;
 import br.usp.ime.choreos.nodepoolmanager.InfrastructureService;
 import br.usp.ime.choreos.nodepoolmanager.Node;
 
 import com.jcraft.jsch.JSchException;
 
 public class SshUtilTest {
-    private final InfrastructureService infra = new InfrastructureService();
+    private final static InfrastructureService infra = new InfrastructureService();
+
+    private static Node node = new Node();
+
+    @BeforeClass
+    public static void createNode() throws RunNodesException {
+        node.setImage("us-east-1/ami-ccf405a5");
+        Configuration.set("DEFAULT_PROVIDER", "");
+        node = infra.createOrUseExistingNode(node);
+    }
 
     @Test
     public void runCommand() throws Exception {
-        Node node = createNode();
-
         // Waiting sshd to start
-        Thread.sleep(30000);
-
+        SshUtil ssh = new SshUtil(node.getIp());
+        while (!ssh.isAccessible())
+            ;
         double rand = Math.random();
         String command = "mkdir tmp1\ncd tmp1\ntouch a" + rand + "\nls\ncd ..\nrm -rf tmp1\n";
         String runReturn = new SshUtil(node.getIp()).runCommand(command);
-
-        infra.destroyNode(node.getId());
 
         assertEquals("a" + rand + "\n", runReturn);
 
     }
 
-    private Node createNode() throws RunNodesException {
-        Node node = new Node();
-        node.setImage("us-east-1/ami-ccf405a5");
 
-        infra.createNode(node);
-
-        return node;
-    }
 
     @Test(expected = JSchException.class)
     public void runCommandInvalidNode() throws Exception {

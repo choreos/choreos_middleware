@@ -19,11 +19,10 @@ public class NodesResourceTest {
     private static final WebClient client = WebClient.create("http://localhost:8080/");
     private static Node sampleNode;
 
-    private static final String IMAGE = "us-east-1/ami-ccf405a5";
-
     @BeforeClass
     public static void startServer() throws Exception {
         NodePoolManagerStandaloneServer.start();
+        Configuration.set("DEFAULT_PROVIDER", "stub");
     }
 
     @AfterClass
@@ -42,12 +41,12 @@ public class NodesResourceTest {
         client.path("nodes");
 
         sampleNode = new Node();
-        sampleNode.setImage(IMAGE);
+        sampleNode.setImage("1");
 
         Response response = client.post(sampleNode);
         sampleNode = getNodeFromResponse(response);
 
-        assertEquals(IMAGE, sampleNode.getImage());
+        assertEquals("1", sampleNode.getImage());
         assertEquals(Status.CREATED.getStatusCode(), response.getStatus());
     }
 
@@ -64,7 +63,7 @@ public class NodesResourceTest {
 
     @Test
     public void listNodes() throws Exception {
-        final String image2 = "us-east-1/ami-8c1fece5";
+        final String image2 = "1";
 
         Node node = new Node();
         node.setImage(image2);
@@ -77,7 +76,7 @@ public class NodesResourceTest {
         Node[] nodes = nodeCollection.toArray(new Node[nodeAmount]);
 
         assertTrue(nodeAmount >= 2);
-        assertEquals(IMAGE, nodes[nodeAmount - 2].getImage());
+        assertEquals("1", nodes[nodeAmount - 2].getImage());
         assertEquals(image2, nodes[nodeAmount - 1].getImage());
 
         resetPath();
