@@ -9,7 +9,7 @@ public class Configuration {
 
     private static Configuration INSTANCE = new Configuration();
 
-    public Properties getProperties() {
+    private Properties getProperties() {
         return properties;
     }
 
