@@ -1,5 +1,6 @@
 package br.usp.ime.choreos.nodepoolmanager;
 
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -67,19 +68,19 @@ public class Infrastructure {
         NodeMetadata cloudNode = Iterables.get(createdNodes, 0);
 
         setNodeProperties(node, cloudNode);
+        if (!(client.getContext() instanceof Proxy)) {
+            System.out.println("Waiting for SSH...");
+            SshUtil ssh = new SshUtil(node.getIp());
+            while (!ssh.isAccessible())
+                ;
 
-        System.out.println("Waiting for SSH...");
-        SshUtil ssh = new SshUtil(node.getIp());
-        while (!ssh.isAccessible())
-            ;
-
-        NodeInitializer ni = new NodeInitializer(node.getIp());
-        try {
-            ni.initialize();
-        } catch (Exception e) {
-            e.printStackTrace();
+            NodeInitializer ni = new NodeInitializer(node.getIp());
+            try {
+                ni.initialize();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
         client.getContext().close();
         return node;
     }
