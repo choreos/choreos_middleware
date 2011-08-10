@@ -18,13 +18,9 @@ import org.jclouds.compute.RunNodesException;
 @Path("/nodes")
 public class NodesResource {
 
-    public static List<Node> nodes = new ArrayList<Node>();
+    public static final List<Node> nodes = new ArrayList<Node>();
 
-    private InfrastructureService infrastructure = new InfrastructureService();
-
-    public void setInfrastructure(InfrastructureService infrastructure) {
-        this.infrastructure = infrastructure;
-    }
+    private final InfrastructureService infrastructure = new InfrastructureService();
 
     @GET
     public List<Node> getNodes() {
