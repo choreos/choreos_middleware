@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.cxf.common.util.StringUtils;
 import org.jclouds.aws.ec2.compute.AWSEC2ComputeService;
 import org.jclouds.aws.ec2.reference.AWSEC2Constants;
 import org.jclouds.compute.ComputeService;
@@ -20,6 +21,9 @@ import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.ec2.compute.options.EC2TemplateOptions;
 import org.jclouds.ec2.domain.InstanceType;
 
+import br.usp.ime.choreos.nodepoolmanager.cm.NodeInitializer;
+import br.usp.ime.choreos.nodepoolmanager.utils.SshUtil;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.inject.Module;
@@ -28,7 +32,7 @@ public class Infrastructure {
 
     private ComputeService getClient(String imageId) {
         String provider = Configuration.get("DEFAULT_PROVIDER");
-        if ("".equals(provider)) {
+        if (StringUtils.isEmpty(provider)) {
             provider = "aws-ec2";
         }
 
@@ -49,7 +53,12 @@ public class Infrastructure {
     }
 
     public Node createNode(Node node) throws RunNodesException {
+        System.out.println("Creating node...");
         String imageId = node.getImage();
+        if (StringUtils.isEmpty(imageId)) {
+            imageId = "us-east-1/ami-ccf405a5"; // TODO put default image in a
+                                                // configuration file
+        }
         String image = imageId.substring(imageId.indexOf('/') + 1);
 
         ComputeService client = getClient(image);
@@ -58,6 +67,18 @@ public class Infrastructure {
         NodeMetadata cloudNode = Iterables.get(createdNodes, 0);
 
         setNodeProperties(node, cloudNode);
+
+        System.out.println("Waiting for SSH...");
+        SshUtil ssh = new SshUtil(node.getIp());
+        while (!ssh.isAccessible())
+            ;
+
+        NodeInitializer ni = new NodeInitializer(node.getIp());
+        try {
+            ni.initialize();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         client.getContext().close();
         return node;
@@ -90,7 +111,9 @@ public class Infrastructure {
             node = new Node();
 
             setNodeProperties(node, cloudNode);
-            nodeList.add(node);
+            if (node.getState() != 1) {
+                nodeList.add(node);
+            }
         }
 
         client.getContext().close();
