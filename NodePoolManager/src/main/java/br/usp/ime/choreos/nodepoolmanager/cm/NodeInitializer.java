@@ -6,26 +6,26 @@ import br.usp.ime.choreos.nodepoolmanager.utils.SshUtil;
 
 public class NodeInitializer {
 
-    private final String nodeName;
+    private final String hostname;
 
-    public NodeInitializer(String nodeName) {
-        this.nodeName = nodeName;
+    public NodeInitializer(String hostname) {
+        this.hostname = hostname;
     }
 
     public void cleanPetals() throws Exception {
-        new SshUtil(nodeName).runCommand("sudo rm -rf /opt/*\n");
+        new SshUtil(hostname).runCommand("sudo rm -rf /opt/*\n");
     }
 
     public boolean isInitialized() throws Exception {
         String returnText = "";
-        returnText = new SshUtil(nodeName).runCommand("ls /opt");
+        returnText = new SshUtil(hostname).runCommand("ls /opt");
         System.out.println(returnText);
         return !returnText.equals("");
     }
 
     public void initialize() throws Exception {
-        String command = new ScriptsProvider().chefStartupScript(Configuration.get("CHEF_KEY_FILE"));
-        String output = new SshUtil(nodeName).runCommand(command);
+        String command = new ScriptsProvider().getChefStartupScript(Configuration.get("CHEF_KEY_FILE"));
+        String output = new SshUtil(hostname).runCommand(command);
         System.out.println(output);
     }
 
