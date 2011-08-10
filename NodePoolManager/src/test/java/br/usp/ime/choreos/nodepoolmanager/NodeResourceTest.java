@@ -30,7 +30,7 @@ public class NodeResourceTest {
         sampleNode = new Node();
         sampleNode.setImage("1");
 
-        InfrastructureService infrastructure = new InfrastructureService();
+        Infrastructure infrastructure = new Infrastructure();
         infrastructure.createNode(sampleNode);
     }
 

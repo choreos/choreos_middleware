@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.inject.Module;
 
-public class InfrastructureService {
+public class Infrastructure {
 
     private ComputeService getClient(String imageId) {
         String provider = Configuration.get("DEFAULT_PROVIDER");

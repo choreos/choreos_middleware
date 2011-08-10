@@ -12,7 +12,7 @@ public class NodeResource {
 
     @GET
     public Response getNode(@PathParam("node_id") String id) {
-        InfrastructureService infrastructure = new InfrastructureService();
+        Infrastructure infrastructure = new Infrastructure();
         Node node;
         Response response;
 
@@ -30,7 +30,7 @@ public class NodeResource {
 
     @DELETE
     public Response deleteNode(@PathParam("node_id") String id) {
-        InfrastructureService infrastructure = new InfrastructureService();
+        Infrastructure infrastructure = new Infrastructure();
         infrastructure.destroyNode(id);
 
         return Response.status(Status.OK).build();

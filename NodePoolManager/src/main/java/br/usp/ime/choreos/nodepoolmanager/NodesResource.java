@@ -20,7 +20,7 @@ public class NodesResource {
 
     public static final List<Node> nodes = new ArrayList<Node>();
 
-    private final InfrastructureService infrastructure = new InfrastructureService();
+    private final Infrastructure infrastructure = new Infrastructure();
 
     @GET
     public List<Node> getNodes() {
