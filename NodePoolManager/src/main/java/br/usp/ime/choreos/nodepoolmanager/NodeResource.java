@@ -12,16 +12,13 @@ public class NodeResource {
 
     @GET
     public Response getNode(@PathParam("node_id") String id) {
-        Infrastructure infrastructure = new Infrastructure();
-        Node node;
         Response response;
+        Infrastructure infrastructure = new Infrastructure();
 
         try {
-            node = infrastructure.getNode(id);
+            Node node = infrastructure.getNode(id);
             response = Response.ok(node).build();
         } catch (NodeNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
             response = Response.status(Status.NOT_FOUND).build();
         }
 
