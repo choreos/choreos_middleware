@@ -69,7 +69,13 @@ public class NodeResourceTest {
 
         resetPath();
         client.path("nodes/" + sampleNode.getId());
-        Node node = client.get(Node.class);
-        assertTrue(node == null || node.getState() != NodeState.RUNNING.ordinal());
+
+        try {
+            Node node = client.get(Node.class);
+            assertTrue(node == null || node.getState() != NodeState.RUNNING.ordinal());
+        } catch (Exception e) {
+            response = client.get();
+            assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
+        }
     }
 }
