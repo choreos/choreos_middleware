@@ -38,16 +38,6 @@
       <url>http://maven.restlet.org</url>
     </repository> 
     <repository>
-      <id>jboss</id>
-      <name>JBoss repository</name>
-      <url>http://repository.jboss.org/maven2</url>
-      <releases>
-        <enabled>false</enabled>
-        <updatePolicy>always</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </releases>
-    </repository>
-    <repository>
       <id>eviware</id>
       <name>eviWare</name>
       <url>http://www.eviware.com/repository/maven2/</url>
