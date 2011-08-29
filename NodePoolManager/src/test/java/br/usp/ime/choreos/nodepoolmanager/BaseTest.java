@@ -3,6 +3,7 @@ package br.usp.ime.choreos.nodepoolmanager;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.cxf.transport.http.HTTPConduit;
 import org.jclouds.compute.RunNodesException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -16,6 +17,10 @@ public class BaseTest {
         NodePoolManagerStandaloneServer.start();
         Configuration.set("DEFAULT_PROVIDER", "stub");
         createSampleNode();
+
+        HTTPConduit conduit = WebClient.getConfig(client).getHttpConduit();
+        conduit.getClient().setReceiveTimeout(Long.MAX_VALUE);
+        conduit.getClient().setConnectionTimeout(Long.MAX_VALUE);
     }
 
     @AfterClass
