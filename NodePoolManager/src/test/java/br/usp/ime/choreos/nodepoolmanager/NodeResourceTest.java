@@ -6,38 +6,11 @@ import static org.junit.Assert.assertTrue;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.cxf.jaxrs.client.WebClient;
-import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.NodeState;
 import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class NodeResourceTest {
-
-    private static final WebClient client = WebClient.create("http://localhost:8080/");
-    private static Node sampleNode;
-
-    @BeforeClass
-    public static void startServer() throws InterruptedException, RunNodesException {
-        NodePoolManagerStandaloneServer.start();
-        Configuration.set("DEFAULT_PROVIDER", "stub");
-        createSampleNode();
-    }
-
-    public static void createSampleNode() throws RunNodesException {
-        sampleNode = new Node();
-        sampleNode.setImage("1");
-
-        Infrastructure infrastructure = new Infrastructure();
-        infrastructure.createNode(sampleNode);
-    }
-
-    @AfterClass
-    public static void stopServer() {
-        NodePoolManagerStandaloneServer.stop();
-    }
+public class NodeResourceTest extends BaseTest {
 
     @After
     public void resetPath() {

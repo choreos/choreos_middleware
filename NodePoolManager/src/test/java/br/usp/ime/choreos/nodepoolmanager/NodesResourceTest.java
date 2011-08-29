@@ -3,7 +3,6 @@ package br.usp.ime.choreos.nodepoolmanager;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 
 import javax.ws.rs.core.Response;
@@ -11,25 +10,9 @@ import javax.ws.rs.core.Response.Status;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class NodesResourceTest {
-    private static final WebClient client = WebClient.create("http://localhost:8080/");
-    private static Node sampleNode;
-
-    @BeforeClass
-    public static void startServer() throws Exception {
-        NodePoolManagerStandaloneServer.start();
-        Configuration.set("DEFAULT_PROVIDER", "stub");
-    }
-
-    @AfterClass
-    public static void stopServer() throws UnsupportedEncodingException {
-        NodePoolManagerStandaloneServer.stop();
-        destroyNode(sampleNode);
-    }
+public class NodesResourceTest extends BaseTest {
 
     @After
     public void resetPath() {
@@ -48,11 +31,6 @@ public class NodesResourceTest {
 
         assertEquals("1", sampleNode.getImage());
         assertEquals(Status.CREATED.getStatusCode(), response.getStatus());
-    }
-
-    private static void destroyNode(Node node) throws UnsupportedEncodingException {
-        client.path("nodes/" + node.getId());
-        client.delete();
     }
 
     private static Node getNodeFromResponse(Response response) {
