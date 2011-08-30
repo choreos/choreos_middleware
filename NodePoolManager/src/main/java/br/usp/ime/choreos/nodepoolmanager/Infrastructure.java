@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.apache.cxf.common.util.StringUtils;
 import org.jclouds.aws.ec2.compute.AWSEC2ComputeService;
+import org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions;
 import org.jclouds.aws.ec2.reference.AWSEC2Constants;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
@@ -19,7 +20,6 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeState;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
-import org.jclouds.ec2.compute.options.EC2TemplateOptions;
 import org.jclouds.ec2.domain.InstanceType;
 
 import br.usp.ime.choreos.nodepoolmanager.cm.NodeInitializer;
@@ -82,6 +82,7 @@ public class Infrastructure {
             }
         }
         client.getContext().close();
+        System.out.println("Node created");
         return node;
     }
 
@@ -150,7 +151,7 @@ public class Infrastructure {
         if (client instanceof AWSEC2ComputeService) {
             builder.hardwareId(InstanceType.M1_SMALL);
             Template template = builder.build();
-            EC2TemplateOptions options = template.getOptions().as(EC2TemplateOptions.class);
+            AWSEC2TemplateOptions options = template.getOptions().as(AWSEC2TemplateOptions.class);
             options.securityGroups("default");
             options.keyPair(Configuration.get("AMAZON_KEY_PAIR"));
             return template;

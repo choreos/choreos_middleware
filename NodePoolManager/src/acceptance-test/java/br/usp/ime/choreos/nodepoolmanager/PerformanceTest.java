@@ -6,7 +6,6 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.junit.Test;
 
-
 public class PerformanceTest extends BaseTest {
 
     private int total = 0;
@@ -16,12 +15,15 @@ public class PerformanceTest extends BaseTest {
         Configuration.set("DEFAULT_PROVIDER", "aws-ec2");
 
         testXNodesCreation(1);
-        testXNodesCreation(2);
+        testXNodesCreation(4);
+        testXNodesCreation(8);
         testXNodesCreation(16);
+        testXNodesCreation(32);
         testXNodesCreation(64);
     }
 
     private void testXNodesCreation(int n) throws Exception {
+        total = 0;
         long startTime = System.currentTimeMillis();
         createNodes(n);
         long endTime = System.currentTimeMillis();
@@ -65,5 +67,6 @@ public class PerformanceTest extends BaseTest {
         String location = (String) response.getMetadata().get("Location").get(0);
         WebClient webClient = WebClient.create(location);
         webClient.delete();
+
     }
 }

@@ -22,7 +22,7 @@ public class SshUtil {
         JSch jsch = new JSch();
         try {
             jsch.addIdentity(Configuration.get("AMAZON_SSH_IDENTITY"));
-            jsch.setKnownHosts(Configuration.get("SSH_KNOWN_HOSTS"));
+            // jsch.setKnownHosts(Configuration.get("SSH_KNOWN_HOSTS"));
         } catch (JSchException e) {
             e.printStackTrace();
         }
@@ -42,7 +42,7 @@ public class SshUtil {
 
         JSch jsch = new JSch();
         jsch.addIdentity(Configuration.get("AMAZON_SSH_IDENTITY"));
-        jsch.setKnownHosts(Configuration.get("SSH_KNOWN_HOSTS"));
+        // jsch.setKnownHosts(Configuration.get("SSH_KNOWN_HOSTS"));
         Session session = jsch.getSession(user, hostname);
         session.setConfig("StrictHostKeyChecking", "no");
 
