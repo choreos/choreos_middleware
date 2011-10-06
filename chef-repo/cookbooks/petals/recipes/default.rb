@@ -6,6 +6,29 @@
 #
 # LGPL 2.0 or, at your option, any later version
 #
+::Chef::Resource::Package.send(:include, Petals::Helpers)
+
+def petals_file(component_url, dir)
+  file_name = component_url.split("/").last
+
+  #download zip file
+  remote_file "#{node['petals']['install_dir']}/#{dir}#{file_name}" do
+    source component_url
+    action :nothing
+  end
+
+  #install only if it has changed
+  http_request "HEAD #{component_url}" do
+    message ""
+    url component_url
+    action :head
+    if File.exists?("#{node['petals']['install_dir']}/#{dir}#{file_name}")
+      headers "If-Modified-Since" => File.mtime("#{node['petals']['install_dir']}/#{dir}#{file_name}").httpdate
+    end
+    notifies :create, resources(:remote_file => "#{node['petals']['install_dir']}/#{dir}#{file_name}"), :immediately
+  end
+end
+
 include_recipe "java"
 include_recipe "mysql::server"
 
@@ -13,21 +36,7 @@ ZIP_FILE = "dsb-distribution-1.0-SNAPSHOT.zip"
 PETALS_URL = "http://maven.petalslink.com/public-snapshot/org/petalslink/dsb/dsb-distribution/1.0-SNAPSHOT/#{ZIP_FILE}"
 
 #download petals zip file
-remote_file "#{node['petals']['install_dir']}/#{ZIP_FILE}" do
-  source PETALS_URL
-  action :nothing
-end
-
-#only if it has changed
-http_request "HEAD #{PETALS_URL}" do
-  message ""
-  url PETALS_URL
-  action :head
-  if File.exists?("#{node['petals']['install_dir']}/#{ZIP_FILE}")
-    headers "If-Modified-Since" => File.mtime("#{node['petals']['install_dir']}/#{ZIP_FILE}").httpdate
-  end
-  notifies :create, resources(:remote_file => "#{node['petals']['install_dir']}/#{ZIP_FILE}"), :immediately
-end
+petals_file(PETALS_URL, "")
 
 package "unzip" do
   action :install
@@ -38,6 +47,18 @@ execute "unzip" do
   command "unzip #{node['petals']['install_dir']}/#{ZIP_FILE} -d #{node['petals']['install_dir']}"
   creates "#{node['petals']['install_dir']}/#{ZIP_FILE.gsub('.zip', '')}"
   action :run
+end
+
+#install components
+PETALS_COMPONENTS = %w{
+  http://maven.ow2.org/maven2/org/ow2/petals/petals-bc-ejb/1.3/petals-bc-ejb-1.3.zip
+  http://maven.ow2.org/maven2/org/ow2/petals/petals-bc-soap/4.0.4/petals-bc-soap-4.0.4.zip
+  http://maven.ow2.org/maven2/org/ow2/petals/petals-se-bpel/1.0.6/petals-se-bpel-1.0.6.zip
+  http://download.forge.objectweb.org/petals/petals-se-rmi-1.1.1.zip
+}
+
+PETALS_COMPONENTS.each do |component_url|
+  petals_file(component_url, "dsb-distribution-1.0-SNAPSHOT/install/")
 end
 
 template "#{node['petals']['install_dir']}/#{ZIP_FILE.gsub('.zip', '')}/conf/server.properties" do
