@@ -101,4 +101,20 @@ mysql_database "creates petals database" do
 end
 
 
+ENV['JAVA_HOME'] = '/usr/lib/jvm/java-6-sun'
 
+template "/etc/profile.d/java.sh" do
+  source "etc/profile.d/java.sh.erb"
+  variables( :JAVA_HOME => ENV['JAVA_HOME'] )
+  mode 0644
+end
+
+template "/etc/init.d/petals" do
+  source "etc/init.d/petals"
+  mode 0755
+end
+
+service "petals" do
+  supports :start => true, :stop => true
+  action [ :enable, :start ]
+end
