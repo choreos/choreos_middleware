@@ -27,8 +27,9 @@ public class NodeInitializer {
         System.out.println("Initializing node with chef");
 
         String command = new ScriptsProvider().getChefStartupScript(Configuration.get("CHEF_KEY_FILE"));
-        String output = new SshUtil(hostname).runCommand(command);
-        // System.out.println(output);
+        new SshUtil(hostname).runCommand(command);
+        /* String output = new SshUtil(hostname).runCommand(command);
+        System.out.println(output); */
     }
 
 }
