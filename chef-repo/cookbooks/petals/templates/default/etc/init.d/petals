@@ -23,8 +23,7 @@ DESC='Petals DSB server node'
 NAME=petals
 DAEMON='/opt/dsb-distribution-1.0-SNAPSHOT/bin/startup.sh'
 DAEMON_ARGS='-D'
-DAEMON_STOP='/opt/dsb-distribution-1.0-SNAPSHOT/bin/shutdown.sh'
-DAEMON_STOP_ARGS='-y'
+DAEMON_STOP='/opt/dsb-distribution-1.0-SNAPSHOT/bin/stop.sh'
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
@@ -79,7 +78,7 @@ do_stop()
 	# that waits for the process to drop all resources that could be
 	# needed by services started subsequently.  A last resort is to
 	# sleep for some time.
-	$DAEMON_STOP $DAEMON_STOP_ARGS
+	$DAEMON_STOP
 	[ "$?" = 2 ] && return 2
 	# Many daemons don't delete their pidfiles when they exit.
 	rm -f $PIDFILE
