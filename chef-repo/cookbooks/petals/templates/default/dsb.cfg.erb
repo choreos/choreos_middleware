@@ -1,0 +1,30 @@
+# Embedded Web application port
+webapp.port=8080
+
+# The mappping between protocols and components
+mapping.soap=petals-bc-soap
+mapping.rest=petals-bc-rest
+
+# Delay to install and start components after node startup
+# No more used !
+embedded.component.delay=30
+
+# list of component (CSV) to be installed nd started after kernel is started
+embedded.component.list=
+
+# Delay to bind predefined services
+# No more used !
+embedded.services.delay=50
+
+# poll for new endpoints period
+endpoints.polling.period=120
+
+# delay
+endpoints.polling.delay=120
+
+#Remote transport definition (optional)
+#remote.transport=soap
+#remote.transport=xmpp
+
+# Federation configuration
+federation.url=xmpp://kitov.merlin@gmail.com

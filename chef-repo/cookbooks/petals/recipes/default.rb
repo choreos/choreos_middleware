@@ -36,7 +36,7 @@ end
 include_recipe "java"
 
 link "/bin/java" do
-  to "/usr/bin/java"
+  to "/usr/bin/java"
 end
 
 include_recipe "mysql::server"
@@ -77,7 +77,7 @@ PETALS_COMPONENTS.each do |component_url|
   petals_file(component_url, "#{PETALS_HOME}/downloads/")
 end
 
-template "#{node['petals']['install_dir']}/#{ZIP_FILE.gsub('.zip', '')}/conf/server.properties" do
+template "#{PETALS_HOME}/conf/server.properties" do
   source "server.properties.erb"
   owner "root"
   group "root"
@@ -99,13 +99,28 @@ if @@master == node
   node.set['petals']['container_type'] = "master"
 end
 
-template "#{node['petals']['install_dir']}/#{ZIP_FILE.gsub('.zip', '')}/conf/topology.xml" do
+template "#{PETALS_HOME}/conf/topology.xml" do
   source "topology.xml.erb"
   owner "root"
   group "root"
   mode "0644"
   variables({:master => @@master})
 end
+
+template "#{PETALS_HOME}/conf/dsb.cfg" do
+  source "dsb.cfg.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+end
+
+template "#{PETALS_HOME}/conf/launcher.cfg" do
+  source "launcher.cfg.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+end
+
 
 
 mysql_database "creates petals database" do
