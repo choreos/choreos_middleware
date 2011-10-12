@@ -6,7 +6,7 @@
 #
 # LGPL 2.0 or, at your option, any later version
 #
-::Chef::Resource::Package.send(:include, Petals::Helpers)
+# ::Chef::Resource::Package.send(:include, Petals::Helpers)
 
 ZIP_FILE = "dsb-distribution-1.0-SNAPSHOT.zip"
 PETALS_URL = "http://maven.petalslink.com/public-snapshot/org/petalslink/dsb/dsb-distribution/1.0-SNAPSHOT/#{ZIP_FILE}"
