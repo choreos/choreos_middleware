@@ -26,7 +26,6 @@ public class BaseTest {
     @AfterClass
     public static void stopServer() throws UnsupportedEncodingException {
         NodePoolManagerStandaloneServer.stop();
-        destroyNode(sampleNode);
     }
 
     public static void createSampleNode() throws RunNodesException {
