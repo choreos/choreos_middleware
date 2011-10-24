@@ -49,8 +49,7 @@ petals_file(JAR_FILE, "dsb-distribution-1.0-SNAPSHOT/webapps/")
 
 #running service
 service "supermarket2_ws" do
-  supports :start => true, :start_command = `java -jar #{node['petals']['install_dir']}/webapps/runSM2.jar 4321`
+  supports :start => true
+  start_command = "java -jar #{node['petals']['install_dir']}/webapps/runSM2.jar 4321"
   action [ :enable, :start ]
 end
-
-`java -jar 
