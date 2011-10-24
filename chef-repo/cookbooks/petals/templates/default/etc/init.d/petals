@@ -21,9 +21,10 @@
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC='Petals DSB server node'
 NAME=petals
-DAEMON='/opt/dsb-distribution-1.0-SNAPSHOT/bin/startup.sh'
+PETALS_DIR='/opt/dsb-fulldistribution/dsb-distribution-1.0-SNAPSHOT'
+DAEMON="$PETALS_DIR/startup.sh"
 DAEMON_ARGS='-D'
-DAEMON_STOP='/opt/dsb-distribution-1.0-SNAPSHOT/bin/shutdown.sh'
+DAEMON_STOP="$PETALS_DIR/bin/shutdown.sh"
 DAEMON_STOP_ARGS='-y'
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
