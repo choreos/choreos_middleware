@@ -6,6 +6,30 @@
 #
 # LGPL 2.0 or, at your option, any later version
 #
+
+# Installing java and configuring JAVA_HOME
+# This is run before other packages are installed to update apt database
+include_recipe 'java'
+
+ENV['JAVA_HOME'] = '/usr/lib/jvm/java-6-sun'
+
+template "/etc/profile.d/java.sh" do
+  source "etc/profile.d/java.sh.erb"
+  variables( :JAVA_HOME => ENV['JAVA_HOME'] )
+  mode 0644
+  action :create_if_missing
+end
+
+# MySQL database
+include_recipe 'mysql::server'
+mysql_database "creates petals database" do
+  host "localhost"
+  username "root"
+  password node[:mysql][:server_root_password]
+  database "petals"
+  action :create_db
+end
+
 DOWNLOAD_SERVER = "http://valinhos.ime.usp.br:54080/demo"
 
 def download(filename)
@@ -18,24 +42,11 @@ def download(filename)
   end
 end
 
-# Installing java and configuring JAVA_HOME
-# This is run before other packages are installed to update apt database
-include_recipe "java"
-
-ENV['JAVA_HOME'] = '/usr/lib/jvm/java-6-sun'
-
-template "/etc/profile.d/java.sh" do
-  source "etc/profile.d/java.sh.erb"
-  variables( :JAVA_HOME => ENV['JAVA_HOME'] )
-  mode 0644
-  action :create_if_missing
-end
-
+# Download and unzip
 package 'unzip' do
   action :install
 end
 
-# Download and unzip
 filename = 'dsb-fulldistribution-latest.zip'
 download filename
 execute 'extract petals' do
@@ -84,6 +95,8 @@ if node['petals']['container_type'] != myType
   node['petals']['container_type'] = myType
 end
 
+node.save
+
 # Configure topology
 template "#{node['petals']['dir']}/conf/topology.xml" do
   source "topology.xml.erb"
@@ -93,23 +106,12 @@ template "#{node['petals']['dir']}/conf/topology.xml" do
   variables({:master => master})
 end
 
-# MySQL database
-include_recipe "mysql::server"
-
-mysql_database "creates petals database" do
-  host "localhost"
-  username "root"
-  password node[:mysql][:server_root_password]
-  database "petals"
-  action :create_db
-end
-
 # Start the service
 service 'petals' do
   start_command "#{node['petals']['dir']}/bin/startup.sh -D"
   stop_command "#{node['petals']['dir']}/bin/stop.sh"
   supports :start => true, :stop => true
-  action [ :start, :enable ]
+  action [ :start ]
   notifies :run, 'bash[wait petals]', :immediately
 end
 

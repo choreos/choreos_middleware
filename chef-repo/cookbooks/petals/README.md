@@ -22,6 +22,7 @@ Most often this will be used to generate a secure password for an attribute.
 License and Author
 ====
 
+Carlos Eduardo Moreira dos Santos
 Daniel Cukier
 CCSL - Centro de Competencia de Software Livre - IME/USP
 University of Sao Paulo
