@@ -16,6 +16,7 @@ The recipe starts the service
 License and Author
 ====
 
+Carlos Eduardo Moreira dos Santos
 Felipe Besson
 Pedro Leal
 CCSL - Centro de Competencia de Software Livre - IME/USP
