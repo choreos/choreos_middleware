@@ -6,91 +6,95 @@
 #
 # LGPL 2.0 or, at your option, any later version
 #
-::Chef::Resource::Package.send(:include, Petals::Helpers)
+DOWNLOAD_SERVER = "http://valinhos.ime.usp.br:54080/demo"
 
-def petals_file(component_url, dir)
-  file_name = component_url.split("/").last
+def download(filename)
+  diskFile = "/tmp/#{filename}"
+  webFile = "#{DOWNLOAD_SERVER}/#{filename}"
 
-  #download zip file
-  remote_file "#{node['petals']['install_dir']}/#{dir}#{file_name}" do
-    source component_url
-    action :nothing
-  end
-
-  #install only if it has changed
-  http_request "HEAD #{component_url}" do
-    message ""
-    url component_url
-    action :head
-    if File.exists?("#{node['petals']['install_dir']}/#{dir}#{file_name}")
-      headers "If-Modified-Since" => File.mtime("#{node['petals']['install_dir']}/#{dir}#{file_name}").httpdate
-    end
-    notifies :create, resources(:remote_file => "#{node['petals']['install_dir']}/#{dir}#{file_name}"), :immediately
+  remote_file diskFile do
+    source webFile
+    action :create_if_missing
   end
 end
 
+# Installing java and configuring JAVA_HOME
+# This is run before other packages are installed to update apt database
 include_recipe "java"
-include_recipe "mysql::server"
 
-ZIP_FILE = "dsb-distribution-1.0-SNAPSHOT.zip"
-PETALS_URL = "http://maven.petalslink.com/public-snapshot/org/petalslink/dsb/dsb-distribution/1.0-SNAPSHOT/#{ZIP_FILE}"
+ENV['JAVA_HOME'] = '/usr/lib/jvm/java-6-sun'
 
-#download petals zip file
-petals_file(PETALS_URL, "")
+template "/etc/profile.d/java.sh" do
+  source "etc/profile.d/java.sh.erb"
+  variables( :JAVA_HOME => ENV['JAVA_HOME'] )
+  mode 0644
+  action :create_if_missing
+end
 
-package "unzip" do
+package 'unzip' do
   action :install
 end
 
-#unzip petals
-execute "unzip" do
-  command "unzip #{node['petals']['install_dir']}/#{ZIP_FILE} -d #{node['petals']['install_dir']}"
-  creates "#{node['petals']['install_dir']}/#{ZIP_FILE.gsub('.zip', '')}"
+# Download and unzip
+filename = 'dsb-fulldistribution-latest.zip'
+download filename
+execute 'extract petals' do
+  command "unzip /tmp/#{filename} -d /opt"
+  creates node['petals']['dir']
   action :run
 end
 
-#install components
-PETALS_COMPONENTS = %w{
-  http://maven.ow2.org/maven2/org/ow2/petals/petals-bc-ejb/1.3/petals-bc-ejb-1.3.zip
-  http://maven.ow2.org/maven2/org/ow2/petals/petals-bc-soap/4.0.4/petals-bc-soap-4.0.4.zip
-  http://maven.ow2.org/maven2/org/ow2/petals/petals-se-bpel/1.0.6/petals-se-bpel-1.0.6.zip
-  http://download.forge.objectweb.org/petals/petals-se-rmi-1.1.1.zip
-}
-
-PETALS_COMPONENTS.each do |component_url|
-  petals_file(component_url, "dsb-distribution-1.0-SNAPSHOT/install/")
-end
-
-template "#{node['petals']['install_dir']}/#{ZIP_FILE.gsub('.zip', '')}/conf/server.properties" do
+# Configure
+template "#{node['petals']['dir']}/conf/server.properties" do
   source "server.properties.erb"
   owner "root"
   group "root"
   mode "0644"
 end
 
-@@master = node
-
-search(:node, 'role:petals') do |n|
-  if n['petals']['container_type'] == "master"
-    @@master = n
-    if n.name != node.name
-      node.set['petals']['container_type'] = "slave"
-    end
-  end
+bash 'fix install on start' do
+  user 'root'
+  cwd "#{node['petals']['dir']}/conf"
+  code <<-EOH
+  sed -i 's/embedded.component.list=.*/embedded.component.list=/' dsb.cfg
+  EOH
 end
 
-if @@master == node
-  node.set['petals']['container_type'] = "master"
+bash 'fix permissions' do
+  user 'root'
+  cwd "#{node['petals']['dir']}/bin"
+  code <<-EOH
+  /bin/chmod 755 *.sh
+  EOH
 end
 
-template "#{node['petals']['install_dir']}/#{ZIP_FILE.gsub('.zip', '')}/conf/topology.xml" do
+# If there is no master, I'll be the one
+masters = search(:node, 'container_type:master')
+myType = node['petals']['container_type']
+
+if masters.empty? and myType == 'slave'
+  myType = 'master'
+  master = node
+elsif not masters.empty? and masters[0]['ipaddress'] != node['ipaddress']
+  myType = 'slave'
+  master = masters[0]
+end
+
+if node['petals']['container_type'] != myType
+  node['petals']['container_type'] = myType
+end
+
+# Configure topology
+template "#{node['petals']['dir']}/conf/topology.xml" do
   source "topology.xml.erb"
   owner "root"
   group "root"
   mode "0644"
-  variables({:master => @@master})
+  variables({:master => master})
 end
 
+# MySQL database
+include_recipe "mysql::server"
 
 mysql_database "creates petals database" do
   host "localhost"
@@ -100,21 +104,41 @@ mysql_database "creates petals database" do
   action :create_db
 end
 
-
-ENV['JAVA_HOME'] = '/usr/lib/jvm/java-6-sun'
-
-template "/etc/profile.d/java.sh" do
-  source "etc/profile.d/java.sh.erb"
-  variables( :JAVA_HOME => ENV['JAVA_HOME'] )
-  mode 0644
-end
-
-template "/etc/init.d/petals" do
-  source "etc/init.d/petals"
-  mode 0755
-end
-
-service "petals" do
+# Start the service
+service 'petals' do
+  start_command "#{node['petals']['dir']}/bin/startup.sh -D"
+  stop_command "#{node['petals']['dir']}/bin/stop.sh"
   supports :start => true, :stop => true
-  action [ :enable, :start ]
+  action [ :start, :enable ]
+  notifies :run, 'bash[wait petals]', :immediately
+end
+
+bash 'wait petals' do
+  cwd "#{node['petals']['dir']}/logs"
+  code <<-EOH
+  echo 'Waiting for petals by monitoring its log...'
+  last_log=$(ls -tr *.log | tail -n 1)
+  >$last_log
+  while ! grep -q 'Time to look for new services to expose' $last_log
+  do
+    sleep 0.5
+  done
+  EOH
+  action :nothing
+end
+
+# Install components
+filename = 'components.tar.gz'
+download filename
+execute "extract components" do
+  command "tar xzf /tmp/#{filename} -C /tmp/"
+  creates "/tmp/components"
+  action :run
+end
+
+execute "install components" do
+  command "cp /tmp/components/* #{node['petals']['dir']}/install"
+  creates "#{node['petals']['dir']}/installed/petals-bc-ejb-1.3.zip"
+  action :run
+  notifies :run, 'bash[wait petals]', :immediately
 end
