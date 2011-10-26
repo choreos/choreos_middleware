@@ -1,6 +1,7 @@
-maintainer       "YOUR_COMPANY_NAME"
-maintainer_email "YOUR_EMAIL"
-license          "All rights reserved"
+depends          "petals"
 description      "Installs/Configures customer"
-long_description IO.read(File.join(File.dirname(__FILE__), 'README.rdoc'))
-version          "0.0.1"
+license          "LGPL 2.0 or, at your option, any later version"
+long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
+maintainer       "CCSL - Centro de Competencia de Software Livre - IME/USP"
+maintainer_email "ccsl@ime.usp.br"
+version          "0.0.7"
