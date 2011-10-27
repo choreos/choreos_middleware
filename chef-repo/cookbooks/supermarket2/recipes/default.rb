@@ -49,6 +49,6 @@ end
 # Runs webapp
 service "supermarket2_ws" do
   supports :start => true
-  start_command "java -jar #{PETALS_DIR}/webapps/runSM2.jar 4321"
+  start_command "java -jar #{PETALS_DIR}/webapps/runSM2.jar 4321 &"
   action [ :start ]
 end

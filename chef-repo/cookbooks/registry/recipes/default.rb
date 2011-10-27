@@ -48,6 +48,6 @@ end
 # Runs webapp
 service "smregistry_ws" do
   supports :start => true
-  start_command "java -jar #{PETALS_DIR}/webapps/runSMRegistryWS.jar 1234"
+  start_command "java -jar #{PETALS_DIR}/webapps/runSMRegistryWS.jar 1234 &"
   action [ :start ]
 end
