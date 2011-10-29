@@ -7,9 +7,28 @@
 # LGPL 2.0 or, at your option, any later version
 #
 
+# If there is no master, I'll be the one.
+# Run at the very beginning to minimize race condition problem.
+masters = search(:node, 'container_type:master')
+myType = node['petals']['container_type']
+
+if masters.empty? and myType == 'slave'
+  myType = 'master'
+  master = node
+elsif not masters.empty? and masters[0]['ipaddress'] != node['ipaddress']
+  myType = 'slave'
+  master = masters[0]
+end
+
+if node['petals']['container_type'] != myType
+  node['petals']['container_type'] = myType
+end
+
+node.save
+
 # Installing java and configuring JAVA_HOME
 # This is run before other packages are installed to update apt database
-include_recipe 'java'
+include_recipe 'java::sun'
 
 ENV['JAVA_HOME'] = '/usr/lib/jvm/java-6-sun'
 
@@ -22,6 +41,7 @@ end
 
 # MySQL database
 include_recipe 'mysql::server'
+
 mysql_database "creates petals database" do
   host "localhost"
   username "root"
@@ -63,7 +83,7 @@ template "#{node['petals']['dir']}/conf/server.properties" do
   mode "0644"
 end
 
-bash 'fix install on start' do
+bash 'fix installs on startup' do
   user 'root'
   cwd "#{node['petals']['dir']}/conf"
   code <<-EOH
@@ -79,24 +99,6 @@ bash 'fix permissions' do
   EOH
 end
 
-# If there is no master, I'll be the one
-masters = search(:node, 'container_type:master')
-myType = node['petals']['container_type']
-
-if masters.empty? and myType == 'slave'
-  myType = 'master'
-  master = node
-elsif not masters.empty? and masters[0]['ipaddress'] != node['ipaddress']
-  myType = 'slave'
-  master = masters[0]
-end
-
-if node['petals']['container_type'] != myType
-  node['petals']['container_type'] = myType
-end
-
-node.save
-
 # Configure topology
 template "#{node['petals']['dir']}/conf/topology.xml" do
   source "topology.xml.erb"
@@ -106,7 +108,7 @@ template "#{node['petals']['dir']}/conf/topology.xml" do
   variables({:master => master})
 end
 
-# Start the service
+# Start petals
 service 'petals' do
   start_command "#{node['petals']['dir']}/bin/startup.sh -D"
   stop_command "#{node['petals']['dir']}/bin/stop.sh"
@@ -114,7 +116,7 @@ service 'petals' do
   action [ :start ]
   notifies :run, 'bash[wait petals]', :immediately
 end
-
+ 
 bash 'wait petals' do
   cwd "#{node['petals']['dir']}/logs"
   code <<-EOH
@@ -132,6 +134,7 @@ end
 # Install components
 filename = 'components.tar.gz'
 download filename
+
 execute "extract components" do
   command "tar xzf /tmp/#{filename} -C /tmp/"
   creates "/tmp/components"

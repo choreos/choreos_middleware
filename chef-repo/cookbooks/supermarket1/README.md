@@ -6,7 +6,8 @@ This cookbook installs a Web Service to run a sample choreography.
 Requirements
 ====
 
-Works on any platform with Java Sun SDK installed. All supermarkets must be installed in the end.
+Works on any platform with Java Sun SDK installed.
+Supermarkets should be started after registry and shipper.
 
 Usage
 ====

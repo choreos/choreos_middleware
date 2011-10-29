@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: customer
+# Cookbook Name:: master
 # Recipe:: default
 #
 # Copyright 2011, YOUR_COMPANY_NAME
@@ -24,6 +24,7 @@ end
 
 # Install components
 components = %w{
+  customer/sa-SOAP-Customer-consume.zip
   shipper/sa-SOAP-Shipper1-consume.zip
   smregistry/sa-SOAP-SMRegistry-consume.zip
   supermarket1/sa-SOAP-SM1-consume.zip

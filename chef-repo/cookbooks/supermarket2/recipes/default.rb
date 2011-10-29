@@ -10,6 +10,7 @@ include_recipe 'petals'
 
 DOWNLOAD_SERVER = 'http://valinhos.ime.usp.br:54080/demo/supermarket2'
 PETALS_DIR = node['petals']['dir']
+DIR2SAVE = PETALS_DIR[/\/opt\/.*\//][0..-2] # first dir below /opt
 
 def download(filename)
   diskFile = "/tmp/#{filename}"
@@ -40,15 +41,15 @@ end
 # Install webapp
 filename = 'runSM2.jar'
 download filename
-execute 'install webapp' do
-  command "cp /tmp/#{filename} #{PETALS_DIR}/webapps"
-  creates "#{PETALS_DIR}/webapps/#{filename}"
+execute 'save webapp' do
+  command "cp /tmp/#{filename} #{DIR2SAVE}/"
+  creates "#{DIR2SAVE}/#{filename}"
   action :run
 end
 
 # Runs webapp
 service "supermarket2_ws" do
   supports :start => true
-  start_command "java -jar #{PETALS_DIR}/webapps/runSM2.jar 4321 &"
+  start_command "java -jar #{DIR2SAVE}/runSM2.jar 4321 &"
   action [ :start ]
 end

@@ -7,6 +7,7 @@ Requirements
 ====
 
 Works on any platform with Java Sun SDK installed.
+Should be the last service to be started.
 
 Usage
 ====
