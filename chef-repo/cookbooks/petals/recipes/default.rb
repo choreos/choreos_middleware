@@ -77,6 +77,18 @@ PETALS_COMPONENTS.each do |component_url|
   petals_file(component_url, "#{PETALS_HOME}/downloads/")
 end
 
+FIRST_COMPONENT = PETALS_COMPONENTS.first.split("/").last
+
+script "install components in petals" do
+  not_if "test -f #{PETALS_HOME}/installed/#{FIRST_COMPONENT}"
+  interpreter "bash"
+  user "root"
+  cwd PETALS_HOME
+  code <<-EOH
+    cp downloads/*.zip install/
+  EOH
+end
+
 template "#{PETALS_HOME}/conf/server.properties" do
   source "server.properties.erb"
   owner "root"
