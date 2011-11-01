@@ -1,29 +1,25 @@
 Description
 ====
 
-This cookbook installs Petals Enterprise Service Bus. 
-
-More information about Petals ESB at http://http://petals.ow2.org/
+This cookbook installs a Web Service to run a sample choreography.
 
 Requirements
 ====
 
 Works on any platform with Java Sun SDK installed.
+Should be the last service to be started.
 
 Usage
 ====
 
-Most often this will be used to generate a secure password for an attribute.
-
-    include Opscode::OpenSSL::Password
-
-    set_unless[:my_password] = secure_password
+The recipe starts the service
 
 License and Author
 ====
 
 Carlos Eduardo Moreira dos Santos
-Daniel Cukier
+Felipe Besson
+Pedro Leal
 CCSL - Centro de Competencia de Software Livre - IME/USP
 University of Sao Paulo
 http://ccsl.ime.usp.br
