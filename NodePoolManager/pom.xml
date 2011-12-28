@@ -41,24 +41,14 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.jclouds</groupId>
-			<artifactId>jclouds-all</artifactId>
-			<version>1.1.0</version>
-			<type>jar</type>
-			<classifier>sources</classifier>
-			<scope>compile</scope>
-		</dependency>
+    		<groupId>org.jclouds.provider</groupId>
+    		<artifactId>jclouds-chef</artifactId>
+    		<version>1.0-SNAPSHOT</version>
+  		</dependency>
 		<dependency>
 			<groupId>org.jclouds</groupId>
 			<artifactId>jclouds-all</artifactId>
-			<version>1.1.0</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jclouds</groupId>
-			<artifactId>jclouds-all</artifactId>
-			<version>1.1.0</version>
+			<version>1.1.1</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
