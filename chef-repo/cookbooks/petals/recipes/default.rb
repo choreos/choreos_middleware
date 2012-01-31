@@ -91,6 +91,15 @@ bash 'fix installs on startup' do
   EOH
 end
 
+bash 'shorten topology timeouts' do
+  user 'root'
+  cwd "#{node['petals']['dir']}/conf"
+  code <<-EOH
+  sed -i 's/topology.update.period=.*/topology.update.period=10/' server.properties
+  sed -i 's/registry.synchro.period=.*/registry.synchro.period=30/' server.properties
+  EOH
+end
+
 bash 'fix permissions' do
   user 'root'
   cwd "#{node['petals']['dir']}/bin"
