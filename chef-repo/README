@@ -1,0 +1,18 @@
+Initial Setup
+=============
+
+Configuration file
+------------------
+
+$ cd .chef
+$ cp knife_template.rb knife.rb
+
+Then edit knife.rb and change USERNAME to the one of your server account (if you do not have an account, ask one to cadu at IME at USP at BR including the desired username).
+
+Testing
+-------
+
+In the chef-repo directory, run:
+$ knife cookbook list
+
+You should see petals cookbook.
