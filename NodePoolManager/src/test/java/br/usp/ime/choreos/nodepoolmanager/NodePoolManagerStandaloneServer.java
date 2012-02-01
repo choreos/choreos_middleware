@@ -23,7 +23,7 @@ public class NodePoolManagerStandaloneServer implements Runnable {
         sf.setResourceClasses(NodeResource.class, NodesResource.class);
         sf.setAddress("http://localhost:8080/");
         sf.create();
-        System.out.println("Iniciou...");
+        System.out.println("Starting CHOReOS Middleware ...");
         running = true;
 
         while (running) {
@@ -33,7 +33,7 @@ public class NodePoolManagerStandaloneServer implements Runnable {
                 e.printStackTrace();
             }
         }
-        System.out.println("Finalizou...");
+        System.out.println("Stoping CHOReOS Middleware...");
 
     }
 

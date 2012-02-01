@@ -125,7 +125,7 @@ service 'petals' do
   action [ :start ]
   notifies :run, 'bash[wait petals]', :immediately
 end
- 
+
 bash 'wait petals' do
   cwd "#{node['petals']['dir']}/logs"
   code <<-EOH
@@ -156,3 +156,9 @@ execute "install components" do
   action :run
   notifies :run, 'bash[wait petals]', :immediately
 end
+
+#things needed to run services
+package "ant" do
+  action :install
+end
+

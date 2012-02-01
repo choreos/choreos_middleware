@@ -8,6 +8,8 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.apache.cxf.common.util.StringUtils;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.jclouds.aws.ec2.compute.AWSEC2ComputeService;
 import org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions;
 import org.jclouds.aws.ec2.reference.AWSEC2Constants;
@@ -20,6 +22,7 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeState;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
+import org.jclouds.domain.JsonBall;
 import org.jclouds.ec2.domain.InstanceType;
 
 import br.usp.ime.choreos.nodepoolmanager.cm.NodeInitializer;
@@ -55,6 +58,7 @@ public class Infrastructure {
 
     public Node createNode(Node node) throws RunNodesException {
         System.out.println("Creating node...");
+
         String imageId = node.getImage();
         if (StringUtils.isEmpty(imageId)) {
             imageId = "us-east-1/ami-ccf405a5"; // TODO put default image in a
@@ -81,7 +85,20 @@ public class Infrastructure {
                 e.printStackTrace();
             }
         }
+
         client.getContext().close();
+
+        // create node in chef database
+        // org.jclouds.chef.domain.Node chefNode = new
+        // org.jclouds.chef.domain.Node(node.getId(),
+        // ImmutableSet.of("role[petals]"));
+        // chefNode.getAutomatic().put("cloud", new
+        // JsonBall("{\"public_host_name\":\"" + node.getHostname() + "\"}"));
+        // chefNode.getAutomatic().put("ec2", new JsonBall("{'ami_id': '" +
+        // node.getImage() + "'}"));
+        // chefNode.getAutomatic().put("os", new JsonBall(node.getSo()));
+        // ChefHelper.getChefContext().getApi().createNode(chefNode);
+        
         System.out.println("Node created");
         return node;
     }
@@ -104,12 +121,27 @@ public class Infrastructure {
     public List<Node> getNodes() {
         List<Node> nodeList = new ArrayList<Node>();
         Node node;
-        NodeMetadata cloudNode;
+
+        // for (String nodeString :
+        // ChefHelper.getChefContext().getApi().listNodes()) {
+        // org.jclouds.chef.domain.Node chefNode =
+        // ChefHelper.getChefContext().getApi().getNode(nodeString);
+        // node = new Node();
+        //
+        // try {
+        // setNodeProperties(node, chefNode);
+        // } catch (JSONException e) {
+        // e.printStackTrace();
+        // }
+        // if (node.getState() != 1) {
+        // nodeList.add(node);
+        // }
+        // }
 
         ComputeService client = getClient("");
         Set<? extends ComputeMetadata> cloudNodes = client.listNodes();
         for (ComputeMetadata computeMetadata : cloudNodes) {
-            cloudNode = client.getNodeMetadata(computeMetadata.getId());
+            NodeMetadata cloudNode = client.getNodeMetadata(computeMetadata.getId());
             node = new Node();
 
             setNodeProperties(node, cloudNode);
@@ -119,6 +151,7 @@ public class Infrastructure {
         }
 
         client.getContext().close();
+
         return nodeList;
     }
 
@@ -131,7 +164,7 @@ public class Infrastructure {
 
     private void setNodeProperties(Node node, NodeMetadata cloudNode) {
         setNodeIp(node, cloudNode);
-        node.setHostname(cloudNode.getHostname());
+        node.setHostname(cloudNode.getName());
         node.setSo(cloudNode.getOperatingSystem().getName());
         node.setId(cloudNode.getId());
         node.setImage(cloudNode.getImageId());
@@ -144,6 +177,24 @@ public class Infrastructure {
         if (publicAddresses != null && publicAddresses.hasNext()) {
             node.setIp(publicAddresses.next());
         }
+    }
+
+    private void setNodeProperties(Node node, org.jclouds.chef.domain.Node chefNode) throws JSONException {
+        JSONObject cloudJSON = new JSONObject(chefNode.getAutomatic().get("cloud").toString());
+        JSONObject ec2JSON = new JSONObject(chefNode.getAutomatic().get("ec2").toString());
+
+        setNodeIp(node, chefNode);
+        node.setHostname(cloudJSON.getString("public_hostname"));
+        node.setSo(chefNode.getAutomatic().get("os").toString());
+        node.setId(chefNode.getName());
+        node.setImage(ec2JSON.getString("ami_id"));
+        // node.setState(chefNode.getState().ordinal());
+    }
+
+    private void setNodeIp(Node node, org.jclouds.chef.domain.Node chefNode) throws JSONException {
+        JsonBall cloud = chefNode.getAutomatic().get("cloud");
+        JSONObject j = new JSONObject(cloud.toString());
+        node.setIp(j.getString("public_ipv4"));
     }
 
     private Template getTemplate(ComputeService client, String imageId) {
