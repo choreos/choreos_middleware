@@ -4,14 +4,14 @@ import org.jclouds.compute.RunNodesException;
 
 import br.usp.ime.ccsl.choreos.storagefactory.datatypes.StorageNode;
 import br.usp.ime.ccsl.choreos.storagefactory.datatypes.StorageNodeSpec;
-import br.usp.ime.choreos.nodepoolmanager.Infrastructure;
 import br.usp.ime.choreos.nodepoolmanager.Node;
+import br.usp.ime.choreos.nodepoolmanager.cloudprovider.CloudProvider;
 
 public class StorageNodeManager {
-	private Infrastructure infrastructure;
+	private CloudProvider infrastructure;
 	public StorageNodeRegistryFacade registry;
 
-	public StorageNodeManager(Infrastructure infrastructure) {
+	public StorageNodeManager(CloudProvider infrastructure) {
 		this.infrastructure = infrastructure;
 		this.registry = new StorageNodeRegistryFacade();
 	}
