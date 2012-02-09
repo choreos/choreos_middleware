@@ -16,7 +16,7 @@ import br.usp.ime.choreos.nodepoolmanager.NodeNotFoundException;
  */
 public class FixedCloudProvider implements CloudProvider {
 
-	private String NODE_IP = "192.168.0.1";
+	private String NODE_IP = "192.168.56.101";
 	private String NODE_ID = "1";
 	private Node node;
 	
