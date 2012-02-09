@@ -7,13 +7,16 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import br.usp.ime.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
+import br.usp.ime.choreos.nodepoolmanager.cloudprovider.CloudProvider;
+
 @Path("/nodes/{node_id:.+}")
 public class NodeResource {
 
     @GET
     public Response getNode(@PathParam("node_id") String id) {
         Response response;
-        Infrastructure infrastructure = new Infrastructure();
+        CloudProvider infrastructure = new AWSCloudProvider();
 
         try {
             Node node = infrastructure.getNode(id);
@@ -27,7 +30,7 @@ public class NodeResource {
 
     @DELETE
     public Response deleteNode(@PathParam("node_id") String id) {
-        Infrastructure infrastructure = new Infrastructure();
+    	CloudProvider infrastructure = new AWSCloudProvider();
         infrastructure.destroyNode(id);
 
         return Response.status(Status.OK).build();

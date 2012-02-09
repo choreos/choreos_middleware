@@ -15,31 +15,28 @@ import javax.ws.rs.core.UriInfo;
 
 import org.jclouds.compute.RunNodesException;
 
+import br.usp.ime.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
+import br.usp.ime.choreos.nodepoolmanager.cloudprovider.CloudProvider;
+
 @Path("/nodes")
 public class NodesResource {
 
-    public static final List<Node> nodes = new ArrayList<Node>();
-
-    private final Infrastructure infrastructure = new Infrastructure();
-
+    
+    private Controller controller = new Controller();
+    
     @GET
     public List<Node> getNodes() {
-        return infrastructure.getNodes();
+        return controller.getNodes();
     }
 
     @POST
     public Response createNode(Node node, @Context UriInfo uriInfo) throws URISyntaxException {
         Response response;
 
-        try {
-            infrastructure.createNode(node);
-            nodes.add(node);
-            UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-            uriBuilder.path(NodeResource.class);
-            response = Response.created(uriBuilder.build(node.getId())).build();
-        } catch (RunNodesException e) {
-            response = Response.status(Status.INTERNAL_SERVER_ERROR).build();
-        }
+    	String nodeId = controller.createNode(node);
+        UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+        uriBuilder.path(NodeResource.class);
+        response = Response.created(uriBuilder.build(nodeId)).build();
 
         return response;
     }

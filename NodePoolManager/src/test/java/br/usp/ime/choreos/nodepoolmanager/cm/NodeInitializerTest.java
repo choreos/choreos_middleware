@@ -8,13 +8,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import br.usp.ime.choreos.nodepoolmanager.Configuration;
-import br.usp.ime.choreos.nodepoolmanager.Infrastructure;
 import br.usp.ime.choreos.nodepoolmanager.Node;
-import br.usp.ime.choreos.nodepoolmanager.configmanager.NodeInitializer;
+import br.usp.ime.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
 import br.usp.ime.choreos.nodepoolmanager.utils.SshUtil;
 
 public class NodeInitializerTest {
-    private final static Infrastructure infra = new Infrastructure();
+    private final static AWSCloudProvider infra = new AWSCloudProvider();
     private static Node node = new Node();
 
     @BeforeClass

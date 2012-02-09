@@ -7,13 +7,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import br.usp.ime.choreos.nodepoolmanager.Configuration;
-import br.usp.ime.choreos.nodepoolmanager.Infrastructure;
 import br.usp.ime.choreos.nodepoolmanager.Node;
+import br.usp.ime.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
 
 import com.jcraft.jsch.JSchException;
 
 public class SshUtilTest {
-    private final static Infrastructure infra = new Infrastructure();
+    private final static AWSCloudProvider infra = new AWSCloudProvider();
 
     private static Node node = new Node();
 
