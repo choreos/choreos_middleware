@@ -34,6 +34,9 @@ import br.usp.ime.choreos.nodepoolmanager.utils.SshUtil;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.inject.Module;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 
 public class AWSCloudProvider implements CloudProvider {
 
