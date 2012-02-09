@@ -1,6 +1,5 @@
 package br.usp.ime.choreos.nodepoolmanager.cloudprovider;
 
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,15 +27,10 @@ import org.jclouds.ec2.domain.InstanceType;
 import br.usp.ime.choreos.nodepoolmanager.Configuration;
 import br.usp.ime.choreos.nodepoolmanager.Node;
 import br.usp.ime.choreos.nodepoolmanager.NodeNotFoundException;
-import br.usp.ime.choreos.nodepoolmanager.cm.NodeInitializer;
-import br.usp.ime.choreos.nodepoolmanager.utils.SshUtil;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.inject.Module;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
 
 public class AWSCloudProvider implements CloudProvider {
 

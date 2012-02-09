@@ -6,7 +6,7 @@ import org.jclouds.compute.RunNodesException;
 
 import br.usp.ime.choreos.nodepoolmanager.cloudprovider.CloudProvider;
 import br.usp.ime.choreos.nodepoolmanager.cloudprovider.FixedCloudProvider;
-import br.usp.ime.choreos.nodepoolmanager.cm.NodeInitializer;
+import br.usp.ime.choreos.nodepoolmanager.configmanager.NodeInitializer;
 import br.usp.ime.choreos.nodepoolmanager.utils.SshUtil;
 
 public class Controller {
