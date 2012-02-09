@@ -15,12 +15,15 @@ import javax.ws.rs.core.UriInfo;
 
 import org.jclouds.compute.RunNodesException;
 
+import br.usp.ime.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
+import br.usp.ime.choreos.nodepoolmanager.cloudprovider.CloudProvider;
+
 @Path("/nodes")
 public class NodesResource {
 
     public static final List<Node> nodes = new ArrayList<Node>();
 
-    private final Infrastructure infrastructure = new Infrastructure();
+    private final CloudProvider infrastructure = new AWSCloudProvider();
 
     @GET
     public List<Node> getNodes() {

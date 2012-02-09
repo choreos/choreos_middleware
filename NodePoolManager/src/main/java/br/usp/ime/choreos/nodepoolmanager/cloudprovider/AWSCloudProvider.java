@@ -1,4 +1,4 @@
-package br.usp.ime.choreos.nodepoolmanager;
+package br.usp.ime.choreos.nodepoolmanager.cloudprovider;
 
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
@@ -25,6 +25,9 @@ import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.ec2.domain.InstanceType;
 
+import br.usp.ime.choreos.nodepoolmanager.Configuration;
+import br.usp.ime.choreos.nodepoolmanager.Node;
+import br.usp.ime.choreos.nodepoolmanager.NodeNotFoundException;
 import br.usp.ime.choreos.nodepoolmanager.cm.NodeInitializer;
 import br.usp.ime.choreos.nodepoolmanager.utils.SshUtil;
 
@@ -32,7 +35,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.inject.Module;
 
-public class Infrastructure {
+public class AWSCloudProvider implements CloudProvider {
 
     private ComputeService getClient(String imageId) {
         String provider = Configuration.get("DEFAULT_PROVIDER");

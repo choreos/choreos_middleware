@@ -8,6 +8,8 @@ import org.jclouds.compute.RunNodesException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
+import br.usp.ime.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
+
 public class BaseTest {
     protected static final WebClient client = WebClient.create("http://localhost:8080/");
     protected static Node sampleNode;
@@ -32,7 +34,7 @@ public class BaseTest {
         sampleNode = new Node();
         sampleNode.setImage("1");
 
-        Infrastructure infrastructure = new Infrastructure();
+        AWSCloudProvider infrastructure = new AWSCloudProvider();
         infrastructure.createNode(sampleNode);
     }
 
