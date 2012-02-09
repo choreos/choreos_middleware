@@ -35,7 +35,7 @@ public class FixedCloudProvider implements CloudProvider {
 	
 	public Node createNode(Node node) throws RunNodesException {
 
-		return node;
+		return this.node;
 	}
 
 	public Node getNode(String nodeId) throws NodeNotFoundException {
