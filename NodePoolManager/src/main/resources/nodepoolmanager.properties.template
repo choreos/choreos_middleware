@@ -4,3 +4,7 @@ AMAZON_KEY_PAIR=my_amazon_key_pair_name
 AMAZON_SSH_IDENTITY=/home/user/.ssh/amazon.pem
 SSH_KNOWN_HOSTS=/home/user/.ssh/known_hosts
 CHEF_KEY_FILE=/home/user/chef/organization.pem
+CHEF_USER=leofl
+CHEF_USER_KEY_FILE=/home/user/chef/leofl.pem
+CHEF_SERVER_URL=https://api.opscode.com/organizations/usp
+VALIDATION_CLIENT_NAME=usp-validator

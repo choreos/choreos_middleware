@@ -10,6 +10,7 @@ import org.junit.Test;
 import br.usp.ime.choreos.nodepoolmanager.Configuration;
 import br.usp.ime.choreos.nodepoolmanager.Infrastructure;
 import br.usp.ime.choreos.nodepoolmanager.Node;
+import br.usp.ime.choreos.nodepoolmanager.configmanager.NodeInitializer;
 import br.usp.ime.choreos.nodepoolmanager.utils.SshUtil;
 
 public class NodeInitializerTest {

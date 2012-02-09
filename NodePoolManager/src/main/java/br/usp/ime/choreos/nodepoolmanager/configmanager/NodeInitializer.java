@@ -1,4 +1,6 @@
-package br.usp.ime.choreos.nodepoolmanager.cm;
+package br.usp.ime.choreos.nodepoolmanager.configmanager;
+
+import java.io.IOException;
 
 import br.usp.ime.choreos.nodepoolmanager.Configuration;
 import br.usp.ime.choreos.nodepoolmanager.utils.ScriptsProvider;
@@ -26,10 +28,15 @@ public class NodeInitializer {
     public void initialize() throws Exception {
         System.out.println("Initializing node with chef");
 
-        String command = new ScriptsProvider().getChefStartupScript(Configuration.get("CHEF_ORGANIZATION_KEY_FILE"));
+        String command = new ScriptsProvider().getChefBootstrapScript(Configuration.get("CHEF_ORGANIZATION_KEY_FILE"));
         new SshUtil(hostname).runCommand(command);
-        /* String output = new SshUtil(hostname).runCommand(command);
-        System.out.println(output); */
+        installPetals();
     }
 
+	private void installPetals() throws IOException, Exception {
+		String command;
+		command = new ScriptsProvider().getChefServerManagerScript(hostname);
+        Runtime.getRuntime().exec(command);
+        new NodeConfigurationManager(hostname).updateNodeConfiguration();
+	}
 }

@@ -26,8 +26,8 @@ rm /tmp/validation.pem
 cat <<'EOP'
 log_level        :info
 log_location     STDOUT
-chef_server_url  "https://api.opscode.com/organizations/usp"
-validation_client_name "usp-validator"
+chef_server_url  "$chefserver"
+validation_client_name "$validator"
 # Using default node name (fqdn)
 
 EOP
@@ -35,7 +35,7 @@ EOP
 
 (
 cat <<'EOP'
-{"run_list":["role[petals]"]}
+//{"run_list":["role[petals]"]}
 EOP
 ) > /etc/chef/first-boot.json
 
