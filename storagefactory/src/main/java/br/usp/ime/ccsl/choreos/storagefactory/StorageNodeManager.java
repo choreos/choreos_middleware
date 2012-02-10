@@ -1,11 +1,17 @@
 package br.usp.ime.ccsl.choreos.storagefactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+
+import org.apache.commons.io.FileUtils;
 import org.jclouds.compute.RunNodesException;
 
 import br.usp.ime.ccsl.choreos.storagefactory.datatypes.StorageNode;
 import br.usp.ime.ccsl.choreos.storagefactory.datatypes.StorageNodeSpec;
 import br.usp.ime.choreos.nodepoolmanager.Node;
 import br.usp.ime.choreos.nodepoolmanager.cloudprovider.CloudProvider;
+import br.usp.ime.choreos.nodepoolmanager.utils.SshUtil;
 
 public class StorageNodeManager {
 	private CloudProvider infrastructure;
@@ -16,17 +22,12 @@ public class StorageNodeManager {
 		this.registry = new StorageNodeRegistryFacade();
 	}
 
-	public StorageNode createNode(StorageNodeSpec nodeSpec) throws Exception {
-		Node infraNode = createInfrastructureNode();
-
-		// Use NodePoolManager for creating a node
-		// Wrap with a storage node
+	public StorageNode registerNewStorageNode(StorageNodeSpec nodeSpec, Node infraNode) throws Exception {
 
 		StorageNode storageNode = new StorageNode();
+
 		storageNode.setStorageNodeSpecs(nodeSpec);
 		storageNode.setNode(infraNode);
-
-		setupStorageNode(storageNode);
 
 		registry.registerNode(storageNode);
 
@@ -34,7 +35,7 @@ public class StorageNodeManager {
 		return storageNode;
 	}
 
-	private Node createInfrastructureNode() throws RunNodesException {
+	public Node createInfrastructureNode() throws RunNodesException {
 		Node infraNode;
 
 		// interact with the node pool manager instance
@@ -49,15 +50,33 @@ public class StorageNodeManager {
 
 		// create a node according to features required
 		return infrastructure.createNode(infraNode);
-		// return infraNode;
 	}
 
-	private void setupStorageNode(StorageNode storageNode) {
-		// Invoke Configuration Manager to add appropriate recipe to the infra
-		// node
+	public String setupStorageNode(StorageNode storageNode) throws Exception {
+		SshUtil sshConnection = new SshUtil(storageNode.getNode().getHostname());
+		
+		String commandOutput = issueSshMySqlDeployerCommand(sshConnection);
+		
+		return commandOutput;
+	}
 
-		//
+	public String issueSshMySqlDeployerCommand(SshUtil sshConnection)
+			throws Exception, IOException {
+		int tries = 10;
+		
+		while(!sshConnection.isAccessible()){
+			tries--;
+			if (tries == 0) throw new Exception("[Storage Node Manager] Could not create a new storage node");
+		}
+		
+		
+		URL scriptFile = ClassLoader.getSystemResource("chef/mysql_deploy.sh");
+		String command = FileUtils.readFileToString(new File(scriptFile.getFile()));
 
+		String commandOutput;
+		commandOutput = sshConnection.runCommand(command);
+		
+		return commandOutput;
 	}
 
 	// TODO: Create and define the thrown exception

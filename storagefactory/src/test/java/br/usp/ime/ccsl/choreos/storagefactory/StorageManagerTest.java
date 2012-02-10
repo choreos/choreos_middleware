@@ -1,12 +1,12 @@
 package br.usp.ime.ccsl.choreos.storagefactory;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.jclouds.compute.RunNodesException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,122 +14,121 @@ import br.usp.ime.ccsl.choreos.storagefactory.datatypes.StorageNode;
 import br.usp.ime.ccsl.choreos.storagefactory.datatypes.StorageNodeSpec;
 import br.usp.ime.choreos.nodepoolmanager.Node;
 import br.usp.ime.choreos.nodepoolmanager.cloudprovider.CloudProvider;
+import br.usp.ime.choreos.nodepoolmanager.utils.SshUtil;
 
 public class StorageManagerTest {
+	protected static StorageNodeManager storageManager;
 	protected static StorageNode sampleStorageNode;
-	protected static Node node;
-
-	protected StorageNodeManager storageNodeManager;
+	protected Node infraNode = new Node();
+	protected StorageNodeSpec spec1 = new StorageNodeSpec();
+	protected StorageNodeSpec spec2 = new StorageNodeSpec();
+	protected SshUtil connection;
 
 	private CloudProvider infrastructure;
 
 	@Before
-	public void setUp() throws RunNodesException {
-		// this.node = mock(Node.class);
+	public void setUp() throws Exception {
+		String parm;
+		
 		this.infrastructure = mock(CloudProvider.class);
 		when(infrastructure.createNode((Node) anyObject())).thenReturn(
-				new Node());
+				infraNode);
+		
+		this.connection = mock(SshUtil.class);
+		when(connection.runCommand("knife node run_list add $hostname 'mysql::server' -k $userkeyfile -s $chefserverurl -u $chefuser"+'\n')).thenReturn("OK");
+		when(connection.isAccessible()).thenReturn(true);
 
-		this.storageNodeManager = new StorageNodeManager(this.infrastructure);
+		storageManager = new StorageNodeManager(this.infrastructure);
+		
+		spec1.setStorageId(new Long(1));
+		spec1.setStorageType("mysql");
+		
+		spec2.setStorageId(new Long(2));
+		spec2.setStorageType("mysql");
+
+		infraNode.setHostname("localhost");
 	}
 
 	@Test
-	public void shouldCreateStorageNode() throws Exception {
-		StorageNodeSpec spec = new StorageNodeSpec();
-		spec.setStorageId(new Long(1));
-		spec.setStorageType("mysql");
+	public void shouldCreateAndStoreNodeDescription() throws Exception {
+		StorageNode instantiatedNode = storageManager.registerNewStorageNode(spec1, infraNode);
 
-		StorageNode instantiatedNode = this.storageNodeManager.createNode(spec);
-
-		assertEquals(spec.getStorageId(), instantiatedNode
+		assertEquals(spec1.getStorageId(), instantiatedNode
 				.getStorageNodeSpecs().getStorageId());
-		assertEquals(spec.getStorageType(), instantiatedNode
+		assertEquals(spec1.getStorageType(), instantiatedNode
 				.getStorageNodeSpecs().getStorageType());
 	}
 
 	@Test
 	public void shouldGetAnStorageNodeByItsID() throws Exception {
 
-		StorageNodeSpec spec1 = new StorageNodeSpec();
-		spec1.setStorageId(new Long(1));
-		spec1.setStorageType("mysql");
+		storageManager.registerNewStorageNode(spec1, infraNode);
+		storageManager.registerNewStorageNode(spec2, infraNode);
 
-		this.storageNodeManager.createNode(spec1);
-
-		StorageNodeSpec spec2 = new StorageNodeSpec();
-		spec2.setStorageId(new Long(2));
-		spec2.setStorageType("mysql");
-
-		this.storageNodeManager.createNode(spec2);
-
-		assertSame(spec2, this.storageNodeManager.registry.getNode(new Long(2))
+		assertSame(spec2, storageManager.registry.getNode(new Long(2))
 				.getStorageNodeSpecs());
-		assertSame(spec1, this.storageNodeManager.registry.getNode(new Long(1))
+		assertSame(spec1, storageManager.registry.getNode(new Long(1))
 				.getStorageNodeSpecs());
 	}
 
 	@Test
 	public void shouldGetAllStorageNodes() throws Exception {
-		StorageNodeSpec spec1 = new StorageNodeSpec();
-		spec1.setStorageId(new Long(1));
-		spec1.setStorageType("mysql");
 
-		this.storageNodeManager.createNode(spec1);
+		storageManager.registerNewStorageNode(spec1, infraNode);
+		storageManager.registerNewStorageNode(spec2, infraNode);
 
-		StorageNodeSpec spec2 = new StorageNodeSpec();
-		spec2.setStorageId(new Long(2));
-		spec2.setStorageType("mysql");
-
-		this.storageNodeManager.createNode(spec2);
-
-		assertEquals(2, storageNodeManager.registry.getNodes().size());
+		assertEquals(2, storageManager.registry.getNodes().size());
 	}
 
 	@Test
 	public void shouldAddRemoveAndKeepCountOfNodes() throws Exception {
-		StorageNodeSpec spec1 = new StorageNodeSpec();
-		spec1.setStorageId(new Long(1));
-		spec1.setStorageType("mysql");
+		storageManager.registerNewStorageNode(spec1, infraNode);
+		assertEquals(1, storageManager.registry.getNodes().size());
 
-		this.storageNodeManager.createNode(spec1);
+		storageManager.registerNewStorageNode(spec2, infraNode);
+		assertEquals(2, storageManager.registry.getNodes().size());
 
-		assertEquals(1, storageNodeManager.registry.getNodes().size());
+		storageManager.destroyNode(new Long(2));
+		assertEquals(1, storageManager.registry.getNodes().size());
 
-		StorageNodeSpec spec2 = new StorageNodeSpec();
-		spec2.setStorageId(new Long(2));
-		spec2.setStorageType("mysql");
-
-		this.storageNodeManager.createNode(spec2);
-
-		assertEquals(2, storageNodeManager.registry.getNodes().size());
-
-		this.storageNodeManager.destroyNode(new Long(2));
-
-		assertEquals(1, storageNodeManager.registry.getNodes().size());
-
-		this.storageNodeManager.destroyNode(new Long(1));
-
-		assertEquals(0, storageNodeManager.registry.getNodes().size());
+		storageManager.destroyNode(new Long(1));
+		assertEquals(0, storageManager.registry.getNodes().size());
 	}
 
 	@Test
 	public void shouldAddAndRemoveSingleNode() throws Exception {
 
-		assertEquals(0, storageNodeManager.registry.getNodes().size());
+		assertEquals(0, storageManager.registry.getNodes().size());
 
-		StorageNodeSpec spec1 = new StorageNodeSpec();
-		spec1.setStorageId(new Long(1));
-		spec1.setStorageType("mysql");
-
-		this.storageNodeManager.createNode(spec1);
-
-		assertEquals(1, storageNodeManager.registry.getNodes().size());
-		assertSame(spec1, storageNodeManager.registry.getNode(new Long(1))
+		storageManager.registerNewStorageNode(spec1, infraNode);
+		assertEquals(1, storageManager.registry.getNodes().size());
+		assertSame(spec1, storageManager.registry.getNode(new Long(1))
 				.getStorageNodeSpecs());
 
-		storageNodeManager.destroyNode(new Long(1));
+		storageManager.destroyNode(new Long(1));
 
-		assertEquals(0, storageNodeManager.registry.getNodes().size());
+		assertEquals(0, storageManager.registry.getNodes().size());
 
 	}
+	
+	@Test
+	public void shouldGetNodeFromNodePoolManager() throws Exception {
+		Node infra = storageManager.createInfrastructureNode();
+		assertNotNull("NodePoolManager returned null pointer", infra);
+	}
+	
+	@Test
+	public void shouldInstallMySqlOnNode() throws Exception {
+		StorageNode storageNode = new StorageNode();
+		
+		storageNode.setNode(storageManager.createInfrastructureNode());
+		StorageNodeSpec storageNodeSpecs = new StorageNodeSpec();
+		storageNode.setStorageNodeSpecs(storageNodeSpecs );
+		
+		String commandReturn = storageManager.issueSshMySqlDeployerCommand(connection);
+		
+		assertEquals("OK", commandReturn);
+		
+	}
+	
 }
