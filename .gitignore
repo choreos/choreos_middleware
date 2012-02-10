@@ -17,3 +17,4 @@
 src/generated/
 src/generated/server/java/*
 target/
+FixedCloudProviderTest.java
