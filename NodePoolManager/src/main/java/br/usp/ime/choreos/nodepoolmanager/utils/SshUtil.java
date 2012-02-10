@@ -23,6 +23,7 @@ public class SshUtil {
         	Session session = getSshSession();
         	session.connect(5000);
         } catch (JSchException e) {
+        	System.out.println(e.getMessage());
             return false;
         }
         return true;
@@ -50,13 +51,14 @@ public class SshUtil {
     }
 
 	private Session getSshSession() throws JSchException {
-		String user = "ubuntu";
+		String user = "choreos";
 
         JSch jsch = new JSch();
         jsch.addIdentity(Configuration.get("PRIVATE_SSH_KEY"));
-        // jsch.setKnownHosts(Configuration.get("SSH_KNOWN_HOSTS"));
+        // 
         Session session = jsch.getSession(user, hostname);
         session.setConfig("StrictHostKeyChecking", "no");
+        
 		return session;
 	}
 

@@ -17,7 +17,7 @@ public class ScriptsProvider {
         String pkey = FileUtils.readFileToString(new File(keyFileName));
 
         command = command.replace("$pkey", pkey);
-        command = command.replace("$chefserver", Configuration.get("CHEF_SERVER"));
+        command = command.replace("$chefserver", Configuration.get("CHEF_SERVER_URL"));
         return command.replace("$validator", Configuration.get("VALIDATION_CLIENT_NAME"));
     }
 
@@ -32,7 +32,8 @@ public class ScriptsProvider {
     	command = command.replace("$userkeyfile", user_key_file);
     	command = command.replace("$chefserverurl", chef_server_url);
     	command = command.replace("$hostname", hostname);
-    	command = command.replace("$role", "petals");
+    	command = command.replace("$recipe", "default");
+    	command = command.replace("$cookbook", "petals");
     	return command.replace("$chefuser", user);
     }
 }
