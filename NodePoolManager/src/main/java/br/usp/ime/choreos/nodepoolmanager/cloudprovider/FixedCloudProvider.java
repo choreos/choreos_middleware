@@ -26,7 +26,7 @@ public class FixedCloudProvider implements CloudProvider {
 		node.setIp(NODE_IP);
 		node.setId(NODE_ID);
 		node.setCpus(1);
-		node.setHostname("choreos");
+		node.setHostname("choreos-node");
 		node.setRam(512);
 		node.setSo("Ubuntu server 11.10");
 		node.setStorage(10000);

@@ -21,7 +21,7 @@ public class NodeInitializer {
     public boolean isInitialized() throws Exception {
         String returnText = "";
         returnText = new SshUtil(hostname).runCommand("ls /opt");
-        System.out.println(returnText);
+        System.out.println(">>"+returnText+"<<");
         return !returnText.equals("");
     }
 
@@ -36,6 +36,7 @@ public class NodeInitializer {
 	private void installPetals() throws IOException, Exception {
 		String command;
 		command = new ScriptsProvider().getChefServerManagerScript(hostname);
+		System.out.println(command);
         Runtime.getRuntime().exec(command);
         new NodeConfigurationManager(hostname).updateNodeConfiguration();
 	}
