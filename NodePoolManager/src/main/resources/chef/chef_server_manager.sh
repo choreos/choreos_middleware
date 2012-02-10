@@ -1,1 +1,1 @@
-knife -k $userkeyfile -s $chefserverurl -u $chefuser node run_list add $hostname "role[$role]"	
+knife node run_list add $hostname 'recipe[$cookbook::$recipe]' -k $userkeyfile -s $chefserverurl -u $chefuser
