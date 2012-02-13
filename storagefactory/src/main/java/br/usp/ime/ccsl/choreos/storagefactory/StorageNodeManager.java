@@ -9,6 +9,7 @@ import org.jclouds.compute.RunNodesException;
 
 import br.usp.ime.ccsl.choreos.storagefactory.datatypes.StorageNode;
 import br.usp.ime.ccsl.choreos.storagefactory.datatypes.StorageNodeSpec;
+import br.usp.ime.choreos.nodepoolmanager.Configuration;
 import br.usp.ime.choreos.nodepoolmanager.Node;
 import br.usp.ime.choreos.nodepoolmanager.cloudprovider.CloudProvider;
 import br.usp.ime.choreos.nodepoolmanager.utils.SshUtil;
@@ -55,12 +56,12 @@ public class StorageNodeManager {
 	public String setupStorageNode(StorageNode storageNode) throws Exception {
 		SshUtil sshConnection = new SshUtil(storageNode.getNode().getHostname());
 		
-		String commandOutput = issueSshMySqlDeployerCommand(sshConnection);
+		String commandOutput = issueSshMySqlDeployerCommand(sshConnection, storageNode);
 		
 		return commandOutput;
 	}
 
-	public String issueSshMySqlDeployerCommand(SshUtil sshConnection)
+	public String issueSshMySqlDeployerCommand(SshUtil sshConnection, StorageNode storage)
 			throws Exception, IOException {
 		int tries = 10;
 		
@@ -69,16 +70,29 @@ public class StorageNodeManager {
 			if (tries == 0) throw new Exception("[Storage Node Manager] Could not create a new storage node");
 		}
 		
-		
-		URL scriptFile = ClassLoader.getSystemResource("chef/mysql_deploy.sh");
-		String command = FileUtils.readFileToString(new File(scriptFile.getFile()));
-
 		String commandOutput;
+		String command = getMySqlServerManagerScript(storage.getNode().getHostname());
+		System.out.println(command);
 		commandOutput = sshConnection.runCommand(command);
 		
 		return commandOutput;
 	}
 
+	public String getMySqlServerManagerScript(String hostname) throws IOException {
+    	URL scriptFile = ClassLoader.getSystemResource("chef/mysql_deploy.sh");
+    	String command = FileUtils.readFileToString(new File(scriptFile.getFile()));
+
+    	String user = Configuration.get("CHEF_USER");
+    	String user_key_file = Configuration.get("CHEF_USER_KEY_FILE");
+    	String chef_server_url = Configuration.get("CHEF_SERVER_URL");
+
+    	command = command.replace("$userkeyfile", user_key_file);
+    	command = command.replace("$chefserverurl", chef_server_url);
+    	command = command.replace("$hostname", hostname);
+    	command = command.replace("$recipe", "default");
+    	command = command.replace("$cookbook", "petals");
+    	return command.replace("$chefuser", user);
+    }
 	// TODO: Create and define the thrown exception
 
 	public void destroyNode(Long storageNodeId) {

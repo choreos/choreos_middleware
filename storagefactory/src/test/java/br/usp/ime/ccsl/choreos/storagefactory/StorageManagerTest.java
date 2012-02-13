@@ -125,7 +125,7 @@ public class StorageManagerTest {
 		StorageNodeSpec storageNodeSpecs = new StorageNodeSpec();
 		storageNode.setStorageNodeSpecs(storageNodeSpecs );
 		
-		String commandReturn = storageManager.issueSshMySqlDeployerCommand(connection);
+		String commandReturn = storageManager.issueSshMySqlDeployerCommand(connection, storageNode);
 		
 		assertEquals("OK", commandReturn);
 		
