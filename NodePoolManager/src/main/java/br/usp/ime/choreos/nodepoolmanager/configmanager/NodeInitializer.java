@@ -25,19 +25,21 @@ public class NodeInitializer {
         return !returnText.equals("");
     }
 
-    public void initialize() throws Exception {
+    public String initialize() throws Exception {
         System.out.println("Initializing node with chef");
 
         String command = new ScriptsProvider().getChefBootstrapScript(Configuration.get("CHEF_ORGANIZATION_KEY_FILE"));
-        new SshUtil(hostname).runCommand(command);
-        installPetals();
+        //new SshUtil(hostname).runCommand(command);
+        Runtime.getRuntime().exec(command);
+        
+        return installPetals();
     }
 
-	private void installPetals() throws IOException, Exception {
+	private String installPetals() throws IOException, Exception {
 		String command;
 		command = new ScriptsProvider().getChefServerManagerScript(hostname);
 		System.out.println(command);
         Runtime.getRuntime().exec(command);
-        new NodeConfigurationManager(hostname).updateNodeConfiguration();
+        return new NodeConfigurationManager(hostname).updateNodeConfiguration();
 	}
 }

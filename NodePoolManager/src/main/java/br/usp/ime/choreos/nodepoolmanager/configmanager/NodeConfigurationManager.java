@@ -10,7 +10,7 @@ public class NodeConfigurationManager {
         this.hostname = hostname;
     }
 
-    public void updateNodeConfiguration() throws Exception {
-        new SshUtil(hostname).runCommand("chef-client\n");
+    public String updateNodeConfiguration() throws Exception {
+        return new SshUtil(hostname).runCommand("chef-client\n");
     }
 }

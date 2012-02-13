@@ -51,7 +51,7 @@ public class SshUtil {
     }
 
 	private Session getSshSession() throws JSchException {
-		String user = "choreos";
+		String user = "root";
 
         JSch jsch = new JSch();
         jsch.addIdentity(Configuration.get("PRIVATE_SSH_KEY"));
