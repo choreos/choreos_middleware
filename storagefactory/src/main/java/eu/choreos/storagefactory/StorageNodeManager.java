@@ -1,4 +1,4 @@
-package br.usp.ime.ccsl.choreos.storagefactory;
+package eu.choreos.storagefactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,9 +7,9 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import org.jclouds.compute.RunNodesException;
 
-import br.usp.ime.ccsl.choreos.storagefactory.datatypes.StorageNode;
-import br.usp.ime.ccsl.choreos.storagefactory.datatypes.StorageNodeSpec;
-import br.usp.ime.choreos.nodepoolmanager.Configuration;
+import eu.choreos.storagefactory.datamodel.StorageNode;
+import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
+
 import br.usp.ime.choreos.nodepoolmanager.Node;
 import br.usp.ime.choreos.nodepoolmanager.cloudprovider.CloudProvider;
 import br.usp.ime.choreos.nodepoolmanager.utils.SshUtil;

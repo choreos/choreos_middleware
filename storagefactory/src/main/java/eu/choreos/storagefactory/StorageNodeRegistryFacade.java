@@ -1,10 +1,11 @@
-package br.usp.ime.ccsl.choreos.storagefactory;
+package eu.choreos.storagefactory;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import br.usp.ime.ccsl.choreos.storagefactory.datatypes.StorageNode;
+import eu.choreos.storagefactory.datamodel.StorageNode;
+
 
 public class StorageNodeRegistryFacade {
 	public Map<Long, StorageNode> instantiatedStorages;
