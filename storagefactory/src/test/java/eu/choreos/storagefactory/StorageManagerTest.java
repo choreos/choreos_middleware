@@ -1,4 +1,4 @@
-package br.usp.ime.ccsl.choreos.storagefactory;
+package eu.choreos.storagefactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -10,8 +10,10 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.usp.ime.ccsl.choreos.storagefactory.datatypes.StorageNode;
-import br.usp.ime.ccsl.choreos.storagefactory.datatypes.StorageNodeSpec;
+import eu.choreos.storagefactory.StorageNodeManager;
+import eu.choreos.storagefactory.datamodel.StorageNode;
+import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
+
 import br.usp.ime.choreos.nodepoolmanager.Node;
 import br.usp.ime.choreos.nodepoolmanager.cloudprovider.CloudProvider;
 import br.usp.ime.choreos.nodepoolmanager.utils.SshUtil;
