@@ -8,22 +8,22 @@ import eu.choreos.storagefactory.datamodel.StorageNode;
 
 
 public class StorageNodeRegistryFacade {
-	public Map<Long, StorageNode> instantiatedStorages;
+	public Map<String, StorageNode> instantiatedStorages;
 
 	public StorageNodeRegistryFacade() {
-		instantiatedStorages = new HashMap<Long, StorageNode>();
+		instantiatedStorages = new HashMap<String, StorageNode>();
 	}
 
 	public void registerNode(StorageNode storageNode) {
-		instantiatedStorages.put(storageNode.getStorageNodeSpecs()
-				.getStorageId(), storageNode);
+		instantiatedStorages.put(storageNode.getStorageNodeSpec()
+				.getCorrelationID(), storageNode);
 	}
 
-	public void unregisterNode(Long storageNodeId) {
+	public void unregisterNode(String storageNodeId) {
 		instantiatedStorages.remove(storageNodeId);
 	}
 
-	public StorageNode getNode(Long nodeId) throws Exception {
+	public StorageNode getNode(String nodeId) throws Exception {
 		return instantiatedStorages.get(nodeId);
 	}
 

@@ -1,34 +1,31 @@
 package eu.choreos.storagefactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
-import org.apache.commons.io.FileUtils;
-import org.jclouds.compute.RunNodesException;
-
+import eu.choreos.storagefactory.datamodel.InfrastructureNodeData;
 import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
 
-import br.usp.ime.choreos.nodepoolmanager.Node;
-import br.usp.ime.choreos.nodepoolmanager.cloudprovider.CloudProvider;
-import br.usp.ime.choreos.nodepoolmanager.utils.SshUtil;
-
 public class StorageNodeManager {
-	private CloudProvider infrastructure;
 	public StorageNodeRegistryFacade registry;
-
-	public StorageNodeManager(CloudProvider infrastructure) {
-		this.infrastructure = infrastructure;
+	private NodePoolManagerHandler npm;
+	
+	public StorageNodeManager() {
 		this.registry = new StorageNodeRegistryFacade();
+		this.setNodePoolManagerHandler(new NodePoolManagerHandler());
 	}
 
-	public StorageNode registerNewStorageNode(StorageNodeSpec nodeSpec, Node infraNode) throws Exception {
+	public NodePoolManagerHandler getNodePoolManagerHandler() {
+		return npm;
+	}
+
+	public void setNodePoolManagerHandler(NodePoolManagerHandler npm) {
+		this.npm = npm;
+	}
+
+	public StorageNode registerNewStorageNode(StorageNodeSpec nodeSpec, InfrastructureNodeData infraNode) {
 
 		StorageNode storageNode = new StorageNode();
 
-		storageNode.setStorageNodeSpecs(nodeSpec);
-		storageNode.setNode(infraNode);
+		storageNode.setStorageNodeSpec(nodeSpec);
 
 		registry.registerNode(storageNode);
 
@@ -36,31 +33,35 @@ public class StorageNodeManager {
 		return storageNode;
 	}
 
-	public Node createInfrastructureNode() throws RunNodesException {
-		Node infraNode;
+	public InfrastructureNodeData createInfrastructureNode(){
+		InfrastructureNodeData infraNode = new InfrastructureNodeData();
 
 		// interact with the node pool manager instance
-		System.out.println("Creating storage node...");
+		System.out.println("Creating storage node Infrastructure Data...");
 
 		// set the node specs for the new storage node
-		infraNode = createSampleNode();
 		infraNode.setCpus(1);
 		infraNode.setRam(1024);
 		infraNode.setSo("linux");
 		infraNode.setStorage(10000);
 
 		// create a node according to features required
-		return infrastructure.createNode(infraNode);
+		getNodePoolManagerHandler().createNode(infraNode);
+		
+		//Return the data on the created node
+		return infraNode;
 	}
 
+	/*
 	public String setupStorageNode(StorageNode storageNode) throws Exception {
 		SshUtil sshConnection = new SshUtil(storageNode.getNode().getHostname());
 		
 		String commandOutput = issueSshMySqlDeployerCommand(sshConnection, storageNode);
 		
 		return commandOutput;
-	}
+	}*/
 
+	/*
 	public String issueSshMySqlDeployerCommand(SshUtil sshConnection, StorageNode storage)
 			throws Exception, IOException {
 		int tries = 10;
@@ -76,8 +77,9 @@ public class StorageNodeManager {
 		commandOutput = sshConnection.runCommand(command);
 		
 		return commandOutput;
-	}
+	}*/
 
+	/*
 	public String getMySqlServerManagerScript(String hostname) throws IOException {
     	URL scriptFile = ClassLoader.getSystemResource("chef/mysql_deploy.sh");
     	String command = FileUtils.readFileToString(new File(scriptFile.getFile()));
@@ -93,31 +95,35 @@ public class StorageNodeManager {
     	command = command.replace("$cookbook", "petals");
     	return command.replace("$chefuser", user);
     }
+    */
 	// TODO: Create and define the thrown exception
 
-	public void destroyNode(Long storageNodeId) {
+	public void destroyNode(String storageNodeId) {
 		StorageNode storageNode;
 
 		try {
 			storageNode = registry.getNode(storageNodeId);
 
-			String infrastructureNodeID = storageNode.getNode().getId();
-			infrastructure.destroyNode(infrastructureNodeID);
+			String id = storageNode.getStorageNodeSpec().getCorrelationID();
+			
+			getNodePoolManagerHandler().destroyNode(id);
 
 			registry.unregisterNode(storageNodeId);
 
 		} catch (Exception e) {
 			System.out
-					.println("[Storage Manager] Error: Could not find node with ID "
-							+ storageNodeId.intValue());
+					.println("[Storage Manager] Error: Could not find node with ID >"
+							+ storageNodeId + "<");
 			e.printStackTrace();
 		}
 	}
 
+	/*
 	private Node createSampleNode() throws RunNodesException {
 		Node sampleNode = new Node();
 		sampleNode.setImage("1");
 
 		return infrastructure.createNode(sampleNode);
 	}
+	*/
 }
