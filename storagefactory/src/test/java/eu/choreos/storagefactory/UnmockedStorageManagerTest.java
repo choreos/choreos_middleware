@@ -22,8 +22,6 @@ public class UnmockedStorageManagerTest {
 	protected static StorageNodeSpec spec2 = new StorageNodeSpec();
 	protected static SshUtil connection;
 
-	private static CloudProvider infrastructure;
-
 	@BeforeClass
 	public static void initialSetUp() throws Exception {
 		System.out.println(new SshUtil("localhost").runCommand("knife node run_list remove choreos-node 'recipe[mysql::server]' -s http://aguia1.ime.usp.br:4000"));
@@ -32,8 +30,6 @@ public class UnmockedStorageManagerTest {
 		connection = new SshUtil("choreos-node");
 
 		System.out.println(connection.runCommand("sudo apt-get remove --purge mysql-server mysql-client-core-5.1 mysql-server-5.1 mysql-server -y"));
-		
-		infrastructure = new FixedCloudProvider();
 		
 		spec1.setCorrelationID("1");
 		spec1.setType("mysql");
