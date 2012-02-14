@@ -2,6 +2,9 @@ package eu.choreos.storagefactory;
 
 import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
+import eu.choreos.storagefactory.recipe.Recipe;
+import eu.choreos.storagefactory.recipe.RecipeDeployer;
+import eu.choreos.storagefactory.recipe.RecipeFactory;
 
 public class StorageNodeManager {
 	public StorageNodeRegistryFacade registry;
@@ -32,7 +35,14 @@ public class StorageNodeManager {
 		return storageNode;
 	}
 
-	
+	public void prepareForDeployment(StorageNodeSpec nodeSpec){
+		RecipeFactory factory = new RecipeFactory();
+		RecipeDeployer deployer = new RecipeDeployer(npm);
+		
+		Recipe recipe = factory.createRecipe();
+		
+		deployer.deployRecipe(recipe);
+	}
 	public void destroyNode(String storageNodeId) {
 		StorageNode storageNode;
 

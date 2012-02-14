@@ -12,13 +12,13 @@ public class RecipeDeployer {
 		npm = nodePoolManager;
 	}
 
-	public String deployRecipe(String recipeName) {
-		uploadRecipe(recipeName);
-		String deployedNodeHostname = npm.createNode(recipeName);
+	public String deployRecipe(Recipe recipe) {
+		uploadRecipe(recipe);
+		String deployedNodeHostname = npm.createNode(recipe.getName());
 		return deployedNodeHostname;
 	}
 	
-	public static void uploadRecipe(String recipeName) {
-		CommandLineInterfaceHelper.runLocalCommand("knife cookbook upload " + recipeName);
+	private void uploadRecipe(Recipe recipe) {
+		CommandLineInterfaceHelper.runLocalCommand("knife cookbook upload " + recipe.getName() + " -o "+recipe.getFolder());
 	}
 }
