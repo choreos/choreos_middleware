@@ -20,8 +20,7 @@ public class StorageManagerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		String parm;
-		
+
 		storageManager = new StorageNodeManager();
 		
 		spec1.setCorrelationID("1");
