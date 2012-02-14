@@ -2,7 +2,6 @@ package eu.choreos.storagefactory;
 
 import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
-import eu.choreos.storagefactory.utils.CommandLineInterfaceHelper;
 
 public class StorageNodeManager {
 	public StorageNodeRegistryFacade registry;
