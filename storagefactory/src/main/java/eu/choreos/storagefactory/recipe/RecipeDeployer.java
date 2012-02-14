@@ -1,5 +1,6 @@
-package eu.choreos.storagefactory;
+package eu.choreos.storagefactory.recipe;
 
+import eu.choreos.storagefactory.NodePoolManagerHandler;
 import eu.choreos.storagefactory.utils.CommandLineInterfaceHelper;
 
 public class RecipeDeployer {
