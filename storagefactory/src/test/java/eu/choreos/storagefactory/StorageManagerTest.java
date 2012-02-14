@@ -76,7 +76,7 @@ public class StorageManagerTest {
 		assertEquals(1, storageManager.registry.getNodes().size());
 
 		storageManager.destroyNode("1");
-//		assertEquals(0, storageManager.registry.getNodes().size());
+		assertEquals(0, storageManager.registry.getNodes().size());
 	}
 
 	@Test
