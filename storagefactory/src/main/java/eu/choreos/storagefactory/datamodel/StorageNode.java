@@ -5,42 +5,59 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "storageNode")
 public class StorageNode {
 
-	private String id;
-	private Database database;
-	private StorageNodeSpec storageNodeSpec;
-	private InfrastructureNodeData infrastructureNodeData;
+	private String uuid;
+	private String type;
+	private String uri;
+	private String schema;
+	private String user;
+	private String password;
 
-	public String getId() {
-		return id;
+	public String getUuid() {
+		return uuid;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
-	public Database getDatabase() {
-		return database;
+	public String getType() {
+		return type;
 	}
 
-	public void setDatabase(Database database) {
-		this.database = database;
+	public void setType(String type) {
+		this.type = type;
 	}
 
-	public StorageNodeSpec getStorageNodeSpec() {
-		return storageNodeSpec;
+	public String getUri() {
+		return uri;
 	}
 
-	public void setStorageNodeSpec(StorageNodeSpec storageNodeSpecs) {
-		this.storageNodeSpec = storageNodeSpecs;
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 
-	public InfrastructureNodeData getInfrastructureNodeData() {
-		return infrastructureNodeData;
+	public String getSchema() {
+		return schema;
 	}
 
-	public void setInfrastructureNodeData(
-			InfrastructureNodeData infrastructureNodeData) {
-		this.infrastructureNodeData = infrastructureNodeData;
+	public void setSchema(String schema) {
+		this.schema = schema;
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	@Override
@@ -48,10 +65,12 @@ public class StorageNode {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((database == null) ? 0 : database.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result
-				+ ((storageNodeSpec == null) ? 0 : storageNodeSpec.hashCode());
+				+ ((password == null) ? 0 : password.hashCode());
+		result = prime * result + ((schema == null) ? 0 : schema.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
 		return result;
 	}
 
@@ -64,28 +83,44 @@ public class StorageNode {
 		if (getClass() != obj.getClass())
 			return false;
 		StorageNode other = (StorageNode) obj;
-		if (database == null) {
-			if (other.database != null)
+		if (password == null) {
+			if (other.password != null)
 				return false;
-		} else if (!database.equals(other.database))
+		} else if (!password.equals(other.password))
 			return false;
-		if (id == null) {
-			if (other.id != null)
+		if (schema == null) {
+			if (other.schema != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!schema.equals(other.schema))
 			return false;
-		if (storageNodeSpec == null) {
-			if (other.storageNodeSpec != null)
+		if (type == null) {
+			if (other.type != null)
 				return false;
-		} else if (!storageNodeSpec.equals(other.storageNodeSpec))
+		} else if (!type.equals(other.type))
+			return false;
+		if (uri == null) {
+			if (other.uri != null)
+				return false;
+		} else if (!uri.equals(other.uri))
+			return false;
+		if (user == null) {
+			if (other.user != null)
+				return false;
+		} else if (!user.equals(other.user))
+			return false;
+		if (uuid == null) {
+			if (other.uuid != null)
+				return false;
+		} else if (!uuid.equals(other.uuid))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "StorageNode [id=" + id + ", database=" + database
-				+ ", storageNodeSpecs=" + storageNodeSpec + "]";
+		return "StorageNode [uuid=" + uuid + ", type=" + type + ", uri=" + uri
+				+ ", schema=" + schema + ", user=" + user + ", password="
+				+ password + "]";
 	}
 
 }

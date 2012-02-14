@@ -17,7 +17,6 @@ import org.junit.Test;
 
 import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
-import eu.choreos.storagefactory.datamodel.StorageNodes;
 import eu.choreos.storagefactory.rest.StandaloneServer;
 
 /**
@@ -51,17 +50,9 @@ public class StorageRestApiTest {
     }
     
     @Test
-    public void shouldSuccessfulyInvokeGetUserStorages() {
+    public void shouldSuccessfulyInvokeGetStorage() {
     	
-        client.path("storages/userID");
-        Response response = client.get();
-        assertEquals(Status.OK.getStatusCode(), response.getStatus());
-    }
-    
-    @Test
-    public void shouldSuccessfulyInvokeGetCorrelationStorage() {
-
-        client.path("correlations/correlationID/storage");
+        client.path("storages/uuid");
         Response response = client.get();
         assertEquals(Status.OK.getStatusCode(), response.getStatus());
     }
@@ -69,7 +60,7 @@ public class StorageRestApiTest {
     @Test
     public void shouldSuccessfulyInvokeDeleteStorage() {
     	
-        client.path("storages/userID/storageID");
+        client.path("storages/uuid");
         Response response = client.delete();
         assertEquals(Family.SUCCESSFUL, Status.fromStatusCode(response.getStatus()).getFamily());
         // delete response has no body, so the response code is 204, which is from the SUCCESSFUL family
@@ -80,7 +71,7 @@ public class StorageRestApiTest {
 
         client.path("storages");
         client.type("application/xml");
-        Response response = client.post("<storageNodeSpec><userId>userID</userId><type>MySQL</type></storageNodeSpec>");
+        Response response = client.post("<storageNodeSpec><uuid>uuid</uuid><type>MySQL</type></storageNodeSpec>");
         assertEquals(Status.OK.getStatusCode(), response.getStatus());
     }
     
@@ -112,30 +103,24 @@ public class StorageRestApiTest {
     }
     
     @Test
-    public void shouldReceiveStorageNodeWithProperStorageNodeSpec() {
+    public void shouldReceiveStorageNodeWithProperTypeAndUuid() {
     
         client.path("storages");
         client.type("application/xml");
         StorageNodeSpec spec = new StorageNodeSpec();
         spec.setType("MySQL");
-        spec.setUserID("userID");
+        spec.setUuid("uuid");
         StorageNode node = client.post(spec, StorageNode.class);
-        assertEquals(spec, node.getStorageNodeSpec());
+        assertEquals(spec.getType(), node.getType());
+        assertEquals(spec.getUuid(), node.getUuid());
     }
+   
     
     @Test
-    public void shouldReceiveValidNodeFromGetCorrelationStorage() {
+    public void shouldReceiveValidNodeFromGetStorage() {
     	
-        client.path("correlations/corrID/storage");
+        client.path("storages/uuid");
         StorageNode node = client.get(StorageNode.class);
         assertTrue(node instanceof StorageNode);
-    }
-    
-    @Test
-    public void shouldReceiveValidNodesFromGetUserStorages() {
-    	
-        client.path("storages/userID");
-        StorageNodes nodes = client.get(StorageNodes.class);
-        assertTrue(nodes instanceof StorageNodes);
     }
 }
