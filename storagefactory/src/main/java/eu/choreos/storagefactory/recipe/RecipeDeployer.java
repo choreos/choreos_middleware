@@ -19,6 +19,10 @@ public class RecipeDeployer {
 	}
 	
 	private void uploadRecipe(Recipe recipe) {
-		CommandLineInterfaceHelper.runLocalCommand("knife cookbook upload " + recipe.getName() + " -o "+recipe.getFolder());
+		CommandLineInterfaceHelper.runLocalCommand(createUploadCommand(recipe));
+	}
+	
+	private String createUploadCommand(Recipe recipe) {
+		return "knife cookbook upload " + recipe.getName() + " -o "+recipe.getFolder();
 	}
 }

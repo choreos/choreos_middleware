@@ -39,7 +39,7 @@ public class StorageNodeManager {
 		RecipeFactory factory = new RecipeFactory();
 		RecipeDeployer deployer = new RecipeDeployer(npm);
 		
-		Recipe recipe = factory.createRecipe();
+		Recipe recipe = factory.createRecipe(nodeSpec.getUuid());
 		
 		deployer.deployRecipe(recipe);
 	}
