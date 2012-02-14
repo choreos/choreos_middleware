@@ -107,13 +107,6 @@ public class UnmockedStorageManagerTest {
 		assertEquals(0, storageManager.registry.getNodes().size());
 
 	}
-	/*
-	@Test
-	public void shouldGetNodeFromNodePoolManager() throws Exception {
-		InfrastructureNodeData infra = storageManager.createInfrastructureNode();
-		assertTrue("NodePoolManager returned no hostname", infra.getHostname().length() > 0);
-	}*/
-	
 	
 	@Test
 	public void shouldInstallMySqlRecipeOnNode() throws Exception {
@@ -121,7 +114,6 @@ public class UnmockedStorageManagerTest {
 		
 		StorageNode storageNode = new StorageNode();
 		
-		//storageNode.setInfrastructureNodeData(storageManager.createInfrastructureNode());
 		StorageNodeSpec storageNodeSpecs = new StorageNodeSpec();
 		storageNode.setStorageNodeSpec(storageNodeSpecs );
 		
@@ -138,9 +130,10 @@ public class UnmockedStorageManagerTest {
 		
 		StorageNode storageNode = new StorageNode();
 		
-		//storageNode.setInfrastructureNodeData(storageManager.createInfrastructureNode());
 		StorageNodeSpec storageNodeSpecs = new StorageNodeSpec();
 		storageNode.setStorageNodeSpec(storageNodeSpecs );
+		
+		storageNode.deployNode();
 		
 		String deployedNode = storageNode.getInfrastructureNodeData().getHostname();
 		

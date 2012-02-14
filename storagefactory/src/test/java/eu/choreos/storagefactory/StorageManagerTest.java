@@ -90,27 +90,4 @@ public class StorageManagerTest {
 		assertEquals(0, storageManager.registry.getNodes().size());
 
 	}
-	
-	/*@Test
-	public void shouldGetNodeFromNodePoolManager() throws Exception {
-		InfrastructureNodeData infra = storageManager.createInfrastructureNode();
-		assertTrue("NodePoolManager returned empty hostname", infra.getHostname().length() > 0);
-	}*/
-	
-	/*
-	@Test
-	public void shouldInstallMySqlOnNode() throws Exception {
-		StorageNode storageNode = new StorageNode();
-
-		StorageNodeSpec storageNodeSpecs = new StorageNodeSpec();
-		
-		storageNode.setInfrastructureNodeData(storageManager.createInfrastructureNode());
-		storageNode.setStorageNodeSpec(storageNodeSpecs );
-		
-		String commandReturn = ().createNode(infraNode)
-		
-		assertEquals("OK", commandReturn);
-		
-	}
-	*/
 }
