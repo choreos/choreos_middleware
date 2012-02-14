@@ -111,7 +111,6 @@ public class StorageRestApiTest {
         spec.setType("MySQL");
         spec.setUuid("uuid");
         StorageNode node = client.post(spec, StorageNode.class);
-        assertEquals(spec.getType(), node.getType());
         assertEquals(spec.getUuid(), node.getUuid());
     }
    

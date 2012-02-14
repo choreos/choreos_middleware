@@ -23,7 +23,7 @@ import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
  *
  */
 @Path("/storagefactory")
-public class Storages {
+public class StoragesResource {
 
 	/**
 	 * Client requests a storage
@@ -46,11 +46,6 @@ public class Storages {
 		// TODO trocar bloco abaixo para o que precisamos fazer
 			StorageNode node = new StorageNode();
 			node.setUuid(spec.getUuid());
-			node.setPassword("123mudar");
-			node.setSchema(spec.getUuid());
-			node.setType(spec.getType());
-			node.setUri("localhost");
-			node.setUser(spec.getUuid());
 			
 		return Response.ok(node).build();
 	}
