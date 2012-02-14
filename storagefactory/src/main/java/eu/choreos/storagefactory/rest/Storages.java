@@ -11,6 +11,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.xml.bind.JAXBElement;
 
 import eu.choreos.storagefactory.datamodel.Database;
@@ -38,9 +40,13 @@ public class Storages {
 	@Path("/storages")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
-	public StorageNode requestStorage(JAXBElement<StorageNodeSpec> specXml) {
+	public Response requestStorage(JAXBElement<StorageNodeSpec> specXml) {
 		
 		StorageNodeSpec spec = specXml.getValue();
+		
+		// condition
+		if (spec.getType() == null && spec.getUserID() == null)
+			return Response.status(Status.BAD_REQUEST).build();
 		
 		// TODO trocar bloco abaixo para o que precisamos fazer
 			StorageNode node = new StorageNode();
@@ -52,7 +58,7 @@ public class Storages {
 			db.setPassword("123mudar");
 			node.setDatabase(db);
 		
-		return node;
+		return Response.ok(node).build();
 	}
 	
 	/**

@@ -1,6 +1,7 @@
 package eu.choreos.storagefactory;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.UnsupportedEncodingException;
 
@@ -14,6 +15,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.choreos.storagefactory.datamodel.StorageNode;
+import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
+import eu.choreos.storagefactory.datamodel.StorageNodes;
 import eu.choreos.storagefactory.rest.StandaloneServer;
 
 /**
@@ -76,7 +80,62 @@ public class StorageRestApiTest {
 
         client.path("storages");
         client.type("application/xml");
-        Response response = client.post("<storageNodeSpec/>");
+        Response response = client.post("<storageNodeSpec><userId>userID</userId><type>MySQL</type></storageNodeSpec>");
         assertEquals(Status.OK.getStatusCode(), response.getStatus());
+    }
+    
+    @Test
+    public void shouldReceiveInternalErrorFromPostStorage() {
+    	
+    	 client.path("storages");
+         client.type("application/xml");
+         Response response = client.post("isNotXml");
+         assertEquals(Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
+    }
+    
+    @Test
+    public void shouldReceiveUnsupportedMediaTypeFromPostStorage() {
+    	
+    	 client.path("storages");
+         client.type("text/plain");
+         Response response = client.post("isNotXml");
+         assertEquals(Status.UNSUPPORTED_MEDIA_TYPE.getStatusCode(), response.getStatus());
+    }
+    
+    @Test
+    public void shouldReceiveBadRequestFromPostStorage() {
+    	
+    	 client.path("storages");
+         client.type("application/xml");
+         Response response = client.post("<isNotStorageNodeSpec/>");
+         assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+    }
+    
+    @Test
+    public void shouldReceiveStorageNodeWithProperStorageNodeSpec() {
+    
+        client.path("storages");
+        client.type("application/xml");
+        StorageNodeSpec spec = new StorageNodeSpec();
+        spec.setType("MySQL");
+        spec.setUserID("userID");
+        StorageNode node = client.post(spec, StorageNode.class);
+        assertEquals(spec, node.getStorageNodeSpec());
+    }
+    
+    @Test
+    public void shouldReceiveValidNodeFromGetCorrelationStorage() {
+    	
+        client.path("correlations/corrID/storage");
+        StorageNode node = client.get(StorageNode.class);
+        assertTrue(node instanceof StorageNode);
+    }
+    
+    @Test
+    public void shouldReceiveValidNodesFromGetUserStorages() {
+    	
+        client.path("storages/userID");
+        StorageNodes nodes = client.get(StorageNodes.class);
+        assertTrue(nodes instanceof StorageNodes);
     }
 }
