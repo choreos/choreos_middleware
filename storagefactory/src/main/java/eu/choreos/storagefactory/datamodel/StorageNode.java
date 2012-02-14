@@ -1,6 +1,14 @@
 package eu.choreos.storagefactory.datamodel;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import javax.xml.bind.annotation.XmlRootElement;
+
+import eu.choreos.storagefactory.NodePoolManagerHandler;
+import eu.choreos.storagefactory.StorageManagerTest;
+import eu.choreos.storagefactory.StorageNodeManager;
 
 @XmlRootElement(name = "storageNode")
 public class StorageNode {
@@ -9,7 +17,8 @@ public class StorageNode {
 	private Database database;
 	private StorageNodeSpec storageNodeSpec;
 	private InfrastructureNodeData infrastructureNodeData;
-
+	private NodePoolManagerHandler npm;
+	
 	public String getId() {
 		return id;
 	}
@@ -42,6 +51,40 @@ public class StorageNode {
 			InfrastructureNodeData infrastructureNodeData) {
 		this.infrastructureNodeData = infrastructureNodeData;
 	}
+
+	public NodePoolManagerHandler getNpm() {
+		return npm;
+	}
+
+	public void setNpm(NodePoolManagerHandler npm) {
+		this.npm = npm;
+	}
+
+	public void deployNode() {
+		String recipeName = createRecipe(); 
+		StorageNodeManager.uploadRecipe(recipeName);
+		
+		createInfrastructureNode();
+		npm.createNode(infrastructureNodeData, recipeName);
+	}
+
+	private String createRecipe() {
+		return "mysql::server";
+	}
+	
+	private void createInfrastructureNode(){
+		// interact with the node pool manager instance
+		System.out.println("Creating storage node Infrastructure Data...");
+
+		// set the node specs for the new storage node
+		infrastructureNodeData.setCpus(1);
+		infrastructureNodeData.setRam(1024);
+		infrastructureNodeData.setSo("linux");
+		infrastructureNodeData.setStorage(10000);
+
+		//Return the data on the created node
+	}
+
 
 	@Override
 	public int hashCode() {

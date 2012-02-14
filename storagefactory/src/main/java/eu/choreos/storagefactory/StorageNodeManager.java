@@ -3,6 +3,7 @@ package eu.choreos.storagefactory;
 import eu.choreos.storagefactory.datamodel.InfrastructureNodeData;
 import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
+import eu.choreos.storagefactory.utils.CommandLineInterfaceHelper;
 
 public class StorageNodeManager {
 	public StorageNodeRegistryFacade registry;
@@ -33,25 +34,10 @@ public class StorageNodeManager {
 		return storageNode;
 	}
 
-	public InfrastructureNodeData createInfrastructureNode(){
-		InfrastructureNodeData infraNode = new InfrastructureNodeData();
-
-		// interact with the node pool manager instance
-		System.out.println("Creating storage node Infrastructure Data...");
-
-		// set the node specs for the new storage node
-		infraNode.setCpus(1);
-		infraNode.setRam(1024);
-		infraNode.setSo("linux");
-		infraNode.setStorage(10000);
-
-		// create a node according to features required
-		getNodePoolManagerHandler().createNode(infraNode);
-		
-		//Return the data on the created node
-		return infraNode;
+	public static void uploadRecipe(String recipeName) {
+		CommandLineInterfaceHelper.runLocalCommand("knife cookbook upload " + recipeName);
 	}
-
+	
 	/*
 	public String setupStorageNode(StorageNode storageNode) throws Exception {
 		SshUtil sshConnection = new SshUtil(storageNode.getNode().getHostname());

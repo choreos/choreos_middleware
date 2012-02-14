@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -15,8 +16,7 @@ import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
 
 public class UnmockedStorageManagerTest {
-	protected StorageNodeManager storageManager;
-	protected static StorageNode sampleStorageNode;
+	protected static StorageNodeManager storageManager;
 	protected static InfrastructureNodeData infraNode = new InfrastructureNodeData();
 	protected static StorageNodeSpec spec1 = new StorageNodeSpec();
 	protected static StorageNodeSpec spec2 = new StorageNodeSpec();
@@ -37,11 +37,16 @@ public class UnmockedStorageManagerTest {
 		spec2.setCorrelationID("2");
 		spec2.setType("mysql");
 		
-		infraNode.setHostname("choreos-node");
+	}
+	
+	@Before
+	public void setUp(){
+		storageManager = new StorageNodeManager();
 	}
 
 	@Test
 	public void shouldCreateAndStoreNodeDescription() throws Exception {
+		
 		StorageNode instantiatedNode = storageManager.registerNewStorageNode(spec1, infraNode);
 
 		assertEquals(spec1.getCorrelationID(), instantiatedNode
@@ -102,12 +107,12 @@ public class UnmockedStorageManagerTest {
 		assertEquals(0, storageManager.registry.getNodes().size());
 
 	}
-	
+	/*
 	@Test
 	public void shouldGetNodeFromNodePoolManager() throws Exception {
 		InfrastructureNodeData infra = storageManager.createInfrastructureNode();
 		assertTrue("NodePoolManager returned no hostname", infra.getHostname().length() > 0);
-	}
+	}*/
 	
 	
 	@Test
@@ -116,9 +121,11 @@ public class UnmockedStorageManagerTest {
 		
 		StorageNode storageNode = new StorageNode();
 		
-		storageNode.setInfrastructureNodeData(storageManager.createInfrastructureNode());
+		//storageNode.setInfrastructureNodeData(storageManager.createInfrastructureNode());
 		StorageNodeSpec storageNodeSpecs = new StorageNodeSpec();
 		storageNode.setStorageNodeSpec(storageNodeSpecs );
+		
+		storageNode.deployNode();
 		
 		String commandReturn = (new SshUtil("localhost")).runCommand("knife node show choreos-node");
 		
@@ -131,7 +138,7 @@ public class UnmockedStorageManagerTest {
 		
 		StorageNode storageNode = new StorageNode();
 		
-		storageNode.setInfrastructureNodeData(storageManager.createInfrastructureNode());
+		//storageNode.setInfrastructureNodeData(storageManager.createInfrastructureNode());
 		StorageNodeSpec storageNodeSpecs = new StorageNodeSpec();
 		storageNode.setStorageNodeSpec(storageNodeSpecs );
 		
