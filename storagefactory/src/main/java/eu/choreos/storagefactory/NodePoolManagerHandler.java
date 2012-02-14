@@ -9,21 +9,19 @@ import java.util.List;
 
 public class NodePoolManagerHandler {
 
-	public boolean createNode(InfrastructureNodeData node, String recipe) {
-		node.setHostname("choreos-node");
-		return true;
+	public String createNode(String recipe) {
+		return "choreos-node";
 	}
 
-	public InfrastructureNodeData getNode(String nodeId) {
-		return null;
+	public String getNode(String nodeId) {
+		return "choreos-node";
 	}
 
-	public List<InfrastructureNodeData> getNodes() {
+	public List<String> getNodes() {
 		return null;
 	}
 
 	public void destroyNode(String id) {
 	}
-
 
 }

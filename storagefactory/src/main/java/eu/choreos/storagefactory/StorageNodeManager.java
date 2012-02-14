@@ -1,6 +1,5 @@
 package eu.choreos.storagefactory;
 
-import eu.choreos.storagefactory.datamodel.InfrastructureNodeData;
 import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
 import eu.choreos.storagefactory.utils.CommandLineInterfaceHelper;
@@ -22,12 +21,12 @@ public class StorageNodeManager {
 		this.npm = npm;
 	}
 
-	public StorageNode registerNewStorageNode(StorageNodeSpec nodeSpec, InfrastructureNodeData infraNode) {
+	public StorageNode registerNewStorageNode(StorageNodeSpec nodeSpec) {
 
 		StorageNode storageNode = new StorageNode();
-
-		storageNode.setStorageNodeSpec(nodeSpec);
-
+		storageNode.setType(nodeSpec.getType());
+		storageNode.setUuid(nodeSpec.getUuid());
+		
 		registry.registerNode(storageNode);
 
 		System.out.println("Node created");
@@ -90,7 +89,7 @@ public class StorageNodeManager {
 		try {
 			storageNode = registry.getNode(storageNodeId);
 
-			String id = storageNode.getStorageNodeSpec().getCorrelationID();
+			String id = storageNode.getUuid();
 			
 			getNodePoolManagerHandler().destroyNode(id);
 

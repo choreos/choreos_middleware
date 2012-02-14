@@ -15,8 +15,7 @@ public class StorageNodeRegistryFacade {
 	}
 
 	public void registerNode(StorageNode storageNode) {
-		instantiatedStorages.put(storageNode.getStorageNodeSpec()
-				.getCorrelationID(), storageNode);
+		instantiatedStorages.put(storageNode.getUuid(), storageNode);
 	}
 
 	public void unregisterNode(String storageNodeId) {
