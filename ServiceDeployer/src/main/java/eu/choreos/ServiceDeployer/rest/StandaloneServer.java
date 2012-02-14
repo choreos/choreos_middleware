@@ -26,7 +26,7 @@ public class StandaloneServer implements Runnable {
 
     public void run() {
         JAXRSServerFactoryBean sf = new JAXRSServerFactoryBean();
-        sf.setResourceClasses(Services.class);
+        sf.setResourceClasses(ServicesResource.class);
         sf.setAddress("http://localhost:8080/");
         sf.create();
         System.out.println("Service Deployer...");

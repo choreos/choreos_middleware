@@ -16,7 +16,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import eu.choreos.ServiceDeployer.datamodel.ResourceImpact;
-import eu.choreos.ServiceDeployer.datamodel.ServiceNode;
+import eu.choreos.ServiceDeployer.datamodel.Service;
+import eu.choreos.ServiceDeployer.datamodel.ServiceSpec;
 import eu.choreos.ServiceDeployer.rest.StandaloneServer;
 
 
@@ -28,7 +29,7 @@ import eu.choreos.ServiceDeployer.rest.StandaloneServer;
  * It doesn't test if the Service Deployer is 
  * actually doing properly its job
  * 
- * @author alfonso
+ * @author alfonso, leonardo, nelson
  *
  */
 public class ServiceDeployerRestApiTest {
@@ -51,9 +52,9 @@ public class ServiceDeployerRestApiTest {
     }
     
     @Test
-    public void shouldSuccessfulyInvokeGetUserService() {
+    public void shouldSuccessfulyInvokeGetService() {
     	
-        client.path("services/servicesID");
+        client.path("services/serviceID");
         Response response = client.get();
         assertEquals(Status.OK.getStatusCode(), response.getStatus());
     }
@@ -72,10 +73,10 @@ public class ServiceDeployerRestApiTest {
 
         client.path("services");
         client.type("application/xml");
-        Response response = client.post("<service>	<codeLocation>URI </codeLocation> <resourceImpact> "+
-        		" <memoryImpact> light</memoryImpact> <cpuImpact> medium</cpuImpact>" +
-        		" <ioImpact> heavy</ioImpact> 	<region> France </region> "+
-        		" </resourceImpact> </service>");
+        Response response = client.post("<serviceSpec><codeUri>URI</codeUri><resourceImpact>"+
+        		" <memory>light</memory><cpu>medium</cpu>" +
+        		" <io>heavy</io><region>France</region> "+
+        		" </resourceImpact><type>JAR</type></serviceSpec>");
         
         assertEquals(Status.OK.getStatusCode(), response.getStatus());
     }
@@ -103,30 +104,29 @@ public class ServiceDeployerRestApiTest {
     	
     	 client.path("services");
          client.type("application/xml");
-         Response response = client.post("<isNotService/>");
+         Response response = client.post("<isNotServiceSpec/>");
          assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     }
     
     @Test
-    public void shouldReceiveServiceNodeWithProperServiceNode() {
+    public void shouldReceiveServiceWithProperServiceNode() {
     
         client.path("services");
         client.type("application/xml");
-        ServiceNode serviceNodeRequest = new ServiceNode();
-                
-        serviceNodeRequest.setType("MySQL");
-        serviceNodeRequest.setId("1234");
+
+        ServiceSpec serviceSpec = new ServiceSpec();
+        serviceSpec.setCodeUri("http://onthewild");
+        serviceSpec.setType("onTheWild");
         
         ResourceImpact resourceImpact = new ResourceImpact();
         resourceImpact.setMemory("light");
         resourceImpact.setCpu("medium");
         resourceImpact.setIo("heavy");
         resourceImpact.setRegion("France");
+        serviceSpec.setResourceImpact(resourceImpact);
         
-        serviceNodeRequest.setResourceImpact(resourceImpact);
-        
-        ServiceNode node = client.post(serviceNodeRequest, ServiceNode.class);
-        assertEquals(serviceNodeRequest.getResourceImpact(), node.getResourceImpact());
+        Service service = client.post(serviceSpec, Service.class);
+        assertTrue(service instanceof Service);
     }
     
 }
