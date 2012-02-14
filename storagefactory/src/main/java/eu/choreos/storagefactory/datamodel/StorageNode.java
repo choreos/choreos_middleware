@@ -60,6 +60,40 @@ public class StorageNode {
 		this.password = password;
 	}
 
+////	public NodePoolManagerHandler getNpm() {
+////		return npm;
+////	}
+////
+////	public void setNpm(NodePoolManagerHandler npm) {
+////		this.npm = npm;
+////	}
+////
+////	public void deployNode() {
+////		String recipeName = createRecipe(); 
+////		StorageNodeManager.uploadRecipe(recipeName);
+////		
+////		createInfrastructureNode();
+////		npm.createNode(infrastructureNodeData, recipeName);
+////	}
+//
+//	private String createRecipe() {
+//		return "mysql::server";
+//	}
+//	
+//	private void createInfrastructureNode(){
+//		// interact with the node pool manager instance
+//		System.out.println("Creating storage node Infrastructure Data...");
+//
+//		// set the node specs for the new storage node
+//		infrastructureNodeData.setCpus(1);
+//		infrastructureNodeData.setRam(1024);
+//		infrastructureNodeData.setSo("linux");
+//		infrastructureNodeData.setStorage(10000);
+//
+//		//Return the data on the created node
+//	}
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

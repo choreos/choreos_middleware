@@ -12,8 +12,7 @@ import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
 
 public class StorageManagerTest {
-	protected static StorageNodeManager storageManager;
-	protected static StorageNode sampleStorageNode;
+	protected StorageNodeManager storageManager;
 	protected InfrastructureNodeData infraNode = new InfrastructureNodeData();
 	protected StorageNodeSpec spec1 = new StorageNodeSpec();
 	protected StorageNodeSpec spec2 = new StorageNodeSpec();
@@ -28,8 +27,6 @@ public class StorageManagerTest {
 		
 		spec2.setCorrelationID("2");
 		spec2.setType("mysql");
-		
-		infraNode.setHostname("localhost");
 	}
 
 	@Test
@@ -93,27 +90,4 @@ public class StorageManagerTest {
 		assertEquals(0, storageManager.registry.getNodes().size());
 
 	}
-	
-	@Test
-	public void shouldGetNodeFromNodePoolManager() throws Exception {
-		InfrastructureNodeData infra = storageManager.createInfrastructureNode();
-		assertTrue("NodePoolManager returned empty hostname", infra.getHostname().length() > 0);
-	}
-	
-	/*
-	@Test
-	public void shouldInstallMySqlOnNode() throws Exception {
-		StorageNode storageNode = new StorageNode();
-
-		StorageNodeSpec storageNodeSpecs = new StorageNodeSpec();
-		
-		storageNode.setInfrastructureNodeData(storageManager.createInfrastructureNode());
-		storageNode.setStorageNodeSpec(storageNodeSpecs );
-		
-		String commandReturn = ().createNode(infraNode)
-		
-		assertEquals("OK", commandReturn);
-		
-	}
-	*/
 }
