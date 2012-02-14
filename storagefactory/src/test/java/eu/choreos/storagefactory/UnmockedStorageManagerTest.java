@@ -1,4 +1,4 @@
-package br.usp.ime.ccsl.choreos.storagefactory;
+package eu.choreos.storagefactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
