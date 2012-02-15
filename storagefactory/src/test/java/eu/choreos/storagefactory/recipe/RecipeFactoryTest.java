@@ -65,7 +65,8 @@ public class RecipeFactoryTest {
 
 	}
 
-	private void assertAllOcurrencesInMetadataRbWereReplaced() throws IOException {
+	private void assertAllOcurrencesInMetadataRbWereReplaced()
+			throws IOException {
 		URL fileLocation = ClassLoader.getSystemResource("chef/storage" + uuid
 				+ "/metadata.rb");
 		String fileData = FileUtils.readFileToString(new File(fileLocation
@@ -86,7 +87,8 @@ public class RecipeFactoryTest {
 		assertAllOcurrencesWereReplacedInDefaultRb();
 	}
 
-	private void assertAllOcurrencesWereReplacedInDefaultRb() throws IOException {
+	private void assertAllOcurrencesWereReplacedInDefaultRb()
+			throws IOException {
 		URL fileLocation = ClassLoader.getSystemResource("chef/storage" + uuid
 				+ "/attributes/default.rb");
 		String fileData = FileUtils.readFileToString(new File(fileLocation
@@ -99,7 +101,6 @@ public class RecipeFactoryTest {
 		// Ensure the ocurrences of $USER were replaced with UZER
 		assertTrue(fileData.contains(user));
 		assertFalse(fileData.contains("$USER"));
-		
 
 		// Ensure the ocurrences of $PASSWORD were replaced with CODE
 		assertTrue(fileData.contains(password));
@@ -108,15 +109,14 @@ public class RecipeFactoryTest {
 		// Ensure the ocurrences of $SCHEMA were replaced with SKEMA
 		assertTrue(fileData.contains(schema));
 		assertFalse(fileData.contains("$SCHEMA"));
-		
+
 		// Ensure the ocurrences of $TYPE were replaced with MYSQL
 		assertTrue(fileData.contains(dbType));
 		assertFalse(fileData.contains("$TYPE"));
-		
+
 		// Ensures the remainder of the file is left untouched
 		assertTrue(fileData.contains("IMPORTANT DEVELOPMENT NOTICE:"));
 	}
-	
 
 	@Test
 	public void shouldReplaceOcurrencesInRecipesServerRb() throws Exception {
@@ -125,7 +125,8 @@ public class RecipeFactoryTest {
 		assertAllOcurrencesWereReplacedInDefaultRecipe();
 	}
 
-	private void assertAllOcurrencesWereReplacedInDefaultRecipe() throws IOException {
+	private void assertAllOcurrencesWereReplacedInDefaultRecipe()
+			throws IOException {
 		URL fileLocation = ClassLoader.getSystemResource("chef/storage" + uuid
 				+ "/recipes/default.rb");
 		String fileData = FileUtils.readFileToString(new File(fileLocation
@@ -143,12 +144,27 @@ public class RecipeFactoryTest {
 	public void shouldCreateFullRecipe() throws Exception {
 		deleteDirectory();
 
-		recipeFactory.createRecipe(storage);
-		
+		Recipe recipe = recipeFactory.createRecipe(storage);
+
 		assertTemplateFolderWasCopied();
 		assertAllOcurrencesInMetadataRbWereReplaced();
 		assertAllOcurrencesWereReplacedInDefaultRb();
 		assertAllOcurrencesWereReplacedInDefaultRecipe();
+		assertFilesAreAvailableInFolder(recipe);
+
+	}
+
+	private void assertFilesAreAvailableInFolder(Recipe recipe)
+			throws IOException {
+		String fileData = FileUtils.readFileToString(new File(recipe
+				.getFolder() + "/attributes/default.rb"));
+
+		// Ensure the ocurrences of $UUID were replaced with THIS_IS_A_TEST
+		assertTrue(fileData.contains(uuid));
+		assertFalse(fileData.contains("$UUID"));
+
+		// Ensures the remainder of the file is left untouched
+		assertTrue(fileData.contains(" IMPORTANT DEVELOPMENT NOTICE:"));
 
 	}
 

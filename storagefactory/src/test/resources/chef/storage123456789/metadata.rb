@@ -3,30 +3,30 @@ maintainer_email "nelson.lago@gmail.com"
 license          "Apache 2.0"
 description      "Creates a database identifiable by a UUID in a database"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.rdoc'))
-version          "1.0.0"
+version          "0.1.1"
 
 depends "mysql"
 
-attribute "storage/$UUID/id",
+attribute "storage/12345789/id",
   :display_name => "the uuid of this schema",
   :default => "test"
 
-attribute "storage/$UUID/schema",
+attribute "storage/12345789/schema",
   :display_name => "the name of this schema3",
   :default => "test"
 
-attribute "storage/$UUID/dbuser",
+attribute "storage/12345789/dbuser",
   :display_name => "the user authorized to access this schema",
   :default => "test"
 
-attribute "storage/$UUID/dbpassword",
+attribute "storage/12345789/dbpassword",
   :display_name => "the password",
   :default => "test"
 
-attribute "storage/$UUID/type",
+attribute "storage/12345789/type",
   :display_name => "the storageuuid type",
   :default => "test"
 
-attribute "storage/$UUID/sqlscript",
+attribute "storage/12345789/sqlscript",
   :display_name => "the script to create the schema",
   :default => "test"
