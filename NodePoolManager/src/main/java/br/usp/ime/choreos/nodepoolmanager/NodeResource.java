@@ -19,7 +19,7 @@ public class NodeResource {
         CloudProvider infrastructure = new AWSCloudProvider();
 
         try {
-            Node node = infrastructure.getNode(id);
+            NodeRestRepresentation node = infrastructure.getNode(id).getRestRepresentation();
             response = Response.ok(node).build();
         } catch (NodeNotFoundException e) {
             response = Response.status(Status.NOT_FOUND).build();
