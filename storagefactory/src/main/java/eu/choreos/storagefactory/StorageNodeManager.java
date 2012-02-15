@@ -25,9 +25,7 @@ public class StorageNodeManager {
 
 	public StorageNode registerNewStorageNode(StorageNodeSpec nodeSpec) {
 
-		StorageNode storageNode = new StorageNode();
-		storageNode.setType(nodeSpec.getType());
-		storageNode.setUuid(nodeSpec.getUuid());
+		StorageNode storageNode = new StorageNode(nodeSpec);
 		
 		registry.registerNode(storageNode);
 
@@ -39,7 +37,7 @@ public class StorageNodeManager {
 		RecipeFactory factory = new RecipeFactory();
 		RecipeDeployer deployer = new RecipeDeployer(npm);
 		
-		Recipe recipe = factory.createRecipe(nodeSpec.getUuid());
+		Recipe recipe = factory.createRecipe((new StorageNode(nodeSpec)));
 		
 		deployer.deployRecipe(recipe);
 	}

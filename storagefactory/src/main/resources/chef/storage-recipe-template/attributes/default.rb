@@ -2,7 +2,7 @@
 #									 #
 #                IMPORTANT DEVELOPMENT NOTICE:                           #
 #									 #
-#  All ocurrences of $UUID must be replaced with the actual storage $UUID #
+# All ocurrences of $ UUID must be replaced with the actual storage $UUID#
 #            before uploading the recipe to the chef-server              #
 #									 #
 ##########################################################################
