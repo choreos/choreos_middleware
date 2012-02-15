@@ -25,6 +25,8 @@ import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
 @Path("/storagefactory")
 public class StoragesResource {
 
+	StorageNodeManager storageManager = new StorageNodeManager();
+
 	/**
 	 * Client requests a storage
 	 * 
@@ -43,8 +45,7 @@ public class StoragesResource {
 		if (spec.getType() == null && spec.getUuid() == null)
 			return Response.status(Status.BAD_REQUEST).build();
 
-		StorageNodeManager nodeManager = new StorageNodeManager();
-		StorageNode node = nodeManager.createNewStorageNode(spec);
+		StorageNode node = storageManager.createNewStorageNode(spec);
 
 		return Response.ok(node).build();
 	}
@@ -58,17 +59,14 @@ public class StoragesResource {
 	@Produces(MediaType.APPLICATION_XML)
 	public StorageNode getCorrelationNode(@PathParam("uuid") String uuid) {
 
-		// TODO trocar bloco abaixo para o que precisamos fazer
-		StorageNode node = new StorageNode();
-		node.setUuid(uuid);
-		node.setPassword("123mudar");
-		node.setSchema(uuid);
-		node.setType("MySQL");
-		node.setUri("localhost");
-		node.setUser("uuid");
-
-		// TODO se não tiver storage, retorna erro
-		return node;
+		StorageNode node = null;
+		try {
+			node = storageManager.registry.getNode(uuid);
+			return node;
+		} catch (Exception e) {
+			// TODO se não tiver storage, retorna erro
+			return null;
+		}
 	}
 
 	/**
@@ -84,7 +82,7 @@ public class StoragesResource {
 	public void deleteStorage(@PathParam("uuid") String uuid) {
 
 		System.out.println("deleting " + uuid);
+		storageManager.registry.unregisterNode(uuid);
 		// TODO se storage node não existir, retornar erro
 	}
-
 }

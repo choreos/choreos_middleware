@@ -18,7 +18,7 @@ public class RecipeFactoryTest {
 
 	private RecipeFactory recipeFactory;
 	private static StorageNode storage = new StorageNode();
-	private static String uuid = "12345789";
+	private static String uuid = "RecipeFactoryTest";
 	private static String user = "UZER";
 	private static String password = "CODE";
 	private static String schema = "SKEMA";
