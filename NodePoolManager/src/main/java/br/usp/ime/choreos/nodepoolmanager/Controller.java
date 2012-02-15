@@ -19,19 +19,20 @@ public class Controller {
 	
 	/**
 	 * 
-	 * @param node
+	 * @param nodeRest
 	 * @return the node id
 	 */
-	public String createNode(Node node) {
+	public String createNode(NodeRestRepresentation nodeRest) {
 
         try {
+        	Node node = new Node(nodeRest);
 			infrastructure.createNode(node);
 			initializeNode(node);
 		} catch (RunNodesException e) {
 			e.printStackTrace();
 		}
         
-        return node.getId();
+        return nodeRest.getId();
 	}
 	
 	// this method shouldn't belong to this class

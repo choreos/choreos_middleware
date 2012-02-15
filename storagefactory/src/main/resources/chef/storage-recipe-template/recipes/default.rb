@@ -27,28 +27,13 @@
 
 include_recipe "mysql::server"
 
-template "#{node['storage']['$UUID']['sql-script']}" do
+template "#{node['storage']['$UUID']['sqlscript']}" do
   source "create-database.sql.erb"
   mode "0644"
 end
 
-sql_db_creation_script_path = "#{node['storage']['$UUID']['sql-script']}"
-
-begin
-  t = resources("template[#{sql_db_creation_script_path}]")
-rescue
-  Chef::Log.info("Could not find previously defined grants.sql resource")
-  t = template sql_db_creation_script_path do
-    source "create-database.sql.erb"
-    owner "root"
-    group "root"
-    mode "0600"
-    action :create
-  end
-end
-
 execute "mysql-install-privileges" do
-  command "/usr/bin/mysql -u root #{node['mysql']['server_root_password'].empty? ? '' : '-p' }#{node['mysql']['server_root_password']} < #{sql_db_creation_script_path}"
+  command "/usr/bin/mysql -u root #{node['mysql']['server_root_password'].empty? ? '' : '-p' }#{node['mysql']['server_root_password']} < #{node['storage']['$UUID']['sqlscript']}"
   action :nothing
-  subscribes :run, resources("template[#{sql_db_creation_script_path}]"), :immediately
+  subscribes :run, resources("template[#{node['storage']['$UUID']['sqlscript']}]"), :immediately
 end

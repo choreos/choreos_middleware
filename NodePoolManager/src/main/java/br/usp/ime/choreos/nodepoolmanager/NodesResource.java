@@ -1,6 +1,7 @@
 package br.usp.ime.choreos.nodepoolmanager;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -20,12 +21,18 @@ public class NodesResource {
     private Controller controller = new Controller(new AWSCloudProvider());
     
     @GET
-    public List<Node> getNodes() {
-        return controller.getNodes();
+    public List<NodeRestRepresentation> getNodes() {
+        List<NodeRestRepresentation> restNodeList = new ArrayList<NodeRestRepresentation>();
+        
+        //foreach node nodelist.add(node.getRestRepresentation);
+    	for (Node node: controller.getNodes()){
+    		restNodeList.add(node.getRestRepresentation());
+    	}
+        return restNodeList;
     }
 
     @POST
-    public Response createNode(Node node, @Context UriInfo uriInfo) throws URISyntaxException {
+    public Response createNode(NodeRestRepresentation node, @Context UriInfo uriInfo) throws URISyntaxException {
         Response response;
 
     	String nodeId = controller.createNode(node);
