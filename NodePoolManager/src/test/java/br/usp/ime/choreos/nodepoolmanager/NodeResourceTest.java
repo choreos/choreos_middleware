@@ -27,7 +27,7 @@ public class NodeResourceTest extends BaseTest {
     @Test
     public void testGetNode() throws Exception {
         client.path("nodes/" + sampleNode.getId());
-        Node node = client.get(Node.class);
+        NodeRestRepresentation node = client.get(NodeRestRepresentation.class);
 
         assertEquals(sampleNode.getId(), node.getId());
         assertEquals(sampleNode.getHostname(), node.getHostname());
@@ -44,7 +44,7 @@ public class NodeResourceTest extends BaseTest {
         client.path("nodes/" + sampleNode.getId());
 
         try {
-            Node node = client.get(Node.class);
+        	NodeRestRepresentation node = client.get(NodeRestRepresentation.class);
             assertTrue(node == null || node.getState() != NodeState.RUNNING.ordinal());
         } catch (Exception e) {
             response = client.get();
