@@ -36,7 +36,7 @@ public class AWSCloudProvider implements CloudProvider {
 
 	private ComputeService getClient(String imageId) {
 		String provider = Configuration.get("DEFAULT_PROVIDER");
-		if (StringUtils.isEmpty(provider)) {
+		if (provider == null || provider.isEmpty()) {
 			provider = "aws-ec2";
 		}
 

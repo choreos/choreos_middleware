@@ -11,11 +11,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import br.usp.ime.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
+
 @Path("/nodes")
 public class NodesResource {
 
     
-    private Controller controller = new Controller();
+    private Controller controller = new Controller(new AWSCloudProvider());
     
     @GET
     public List<Node> getNodes() {
