@@ -12,6 +12,15 @@ public class StorageNode {
 	private String user;
 	private String password;
 
+	public StorageNode(StorageNodeSpec nodeSpec) {
+		uuid = nodeSpec.getUuid();
+		type = nodeSpec.getType();
+	}
+	
+	public StorageNode(){
+		
+	}
+
 	public String getUuid() {
 		return uuid;
 	}

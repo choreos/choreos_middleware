@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: choreos-create-database
+# Cookbook Name:: storage$UUID
 # Recipe:: default
 #
 # Copyright 2010, Opscode, Inc.
