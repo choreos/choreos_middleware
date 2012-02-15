@@ -3,7 +3,7 @@ maintainer_email "nelson.lago@gmail.com"
 license          "Apache 2.0"
 description      "Creates a database identifiable by a UUID in a database"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.rdoc'))
-version          "0.1.1"
+version          "1.0.0"
 
 depends "mysql"
 
