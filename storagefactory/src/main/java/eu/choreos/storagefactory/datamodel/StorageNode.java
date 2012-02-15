@@ -16,9 +16,9 @@ public class StorageNode {
 		uuid = nodeSpec.getUuid();
 		type = nodeSpec.getType();
 	}
-	
-	public StorageNode(){
-		
+
+	public StorageNode() {
+
 	}
 
 	public String getUuid() {

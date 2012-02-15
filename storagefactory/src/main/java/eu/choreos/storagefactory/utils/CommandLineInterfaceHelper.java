@@ -9,16 +9,16 @@ public class CommandLineInterfaceHelper {
 	public static String runLocalCommand(String command) {
 		String commandReturn = "";
 
-	    try {  
-            Process p = Runtime.getRuntime().exec(command);  
-            BufferedReader in = new BufferedReader(  
-                                new InputStreamReader(p.getInputStream()));  
-            String line;  
-            while ((line = in.readLine()) != null) {  
-                System.out.println(line);
-                commandReturn = commandReturn + line;
-            }  
-        } catch (IOException e) {  
+		try {
+			Process p = Runtime.getRuntime().exec(command);
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					p.getInputStream()));
+			String line;
+			while ((line = in.readLine()) != null) {
+				System.out.println(line);
+				commandReturn = commandReturn + line;
+			}
+		} catch (IOException e) {
 			System.out.println("[Storage Node] - Error while executing command"
 					+ '\n' + command);
 			e.printStackTrace();

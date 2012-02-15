@@ -17,11 +17,10 @@ import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
 
 /**
- * Storage factory REST API
- * resource: storages
+ * Storage factory REST API resource: storages
  * 
  * @author leonardo, alfonso
- *
+ * 
  */
 @Path("/storagefactory")
 public class StoragesResource {
@@ -37,19 +36,19 @@ public class StoragesResource {
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
 	public Response requestStorage(JAXBElement<StorageNodeSpec> specXml) {
-		
+
 		StorageNodeSpec spec = specXml.getValue();
-		
+
 		// condition
 		if (spec.getType() == null && spec.getUuid() == null)
 			return Response.status(Status.BAD_REQUEST).build();
-		
-			StorageNodeManager nodeManager = new StorageNodeManager();
-			StorageNode node = nodeManager.createNewStorageNode(spec);
-			
+
+		StorageNodeManager nodeManager = new StorageNodeManager();
+		StorageNode node = nodeManager.createNewStorageNode(spec);
+
 		return Response.ok(node).build();
 	}
-	
+
 	/**
 	 * 
 	 * @return the storage node of a group defined by a correlation ID
@@ -58,34 +57,34 @@ public class StoragesResource {
 	@Path("/storages/{uuid}")
 	@Produces(MediaType.APPLICATION_XML)
 	public StorageNode getCorrelationNode(@PathParam("uuid") String uuid) {
-		
+
 		// TODO trocar bloco abaixo para o que precisamos fazer
-			StorageNode node = new StorageNode();
-			node.setUuid(uuid);
-			node.setPassword("123mudar");
-			node.setSchema(uuid);
-			node.setType("MySQL");
-			node.setUri("localhost");
-			node.setUser("uuid");
-		
+		StorageNode node = new StorageNode();
+		node.setUuid(uuid);
+		node.setPassword("123mudar");
+		node.setSchema(uuid);
+		node.setType("MySQL");
+		node.setUri("localhost");
+		node.setUser("uuid");
+
 		// TODO se não tiver storage, retorna erro
 		return node;
 	}
-	
+
 	/**
 	 * Deletes a storage node
 	 * 
-	 * @param uuid the user identifier
-	 * @param id the storage node identifier
+	 * @param uuid
+	 *            the user identifier
+	 * @param id
+	 *            the storage node identifier
 	 */
 	@DELETE
 	@Path("/storages/{uuid}")
 	public void deleteStorage(@PathParam("uuid") String uuid) {
-		
+
 		System.out.println("deleting " + uuid);
 		// TODO se storage node não existir, retornar erro
 	}
-	
-	
-	
+
 }

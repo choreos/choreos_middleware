@@ -8,8 +8,6 @@ import org.apache.commons.io.FileUtils;
 
 import eu.choreos.storagefactory.datamodel.StorageNode;
 
-import br.usp.ime.choreos.nodepoolmanager.Configuration;
-
 public class RecipeFactory {
 
 	public Recipe createRecipe(StorageNode storage) {
@@ -73,7 +71,8 @@ public class RecipeFactory {
 		URL destURL = ClassLoader.getSystemResource("chef");
 
 		File srcFolder = new File(scriptFile.getFile());
-		File destFolder = new File(destURL.getFile().concat("/storage" + storage.getUuid()));
+		File destFolder = new File(destURL.getFile().concat(
+				"/storage" + storage.getUuid()));
 
 		FileUtils.copyDirectory(srcFolder, destFolder);
 
