@@ -18,7 +18,7 @@ public class NodeResourceTest extends BaseTest {
     }
 
     @Test
-    public void testGetInvalidNode() throws Exception {
+    public void testGetInvalidNode()  {
         client.path("nodes/696969696969");
         Response response = client.get();
         assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
@@ -31,7 +31,7 @@ public class NodeResourceTest extends BaseTest {
 
         assertEquals(sampleNode.getId(), node.getId());
         assertEquals(sampleNode.getHostname(), node.getHostname());
-        assertEquals("1", node.getImage());
+        assertEquals(EXPECTED_IMAGE, node.getImage());
     }
 
     @Test

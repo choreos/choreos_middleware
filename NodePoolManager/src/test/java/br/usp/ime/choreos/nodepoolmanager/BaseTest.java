@@ -16,6 +16,7 @@ public class BaseTest {
     
     protected static String TEST_IMAGE = ""; // era 1 
     private static String TEST_DEFAULT_PROVIDER = ""; // era stub
+    protected static String EXPECTED_IMAGE = "us-east-1/ami-ccf405a5";
 
     @BeforeClass
     public static void startServer() throws Exception {

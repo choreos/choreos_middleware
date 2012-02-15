@@ -13,8 +13,6 @@ import org.junit.After;
 import org.junit.Test;
 
 public class NodesResourceTest extends BaseTest {
-
-	private static String EXPECTED_IMAGE = "us-east-1/ami-ccf405a5";
 	
     @After
     public void resetPath() {
