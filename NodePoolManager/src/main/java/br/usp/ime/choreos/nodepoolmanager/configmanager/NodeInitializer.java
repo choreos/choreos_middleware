@@ -27,8 +27,10 @@ public class NodeInitializer {
 
     public String initialize() throws Exception {
         System.out.println("Initializing node with chef");
+        String chefOrganizationKeyFile = Configuration.get("CHEF_ORGANIZATION_KEY_FILE");
+        System.out.println("chefOrganizationKeyFile= " + chefOrganizationKeyFile);
 
-        String command = new ScriptsProvider().getChefBootstrapScript(Configuration.get("CHEF_ORGANIZATION_KEY_FILE"));
+        String command = new ScriptsProvider().getChefBootstrapScript(chefOrganizationKeyFile);
         //new SshUtil(hostname).runCommand(command);
         Runtime.getRuntime().exec(command);
         

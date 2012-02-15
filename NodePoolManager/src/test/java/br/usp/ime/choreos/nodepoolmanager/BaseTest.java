@@ -13,11 +13,14 @@ import br.usp.ime.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
 public class BaseTest {
     protected static final WebClient client = WebClient.create("http://localhost:8080/");
     protected static Node sampleNode;
+    
+    protected static String TEST_IMAGE = ""; // era 1 
+    private static String TEST_DEFAULT_PROVIDER = ""; // era stub
 
     @BeforeClass
     public static void startServer() throws Exception {
         NodePoolManagerStandaloneServer.start();
-        Configuration.set("DEFAULT_PROVIDER", "stub");
+        Configuration.set("DEFAULT_PROVIDER", TEST_DEFAULT_PROVIDER);
         createSampleNode();
 
         HTTPConduit conduit = WebClient.getConfig(client).getHttpConduit();
@@ -32,7 +35,7 @@ public class BaseTest {
 
     public static void createSampleNode() throws RunNodesException {
         sampleNode = new Node();
-        sampleNode.setImage("1");
+        sampleNode.setImage(TEST_IMAGE);
 
         AWSCloudProvider infrastructure = new AWSCloudProvider();
         infrastructure.createNode(sampleNode);

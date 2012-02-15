@@ -14,6 +14,8 @@ import org.junit.Test;
 
 public class NodesResourceTest extends BaseTest {
 
+	private static String EXPECTED_IMAGE = "us-east-1/ami-ccf405a5";
+	
     @After
     public void resetPath() {
         client.back(true);
@@ -24,12 +26,12 @@ public class NodesResourceTest extends BaseTest {
         client.path("nodes");
 
         sampleNode = new Node();
-        sampleNode.setImage("1");
+        sampleNode.setImage(TEST_IMAGE);
 
         Response response = client.post(sampleNode);
         sampleNode = getNodeFromResponse(response);
 
-        assertEquals("1", sampleNode.getImage());
+        assertEquals(EXPECTED_IMAGE, sampleNode.getImage());
         assertEquals(Status.CREATED.getStatusCode(), response.getStatus());
     }
 
@@ -41,7 +43,7 @@ public class NodesResourceTest extends BaseTest {
 
     @Test
     public void listNodes() throws Exception {
-        final String image2 = "1";
+        final String image2 = TEST_IMAGE;
 
         Node node = new Node();
         node.setImage(image2);
@@ -54,8 +56,8 @@ public class NodesResourceTest extends BaseTest {
         Node[] nodes = nodeCollection.toArray(new Node[nodeAmount]);
 
         assertTrue(nodeAmount >= 2);
-        assertEquals("1", nodes[nodeAmount - 2].getImage());
-        assertEquals(image2, nodes[nodeAmount - 1].getImage());
+        assertEquals(EXPECTED_IMAGE, nodes[nodeAmount - 2].getImage());
+        assertEquals(EXPECTED_IMAGE, nodes[nodeAmount - 1].getImage());
 
         resetPath();
         destroyNode(nodes[nodeAmount - 1]);
