@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.xml.bind.JAXBElement;
 
+import eu.choreos.storagefactory.StorageNodeManager;
 import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
 
@@ -43,9 +44,8 @@ public class StoragesResource {
 		if (spec.getType() == null && spec.getUuid() == null)
 			return Response.status(Status.BAD_REQUEST).build();
 		
-		// TODO trocar bloco abaixo para o que precisamos fazer
-			StorageNode node = new StorageNode();
-			node.setUuid(spec.getUuid());
+			StorageNodeManager nodeManager = new StorageNodeManager();
+			StorageNode node = nodeManager.createNewStorageNode(spec);
 			
 		return Response.ok(node).build();
 	}

@@ -12,6 +12,8 @@ import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
 
 public class UnmockedStorageManagerTest {
 	protected static StorageNodeManager storageManager;
+	protected static StorageNode node1 ;
+	protected static StorageNode node2 ;
 	protected static StorageNodeSpec spec1 = new StorageNodeSpec();
 	protected static StorageNodeSpec spec2 = new StorageNodeSpec();
 	protected static SshUtil connection;
@@ -34,9 +36,12 @@ public class UnmockedStorageManagerTest {
 		spec1.setUuid("1");
 		spec1.setType("mysql");
 
-		spec2.setUuid("2");
-		spec2.setType("mysql");
+		node1 = new StorageNode(spec1);
+		
+		node2.setUuid("2");
+		node2.setType("mysql");
 
+		node2 = new StorageNode(spec2);
 	}
 
 	@Before
@@ -48,27 +53,27 @@ public class UnmockedStorageManagerTest {
 	public void shouldCreateAndStoreNodeDescription() throws Exception {
 
 		StorageNode instantiatedNode = storageManager
-				.registerNewStorageNode(spec1);
+				.registerNewStorageNode(node1);
 
-		assertEquals(spec1.getUuid(), instantiatedNode.getUuid());
-		assertEquals(spec1.getType(), instantiatedNode.getType());
+		assertEquals(node1.getUuid(), instantiatedNode.getUuid());
+		assertEquals(node1.getType(), instantiatedNode.getType());
 	}
 
 	@Test
 	public void shouldGetAnStorageNodeByItsID() throws Exception {
 
-		storageManager.registerNewStorageNode(spec1);
-		storageManager.registerNewStorageNode(spec2);
+		storageManager.registerNewStorageNode(node1);
+		storageManager.registerNewStorageNode(node2);
 
-		assertSame(spec2.getUuid(), storageManager.registry.getNode("2").getUuid());
-		assertSame(spec1.getUuid(), storageManager.registry.getNode("1").getUuid());
+		assertSame(node2.getUuid(), storageManager.registry.getNode("2").getUuid());
+		assertSame(node1.getUuid(), storageManager.registry.getNode("1").getUuid());
 	}
 
 	@Test
 	public void shouldGetAllStorageNodes() throws Exception {
 
-		storageManager.registerNewStorageNode(spec1);
-		storageManager.registerNewStorageNode(spec2);
+		storageManager.registerNewStorageNode(node1);
+		storageManager.registerNewStorageNode(node2);
 
 		assertEquals(2, storageManager.registry.getNodes().size());
 	}
@@ -76,10 +81,10 @@ public class UnmockedStorageManagerTest {
 	@Test
 	public void shouldAddRemoveAndKeepCountOfNodes() throws Exception {
 
-		storageManager.registerNewStorageNode(spec1);
+		storageManager.registerNewStorageNode(node1);
 		assertEquals(1, storageManager.registry.getNodes().size());
 
-		storageManager.registerNewStorageNode(spec2);
+		storageManager.registerNewStorageNode(node2);
 		assertEquals(2, storageManager.registry.getNodes().size());
 
 		storageManager.destroyNode("2");
@@ -94,9 +99,9 @@ public class UnmockedStorageManagerTest {
 
 		assertEquals(0, storageManager.registry.getNodes().size());
 
-		storageManager.registerNewStorageNode(spec1);
+		storageManager.registerNewStorageNode(node1);
 		assertEquals(1, storageManager.registry.getNodes().size());
-		assertSame(spec1.getUuid(), storageManager.registry.getNode("1").getUuid());
+		assertSame(node1.getUuid(), storageManager.registry.getNode("1").getUuid());
 
 		storageManager.destroyNode("1");
 
@@ -109,9 +114,7 @@ public class UnmockedStorageManagerTest {
 		fail("Not yet implemented...");
 		storageManager = new StorageNodeManager();
 
-		StorageNodeSpec storageNodeSpecs = new StorageNodeSpec();
-
-		storageManager.registerNewStorageNode(storageNodeSpecs);
+		storageManager.registerNewStorageNode(node1);
 		
 		String commandReturn = (new SshUtil("localhost"))
 				.runCommand("knife node show choreos-node");
