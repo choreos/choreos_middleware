@@ -22,9 +22,8 @@ public class NodesResource {
     
     @GET
     public List<NodeRestRepresentation> getNodes() {
-        List<NodeRestRepresentation> restNodeList = new ArrayList<NodeRestRepresentation>();
-        
-        //foreach node nodelist.add(node.getRestRepresentation);
+
+    	List<NodeRestRepresentation> restNodeList = new ArrayList<NodeRestRepresentation>();
     	for (Node node: controller.getNodes()){
     		restNodeList.add(node.getRestRepresentation());
     	}

@@ -24,15 +24,15 @@ public class Controller {
 	 */
 	public String createNode(NodeRestRepresentation nodeRest) {
 
+		Node node = new Node(nodeRest);
         try {
-        	Node node = new Node(nodeRest);
 			infrastructure.createNode(node);
 			initializeNode(node);
 		} catch (RunNodesException e) {
 			e.printStackTrace();
 		}
         
-        return nodeRest.getId();
+        return node.getId();
 	}
 	
 	// this method shouldn't belong to this class

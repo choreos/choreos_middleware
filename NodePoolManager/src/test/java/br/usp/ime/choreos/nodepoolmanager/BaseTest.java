@@ -41,7 +41,7 @@ public class BaseTest {
         infrastructure.createNode(sampleNode);
     }
 
-    protected static void destroyNode(Node node) throws UnsupportedEncodingException {
+    protected static void destroyNode(NodeRestRepresentation node) throws UnsupportedEncodingException {
         client.path("nodes/" + node.getId());
         client.delete();
     }

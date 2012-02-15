@@ -40,8 +40,8 @@ public class ObjectFactory {
      * Create an instance of {@link Node }
      * 
      */
-    public Node createNode() {
-        return new Node();
+    public NodeRestRepresentation createNode() {
+        return new NodeRestRepresentation();
     }
 
     /**

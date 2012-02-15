@@ -311,4 +311,13 @@ public class NodeRestRepresentation {
         this.state = value;
     }
 
+	@Override
+	public String toString() {
+		return "NodeRestRepresentation [id=" + id + ", cpus=" + cpus + ", ram="
+				+ ram + ", storage=" + storage + ", so=" + so + ", zone="
+				+ zone + ", ip=" + ip + ", hostname=" + hostname + ", image="
+				+ image + ", state=" + state + "]";
+	}
+
+    
 }
