@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 import eu.choreos.nodepoolmanager.utils.SshUtil;
 import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
+import eu.choreos.storagefactory.utils.CommandLineInterfaceHelper;
 
 public class UnmockedStorageManagerTest {
 	protected static StorageNodeManager storageManager;
@@ -19,13 +20,13 @@ public class UnmockedStorageManagerTest {
 	// @BeforeClass
 	public static void initialSetUp() throws Exception {
 		System.out
-				.println(new SshUtil("localhost")
-						.runCommand("knife node run_list remove choreos-node 'recipe[mysql::server]' -s http://aguia1.ime.usp.br:4000"));
+				.println(new CommandLineInterfaceHelper()
+						.runLocalCommand("knife node run_list remove choreos-node 'recipe[mysql::server]' -s http://aguia1.ime.usp.br:4000"));
 		System.out
-				.println(new SshUtil("localhost")
-						.runCommand("knife node show choreos-node -s http://aguia1.ime.usp.br:4000"));
+				.println(new CommandLineInterfaceHelper()
+						.runLocalCommand("knife node show choreos-node -s http://aguia1.ime.usp.br:4000"));
 
-		connection = new SshUtil("choreos-node");
+		// connection = new SshUtil("choreos-node");
 
 		System.out
 				.println(connection
@@ -52,8 +53,8 @@ public class UnmockedStorageManagerTest {
 		fail("Not yet implemented...");
 		storageManager = new StorageNodeManager();
 
-		String commandReturn = (new SshUtil("localhost"))
-				.runCommand("knife node show choreos-node");
+		String commandReturn = new CommandLineInterfaceHelper()
+				.runLocalCommand("knife node show choreos-node");
 
 		assertTrue(commandReturn.contains("recipe[mysql::server]"));
 	}
@@ -69,12 +70,12 @@ public class UnmockedStorageManagerTest {
 
 		String deployedNode = "pending";
 
-		SshUtil ssh = new SshUtil(deployedNode);
+		// SshUtil ssh = new SshUtil(deployedNode);
 
-		String commandReturn = ssh.runCommand("mysql");
+		// String commandReturn = ssh.runCommand("mysql");
 
-		assertEquals(
-				"ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)",
-				commandReturn);
+		// assertEquals(
+		// "ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)",
+		// commandReturn);
 	}
 }
