@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 
 public class CommandLineInterfaceHelper {
 
-	public static String runLocalCommand(String command) {
+	public String runLocalCommand(String command) {
 		String commandReturn = "";
 
 		try {
@@ -16,7 +16,7 @@ public class CommandLineInterfaceHelper {
 			String line;
 			while ((line = in.readLine()) != null) {
 				System.out.println(line);
-				commandReturn = commandReturn + line;
+				commandReturn = commandReturn + line + '\n';
 			}
 		} catch (IOException e) {
 			System.out.println("[Storage Node] - Error while executing command"

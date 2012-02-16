@@ -1,8 +1,6 @@
 package eu.choreos.storagefactory;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,69 +28,6 @@ public class StorageManagerTest {
 
 		node1 = new StorageNode(spec1);
 		node2 = new StorageNode(spec2);
-	}
-
-	@Test
-	public void shouldCreateAndStoreNodeDescription() throws Exception {
-		StorageNode instantiatedNode = storageManager
-				.registerNewStorageNode(node1);
-
-		assertEquals(spec1.getUuid(), instantiatedNode.getUuid());
-		assertEquals(spec1.getType(), instantiatedNode.getType());
-	}
-
-	@Test
-	public void shouldGetAnStorageNodeByItsID() throws Exception {
-
-		storageManager.registerNewStorageNode(node1);
-		storageManager.registerNewStorageNode(node2);
-
-		assertNotNull(storageManager.registry.getNode("1"));
-		assertNotNull(storageManager.registry.getNode("2"));
-		assertSame(spec2.getUuid(), storageManager.registry.getNode("2")
-				.getUuid());
-		assertSame(spec1.getUuid(), storageManager.registry.getNode("1")
-				.getUuid());
-	}
-
-	@Test
-	public void shouldGetAllStorageNodes() throws Exception {
-
-		storageManager.registerNewStorageNode(node1);
-		storageManager.registerNewStorageNode(node2);
-
-		assertEquals(2, storageManager.registry.getNodes().size());
-	}
-
-	@Test
-	public void shouldAddRemoveAndKeepCountOfNodes() throws Exception {
-		storageManager.registerNewStorageNode(node1);
-		assertEquals(1, storageManager.registry.getNodes().size());
-
-		storageManager.registerNewStorageNode(node2);
-		assertEquals(2, storageManager.registry.getNodes().size());
-
-		storageManager.destroyNode("2");
-		assertEquals(1, storageManager.registry.getNodes().size());
-
-		storageManager.destroyNode("1");
-		assertEquals(0, storageManager.registry.getNodes().size());
-	}
-
-	@Test
-	public void shouldAddAndRemoveSingleNode() throws Exception {
-
-		assertEquals(0, storageManager.registry.getNodes().size());
-
-		storageManager.registerNewStorageNode(node1);
-		assertEquals(1, storageManager.registry.getNodes().size());
-		assertSame(spec1.getUuid(), storageManager.registry.getNode("1")
-				.getUuid());
-
-		storageManager.destroyNode("1");
-
-		assertEquals(0, storageManager.registry.getNodes().size());
-
 	}
 
 	@Test

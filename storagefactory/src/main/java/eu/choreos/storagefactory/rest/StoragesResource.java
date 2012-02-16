@@ -82,7 +82,6 @@ public class StoragesResource {
 	public void deleteStorage(@PathParam("uuid") String uuid) {
 
 		System.out.println("deleting " + uuid);
-		storageManager.registry.unregisterNode(uuid);
 		// TODO se storage node não existir, retornar erro
 	}
 }

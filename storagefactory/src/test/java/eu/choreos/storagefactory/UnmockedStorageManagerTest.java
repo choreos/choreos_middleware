@@ -48,74 +48,9 @@ public class UnmockedStorageManagerTest {
 	}
 
 	// @Test
-	public void shouldCreateAndStoreNodeDescription() throws Exception {
-
-		StorageNode instantiatedNode = storageManager
-				.registerNewStorageNode(node1);
-
-		assertEquals(node1.getUuid(), instantiatedNode.getUuid());
-		assertEquals(node1.getType(), instantiatedNode.getType());
-	}
-
-	// @Test
-	public void shouldGetAnStorageNodeByItsID() throws Exception {
-
-		storageManager.registerNewStorageNode(node1);
-		storageManager.registerNewStorageNode(node2);
-
-		assertSame(node2.getUuid(), storageManager.registry.getNode("2")
-				.getUuid());
-		assertSame(node1.getUuid(), storageManager.registry.getNode("1")
-				.getUuid());
-	}
-
-	// @Test
-	public void shouldGetAllStorageNodes() throws Exception {
-
-		storageManager.registerNewStorageNode(node1);
-		storageManager.registerNewStorageNode(node2);
-
-		assertEquals(2, storageManager.registry.getNodes().size());
-	}
-
-	// @Test
-	public void shouldAddRemoveAndKeepCountOfNodes() throws Exception {
-
-		storageManager.registerNewStorageNode(node1);
-		assertEquals(1, storageManager.registry.getNodes().size());
-
-		storageManager.registerNewStorageNode(node2);
-		assertEquals(2, storageManager.registry.getNodes().size());
-
-		storageManager.destroyNode("2");
-		assertEquals(1, storageManager.registry.getNodes().size());
-
-		storageManager.destroyNode("1");
-		assertEquals(0, storageManager.registry.getNodes().size());
-	}
-
-	// @Test
-	public void shouldAddAndRemoveSingleNode() throws Exception {
-
-		assertEquals(0, storageManager.registry.getNodes().size());
-
-		storageManager.registerNewStorageNode(node1);
-		assertEquals(1, storageManager.registry.getNodes().size());
-		assertSame(node1.getUuid(), storageManager.registry.getNode("1")
-				.getUuid());
-
-		storageManager.destroyNode("1");
-
-		assertEquals(0, storageManager.registry.getNodes().size());
-
-	}
-
-	// @Test
 	public void shouldInstallMySqlRecipeOnNode() throws Exception {
 		fail("Not yet implemented...");
 		storageManager = new StorageNodeManager();
-
-		storageManager.registerNewStorageNode(node1);
 
 		String commandReturn = (new SshUtil("localhost"))
 				.runCommand("knife node show choreos-node");

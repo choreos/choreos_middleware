@@ -6,6 +6,7 @@ import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
 import eu.choreos.storagefactory.recipe.Recipe;
 import eu.choreos.storagefactory.recipe.RecipeDeployer;
 import eu.choreos.storagefactory.recipe.RecipeFactory;
+import eu.choreos.storagefactory.registry.StorageNodeRegistryFacade;
 
 public class StorageNodeManager {
 	public StorageNodeRegistryFacade registry;
@@ -22,13 +23,6 @@ public class StorageNodeManager {
 
 	public void setNodePoolManagerHandler(NodePoolManagerHandler npm) {
 		this.npm = npm;
-	}
-
-	public StorageNode registerNewStorageNode(StorageNode node) {
-
-		registry.registerNode(node);
-		System.out.println("Node created");
-		return node;
 	}
 
 	private Recipe createRecipe(StorageNode node) {
@@ -68,7 +62,6 @@ public class StorageNodeManager {
 	public StorageNode createNewStorageNode(StorageNodeSpec specifications) {
 		StorageNode node = new StorageNode(specifications);
 		deployNode(node);
-		registerNewStorageNode(node);
 
 		return node;
 	}
@@ -82,8 +75,6 @@ public class StorageNodeManager {
 			String id = storageNode.getUuid();
 
 			getNodePoolManagerHandler().destroyNode(id);
-
-			registry.unregisterNode(storageNodeId);
 
 		} catch (Exception e) {
 			System.out

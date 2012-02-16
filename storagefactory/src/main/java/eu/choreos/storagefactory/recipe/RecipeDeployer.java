@@ -18,7 +18,8 @@ public class RecipeDeployer {
 	}
 
 	private void uploadRecipe(Recipe recipe) {
-		CommandLineInterfaceHelper.runLocalCommand(createUploadCommand(recipe));
+		(new CommandLineInterfaceHelper())
+				.runLocalCommand(createUploadCommand(recipe));
 	}
 
 	private String createUploadCommand(Recipe recipe) {
