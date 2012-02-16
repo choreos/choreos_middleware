@@ -1,6 +1,5 @@
 package eu.choreos.storagefactory;
 
-import eu.choreos.nodepoolmanager.Node;
 import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
 import eu.choreos.storagefactory.recipe.Recipe;

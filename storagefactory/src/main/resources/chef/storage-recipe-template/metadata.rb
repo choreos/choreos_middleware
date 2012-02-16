@@ -7,7 +7,7 @@ version          "1.0.0"
 
 depends "mysql"
 
-attribute "storage/$UUID/id",
+attribute "storage/$UUID/uuid",
   :display_name => "the uuid of this schema",
   :default => "test"
 
@@ -23,7 +23,7 @@ attribute "storage/$UUID/dbpassword",
   :display_name => "the password",
   :default => "test"
 
-attribute "storage/$UUID/type",
+attribute "storage/$UUID/dbtype",
   :display_name => "the storageuuid type",
   :default => "test"
 

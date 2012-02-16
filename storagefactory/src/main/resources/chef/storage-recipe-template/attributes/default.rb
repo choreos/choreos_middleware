@@ -9,7 +9,7 @@
 
 
 # $UUID of the correlation/storage 
-default['storage']['$UUID']['id']		= "$UUID"
+default['storage']['$UUID']['uuid']		= "$UUID"
 
 # database user for the storage 
 default['storage']['$UUID']['dbuser']		= "$USER"
@@ -21,7 +21,7 @@ default['storage']['$UUID']['dbpassword']	= "$PASSWORD"
 default['storage']['$UUID']['schema']		= "$SCHEMA"
 
 # Type of the storage 
-default['storage']['$UUID']['type']		= "$TYPE"
+default['storage']['$UUID']['dbtype']		= "$TYPE"
 
 # Location of the storage deployment script
 #default['storage-$UUID']['sql-script']	= ENV['HOME']/$UUID-sql-script.sql

@@ -2,6 +2,7 @@ package eu.choreos.storagefactory.registry;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Hashtable;
 
 import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.utils.CommandLineInterfaceHelper;
@@ -15,59 +16,97 @@ public class StorageNodeRegistryFacade {
 		return getNode(nodeId, (new CommandLineInterfaceHelper()));
 	}
 
-	public StorageNode getNode(String nodeId, CommandLineInterfaceHelper cli) {
+	public StorageNode getNode(String nodeUuid, CommandLineInterfaceHelper cli) {
 		String queryResult;
-		queryResult = cli.runLocalCommand("knife search node storage_*_id:"
-				+ nodeId);
-		System.out.println("knife search node 'storage_*_id:" + nodeId + "'");
-		System.out.println(">>" + queryResult + "<<");
+		String command = "knife search node storage_*_uuid:" + nodeUuid
+				+ " -a storage";
+		System.out.println(command);
+		queryResult = cli.runLocalCommand(command);
 
-		// queryResult = CommandLineInterfaceHelper
-		// .runLocalCommand("knife search node \"attributes:storage/?????/id\"");
+		StorageNode storageNode = null;
+		for (StorageNode node : processQueryResult(queryResult))
+			storageNode = node;
 
-		if (queryResult.length() > 0) {
-
-			StorageNode storage = new StorageNode();
-			storage.setUri(getFullyQualifiedDomainName(queryResult));
-
-			return storage;
-
-		} else
-			return null;
+		return storageNode;
 	}
 
-	private String getFullyQualifiedDomainName(String queryResult) {
-		String[] responseLines = queryResult.split("" + '\n');
-		for (int i = 0; i < responseLines.length; i++) {
-			if (responseLines[i].contains("FQDN")) {
-				String[] parts = responseLines[2].split(":   ");
-				return parts[1].trim();
-			}
+	private StorageNode setStorageNodeData(Hashtable<String, String> table) {
+
+		StorageNode storage = new StorageNode();
+
+		for (String key : table.keySet()) {
+			System.out.println(key + " >> " + table.get(key));
 		}
-		return null;
+		storage.setUri(table.get("id"));
+
+		storage.setPassword(table.get("dbpassword"));
+		storage.setUser(table.get("dbuser"));
+		storage.setUuid(table.get("uuid"));
+		storage.setSchema(table.get("schema"));
+		storage.setType(table.get("dbtype"));
+
+		return storage;
 	}
 
 	public Collection<StorageNode> getNodes(CommandLineInterfaceHelper cli) {
 
-		Collection<StorageNode> allNodes = new ArrayList<StorageNode>();
-
 		String queryResult;
-		String command = "knife search node storage_*_id:*";
+		String command = "knife search node storage_*_uuid:* -a storage";
 		queryResult = cli.runLocalCommand(command);
 
 		System.out.println(command);
 		System.out.println(">>" + queryResult + "<<");
 
-		if (queryResult.length() > 0) {
+		return processQueryResult(queryResult);
+	}
 
-			StorageNode storage = new StorageNode();
-			storage.setUri(getFullyQualifiedDomainName(queryResult));
-			allNodes.add(storage);
+	private Collection<StorageNode> processQueryResult(String queryResult) {
 
-			return allNodes;
+		Collection<StorageNode> foundRecords = new ArrayList<StorageNode>();
 
-		} else
-			return null;
+		queryResult = queryResult.substring(queryResult.indexOf('\n') + 2);
+		// queryResult = queryResult + '\r';
+
+		String[] allLines = queryResult.split("" + '\n', -1);
+		// create a string with a single record
+		String singleRecord = "";
+		for (String line : allLines) {
+			singleRecord = singleRecord + line + '\n';
+			System.out.println(line.length());
+
+			if ((line.length() == 0) && singleRecord.contains(":")) {
+
+				// convert the string to a hash table
+				Hashtable<String, String> hashTable = processRecord(singleRecord + '\n');
+				// With the aid of the hash table, create a properly set
+				// StorageNode
+				StorageNode node = setStorageNodeData(hashTable);
+
+				// Add this node to the result collection
+				foundRecords.add(node);
+
+				// Start over the process for the next one.
+				singleRecord = "";
+			}
+		}
+
+		return foundRecords;
+	}
+
+	private Hashtable<String, String> processRecord(String currentRecord) {
+		Hashtable<String, String> table = new Hashtable<String, String>();
+
+		String lines[] = currentRecord.split("" + '\n');
+		for (String line : lines) {
+			if (line.contains(":")) {
+				String key = line.split(":")[0].trim();
+				String value = line.split(":")[1].trim();
+				table.put(key, value);
+			}
+		}
+
+		return table;
+
 	}
 
 	public Collection<StorageNode> getNodes() {

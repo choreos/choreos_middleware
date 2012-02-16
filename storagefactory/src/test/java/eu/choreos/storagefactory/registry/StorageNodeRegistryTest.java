@@ -1,6 +1,7 @@
 package eu.choreos.storagefactory.registry;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -21,29 +22,75 @@ public class StorageNodeRegistryTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 
+		// cliHelper = new CommandLineInterfaceHelper();
 		cliHelper = mock(CommandLineInterfaceHelper.class);
 
-		when(cliHelper.runLocalCommand("knife search node storage_*_id:12345"))
+		when(
+				cliHelper
+						.runLocalCommand("knife search node storage_*_uuid:987654321 -a storage"))
 				.thenReturn(
-						"Node Name:   choreos-node" + '\n'
-								+ "Environment: _default" + '\n'
-								+ "FQDN:       choreos-node" + '\n'
-								+ "IP:          10.0.3.15" + '\n'
-								+ "Run List:    recipe[storage12345]" + '\n'
-								+ "Roles:       " + '\n'
-								+ "Recipes:     storage12345" + '\n'
-								+ "Platform:    ubuntu 11.10" + '\n' + '\n');
+						"1 node found"
+								+ '\n'
+								+ '\n'
+								+ "id:   test-single-record"
+								+ '\n'
+								+ "storage: "
+								+ '\n'
+								+ "  987654321:        "
+								+ '\n'
+								+ "    dbpassword:          CODE"
+								+ '\n'
+								+ "    dbuser:    UZER"
+								+ '\n'
+								+ "    uuid:       987654321"
+								+ '\n'
+								+ "    schema:     SKEMA"
+								+ '\n'
+								+ "    sqlscript:    /tmp/987654321-sql-script.sql"
+								+ '\n' + "    dbtype:   MySQL" + '\n' + '\n');
 
-		when(cliHelper.runLocalCommand("knife search node storage_*_id:*"))
+		when(
+				cliHelper
+						.runLocalCommand("knife search node storage_*_uuid:* -a storage"))
 				.thenReturn(
-						"Node Name:   choreos-node" + '\n'
-								+ "Environment: _default" + '\n'
-								+ "FQDN:        choreos-node" + '\n'
-								+ "IP:          10.0.3.15" + '\n'
-								+ "Run List:    recipe[storage12345]" + '\n'
-								+ "Roles:       " + '\n'
-								+ "Recipes:     storage12345" + '\n'
-								+ "Platform:    ubuntu 11.10" + '\n' + '\n');
+						"2 nodes found"
+								+ '\n'
+								+ '\n'
+								+ "id:   test-multiple-records"
+								+ '\n'
+								+ "storage: "
+								+ '\n'
+								+ "  987654321:        "
+								+ '\n'
+								+ "    dbpassword:          CODE"
+								+ '\n'
+								+ "    dbuser:    UZER"
+								+ '\n'
+								+ "    uuid:       987654321"
+								+ '\n'
+								+ "    schema:     SKEMA"
+								+ '\n'
+								+ "    sqlscript:    /tmp/987654321-sql-script.sql"
+								+ '\n'
+								+ "    dbtype:   MySQL"
+								+ '\n'
+								+ '\n'
+								+ "id:   choreos-node"
+								+ '\n'
+								+ "storage: "
+								+ '\n'
+								+ "  123456789:        "
+								+ '\n'
+								+ "    dbpassword:          CODE"
+								+ '\n'
+								+ "    dbuser:    UZER"
+								+ '\n'
+								+ "    uuid:       123456789"
+								+ '\n'
+								+ "    schema:     SKEMA"
+								+ '\n'
+								+ "    sqlscript:    /tmp/123456789-sql-script.sql"
+								+ '\n' + "    dbtype:   MySQL" + '\n' + '\n');
 
 	}
 
@@ -53,20 +100,35 @@ public class StorageNodeRegistryTest {
 
 	@Test
 	public void testGetNode() {
-		StorageNode node = registry.getNode("12345", cliHelper);
-		assertEquals("choreos-node", node.getUri());
+		StorageNode node = registry.getNode("987654321", cliHelper);
+		assertTrue("Returned Node was null", node != null);
+		assertEquals("test-single-record", node.getUri());
+		assertEquals("987654321", node.getUuid());
+		assertEquals("MySQL", node.getType());
+		assertEquals("UZER", node.getUser());
+		assertEquals("CODE", node.getPassword());
+		assertEquals("SKEMA", node.getSchema());
 
 	}
 
 	@Test
 	public void testGetNodes() {
 		Collection<StorageNode> nodes = registry.getNodes(cliHelper);
-		assertEquals("There should be only one node registered", 1,
+		assertTrue("Returned Nodes was null", nodes != null);
+		assertEquals("There should be only one node registered", 2,
 				nodes.size());
+
 		for (StorageNode currentNode : nodes) {
-			assertEquals("The only registered node should be \"choreos-node\"",
-					"choreos-node", currentNode.getUri());
+			assertTrue("The node id should be \"test-multiple-records\"",
+					"test-multiple-records".equals(currentNode.getUri())
+							|| "choreos-node".equals(currentNode.getUri()));
 		}
+		assertEquals("There should be two nodes", 2, nodes.size());
 	}
 
+	@Test
+	public void shouldGetNodeFromUUIDForReal() {
+
+		assertEquals("choreos-node", registry.getNode("314159265").getUri());
+	}
 }

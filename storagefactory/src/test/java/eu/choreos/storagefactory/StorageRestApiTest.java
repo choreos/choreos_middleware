@@ -54,7 +54,7 @@ public class StorageRestApiTest {
 		// Since the method shouldReceiveStorageNodeWithProperTypeAndUuid
 		// sets the client.path to "storage" it only requires to
 		// add the "uuid" to the path.
-		client.path("12345");
+		client.path("314159265");
 		Response response = client.get();
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 	}
@@ -65,7 +65,7 @@ public class StorageRestApiTest {
 		// Since the method shouldReceiveStorageNodeWithProperTypeAndUuid
 		// sets the client.path to "storage" it only requires to
 		// add the "uuid" to the path.
-		client.path("12345");
+		client.path("314159265");
 		Response response = client.delete();
 		assertEquals(Family.SUCCESSFUL,
 				Status.fromStatusCode(response.getStatus()).getFamily());
@@ -79,7 +79,7 @@ public class StorageRestApiTest {
 		client.path("storages");
 		client.type("application/xml");
 		Response response = client
-				.post("<storageNodeSpec><uuid>uuid</uuid><type>MySQL</type></storageNodeSpec>");
+				.post("<storageNodeSpec><uuid>314159265</uuid><type>MySQL</type></storageNodeSpec>");
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 	}
 
@@ -119,7 +119,7 @@ public class StorageRestApiTest {
 		client.type("application/xml");
 		StorageNodeSpec spec = new StorageNodeSpec();
 		spec.setType("MySQL");
-		spec.setUuid("12345");
+		spec.setUuid("314159265");
 		StorageNode node = client.post(spec, StorageNode.class);
 		assertEquals(spec.getUuid(), node.getUuid());
 	}
@@ -127,7 +127,7 @@ public class StorageRestApiTest {
 	@Test
 	public void shouldReceiveValidNodeFromGetStorage() {
 
-		client.path("storages/12345");
+		client.path("storages/314159265");
 		StorageNode node = client.get(StorageNode.class);
 		assertTrue(node instanceof StorageNode);
 	}
