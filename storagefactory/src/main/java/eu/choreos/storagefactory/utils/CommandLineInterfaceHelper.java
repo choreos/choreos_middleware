@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 
 public class CommandLineInterfaceHelper {
 
-	public static String runLocalCommand(String command) {
+	public String runLocalCommand(String command) {
 		String commandReturn = "";
 
 		try {
