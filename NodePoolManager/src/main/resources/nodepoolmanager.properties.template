@@ -1,10 +1,12 @@
-AMAZON_ACCESS_KEY_ID=ABCDEF1HIJ2LM34PQ5ST
-AMAZON_SECRET_KEY=eix4Ahsorei4Thie5nochevei6Sai3chee0Ieth4
-AMAZON_KEY_PAIR=my_amazon_key_pair_name
-PRIVATE_SSH_KEY=/home/user/.ssh/amazon.pem
-SSH_KNOWN_HOSTS=/home/user/.ssh/known_hosts
-CHEF_ORGANIZATION_KEY_FILE=/home/user/chef/organization.pem
+AMAZON_ACCESS_KEY_ID=secret
+AMAZON_SECRET_KEY=secret
+# AMAZON_KEY_PAIR must be registered on the AWS web console
+AMAZON_KEY_PAIR=leofl
+# the correspondent public key must be registered on the AWS web console, related with the AMAZON_KEY_PAIR above
+PRIVATE_SSH_KEY=/home/leonardo/.ssh/leofl.pem 
+SSH_KNOWN_HOSTS=/home/leonardo/.ssh/known_hosts
+CHEF_ORGANIZATION_KEY_FILE=/home/leonardo/chef/chef-repo/.chef/validation_aguia.pem 
+CHEF_SERVER_URL=http://aguia1.ime.usp.br:4000 
+VALIDATION_CLIENT_NAME=validation_aguia
 CHEF_USER=leofl
-CHEF_USER_KEY_FILE=/home/user/chef/leofl.pem
-CHEF_SERVER_URL=https://api.opscode.com/organizations/usp
-VALIDATION_CLIENT_NAME=usp-validator
+CHEF_USER_KEY_FILE=/home/leonardo/chef/chef-repo/.chef/leofl.pem

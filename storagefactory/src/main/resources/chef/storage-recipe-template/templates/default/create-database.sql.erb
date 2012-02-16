@@ -8,21 +8,21 @@
 -- ##########################################################################
  
 
-DROP DATABASE IF EXISTS <%= node['storage']['$UUID']['schema'] %>;
+DROP DATABASE IF EXISTS <%= node['storage'] ['$UUID']['schema'] %>;
 
-CREATE DATABASE <%= node['storage']['$UUID']['schema'] %>;
-
-GRANT ALL 
-	ON  <%= node['storage']['$UUID']['schema'] %>.* 
-	TO '<%= node['storage']['$UUID']['user']   %>' 
-	IDENTIFIED BY '<%= node['storage']['$UUID']['password'] %>';
+CREATE DATABASE <%= node['storage'] ['$UUID']['schema'] %>;
 
 GRANT ALL 
-	ON  <%= node['storage']['$UUID']['schema'] %>.* 
-	TO '<%= node['storage']['$UUID']['user']   %>'@'localhost' 
-	IDENTIFIED BY '<%= node['storage']['$UUID']['pssword'] %>';
+	ON  <%= node['storage'] ['$UUID']['schema'] %>.* 
+	TO '<%= node['storage'] ['$UUID']['dbuser']   %>' 
+	IDENTIFIED BY '<%= node['storage'] ['$UUID']['dbpassword'] %>';
 
 GRANT ALL 
-	ON  <%= node['storage']['$UUID']['schema'] %>.* 
-	TO '<%= node['storage']['$UUID']['user']   %>'@'%' 
-	IDENTIFIED BY '<%= node['storage']['$UUID']['pssword'] %>';
+	ON  <%= node['storage'] ['$UUID']['schema'] %>.* 
+	TO '<%= node['storage'] ['$UUID']['dbuser']   %>'@'localhost' 
+	IDENTIFIED BY '<%= node['storage'] ['$UUID']['dbpassword'] %>';
+
+GRANT ALL 
+	ON  <%= node['storage'] ['$UUID']['schema'] %>.* 
+	TO '<%= node['storage'] ['$UUID']['dbuser']   %>'@'%' 
+	IDENTIFIED BY '<%= node['storage']['$UUID']['dbpassword'] %>';

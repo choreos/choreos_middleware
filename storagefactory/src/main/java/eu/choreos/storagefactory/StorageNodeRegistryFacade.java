@@ -6,7 +6,6 @@ import java.util.Map;
 
 import eu.choreos.storagefactory.datamodel.StorageNode;
 
-
 public class StorageNodeRegistryFacade {
 	public Map<String, StorageNode> instantiatedStorages;
 

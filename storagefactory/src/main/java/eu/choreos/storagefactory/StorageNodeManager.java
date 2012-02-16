@@ -1,5 +1,6 @@
 package eu.choreos.storagefactory;
 
+import br.usp.ime.choreos.nodepoolmanager.Node;
 import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
 import eu.choreos.storagefactory.recipe.Recipe;
@@ -9,7 +10,7 @@ import eu.choreos.storagefactory.recipe.RecipeFactory;
 public class StorageNodeManager {
 	public StorageNodeRegistryFacade registry;
 	private NodePoolManagerHandler npm;
-	
+
 	public StorageNodeManager() {
 		this.registry = new StorageNodeRegistryFacade();
 		this.setNodePoolManagerHandler(new NodePoolManagerHandler());
@@ -23,26 +24,55 @@ public class StorageNodeManager {
 		this.npm = npm;
 	}
 
-	public StorageNode registerNewStorageNode(StorageNodeSpec nodeSpec) {
+	public StorageNode registerNewStorageNode(StorageNode node) {
 
-		StorageNode storageNode = new StorageNode();
-		storageNode.setType(nodeSpec.getType());
-		storageNode.setUuid(nodeSpec.getUuid());
-		
-		registry.registerNode(storageNode);
-
+		registry.registerNode(node);
 		System.out.println("Node created");
-		return storageNode;
+		return node;
 	}
 
-	public void prepareForDeployment(StorageNodeSpec nodeSpec){
+	private Recipe createRecipe(StorageNode node) {
 		RecipeFactory factory = new RecipeFactory();
-		RecipeDeployer deployer = new RecipeDeployer(npm);
-		
-		Recipe recipe = factory.createRecipe(nodeSpec.getUuid());
-		
-		deployer.deployRecipe(recipe);
+
+		return factory.createRecipe(node);
+
 	}
+
+	public StorageNode deployNode(StorageNode node) {
+
+		prepareNodeForDatabase(node);
+
+		Recipe recipe = createRecipe(node);
+
+		sendRecipeToNode(node, recipe);
+
+		return node;
+	}
+
+	private void prepareNodeForDatabase(StorageNode node) {
+		// Currently works only on MYSQL
+		node.setSchema(node.getUuid());
+		node.setUser(node.getUuid());
+		node.setPassword(node.getUuid());
+	}
+
+	private void sendRecipeToNode(StorageNode node, Recipe recipe) {
+		RecipeDeployer deployer = new RecipeDeployer(npm);
+
+		String deployedHostname;
+		deployedHostname = deployer.deployRecipe(recipe);
+
+		node.setUri(deployedHostname);
+	}
+
+	public StorageNode createNewStorageNode(StorageNodeSpec specifications) {
+		StorageNode node = new StorageNode(specifications);
+		deployNode(node);
+		registerNewStorageNode(node);
+
+		return node;
+	}
+
 	public void destroyNode(String storageNodeId) {
 		StorageNode storageNode;
 
@@ -50,7 +80,7 @@ public class StorageNodeManager {
 			storageNode = registry.getNode(storageNodeId);
 
 			String id = storageNode.getUuid();
-			
+
 			getNodePoolManagerHandler().destroyNode(id);
 
 			registry.unregisterNode(storageNodeId);

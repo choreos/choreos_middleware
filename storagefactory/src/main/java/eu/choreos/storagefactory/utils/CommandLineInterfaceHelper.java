@@ -10,13 +10,13 @@ public class CommandLineInterfaceHelper {
 		String commandReturn = "";
 
 		try {
-			Process process = Runtime.getRuntime().exec(command);
-
+			Process p = Runtime.getRuntime().exec(command);
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					p.getInputStream()));
 			String line;
-			BufferedReader bri = new BufferedReader(new InputStreamReader(
-					process.getInputStream()));
-			while ((line = bri.readLine()) != null) {
-				commandReturn.concat(line);
+			while ((line = in.readLine()) != null) {
+				System.out.println(line);
+				commandReturn = commandReturn + line;
 			}
 		} catch (IOException e) {
 			System.out.println("[Storage Node] - Error while executing command"

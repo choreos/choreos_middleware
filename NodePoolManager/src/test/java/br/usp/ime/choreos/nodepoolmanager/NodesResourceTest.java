@@ -13,7 +13,7 @@ import org.junit.After;
 import org.junit.Test;
 
 public class NodesResourceTest extends BaseTest {
-
+	
     @After
     public void resetPath() {
         client.back(true);
@@ -23,39 +23,37 @@ public class NodesResourceTest extends BaseTest {
     public void createNode() throws Exception {
         client.path("nodes");
 
-        sampleNode = new Node();
-        sampleNode.setImage("1");
+        NodeRestRepresentation requestNode = new NodeRestRepresentation();
+        Response response = client.post(requestNode);
+        NodeRestRepresentation responseNode = getNodeFromResponse(response);
 
-        Response response = client.post(sampleNode);
-        sampleNode = getNodeFromResponse(response);
-
-        assertEquals("1", sampleNode.getImage());
+        assertEquals(EXPECTED_IMAGE, responseNode.getImage());
         assertEquals(Status.CREATED.getStatusCode(), response.getStatus());
     }
 
-    private static Node getNodeFromResponse(Response response) {
+    private static NodeRestRepresentation getNodeFromResponse(Response response) {
         String location = (String) response.getMetadata().get("Location").get(0);
         WebClient webClient = WebClient.create(location);
-        return webClient.get(Node.class);
+        return webClient.get(NodeRestRepresentation.class);
     }
 
     @Test
     public void listNodes() throws Exception {
-        final String image2 = "1";
+        final String image2 = TEST_IMAGE;
 
-        Node node = new Node();
+        NodeRestRepresentation node = new NodeRestRepresentation();
         node.setImage(image2);
 
         client.path("nodes");
         client.post(node);
 
-        Collection<? extends Node> nodeCollection = client.getCollection(Node.class);
+        Collection<? extends NodeRestRepresentation> nodeCollection = client.getCollection(NodeRestRepresentation.class);
         int nodeAmount = nodeCollection.size();
-        Node[] nodes = nodeCollection.toArray(new Node[nodeAmount]);
+        NodeRestRepresentation[] nodes = nodeCollection.toArray(new NodeRestRepresentation[nodeAmount]);
 
         assertTrue(nodeAmount >= 2);
-        assertEquals("1", nodes[nodeAmount - 2].getImage());
-        assertEquals(image2, nodes[nodeAmount - 1].getImage());
+        assertEquals(EXPECTED_IMAGE, nodes[nodeAmount - 2].getImage());
+        assertEquals(EXPECTED_IMAGE, nodes[nodeAmount - 1].getImage());
 
         resetPath();
         destroyNode(nodes[nodeAmount - 1]);

@@ -34,6 +34,8 @@ import com.google.inject.Module;
 
 public class AWSCloudProvider implements CloudProvider {
 
+	private static String DEFAULT_IMAGE = "us-east-1/ami-ccf405a5";
+	
 	private ComputeService getClient(String imageId) {
 		String provider = Configuration.get("DEFAULT_PROVIDER");
 		if (provider == null || provider.isEmpty()) {
@@ -64,7 +66,7 @@ public class AWSCloudProvider implements CloudProvider {
 
 		String imageId = node.getImage();
 		if (StringUtils.isEmpty(imageId)) {
-			imageId = "us-east-1/ami-ccf405a5"; // TODO put default image in a
+			imageId = DEFAULT_IMAGE; // TODO put default image in a
 												// configuration file
 		}
 		String image = imageId.substring(imageId.indexOf('/') + 1);

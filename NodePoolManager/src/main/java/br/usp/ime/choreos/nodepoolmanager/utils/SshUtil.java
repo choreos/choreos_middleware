@@ -12,6 +12,7 @@ import com.jcraft.jsch.Session;
 
 public class SshUtil {
 
+	private static String REMOTE_USER = "ubuntu";
     private final String hostname;
 
     public SshUtil(String hostname) {
@@ -23,7 +24,7 @@ public class SshUtil {
         	Session session = getSshSession();
         	session.connect(5000);
         } catch (JSchException e) {
-        	System.out.println(e.getMessage());
+        	System.out.println("** " + e.getMessage());
             return false;
         }
         return true;
@@ -51,11 +52,13 @@ public class SshUtil {
     }
 
 	private Session getSshSession() throws JSchException {
-		String user = "root";
-
-        JSch jsch = new JSch();
-        jsch.addIdentity(Configuration.get("PRIVATE_SSH_KEY"));
-        // 
+		
+		String user = REMOTE_USER;
+		String privateKey = Configuration.get("PRIVATE_SSH_KEY");
+		
+        JSch jsch = new JSch();       
+        jsch.addIdentity(privateKey);
+        
         Session session = jsch.getSession(user, hostname);
         session.setConfig("StrictHostKeyChecking", "no");
         

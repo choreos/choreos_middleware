@@ -1,10 +1,14 @@
 package eu.choreos.storagefactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NodePoolManagerHandler {
 
+	private static List<String> deployedRecipe = new ArrayList<String>();
+	
 	public String createNode(String recipe) {
+		deployedRecipe.add(recipe);
 		return "choreos-node";
 	}
 
@@ -13,7 +17,7 @@ public class NodePoolManagerHandler {
 	}
 
 	public List<String> getNodes() {
-		return null;
+		return deployedRecipe;
 	}
 
 	public void destroyNode(String id) {
