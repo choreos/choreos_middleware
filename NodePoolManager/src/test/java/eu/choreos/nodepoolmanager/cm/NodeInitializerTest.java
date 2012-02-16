@@ -23,9 +23,9 @@ public class NodeInitializerTest {
     public static void createNode() throws RunNodesException {
         node.setImage("us-east-1/ami-ccf405a5");
         Configuration.set("DEFAULT_PROVIDER", "");
-        node = infra.createOrUseExistingNode(node);
+        node = infra.createNode(node);
     }
-
+    
     @Test
     public void initializeNode() throws Exception {
         

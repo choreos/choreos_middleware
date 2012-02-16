@@ -14,6 +14,7 @@ public class Node {
 	private String privateKeyFile;
 	private String image;
 	private Integer state;
+	private String chefName; // nos comandos do chef é o NODE_NAME
 
 	public Node() {
 	}
@@ -46,6 +47,19 @@ public class Node {
 		rest.state = state;
 		
 		return rest;
+	}
+
+	
+	public String getChefName() {
+		return chefName;
+	}
+
+	public void setChefName(String chefName) {
+		this.chefName = chefName;
+	}
+
+	public void setPrivateKeyFile(String privateKeyFile) {
+		this.privateKeyFile = privateKeyFile;
 	}
 
 	public String getId() {
@@ -148,6 +162,8 @@ public class Node {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+				+ ((chefName == null) ? 0 : chefName.hashCode());
 		result = prime * result + ((cpus == null) ? 0 : cpus.hashCode());
 		result = prime * result
 				+ ((hostname == null) ? 0 : hostname.hashCode());
@@ -174,6 +190,11 @@ public class Node {
 		if (getClass() != obj.getClass())
 			return false;
 		Node other = (Node) obj;
+		if (chefName == null) {
+			if (other.chefName != null)
+				return false;
+		} else if (!chefName.equals(other.chefName))
+			return false;
 		if (cpus == null) {
 			if (other.cpus != null)
 				return false;
@@ -242,8 +263,8 @@ public class Node {
 		return "Node [id=" + id + ", cpus=" + cpus + ", ram=" + ram
 				+ ", storage=" + storage + ", so=" + so + ", zone=" + zone
 				+ ", ip=" + ip + ", hostname=" + hostname + ", user=" + user
-				+ ", privateKey=" + privateKeyFile + ", image=" + image
-				+ ", state=" + state + "]";
+				+ ", privateKeyFile=" + privateKeyFile + ", image=" + image
+				+ ", state=" + state + ", chefName=" + chefName + "]";
 	}
 
 	

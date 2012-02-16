@@ -10,3 +10,4 @@ CHEF_SERVER_URL=http://aguia1.ime.usp.br:4000
 VALIDATION_CLIENT_NAME=validation_aguia
 CHEF_USER=leofl
 CHEF_USER_KEY_FILE=/home/leonardo/chef/chef-repo/.chef/leofl.pem
+CHEF_CONFIG_FILE=/home/leonardo/chef/chef-repo/.chef/knife.rb

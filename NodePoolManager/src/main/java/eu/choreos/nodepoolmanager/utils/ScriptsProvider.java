@@ -10,49 +10,49 @@ import eu.choreos.nodepoolmanager.Configuration;
 
 
 public class ScriptsProvider {
-
-    public String getChefBootstrapScript(String keyFileName) throws IOException {
-    	URL scriptFile = ClassLoader.getSystemResource("chef/bootstrap_script.sh");
+	
+	private static String CHEF_BOOTSTRAP_SCRIPT = "chef/chef_bootstrap.sh";
+	private static String CHEF_ADD_COOKBOOK_SCRIPT = "chef/chef_add_cookbook.sh";
+	private static String CHEF_NAME_SCRIPT = "chef/my_chef_name.sh";
+	
+    public static String getChefBootstrapScript(String pKeyFile, String ip, String user) throws IOException {
+    	
+    	URL scriptFile = ClassLoader.getSystemResource(CHEF_BOOTSTRAP_SCRIPT);
         String command = FileUtils.readFileToString(new File(scriptFile.getFile()));
 
-        String pkey = FileUtils.readFileToString(new File(keyFileName));
+        String config = Configuration.get("CHEF_CONFIG_FILE");
 
-        command = command.replace("$pkey", pkey);
-        command = command.replace("$chefserver", Configuration.get("CHEF_SERVER_URL"));
-        return command.replace("$validator", Configuration.get("VALIDATION_CLIENT_NAME"));
+        command = command.replace("$privateKeyFile", pKeyFile);
+        command = command.replace("$ip", ip);
+        command = command.replace("$user", user);
+        command = command.replace("$knifeFile", config);
+        
+        return command;
     }
 
-    public String getChefServerManagerScript(String hostname) throws IOException {
-    	URL scriptFile = ClassLoader.getSystemResource("chef/chef_server_manager.sh");
+    public static String getChefAddCookbook(String nodeName, String ip, String cookbook) throws IOException {
+    	
+    	URL scriptFile = ClassLoader.getSystemResource(CHEF_ADD_COOKBOOK_SCRIPT);
     	String command = FileUtils.readFileToString(new File(scriptFile.getFile()));
 
-    	String user = Configuration.get("CHEF_USER");
-    	String user_key_file = Configuration.get("CHEF_USER_KEY_FILE");
-    	String chef_server_url = Configuration.get("CHEF_SERVER_URL");
+        String config = Configuration.get("CHEF_CONFIG_FILE");
 
-    	command = command.replace("$userkeyfile", user_key_file);
-    	command = command.replace("$chefserverurl", chef_server_url);
-    	command = command.replace("$hostname", hostname);
+        System.out.println("<<"+command);
+        System.out.println("nodeName= " + nodeName);
+    	command = command.replace("$nodeName", nodeName);
+    	command = command.replace("$ip", ip);
     	command = command.replace("$recipe", "default");
-    	command = command.replace("$cookbook", "petals");
-    	return command.replace("$chefuser", user);
+    	command = command.replace("$cookbook", cookbook);
+    	command = command.replace("$knifeFile", config);
+
+    	return command;
     }
- 
-    public static String getChefServerManagerScript(String hostname, String chefCookbook) throws IOException {
-    	URL scriptFile = ClassLoader.getSystemResource("chef/chef_server_manager.sh");
+    
+    public static String getChefName() throws IOException {
+    	
+    	URL scriptFile = ClassLoader.getSystemResource(CHEF_NAME_SCRIPT);
     	String command = FileUtils.readFileToString(new File(scriptFile.getFile()));
-
-    	String chefUser = Configuration.get("CHEF_USER");
-    	String user_key_file = Configuration.get("CHEF_USER_KEY_FILE");
-    	String chef_server_url = Configuration.get("CHEF_SERVER_URL");
-
-    	command = command.replace("$userkeyfile", user_key_file);
-    	command = command.replace("$chefserverurl", chef_server_url);
-    	command = command.replace("$hostname", hostname);
-    	command = command.replace("$recipe", "default");
-    	//command = command.replace("$cookbook", "petals");
-    	command = command.replace("$cookbook", chefCookbook);
-    	return command.replace("$chefuser", chefUser);
+    	return command;
     }
 
 }

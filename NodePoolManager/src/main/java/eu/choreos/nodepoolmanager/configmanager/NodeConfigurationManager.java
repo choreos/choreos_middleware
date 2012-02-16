@@ -2,7 +2,6 @@ package eu.choreos.nodepoolmanager.configmanager;
 
 import java.io.IOException;
 
-import eu.choreos.nodepoolmanager.Configuration;
 import eu.choreos.nodepoolmanager.datamodel.Node;
 import eu.choreos.nodepoolmanager.utils.ScriptsProvider;
 import eu.choreos.nodepoolmanager.utils.SshUtil;
@@ -25,8 +24,17 @@ public class NodeConfigurationManager {
 
  		String command;
 		try {
-			command = new ScriptsProvider().getChefBootstrapScript(Configuration.get("CHEF_ORGANIZATION_KEY_FILE"));
+			// bootstrap node
+			command = ScriptsProvider.getChefBootstrapScript(node.getPrivateKeyFile(), node.getIp(), node.getUser());
+			System.out.println(command);
 			Runtime.getRuntime().exec(command);
+			
+			// get chef name
+			command = ScriptsProvider.getChefName();
+			String chefClientName = ssh.runCommand(command);
+			node.setChefName(chefClientName);
+			
+			// install cookbook
 			this.installCookbook(node, INITIAL_RECIPE);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -39,18 +47,16 @@ public class NodeConfigurationManager {
         
     	String createdFile = "chef-getting-started.txt";
     	String returnText = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile()).runCommand("ls " + createdFile);
-        return returnText.equals(createdFile);
+        System.out.println(">>"+returnText+"<<");
+    	return returnText.equals(createdFile);
     }
     
-	public String installCookbook(Node node, String recipe) throws IOException, Exception{
+	public String installCookbook(Node node, String cookbook) throws IOException, Exception{
 		
-		String command;
-		//command = new ScriptsProvider().getChefServerManagerScript(node.getIp());
-		command = ScriptsProvider.getChefServerManagerScript(node.getIp(), recipe);
+		String command = ScriptsProvider.getChefAddCookbook(node.getChefName(), node.getIp(), cookbook);
 		System.out.println(command);
         Runtime.getRuntime().exec(command);
         
-        //return this.updateNodeConfiguration(node.getIp());
         return this.updateNodeConfiguration(node);
 	}
 

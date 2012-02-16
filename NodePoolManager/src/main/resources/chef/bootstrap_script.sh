@@ -1,3 +1,4 @@
+#no more used... we use bootstrap instead
 sudo bash -c '
 if [ ! -f /usr/bin/chef-client ]; then
   apt-get update
