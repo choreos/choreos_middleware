@@ -16,7 +16,7 @@ public class CommandLineInterfaceHelper {
 			String line;
 			while ((line = in.readLine()) != null) {
 				System.out.println(line);
-				commandReturn = commandReturn + line;
+				commandReturn = commandReturn + line + '\n';
 			}
 		} catch (IOException e) {
 			System.out.println("[Storage Node] - Error while executing command"
