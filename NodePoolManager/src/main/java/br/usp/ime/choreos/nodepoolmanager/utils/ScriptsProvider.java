@@ -36,4 +36,22 @@ public class ScriptsProvider {
     	command = command.replace("$cookbook", "petals");
     	return command.replace("$chefuser", user);
     }
+ 
+    public static String getChefServerManagerScript(String hostname, String chefCookbook) throws IOException {
+    	URL scriptFile = ClassLoader.getSystemResource("chef/chef_server_manager.sh");
+    	String command = FileUtils.readFileToString(new File(scriptFile.getFile()));
+
+    	String chefUser = Configuration.get("CHEF_USER");
+    	String user_key_file = Configuration.get("CHEF_USER_KEY_FILE");
+    	String chef_server_url = Configuration.get("CHEF_SERVER_URL");
+
+    	command = command.replace("$userkeyfile", user_key_file);
+    	command = command.replace("$chefserverurl", chef_server_url);
+    	command = command.replace("$hostname", hostname);
+    	command = command.replace("$recipe", "default");
+    	//command = command.replace("$cookbook", "petals");
+    	command = command.replace("$cookbook", chefCookbook);
+    	return command.replace("$chefuser", chefUser);
+    }
+
 }

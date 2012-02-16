@@ -34,8 +34,10 @@ import com.google.inject.Module;
 
 public class AWSCloudProvider implements CloudProvider {
 
-	private static String DEFAULT_IMAGE = "us-east-1/ami-ccf405a5";
-	
+	private static String PROVIDER="aws-ec2";
+	private static String DEFAULT_IMAGE= "us-east-1/ami-ccf405a5";
+
+	@Deprecated
 	private ComputeService getClient(String imageId) {
 		String provider = Configuration.get("DEFAULT_PROVIDER");
 		if (provider == null || provider.isEmpty()) {
@@ -66,12 +68,11 @@ public class AWSCloudProvider implements CloudProvider {
 
 		String imageId = node.getImage();
 		if (StringUtils.isEmpty(imageId)) {
-			imageId = DEFAULT_IMAGE; // TODO put default image in a
-												// configuration file
+			imageId = AWSCloudProvider.DEFAULT_IMAGE; // TODO put default image in a configuration file
 		}
 		String image = imageId.substring(imageId.indexOf('/') + 1);
 
-		ComputeService client = getClient(image);
+		ComputeService client = getClient(imageId, AWSCloudProvider.PROVIDER);//getClient(image);
 		Set<? extends NodeMetadata> createdNodes = client.createNodesInGroup(
 				"default", 1, getTemplate(client, imageId));
 		NodeMetadata cloudNode = Iterables.get(createdNodes, 0);
@@ -102,7 +103,7 @@ public class AWSCloudProvider implements CloudProvider {
 
 
 	public Node getNode(String nodeId) throws NodeNotFoundException {
-		ComputeService client = getClient("");
+		ComputeService client = getClient("",AWSCloudProvider.PROVIDER);//getClient("");
 
 		Node node = new Node();
 
@@ -136,7 +137,7 @@ public class AWSCloudProvider implements CloudProvider {
 		// }
 		// }
 
-		ComputeService client = getClient("");
+		ComputeService client = getClient("", AWSCloudProvider.PROVIDER);//getClient("");
 		Set<? extends ComputeMetadata> cloudNodes = client.listNodes();
 		for (ComputeMetadata computeMetadata : cloudNodes) {
 			NodeMetadata cloudNode = client.getNodeMetadata(computeMetadata
@@ -155,7 +156,7 @@ public class AWSCloudProvider implements CloudProvider {
 	}
 
 	public void destroyNode(String id) {
-		ComputeService client = getClient("");
+		ComputeService client = getClient("", AWSCloudProvider.PROVIDER);//getClient("");
 		client.destroyNode(id);
 
 		client.getContext().close();
