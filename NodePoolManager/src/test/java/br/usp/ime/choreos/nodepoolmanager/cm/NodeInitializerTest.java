@@ -10,6 +10,7 @@ import org.junit.Test;
 import br.usp.ime.choreos.nodepoolmanager.Configuration;
 import br.usp.ime.choreos.nodepoolmanager.Node;
 import br.usp.ime.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
+import br.usp.ime.choreos.nodepoolmanager.configmanager.NodeConfigurationManager;
 import br.usp.ime.choreos.nodepoolmanager.configmanager.NodeInitializer;
 import br.usp.ime.choreos.nodepoolmanager.utils.SshUtil;
 
@@ -20,7 +21,7 @@ public class NodeInitializerTest {
     @BeforeClass
     public static void createNode() throws RunNodesException {
         node.setImage("us-east-1/ami-ccf405a5");
-        Configuration.set("DEFAULT_PROVIDER", "");
+        Configuration.set("DEFAULT_PROVIDER", "");//
         node = infra.createOrUseExistingNode(node);
     }
 
@@ -31,13 +32,25 @@ public class NodeInitializerTest {
         while (!ssh.isAccessible())
             ;
 
-        NodeInitializer ni = new NodeInitializer(node.getIp());
-        ni.cleanPetals();
+        NodeConfigurationManager configurationManager = new NodeConfigurationManager();
+        
+        
+        assertFalse(configurationManager.isInitialized(node));
+        
+        configurationManager.cleanPetals(node);
+        configurationManager.initializeNode(node);//tem clean?
+		configurationManager.installCookbook(node, "petals");
+        
+		 assertTrue(configurationManager.isInitialized(node));
+		
+		//NodeInitializer ni = new NodeInitializer(node.getIp());
+        //ni.cleanPetals();
 
-        assertFalse(ni.isInitialized());
+        //assertFalse(ni.isInitialized());
 
-        ni.initialize();
+        //ni.initialize();
+        //ni.installPetals();
 
-        assertTrue(ni.isInitialized());
+         //assertTrue(ni.isInitialized());
     }
 }

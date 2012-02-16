@@ -3,9 +3,11 @@ package br.usp.ime.choreos.nodepoolmanager.configmanager;
 import java.io.IOException;
 
 import br.usp.ime.choreos.nodepoolmanager.Configuration;
+import br.usp.ime.choreos.nodepoolmanager.Node;
 import br.usp.ime.choreos.nodepoolmanager.utils.ScriptsProvider;
 import br.usp.ime.choreos.nodepoolmanager.utils.SshUtil;
 
+@Deprecated
 public class NodeInitializer {
 
     private final String hostname;
@@ -14,30 +16,35 @@ public class NodeInitializer {
         this.hostname = hostname;
     }
 
+    @Deprecated
     public void cleanPetals() throws Exception {
         new SshUtil(hostname).runCommand("sudo rm -rf /opt/*\n");
     }
 
+    @Deprecated
     public boolean isInitialized() throws Exception {
         String returnText = "";
         returnText = new SshUtil(hostname).runCommand("ls /opt");
         System.out.println(">>"+returnText+"<<");
         return !returnText.equals("");
     }
+    
+    
 
-    public String initialize() throws Exception {
+    public void initialize() throws Exception {
         System.out.println("Initializing node with chef");
-        String chefOrganizationKeyFile = Configuration.get("CHEF_ORGANIZATION_KEY_FILE");
-        System.out.println("chefOrganizationKeyFile= " + chefOrganizationKeyFile);
 
-        String command = new ScriptsProvider().getChefBootstrapScript(chefOrganizationKeyFile);
+        String command = new ScriptsProvider().getChefBootstrapScript(Configuration.get("CHEF_ORGANIZATION_KEY_FILE"));
         //new SshUtil(hostname).runCommand(command);
         Runtime.getRuntime().exec(command);
         
-        return installPetals();
+        //return installPetals();
     }
+    
+    
 
-	private String installPetals() throws IOException, Exception {
+    @Deprecated
+	public String installPetals() throws IOException, Exception {
 		String command;
 		command = new ScriptsProvider().getChefServerManagerScript(hostname);
 		System.out.println(command);

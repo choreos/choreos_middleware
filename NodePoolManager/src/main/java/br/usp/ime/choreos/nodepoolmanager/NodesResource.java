@@ -34,11 +34,21 @@ public class NodesResource {
     public Response createNode(NodeRestRepresentation node, @Context UriInfo uriInfo) throws URISyntaxException {
         Response response;
 
-    	String nodeId = controller.createNode(node);
+    	String nodeId = controller.createNode(new Node(node));
         UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
         uriBuilder.path(NodeResource.class);
         response = Response.created(uriBuilder.build(nodeId)).build();
 
         return response;
+    }
+    
+    @POST
+    public Response createNode(NodeRestRepresentation node, Cookbook coobook, @Context UriInfo uriInfo) throws URISyntaxException {
+        Response response;
+
+    	String nodeId = controller.createNode(new Node(node),coobook);
+        //TODO
+    	
+        return null;
     }
 }
