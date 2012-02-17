@@ -1,4 +1,4 @@
-package eu.choreos.nodepoolmanager.utils;
+package eu.choreos.nodepoolmanager.chef;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,17 +30,14 @@ public class ScriptsProvider {
         return command;
     }
 
-    public static String getChefAddCookbook(String nodeName, String ip, String cookbook) throws IOException {
+    public static String getChefAddCookbook(String nodeName, String cookbook) throws IOException {
     	
     	URL scriptFile = ClassLoader.getSystemResource(CHEF_ADD_COOKBOOK_SCRIPT);
     	String command = FileUtils.readFileToString(new File(scriptFile.getFile()));
 
         String config = Configuration.get("CHEF_CONFIG_FILE");
 
-        System.out.println("<<"+command);
-        System.out.println("nodeName= " + nodeName);
     	command = command.replace("$nodeName", nodeName);
-    	command = command.replace("$ip", ip);
     	command = command.replace("$recipe", "default");
     	command = command.replace("$cookbook", cookbook);
     	command = command.replace("$knifeFile", config);

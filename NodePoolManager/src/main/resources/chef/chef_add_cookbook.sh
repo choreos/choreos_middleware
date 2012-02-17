@@ -1,1 +1,1 @@
-knife node run_list add $nodeName -a $ip $cookbook -c $knifeFile
+knife node run_list add $nodeName $cookbook -c $knifeFile

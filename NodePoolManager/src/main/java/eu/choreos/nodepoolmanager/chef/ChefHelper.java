@@ -1,4 +1,4 @@
-package eu.choreos.nodepoolmanager.utils;
+package eu.choreos.nodepoolmanager.chef;
 
 import java.io.File;
 import java.io.IOException;

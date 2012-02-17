@@ -1,11 +1,11 @@
-package eu.choreos.nodepoolmanager.utils;
+package eu.choreos.nodepoolmanager.chef;
 
 import static org.junit.Assert.assertEquals;
 
 import org.jclouds.chef.domain.Role;
 import org.junit.Test;
 
-import eu.choreos.nodepoolmanager.utils.ChefHelper;
+import eu.choreos.nodepoolmanager.chef.ChefHelper;
 
 
 public class ChefHelperTest {
