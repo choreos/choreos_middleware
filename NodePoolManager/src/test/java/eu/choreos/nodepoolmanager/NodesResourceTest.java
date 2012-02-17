@@ -5,6 +5,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -12,6 +14,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.After;
 import org.junit.Test;
 
+import eu.choreos.nodepoolmanager.datamodel.Config;
 import eu.choreos.nodepoolmanager.datamodel.NodeRestRepresentation;
 
 
@@ -61,5 +64,34 @@ public class NodesResourceTest extends BaseTest {
         resetPath();
         String id = (nodes[nodeAmount - 1]).getId();
         infrastructure.destroyNode(id);
+    }
+    
+    @Test
+    public void shouldApplyValidCookbook(){
+    	client.path("configs");   	
+    	
+    	Config config = new Config();
+    	config.setName("getting-started2");
+    	//NodeRestRepresentation requestNode = new NodeRestRepresentation();
+        Response response = client.post(config);
+        NodeRestRepresentation responseNode = getNodeFromResponse(response);
+
+        assertEquals(EXPECTED_IMAGE, responseNode.getImage());
+        assertEquals(Status.CREATED.getStatusCode(), response.getStatus());
+
+    }
+    
+    @Test
+    public void shouldNotApplyInValidCookbook(){
+    	client.path("configs");   	
+    	
+    	Config config = new Config();
+    	config.setName("xyz");
+    	//NodeRestRepresentation requestNode = new NodeRestRepresentation();
+        Response response = client.post(config);
+        NodeRestRepresentation responseNode = getNodeFromResponse(response);
+
+        assertEquals(Status.INTERNAL_SERVER_ERROR, response.getStatus());
+
     }
 }

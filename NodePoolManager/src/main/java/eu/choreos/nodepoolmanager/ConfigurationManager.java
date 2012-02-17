@@ -32,6 +32,7 @@ public class ConfigurationManager {
 		try {
 			// bootstrap node
 			command = ScriptsProvider.getChefBootstrapScript(node.getPrivateKeyFile(), node.getIp(), node.getUser());
+			System.out.println("Bootstrap command = [" + command+"]");
 			CommandLine.runLocalCommand(command);
 			
 			// get chef name
@@ -65,6 +66,7 @@ public class ConfigurationManager {
 	public void installRecipe(Node node, String cookbook, String recipe) throws IOException, Exception{
 		
 		String command = ScriptsProvider.getChefAddCookbook(node.getChefName(), cookbook, recipe);
+		System.out.println("Install recipe command = [" + command+"]");
         CommandLine.runLocalCommand(command);
         this.updateNodeConfiguration(node);
 	}
