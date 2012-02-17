@@ -1,5 +1,7 @@
 package eu.choreos.ServiceDeployer.rest;
 
+import java.net.URL;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -13,81 +15,100 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.xml.bind.JAXBElement;
 
+import eu.choreos.ServiceDeployer.ServiceDeployer;
 import eu.choreos.ServiceDeployer.datamodel.Service;
 import eu.choreos.ServiceDeployer.datamodel.ServiceSpec;
 
 /**
- * Service Deployer REST API
- * resource: services
+ * Service Deployer REST API resource: services
  * 
  * @author alfonso, leonardo, nelson
- *
+ * 
  */
 @Path("/serviceDeployer")
 public class ServicesResource {
 
+	ServiceDeployer serviceDeployer = new ServiceDeployer();
+
 	/**
-	 * Client requests a service (new or already created) 
-	 * @param serviceXML Service request XML
-	 * @return A new service (or service already created) according to specifications.  
+	 * Client requests a service (new or already created)
+	 * 
+	 * @param serviceXML
+	 *            Service request XML
+	 * @return A new service (or service already created) according to
+	 *         specifications.
 	 */
 	@POST
 	@Path("/services")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
 	public Response requestService(JAXBElement<ServiceSpec> serviceSpecXML) {
-		
+
 		ServiceSpec serviceSpec = serviceSpecXML.getValue();
 		if (serviceSpec.getCodeUri() == null || serviceSpec.getType() == null)
 			return Response.status(Status.BAD_REQUEST).build();
-		
+
 		// TODO trocar bloco abaixo para o que precisamos fazer
-		Service service = new Service();
-		service.setId("12345"); 
-		
-		return Response.ok(service).build();
+		URL serviceURL = serviceDeployer.deploy(new Service(serviceSpec));
+
+		return Response.ok(serviceURL).build();
 	}
-	
+
 	/**
 	 * Client requests a service by ID
-	 * @param serviceID of required service 
+	 * 
+	 * @param serviceID
+	 *            of required service
 	 * @return a service found
 	 */
 	@GET
 	@Path("/services/{serviceID}")
 	@Produces(MediaType.APPLICATION_XML)
-	public Service getService(@PathParam("serviceID") String serviceID){
-		
+	public Service getService(@PathParam("serviceID") String serviceID) {
+
 		// TODO trocar bloco abaixo para o que precisamos fazer
-		Service service = new Service();
-		service.setId(serviceID+"007");
-		service.setUri("localhost");
-		
+		Service service = serviceDeployer.getService(serviceID);
 		return service;
 	}
 
 	/**
-	 * Client requests update specifications of a service 
-	 * @param serviceXML: new specifications in order to update 
+	 * Client requests update specifications of a service
+	 * 
+	 * @param serviceXML
+	 *            : new specifications in order to update
+	 * @return
 	 */
 	@PUT
 	@Path("/services/")
 	@Consumes(MediaType.APPLICATION_XML)
-	public void updateService(JAXBElement<Service> serviceXML) {
-		//TODO
+	public Response updateService(JAXBElement<Service> serviceXML) {
+		Service service = serviceXML.getValue();
+		if (service.getId() == null || service.getUri() == null)
+			return Response.status(Status.BAD_REQUEST).build();
+
+		Service updatedService = serviceDeployer.updateService(service);
+		return Response.ok(updatedService).build();
 	}
-	
-	
+
 	/**
-	 * Client requests remove a service by ID	
+	 * Client requests remove a service by ID
+	 * 
 	 * @param serviceID
 	 */
 	@DELETE
 	@Path("/services/{serviceID}")
-	public void deleteService(@PathParam("serviceID") String serviceID) {
-		
-		System.out.println("deleting service " + serviceID);
-		// TODO se servico não existir, retornar erro
-	}
+	public Response deleteService(@PathParam("serviceID") String serviceID) {
 
+		if (serviceID.length() == 0)
+			return Response.status(Status.BAD_REQUEST).build();
+
+		if (serviceDeployer.getService(serviceID) == null)
+			return Response.status(Status.NOT_FOUND).build();
+
+		serviceDeployer.deleteService(serviceID);
+
+		System.out.println("deleting service " + serviceID);
+
+		return Response.ok().build();
+	}
 }
