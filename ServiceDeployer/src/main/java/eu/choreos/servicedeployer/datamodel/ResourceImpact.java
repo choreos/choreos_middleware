@@ -1,4 +1,4 @@
-package eu.choreos.ServiceDeployer.datamodel;
+package eu.choreos.servicedeployer.datamodel;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -7,40 +7,47 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
 public class ResourceImpact {
-	
+
 	private String memory;
-	
+
 	private String cpu;
-	
+
 	private String io;
-	
+
 	private String region;
-	
-	
+
 	public String getMemory() {
 		return memory;
 	}
+
 	public void setMemory(String memory) {
 		this.memory = memory;
 	}
+
 	public String getCpu() {
 		return cpu;
 	}
+
 	public void setCpu(String cpu) {
 		this.cpu = cpu;
 	}
+
 	public String getIo() {
 		return io;
 	}
+
 	public void setIo(String io) {
 		this.io = io;
 	}
+
 	public String getRegion() {
 		return region;
 	}
+
 	public void setRegion(String region) {
 		this.region = region;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -51,6 +58,7 @@ public class ResourceImpact {
 		result = prime * result + ((region == null) ? 0 : region.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -82,11 +90,11 @@ public class ResourceImpact {
 			return false;
 		return true;
 	}
+
 	@Override
 	public String toString() {
 		return "ResourceImpact [memory=" + memory + ", cpu=" + cpu + ", io="
 				+ io + ", region=" + region + "]";
 	}
-	
-	
+
 }

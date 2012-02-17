@@ -1,4 +1,4 @@
-package eu.choreos.ServiceDeployer.datamodel;
+package eu.choreos.servicedeployer.datamodel;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

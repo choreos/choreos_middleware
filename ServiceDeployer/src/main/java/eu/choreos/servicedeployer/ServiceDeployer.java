@@ -1,8 +1,8 @@
-package eu.choreos.ServiceDeployer;
+package eu.choreos.servicedeployer;
 
 import java.net.URL;
 
-import eu.choreos.ServiceDeployer.datamodel.Service;
+import eu.choreos.servicedeployer.datamodel.Service;
 
 public class ServiceDeployer {
 

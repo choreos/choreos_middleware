@@ -1,4 +1,4 @@
-package eu.choreos.ServiceDeployer;
+package eu.choreos.servicedeployer;
 
 public class ServiceNodeNotFoundException extends Exception {
 

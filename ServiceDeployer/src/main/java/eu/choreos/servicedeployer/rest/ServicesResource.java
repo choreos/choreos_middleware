@@ -1,4 +1,4 @@
-package eu.choreos.ServiceDeployer.rest;
+package eu.choreos.servicedeployer.rest;
 
 import java.net.URL;
 
@@ -15,9 +15,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.xml.bind.JAXBElement;
 
-import eu.choreos.ServiceDeployer.ServiceDeployer;
-import eu.choreos.ServiceDeployer.datamodel.Service;
-import eu.choreos.ServiceDeployer.datamodel.ServiceSpec;
+import eu.choreos.servicedeployer.ServiceDeployer;
+import eu.choreos.servicedeployer.datamodel.Service;
+import eu.choreos.servicedeployer.datamodel.ServiceSpec;
 
 /**
  * Service Deployer REST API resource: services
