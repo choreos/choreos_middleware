@@ -11,6 +11,7 @@ import org.junit.BeforeClass;
 import eu.choreos.nodepoolmanager.Configuration;
 import eu.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
 import eu.choreos.nodepoolmanager.datamodel.Node;
+import eu.choreos.nodepoolmanager.rest.NodePoolManagerStandaloneServer;
 
 
 public class BaseTest {

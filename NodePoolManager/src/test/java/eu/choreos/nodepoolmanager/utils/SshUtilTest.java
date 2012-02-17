@@ -28,7 +28,7 @@ public class SshUtilTest {
 
     @Test
     public void runCommand() throws Exception {
-        // Waiting sshd to start
+        // Waiting ssh to start
         SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
         while (!ssh.isAccessible())
             ;

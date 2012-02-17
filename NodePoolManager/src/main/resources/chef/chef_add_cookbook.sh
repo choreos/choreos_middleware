@@ -1,1 +1,1 @@
-knife node run_list add $nodeName $cookbook -c $knifeFile
+knife node run_list add $nodeName $cookbook::$recipe -c $knifeFile

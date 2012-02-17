@@ -1,15 +1,14 @@
-package eu.choreos.nodepoolmanager.configmanager;
+package eu.choreos.nodepoolmanager;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import eu.choreos.nodepoolmanager.chef.ScriptsProvider;
 import eu.choreos.nodepoolmanager.datamodel.Node;
+import eu.choreos.nodepoolmanager.utils.CommandLine;
 import eu.choreos.nodepoolmanager.utils.SshUtil;
 
 
-public class NodeConfigurationManager {
+public class ConfigurationManager {
 
 	private static String INITIAL_RECIPE = "getting-started";
 	
@@ -33,12 +32,7 @@ public class NodeConfigurationManager {
 		try {
 			// bootstrap node
 			command = ScriptsProvider.getChefBootstrapScript(node.getPrivateKeyFile(), node.getIp(), node.getUser());
-			Process p = Runtime.getRuntime().exec(command);
-			
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					p.getInputStream()));
-			while (in.readLine() != null) {
-			}
+			CommandLine.runLocalCommand(command);
 			
 			// get chef name
 			command = ScriptsProvider.getChefName();
@@ -47,7 +41,7 @@ public class NodeConfigurationManager {
 			System.out.println("nodeName= " + chefClientName);
 			
 			// install cookbook
-			this.installCookbook(node, INITIAL_RECIPE);
+			this.installRecipe(node, INITIAL_RECIPE);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -63,12 +57,15 @@ public class NodeConfigurationManager {
     	return returnText.trim().equals(createdFile);
     }
     
-	public String installCookbook(Node node, String cookbook) throws IOException, Exception{
+	public void installRecipe(Node node, String cookbook) throws IOException, Exception{
 		
-		String command = ScriptsProvider.getChefAddCookbook(node.getChefName(), cookbook);
-        Runtime.getRuntime().exec(command);
-        
-        return this.updateNodeConfiguration(node);
+        this.installRecipe(node, cookbook, "default");
 	}
 
+	public void installRecipe(Node node, String cookbook, String recipe) throws IOException, Exception{
+		
+		String command = ScriptsProvider.getChefAddCookbook(node.getChefName(), cookbook, recipe);
+        CommandLine.runLocalCommand(command);
+        this.updateNodeConfiguration(node);
+	}
 }
