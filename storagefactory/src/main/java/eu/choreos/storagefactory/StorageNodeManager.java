@@ -59,8 +59,18 @@ public class StorageNodeManager {
 	}
 
 	public StorageNode createNewStorageNode(StorageNodeSpec specifications) {
-		StorageNode node = new StorageNode(specifications);
-		deployNode(node);
+		StorageNode node;
+
+		// Check if it exists
+		node = registry.getNode(specifications.getUuid());
+
+		// If it does not
+		if (node == null) {
+			// Create a node from specifications
+			node = new StorageNode(specifications);
+			// And deploy it
+			deployNode(node);
+		}
 
 		return node;
 	}

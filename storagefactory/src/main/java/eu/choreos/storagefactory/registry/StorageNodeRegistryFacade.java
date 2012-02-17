@@ -12,8 +12,8 @@ public class StorageNodeRegistryFacade {
 	public StorageNodeRegistryFacade() {
 	}
 
-	public StorageNode getNode(String nodeId) {
-		return getNode(nodeId, (new CommandLineInterfaceHelper()));
+	public StorageNode getNode(String nodeUuid) {
+		return getNode(nodeUuid, (new CommandLineInterfaceHelper()));
 	}
 
 	public StorageNode getNode(String nodeUuid, CommandLineInterfaceHelper cli) {
