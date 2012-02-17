@@ -1,5 +1,6 @@
 package eu.choreos.servicedeployer;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import eu.choreos.servicedeployer.datamodel.Service;
@@ -10,9 +11,9 @@ public class ServiceDeployer {
 
 	}
 
-	public URL deploy(Service service) {
+	public URL deploy(Service service) throws MalformedURLException {
 		// TODO Auto-generated method stub
-		return null;
+		return new URL(service.getUri());
 	}
 
 	public Service getService(String serviceID) {

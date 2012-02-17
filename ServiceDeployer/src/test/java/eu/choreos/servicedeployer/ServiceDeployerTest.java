@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.net.MalformedURLException;
+
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -50,7 +52,7 @@ public class ServiceDeployerTest {
 	}
 
 	@Test
-	public void shouldDeployAWarServiceInANode() {
+	public void shouldDeployAWarServiceInANode() throws MalformedURLException {
 		service1 = new Service(specWar);
 
 		service1.setUri("http://this.should.not.work/");
@@ -63,7 +65,7 @@ public class ServiceDeployerTest {
 	}
 
 	@Test
-	public void shouldDeployABPELServiceInANode() {
+	public void shouldDeployABPELServiceInANode() throws MalformedURLException {
 		service1 = new Service(specBpel);
 
 		service1.setUri("http://this.should.not.work/");
@@ -76,7 +78,7 @@ public class ServiceDeployerTest {
 	}
 
 	@Test
-	public void shouldDeployAWildServiceInANode() {
+	public void shouldDeployAWildServiceInANode() throws MalformedURLException {
 		service1 = new Service(specWild);
 
 		service1.setUri("http://this.should.not.work/");
@@ -89,7 +91,7 @@ public class ServiceDeployerTest {
 	}
 
 	@Test
-	public void shouldGetServiceFromServiceID() {
+	public void shouldGetServiceFromServiceID() throws MalformedURLException {
 		service1 = new Service(specWar);
 		service1.setId("123456789");
 		deployer.deploy(service1);
@@ -98,7 +100,8 @@ public class ServiceDeployerTest {
 	}
 
 	@Test
-	public void shouldGetSpecificServiceFromAServiceGroupGivenTheServiceID() {
+	public void shouldGetSpecificServiceFromAServiceGroupGivenTheServiceID()
+			throws MalformedURLException {
 		service1 = new Service(specWar);
 		service1.setId("123456789");
 		deployer.deploy(service1);
@@ -121,7 +124,7 @@ public class ServiceDeployerTest {
 	}
 
 	@Test
-	public void shouldDeleteAService() {
+	public void shouldDeleteAService() throws MalformedURLException {
 		service1 = new Service(specWar);
 		service1.setId("123456789");
 		service1.setUri("http://this.should.not.work/");
@@ -142,7 +145,8 @@ public class ServiceDeployerTest {
 	}
 
 	@Test
-	public void ShouldOnlyDeleteTheCorrectService() {
+	public void ShouldOnlyDeleteTheCorrectService()
+			throws MalformedURLException {
 		service1 = new Service(specWar);
 		service1.setId("123456789");
 		deployer.deploy(service1);

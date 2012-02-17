@@ -1,5 +1,6 @@
 package eu.choreos.servicedeployer.rest;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.ws.rs.Consumes;
@@ -49,9 +50,13 @@ public class ServicesResource {
 			return Response.status(Status.BAD_REQUEST).build();
 
 		// TODO trocar bloco abaixo para o que precisamos fazer
-		URL serviceURL = serviceDeployer.deploy(new Service(serviceSpec));
-
-		return Response.ok(serviceURL).build();
+		URL serviceURL;
+		try {
+			serviceURL = serviceDeployer.deploy(new Service(serviceSpec));
+			return Response.ok(serviceURL).build();
+		} catch (MalformedURLException e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 
 	/**
