@@ -12,7 +12,9 @@ public class ServiceDeployer {
 	}
 
 	public URL deploy(Service service) throws MalformedURLException {
-		// TODO Auto-generated method stub
+		// Create recipe from template
+		// Upload template to Chef
+		// Request NodePoolManager to deploy the recipe in a node
 		return new URL(service.getUri());
 	}
 
