@@ -1,0 +1,8 @@
+- Duplication of code:
+	- Copied Recipe, RecipeFactory and RecipeDeployer classes from StorageManager
+	- Copied NodePoolManagerHandler class from StorageManager
+- Pending requirements:
+	- BPEL deployment
+	- Petals JBI consume
+	- Petals auto-deployment (node pool manager??)
+ 
