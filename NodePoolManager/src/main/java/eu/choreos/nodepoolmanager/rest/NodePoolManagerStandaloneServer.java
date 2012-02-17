@@ -1,9 +1,7 @@
-package eu.choreos.nodepoolmanager;
+package eu.choreos.nodepoolmanager.rest;
 
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 
-import eu.choreos.nodepoolmanager.rest.NodeResource;
-import eu.choreos.nodepoolmanager.rest.NodesResource;
 
 
 public class NodePoolManagerStandaloneServer implements Runnable {

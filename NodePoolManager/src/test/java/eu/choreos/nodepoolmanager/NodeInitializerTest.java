@@ -1,4 +1,4 @@
-package eu.choreos.nodepoolmanager.cm;
+package eu.choreos.nodepoolmanager;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -8,8 +8,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import eu.choreos.nodepoolmanager.Configuration;
+import eu.choreos.nodepoolmanager.ConfigurationManager;
 import eu.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
-import eu.choreos.nodepoolmanager.configmanager.NodeConfigurationManager;
 import eu.choreos.nodepoolmanager.datamodel.Node;
 import eu.choreos.nodepoolmanager.utils.SshUtil;
 
@@ -34,7 +34,7 @@ public class NodeInitializerTest {
         while (!ssh.isAccessible())
             ;
 
-        NodeConfigurationManager configurationManager = new NodeConfigurationManager();
+        ConfigurationManager configurationManager = new ConfigurationManager();
         assertFalse(configurationManager.isInitialized(node));
         
         configurationManager.initializeNode(node);

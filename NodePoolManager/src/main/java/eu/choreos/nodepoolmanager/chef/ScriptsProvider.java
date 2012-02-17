@@ -1,4 +1,4 @@
-package eu.choreos.nodepoolmanager.utils;
+package eu.choreos.nodepoolmanager.chef;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,7 +8,11 @@ import org.apache.commons.io.FileUtils;
 
 import eu.choreos.nodepoolmanager.Configuration;
 
-
+/**
+ * Provide access to Chef functionalities using scripts with chef commands
+ * 
+ *
+ */
 public class ScriptsProvider {
 	
 	private static String CHEF_BOOTSTRAP_SCRIPT = "chef/chef_bootstrap.sh";
@@ -29,20 +33,17 @@ public class ScriptsProvider {
         
         return command;
     }
-
-    public static String getChefAddCookbook(String nodeName, String ip, String cookbook) throws IOException {
+    
+    public static String getChefAddCookbook(String nodeName, String cookbook, String recipe) throws IOException {
     	
     	URL scriptFile = ClassLoader.getSystemResource(CHEF_ADD_COOKBOOK_SCRIPT);
     	String command = FileUtils.readFileToString(new File(scriptFile.getFile()));
 
         String config = Configuration.get("CHEF_CONFIG_FILE");
 
-        System.out.println("<<"+command);
-        System.out.println("nodeName= " + nodeName);
     	command = command.replace("$nodeName", nodeName);
-    	command = command.replace("$ip", ip);
-    	command = command.replace("$recipe", "default");
     	command = command.replace("$cookbook", cookbook);
+    	command = command.replace("$recipe", recipe);
     	command = command.replace("$knifeFile", config);
 
     	return command;

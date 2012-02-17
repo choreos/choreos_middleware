@@ -1,4 +1,4 @@
-package eu.choreos.nodepoolmanager.utils;
+package eu.choreos.nodepoolmanager.chef;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +16,12 @@ import com.google.inject.Module;
 
 import eu.choreos.nodepoolmanager.Configuration;
 
+/**
+ * Provides access to Chef functionalities using the Chef API
+ * Currently we are using just the ScriptsProvider class (chef scripts)
+ * But in the future would be better to just use the API
+ *
+ */
 public class ChefHelper {
 
     private static final String client = Configuration.get("CHEF_USER");
