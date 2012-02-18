@@ -18,16 +18,22 @@
 
 include_recipe "tomcat"
 
-template "#{node['service']['$NAME']['bashscript']}" do
-  source "deploy-service.sh.erb"
-  mode "0777"
+remote_file "#{node['service']['$NAME']['webappsPath']}/service$NAMEdeploy.war" do
+  source "#{node['service']['$NAME']['URL']}"
+    action :create
 end
 
-execute "deploy WAR" do
-  command "/bin/bash < #{node['service']['$NAME']['bashscript']}"
-  action :nothing
-  subscribes :run, resources("template[#{node['service']['$NAME']['bashscript']}]"), :immediately
-end
+#template "#{node['service']['$NAME']['bashscript']}" do
+#  source "deploy-service.sh.erb"
+#  mode "0777"
+#  notifies :run, resource("deploy WAR")
+#end
+
+#execute "deploy WAR" do
+#  command "/bin/bash < #{node['service']['$NAME']['bashscript']}"
+#  action :run
+#  subscribes :create, resources("template[#{node['service']['$NAME']['bashscript']}]"), :immediately
+#end
 
 # TODO: Handle wget EXIT STATUS
 #       Wget may return one of several error codes if it encounters problems.

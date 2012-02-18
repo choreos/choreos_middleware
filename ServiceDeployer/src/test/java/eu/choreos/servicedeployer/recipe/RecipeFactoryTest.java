@@ -150,7 +150,7 @@ public class RecipeFactoryTest {
 	private void assertAllOcurrencesWereReplacedInTemplatesShellScript()
 			throws IOException {
 		URL fileLocation = ClassLoader.getSystemResource("chef/service" + id
-				+ "/templates/deploy-service.sh.erb");
+				+ "/templates/default/deploy-service.sh.erb");
 		String fileData = FileUtils.readFileToString(new File(fileLocation
 				.getFile()));
 

@@ -36,7 +36,7 @@ public class RecipeFactory {
 
 	public void changeScriptTemplate(Service service) throws IOException {
 		changeFileContents(service, "chef/service" + service.getId()
-				+ "/templates/deploy-service.sh.erb");
+				+ "/templates/default/deploy-service.sh.erb");
 	}
 
 	public void changeMetadataRb(Service service) throws IOException {
@@ -58,15 +58,15 @@ public class RecipeFactory {
 			throws IOException {
 		URL scriptFile = ClassLoader.getSystemResource(fileLocation);
 
-		String fileData = FileUtils.readFileToString(new File(scriptFile
-				.getFile()));
+		File file = new File(scriptFile.getFile());
+		String fileData = FileUtils.readFileToString(file);
 
 		fileData = fileData.replace("$NAME", service.getId());
 		fileData = fileData.replace("$URL", service.getCodeLocationURI());
 		fileData = fileData.replace("$WARFILE", service.getWarFile());
 
-		FileUtils.deleteQuietly(new File(scriptFile.getFile()));
-		FileUtils.writeStringToFile((new File(scriptFile.getFile())), fileData);
+		FileUtils.deleteQuietly(file);
+		FileUtils.writeStringToFile(file, fileData);
 	}
 
 	public String copyTemplate(Service service) throws IOException {

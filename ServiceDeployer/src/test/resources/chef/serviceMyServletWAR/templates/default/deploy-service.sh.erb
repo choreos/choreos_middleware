@@ -1,0 +1,7 @@
+#!/bin/sh
+
+wget <%= node['service']['MyServletWAR']['URL']%> --append-output=<%= node['service']['MyServletWAR']['logFile']%> -p <%= node['service']['MyServletWAR']['webappsPath']%>
+rm -f <%= node['service']['MyServletWAR']['webappsPath']%>/<%= node['service']['MyServletWAR']['WarFile']%>
+
+# temporary command to list
+touch | date +%F__%k%M
