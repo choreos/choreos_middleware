@@ -56,11 +56,12 @@ public class ServiceDeployerTest {
 		service1 = new Service(specWar);
 
 		service1.setUri("http://this.should.not.work/");
-		service1.setId("123456789");
+		service1.setId("myServletWAR");
 
-		deployer.deploy(service1);
+		String url = deployer.deploy(service1);
+		assertEquals("http://choreos-node:8080/myServletWAR/", url);
 
-		client = WebClient.create(service1.getUri());
+		client = WebClient.create(url);
 		assertEquals(200, client.get().getStatus());
 	}
 

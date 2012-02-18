@@ -52,7 +52,7 @@ public class ServiceDeployerRestApiTest {
 	@Test
 	public void shouldSuccessfulyInvokeGetService() {
 
-		client.path("services/serviceID");
+		client.path("services/myServletWAR");
 		Response response = client.get();
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 	}
@@ -60,7 +60,7 @@ public class ServiceDeployerRestApiTest {
 	@Test
 	public void shouldSuccessfulyInvokeDeleteService() {
 
-		client.path("services/servicesID");
+		client.path("services/myServletWAR");
 		Response response = client.delete();
 		assertEquals(Family.SUCCESSFUL,
 				Status.fromStatusCode(response.getStatus()).getFamily());
@@ -74,10 +74,10 @@ public class ServiceDeployerRestApiTest {
 		client.path("services");
 		client.type("application/xml");
 		Response response = client
-				.post("<serviceSpec><codeUri>URI</codeUri><resourceImpact>"
+				.post("<serviceSpec><codeUri>http://content.hccfl.edu/pollock/AJava/WAR/myServletWAR.war</codeUri><resourceImpact>"
 						+ " <memory>light</memory><cpu>medium</cpu>"
 						+ " <io>heavy</io><region>France</region> "
-						+ " </resourceImpact><type>JAR</type></serviceSpec>");
+						+ " </resourceImpact><type>WAR</type></serviceSpec>");
 
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 	}

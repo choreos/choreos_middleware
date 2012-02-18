@@ -1,6 +1,7 @@
 package eu.choreos.servicedeployer.recipe;
 
 import eu.choreos.servicedeployer.NodePoolManagerHandler;
+import eu.choreos.servicedeployer.datamodel.Service;
 import eu.choreos.servicedeployer.utils.CommandLineInterfaceHelper;
 
 public class RecipeDeployer {
@@ -11,8 +12,10 @@ public class RecipeDeployer {
 		npm = nodePoolManager;
 	}
 
-	public String deployRecipe(Recipe recipe) {
-		String deployedNodeHostname = npm.createNode(recipe.getName());
+	public String deployRecipe(Recipe recipe, Service service) {
+		String deployedNodeHostname = npm.createNode(recipe.getName(), service)
+				.getUri();
+		npm.initializeNode();
 		return deployedNodeHostname;
 	}
 

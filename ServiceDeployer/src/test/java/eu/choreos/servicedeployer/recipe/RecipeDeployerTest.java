@@ -6,6 +6,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import eu.choreos.servicedeployer.NodePoolManagerHandler;
+import eu.choreos.servicedeployer.datamodel.Service;
 import eu.choreos.storagefactory.utils.CommandLineInterfaceHelper;
 
 public class RecipeDeployerTest {
@@ -28,7 +29,7 @@ public class RecipeDeployerTest {
 	@Test
 	public void testDeployRecipe() {
 
-		deployer.deployRecipe(recipe);
+		deployer.deployRecipe(recipe, (new Service()));
 
 		String commandReturn = "";
 

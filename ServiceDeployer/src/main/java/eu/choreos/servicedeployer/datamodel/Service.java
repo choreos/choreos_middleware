@@ -11,6 +11,7 @@ public class Service {
 	private String codeLocationURI;
 	private String warFile;
 	private ResourceImpact resourceImpact;
+	private int port;
 
 	public Service(ServiceSpec serviceSpec) {
 		codeLocationURI = serviceSpec.getCodeUri();
@@ -21,7 +22,6 @@ public class Service {
 		String[] urlPieces = serviceSpec.getCodeUri().split("/");
 		if (urlPieces[urlPieces.length - 1].contains(".war"))
 			warFile = urlPieces[urlPieces.length - 1];
-
 	}
 
 	public Service() {
@@ -57,6 +57,14 @@ public class Service {
 
 	public void setCodeLocationURI(String codeLocationURI) {
 		this.codeLocationURI = codeLocationURI;
+	}
+
+	public int getPort() {
+		return port;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
 	}
 
 	public String getWarFile() {

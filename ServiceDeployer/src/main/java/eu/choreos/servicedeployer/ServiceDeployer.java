@@ -24,11 +24,18 @@ public class ServiceDeployer {
 		deployer.uploadRecipe(serviceDeployRecipe);
 
 		// and Request NodePoolManager to deploy the recipe in a node
-		String deployedHost = deployer.deployRecipe(serviceDeployRecipe);
+		String deployedHost = deployer.deployRecipe(serviceDeployRecipe,
+				service);
 
-		service.setUri(deployedHost);
+		String serviceURL;
+		if (deployedHost.contains("http://"))
+			serviceURL = service.getUri() + ":" + service.getPort() + "/"
+					+ service.getId() + "/";
+		else
+			serviceURL = "http://" + service.getUri() + ":" + service.getPort()
+					+ "/" + service.getId() + "/";
 
-		return service.getUri();
+		return serviceURL;
 	}
 
 	public Service getService(String serviceID) {
