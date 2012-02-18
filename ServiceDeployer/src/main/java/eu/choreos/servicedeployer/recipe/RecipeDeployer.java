@@ -15,7 +15,6 @@ public class RecipeDeployer {
 	public String deployRecipe(Recipe recipe, Service service) {
 		String deployedNodeHostname = npm.createNode(recipe.getName(), service)
 				.getUri();
-		npm.initializeNode();
 		return deployedNodeHostname;
 	}
 
@@ -25,6 +24,8 @@ public class RecipeDeployer {
 	}
 
 	private String createUploadCommand(Recipe recipe) {
+		System.out.println("knife cookbook upload " + recipe.getName() + " -o "
+				+ recipe.getFolder());
 		return "knife cookbook upload " + recipe.getName() + " -o "
 				+ recipe.getFolder();
 	}

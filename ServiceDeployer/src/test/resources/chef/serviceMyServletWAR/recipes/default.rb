@@ -21,6 +21,7 @@ include_recipe "tomcat"
 template "#{node['service']['MyServletWAR']['bashscript']}" do
   source "deploy-service.sh.erb"
   mode "0777"
+  action :create
 end
 
 execute "deploy WAR" do

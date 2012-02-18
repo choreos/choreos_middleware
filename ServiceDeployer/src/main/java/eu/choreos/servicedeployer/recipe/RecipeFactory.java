@@ -19,6 +19,7 @@ public class RecipeFactory {
 			changeMetadataRb(service);
 			changeAttributesDefaultRb(service);
 			changeServerRecipe(service);
+			changeScriptTemplate(service);
 
 			recipe.setName("service" + service.getId());
 			recipe.setFolder(absolutePath);
@@ -31,6 +32,11 @@ public class RecipeFactory {
 
 		return null;
 
+	}
+
+	public void changeScriptTemplate(Service service) throws IOException {
+		changeFileContents(service, "chef/service" + service.getId()
+				+ "/templates/deploy-service.sh.erb");
 	}
 
 	public void changeMetadataRb(Service service) throws IOException {

@@ -4,8 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -14,6 +17,7 @@ import org.junit.Test;
 import eu.choreos.servicedeployer.datamodel.ResourceImpact;
 import eu.choreos.servicedeployer.datamodel.Service;
 import eu.choreos.servicedeployer.datamodel.ServiceSpec;
+import eu.choreos.servicedeployer.utils.CommandLineInterfaceHelper;
 
 public class ServiceDeployerTest {
 
@@ -49,10 +53,17 @@ public class ServiceDeployerTest {
 	@Before
 	public void setUp() throws Exception {
 		deployer = new ServiceDeployer();
+		(new CommandLineInterfaceHelper())
+				.runLocalCommand("knife node run_list remove choreos-node recipe[servicemyServletWAR]");
+		(new CommandLineInterfaceHelper())
+				.runLocalCommand("ssh root@choreos-node chef-client");
 	}
 
 	@Test
-	public void shouldDeployAWarServiceInANode() throws MalformedURLException {
+	public void shouldDeployAWarServiceInANode() throws Exception {
+		(new CommandLineInterfaceHelper())
+				.runLocalCommand("ssh root@choreos-node rm -rf "
+						+ "/var/lib/tomcat6/webapps/myServletWAR*");
 		service1 = new Service(specWar);
 
 		service1.setUri("http://this.should.not.work/");
@@ -61,6 +72,7 @@ public class ServiceDeployerTest {
 		String url = deployer.deploy(service1);
 		assertEquals("http://choreos-node:8080/myServletWAR/", url);
 
+		Thread.sleep(15000);
 		client = WebClient.create(url);
 		assertEquals(200, client.get().getStatus());
 	}
@@ -163,4 +175,13 @@ public class ServiceDeployerTest {
 				deployer.getService("987654321") != null);
 	}
 
+	private static void deleteDirectory() {
+		URL fileLocation = ClassLoader
+				.getSystemResource("chef/service123456789");
+		if (fileLocation != null)
+			FileUtils.deleteQuietly(new File(fileLocation.getFile()));
+		fileLocation = ClassLoader.getSystemResource("chef/service987654321");
+		if (fileLocation != null)
+			FileUtils.deleteQuietly(new File(fileLocation.getFile()));
+	}
 }

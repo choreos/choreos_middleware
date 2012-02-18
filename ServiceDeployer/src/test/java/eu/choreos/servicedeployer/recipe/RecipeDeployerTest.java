@@ -23,7 +23,23 @@ public class RecipeDeployerTest {
 		System.out
 				.println("deleting previous instances of the recipe. Errors are expected");
 		(new CommandLineInterfaceHelper())
-				.runLocalCommand("knife cookbook remove servlet -y");
+				.runLocalCommand("knife cookbook remove myServletWAR -y");
+		(new CommandLineInterfaceHelper())
+				.runLocalCommand("knife node run_list remove choreos recipe[myServletWAR]");
+	}
+
+	@Test
+	public void testUploadRecipe() {
+
+		deployer.deployRecipe(recipe, (new Service()));
+
+		String commandReturn = "";
+
+		commandReturn = (new CommandLineInterfaceHelper())
+				.runLocalCommand("knife cookbook list");
+
+		assertTrue("Did not find the uploaded recipe.",
+				commandReturn.contains("myServlet"));
 	}
 
 	@Test
@@ -34,9 +50,9 @@ public class RecipeDeployerTest {
 		String commandReturn = "";
 
 		commandReturn = (new CommandLineInterfaceHelper())
-				.runLocalCommand("knife cookbook list");
+				.runLocalCommand("knife search node run_list:*myServlet*");
 
 		assertTrue("Did not find the uploaded recipe.",
-				commandReturn.contains("servlet"));
+				commandReturn.contains("Node Name"));
 	}
 }

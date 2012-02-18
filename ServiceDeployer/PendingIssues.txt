@@ -9,3 +9,4 @@
 	- Petals auto-deployment (node pool manager??)
  	- RegistryFacade is still very simple and should be improved. Is it possible
  	 to interact with chef to store data?
+

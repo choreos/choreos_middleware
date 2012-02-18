@@ -118,7 +118,8 @@ public class ServiceDeployerRestApiTest {
 		client.type("application/xml");
 
 		ServiceSpec serviceSpec = new ServiceSpec();
-		serviceSpec.setCodeUri("http://onthewild");
+		serviceSpec
+				.setCodeUri("http://content.hccfl.edu/pollock/AJava/WAR/myServletWAR.war");
 		serviceSpec.setType("onTheWild");
 
 		ResourceImpact resourceImpact = new ResourceImpact();

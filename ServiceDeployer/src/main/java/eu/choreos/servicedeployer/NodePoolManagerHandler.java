@@ -12,6 +12,12 @@ public class NodePoolManagerHandler {
 
 	public Service createNode(String recipe, Service service) {
 		deployedRecipe.add(recipe);
+		System.out.println("knife node run_list add choreos-node " + recipe);
+		(new CommandLineInterfaceHelper())
+				.runLocalCommand("knife node run_list add choreos-node "
+						+ recipe);
+
+		initializeNode();
 		service.setPort(8080);
 		service.setUri("choreos-node");
 		return service;

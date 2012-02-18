@@ -49,12 +49,10 @@ public class ServicesResource {
 		if (serviceSpec.getCodeUri() == null || serviceSpec.getType() == null)
 			return Response.status(Status.BAD_REQUEST).build();
 
-		URL serviceURL;
 		try {
 			Service service = new Service(serviceSpec);
 			String deployedHost = serviceDeployer.deploy(service);
-			serviceURL = new URL(deployedHost);
-			return Response.ok(serviceURL).build();
+			return Response.ok(deployedHost).build();
 		} catch (MalformedURLException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}

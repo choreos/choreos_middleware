@@ -19,7 +19,7 @@ public class RecipeFactoryTest {
 
 	private RecipeFactory recipeFactory;
 	private static Service service = new Service();
-	private static String id = "MyServletWAR";
+	private static String id = "myServletWAR";
 	private static String codeLocationURI = "http://content.hccfl.edu/pollock/AJava/WAR/myServletWAR.war";
 	private static String warFile = "myServletWAR.war";
 	private static eu.choreos.servicedeployer.datamodel.ResourceImpact impact = new ResourceImpact();
@@ -140,6 +140,31 @@ public class RecipeFactoryTest {
 	}
 
 	@Test
+	public void shouldReplaceOcurrencesInTemplatesShellScript()
+			throws Exception {
+		recipeFactory.changeScriptTemplate(service);
+
+		assertAllOcurrencesWereReplacedInTemplatesShellScript();
+	}
+
+	private void assertAllOcurrencesWereReplacedInTemplatesShellScript()
+			throws IOException {
+		URL fileLocation = ClassLoader.getSystemResource("chef/service" + id
+				+ "/templates/deploy-service.sh.erb");
+		String fileData = FileUtils.readFileToString(new File(fileLocation
+				.getFile()));
+
+		System.out.println(fileLocation);
+		System.out.println(fileData);
+		// Ensure the ocurrences of $UUID were replaced with THIS_IS_A_TEST
+		assertTrue(fileData.contains(id));
+		assertFalse(fileData.contains("$NAME"));
+
+		// Ensures the remainder of the file is left untouched
+		assertTrue(fileData.contains(" IMPORTANT DEVELOPMENT NOTICE:"));
+	}
+
+	@Test
 	public void shouldCreateFullRecipe() throws Exception {
 		deleteDirectory();
 
@@ -155,6 +180,7 @@ public class RecipeFactoryTest {
 
 	private void assertFilesAreAvailableInFolder(Recipe recipe)
 			throws IOException {
+		System.out.println(recipe.getFolder() + "/attributes/default.rb");
 		String fileData = FileUtils.readFileToString(new File(recipe
 				.getFolder() + "/attributes/default.rb"));
 
