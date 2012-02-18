@@ -2,7 +2,6 @@ package eu.choreos.servicedeployer.registry;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Hashtable;
 
 import eu.choreos.servicedeployer.datamodel.Service;
 

@@ -1,7 +1,6 @@
 package eu.choreos.servicedeployer.rest;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;

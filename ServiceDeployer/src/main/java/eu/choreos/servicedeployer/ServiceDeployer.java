@@ -1,7 +1,6 @@
 package eu.choreos.servicedeployer;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import eu.choreos.servicedeployer.datamodel.Service;
 import eu.choreos.servicedeployer.recipe.Recipe;
