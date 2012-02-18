@@ -4,12 +4,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import eu.choreos.servicedeployer.datamodel.Service;
+import eu.choreos.servicedeployer.registry.DeployedServicesRegistry;
 
 public class ServiceDeployer {
 
-	public ServiceDeployer() {
-
-	}
+	private DeployedServicesRegistry registry;
 
 	public URL deploy(Service service) throws MalformedURLException {
 		// Create recipe from template
@@ -19,19 +18,16 @@ public class ServiceDeployer {
 	}
 
 	public Service getService(String serviceID) {
-		return null;
-		// TODO Auto-generated method stub
-
+		return registry.getNode(serviceID);
 	}
 
+	// What is this??
 	public Service updateService(Service service) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void deleteService(String serviceID) {
-		// TODO Auto-generated method stub
-
+		registry.deleteService(serviceID);
 	}
 
 }
