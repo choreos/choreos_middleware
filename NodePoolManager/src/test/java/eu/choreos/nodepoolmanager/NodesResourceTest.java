@@ -5,8 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -66,13 +64,15 @@ public class NodesResourceTest extends BaseTest {
         infrastructure.destroyNode(id);
     }
     
+    /**
+     * This test supposes the "getting-started2" recipe is already available on the chef server 
+     */
     @Test
     public void shouldApplyValidCookbook(){
     	client.path("configs");   	
     	
     	Config config = new Config();
     	config.setName("getting-started2");
-    	//NodeRestRepresentation requestNode = new NodeRestRepresentation();
         Response response = client.post(config);
         NodeRestRepresentation responseNode = getNodeFromResponse(response);
 
@@ -87,9 +87,7 @@ public class NodesResourceTest extends BaseTest {
     	
     	Config config = new Config();
     	config.setName("xyz");
-    	//NodeRestRepresentation requestNode = new NodeRestRepresentation();
         Response response = client.post(config);
-        NodeRestRepresentation responseNode = getNodeFromResponse(response);
 
         assertEquals(Status.INTERNAL_SERVER_ERROR, response.getStatus());
 
