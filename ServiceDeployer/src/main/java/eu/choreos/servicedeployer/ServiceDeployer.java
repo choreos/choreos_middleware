@@ -4,17 +4,31 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import eu.choreos.servicedeployer.datamodel.Service;
+import eu.choreos.servicedeployer.recipe.Recipe;
+import eu.choreos.servicedeployer.recipe.RecipeDeployer;
+import eu.choreos.servicedeployer.recipe.RecipeFactory;
 import eu.choreos.servicedeployer.registry.DeployedServicesRegistry;
 
 public class ServiceDeployer {
 
 	private DeployedServicesRegistry registry;
 
-	public URL deploy(Service service) throws MalformedURLException {
+	public String deploy(Service service) throws MalformedURLException {
 		// Create recipe from template
+		RecipeFactory factory = new RecipeFactory();
+		Recipe serviceDeployRecipe = factory.createRecipe(service);
+
 		// Upload template to Chef
-		// Request NodePoolManager to deploy the recipe in a node
-		return new URL(service.getUri());
+		RecipeDeployer deployer = new RecipeDeployer(
+				new NodePoolManagerHandler());
+		deployer.uploadRecipe(serviceDeployRecipe);
+
+		// and Request NodePoolManager to deploy the recipe in a node
+		String deployedHost = deployer.deployRecipe(serviceDeployRecipe);
+
+		service.setUri(deployedHost);
+
+		return service.getUri();
 	}
 
 	public Service getService(String serviceID) {

@@ -55,8 +55,9 @@ public class RecipeFactory {
 		String fileData = FileUtils.readFileToString(new File(scriptFile
 				.getFile()));
 
-		fileData = fileData.replace("$UUID", service.getId());
-		fileData = fileData.replace("$USER", service.getCodeLocationURI());
+		fileData = fileData.replace("$NAME", service.getId());
+		fileData = fileData.replace("$URL", service.getCodeLocationURI());
+		fileData = fileData.replace("$URL", service.getCodeLocationURI());
 
 		FileUtils.deleteQuietly(new File(scriptFile.getFile()));
 		FileUtils.writeStringToFile((new File(scriptFile.getFile())), fileData);
@@ -64,7 +65,7 @@ public class RecipeFactory {
 
 	public String copyTemplate(Service service) throws IOException {
 		URL scriptFile = ClassLoader
-				.getSystemResource("chef/service-recipe-template");
+				.getSystemResource("chef/tomcat-service-deploy-recipe-template");
 		URL destURL = ClassLoader.getSystemResource("chef");
 
 		File srcFolder = new File(scriptFile.getFile());

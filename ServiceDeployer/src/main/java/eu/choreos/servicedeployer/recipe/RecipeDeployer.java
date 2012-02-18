@@ -12,12 +12,11 @@ public class RecipeDeployer {
 	}
 
 	public String deployRecipe(Recipe recipe) {
-		uploadRecipe(recipe);
 		String deployedNodeHostname = npm.createNode(recipe.getName());
 		return deployedNodeHostname;
 	}
 
-	private void uploadRecipe(Recipe recipe) {
+	public void uploadRecipe(Recipe recipe) {
 		(new CommandLineInterfaceHelper())
 				.runLocalCommand(createUploadCommand(recipe));
 	}
@@ -25,6 +24,5 @@ public class RecipeDeployer {
 	private String createUploadCommand(Recipe recipe) {
 		return "knife cookbook upload " + recipe.getName() + " -o "
 				+ recipe.getFolder();
-		// knife cookbook upload storage12345789 -o ./src/test/resources/chef/
 	}
 }
