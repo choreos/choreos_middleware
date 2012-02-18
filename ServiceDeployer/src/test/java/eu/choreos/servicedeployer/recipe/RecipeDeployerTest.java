@@ -17,12 +17,12 @@ public class RecipeDeployerTest {
 	@BeforeClass
 	public static void setUpBeforeClass() {
 		recipe = new Recipe();
-		recipe.setName("storage123456789");
+		recipe.setName("servlet");
 		recipe.setFolder("./src/test/resources/chef/");
 		System.out
 				.println("deleting previous instances of the recipe. Errors are expected");
 		(new CommandLineInterfaceHelper())
-				.runLocalCommand("knife cookbook remove storage123456789 -y");
+				.runLocalCommand("knife cookbook remove servlet -y");
 	}
 
 	@Test
@@ -36,6 +36,6 @@ public class RecipeDeployerTest {
 				.runLocalCommand("knife cookbook list");
 
 		assertTrue("Did not find the uploaded recipe.",
-				commandReturn.contains("storage123456789"));
+				commandReturn.contains("servlet"));
 	}
 }

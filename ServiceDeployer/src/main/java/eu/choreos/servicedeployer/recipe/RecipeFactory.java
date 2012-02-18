@@ -57,7 +57,7 @@ public class RecipeFactory {
 
 		fileData = fileData.replace("$NAME", service.getId());
 		fileData = fileData.replace("$URL", service.getCodeLocationURI());
-		fileData = fileData.replace("$URL", service.getCodeLocationURI());
+		fileData = fileData.replace("$WARFILE", service.getWarFile());
 
 		FileUtils.deleteQuietly(new File(scriptFile.getFile()));
 		FileUtils.writeStringToFile((new File(scriptFile.getFile())), fileData);

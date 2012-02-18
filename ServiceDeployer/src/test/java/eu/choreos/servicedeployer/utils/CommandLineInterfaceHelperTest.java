@@ -15,8 +15,10 @@ public class CommandLineInterfaceHelperTest {
 
 	@Test
 	public void testKnifeCommand() {
-		assertTrue((new CommandLineInterfaceHelper()).runLocalCommand(
-				"knife node show choreos-node").contains("FQDN:   "));
+		assertTrue(
+				"Could not connect to chef server or a choreos-node is not present",
+				(new CommandLineInterfaceHelper()).runLocalCommand(
+						"knife node show choreos-node").contains("FQDN:   "));
 	}
 
 }

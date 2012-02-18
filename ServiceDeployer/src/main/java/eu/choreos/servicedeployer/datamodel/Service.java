@@ -19,8 +19,8 @@ public class Service {
 
 		// We assume that the codeLocationURI ends with "/warFileName.war
 		String[] urlPieces = serviceSpec.getCodeUri().split("/");
-		if (urlPieces[urlPieces.length].contains(".war"))
-			warFile = urlPieces[urlPieces.length];
+		if (urlPieces[urlPieces.length - 1].contains(".war"))
+			warFile = urlPieces[urlPieces.length - 1];
 
 	}
 
