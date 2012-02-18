@@ -5,11 +5,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Service {
 
-	private String id;
+	private String id; // Who will define the service ID?
+	private String serviceType;
 	private String uri;
+	private String codeLocationURI;
+	private String warFile;
+	private ResourceImpact resourceImpact;
 
 	public Service(ServiceSpec serviceSpec) {
-		// TODO Auto-generated constructor stub
+		setCodeLocationURI(serviceSpec.getCodeUri());
+		setServiceType(serviceSpec.getType());
+		setResourceImpact(serviceSpec.getResourceImpact());
+	}
+
+	public Service() {
 	}
 
 	public String getId() {
@@ -20,12 +29,44 @@ public class Service {
 		this.id = id;
 	}
 
+	public String getServiceType() {
+		return serviceType;
+	}
+
+	public void setServiceType(String serviceType) {
+		this.serviceType = serviceType;
+	}
+
 	public String getUri() {
 		return uri;
 	}
 
 	public void setUri(String uri) {
 		this.uri = uri;
+	}
+
+	public String getCodeLocationURI() {
+		return codeLocationURI;
+	}
+
+	public void setCodeLocationURI(String codeLocationURI) {
+		this.codeLocationURI = codeLocationURI;
+	}
+
+	public String getWarFile() {
+		return warFile;
+	}
+
+	public void setWarFile(String warFile) {
+		this.warFile = warFile;
+	}
+
+	public ResourceImpact getResourceImpact() {
+		return resourceImpact;
+	}
+
+	public void setResourceImpact(ResourceImpact resourceImpact) {
+		this.resourceImpact = resourceImpact;
 	}
 
 	@Override
