@@ -1,4 +1,4 @@
-package eu.choreos.storagefactory;
+package eu.choreos.storagefactory.utils;
 
 import java.util.ArrayList;
 import java.util.List;

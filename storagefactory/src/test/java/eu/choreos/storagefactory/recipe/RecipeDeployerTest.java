@@ -5,8 +5,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import eu.choreos.storagefactory.NodePoolManagerHandler;
 import eu.choreos.storagefactory.utils.CommandLineInterfaceHelper;
+import eu.choreos.storagefactory.utils.NodePoolManagerHandler;
 
 public class RecipeDeployerTest {
 

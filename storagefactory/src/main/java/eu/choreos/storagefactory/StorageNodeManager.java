@@ -6,6 +6,7 @@ import eu.choreos.storagefactory.recipe.Recipe;
 import eu.choreos.storagefactory.recipe.RecipeDeployer;
 import eu.choreos.storagefactory.recipe.RecipeFactory;
 import eu.choreos.storagefactory.registry.StorageNodeRegistryFacade;
+import eu.choreos.storagefactory.utils.NodePoolManagerHandler;
 
 public class StorageNodeManager {
 	public StorageNodeRegistryFacade registry;
