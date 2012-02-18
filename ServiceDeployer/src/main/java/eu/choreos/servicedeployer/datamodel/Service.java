@@ -13,9 +13,15 @@ public class Service {
 	private ResourceImpact resourceImpact;
 
 	public Service(ServiceSpec serviceSpec) {
-		setCodeLocationURI(serviceSpec.getCodeUri());
-		setServiceType(serviceSpec.getType());
-		setResourceImpact(serviceSpec.getResourceImpact());
+		codeLocationURI = serviceSpec.getCodeUri();
+		serviceType = serviceSpec.getType();
+		resourceImpact = serviceSpec.getResourceImpact();
+
+		// We assume that the codeLocationURI ends with "/warFileName.war
+		String[] urlPieces = serviceSpec.getCodeUri().split("/");
+		if (urlPieces[urlPieces.length].contains(".war"))
+			warFile = urlPieces[urlPieces.length];
+
 	}
 
 	public Service() {
