@@ -11,6 +11,7 @@ import eu.choreos.nodepoolmanager.utils.SshUtil;
 public class ConfigurationManager {
 
 	private static String INITIAL_RECIPE = "getting-started";
+	private static String CHEF_REPO = Configuration.get("CHEF_REPO");
 	
     private String updateNodeConfiguration(Node node) throws Exception {
     	return new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile()).runCommand("sudo chef-client\n");
@@ -32,14 +33,12 @@ public class ConfigurationManager {
 		try {
 			// bootstrap node
 			command = ScriptsProvider.getChefBootstrapScript(node.getPrivateKeyFile(), node.getIp(), node.getUser());
-			System.out.println("Bootstrap command = [" + command+"]");
-			CommandLine.runLocalCommand(command);
+			CommandLine.runLocalCommand(command, CHEF_REPO);
 			
 			// get chef name
 			command = ScriptsProvider.getChefName();
 			String chefClientName = ssh.runCommand(command);
 			node.setChefName(chefClientName);
-			System.out.println("nodeName= " + chefClientName);
 			
 			// install cookbook
 			this.installRecipe(node, INITIAL_RECIPE);

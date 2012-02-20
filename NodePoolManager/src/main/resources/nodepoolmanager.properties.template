@@ -11,3 +11,4 @@ VALIDATION_CLIENT_NAME=validation_aguia
 CHEF_USER=leofl
 CHEF_USER_KEY_FILE=/home/leonardo/chef/chef-repo/.chef/leofl.pem
 CHEF_CONFIG_FILE=/home/leonardo/chef/chef-repo/.chef/knife.rb
+CHEF_REPO=/home/alfonso777/chef-repo
