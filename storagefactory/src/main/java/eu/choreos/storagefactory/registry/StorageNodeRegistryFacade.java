@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 
+import eu.choreos.storagefactory.Configuration;
 import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.utils.CommandLineInterfaceHelper;
 
 public class StorageNodeRegistryFacade {
-
+	
+	private static String NODE_NOT_FOUND ="0 items found";
+	
 	public StorageNodeRegistryFacade() {
 	}
 
@@ -19,9 +22,13 @@ public class StorageNodeRegistryFacade {
 	public StorageNode getNode(String nodeUuid, CommandLineInterfaceHelper cli) {
 		String queryResult;
 		String command = "knife search node storage_*_uuid:" + nodeUuid
-				+ " -a storage";
+				+ " -a storage -c "+ Configuration.get("CHEF_CONFIG_FILE");
 		System.out.println(command);
 		queryResult = cli.runLocalCommand(command);
+
+		System.out.println("Query Result:>>"+queryResult+"<<");
+		if(!isFoundNode(queryResult))
+			return null;
 
 		StorageNode storageNode = null;
 		for (StorageNode node : processQueryResult(queryResult))
@@ -56,8 +63,18 @@ public class StorageNodeRegistryFacade {
 
 		System.out.println(command);
 		System.out.println(">>" + queryResult + "<<");
+		
+		if(!isFoundNode(queryResult))
+			return null;
 
 		return processQueryResult(queryResult);
+	}
+
+	private boolean isFoundNode(String queryResult) {
+		if(queryResult.trim().equals(NODE_NOT_FOUND))
+			return false;
+		
+		return true;
 	}
 
 	private Collection<StorageNode> processQueryResult(String queryResult) {

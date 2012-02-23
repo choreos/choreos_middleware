@@ -18,16 +18,16 @@ public class StorageManagerTest {
 	@Before
 	public void setUp() throws Exception {
 
-		storageManager = new StorageNodeManager();
+		this.storageManager = new StorageNodeManager();
 
-		spec1.setUuid("1");
-		spec1.setType("mysql");
+		this.spec1.setUuid("1");
+		this.spec1.setType("mysql");
 
-		spec2.setUuid("2");
-		spec2.setType("mysql");
+		this.spec2.setUuid("2");
+		this.spec2.setType("mysql");
 
-		node1 = new StorageNode(spec1);
-		node2 = new StorageNode(spec2);
+		this.node1 = new StorageNode(spec1);
+		this.node2 = new StorageNode(spec2);
 	}
 
 	@Test

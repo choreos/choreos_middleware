@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.choreos.storagefactory.Configuration;
 import eu.choreos.storagefactory.utils.CommandLineInterfaceHelper;
 import eu.choreos.storagefactory.utils.NodePoolManagerHandler;
 
@@ -22,7 +23,7 @@ public class RecipeDeployerTest {
 		System.out
 				.println("deleting previous instances of the recipe. Errors are expected");
 		(new CommandLineInterfaceHelper())
-				.runLocalCommand("knife cookbook remove storage123456789 -y");
+				.runLocalCommand("knife cookbook remove storage123456789 -y -c "+ Configuration.get("CHEF_CONFIG_FILE"));
 	}
 
 	@Test
@@ -33,8 +34,9 @@ public class RecipeDeployerTest {
 		String commandReturn = "";
 
 		commandReturn = (new CommandLineInterfaceHelper())
-				.runLocalCommand("knife cookbook list");
+				.runLocalCommand("knife cookbook list -c "+ Configuration.get("CHEF_CONFIG_FILE"));
 
+		System.out.println("Deploy Recipe return: >>"+commandReturn+"<<");
 		assertTrue("Did not find the uploaded recipe.",
 				commandReturn.contains("storage123456789"));
 	}
