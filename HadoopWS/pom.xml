@@ -61,11 +61,6 @@
       <version>${cxf.version}</version>
     </dependency>
     <dependency>
-    	<groupId>org.apache.hadoop</groupId>
-    	<artifactId>hadoop-core</artifactId>
-    	<version>0.20.203.0</version>
-    </dependency>
-    <dependency>
     	<groupId>org.apache.cxf</groupId>
     	<artifactId>apache-cxf</artifactId>
     	<version>2.5.2</version>
@@ -75,6 +70,16 @@
     	<groupId>org.apache.cxf</groupId>
     	<artifactId>cxf-rt-frontend-jaxrs</artifactId>
     	<version>2.5.2</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.hadoop</groupId>
+    	<artifactId>hadoop-core</artifactId>
+    	<version>0.20.205.0</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.codehaus.jackson</groupId>
+    	<artifactId>jackson-core-lgpl</artifactId>
+    	<version>1.9.4</version>
     </dependency>
   </dependencies>
   
