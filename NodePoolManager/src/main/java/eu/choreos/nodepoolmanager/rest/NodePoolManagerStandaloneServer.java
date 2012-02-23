@@ -26,7 +26,7 @@ public class NodePoolManagerStandaloneServer implements Runnable {
         sf.setResourceClasses(ConfigResource.class, NodesResource.class);
         sf.setAddress(LOCAL_HOST);
         sf.create();
-        System.out.println("Starting CHOReOS Middleware ...");
+        System.out.println("Starting Node Pool Manager ...");
         running = true;
 
         while (running) {
