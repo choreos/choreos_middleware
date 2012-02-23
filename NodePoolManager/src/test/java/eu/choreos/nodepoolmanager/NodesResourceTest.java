@@ -69,11 +69,13 @@ public class NodesResourceTest extends BaseTest {
      */
     @Test
     public void shouldApplyValidCookbook(){
-    	client.path("configs");   	
+    	client.path("nodes/configs");   	
     	
     	Config config = new Config();
     	config.setName("getting-started2");
         Response response = client.post(config);
+        
+        System.out.println("Response Status: "+response.getStatus());
         NodeRestRepresentation responseNode = getNodeFromResponse(response);
 
         assertEquals(EXPECTED_IMAGE, responseNode.getImage());
@@ -83,13 +85,20 @@ public class NodesResourceTest extends BaseTest {
     
     @Test
     public void shouldNotApplyInValidCookbook(){
+    	resetPath();
     	client.path("configs");   	
     	
     	Config config = new Config();
     	config.setName("xyz");
         Response response = client.post(config);
 
-        assertEquals(Status.INTERNAL_SERVER_ERROR, response.getStatus());
+        assertEquals(Status.NOT_FOUND, response.getStatus());
+        
+    	Config config2 = new Config();
+    	
+        response = client.post(config2);
+
+        assertEquals(Status.BAD_REQUEST, response.getStatus());
 
     }
 }

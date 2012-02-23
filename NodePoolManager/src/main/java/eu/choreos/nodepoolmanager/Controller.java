@@ -63,6 +63,7 @@ public class Controller {
 		String cookbook = ConfigToChef.getCookbookNameFromConfigName(config.getName());
 		String recipe = ConfigToChef.getRecipeNameFromConfigName(config.getName());
 		try {
+			System.out.println("Installing Recipe ...");
 			this.configurationManager.installRecipe(node, cookbook, recipe);
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -1,46 +1,47 @@
 package eu.choreos.nodepoolmanager;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
+
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import org.apache.cxf.jaxrs.client.WebClient;
 import org.jclouds.compute.RunNodesException;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
-import eu.choreos.nodepoolmanager.Configuration;
-import eu.choreos.nodepoolmanager.ConfigurationManager;
 import eu.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
+import eu.choreos.nodepoolmanager.datamodel.Config;
 import eu.choreos.nodepoolmanager.datamodel.Node;
+import eu.choreos.nodepoolmanager.datamodel.NodeRestRepresentation;
 import eu.choreos.nodepoolmanager.utils.SshUtil;
 
 
-public class NodeInitializerTest {
-    
+public class AWSCloudProviderTest extends BaseTest {
+	
 	private final static AWSCloudProvider infra = new AWSCloudProvider();
-    private static Node node = new Node();
+    private Node node = new Node();
 
-    @BeforeClass
-    public static void createNode() throws RunNodesException {
+    @Before
+    public void SetUp() throws RunNodesException {
         node.setImage("us-east-1/ami-ccf405a5");
         Configuration.set("DEFAULT_PROVIDER", "");
         node = infra.createNode(node);
     }
-    
-    @Test
-    public void initializeNode() throws Exception {
+
+	@Test
+    public void shouldCreateNodeFromPool() throws Exception {
         
     	// Waiting ssh to start
         SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
         while (!ssh.isAccessible())
             ;
 
-        ConfigurationManager configurationManager = new ConfigurationManager();
-        assertFalse(configurationManager.isInitialized(node));
-        
-        configurationManager.initializeNode(node);
-		assertTrue(configurationManager.isInitialized(node));
+        assertTrue(infra.createOrUseExistingNode(node)!=null);
     }
-    
-        
-    
+
 }

@@ -7,10 +7,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Config {
 
-    @XmlElement(required = true)
     private String name;
     private ResourceImpact resourceImpact;
 
+    @XmlElement(required = true)
     public String getName() {
         return name;
     }
