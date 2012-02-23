@@ -6,6 +6,7 @@ import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 
 public class NodePoolManagerStandaloneServer implements Runnable {
 
+	private static String LOCAL_HOST = "http://localhost:8080/";
     private static boolean running = false;
 
     public static void start() throws InterruptedException {
@@ -23,7 +24,7 @@ public class NodePoolManagerStandaloneServer implements Runnable {
     public void run() {
         JAXRSServerFactoryBean sf = new JAXRSServerFactoryBean();
         sf.setResourceClasses(NodeResource.class, NodesResource.class);
-        sf.setAddress("http://localhost:8080/");
+        sf.setAddress(LOCAL_HOST);
         sf.create();
         System.out.println("Starting CHOReOS Middleware ...");
         running = true;

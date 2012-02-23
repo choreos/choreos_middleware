@@ -1,0 +1,53 @@
+package eu.choreos.nodepoolmanager;
+
+import static org.junit.Assert.assertEquals;
+
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import org.junit.Test;
+
+import eu.choreos.nodepoolmanager.datamodel.Config;
+import eu.choreos.nodepoolmanager.datamodel.NodeRestRepresentation;
+
+public class ConfigResourceTest extends BaseTest {
+	
+    /**
+     * This test supposes the "getting-started2" recipe is already available on the chef server 
+     */
+    @Test
+    public void shouldApplyValidCookbook(){
+    	
+    	String RECIPE_NAME = "getting-started2";
+    	
+    	client.path("configs");   	
+    	
+    	Config config = new Config();
+    	config.setName(RECIPE_NAME);
+        Response response = client.post(config);
+        NodeRestRepresentation responseNode = getNodeFromResponse(response);
+
+        assertEquals(EXPECTED_IMAGE, responseNode.getImage());
+        assertEquals(Status.CREATED.getStatusCode(), response.getStatus());
+        
+        // verify if knife lists the recipe to the node
+        
+        // verify if the file getting-started2 is actually there
+
+    }
+    
+    @Test
+    public void shouldNotApplyInValidCookbook(){
+    	
+    	String INVALID_RECIPE = "xyz";
+    	
+    	client.path("configs");   	
+    	
+    	Config config = new Config();
+    	config.setName(INVALID_RECIPE);
+        Response response = client.post(config);
+
+        assertEquals(Status.INTERNAL_SERVER_ERROR, response.getStatus());
+
+    }
+}

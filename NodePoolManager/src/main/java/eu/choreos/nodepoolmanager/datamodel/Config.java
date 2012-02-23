@@ -1,13 +1,11 @@
 package eu.choreos.nodepoolmanager.datamodel;
 
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 
 @XmlRootElement
 public class Config {
 
-    @XmlElement(required = true)
     private String name;
     private ResourceImpact resourceImpact;
 

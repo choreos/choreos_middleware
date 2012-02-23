@@ -2,6 +2,8 @@ package eu.choreos.nodepoolmanager;
 
 import java.io.UnsupportedEncodingException;
 
+import javax.ws.rs.core.Response;
+
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.jclouds.compute.RunNodesException;
@@ -11,6 +13,7 @@ import org.junit.BeforeClass;
 import eu.choreos.nodepoolmanager.Configuration;
 import eu.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
 import eu.choreos.nodepoolmanager.datamodel.Node;
+import eu.choreos.nodepoolmanager.datamodel.NodeRestRepresentation;
 import eu.choreos.nodepoolmanager.rest.NodePoolManagerStandaloneServer;
 
 
@@ -47,6 +50,13 @@ public class BaseTest {
         sampleNode.setImage(TEST_IMAGE);
 
         infrastructure.createNode(sampleNode);
+    }
+    
+    protected static NodeRestRepresentation getNodeFromResponse(Response response) {
+    	
+        String location = (String) response.getMetadata().get("Location").get(0);
+        WebClient webClient = WebClient.create(location);
+        return webClient.get(NodeRestRepresentation.class);
     }
 
 }

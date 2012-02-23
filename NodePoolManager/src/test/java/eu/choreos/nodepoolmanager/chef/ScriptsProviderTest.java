@@ -25,7 +25,7 @@ public class ScriptsProviderTest {
         assertEquals(expected.trim(), command.trim());
 
         command = ScriptsProvider.getChefAddCookbook(hostname, cookbook, recipe);
-        expected = "knife node run_list add myHost cook:recipe -c " + config;
+        expected = "knife node run_list add myHost cook::recipe -c " + config;
         assertEquals(expected.trim(), command.trim());
     }
 

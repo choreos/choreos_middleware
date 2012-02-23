@@ -1,5 +1,6 @@
 package eu.choreos.nodepoolmanager.rest;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,24 +53,35 @@ public class NodesResource {
     }
     
     @POST
-    @Path("/configs")
+    @Path("configs")
     @Consumes(MediaType.APPLICATION_XML)
     public Response applyConfig(Config config, @Context UriInfo uriInfo) throws URISyntaxException {
         
-		if (config == null || config.getName() == null)
+		if (config == null || config.getName() == null || config.getName().isEmpty())
 			return Response.status(Status.BAD_REQUEST).build();
 		
-    	Node node = controller.applyConfig(config);
+    	//Node node = controller.applyConfig(config);
     	
+		Node node = new Node();
+		node.setId("777");
+		
     	if (node == null)  // config not applied!
     		return Response.status(Status.INTERNAL_SERVER_ERROR).build();
     	
-    	// TODO responder código 201
-    	Response response = null;
         UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
         uriBuilder.path(NodeResource.class);
-        response = Response.created(uriBuilder.build(node.getId())).build();
+        URI uri = uriBuilder.build(node.getId());
+        System.out.println("****" + uri.toString());
+        Response response = Response.created(uri).build();
         
     	return response;
+    }
+    
+    @GET
+    @Path("configs")
+    @Consumes(MediaType.APPLICATION_XML)
+    public String getConfigs(Config config) {
+    	
+    	return config.getName();
     }
 }
