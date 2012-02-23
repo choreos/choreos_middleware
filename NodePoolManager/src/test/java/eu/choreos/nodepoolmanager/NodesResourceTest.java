@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -31,6 +32,12 @@ public class NodesResourceTest extends BaseTest {
 
         assertEquals(EXPECTED_IMAGE, responseNode.getImage());
         assertEquals(Status.CREATED.getStatusCode(), response.getStatus());
+        
+        List<Object> list =  response.getMetadata().get("Location");
+        assertTrue(list != null && !list.isEmpty());
+        String location = list.get(0).toString();
+        System.out.println("location= " + location);
+        assertTrue(isNodeLocation(location));
     }
 
     @Test

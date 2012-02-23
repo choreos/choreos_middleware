@@ -1,6 +1,8 @@
 package eu.choreos.nodepoolmanager;
 
 import java.io.UnsupportedEncodingException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.ws.rs.core.Response;
 
@@ -22,8 +24,10 @@ public class BaseTest {
 	protected static String TEST_IMAGE = ""; // era 1 
 	private static String TEST_DEFAULT_PROVIDER = ""; // era stub
 	protected static String EXPECTED_IMAGE = "us-east-1/ami-ccf405a5";
-
-	protected static final WebClient client = WebClient.create("http://localhost:8080/");
+	private static String LOCAL_HOST = "http://localhost:8080/";
+	private static String RESOURCE = "nodes";
+	
+	protected static final WebClient client = WebClient.create(LOCAL_HOST);
     protected static AWSCloudProvider infrastructure = new AWSCloudProvider();
     protected static Node sampleNode;
     
@@ -57,6 +61,20 @@ public class BaseTest {
         String location = (String) response.getMetadata().get("Location").get(0);
         WebClient webClient = WebClient.create(location);
         return webClient.get(NodeRestRepresentation.class);
+    }
+    
+    /**
+     * Verify if <code>uri</code> matches http://localhost:8080/nodes/.+
+     * @param uri
+     * @return
+     */
+    protected boolean isNodeLocation(String uri) {
+    	
+    	String regex = LOCAL_HOST + RESOURCE + "/.+";
+    	Pattern pattern = Pattern.compile(regex);
+    	Matcher matcher = pattern.matcher(uri);
+    	
+    	return matcher.matches();
     }
 
 }

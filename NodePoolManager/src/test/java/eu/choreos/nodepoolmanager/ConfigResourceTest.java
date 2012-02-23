@@ -1,6 +1,9 @@
 package eu.choreos.nodepoolmanager;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -33,11 +36,18 @@ public class ConfigResourceTest extends BaseTest {
 
         assertEquals(EXPECTED_IMAGE, responseNode.getImage());
         assertEquals(Status.CREATED.getStatusCode(), response.getStatus());
+        assertTrue(isNodeLocation(response.getMetadata().get("Location").toString()));
         
         // verify if knife lists the recipe to the node
         
         // verify if the file getting-started2 is actually there
 
+        // verify resource location
+        List<Object> list =  response.getMetadata().get("Location");
+        assertTrue(list != null && !list.isEmpty());
+        String location = list.get(0).toString();
+        System.out.println("location= " + location);
+        assertTrue(isNodeLocation(location));
     }
     
     @Test
