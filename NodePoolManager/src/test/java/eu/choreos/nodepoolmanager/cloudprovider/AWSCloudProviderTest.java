@@ -1,4 +1,4 @@
-package eu.choreos.nodepoolmanager;
+package eu.choreos.nodepoolmanager.cloudprovider;
 
 import static org.junit.Assert.assertTrue;
 
@@ -6,6 +6,8 @@ import org.jclouds.compute.RunNodesException;
 import org.junit.Before;
 import org.junit.Test;
 
+import eu.choreos.nodepoolmanager.BaseTest;
+import eu.choreos.nodepoolmanager.Configuration;
 import eu.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
 import eu.choreos.nodepoolmanager.datamodel.Node;
 import eu.choreos.nodepoolmanager.utils.SshUtil;
