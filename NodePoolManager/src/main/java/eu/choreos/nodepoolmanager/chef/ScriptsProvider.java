@@ -19,10 +19,16 @@ public class ScriptsProvider {
 	private static String CHEF_ADD_COOKBOOK_SCRIPT = "chef/chef_add_cookbook.sh";
 	private static String CHEF_NAME_SCRIPT = "chef/my_chef_name.sh";
 	
-    public static String getChefBootstrapScript(String pKeyFile, String ip, String user) throws IOException {
+    public static String getChefBootstrapScript(String pKeyFile, String ip, String user) {
     	
     	URL scriptFile = ClassLoader.getSystemResource(CHEF_BOOTSTRAP_SCRIPT);
-        String command = FileUtils.readFileToString(new File(scriptFile.getFile()));
+        String command = null;
+		try {
+			command = FileUtils.readFileToString(new File(scriptFile.getFile()));
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Should not happen");
+		}
 
         String config = Configuration.get("CHEF_CONFIG_FILE");
 
@@ -34,10 +40,16 @@ public class ScriptsProvider {
         return command;
     }
     
-    public static String getChefAddCookbook(String nodeName, String cookbook, String recipe) throws IOException {
+    public static String getChefAddCookbook(String nodeName, String cookbook, String recipe) {
     	
     	URL scriptFile = ClassLoader.getSystemResource(CHEF_ADD_COOKBOOK_SCRIPT);
-    	String command = FileUtils.readFileToString(new File(scriptFile.getFile()));
+    	String command = null;
+		try {
+			command = FileUtils.readFileToString(new File(scriptFile.getFile()));
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Should not happen");
+		}
 
         String config = Configuration.get("CHEF_CONFIG_FILE");
 

@@ -33,8 +33,12 @@ public class SshUtil {
     public String runCommand(String command) throws Exception {
         Session session = getSshSession();
 
-        session.connect(5000);
-
+        try {
+        	session.connect(5000);
+        }
+        catch(JSchException e) {
+        	System.out.println("Could not connect " + user + "@" + hostname + " with " + privateKeyFile);
+        }
         Channel channel = session.openChannel("exec");
         ((ChannelExec) channel).setCommand(command);
         StringBuffer sb = new StringBuffer();

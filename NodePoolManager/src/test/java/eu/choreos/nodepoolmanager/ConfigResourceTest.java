@@ -34,23 +34,24 @@ public class ConfigResourceTest extends BaseTest {
         Response response = client.post(config);
         NodeRestRepresentation responseNode = getNodeFromResponse(response);
 
+        // verify cloud node 
         assertEquals(EXPECTED_IMAGE, responseNode.getImage());
         assertEquals(Status.CREATED.getStatusCode(), response.getStatus());
-        assertTrue(isNodeLocation(response.getMetadata().get("Location").toString()));
         
-        // verify if knife lists the recipe to the node
-        
-        // verify if the file getting-started2 is actually there
-
         // verify resource location
         List<Object> list =  response.getMetadata().get("Location");
         assertTrue(list != null && !list.isEmpty());
         String location = list.get(0).toString();
         System.out.println("location= " + location);
         assertTrue(isNodeLocation(location));
+        
+        // verify if knife lists the recipe to the node
+        
+        // verify if the file getting-started2 is actually there
+
     }
     
-    @Test
+    //@Test
     public void shouldNotApplyInValidCookbook(){
     	
     	String INVALID_RECIPE = "xyz";

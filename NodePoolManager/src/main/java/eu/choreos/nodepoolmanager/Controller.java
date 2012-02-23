@@ -1,6 +1,5 @@
 package eu.choreos.nodepoolmanager;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.jclouds.compute.RunNodesException;
@@ -62,17 +61,11 @@ public class Controller {
 		
 		String cookbook = ConfigToChef.getCookbookNameFromConfigName(config.getName());
 		String recipe = ConfigToChef.getRecipeNameFromConfigName(config.getName());
-		try {
-			System.out.println("Installing Recipe ...");
-			this.configurationManager.installRecipe(node, cookbook, recipe);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		System.out.println("Controller: Installing Recipe ...");
+		boolean status = this.configurationManager.installRecipe(node, cookbook, recipe);
 		
+		if (!status)
+			return null;
 		return node;
 	}
 }
