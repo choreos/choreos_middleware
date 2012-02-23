@@ -12,6 +12,10 @@ import eu.choreos.nodepoolmanager.datamodel.NodeRestRepresentation;
 
 public class ConfigResourceTest extends BaseTest {
 	
+    public void resetPath() {
+        client.back(true);
+    }
+    
     /**
      * This test supposes the "getting-started2" recipe is already available on the chef server 
      */
@@ -20,7 +24,7 @@ public class ConfigResourceTest extends BaseTest {
     	
     	String RECIPE_NAME = "getting-started2";
     	
-    	client.path("configs");   	
+    	client.path("nodes/configs");   	
     	
     	Config config = new Config();
     	config.setName(RECIPE_NAME);
@@ -41,13 +45,21 @@ public class ConfigResourceTest extends BaseTest {
     	
     	String INVALID_RECIPE = "xyz";
     	
+        
+    	resetPath();
     	client.path("configs");   	
     	
     	Config config = new Config();
     	config.setName(INVALID_RECIPE);
         Response response = client.post(config);
 
-        assertEquals(Status.INTERNAL_SERVER_ERROR, response.getStatus());
+        assertEquals(Status.NOT_FOUND, response.getStatus());
+        
+    	Config config2 = new Config();
+    	
+        response = client.post(config2);
+
+        assertEquals(Status.BAD_REQUEST, response.getStatus());
 
     }
 }

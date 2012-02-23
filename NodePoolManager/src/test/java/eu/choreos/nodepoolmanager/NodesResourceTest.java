@@ -56,5 +56,4 @@ public class NodesResourceTest extends BaseTest {
         infrastructure.destroyNode(id);
     }
     
-
 }
