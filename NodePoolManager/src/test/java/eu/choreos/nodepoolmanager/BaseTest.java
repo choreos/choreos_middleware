@@ -45,7 +45,7 @@ public class BaseTest {
 
     @AfterClass
     public static void stopServer() throws UnsupportedEncodingException {
-    	infrastructure.destroyNode(sampleNode.getId());
+    	//infrastructure.destroyNode(sampleNode.getId());
         NodePoolManagerStandaloneServer.stop();
     }
 
@@ -53,7 +53,7 @@ public class BaseTest {
         sampleNode = new Node();
         sampleNode.setImage(TEST_IMAGE);
 
-        infrastructure.createNode(sampleNode);
+        //infrastructure.createNode(sampleNode);
     }
     
     protected static NodeRestRepresentation getNodeFromResponse(Response response) {

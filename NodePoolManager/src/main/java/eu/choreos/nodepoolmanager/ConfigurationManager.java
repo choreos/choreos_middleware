@@ -100,6 +100,8 @@ public class ConfigurationManager {
 		String command = ScriptsProvider.getChefAddCookbook(node.getChefName(), cookbook, recipe);
 		System.out.println("Install recipe command = [" + command+"]");
         CommandLine.runLocalCommand(command);
+        // TODO we should verify if the recipe install was OK
+        // but it is very awkward make this without using the chef API!
         
         try {
 			this.updateNodeConfiguration(node);
