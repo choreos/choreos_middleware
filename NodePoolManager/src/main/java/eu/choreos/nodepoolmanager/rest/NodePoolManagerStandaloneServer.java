@@ -23,7 +23,7 @@ public class NodePoolManagerStandaloneServer implements Runnable {
 
     public void run() {
         JAXRSServerFactoryBean sf = new JAXRSServerFactoryBean();
-        sf.setResourceClasses(NodeResource.class, NodesResource.class);
+        sf.setResourceClasses(ConfigResource.class, NodesResource.class);
         sf.setAddress(LOCAL_HOST);
         sf.create();
         System.out.println("Starting CHOReOS Middleware ...");

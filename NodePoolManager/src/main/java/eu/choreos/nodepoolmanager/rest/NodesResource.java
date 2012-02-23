@@ -1,29 +1,31 @@
 package eu.choreos.nodepoolmanager.rest;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Response.Status;
 
 import eu.choreos.nodepoolmanager.Controller;
+import eu.choreos.nodepoolmanager.NodeNotFoundException;
 import eu.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
-import eu.choreos.nodepoolmanager.datamodel.Config;
+import eu.choreos.nodepoolmanager.cloudprovider.CloudProvider;
 import eu.choreos.nodepoolmanager.datamodel.Node;
 import eu.choreos.nodepoolmanager.datamodel.NodeRestRepresentation;
 
 
-@Path("/nodes")
+@Path("nodes")
 public class NodesResource {
 
     
@@ -46,42 +48,39 @@ public class NodesResource {
 
     	String nodeId = controller.createNode(new Node(node));
         UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-        uriBuilder.path(NodeResource.class);
+        uriBuilder.path(NodesResource.class);
         response = Response.created(uriBuilder.build(nodeId)).build();
-
+        // FIXME response is wrong
+        // it is http://localhost:8080/nodes
+        // it should be http://localhost:8080/nodes/{nodeId}
+        
         return response;
     }
     
-    @POST
-    @Path("configs")
-    @Consumes(MediaType.APPLICATION_XML)
-    public Response applyConfig(Config config, @Context UriInfo uriInfo) throws URISyntaxException {
-        
-		if (config == null || config.getName() == null || config.getName().isEmpty())
-			return Response.status(Status.BAD_REQUEST).build();
-		
-    	//Node node = controller.applyConfig(config);
-    	
-		Node node = new Node();
-		node.setId("777");
-		
-    	if (node == null)  // config not applied!
-    		return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-    	
-        UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-        uriBuilder.path(NodeResource.class);
-        URI uri = uriBuilder.build(node.getId());
-        System.out.println("****" + uri.toString());
-        Response response = Response.created(uri).build();
-        
-    	return response;
+    @GET
+    @Path("{node_id:.+}")
+    public Response getNode(@PathParam("node_id") String id) {
+        Response response;
+        CloudProvider infrastructure = new AWSCloudProvider();
+
+        try {
+            NodeRestRepresentation node = infrastructure.getNode(id).getRestRepresentation();
+            response = Response.ok(node).build();
+        } catch (NodeNotFoundException e) {
+            response = Response.status(Status.NOT_FOUND).build();
+        }
+
+        return response;
+    }
+
+    @DELETE
+    @Path("{node_id:.+}")
+    public Response deleteNode(@PathParam("node_id") String id) {
+    	CloudProvider infrastructure = new AWSCloudProvider();
+        infrastructure.destroyNode(id);
+
+        return Response.status(Status.OK).build();
     }
     
-    @GET
-    @Path("configs")
-    @Consumes(MediaType.APPLICATION_XML)
-    public String getConfigs(Config config) {
-    	
-    	return config.getName();
-    }
+   
 }
