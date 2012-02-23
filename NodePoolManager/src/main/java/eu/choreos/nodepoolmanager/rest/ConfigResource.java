@@ -35,13 +35,9 @@ public class ConfigResource {
     	if (node == null)  // config not applied!
     		return Response.status(Status.INTERNAL_SERVER_ERROR).build();
     	
-        UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-        URI uri = uriBuilder.path(NodesResource.class).build(node.getId());
-        Response response = Response.created(uri).build();
-        // FIXME response is wrong
-        // it is http://localhost:8080/nodes
-        // it should be http://localhost:8080/nodes/{nodeId}
-        
-    	return response;
+		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+		uriBuilder = uriBuilder.path(NodesResource.class).path(node.getId());
+		URI uri = uriBuilder.build();
+    	return Response.created(uri).build();
     }
 }

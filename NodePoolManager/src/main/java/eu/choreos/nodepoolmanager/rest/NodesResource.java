@@ -1,5 +1,6 @@
 package eu.choreos.nodepoolmanager.rest;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,23 +45,20 @@ public class NodesResource {
     @POST
     @Consumes(MediaType.APPLICATION_XML)
     public Response createNode(NodeRestRepresentation node, @Context UriInfo uriInfo) throws URISyntaxException {
-        Response response;
 
     	String nodeId = controller.createNode(new Node(node));
-        UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-        uriBuilder.path(NodesResource.class);
-        response = Response.created(uriBuilder.build(nodeId)).build();
-        // FIXME response is wrong
-        // it is http://localhost:8080/nodes
-        // it should be http://localhost:8080/nodes/{nodeId}
-        
-        return response;
+
+		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+		uriBuilder = uriBuilder.path(NodesResource.class).path(nodeId);
+		URI uri = uriBuilder.build();
+    	return Response.created(uri).build();
     }
     
     @GET
     @Path("{node_id:.+}")
     public Response getNode(@PathParam("node_id") String id) {
-        Response response;
+        
+    	Response response;
         CloudProvider infrastructure = new AWSCloudProvider();
 
         try {
@@ -76,6 +74,7 @@ public class NodesResource {
     @DELETE
     @Path("{node_id:.+}")
     public Response deleteNode(@PathParam("node_id") String id) {
+    	
     	CloudProvider infrastructure = new AWSCloudProvider();
         infrastructure.destroyNode(id);
 
