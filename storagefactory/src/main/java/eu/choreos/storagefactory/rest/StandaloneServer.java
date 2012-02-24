@@ -27,7 +27,7 @@ public class StandaloneServer implements Runnable {
 	public void run() {
 		JAXRSServerFactoryBean sf = new JAXRSServerFactoryBean();
 		sf.setResourceClasses(StoragesResource.class);
-		sf.setAddress("http://localhost:8080/");
+		sf.setAddress("http://localhost:8081/");
 		sf.create();
 		System.out.println("Starting Storage Factory...");
 		running = true;

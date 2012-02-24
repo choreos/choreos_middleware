@@ -71,9 +71,8 @@ public class StorageNodeRegistryFacade {
 	}
 
 	private boolean isFoundNode(String queryResult) {
-		if(queryResult==null)
-			return false;
-		if(queryResult.trim().equals(NODE_NOT_FOUND))
+		
+		if(queryResult==null || queryResult.trim().contains(NODE_NOT_FOUND))
 			return false;
 		
 		return true;

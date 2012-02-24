@@ -7,13 +7,13 @@ import org.junit.Test;
 
 import eu.choreos.storagefactory.Configuration;
 import eu.choreos.storagefactory.utils.CommandLineInterfaceHelper;
-import eu.choreos.storagefactory.utils.NodePoolManagerHandler;
+import eu.choreos.storagefactory.utils.SimpleNodePoolManagerHandler;
 
 public class RecipeDeployerTest {
 
 	private static Recipe recipe;
 	private RecipeDeployer deployer = new RecipeDeployer(
-			new NodePoolManagerHandler());
+			new SimpleNodePoolManagerHandler());
 
 	@BeforeClass
 	public static void setUpBeforeClass() {

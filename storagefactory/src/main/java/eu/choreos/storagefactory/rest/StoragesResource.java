@@ -15,6 +15,7 @@ import javax.xml.bind.JAXBElement;
 import eu.choreos.storagefactory.StorageNodeManager;
 import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
+import eu.choreos.storagefactory.utils.NodePoolManager;
 
 /**
  * Storage factory REST API resource: storages
@@ -25,7 +26,7 @@ import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
 @Path("/storagefactory")
 public class StoragesResource {
 
-	StorageNodeManager storageManager = new StorageNodeManager();
+	StorageNodeManager storageManager = new StorageNodeManager(new NodePoolManager());
 
 	/**
 	 * Client requests a storage

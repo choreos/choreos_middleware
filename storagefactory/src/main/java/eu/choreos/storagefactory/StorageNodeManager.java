@@ -7,24 +7,23 @@ import eu.choreos.storagefactory.recipe.RecipeDeployer;
 import eu.choreos.storagefactory.recipe.RecipeFactory;
 import eu.choreos.storagefactory.registry.StorageNodeRegistryFacade;
 import eu.choreos.storagefactory.utils.NodePoolManagerHandler;
+import eu.choreos.storagefactory.utils.SimpleNodePoolManagerHandler;
 
 public class StorageNodeManager {
 	public StorageNodeRegistryFacade registry;
 	private NodePoolManagerHandler npm;
 
+	public StorageNodeManager(NodePoolManagerHandler nodepoolmanager) {
+		this.registry = new StorageNodeRegistryFacade();
+		this.npm=nodepoolmanager;
+	}
+	
 	public StorageNodeManager() {
 		this.registry = new StorageNodeRegistryFacade();
-		this.setNodePoolManagerHandler(new NodePoolManagerHandler());
+		this.npm=new SimpleNodePoolManagerHandler();
 	}
 
-	public NodePoolManagerHandler getNodePoolManagerHandler() {
-		return npm;
-	}
-
-	public void setNodePoolManagerHandler(NodePoolManagerHandler npm) {
-		this.npm = npm;
-	}
-
+	
 	private Recipe createRecipe(StorageNode node) {
 		RecipeFactory factory = new RecipeFactory();
 
@@ -59,6 +58,11 @@ public class StorageNodeManager {
 		node.setUri(deployedHostname);
 	}
 
+	/**
+	 * Create a node according to specifications (StorageNodeSpec)
+	 * @param specifications
+	 * @return
+	 */
 	public StorageNode createNewStorageNode(StorageNodeSpec specifications) {
 		StorageNode node;
 
@@ -76,6 +80,10 @@ public class StorageNodeManager {
 		return node;
 	}
 
+	/**
+	 * Remove a storage node by Id 
+	 * @param storageNodeId
+	 */
 	public void destroyNode(String storageNodeId) {
 		StorageNode storageNode;
 
@@ -84,7 +92,7 @@ public class StorageNodeManager {
 
 			String id = storageNode.getUuid();
 
-			getNodePoolManagerHandler().destroyNode(id);
+			this.npm.destroyNode(id);
 
 		} catch (Exception e) {
 			System.out
@@ -93,4 +101,6 @@ public class StorageNodeManager {
 			e.printStackTrace();
 		}
 	}
+	
+	
 }

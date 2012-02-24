@@ -2,6 +2,7 @@ package eu.choreos.storagefactory.recipe;
 
 import eu.choreos.storagefactory.utils.CommandLineInterfaceHelper;
 import eu.choreos.storagefactory.utils.NodePoolManagerHandler;
+import eu.choreos.storagefactory.utils.SimpleNodePoolManagerHandler;
 
 public class RecipeDeployer {
 
@@ -9,6 +10,10 @@ public class RecipeDeployer {
 
 	public RecipeDeployer(NodePoolManagerHandler nodePoolManager) {
 		npm = nodePoolManager;
+	}
+	
+	public RecipeDeployer() {
+		npm = new SimpleNodePoolManagerHandler();
 	}
 
 	public String deployRecipe(Recipe recipe) {
