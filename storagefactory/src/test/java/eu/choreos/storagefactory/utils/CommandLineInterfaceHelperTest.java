@@ -4,6 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import eu.choreos.storagefactory.Configuration;
+
 public class CommandLineInterfaceHelperTest {
 
 	@Test
@@ -15,8 +17,10 @@ public class CommandLineInterfaceHelperTest {
 
 	@Test
 	public void testKnifeCommand() {
-		assertTrue((new CommandLineInterfaceHelper()).runLocalCommand(
-				"knife node show choreos-node").contains("FQDN:   "));
+		String runCommand ="knife node show choreos-other-node ";
+		runCommand+=Configuration.get("CHEF_CONFIG_FILE")!=null?("-c "+Configuration.get("CHEF_CONFIG_FILE")):"";
+		System.out.println("command: "+runCommand);		
+		assertTrue((new CommandLineInterfaceHelper()).runLocalCommand(runCommand).contains("FQDN:   "));
 	}
 
 }

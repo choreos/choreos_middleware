@@ -10,6 +10,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.Status.Family;
 
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -47,24 +48,33 @@ public class StorageRestApiTest {
 	public void setUpClient() {
 		client = WebClient.create("http://localhost:8080/storagefactory/");
 	}
+	
+    @After
+    public void resetPath() {
+        client.back(true);
+    }
+
 
 	@Test
 	public void shouldSuccessfulyInvokeGetStorage() {
-		shouldReceiveStorageNodeWithProperTypeAndUuid();
+		//shouldReceiveStorageNodeWithProperTypeAndUuid();
 		// Since the method shouldReceiveStorageNodeWithProperTypeAndUuid
 		// sets the client.path to "storage" it only requires to
 		// add the "uuid" to the path.
+		client.path("storages");
 		client.path("314159265");
 		Response response = client.get();
-		assertEquals(Status.OK.getStatusCode(), response.getStatus());
+		assertTrue( response.getStatus()== Status.OK.getStatusCode() ||
+				    response.getStatus()== Status.NO_CONTENT.getStatusCode() );
 	}
 
 	@Test
 	public void shouldSuccessfulyInvokeDeleteStorage() {
-		shouldReceiveStorageNodeWithProperTypeAndUuid();
+		//shouldReceiveStorageNodeWithProperTypeAndUuid();
 		// Since the method shouldReceiveStorageNodeWithProperTypeAndUuid
 		// sets the client.path to "storage" it only requires to
 		// add the "uuid" to the path.
+		client.path("storages");
 		client.path("314159265");
 		Response response = client.delete();
 		assertEquals(Family.SUCCESSFUL,
@@ -129,6 +139,7 @@ public class StorageRestApiTest {
 
 		client.path("storages/314159265");
 		StorageNode node = client.get(StorageNode.class);
+		System.out.println("StorageNode: "+node+ "class:");
 		assertTrue(node instanceof StorageNode);
 	}
 }

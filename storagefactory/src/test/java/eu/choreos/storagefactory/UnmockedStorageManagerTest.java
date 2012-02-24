@@ -14,6 +14,7 @@ public class UnmockedStorageManagerTest {
 	protected static StorageNodeSpec spec1 = new StorageNodeSpec();
 	protected static StorageNodeSpec spec2 = new StorageNodeSpec();
 	protected static SshUtil connection;
+	protected static String CHEF_KNIFE_FILE=Configuration.get("CHEF_CONFIG_FILE");
 
 	// @BeforeClass
 	public static void initialSetUp() throws Exception {
