@@ -10,6 +10,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.Status.Family;
 
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -46,8 +47,15 @@ public class ServiceDeployerRestApiTest {
 
 	@Before
 	public void setUpClient() {
-		client = WebClient.create("http://localhost:8080/serviceDeployer/");
+		client = WebClient.create("http://localhost:8082/serviceDeployer/");
+		//System.out.println("Cliente Base URI:"+client.getBaseURI());
 	}
+
+	//@After
+    public void resetPath() {
+        client.back(true);
+        System.out.println("resetPath, current URI: "+client.getCurrentURI());
+    }
 
 	@Test
 	public void shouldSuccessfulyInvokeGetService() {
@@ -128,6 +136,8 @@ public class ServiceDeployerRestApiTest {
 		resourceImpact.setIo("heavy");
 		resourceImpact.setRegion("France");
 		serviceSpec.setResourceImpact(resourceImpact);
+
+		System.out.println("shouldReceiveServiceWithProperServiceNode |current URI: "+client.getCurrentURI());
 
 		Service service = client.post(serviceSpec, Service.class);
 		assertTrue(service instanceof Service);

@@ -1,16 +1,24 @@
 package eu.choreos.servicedeployer.utils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class CommandLineInterfaceHelper {
 
-	public String runLocalCommand(String command) {
+
+	public String runLocalCommand(String command){
+		return runLocalCommand(command, ".");
+	}
+	
+	public String runLocalCommand(String command, String workingDirectory) {
 		String commandReturn = "";
 
 		try {
-			Process p = Runtime.getRuntime().exec(command);
+			File wd = new File(workingDirectory);
+			
+			Process p = Runtime.getRuntime().exec(command,null,wd);
 			BufferedReader in = new BufferedReader(new InputStreamReader(
 					p.getInputStream()));
 			String line;
@@ -26,5 +34,6 @@ public class CommandLineInterfaceHelper {
 
 		return commandReturn;
 	}
+
 
 }
