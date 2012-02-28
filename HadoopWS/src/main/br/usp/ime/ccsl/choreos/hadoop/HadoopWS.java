@@ -1,31 +1,25 @@
 package br.usp.ime.ccsl.choreos.hadoop;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
+import static org.junit.Assert.assertEquals;
+
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.net.URLStreamHandlerFactory;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.cxf.jaxrs.ext.xml.XMLSource;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hdfs.util.ByteArray;
 
 @Path("/hadoop/")
 public class HadoopWS {
@@ -85,8 +79,14 @@ public class HadoopWS {
 			ByteArrayOutputStream baout = new ByteArrayOutputStream();
 			conf.writeXml(baout);
 			baout.close();
+			
+			ByteArrayInputStream bais = new ByteArrayInputStream(baout.toByteArray());
+            XMLSource xml = new XMLSource(bais);
+            xml.setBuffering(true);
+            
+            Property dfs = xml.getNode("/configuration/property[name='fs.defaultFS']", Property.class);
 
-			response = Response.ok(baout.toString()).type("text/xml").build();
+			response = Response.ok(dfs).build();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -96,4 +96,23 @@ public class HadoopWS {
 		return response;
 	}
 
+	@XmlRootElement(name = "property")
+	static class Property {
+		private String name;
+		private String value;
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		public String getValue() {
+			return value;
+		}
+		public void setValue(String value) {
+			this.value = value;
+		}
+		
+	};
 }
+
