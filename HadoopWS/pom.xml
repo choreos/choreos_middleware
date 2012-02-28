@@ -72,14 +72,20 @@
     	<version>2.5.2</version>
     </dependency>
     <dependency>
-    	<groupId>org.apache.hadoop</groupId>
-    	<artifactId>hadoop-core</artifactId>
-    	<version>0.20.205.0</version>
-    </dependency>
-    <dependency>
     	<groupId>org.codehaus.jackson</groupId>
     	<artifactId>jackson-core-lgpl</artifactId>
     	<version>1.9.4</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.hadoop</groupId>
+    	<artifactId>hadoop-common</artifactId>
+    	<version>0.22.0</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.httpcomponents</groupId>
+    	<artifactId>httpclient</artifactId>
+    	<version>4.2-beta1</version>
+    	<scope>test</scope>
     </dependency>
   </dependencies>
   

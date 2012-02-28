@@ -1,10 +1,14 @@
 package br.usp.ime.ccsl.choreos.hadoop;
 
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 
 public class HadoopWSServer implements Runnable {
 
+	public static final String SERVER_ADDRESS = "http://localhost:8080/";
 	private static boolean running = false;
 
 	public static void start() throws InterruptedException {
@@ -22,7 +26,7 @@ public class HadoopWSServer implements Runnable {
 	public void run() {
 		JAXRSServerFactoryBean sf = new JAXRSServerFactoryBean();
 		sf.setResourceClasses(HadoopWS.class);
-		sf.setAddress("http://localhost:8080/");
+		sf.setAddress(SERVER_ADDRESS);
 		sf.create();
 		System.out.println("Starting server...");
 		running = true;
