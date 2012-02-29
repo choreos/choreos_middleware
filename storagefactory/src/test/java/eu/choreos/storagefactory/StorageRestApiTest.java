@@ -32,7 +32,7 @@ import eu.choreos.storagefactory.rest.StandaloneServer;
  */
 public class StorageRestApiTest {
 
-	private static final String HOST = "http://localhost:8081/storagefactory/";
+	private static final String HOST = "http://localhost:9102/storagefactory/";
 	private WebClient client;
 
 	@BeforeClass

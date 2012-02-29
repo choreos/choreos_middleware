@@ -10,7 +10,7 @@ import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
  */
 public class StandaloneServer implements Runnable {
 
-	private static final String HOST = "http://localhost:8081/";
+	private static final String HOST = "http://localhost:9102/";
 	private static boolean running = false;
 
 	public static void start() throws InterruptedException {
