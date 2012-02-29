@@ -18,28 +18,11 @@
 
 include_recipe "tomcat"
 
-template "#{node['service']['MyServletWAR']['bashscript']}" do
-  source "deploy-service.sh.erb"
-  mode "0777"
+remote_file "war_file" do
+  source "#{node['service']['MyServletWAR']['URL']}"
+  path "#{node['tomcat']['webapp_dir']}/serviceMyServletWARdeploy.war"
+  mode "0755"
   action :create
 end
 
-execute "deploy WAR" do
-  command "/bin/bash < #{node['service']['MyServletWAR']['bashscript']}"
-  action :nothing
-  subscribes :run, resources("template[#{node['service']['MyServletWAR']['bashscript']}]"), :immediately
-end
 
-# TODO: Handle wget EXIT STATUS
-#       Wget may return one of several error codes if it encounters problems.
-#       0   No problems occurred.
-#       1   Generic error code.
-#       2   Parse error---for instance, when parsing command-line options, the .wgetrc or .netrc...
-#       3   File I/O error.
-#       4   Network failure.
-#       5   SSL verification failure.
-#       6   Username/password authentication failure.
-#       7   Protocol errors.
-#       8   Server issued an error response.
-
-# temporary command to list
