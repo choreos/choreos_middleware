@@ -9,12 +9,13 @@ depends "tomcat"
 
 
 attribute "service/$NAME/WarFile",
+  :display_NAME => "WAR file name to be deployed",
+  :default => "test"
+
+attribute "service/$NAME/URL",
   :display_NAME => "Location (URL) of the WAR file to be deployed",
   :default => "test"
 
-attribute "service/$NAME/webappsPath",
-  :display_NAME => "Path for the webapps folder to deploy in Tomcat",
-  :default => "/var/lib/webapps"
 
 attribute "service/$NAME/logfile",
   :display_NAME => "The default log file for errors",
