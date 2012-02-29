@@ -7,7 +7,7 @@ import eu.choreos.servicedeployer.datamodel.Service;
 import eu.choreos.servicedeployer.utils.CommandLineInterfaceHelper;
 
 
-public class SimpleNodePoolManagerHandler implements NodePoolManagerHandler{
+public class SimpleNodePoolManagerHandler extends NodePoolManagerHandler{
 
 	public static String  KNIFE_CONFIG_FILE_OPTION = 
 			Configuration.get("CHEF_CONFIG_FILE")!=null?" -c "+Configuration.get("CHEF_CONFIG_FILE"):"";

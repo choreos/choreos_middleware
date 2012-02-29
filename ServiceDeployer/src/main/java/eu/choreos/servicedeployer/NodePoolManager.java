@@ -10,7 +10,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import eu.choreos.servicedeployer.datamodel.Service;
 
 
-public class NodePoolManager implements NodePoolManagerHandler{
+public class NodePoolManager extends NodePoolManagerHandler{
 
 	private static String HOST = "http://localhost:8082/";
 	protected static final WebClient client = WebClient.create(HOST);
