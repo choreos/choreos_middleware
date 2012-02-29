@@ -46,7 +46,7 @@ public class ServiceDeployerRestApiTest {
 
 	@Before
 	public void setUpClient() {
-		client = WebClient.create("http://localhost:8080/serviceDeployer/");
+		client = WebClient.create("http://localhost:8082/serviceDeployer/");
 	}
 
 	@Test
