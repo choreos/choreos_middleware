@@ -29,10 +29,10 @@ public class ServiceDeployer {
 		String serviceURL;
 		if (deployedHost.contains("http://"))
 			serviceURL = service.getUri() + ":" + service.getPort() + "/"
-					+ service.getId() + "/";
+					+ "service"+ service.getId() +"Deploy/";
 		else
 			serviceURL = "http://" + service.getUri() + ":" + service.getPort()
-					+ "/" + service.getId() + "/";
+					+ "/service" + service.getId() + "Deploy/";
 
 		return serviceURL;
 	}

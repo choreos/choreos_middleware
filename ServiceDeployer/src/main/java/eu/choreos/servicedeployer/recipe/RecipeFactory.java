@@ -2,14 +2,13 @@ package eu.choreos.servicedeployer.recipe;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 
 import eu.choreos.servicedeployer.datamodel.Service;
 
 public class RecipeFactory {
-
+	
 	public Recipe createRecipe(Service service) {
 		Recipe recipe = new Recipe();
 		String absolutePath;
@@ -55,9 +54,8 @@ public class RecipeFactory {
 
 	private void changeFileContents(Service service, String fileLocation)
 			throws IOException {
-		URL scriptFile = ClassLoader.getSystemResource(fileLocation);
 
-		File file = new File(scriptFile.getFile());
+		File file = new File("src/main/resources/" + fileLocation);
 		String fileData = FileUtils.readFileToString(file);
 
 		fileData = fileData.replace("$NAME", service.getId());
@@ -69,14 +67,12 @@ public class RecipeFactory {
 	}
 
 	public String copyTemplate(Service service) throws IOException {
-		URL scriptFile = ClassLoader
-				.getSystemResource("chef/tomcat-service-deploy-recipe-template");
-		URL destURL = ClassLoader.getSystemResource("chef");
-
-		File srcFolder = new File(scriptFile.getFile());
-		File destFolder = new File(destURL.getFile().concat(
-				"/service" + service.getId()));
-
+		
+		File srcFolder = new File("src/main/resources/chef/tomcat-service-deploy-recipe-template");
+		
+		String destPath = RecipeDeployer.DEST_DIR.getAbsolutePath() + "/service" + service.getId();
+		File destFolder = new File(destPath);
+		
 		FileUtils.copyDirectory(srcFolder, destFolder);
 
 		return destFolder.getAbsolutePath();

@@ -1,6 +1,7 @@
 package eu.choreos.servicedeployer;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -12,6 +13,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.choreos.nodepoolmanager.Configuration;
 import eu.choreos.servicedeployer.datamodel.ResourceImpact;
 import eu.choreos.servicedeployer.datamodel.Service;
 import eu.choreos.servicedeployer.datamodel.ServiceSpec;
@@ -52,9 +54,28 @@ public class ServiceDeployerTest {
 	public void setUp() throws Exception {
 		deployer = new ServiceDeployer();
 		(new CommandLineInterfaceHelper())
-				.runLocalCommand("knife node run_list remove choreos-node recipe[servicemyServletWAR]");
+				.runLocalCommand("knife node run_list remove choreos-node recipe[servicemyServletWAR] -c " + Configuration.get("CHEF_CONFIG_FILE"));
 		(new CommandLineInterfaceHelper())
 				.runLocalCommand("ssh root@choreos-node chef-client");
+	}
+
+	@Test
+	public void shouldStoreWarFileInWebAppsFolder() throws Exception {
+		(new CommandLineInterfaceHelper())
+				.runLocalCommand("ssh root@choreos-node rm -rf "
+						+ "/var/lib/tomcat6/webapps/myServletWAR*");
+		service1 = new Service(specWar);
+
+		service1.setUri("http://this.should.not.work/");
+		service1.setId("myServletWAR");
+
+		String url = deployer.deploy(service1);
+		assertEquals("http://choreos-node:8080/servicemyServletWARDeploy/", url);
+
+		assertTrue((new CommandLineInterfaceHelper())
+		.runLocalCommand("ssh root@choreos-node ls "
+				+ "/var/lib/tomcat6/webapps/").contains("servicemyServletWARDeploy"));
+
 	}
 
 	@Test
@@ -68,7 +89,7 @@ public class ServiceDeployerTest {
 		service1.setId("myServletWAR");
 
 		String url = deployer.deploy(service1);
-		assertEquals("http://choreos-node:8080/myServletWAR/", url);
+		assertEquals("http://choreos-node:8080/servicemyServletWARDeploy/", url);
 
 		Thread.sleep(15000);
 		client = WebClient.create(url);
