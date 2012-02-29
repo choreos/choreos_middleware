@@ -10,7 +10,7 @@ import eu.choreos.nodepoolmanager.datamodel.Config;
 
 public class NodePoolManagerClient implements NodePoolManager {
 
-	private static String HOST = "http://localhost:8080/";
+	private static String HOST = "http://localhost:9100/";
 	protected static final WebClient client = WebClient.create(HOST);
 	
 	@Override
