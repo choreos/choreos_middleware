@@ -18,3 +18,4 @@ src/generated/
 src/generated/server/java/*
 target/
 FixedCloudProviderTest.java
+storagefactory/src/main/resources/storagefactory.properties
