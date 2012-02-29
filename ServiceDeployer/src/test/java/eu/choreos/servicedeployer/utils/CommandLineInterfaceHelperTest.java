@@ -4,8 +4,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import eu.choreos.servicedeployer.Configuration;
-
 public class CommandLineInterfaceHelperTest {
 
 	@Test
@@ -17,12 +15,10 @@ public class CommandLineInterfaceHelperTest {
 
 	@Test
 	public void testKnifeCommand() {
-		String runCommand = "knife node show choreos-other-node";
-		runCommand+= Configuration.get("CHEF_CONFIG_FILE")!=null?" -c "+Configuration.get("CHEF_CONFIG_FILE"):"";
-		
 		assertTrue(
-				"Could not connect to chef server or a choreos-other-node is not present",
-				(new CommandLineInterfaceHelper()).runLocalCommand(runCommand).contains("FQDN:   "));
+				"Could not connect to chef server or a choreos-node is not present",
+				(new CommandLineInterfaceHelper()).runLocalCommand(
+						"knife node show choreos-node").contains("FQDN:   "));
 	}
 
 }

@@ -5,7 +5,7 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.choreos.servicedeployer.utils.CommandLineInterfaceHelper;
+import eu.choreos.storagefactory.utils.CommandLineInterfaceHelper;
 
 public class StorageNodeRegistryTest {
 

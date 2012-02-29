@@ -11,8 +11,7 @@ import eu.choreos.servicedeployer.registry.DeployedServicesRegistry;
 public class ServiceDeployer {
 
 	private DeployedServicesRegistry registry;
-	
-	
+
 	public String deploy(Service service) throws MalformedURLException {
 		// Create recipe from template
 		RecipeFactory factory = new RecipeFactory();
@@ -20,7 +19,7 @@ public class ServiceDeployer {
 
 		// Upload template to Chef
 		RecipeDeployer deployer = new RecipeDeployer(
-				new SimpleNodePoolManagerHandler());
+				new NodePoolManagerHandler());
 		deployer.uploadRecipe(serviceDeployRecipe);
 
 		// and Request NodePoolManager to deploy the recipe in a node
