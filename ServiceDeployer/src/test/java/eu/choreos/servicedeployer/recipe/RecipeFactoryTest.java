@@ -139,14 +139,6 @@ public class RecipeFactoryTest {
 		assertTrue(fileData.contains(" IMPORTANT DEVELOPMENT NOTICE:"));
 	}
 
-	@Test
-	public void shouldReplaceOcurrencesInTemplatesShellScript()
-			throws Exception {
-		recipeFactory.changeScriptTemplate(service);
-
-		assertAllOcurrencesWereReplacedInTemplatesShellScript();
-	}
-
 	private void assertAllOcurrencesWereReplacedInTemplatesShellScript()
 			throws IOException {
 		URL fileLocation = ClassLoader.getSystemResource("chef/service" + id

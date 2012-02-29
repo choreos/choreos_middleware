@@ -19,7 +19,6 @@ public class RecipeFactory {
 			changeMetadataRb(service);
 			changeAttributesDefaultRb(service);
 			changeServerRecipe(service);
-			changeScriptTemplate(service);
 
 			recipe.setName("service" + service.getId());
 			recipe.setFolder(absolutePath);
