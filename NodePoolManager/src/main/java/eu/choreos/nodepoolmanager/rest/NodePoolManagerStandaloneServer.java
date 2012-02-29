@@ -6,7 +6,7 @@ import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 
 public class NodePoolManagerStandaloneServer implements Runnable {
 
-	private static String LOCAL_HOST = "http://localhost:8080/";
+	private static String LOCAL_HOST = "http://localhost:9100/";
     private static boolean running = false;
 
     public static void start() throws InterruptedException {

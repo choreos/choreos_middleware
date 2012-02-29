@@ -24,7 +24,7 @@ public class BaseTest {
 	protected static String TEST_IMAGE = ""; // era 1 
 	private static String TEST_DEFAULT_PROVIDER = ""; // era stub
 	protected static String EXPECTED_IMAGE = "us-east-1/ami-ccf405a5";
-	private static String LOCAL_HOST = "http://localhost:8080/";
+	private static String LOCAL_HOST = "http://localhost:9100/";
 	private static String RESOURCE = "nodes";
 	
 	protected static final WebClient client = WebClient.create(LOCAL_HOST);
