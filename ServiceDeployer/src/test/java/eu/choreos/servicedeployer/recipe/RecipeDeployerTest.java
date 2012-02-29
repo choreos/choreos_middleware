@@ -18,12 +18,12 @@ public class RecipeDeployerTest {
 	@BeforeClass
 	public static void setUpBeforeClass() {
 		recipe = new Recipe();
-		recipe.setName("servlet");
+		recipe.setName("myServletWAR");
 		recipe.setFolder("./src/test/resources/chef/");
 		System.out
 				.println("deleting previous instances of the recipe. Errors are expected");
 		(new CommandLineInterfaceHelper())
-				.runLocalCommand("knife cookbook remove myServletWAR -y");
+				.runLocalCommand("knife cookbook delete myServletWAR -y");
 		(new CommandLineInterfaceHelper())
 				.runLocalCommand("knife node run_list remove choreos recipe[myServletWAR]");
 	}

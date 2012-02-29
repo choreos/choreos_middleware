@@ -1,10 +1,14 @@
 package eu.choreos.servicedeployer.recipe;
 
+import java.net.URL;
+
 import eu.choreos.servicedeployer.NodePoolManagerHandler;
 import eu.choreos.servicedeployer.datamodel.Service;
 import eu.choreos.servicedeployer.utils.CommandLineInterfaceHelper;
 
 public class RecipeDeployer {
+
+	public static final URL destURL = ClassLoader.getSystemResource("chef");
 
 	private NodePoolManagerHandler npm;
 
