@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.choreos.nodepoolmanager.Configuration;
 import eu.choreos.servicedeployer.NodePoolManagerHandler;
 import eu.choreos.servicedeployer.datamodel.Service;
 import eu.choreos.storagefactory.utils.CommandLineInterfaceHelper;
@@ -23,9 +24,9 @@ public class RecipeDeployerTest {
 		System.out
 				.println("deleting previous instances of the recipe. Errors are expected");
 		(new CommandLineInterfaceHelper())
-				.runLocalCommand("knife cookbook delete myServletWAR -y");
+				.runLocalCommand("knife cookbook delete myServletWAR -y" + " -c " + Configuration.get("CHEF_CONFIG_FILE"));
 		(new CommandLineInterfaceHelper())
-				.runLocalCommand("knife node run_list remove choreos recipe[myServletWAR]");
+				.runLocalCommand("knife node run_list remove choreos recipe[myServletWAR]" + " -c " + Configuration.get("CHEF_CONFIG_FILE"));
 	}
 
 	@Test
@@ -36,7 +37,7 @@ public class RecipeDeployerTest {
 		String commandReturn = "";
 
 		commandReturn = (new CommandLineInterfaceHelper())
-				.runLocalCommand("knife cookbook list");
+				.runLocalCommand("knife cookbook list") + " -c " + Configuration.get("CHEF_CONFIG_FILE");
 
 		assertTrue("Did not find the uploaded recipe.",
 				commandReturn.contains("myServlet"));
@@ -50,7 +51,7 @@ public class RecipeDeployerTest {
 		String commandReturn = "";
 
 		commandReturn = (new CommandLineInterfaceHelper())
-				.runLocalCommand("knife search node run_list:*myServlet*");
+				.runLocalCommand("knife search node run_list:*myServlet*" + " -c " + Configuration.get("CHEF_CONFIG_FILE"));
 
 		assertTrue("Did not find the uploaded recipe.",
 				commandReturn.contains("Node Name"));

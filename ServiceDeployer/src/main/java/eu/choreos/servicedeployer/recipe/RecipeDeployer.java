@@ -1,15 +1,19 @@
 package eu.choreos.servicedeployer.recipe;
 
-import java.net.URL;
+import java.io.File;
 
+import eu.choreos.nodepoolmanager.Configuration;
 import eu.choreos.servicedeployer.NodePoolManagerHandler;
 import eu.choreos.servicedeployer.datamodel.Service;
 import eu.choreos.servicedeployer.utils.CommandLineInterfaceHelper;
 
 public class RecipeDeployer {
 
-	public static final URL destURL = ClassLoader.getSystemResource("chef");
+	// este getSystemResource estava usando a pasta do NodePoolManager!!!
+	// public static final URL destURL = ClassLoader.getSystemResource("chef");
 
+	public static final File DEST_DIR = new File("src/main/resources/chef");
+	
 	private NodePoolManagerHandler npm;
 
 	public RecipeDeployer(NodePoolManagerHandler nodePoolManager) {
@@ -29,8 +33,8 @@ public class RecipeDeployer {
 
 	private String createUploadCommand(Recipe recipe) {
 		System.out.println("knife cookbook upload " + recipe.getName() + " -o "
-				+ recipe.getFolder());
+				+ recipe.getFolder() + " -c " + Configuration.get("CHEF_CONFIG_FILE"));
 		return "knife cookbook upload " + recipe.getName() + " -o "
-				+ recipe.getFolder();
+				+ recipe.getFolder() + " -c " + Configuration.get("CHEF_CONFIG_FILE");
 	}
 }

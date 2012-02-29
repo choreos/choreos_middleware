@@ -32,7 +32,7 @@ public class ServiceDeployer {
 					+ "service"+ service.getId() +"Deploy/";
 		else
 			serviceURL = "http://" + service.getUri() + ":" + service.getPort()
-					+ "/" + service.getId() + "/";
+					+ "/service" + service.getId() + "Deploy/";
 
 		return serviceURL;
 	}

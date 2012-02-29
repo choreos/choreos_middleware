@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.choreos.nodepoolmanager.Configuration;
 import eu.choreos.servicedeployer.datamodel.ResourceImpact;
 import eu.choreos.servicedeployer.datamodel.Service;
 import eu.choreos.servicedeployer.datamodel.ServiceSpec;
@@ -53,7 +54,7 @@ public class ServiceDeployerTest {
 	public void setUp() throws Exception {
 		deployer = new ServiceDeployer();
 		(new CommandLineInterfaceHelper())
-				.runLocalCommand("knife node run_list remove choreos-node recipe[servicemyServletWAR]");
+				.runLocalCommand("knife node run_list remove choreos-node recipe[servicemyServletWAR] -c " + Configuration.get("CHEF_CONFIG_FILE"));
 		(new CommandLineInterfaceHelper())
 				.runLocalCommand("ssh root@choreos-node chef-client");
 	}
@@ -73,7 +74,7 @@ public class ServiceDeployerTest {
 
 		assertTrue((new CommandLineInterfaceHelper())
 		.runLocalCommand("ssh root@choreos-node ls "
-				+ "/var/lib/tomcat6/webapps/").contains("myServletWAR"));
+				+ "/var/lib/tomcat6/webapps/").contains("servicemyServletWARDeploy"));
 
 	}
 

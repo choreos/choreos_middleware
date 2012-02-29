@@ -3,6 +3,7 @@ package eu.choreos.servicedeployer;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.choreos.nodepoolmanager.Configuration;
 import eu.choreos.servicedeployer.datamodel.Service;
 import eu.choreos.servicedeployer.utils.CommandLineInterfaceHelper;
 
@@ -18,7 +19,7 @@ public class SimpleNodePoolManagerHandler extends NodePoolManagerHandler{
 		System.out.println("knife node run_list add choreos-node " + recipe+KNIFE_CONFIG_FILE_OPTION);
 		(new CommandLineInterfaceHelper())
 				.runLocalCommand("knife node run_list add choreos-node "
-						+ recipe+KNIFE_CONFIG_FILE_OPTION);
+						+ recipe+KNIFE_CONFIG_FILE_OPTION + " -c " + Configuration.get("CHEF_CONFIG_FILE"));
 
 		initializeNode();
 		service.setPort(8080);
