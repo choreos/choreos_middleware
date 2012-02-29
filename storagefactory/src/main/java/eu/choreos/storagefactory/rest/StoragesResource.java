@@ -15,6 +15,7 @@ import javax.xml.bind.JAXBElement;
 import eu.choreos.storagefactory.StorageNodeManager;
 import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
+import eu.choreos.storagefactory.utils.NodePoolManager;
 import eu.choreos.storagefactory.utils.SimpleNodePoolManagerHandler;
 
 /**
@@ -26,7 +27,8 @@ import eu.choreos.storagefactory.utils.SimpleNodePoolManagerHandler;
 @Path("/storagefactory")
 public class StoragesResource {
 
-	StorageNodeManager storageManager = new StorageNodeManager(new SimpleNodePoolManagerHandler());
+	//StorageNodeManager storageManager = new StorageNodeManager(new SimpleNodePoolManagerHandler());
+	StorageNodeManager storageManager = new StorageNodeManager(new NodePoolManager());
 
 	/**
 	 * Client requests a storage
@@ -45,9 +47,19 @@ public class StoragesResource {
 		// condition
 		if (spec.getType() == null && spec.getUuid() == null)
 			return Response.status(Status.BAD_REQUEST).build();
-
-		StorageNode node = storageManager.createNewStorageNode(spec);
-
+		
+		StorageNode node=null;
+		try{
+			node = storageManager.createNewStorageNode(spec);
+			if(node ==null)
+				return Response.status(Status.NOT_FOUND).build();
+			
+		}catch(Exception e){
+			System.out.println("** A Exception when invoking StorageFactory REST API ... ");
+			System.out.println(e.getMessage());
+			return Response.serverError().build();
+		}
+		
 		return Response.ok(node).build();
 	}
 

@@ -10,6 +10,8 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.Status.Family;
 
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -48,6 +50,13 @@ public class StorageRestApiTest {
 	@Before
 	public void setUpClient() {
 		client = WebClient.create(HOST);
+		HTTPConduit http = (HTTPConduit)WebClient.getConfig(client).getConduit();
+		 
+		HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
+		httpClientPolicy.setConnectionTimeout(0);//indefined
+		httpClientPolicy.setReceiveTimeout(0);//indefined
+		 
+		http.setClient(httpClientPolicy);
 	}
 	
     @After

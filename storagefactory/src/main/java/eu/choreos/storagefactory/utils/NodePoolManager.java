@@ -5,19 +5,29 @@ import java.util.List;
 import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
 import eu.choreos.nodepoolmanager.datamodel.Config;
 
 public class NodePoolManager implements NodePoolManagerHandler {
 	
-	private static String HOST = "http://localhost:9100/";
-	protected static final WebClient client = WebClient.create(HOST);
+	private static String HOST = "http://localhost:8080/";
+	protected final WebClient client; 
     
 	public NodePoolManager(){
+		client = WebClient.create(HOST);
 		
+		HTTPConduit http = (HTTPConduit)WebClient.getConfig(client).getConduit();
+		 
+		HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
+		httpClientPolicy.setConnectionTimeout(0);//indefined
+		httpClientPolicy.setReceiveTimeout(0);//indefined
+		 
+		http.setClient(httpClientPolicy);
 	}
 	@Override
-	public String createNode(String recipe) {
+	public String createNode(String recipe) throws Exception {
 
 		client.path("nodes/configs");   	
 		Config config = new Config();

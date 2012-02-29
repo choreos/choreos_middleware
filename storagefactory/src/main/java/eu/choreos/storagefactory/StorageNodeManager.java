@@ -38,6 +38,9 @@ public class StorageNodeManager {
 		Recipe recipe = createRecipe(node);
 
 		sendRecipeToNode(node, recipe);
+		
+		if(node.getUri()==null)//Node was not deployed
+			return null;
 
 		return node;
 	}
@@ -67,14 +70,17 @@ public class StorageNodeManager {
 		StorageNode node;
 
 		// Check if it exists
+		System.out.println("Registry: Check if it exists ...");
+
 		node = registry.getNode(specifications.getUuid());
 
 		// If it does not
 		if (node == null) {
 			// Create a node from specifications
+			System.out.println("Node don't exist, then deploy a new Node...");
 			node = new StorageNode(specifications);
 			// And deploy it
-			deployNode(node);
+			return deployNode(node);
 		}
 
 		return node;
