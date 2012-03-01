@@ -1,9 +1,5 @@
 package br.usp.ime.ccsl.choreos.hadoop;
 
-
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 
 public class HadoopWSServer implements Runnable {
@@ -45,5 +41,4 @@ public class HadoopWSServer implements Runnable {
 	public static void main(String[] args) throws InterruptedException {
 		HadoopWSServer.start();
 	}
-
 }

@@ -1,26 +1,22 @@
 package br.usp.ime.ccsl.choreos.hadoop;
 
-import static org.junit.Assert.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import javax.ws.rs.core.Response;
-import javax.xml.bind.annotation.XmlElement;
-
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.jaxrs.ext.xml.XMLSource;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.file.tfile.ByteArray;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FSDataOutputStream;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -91,6 +87,47 @@ public class AutoConfigClient {
 		}
 
 	}
+	
+	@Test
+	public void acessingHadoopFS() throws ClientProtocolException, IOException {
+		HttpClient httpclient = new DefaultHttpClient();
+		try {
+
+			Configuration conf = new Configuration(true);
+
+
+			ByteArrayInputStream bais = new ByteArrayInputStream(
+					retrieveConfig(httpclient).getBytes());
+			XMLSource xml = new XMLSource(bais);
+			xml.setBuffering(true);
+
+			Property dfs = xml.getNode("/property[name='fs.defaultFS']",
+					Property.class);
+			String newValue = dfs.getValue();
+
+			conf.set("fs.defaultFS", newValue);
+			
+			FileSystem fs = FileSystem.get(conf);
+			
+			try {
+				fs.mkdirs(new Path("/test"));
+			}
+			catch(IOException ioe) {
+				ioe.printStackTrace();
+				fail("Could not create a directory '/test'");
+			}
+			
+			FSDataOutputStream out = fs.create(new Path("/test/test.txt"));
+
+			out.writeUTF("1\tthis is a test line content");
+			
+			out.close();
+			
+
+		} finally {
+			httpclient.getConnectionManager().shutdown();
+		}
+	}
 
 	private String retrieveConfig(HttpClient httpclient) throws IOException,
 			ClientProtocolException {
@@ -105,6 +142,7 @@ public class AutoConfigClient {
 	}
 
 	static class Property {
+
 		private String name;
 		private String value;
 
@@ -123,7 +161,5 @@ public class AutoConfigClient {
 		public void setValue(String value) {
 			this.value = value;
 		}
-
 	};
-
 }

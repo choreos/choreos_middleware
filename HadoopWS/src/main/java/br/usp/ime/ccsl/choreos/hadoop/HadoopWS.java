@@ -1,7 +1,5 @@
 package br.usp.ime.ccsl.choreos.hadoop;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -9,7 +7,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -17,7 +14,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlRootElement;
-
 import org.apache.cxf.jaxrs.ext.xml.XMLSource;
 import org.apache.hadoop.conf.Configuration;
 
@@ -25,8 +21,8 @@ import org.apache.hadoop.conf.Configuration;
 public class HadoopWS {
 
 	private static class OurURLClassLoader {
-		
-		private static final Class[] parameters = new Class[]{URL.class};
+
+		private static final Class[] parameters = new Class[] { URL.class };
 
 		public static ClassLoader addFile(String s) throws IOException {
 			File f = new File(s);
@@ -44,7 +40,8 @@ public class HadoopWS {
 			Class sysclass = URLClassLoader.class;
 
 			try {
-				Method method = sysclass.getDeclaredMethod("addURL", parameters);
+				Method method = sysclass
+						.getDeclaredMethod("addURL", parameters);
 				method.setAccessible(true);
 				method.invoke(sysloader, new Object[] { u });
 			} catch (Throwable t) {
@@ -55,7 +52,6 @@ public class HadoopWS {
 			return sysloader;
 
 		}
-
 	}
 
 	@GET
@@ -69,22 +65,28 @@ public class HadoopWS {
 					System.getProperty("user.home"))
 					+ File.separator + "conf");
 			OurURLClassLoader.addFile(hdConfPath);
-			
-			Configuration.addDefaultResource(hdConfPath.getAbsolutePath() + File.separator + "core-site.xml");
-			Configuration.addDefaultResource(hdConfPath.getAbsolutePath() + File.separator + "hdfs-site.xml");
-			Configuration.addDefaultResource(hdConfPath.getAbsolutePath() + File.separator + "mapred-site.xml");
-			
+
+			Configuration.addDefaultResource(hdConfPath.getAbsolutePath()
+					+ File.separator + "core-site.xml");
+			Configuration.addDefaultResource(hdConfPath.getAbsolutePath()
+					+ File.separator + "hdfs-site.xml");
+			Configuration.addDefaultResource(hdConfPath.getAbsolutePath()
+					+ File.separator + "mapred-site.xml");
+
 			Configuration conf = new Configuration(true);
-			
+
 			ByteArrayOutputStream baout = new ByteArrayOutputStream();
 			conf.writeXml(baout);
 			baout.close();
-			
-			ByteArrayInputStream bais = new ByteArrayInputStream(baout.toByteArray());
-            XMLSource xml = new XMLSource(bais);
-            xml.setBuffering(true);
-            
-            Property dfs = xml.getNode("/configuration/property[name='fs.defaultFS']", Property.class);
+
+			ByteArrayInputStream bais = new ByteArrayInputStream(
+					baout.toByteArray());
+			XMLSource xml = new XMLSource(bais);
+			xml.setBuffering(true);
+
+			Property dfs = xml.getNode(
+					"/configuration/property[name='fs.defaultFS']",
+					Property.class);
 
 			response = Response.ok(dfs).build();
 
@@ -98,21 +100,24 @@ public class HadoopWS {
 
 	@XmlRootElement(name = "property")
 	static class Property {
+
 		private String name;
 		private String value;
+
 		public String getName() {
 			return name;
 		}
+
 		public void setName(String name) {
 			this.name = name;
 		}
+
 		public String getValue() {
 			return value;
 		}
+
 		public void setValue(String value) {
 			this.value = value;
 		}
-		
 	};
 }
-
