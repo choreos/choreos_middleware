@@ -19,6 +19,7 @@ public class RecipeFactory {
 			changeMetadataRb(storage);
 			changeAttributesDefaultRb(storage);
 			changeServerRecipe(storage);
+			changeTemplate(storage);
 
 			recipe.setName("storage" + storage.getUuid());
 			recipe.setFolder(absolutePath);
@@ -35,6 +36,12 @@ public class RecipeFactory {
 	public void changeMetadataRb(StorageNode storage) throws IOException {
 		changeFileContents(storage, "chef/storage" + storage.getUuid()
 				+ "/metadata.rb");
+	}
+
+
+	public void changeTemplate(StorageNode storage) throws IOException {
+		changeFileContents(storage, "chef/storage" + storage.getUuid()
+				+ "/templates/default/create-database.sql.erb");
 	}
 
 	public void changeServerRecipe(StorageNode storage) throws IOException {
