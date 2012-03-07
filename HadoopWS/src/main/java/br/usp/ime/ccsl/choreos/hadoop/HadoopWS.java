@@ -37,7 +37,7 @@ public class HadoopWS {
 
 			URLClassLoader sysloader = (URLClassLoader) ClassLoader
 					.getSystemClassLoader();
-			Class sysclass = URLClassLoader.class;
+			Class<URLClassLoader> sysclass = URLClassLoader.class;
 
 			try {
 				Method method = sysclass
@@ -61,32 +61,40 @@ public class HadoopWS {
 
 		try {
 
-			File hdConfPath = new File(System.getProperty("hadoop.home",
-					System.getProperty("user.home"))
-					+ File.separator + "conf");
-			OurURLClassLoader.addFile(hdConfPath);
-
-			Configuration.addDefaultResource(hdConfPath.getAbsolutePath()
-					+ File.separator + "core-site.xml");
-			Configuration.addDefaultResource(hdConfPath.getAbsolutePath()
-					+ File.separator + "hdfs-site.xml");
-			Configuration.addDefaultResource(hdConfPath.getAbsolutePath()
-					+ File.separator + "mapred-site.xml");
-
-			Configuration conf = new Configuration(true);
-
-			ByteArrayOutputStream baout = new ByteArrayOutputStream();
-			conf.writeXml(baout);
-			baout.close();
-
-			ByteArrayInputStream bais = new ByteArrayInputStream(
-					baout.toByteArray());
-			XMLSource xml = new XMLSource(bais);
-			xml.setBuffering(true);
-
-			Property dfs = xml.getNode(
-					"/configuration/property[name='fs.defaultFS']",
-					Property.class);
+			Property dfs = new Property();
+			dfs.setName("fs.defaultFS");
+			
+			if (System.getProperty("hadoop.url") != null && !System.getProperty("hadoop.url").equals(""))
+				dfs.setValue(System.getProperty("hadoop.url"));
+			else {
+				
+				File hdConfPath = new File(System.getProperty("hadoop.home",
+						System.getProperty("user.home"))
+						+ File.separator + "conf");
+				OurURLClassLoader.addFile(hdConfPath);
+	
+				Configuration.addDefaultResource(hdConfPath.getAbsolutePath()
+						+ File.separator + "core-site.xml");
+				Configuration.addDefaultResource(hdConfPath.getAbsolutePath()
+						+ File.separator + "hdfs-site.xml");
+				Configuration.addDefaultResource(hdConfPath.getAbsolutePath()
+						+ File.separator + "mapred-site.xml");
+	
+				Configuration conf = new Configuration(true);
+	
+				ByteArrayOutputStream baout = new ByteArrayOutputStream();
+				conf.writeXml(baout);
+				baout.close();
+	
+				ByteArrayInputStream bais = new ByteArrayInputStream(
+						baout.toByteArray());
+				XMLSource xml = new XMLSource(bais);
+				xml.setBuffering(true);
+	
+				dfs = xml.getNode(
+						"/configuration/property[name='fs.defaultFS']",
+						Property.class);
+			}
 
 			response = Response.ok(dfs).build();
 
