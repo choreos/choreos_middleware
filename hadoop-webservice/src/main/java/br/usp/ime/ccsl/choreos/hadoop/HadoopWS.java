@@ -69,7 +69,7 @@ public class HadoopWS {
 			else {
 				
 				File hdConfPath = new File(System.getProperty("hadoop.home",
-						System.getProperty("user.home"))
+						System.getProperty("user.home")) + File.separator + "hadoopws"
 						+ File.separator + "conf");
 				OurURLClassLoader.addFile(hdConfPath);
 	

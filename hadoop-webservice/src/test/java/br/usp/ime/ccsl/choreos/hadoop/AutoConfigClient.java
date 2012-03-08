@@ -45,7 +45,7 @@ public class AutoConfigClient {
 
 			Property dfs = xml.getNode("/property[name='fs.defaultFS']",
 					Property.class);
-			assertEquals("hdfs://localhost:9000", dfs.getValue());
+			assertEquals("hdfs://aguia1.ime.usp.br:54310", dfs.getValue());
 
 		} finally {
 			httpclient.getConnectionManager().shutdown();
