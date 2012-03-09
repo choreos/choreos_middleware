@@ -4,21 +4,16 @@ Inc.//DTD Web Application 2.3//EN"
 "http://java.sun.com/j2ee/dtds/web-app_2_3.dtd">
 
 <web-app>
-	<listener>
-		<listener-class>
-			com.sun.xml.ws.transport.http.servlet.WSServletContextListener
-		</listener-class>
-	</listener>
 	<servlet>
-		<servlet-name>Customer</servlet-name>
+		<servlet-name>HadoopWS</servlet-name>
 		<servlet-class>
-			com.sun.xml.ws.transport.http.servlet.WSServlet
+			br.usp.ime.ccsl.choreos.hadoop.HadoopWSServlet
 		</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>Customer</servlet-name>
-		<url-pattern>/customer</url-pattern>
+		<servlet-name>HadoopWS</servlet-name>
+		<url-pattern>/hadoop</url-pattern>
 	</servlet-mapping>
 	<session-config>
 		<session-timeout>120</session-timeout>
