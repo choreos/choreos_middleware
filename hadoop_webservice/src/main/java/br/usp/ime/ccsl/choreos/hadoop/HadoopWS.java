@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.cxf.jaxrs.ext.xml.XMLSource;
 import org.apache.hadoop.conf.Configuration;
 
-@Path("hadoop")
+@Path("/hadoop")
 public class HadoopWS {
 
 	private static class OurURLClassLoader {
