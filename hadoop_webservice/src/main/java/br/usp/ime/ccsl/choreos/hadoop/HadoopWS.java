@@ -16,10 +16,13 @@ import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.cxf.jaxrs.ext.xml.XMLSource;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.log4j.Logger;
 
-@Path("/hadoop")
+@Path("/")
 public class HadoopWS {
 
+	private static Logger log = Logger.getLogger(HadoopWS.class);
+	
 	private static class OurURLClassLoader {
 
 		private static final Class[] parameters = new Class[] { URL.class };
@@ -60,19 +63,25 @@ public class HadoopWS {
 		Response response = null;
 
 		try {
+			
+			log.debug("Init");
 
 			Property dfs = new Property();
 			dfs.setName("fs.defaultFS");
 			
-			if (System.getProperty("hadoop.url") != null && !System.getProperty("hadoop.url").equals(""))
+			if (System.getProperty("hadoop.url") != null && !System.getProperty("hadoop.url").equals("")) {
+				log.debug("defining config via hadoop.url property");
 				dfs.setValue(System.getProperty("hadoop.url"));
+			}
 			else {
-				
+				log.debug("defining config via file property");
 				File hdConfPath = new File(System.getProperty("hadoop.home",
 						System.getProperty("user.home")) + File.separator + "hadoopws"
 						+ File.separator + "conf");
+				log.debug("file=" + hdConfPath.getAbsolutePath());
 				OurURLClassLoader.addFile(hdConfPath);
 	
+				log.debug("loading config files");
 				Configuration.addDefaultResource(hdConfPath.getAbsolutePath()
 						+ File.separator + "core-site.xml");
 				Configuration.addDefaultResource(hdConfPath.getAbsolutePath()
@@ -80,6 +89,7 @@ public class HadoopWS {
 				Configuration.addDefaultResource(hdConfPath.getAbsolutePath()
 						+ File.separator + "mapred-site.xml");
 	
+				log.debug("validating config files");
 				Configuration conf = new Configuration(true);
 	
 				ByteArrayOutputStream baout = new ByteArrayOutputStream();
@@ -88,6 +98,8 @@ public class HadoopWS {
 	
 				ByteArrayInputStream bais = new ByteArrayInputStream(
 						baout.toByteArray());
+				
+				log.debug("Reading XML to grab the correct property");
 				XMLSource xml = new XMLSource(bais);
 				xml.setBuffering(true);
 	
@@ -96,6 +108,8 @@ public class HadoopWS {
 						Property.class);
 			}
 
+			log.debug("xml=" + dfs);
+			
 			response = Response.ok(dfs).build();
 
 		} catch (Exception e) {
@@ -127,5 +141,12 @@ public class HadoopWS {
 		public void setValue(String value) {
 			this.value = value;
 		}
+
+		@Override
+		public String toString() {
+			return "Property [name=" + name + ", value=" + value + "]";
+		}
+		
+		
 	};
 }
