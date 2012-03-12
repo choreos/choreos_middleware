@@ -6,7 +6,7 @@ import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 
 public class HadoopWSServer implements Runnable {
 
-	public static final String SERVER_ADDRESS = "http://localhost:90090/";
+	public static final String SERVER_ADDRESS = "http://localhost:9090/";
 	private static boolean running = false;
 
 	public static void start() throws InterruptedException {

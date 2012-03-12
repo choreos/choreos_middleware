@@ -95,6 +95,8 @@ public class HadoopWS {
 				ByteArrayOutputStream baout = new ByteArrayOutputStream();
 				conf.writeXml(baout);
 				baout.close();
+				
+				log.debug("fullxml = " + baout.toString());
 	
 				ByteArrayInputStream bais = new ByteArrayInputStream(
 						baout.toByteArray());

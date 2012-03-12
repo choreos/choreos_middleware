@@ -1,8 +1,6 @@
 package br.usp.ime.ccsl.choreos.hadoop;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -39,10 +37,13 @@ import org.junit.Test;
 public class AutoConfigClient {
 
 	// URL configuration
-	private static String URL = "http://143.107.45.126:8080/hadoop";
+	// private static String URL = "http://143.107.45.126:8080/hadoop";
+	private static String URL = "http://localhost:8080/hadoop";
 	// private static String URL = HadoopWSServer.SERVER_ADDRESS + "hadoop";
 
-	private static String DFS_URL = "hdfs://143.107.45.126:54310";
+	// private static String DFS_URL = "hdfs://143.107.45.126:54310";
+	private static String DFS_URL = "hdfs://localhost:54310";
+	private static String MAPRED_URL = "localhost:54311";
 	private static String PROJECT_PATH = System.getProperty("user.home")
 			+ File.separator + "choreos_middleware" + File.separator
 			+ "hadoop_webservice";
@@ -177,49 +178,43 @@ public class AutoConfigClient {
 					Property.class);
 			String newValue = dfs.getValue();
 
+			System.out.println("fs.defaultFS=" + newValue);
 			conf.set("fs.defaultFS", newValue);
+			conf.set("mapred.job.tracker", MAPRED_URL);
 
 			fs = FileSystem.get(conf);
-			
-			if (!fs.exists(new Path("/input")))
-				fs.mkdirs(new Path("/input"));
 
-			FSDataOutputStream output = fs.create(new Path("/input/test.txt"),
-					true);
+			try {
+				fs.mkdirs(new Path("/input"));
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				fail("Could not create a directory '/test'");
+			}
+
+			FSDataOutputStream output = fs.create(new Path("/input/test.txt"));
 			FileInputStream input = new FileInputStream(new File(PROJECT_PATH
 					+ "/src/test/resource/test.txt"));
 
-			byte buffer[] = new byte[4096];
-			int byte_read = 0;
+			try {
+				int read = 0;
 
-			while ((byte_read = input.read(buffer)) != -1) {
-				output.write(buffer, 0, byte_read);
+				while ((read = input.read()) != -1) {
+					output.write(read);
+				}
+			} finally {
+				output.close();
+				input.close();
 			}
 
-			conf = new Configuration();
+			WordCount.setConf(conf);
+			WordCount.main(null);
 
-			Job job = Job.getInstance(conf, "wordcount");
-
-			job.setOutputKeyClass(Text.class);
-			job.setOutputValueClass(IntWritable.class);
-
-			job.setMapperClass(Map.class);
-			job.setReducerClass(Reduce.class);
-			
-			job.setInputFormatClass(TextInputFormat.class);
-			job.setOutputFormatClass(TextOutputFormat.class);
-
-		    FileInputFormat.addInputPath(job, new Path("/input"));
-		    FileOutputFormat.setOutputPath(job, new Path("/output"));
-
-
-			job.waitForCompletion(true);
+			assertTrue(fs.exists(new Path("/output/SUCCESS")));
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
-		}
-		finally {
+		} finally {
 			fs.close();
 			FileSystem.closeAll();
 			httpclient.getConnectionManager().shutdown();
@@ -260,32 +255,5 @@ public class AutoConfigClient {
 		}
 	};
 
-	public static class Map extends
-			Mapper<LongWritable, Text, Text, IntWritable> {
-		private final static IntWritable one = new IntWritable(1);
-		private Text word = new Text();
 
-		public void map(LongWritable key, Text value, Context context)
-				throws IOException, InterruptedException {
-			String line = value.toString();
-			StringTokenizer tokenizer = new StringTokenizer(line);
-			while (tokenizer.hasMoreTokens()) {
-				word.set(tokenizer.nextToken());
-				context.write(word, one);
-			}
-		}
-	}
-
-	public static class Reduce extends
-			Reducer<Text, IntWritable, Text, IntWritable> {
-
-		public void reduce(Text key, Iterable<IntWritable> values,
-				Context context) throws IOException, InterruptedException {
-			int sum = 0;
-			for (IntWritable val : values) {
-				sum += val.get();
-			}
-			context.write(key, new IntWritable(sum));
-		}
-	}
 }
