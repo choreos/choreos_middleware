@@ -3,4 +3,23 @@
   <groupId>ChoreosMonitoring</groupId>
   <artifactId>ChoreosMonitoring</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+
+<repositories>
+	<repository>
+		<id>ccslrepository</id>
+		<name>ccsl</name>
+		<url>http://valinhos.ime.usp.br:54080/maven/</url>
+	</repository>
+</repositories>
+<dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.0</version>
+      <type>jar</type>
+      <!-- <scope>test</scope> -->
+      <optional>true</optional>
+    </dependency>
+ </dependencies>
+
 </project>
