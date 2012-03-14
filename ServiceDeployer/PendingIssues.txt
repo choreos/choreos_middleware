@@ -1,0 +1,12 @@
+- Duplication of code:
+	- Copied and adapted Recipe, RecipeFactory and RecipeDeployer classes from 
+	StorageManager
+	- Copied CLIHelper class from StorageManager
+	- Copied NodePoolManagerHandler class from StorageManager
+- Pending requirements:
+	- BPEL deployment
+	- Petals JBI consume
+	- Petals auto-deployment (node pool manager??)
+ 	- RegistryFacade is still very simple and should be improved. Is it possible
+ 	 to interact with chef to store data?
+

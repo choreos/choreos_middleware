@@ -12,18 +12,23 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.xml.bind.JAXBElement;
 
+import eu.choreos.storagefactory.StorageNodeManager;
 import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
+import eu.choreos.storagefactory.utils.NodePoolManager;
+import eu.choreos.storagefactory.utils.SimpleNodePoolManagerHandler;
 
 /**
- * Storage factory REST API
- * resource: storages
+ * Storage factory REST API resource: storages
  * 
  * @author leonardo, alfonso
- *
+ * 
  */
 @Path("/storagefactory")
 public class StoragesResource {
+
+	//StorageNodeManager storageManager = new StorageNodeManager(new SimpleNodePoolManagerHandler());
+	StorageNodeManager storageManager = new StorageNodeManager(new NodePoolManager());
 
 	/**
 	 * Client requests a storage
@@ -36,20 +41,28 @@ public class StoragesResource {
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
 	public Response requestStorage(JAXBElement<StorageNodeSpec> specXml) {
-		
+
 		StorageNodeSpec spec = specXml.getValue();
-		
+
 		// condition
 		if (spec.getType() == null && spec.getUuid() == null)
 			return Response.status(Status.BAD_REQUEST).build();
 		
-		// TODO trocar bloco abaixo para o que precisamos fazer
-			StorageNode node = new StorageNode();
-			node.setUuid(spec.getUuid());
+		StorageNode node=null;
+		try{
+			node = storageManager.createNewStorageNode(spec);
+			if(node ==null)
+				return Response.status(Status.NOT_FOUND).build();
 			
+		}catch(Exception e){
+			System.out.println("** A Exception when invoking StorageFactory REST API ... ");
+			System.out.println(e.getMessage());
+			return Response.serverError().build();
+		}
+		
 		return Response.ok(node).build();
 	}
-	
+
 	/**
 	 * 
 	 * @return the storage node of a group defined by a correlation ID
@@ -58,34 +71,30 @@ public class StoragesResource {
 	@Path("/storages/{uuid}")
 	@Produces(MediaType.APPLICATION_XML)
 	public StorageNode getCorrelationNode(@PathParam("uuid") String uuid) {
-		
-		// TODO trocar bloco abaixo para o que precisamos fazer
-			StorageNode node = new StorageNode();
-			node.setUuid(uuid);
-			node.setPassword("123mudar");
-			node.setSchema(uuid);
-			node.setType("MySQL");
-			node.setUri("localhost");
-			node.setUser("uuid");
-		
-		// TODO se não tiver storage, retorna erro
-		return node;
+
+		StorageNode node = null;
+		try {
+			node = storageManager.registry.getNode(uuid);
+			return node;
+		} catch (Exception e) {
+			// TODO se não tiver storage, retorna erro
+			return null;
+		}
 	}
-	
+
 	/**
 	 * Deletes a storage node
 	 * 
-	 * @param uuid the user identifier
-	 * @param id the storage node identifier
+	 * @param uuid
+	 *            the user identifier
+	 * @param id
+	 *            the storage node identifier
 	 */
 	@DELETE
 	@Path("/storages/{uuid}")
 	public void deleteStorage(@PathParam("uuid") String uuid) {
-		
+
 		System.out.println("deleting " + uuid);
 		// TODO se storage node não existir, retornar erro
 	}
-	
-	
-	
 }

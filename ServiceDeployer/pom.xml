@@ -6,10 +6,10 @@
 	<groupId>eu.choreos</groupId>
 	<artifactId>ServiceDeployer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>ServiceDeployer</name>
-	<url>http://maven.apache.org</url>
+	<url>http://valinhos.ime.usp.br:54080/hudson/</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -71,4 +71,9 @@
 			<version>2.2.5</version>
 		</dependency>
 	</dependencies>
+	<parent>
+		<groupId>br.usp.ime.ccsl.choreos</groupId>
+		<artifactId>middleware</artifactId>
+		<version>0.2-SNAPSHOT</version>
+	</parent>
 </project>
