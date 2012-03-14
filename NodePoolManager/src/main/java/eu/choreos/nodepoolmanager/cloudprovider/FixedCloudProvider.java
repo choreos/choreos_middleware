@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.jclouds.compute.RunNodesException;
 
+import eu.choreos.nodepoolmanager.Configuration;
 import eu.choreos.nodepoolmanager.NodeNotFoundException;
 import eu.choreos.nodepoolmanager.datamodel.Node;
 
@@ -17,7 +18,7 @@ import eu.choreos.nodepoolmanager.datamodel.Node;
  */
 public class FixedCloudProvider implements CloudProvider {
 
-	private String NODE_IP = "192.168.56.101";
+	private String NODE_IP = Configuration.get("FIXED_VM_IP");
 	private String NODE_ID = "1";
 	private Node node;
 	
