@@ -17,7 +17,7 @@ import eu.choreos.nodepoolmanager.utils.SshUtil;
 public class ConfigResourceTest extends BaseTest {
 	
 	private String SSH_USER = "ubuntu";
-	private String SSH_KEY = Configuration.get("PRIVATE_SSH_KEY");
+	private String SSH_KEY = Configuration.get("AMAZON_PRIVATE_SSH_KEY");
 	
     public void resetPath() {
         client.back(true);

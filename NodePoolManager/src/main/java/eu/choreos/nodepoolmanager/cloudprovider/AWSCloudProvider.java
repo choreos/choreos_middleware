@@ -127,7 +127,7 @@ public class AWSCloudProvider implements CloudProvider {
 		node.setImage(cloudNode.getImageId());
 		node.setState(cloudNode.getState().ordinal());
 		node.setUser(DEFAULT_USER);
-		node.setPrivateKey(Configuration.get("PRIVATE_SSH_KEY"));
+		node.setPrivateKey(Configuration.get("AMAZON_PRIVATE_SSH_KEY"));
 	}
 
 	private void setNodeIp(Node node, NodeMetadata cloudNode) {

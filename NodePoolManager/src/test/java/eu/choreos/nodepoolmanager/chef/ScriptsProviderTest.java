@@ -18,7 +18,7 @@ public class ScriptsProviderTest {
     	String hostname = "myHost";
     	String cookbook = "cook";
     	String recipe = "recipe";
-    	String key = Configuration.get("PRIVATE_SSH_KEY");
+    	String key = Configuration.get("FIXED_VM_PRIVATE_SSH_KEY");
     	
         String command = ScriptsProvider.getChefBootstrapScript(key, ip, user);
         String expected = "knife bootstrap 127.0.0.1 -x myUser -i " + key + " --sudo -c " + config;

@@ -33,6 +33,8 @@ public class FixedCloudProvider implements CloudProvider {
 		node.setSo("Ubuntu server 11.10");
 		node.setStorage(10000);
 		node.setZone("BR");
+		node.setUser("choreos");
+		node.setPrivateKey(Configuration.get("FIXED_VM_PRIVATE_SSH_KEY"));
 	}
 	
 	public Node createNode(Node node) throws RunNodesException {

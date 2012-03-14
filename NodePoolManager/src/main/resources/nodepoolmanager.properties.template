@@ -1,12 +1,12 @@
 FIXED_VM_IP=192.168.56.101
+FIXED_VM_PRIVATE_SSH_KEY=/home/leonardo/.ssh/id_rsa
 
 AMAZON_ACCESS_KEY_ID=secret
 AMAZON_SECRET_KEY=secret
 # AMAZON_KEY_PAIR must be registered on the AWS web console
 AMAZON_KEY_PAIR=leofl
-
 # the correspondent public key must be registered on the AWS web console, related with the AMAZON_KEY_PAIR above
-PRIVATE_SSH_KEY=/home/leonardo/.ssh/leofl.pem
+AMAZON_PRIVATE_SSH_KEY=/home/leonardo/.ssh/leofl.pem
 
 CHEF_CONFIG_FILE=/home/leonardo/chef/chef-repo/.chef/knife.rb
 # CHEF_REPO is .chef parent folder

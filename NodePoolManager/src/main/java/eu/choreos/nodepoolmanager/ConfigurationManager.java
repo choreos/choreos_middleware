@@ -28,12 +28,16 @@ public class ConfigurationManager {
 					Thread.sleep(5000);
 				} catch (InterruptedException e) {}
  		}
+ 		System.out.println("Connected");
 
  		String command;
 		try {
 			// bootstrap node
+			System.out.println("Bootstraping " + node.getHostname());
 			command = ScriptsProvider.getChefBootstrapScript(node.getPrivateKeyFile(), node.getIp(), node.getUser());
+			System.out.println(command);
 			CommandLine.runLocalCommand(command, CHEF_REPO);
+			System.out.println("Bootstrap completed");
 			
 			// get chef name
 			command = ScriptsProvider.getChefName();
