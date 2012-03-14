@@ -1,0 +1,11 @@
+Requirements
+============
+
+- Maven 3
+
+Eclipse IDE
+===========
+
+$ ./install_jclouds-chef.sh
+$ mvn -Dwtpversion=2.0 eclipse:eclipse
+Then import existent project in Eclipse IDE and change compiler version to 1.6 (also search for facets in project -> properties)
