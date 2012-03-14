@@ -20,6 +20,8 @@ public class ScriptsProvider {
 	private static final String CHEF_ADD_COOKBOOK_SCRIPT = "chef/chef_add_cookbook.sh";
 	private static final String CHEF_NAME_SCRIPT = "chef/my_chef_name.sh";
 	private static final String CHEF_NODE_SHOW = "chef/chef_node_show.sh";
+	private static final String CHEF_NODE_DELETE = "chef/chef_node_delete.sh";
+	private static final String CHEF_CLIENT_DELETE = "chef/chef_client_delete.sh";
 	
     public static String getChefBootstrapScript(String pKeyFile, String ip, String user) {
     	
@@ -98,11 +100,52 @@ public class ScriptsProvider {
     	return command;
     }
     
-    public static String getChefName() throws IOException {
+    public static String getChefName() {
     	
     	URL scriptFile = ClassLoader.getSystemResource(CHEF_NAME_SCRIPT);
-    	String command = FileUtils.readFileToString(new File(scriptFile.getFile()));
+    	String command = null;
+		try {
+			command = FileUtils.readFileToString(new File(scriptFile.getFile()));
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Should not happen");
+		}
+    	return command;
+    }
+    
+    public static String getDeleteNode(String nodeName) {
+    	
+    	URL scriptFile = ClassLoader.getSystemResource(CHEF_NODE_DELETE);
+    	String command = null;
+		try {
+			command = FileUtils.readFileToString(new File(scriptFile.getFile()));
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Should not happen");
+		}
+
+        String config = Configuration.get("CHEF_CONFIG_FILE");
+    	command = command.replace("$knifeFile", config);
+    	command = command.replace("$nodeName", nodeName);
+
     	return command;
     }
 
+    public static String getDeleteClient(String clientName) {
+    	
+		URL scriptFile = ClassLoader.getSystemResource(CHEF_CLIENT_DELETE);
+    	String command = null;
+		try {
+			command = FileUtils.readFileToString(new File(scriptFile.getFile()));
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Should not happen");
+		}
+
+        String config = Configuration.get("CHEF_CONFIG_FILE");
+    	command = command.replace("$knifeFile", config);
+    	command = command.replace("$clientName", clientName);
+
+    	return command;
+    }
 }

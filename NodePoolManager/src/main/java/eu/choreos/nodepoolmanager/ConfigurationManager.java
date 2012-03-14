@@ -42,6 +42,8 @@ public class ConfigurationManager {
 			// get chef name
 			command = ScriptsProvider.getChefName();
 			String chefClientName = ssh.runCommand(command);
+			if (chefClientName == null || chefClientName.isEmpty())
+				chefClientName = node.getHostname();
 			node.setChefName(chefClientName);
 			
 			// install cookbook
