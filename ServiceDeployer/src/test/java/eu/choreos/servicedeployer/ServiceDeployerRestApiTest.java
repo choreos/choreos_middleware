@@ -18,7 +18,7 @@ import org.junit.Test;
 import eu.choreos.servicedeployer.datamodel.ResourceImpact;
 import eu.choreos.servicedeployer.datamodel.Service;
 import eu.choreos.servicedeployer.datamodel.ServiceSpec;
-import eu.choreos.servicedeployer.rest.StandaloneServer;
+import eu.choreos.servicedeployer.rest.ServiceDeployerStandaloneServer;
 
 /**
  * Tests the Service Deployer REST API
@@ -36,17 +36,17 @@ public class ServiceDeployerRestApiTest {
 
 	@BeforeClass
 	public static void startServer() throws Exception {
-		StandaloneServer.start();
+		ServiceDeployerStandaloneServer.start();
 	}
 
 	@AfterClass
 	public static void stopServer() throws UnsupportedEncodingException {
-		StandaloneServer.stop();
+		ServiceDeployerStandaloneServer.stop();
 	}
 
 	@Before
 	public void setUpClient() {
-		client = WebClient.create("http://localhost:9101/serviceDeployer/");
+		client = WebClient.create(ServiceDeployerStandaloneServer.URL);
 	}
 
 	@Test

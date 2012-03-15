@@ -34,7 +34,7 @@ public class BaseTest {
     @BeforeClass
     public static void startServer() throws Exception {
     	
-    	client = WebClient.create(NodePoolManagerStandaloneServer.LOCAL_HOST);
+    	client = WebClient.create(NodePoolManagerStandaloneServer.URL);
     	
         NodePoolManagerStandaloneServer.start();
         Configuration.set("DEFAULT_PROVIDER", TEST_DEFAULT_PROVIDER);
@@ -72,7 +72,7 @@ public class BaseTest {
      */
     protected boolean isNodeLocation(String uri) {
     	
-    	String regex = NodePoolManagerStandaloneServer.LOCAL_HOST + RESOURCE + "/.+";
+    	String regex = NodePoolManagerStandaloneServer.URL + RESOURCE + "/.+";
     	Pattern pattern = Pattern.compile(regex);
     	Matcher matcher = pattern.matcher(uri);
     	

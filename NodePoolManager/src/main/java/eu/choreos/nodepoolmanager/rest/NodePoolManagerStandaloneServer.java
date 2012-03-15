@@ -8,12 +8,12 @@ import eu.choreos.nodepoolmanager.Configuration;
 
 public class NodePoolManagerStandaloneServer implements Runnable {
 
-	public static String LOCAL_HOST;
+	public static String URL;
     private static boolean running = false;
     
     static {
     	String port = Configuration.get("NODE_POOL_MANAGER_PORT");
-    	LOCAL_HOST = "http://localhost:" + port + "/nodepoolmanager/";
+    	URL = "http://localhost:" + port + "/nodepoolmanager/";
     }
 
     public static void start() throws InterruptedException {
@@ -31,7 +31,7 @@ public class NodePoolManagerStandaloneServer implements Runnable {
     public void run() {
         JAXRSServerFactoryBean sf = new JAXRSServerFactoryBean();
         sf.setResourceClasses(ConfigsResource.class, NodesResource.class);
-        sf.setAddress(LOCAL_HOST);
+        sf.setAddress(URL);
         sf.create();
         System.out.println("Starting Node Pool Manager ...");
         running = true;

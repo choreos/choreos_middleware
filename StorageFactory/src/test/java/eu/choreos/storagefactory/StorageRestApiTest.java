@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
-import eu.choreos.storagefactory.rest.StandaloneServer;
+import eu.choreos.storagefactory.rest.StorageFactoryStandaloneServer;
 
 /**
  * Tests the Storage Factory REST API
@@ -34,17 +34,17 @@ import eu.choreos.storagefactory.rest.StandaloneServer;
  */
 public class StorageRestApiTest {
 
-	private static final String HOST = "http://localhost:9102/storagefactory/";
+	private static final String HOST = StorageFactoryStandaloneServer.URL;
 	private WebClient client;
 
 	@BeforeClass
 	public static void startServer() throws Exception {
-		StandaloneServer.start();
+		StorageFactoryStandaloneServer.start();
 	}
 
 	@AfterClass
 	public static void stopServer() throws UnsupportedEncodingException {
-		StandaloneServer.stop();
+		StorageFactoryStandaloneServer.stop();
 	}
 
 	@Before

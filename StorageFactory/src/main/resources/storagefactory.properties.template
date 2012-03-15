@@ -1,3 +1,4 @@
+STORAGE_FACTORY_PORT=9102
 NODE_POOL_MANAGER=http://localhost:9100/nodepoolmanager
 #CHEF_ORGANIZATION_KEY_FILE=/home/alfonso777/chef-repo/.chef/validation_aguia.pem 
 CHEF_SERVER_URL=http://aguia1.ime.usp.br:4000
