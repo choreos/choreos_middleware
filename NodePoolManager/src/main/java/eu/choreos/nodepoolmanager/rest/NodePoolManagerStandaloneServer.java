@@ -2,12 +2,19 @@ package eu.choreos.nodepoolmanager.rest;
 
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 
+import eu.choreos.nodepoolmanager.Configuration;
+
 
 
 public class NodePoolManagerStandaloneServer implements Runnable {
 
-	private static String LOCAL_HOST = "http://localhost:9100/";
+	public static String LOCAL_HOST;
     private static boolean running = false;
+    
+    static {
+    	String port = Configuration.get("NODE_POOL_MANAGER_PORT");
+    	LOCAL_HOST = "http://localhost:" + port + "/";
+    }
 
     public static void start() throws InterruptedException {
         new Thread(new NodePoolManagerStandaloneServer()).start();

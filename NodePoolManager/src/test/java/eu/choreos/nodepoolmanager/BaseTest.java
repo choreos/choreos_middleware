@@ -24,16 +24,18 @@ public class BaseTest {
 	protected static String TEST_IMAGE = ""; // era 1 
 	private static String TEST_DEFAULT_PROVIDER = ""; // era stub
 	protected static String EXPECTED_IMAGE = "us-east-1/ami-ccf405a5";
-	private static String LOCAL_HOST = "http://localhost:9100/";
 	private static String RESOURCE = "nodes";
 	
-	protected static final WebClient client = WebClient.create(LOCAL_HOST);
+	protected static WebClient client;
     protected static AWSCloudProvider infrastructure = new AWSCloudProvider();
     protected static Node sampleNode;
     
 
     @BeforeClass
     public static void startServer() throws Exception {
+    	
+    	client = WebClient.create(NodePoolManagerStandaloneServer.LOCAL_HOST);
+    	
         NodePoolManagerStandaloneServer.start();
         Configuration.set("DEFAULT_PROVIDER", TEST_DEFAULT_PROVIDER);
         createSampleNode();
@@ -64,13 +66,13 @@ public class BaseTest {
     }
     
     /**
-     * Verify if <code>uri</code> matches http://localhost:8080/nodes/.+
+     * Verify if <code>uri</code> matches http://localhost:port/nodes/.+
      * @param uri
      * @return
      */
     protected boolean isNodeLocation(String uri) {
     	
-    	String regex = LOCAL_HOST + RESOURCE + "/.+";
+    	String regex = NodePoolManagerStandaloneServer.LOCAL_HOST + RESOURCE + "/.+";
     	Pattern pattern = Pattern.compile(regex);
     	Matcher matcher = pattern.matcher(uri);
     	
