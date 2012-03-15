@@ -6,12 +6,18 @@ import javax.ws.rs.core.Response;
 import org.apache.cxf.jaxrs.client.WebClient;
 
 import eu.choreos.nodepoolmanager.datamodel.Config;
+import eu.choreos.servicedeployer.Configuration;
 
 
 public class NodePoolManagerClient implements NodePoolManager {
 
-	private static String HOST = "http://localhost:9100/";
-	protected static final WebClient client = WebClient.create(HOST);
+	private static String HOST; 
+	protected static WebClient client;
+	
+	static {
+		HOST = Configuration.get("NODE_POOL_MANAGER");
+		client = WebClient.create(HOST);
+	}
 	
 	@Override
 	public String applyConfig(String configName) {

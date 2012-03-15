@@ -1,9 +1,6 @@
 package eu.choreos.servicedeployer;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 
@@ -12,8 +9,13 @@ import eu.choreos.servicedeployer.datamodel.Service;
 
 public class NodePoolManager extends NodePoolManagerHandler{
 
-	private static String HOST = "http://localhost:9100/";
-	protected static final WebClient client = WebClient.create(HOST);
+	private static String HOST; 
+	protected static WebClient client;
+	
+	static {
+		HOST = Configuration.get("NODE_POOL_MANAGER");
+		client = WebClient.create(HOST);
+	}
 
 	public NodePoolManager(){
 		

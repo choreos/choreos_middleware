@@ -19,7 +19,7 @@ import eu.choreos.nodepoolmanager.datamodel.Config;
 import eu.choreos.nodepoolmanager.datamodel.Node;
 
 @Path("nodes/configs")
-public class ConfigResource {
+public class ConfigsResource {
 
 	private Controller controller = new Controller(new AWSCloudProvider());
 	

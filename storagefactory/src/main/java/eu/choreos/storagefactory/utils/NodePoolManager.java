@@ -9,11 +9,17 @@ import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
 import eu.choreos.nodepoolmanager.datamodel.Config;
+import eu.choreos.storagefactory.Configuration;
 
 public class NodePoolManager implements NodePoolManagerHandler {
 	
-	private static String HOST = "http://localhost:9100/";
-	protected final WebClient client; 
+	private static String HOST; 
+	protected static WebClient client;
+	
+	static {
+		HOST = Configuration.get("NODE_POOL_MANAGER");
+		client = WebClient.create(HOST);
+	}
     
 	public NodePoolManager(){
 		client = WebClient.create(HOST);

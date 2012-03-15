@@ -13,7 +13,7 @@ public class NodePoolManagerStandaloneServer implements Runnable {
     
     static {
     	String port = Configuration.get("NODE_POOL_MANAGER_PORT");
-    	LOCAL_HOST = "http://localhost:" + port + "/";
+    	LOCAL_HOST = "http://localhost:" + port + "/nodepoolmanager/";
     }
 
     public static void start() throws InterruptedException {
@@ -30,7 +30,7 @@ public class NodePoolManagerStandaloneServer implements Runnable {
 
     public void run() {
         JAXRSServerFactoryBean sf = new JAXRSServerFactoryBean();
-        sf.setResourceClasses(ConfigResource.class, NodesResource.class);
+        sf.setResourceClasses(ConfigsResource.class, NodesResource.class);
         sf.setAddress(LOCAL_HOST);
         sf.create();
         System.out.println("Starting Node Pool Manager ...");
