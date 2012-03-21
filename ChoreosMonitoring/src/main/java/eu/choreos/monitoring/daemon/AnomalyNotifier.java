@@ -8,6 +8,10 @@ public class AnomalyNotifier {
 	private GmondDataReader dataReader;
 	private Map<String, Gmetric> metricsMap;
 
+	public Map<String, Gmetric> getMetricsMap() {
+		return metricsMap;
+	}
+
 	public AnomalyNotifier(GmondDataReader dataReader) {
 		this.dataReader = dataReader;
 	}
@@ -33,9 +37,6 @@ public class AnomalyNotifier {
 			System.out.println("ERROR: Could not get metrics");
 			System.exit(1);
 		}
-		System.out.println(metricsMap.get(metricName).getValue());
-		System.out.println(Double.parseDouble(metricsMap.get(metricName)
-				.getValue()));
 		return Double.parseDouble(metricsMap.get(metricName).getValue());
 	}
 
