@@ -1,6 +1,7 @@
-package eu.choreos.monitoring;
+package eu.choreos.monitoring.daemon;
 
 import java.util.Map;
+import eu.choreos.monitoring.*;
 
 public class AnomalyNotifier {
 
