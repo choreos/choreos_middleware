@@ -224,23 +224,14 @@ public class GmondDataReader {
 	}
 	
 	public Document gangliaXML() {
-		// create a socket
-		Socket socket = null;
-		try {
-			socket = new Socket(InetAddress.getByName(host), port);
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		
-		// create a input stream reader to read a socket message
-		InputStream in = null;
-		try {
-		    in = socket.getInputStream();
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		
-		// create a xml document to read the metrics
+
+		Socket socket = createSocket();
+		InputStream in = getStreamFromSocket(socket);
+		return convertToDomDocument(socket, in);
+	
+	}
+
+	public Document convertToDomDocument(Socket socket, InputStream in) {
 		try {			
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
@@ -263,5 +254,25 @@ public class GmondDataReader {
 			}
 			return null;
     	}
+	}
+
+	private InputStream getStreamFromSocket(Socket socket) {
+		InputStream in = null;
+		try {
+		    in = socket.getInputStream();
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return in;
+	}
+
+	private Socket createSocket() {
+		Socket socket = null;
+		try {
+			socket = new Socket(InetAddress.getByName(host), port);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return socket;
 	}
 }
