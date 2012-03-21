@@ -12,14 +12,16 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class GmondDataReader {
 
 	private String host;
 	private int port;
-	
+
 	private Map<String, Gmetric> metrics;
+	private Socket socket;
 
 	public GmondDataReader(String host, int port) {
 		this.host = host;
@@ -27,252 +29,281 @@ public class GmondDataReader {
 		metrics = new HashMap<String, Gmetric>();
 	}
 
-	public float getOneMinuteLoadAverage() {
-		setMetrics(gangliaXML());
+	public float getLastMinuteLoadAverage() {
+		setMetrics(getGangliaCurrentMetrics());
 		return (new Float(metrics.get("load_one").getValue())).floatValue();
 	}
-	
-	public float getFiveMinuteLoadAverage() {
-		setMetrics(gangliaXML());
+
+	public float getLastFiveMinuteLoadAverage() {
+		setMetrics(getGangliaCurrentMetrics());
 		return (new Float(metrics.get("load_five").getValue())).floatValue();
 	}
-	
-	public float getFifteenMinuteLoadAverage() {
-		setMetrics(gangliaXML());
-		return (new Float(metrics.get("load_fifteen").getValue())).floatValue();
-	}
-	
-	public float getCpuIdle() {
-		setMetrics(gangliaXML());
-		return (new Float(metrics.get("cpu_idle").getValue())).floatValue();
-	}
-	
-	public float getCpuUser() {
-		setMetrics(gangliaXML());
-		return (new Float(metrics.get("cpu_user").getValue())).floatValue();
-	}
-	
-	public float getCpuNice() {
-		setMetrics(gangliaXML());
-		return (new Float(metrics.get("cpu_nice").getValue())).floatValue();
-	}
-	
-	public float getCpuAidle() {
-		setMetrics(gangliaXML());
-		return (new Float(metrics.get("cpu_aidle").getValue())).floatValue();
-	}
-	
-	public float getMemBuffers() {
-		setMetrics(gangliaXML());
-		return (new Float(metrics.get("mem_buffers").getValue())).floatValue();
-	}
-	
-	public float getCpuSystem() {
-		setMetrics(gangliaXML());
-		return (new Float(metrics.get("cpu_system").getValue())).floatValue();
-	}
-	
-	public float getPartMaxUsed() {
-		setMetrics(gangliaXML());
-		return (new Float(metrics.get("part_max_used").getValue())).floatValue();
-	}
-	
-	public double getDiskTotal() {
-		setMetrics(gangliaXML());
-		return (new Double(metrics.get("disk_total").getValue())).doubleValue();
-	}
-	
-	public float getMemShared() {
-		setMetrics(gangliaXML());
-		return (new Float(metrics.get("mem_shared").getValue())).floatValue();
-	}
-	
-	public float getCpuWIO() {
-		setMetrics(gangliaXML());
-		return (new Float(metrics.get("cpu_wio").getValue())).floatValue();
-	}
-	
-	public String getMachineType() {
-		setMetrics(gangliaXML());
-		return (new String(metrics.get("machine_type").getValue()));
-	}
-	
-	public int getProcTotal() {
-		setMetrics(gangliaXML());
-		return (new Integer(metrics.get("proc_total").getValue())).intValue();
-	}
-	
-	public int getCpuNum() {
-		setMetrics(gangliaXML());
-		return (new Integer(metrics.get("cpu_num").getValue())).intValue();
-	}
-	
-	public int getCpuSpeed() {
-		setMetrics(gangliaXML());
-		return (new Integer(metrics.get("cpu_speed").getValue())).intValue();
-	}
-	
-	public float getPktsOut() {
-		setMetrics(gangliaXML());
-		return (new Float(metrics.get("pkts_out").getValue())).floatValue();
-	}
-	
-	public float getSwapFree() {
-		setMetrics(gangliaXML());
-		return (new Float(metrics.get("swap_free").getValue())).floatValue();
-	}
-	
-	public float getMemTotal() {
-		setMetrics(gangliaXML());
-		return (new Float(metrics.get("mem_total").getValue())).floatValue();
-	}
-	
-	public String getOSRelease() {
-		setMetrics(gangliaXML());
-		return (new String(metrics.get("os_release").getValue()));
-	}
-	
-	public int getProcRun() {
-		setMetrics(gangliaXML());
-		return (new Integer(metrics.get("proc_run").getValue())).intValue();
-	}
-	
-	public String getGexec() {
-		setMetrics(gangliaXML());
-		return (new String(metrics.get("gexec").getValue()));
-	}
-	
-	public double getDiskFree() {
-		setMetrics(gangliaXML());
-		return (new Double(metrics.get("disk_free").getValue())).doubleValue();
-	}
-	
-	public float getMemCached() {
-		setMetrics(gangliaXML());
-		return (new Float(metrics.get("mem_cached").getValue())).floatValue();
-	}
-	
-	public float getPktsIn() {
-		setMetrics(gangliaXML());
-		return (new Float(metrics.get("pkts_in").getValue())).floatValue();
-	}
-	
-	public float getBytesIn() {
-		setMetrics(gangliaXML());
-		return (new Float(metrics.get("bytes_in").getValue())).floatValue();
-	}
-	
-	public float getBytesOut() {
-		setMetrics(gangliaXML());
-		return (new Float(metrics.get("bytes_out").getValue())).floatValue();
-	}
-	
-	public float getSwapTotal() {
-		setMetrics(gangliaXML());
-		return (new Float(metrics.get("bytes_in").getValue())).floatValue();
-	}
-	
-	public float getMemFree() {
-		setMetrics(gangliaXML());
-		return (new Float(metrics.get("mem_free").getValue())).floatValue();
-	}
-	
+
 	public String getOSName() {
-		setMetrics(gangliaXML());
+		setMetrics(getGangliaCurrentMetrics());
 		return (new String(metrics.get("os_name").getValue()));
 	}
-	
+
+	public String getOSRelease() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new String(metrics.get("os_release").getValue()));
+	}
+
+	public float getLastFifteenMinuteLoadAverage() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Float(metrics.get("load_fifteen").getValue())).floatValue();
+	}
+
+	public String getSystemArchitecture() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new String(metrics.get("machine_type").getValue()));
+	}
+
+	public int getCpuCount() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Integer(metrics.get("cpu_num").getValue())).intValue();
+	}
+
+	public int getCpuSpeed() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Integer(metrics.get("cpu_speed").getValue())).intValue();
+	}
+
+	public float getCpuNice() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Float(metrics.get("cpu_nice").getValue())).floatValue();
+	}
+
+	public float getCpuIdleTime() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Float(metrics.get("cpu_idle").getValue())).floatValue();
+	}
+
+	public float getCpuIdleTimeDueToIO() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Float(metrics.get("cpu_wio").getValue())).floatValue();
+	}
+
+	public float getCpuIdleTimePercentageSinceBoot() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Float(metrics.get("cpu_aidle").getValue())).floatValue();
+	}
+
+	public float getCpuUserTime() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Float(metrics.get("cpu_user").getValue())).floatValue();
+	}
+
+	public float getCpuSystemTimePercentage() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Float(metrics.get("cpu_system").getValue())).floatValue();
+	}
+
+	public float getBiggestPartitionUsage() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Float(metrics.get("part_max_used").getValue()))
+				.floatValue();
+	}
+
+	public double getTotalAvailableStorageSpace() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Double(metrics.get("disk_total").getValue())).doubleValue();
+	}
+
+	public float getBufferedMemory() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Float(metrics.get("mem_buffers").getValue())).floatValue();
+	}
+
+	public float getSharedMemory() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Float(metrics.get("mem_shared").getValue())).floatValue();
+	}
+
+	public float getTotalMemory() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Float(metrics.get("mem_total").getValue())).floatValue();
+	}
+
+	public float getFreeMemory() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Float(metrics.get("mem_free").getValue())).floatValue();
+	}
+
+	public float getCachedMemory() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Float(metrics.get("mem_cached").getValue())).floatValue();
+	}
+
+	public float getFreeSwap() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Float(metrics.get("swap_free").getValue())).floatValue();
+	}
+
+	public int getProcessCount() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Integer(metrics.get("proc_total").getValue())).intValue();
+	}
+
+	public int getRunningProcessCount() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Integer(metrics.get("proc_run").getValue())).intValue();
+	}
+
+	public boolean isGexecAvailable() {
+		setMetrics(getGangliaCurrentMetrics());
+		return metrics.get("gexec").getValue().equals("ON");
+	}
+
+	public double getAvailableDiskSpace() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Double(metrics.get("disk_free").getValue())).doubleValue();
+	}
+
+	public float getIncomingPacketRate() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Float(metrics.get("pkts_in").getValue())).floatValue();
+	}
+
+	public float getOutgoingPacketRate() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Float(metrics.get("pkts_out").getValue())).floatValue();
+	}
+
+	public float getIncomingByteRate() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Float(metrics.get("bytes_in").getValue())).floatValue();
+	}
+
+	public float getOutgoingByteRate() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Float(metrics.get("bytes_out").getValue())).floatValue();
+	}
+
+	public float getTotalSwap() {
+		setMetrics(getGangliaCurrentMetrics());
+		return (new Float(metrics.get("bytes_in").getValue())).floatValue();
+	}
+
 	public float getBootTime() {
-		setMetrics(gangliaXML());
+		setMetrics(getGangliaCurrentMetrics());
 		return (new Integer(metrics.get("boottime").getValue())).intValue();
 	}
-	
+
 	public Gmetric getMetricByName(String name) {
-		setMetrics(gangliaXML());
+		setMetrics(getGangliaCurrentMetrics());
 		return metrics.get(name);
 	}
-	
+
 	public Map<String, Gmetric> getAllMetrics() {
-		setMetrics(gangliaXML());
+		setMetrics(getGangliaCurrentMetrics());
 		return metrics;
 	}
 
-	private void setMetrics(Document gangliaXML) {
-		
-		if(gangliaXML == null) {
+	public void setMetrics(Document gangliaXML) {
+
+		if (gangliaXML == null) {
 			System.err.println("Error on parse ganglia XML file!");
 			return;
 		}
-		
+
 		gangliaXML.getDocumentElement().normalize();
 		NodeList clusterNodeList = gangliaXML.getElementsByTagName("CLUSTER");
 		Element clusterNode = (Element) clusterNodeList.item(0);
+
+		//TODO: How to actually get the Host with the same name as it is not necessarily the 
+		// 		first, and the host name and ip may not be the one used to access it
 		
 		NodeList hostNodeList = clusterNode.getElementsByTagName("HOST");
 		Element hostNode = (Element) hostNodeList.item(0);
 		
 		NodeList metricNodeList = hostNode.getElementsByTagName("METRIC"); // list of metrics
-		
-		for(int i = 0; i < metricNodeList.getLength(); i++) {
-			
+
+		for (int i = 0; i < metricNodeList.getLength(); i++) {
+
 			Element el = (Element) metricNodeList.item(i);
-						
-			metrics.put(
-					el.getAttributeNode("NAME").getNodeValue(), // key
-					new Gmetric(el.getAttributeNode("NAME").getNodeValue(), el.getAttributeNode("VAL").getNodeValue()));
+
+			metrics.put(el.getAttributeNode("NAME").getNodeValue(), // key
+					new Gmetric(el.getAttributeNode("NAME").getNodeValue(), el
+							.getAttributeNode("VAL").getNodeValue()));
 		}
 	}
-	
-	public Document gangliaXML() {
 
-		Socket socket = createSocket();
-		InputStream in = getStreamFromSocket(socket);
-		return convertToDomDocument(socket, in);
-	
+	private Document getGangliaCurrentMetrics() {
+
+		if(socket==null) createSocket();
+		Document dom = getGangliaMetricsFromSocket(socket);
+		closeSocket(socket);
+		return dom;
+
 	}
 
-	public Document convertToDomDocument(Socket socket, InputStream in) {
-		try {			
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document dom = db.parse(in);
- 
-    	    socket.close();
-    	    in.close();
-    	    
-    	    return dom;
-    	    
-    	} catch ( Throwable e ) {
-			e.printStackTrace();
+	public Document getGangliaMetricsFromSocket(Socket socket) {
+		InputStream in = getStreamFromSocket(socket);
+		Document dom = convertToDomDocument(in);
+		closeInputStream(in);
+		return dom;
+	}
+		
+	private void closeSocket(Socket socket) {
+		if (socket != null) {
 			try {
-				if(socket != null)
-					socket.close();
-				if(in != null)
-					in.close();
+				socket.close();
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
+		}
+	}
+
+	public Document convertToDomDocument(InputStream in) {
+		try {
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			Document dom = db.parse(in);
+
+			return dom;
+
+		} catch (Throwable e) {
+			e.printStackTrace();
 			return null;
-    	}
+		}
+	}
+
+	private void closeInputStream(InputStream in) {
+
+		if (in != null) {
+			try {
+				in.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 	}
 
 	private InputStream getStreamFromSocket(Socket socket) {
 		InputStream in = null;
 		try {
-		    in = socket.getInputStream();
+			in = socket.getInputStream();
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 		return in;
 	}
 
-	private Socket createSocket() {
-		Socket socket = null;
+	private void createSocket() {
 		try {
 			socket = new Socket(InetAddress.getByName(host), port);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Socket getSocket() {
 		return socket;
+	}
+
+	public void setSocket(Socket socket) {
+		this.socket = socket;
 	}
 }
