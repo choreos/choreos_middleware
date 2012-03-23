@@ -116,11 +116,76 @@ public class GmondConfTest {
 
 		fileContents = FileUtils.readFileToString(testFile);
 
-		System.out.println(fileContents);
 		assertTrue("Altered line not located!",
 				fileContents.contains("port = 1234"));
 
 		assertEquals(location, fileContents.indexOf("port = 1234"));
+	}
+	
+	@Test
+	public void shouldChangeHostFromMain() throws IOException {
+		String fileContents = FileUtils.readFileToString(testFile);
+		
+		assertTrue(fileContents.contains("host = eclipse.ime.usp.br"));
+		assertFalse(fileContents.contains("host = localhost"));
+
+		int hostLocation = fileContents.indexOf("host = eclipse.ime.usp.br");
+
+		GmondConf.main("-h", "localhost", "-f", testFile.getAbsolutePath());
+
+		fileContents = FileUtils.readFileToString(testFile);
+
+		System.out.println(fileContents);
+		assertFalse("Original line was found!",
+				fileContents.contains("host = eclipse.ime.usp.br"));
+		assertTrue("Altered line not located!",
+				fileContents.contains("host = localhost"));
+
+		assertEquals(hostLocation, fileContents.indexOf("host = localhost"));
+
+		
+	}@Test
+	public void shouldChangePortFromMain() throws IOException {
+		String fileContents = FileUtils.readFileToString(testFile);
+		assertFalse(fileContents.contains("port = 1234"));
+		int portLocation = fileContents.indexOf("port = 8649");
+
+		int hostLocation = fileContents.indexOf("host = eclipse.ime.usp.br");
+
+		GmondConf.main( "-p", "1234", "-f", testFile.getAbsolutePath());
+
+		fileContents = FileUtils.readFileToString(testFile);
+
+		System.out.println(fileContents);
+
+		assertTrue("Altered line not located!",
+				fileContents.contains("port = 1234"));
+
+		assertEquals(portLocation, fileContents.indexOf("port = 1234"));
+		
+	}@Test
+	public void should() throws IOException {
+		String fileContents = FileUtils.readFileToString(testFile);
+		assertFalse(fileContents.contains("port = 1234"));
+		
+		assertTrue(fileContents.contains("host = eclipse.ime.usp.br"));
+		assertFalse(fileContents.contains("host = localhost"));
+
+
+		GmondConf.main("-h", "localhost", "-p", "1234", "-f", testFile.getAbsolutePath());
+
+		fileContents = FileUtils.readFileToString(testFile);
+
+		System.out.println(fileContents);
+		assertFalse("Original line was found!",
+				fileContents.contains("host = eclipse.ime.usp.br"));
+		assertTrue("Altered line not located!",
+				fileContents.contains("host = localhost"));
+
+		assertTrue("Altered line not located!",
+				fileContents.contains("port = 1234"));
+
+		
 	}
 
 }
