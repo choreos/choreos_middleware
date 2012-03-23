@@ -60,9 +60,6 @@ public class GmondConfTest {
 		gmondConf.setSendChannelHost("campinas");
 		List<String> resultLines = gmondConf.getFileLines();
 
-		for(String line : resultLines){
-			System.out.println(line);
-		}
 		assertTrue("New content not found!",
 				resultLines.get(3).contains("campinas"));
 		assertFalse("Old content still present",
@@ -92,12 +89,23 @@ public class GmondConfTest {
 
 		assertEquals(location, fileContents.indexOf("host = localhost"));
 	}
+	
+	@Test
+	public void shouldChangeLinesWithHostAttribute(){
+		String result = gmondConf.changeAttribute("host = ", "1234", "host = 0987");
+		assertEquals("host = 1234", result);
+	}
+	
+	@Test
+	public void shouldNotChangeLinesWithoutHostAttribute(){
+		String result = gmondConf.changeAttribute("host = ", "1234", "lorem ipsum");
+		assertEquals("lorem ipsum", result);
+	}
 
-//	@Test
+	@Test
 	public void shouldChangeChannelPort() throws IOException {
 		
 		String fileContents = FileUtils.readFileToString(testFile);
-		assertTrue(fileContents.contains("port = 8649"));
 		assertFalse(fileContents.contains("port = 1234"));
 
 		int location = fileContents.indexOf("port = 8649");
@@ -108,8 +116,7 @@ public class GmondConfTest {
 
 		fileContents = FileUtils.readFileToString(testFile);
 
-		assertFalse("Original line was found!",
-				fileContents.contains("port = 8649"));
+		System.out.println(fileContents);
 		assertTrue("Altered line not located!",
 				fileContents.contains("port = 1234"));
 
