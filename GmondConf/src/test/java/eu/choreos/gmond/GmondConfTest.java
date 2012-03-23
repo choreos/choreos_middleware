@@ -3,48 +3,117 @@ package eu.choreos.gmond;
 import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class GmondConfTest {
 
 	private GmondConf gmondConf;
+	private File exampleFile;
+	private File testFile;
 
 	@Before
-	public void createGmondConf() {
+	public void setUp() throws IOException {
 		gmondConf = new GmondConf();
-	}
-	
-	public void shouldLoadFile() throws IOException{
-		gmondConf.load();
+		exampleFile = new File(ClassLoader.getSystemResource(
+				"gmond.conf.template").getFile());
+		testFile = new File("gmond.conf");
+
+		FileUtils.copyFile(exampleFile, testFile);
 	}
 
-	public void shouldModifyGmondFile() throws IOException{
-		gmondConf.load();
-		gmondConf.setSendChannelHost("localhost");
-		gmondConf.setSendChannelPort("8888");
-		gmondConf.save();
+	@After
+	public void tearDown() {
+		FileUtils.deleteQuietly(testFile);
 	}
-	
-	public void shouldChangeChannelHost() throws IOException {
-		gmondConf.load();
-		gmondConf.setSendChannelHost("localhost");
-		gmondConf.save();
-		
-		String gmondConfString = GmondUtil.readFile("/gmond.conf");
-		String sendChannelString = gmondConfString.substring(gmondConfString.indexOf("udp_send_channel {"), gmondConfString.indexOf("}",gmondConfString.indexOf("udp_send_channel {")));
-		sendChannelString = sendChannelString.substring(sendChannelString.indexOf("host"),sendChannelString.indexOf("\n",sendChannelString.indexOf("host")));
-		String host = sendChannelString.split("=")[1].trim();
-		assertEquals(host,"localhost");
-	}
-	
-	
+
 	@Test
-	public void shouldChangeChannelPort() {
+	public void shouldReplaceHostLineInAString() {
+		ArrayList<String> testString = new ArrayList<String>();
+
+		testString
+				.add("Lorem ipsum dolor sit amet, consectetur adipiscing elit. ");
+		testString
+				.add("Vivamus at ante magna, eu volutpat purus. Nullam pretium ullamcorper ");
+		testString
+				.add("elit adipiscing porttitor. Pellentesque enim ipsum, posuere eu euismod ");
+		testString.add("host = eclipse");
+		testString
+				.add("id, accumsan sed augue. Aliquam at libero eu elit tristique vulputate. ");
+		testString
+				.add("Maecenas viverra, nisl vel tempus cursus, urna nisl gravida dolor, ");
+		testString
+				.add("nec molestie neque tellus eget nisi. Lorem ipsum dolor sit amet, ");
+		testString
+				.add("consectetur adipiscing elit. Morbi id mauris sed lectus mollis ");
+		testString.add("vehicula a vitae diam. ");
+
+		gmondConf.setFileLines(testString);
+		gmondConf.setSendChannelHost("campinas");
+		List<String> resultLines = gmondConf.getFileLines();
+
+		for(String line : resultLines){
+			System.out.println(line);
+		}
+		assertTrue("New content not found!",
+				resultLines.get(3).contains("campinas"));
+		assertFalse("Old content still present",
+				resultLines.get(3).contains("eclipse"));
+
+	}
+
+	@Test
+	public void shouldChangeChannelHost() throws IOException {
+
+		String fileContents = FileUtils.readFileToString(testFile);
+		assertTrue(fileContents.contains("host = eclipse.ime.usp.br"));
+		assertFalse(fileContents.contains("host = localhost"));
+
+		int location = fileContents.indexOf("host = eclipse.ime.usp.br");
+
+		gmondConf.load(testFile.getAbsolutePath());
+		gmondConf.setSendChannelHost("localhost");
+		gmondConf.save();
+
+		fileContents = FileUtils.readFileToString(testFile);
+
+		assertFalse("Original line was found!",
+				fileContents.contains("host = eclipse.ime.usp.br"));
+		assertTrue("Altered line not located!",
+				fileContents.contains("host = localhost"));
+
+		assertEquals(location, fileContents.indexOf("host = localhost"));
+	}
+
+//	@Test
+	public void shouldChangeChannelPort() throws IOException {
 		
+		String fileContents = FileUtils.readFileToString(testFile);
+		assertTrue(fileContents.contains("port = 8649"));
+		assertFalse(fileContents.contains("port = 1234"));
+
+		int location = fileContents.indexOf("port = 8649");
+
+		gmondConf.load(testFile.getAbsolutePath());
+		gmondConf.setSendChannelPort("1234");
+		gmondConf.save();
+
+		fileContents = FileUtils.readFileToString(testFile);
+
+		assertFalse("Original line was found!",
+				fileContents.contains("port = 8649"));
+		assertTrue("Altered line not located!",
+				fileContents.contains("port = 1234"));
+
+		assertEquals(location, fileContents.indexOf("port = 1234"));
 	}
 
 }

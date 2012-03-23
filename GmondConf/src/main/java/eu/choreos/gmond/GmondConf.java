@@ -1,33 +1,65 @@
 package eu.choreos.gmond;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
+
+import org.apache.commons.io.FileUtils;
 
 public class GmondConf {
-	final static private String GMOND_FILE = "resources/gmond.conf";
-	private String gmondString;
-	
-	public GmondConf(){
-		
+	private String gmondFile = "/etc/ganglia/gmond.conf";
+	private List<String> fileLines;
+
+	public List<String> getFileLines() {
+		return fileLines;
 	}
-	
-	public void load() throws IOException{
-		gmondString = GmondUtil.readFile(GMOND_FILE);
+
+	public void setFileLines(List<String> fileLines) {
+		this.fileLines = fileLines;
+	}
+
+	public GmondConf() {
+
+	}
+
+	public void load(String filePath) throws IOException {
+		gmondFile = filePath;
+		load();
+	}
+
+	public void load() throws IOException {
+		// gmondString = FileUtils.readFileToString((new File(gmondFile)));
+		fileLines = FileUtils.readLines((new File(gmondFile)));
 	}
 
 	public void setSendChannelHost(String host) {
-		int i = gmondString.indexOf("udp_send_channel {");
-		i = gmondString.indexOf("host", i);
-		i = gmondString.indexOf("=",i)+1;
-		int j = gmondString.indexOf("\n",i);
-		gmondString = gmondString.substring(0, i)+host+gmondString.substring(j);
+		int index = 0;
+		ArrayList<String> result = new ArrayList<String>();
+		for (String line : fileLines) {
+			if (line.contains("host = ")) {
+				int replacementPosition = line.indexOf("host = ")
+						+ "host = ".length();
+				line = line.substring(0, replacementPosition) + host;
+			}
+			result.add(line);
+		}
+		
+		fileLines = result;
 	}
 
 	public void setSendChannelPort(String string) {
-		
+
 	}
 
 	public void save() {
-		//TODO 
+		try {
+			FileUtils.writeLines((new File(gmondFile)), fileLines);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
