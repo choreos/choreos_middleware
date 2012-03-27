@@ -1,0 +1,71 @@
+STORAGE FACTORY – INSTALLATION GUIDE
+26/04/12
+Written by Leonardo Leite (USP)
+
+
+== WHAT IS IT? ==
+
+Storage Factory enables you to receive cloud nodes with some storage system ready to be used by application. Storage Factory can provided an unique storage instance to a group of clients.
+
+At the moment, just MySQL is supported as storage system.
+
+
+== REQUIREMETNS ==
+
+Before you run Storage Factory, you will need Node Pool Manager running.
+
+
+== CONFIGURING IT ==
+
+As in Node Pool Manager, create the storagefactory.properties file based on the  storagefactory.properties.template file.
+
+Fill it as the example, adapting when necessary:
+
+STORAGE_FACTORY_PORT=9102
+NODE_POOL_MANAGER=http://localhost:9100/nodepoolmanager
+CHEF_SERVER_URL=http://aguia1.ime.usp.br:4000
+CHEF_CONFIG_FILE=/home/leonardo/chef/chef-repo/.chef/knife.rb
+CHEF_USER=leofl
+CHEF_USER_KEY_FILE=/home/leonardo/chef/chef-repo/.chef/leofl.pem
+CHEF_REPO=/home/leonardo/chef/chef-repo
+
+You will need also to upload the “mysql”cookbook to your chef repo. To download the cookbook in your workstation: “knife cookbook site install mysql”.
+
+
+== COMPILING IT ==
+
+Just open the terminal at the project folder, and type “mvn eclipse:eclipse”.
+
+You need maven 3 in this step. It can take several minutes.
+
+
+== RUNNING IT ==
+
+After compiling the project, you have just to run the main method on the eu.choreos.storagefactory.rest.StorageFactoryStandaloneServer class.
+
+You can proceed in the same way as indicated in the Node Pool Manager installation guide.
+
+If you successfully start Storage Factory, you must see the “Starting Storage Factory...” message on the console.
+
+
+== VERIFYING IF IT WORKS ==
+
+With Poster, the firefox plugin, send the following requisition:
+
+HTTP method: POST
+URI: http://localhost:9102/storagefactory/storages
+Content-Type: application/xml
+Body: <storageNodeSpec><uuid>choreos</uuid><type>MySQL</type></storageNodeSpec>
+
+Change the port numbers if necessary.
+
+After receive the reply, check which was the new VM created on AWS console. This step can take several minutes.
+
+You must login with SSH in this newly created VM, and type the following:
+
+$mysql -u choreos -h localhost -p
+
+Enter the password (choreos), and if the mysql prompt appears it is working!
+
+IMPORTANT NOTE: Currently, the user is not able to remotely connect to a data base created in a AWS node, although the remote connection is possible if Node Pool Manager uses the “fixed cloud provider”, which uses a virtual machine instance running in the development machine. Anyway, it is an issue we must still work on.
+

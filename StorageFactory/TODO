@@ -1,0 +1,3 @@
+* Client must be able to log remotely on MySQL data base created in a AWS node
+
+* Minimize Chef configuration needed on properties file, as done in Node Pool Manager

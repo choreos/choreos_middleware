@@ -16,7 +16,6 @@ import eu.choreos.storagefactory.StorageNodeManager;
 import eu.choreos.storagefactory.datamodel.StorageNode;
 import eu.choreos.storagefactory.datamodel.StorageNodeSpec;
 import eu.choreos.storagefactory.utils.NodePoolManager;
-import eu.choreos.storagefactory.utils.SimpleNodePoolManagerHandler;
 
 /**
  * Storage factory REST API resource: storages
@@ -24,7 +23,7 @@ import eu.choreos.storagefactory.utils.SimpleNodePoolManagerHandler;
  * @author leonardo, alfonso
  * 
  */
-@Path("/storagefactory")
+@Path("storages")
 public class StoragesResource {
 
 	//StorageNodeManager storageManager = new StorageNodeManager(new SimpleNodePoolManagerHandler());
@@ -37,7 +36,6 @@ public class StoragesResource {
 	 * @return
 	 */
 	@POST
-	@Path("/storages")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
 	public Response requestStorage(JAXBElement<StorageNodeSpec> specXml) {
@@ -68,7 +66,7 @@ public class StoragesResource {
 	 * @return the storage node of a group defined by a correlation ID
 	 */
 	@GET
-	@Path("/storages/{uuid}")
+	@Path("{uuid}")
 	@Produces(MediaType.APPLICATION_XML)
 	public StorageNode getCorrelationNode(@PathParam("uuid") String uuid) {
 
@@ -91,7 +89,7 @@ public class StoragesResource {
 	 *            the storage node identifier
 	 */
 	@DELETE
-	@Path("/storages/{uuid}")
+	@Path("{uuid}")
 	public void deleteStorage(@PathParam("uuid") String uuid) {
 
 		System.out.println("deleting " + uuid);

@@ -81,8 +81,9 @@ After installing Maven 3, open the terminal at the NodePoolManager folder, and e
 
 $ chmod +x install_jclouds-chef.sh 
 $ ./install_jclouds-chef.sh 
-$ mvn -Dwtpversion=2.0 eclipse:eclipse
+$ mvn eclipse:eclipse
 
+It can take several minutes.
 
 == RUNNING IT ==
 
@@ -114,13 +115,13 @@ Open Firefox and install the Poster plugin, which enables you to send HTTP requi
 With Poster, send the following requisition:
 
 HTTP method: POST
-URI: http://localhost:9100/nodepoolmanager/configs
+URI: http://localhost:9100/nodepoolmanager/nodes/configs
 Content-Type: application/xml
 Body: <config><name>getting-started2</name></config>
 
 Change the port number if necessary.
 
-After receive the reply, check which was the new VM created on AWS console.
+After receive the reply, check which was the new VM created on AWS console. This step can take several minutes.
 
 You must login with SSH in this newly created VM, and verify if the home folder contains the getting-started2.txt file. If so, it worked!
 
