@@ -25,7 +25,7 @@ import eu.choreos.servicedeployer.datamodel.ServiceSpec;
  * @author alfonso, leonardo, nelson
  * 
  */
-@Path("/serviceDeployer")
+@Path("services")
 public class ServicesResource {
 
 	ServiceDeployer serviceDeployer = new ServiceDeployer();
@@ -39,7 +39,6 @@ public class ServicesResource {
 	 *         specifications.
 	 */
 	@POST
-	@Path("/services")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
 	public Response requestService(JAXBElement<ServiceSpec> serviceSpecXML) {
@@ -65,7 +64,7 @@ public class ServicesResource {
 	 * @return a service found
 	 */
 	@GET
-	@Path("/services/{serviceID}")
+	@Path("{serviceID}")
 	@Produces(MediaType.APPLICATION_XML)
 	public Service getService(@PathParam("serviceID") String serviceID) {
 
@@ -82,7 +81,6 @@ public class ServicesResource {
 	 * @return
 	 */
 	@PUT
-	@Path("/services/")
 	@Consumes(MediaType.APPLICATION_XML)
 	public Response updateService(JAXBElement<Service> serviceXML) {
 		Service service = serviceXML.getValue();
@@ -99,7 +97,7 @@ public class ServicesResource {
 	 * @param serviceID
 	 */
 	@DELETE
-	@Path("/services/{serviceID}")
+	@Path("{serviceID}")
 	public Response deleteService(@PathParam("serviceID") String serviceID) {
 
 		if (serviceID.length() == 0)

@@ -20,8 +20,10 @@ public class Service {
 
 		// We assume that the codeLocationURI ends with "/warFileName.war
 		String[] urlPieces = serviceSpec.getCodeUri().split("/");
-		if (urlPieces[urlPieces.length - 1].contains(".war"))
+		if (urlPieces[urlPieces.length - 1].contains(".war")) {
 			warFile = urlPieces[urlPieces.length - 1];
+			id = warFile;
+		}
 	}
 
 	public Service() {

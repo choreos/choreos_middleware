@@ -1,0 +1,87 @@
+SERVICE DEPLOYER – INSTALLATION GUIDE
+26/04/12
+Written by Leonardo Leite (USP)
+
+
+== WHAT IS IT? ==
+
+Service Deployer enables you to easily deploy web services into cloud nodes.
+
+At the moment just the WAR option is supported, what means web services must be delivered withing a WAR file.
+
+At the moment, Service Deployer is not actually calling Node Pool Manager, but rather using a fixed virtual machine running in the development machine.
+
+ * This virtual machine must be accessible through 192.168.56.101
+ * The host name must be "choreos-node"
+ * This machine must be already bootstrapped by Chef as "choreos-node"
+ * The machine must have a "choreos" user 
+ * This user must have sudo powers without entering password
+ * (type $visudo and add the line "choreos ALL = NOPASSWD: ALL")
+ * Finally, don't forget also to synchronize the machine time!
+ * ($ntpdate ccsl.ime.usp.br)
+
+
+== REQUIREMETNS ==
+
+Before you run Service Deployer, you will need:
+
+#1 Java 6 (we are using OpenJDK)
+
+#2 Maven 3  (http://maven.apache.org/download.html)
+
+#3 An Chef account
+
+You can setup your own Chef server, or create an Hosted Chef server account. Hosted Chef is offered by Opscode (http://www.opscode.com/).
+
+
+== CONFIGURING IT ==
+
+As in Node Pool Manager, create the servicedeployer.properties file based on the  servicedeployer.properties.template file.
+
+Fill it as the example, adapting when necessary:
+
+SERVICE_DEPLOYER_PORT=9101
+NODE_POOL_MANAGER=http://localhost:9100/nodepoolmanager
+CHEF_SERVER_URL=http://aguia1.ime.usp.br:4000
+CHEF_CONFIG_FILE=/home/leonardo/chef/chef-repo/.chef/knife.rb
+CHEF_USER=leofl
+CHEF_USER_KEY_FILE=/home/leonardo/chef/chef-repo/.chef/leofl.pem
+CHEF_REPO=/home/leonardo/chef/chef-repo
+VALIDATION_CLIENT_NAME=validation_aguia
+
+You will need also to upload the “tomcat”cookbook to your chef repo. To download the cookbook in your workstation: “knife cookbook site install tomcat”.
+
+
+== COMPILING IT ==
+
+Just open the terminal at the project folder, and type “mvn eclipse:eclipse”.
+
+You need maven 3 in this step. It can take several minutes.
+
+
+== RUNNING IT ==
+
+After compiling the project, you have just to run the main method on the eu.choreos.servicedeployer.rest.ServiceDeployerStandaloneServer class.
+
+You can proceed in the same way as indicated in the Node Pool Manager installation guide.
+
+If you successfully start Service Deployer, you must see the “Starting Service Deployer...” message on the console.
+
+
+== VERIFYING IF IT WORKS ==
+
+With Poster, the firefox plugin, send the following requisition:
+
+HTTP method: POST
+URI: http://localhost:9101/servicedeployer/services
+Content-Type: application/xml
+Body: 
+<serviceSpec> 
+  <type>WAR</type> 
+  <codeUri>LINK</codeUri> 
+</serviceSpec>
+
+Change the port numbers if necessary. Replace “LINK” by an URL pointing to a WAR file. To learn how to build a WAR file containing a web service: http://ccsl.ime.usp.br/redmine/projects/bailevv/wiki/Jaxws_tomcat.
+
+The application provided by the WAR file must be accessible by the address http://192.168.56.101:8080/WAR_FILE_NAME.
+
