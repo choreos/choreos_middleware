@@ -11,7 +11,7 @@ public class GmondReloaderTest {
 
 	@Before
 	public void setUp() {
-		gmondReloader = new GmondReloader(true);
+		gmondReloader = new GmondReloader();
 	}
 
 	@Test

@@ -1,9 +1,7 @@
 package eu.choreos.gmond.reloader;
 
-import javax.jws.WebMethod;
-import javax.jws.WebService;
 
-@WebService
+
 public class GmondReloader {
 	
 	private String commandRestartMonitor;
@@ -11,14 +9,7 @@ public class GmondReloader {
 	public GmondReloader(){
 		commandRestartMonitor = "/etc/init.d/ganglia-monitor restart";
 	}
-	public GmondReloader(boolean test){
-		if(test)
-		{
-			commandRestartMonitor = "ls";
-		}
-	}
 	
-	@WebMethod
 	public boolean reload(){
 		Process procReturned = runCommand(commandRestartMonitor);
 		try {
