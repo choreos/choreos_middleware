@@ -28,7 +28,9 @@ public class ThresholdEvalDaemon {
 	}
 
 	private void evaluateThresholds() {
-		if (notifier.identifySurpassedUpperThreshold("load_one", 3)) {
+	    	int index1 = notifier.addThreshold((new Threshold("load_one", Threshold.MAX, 3)));
+		
+	    	if (notifier.evaluateSingleThreshold(index1)) {
 			System.out.println("Load was exceeded!");
 			System.out.println("Maximum allowed was 3");
 			System.out.println("Current Measure is "
