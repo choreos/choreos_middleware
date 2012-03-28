@@ -6,8 +6,17 @@ public class GmondReloader {
 	
 	private String commandRestartMonitor;
 
+	private Runtime runtime;
+	private Process proc;
+	
+
 	public GmondReloader(){
 		commandRestartMonitor = "/etc/init.d/ganglia-monitor restart";
+		runtime = null;
+	}
+
+	public void setRuntime(Runtime runtime) {
+		this.runtime = runtime;
 	}
 	
 	public boolean reload(){
@@ -22,8 +31,12 @@ public class GmondReloader {
 		return false;
 	}
 
-	private static Process runCommand(String cmd) {
-		Runtime runtime = Runtime.getRuntime();
+	private Process runCommand(String cmd) {
+		Runtime runtime = null;
+		if (this.runtime==null) 
+			runtime = Runtime.getRuntime();
+		else runtime =  this.runtime;
+		
 		Process proc = null;
 		try {
 			proc = runtime.exec(cmd);
@@ -31,5 +44,13 @@ public class GmondReloader {
 			e.printStackTrace();
 		}
 		return proc;
+	}
+
+	public Process getProc() {
+		return proc;
+	}
+
+	public void setProc(Process proc) {
+		this.proc = proc;
 	}
 }
