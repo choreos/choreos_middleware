@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import eu.choreos.nodepoolmanager.Configuration;
 import eu.choreos.nodepoolmanager.ConfigurationManager;
-import eu.choreos.nodepoolmanager.chef.ScriptsProvider;
+import eu.choreos.nodepoolmanager.chef.ChefScripts;
 import eu.choreos.nodepoolmanager.cloudprovider.CloudProvider;
 import eu.choreos.nodepoolmanager.cloudprovider.FixedCloudProvider;
 import eu.choreos.nodepoolmanager.datamodel.Node;
@@ -56,8 +56,8 @@ public class FixedCloudProviderTest {
 	private void cleanChefServer() {
 		
 		String workdir = Configuration.get("CHEF_REPO");
-		String deleteChoreosNode = ScriptsProvider.getDeleteNode("choreos-node");
-		String deleteChoreosClient = ScriptsProvider.getDeleteClient("choreos-node");
+		String deleteChoreosNode = ChefScripts.getDeleteNode("choreos-node");
+		String deleteChoreosClient = ChefScripts.getDeleteClient("choreos-node");
 		CommandLine.runLocalCommand(deleteChoreosClient, workdir, true);
 		CommandLine.runLocalCommand(deleteChoreosNode, workdir, true);
 	}

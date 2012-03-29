@@ -18,9 +18,12 @@ import javax.xml.bind.JAXBElement;
 import eu.choreos.servicedeployer.ServiceDeployer;
 import eu.choreos.servicedeployer.datamodel.Service;
 import eu.choreos.servicedeployer.datamodel.ServiceSpec;
+import eu.choreos.servicedeployer.npm.NodePoolManager;
+import eu.choreos.servicedeployer.npm.NodePoolManagerClient;
 
 /**
- * Service Deployer REST API resource: services
+ * Service Deployer REST API 
+ * Resource: services
  * 
  * @author alfonso, leonardo, nelson
  * 
@@ -28,20 +31,22 @@ import eu.choreos.servicedeployer.datamodel.ServiceSpec;
 @Path("services")
 public class ServicesResource {
 
-	ServiceDeployer serviceDeployer = new ServiceDeployer();
+	private NodePoolManager npm = new NodePoolManagerClient();
+	private ServiceDeployer serviceDeployer = new ServiceDeployer(npm);
 
 	/**
-	 * Client requests a service (new or already created)
+	 * Deploys a service
 	 * 
-	 * @param serviceXML
-	 *            Service request XML
-	 * @return A new service (or service already created) according to
-	 *         specifications.
+	 * @param serviceSpecXML
+	 *            Request's body content with a ServiceSpec XML
+	 * @return HTTP code 201 and Location header if the service was successfully deployed;
+	 *         HTTP code 400 if request can not be properly parsed; 
+	 *         HTTP code 500 if any other error occurs.
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response requestService(JAXBElement<ServiceSpec> serviceSpecXML) {
+	public Response deployService(JAXBElement<ServiceSpec> serviceSpecXML) {
 
 		ServiceSpec serviceSpec = serviceSpecXML.getValue();
 		if (serviceSpec.getCodeUri() == null || serviceSpec.getType() == null)
@@ -50,6 +55,8 @@ public class ServicesResource {
 		try {
 			Service service = new Service(serviceSpec);
 			String deployedHost = serviceDeployer.deploy(service);
+			
+			// TODO must return created(http://...serviceId)
 			return Response.ok(deployedHost).build();
 		} catch (MalformedURLException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();

@@ -2,7 +2,7 @@ package eu.choreos.nodepoolmanager;
 
 import java.io.IOException;
 
-import eu.choreos.nodepoolmanager.chef.ScriptsProvider;
+import eu.choreos.nodepoolmanager.chef.ChefScripts;
 import eu.choreos.nodepoolmanager.datamodel.Node;
 import eu.choreos.nodepoolmanager.utils.CommandLine;
 import eu.choreos.nodepoolmanager.utils.SshUtil;
@@ -34,13 +34,13 @@ public class ConfigurationManager {
 		try {
 			// bootstrap node
 			System.out.println("Bootstraping " + node.getHostname());
-			command = ScriptsProvider.getChefBootstrapScript(node.getPrivateKeyFile(), node.getIp(), node.getUser());
+			command = ChefScripts.getChefBootstrapScript(node.getPrivateKeyFile(), node.getIp(), node.getUser());
 			System.out.println(command);
 			CommandLine.runLocalCommand(command, CHEF_REPO);
 			System.out.println("Bootstrap completed");
 			
 			// get chef name
-			command = ScriptsProvider.getChefName();
+			command = ChefScripts.getChefName();
 			String chefClientName = ssh.runCommand(command);
 			if (chefClientName == null || chefClientName.isEmpty())
 				chefClientName = node.getHostname();
@@ -103,7 +103,7 @@ public class ConfigurationManager {
 			return false;
 		}
 		
-		String command = ScriptsProvider.getChefAddCookbook(node.getChefName(), cookbook, recipe);
+		String command = ChefScripts.getChefAddCookbook(node.getChefName(), cookbook, recipe);
 		System.out.println("Install recipe command = [" + command+"]");
         CommandLine.runLocalCommand(command);
         // TODO we should verify if the recipe install was OK
@@ -119,7 +119,7 @@ public class ConfigurationManager {
 	
 	private void installInitialRecipe(Node node) {
 		
-		String command = ScriptsProvider.getChefAddCookbook(node.getChefName(), INITIAL_RECIPE, "default");
+		String command = ChefScripts.getChefAddCookbook(node.getChefName(), INITIAL_RECIPE, "default");
 		System.out.println("Install recipe command = [" + command+"]");
         CommandLine.runLocalCommand(command);
         

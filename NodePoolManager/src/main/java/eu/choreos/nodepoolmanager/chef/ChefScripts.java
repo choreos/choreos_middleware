@@ -13,7 +13,7 @@ import eu.choreos.nodepoolmanager.Configuration;
  * 
  *
  */
-public class ScriptsProvider {
+public class ChefScripts {
 	
 	private static final String CHEF_NODE_LIST = "chef/chef_node_list.sh";
 	private static final String CHEF_BOOTSTRAP_SCRIPT = "chef/chef_bootstrap.sh";
@@ -22,6 +22,7 @@ public class ScriptsProvider {
 	private static final String CHEF_NODE_SHOW = "chef/chef_node_show.sh";
 	private static final String CHEF_NODE_DELETE = "chef/chef_node_delete.sh";
 	private static final String CHEF_CLIENT_DELETE = "chef/chef_client_delete.sh";
+	private static final String CHEF_UPLOAD_COOKBOOK = "chef/chef_upload_cookbook.sh";
 	
     public static String getChefBootstrapScript(String pKeyFile, String ip, String user) {
     	
@@ -146,6 +147,25 @@ public class ScriptsProvider {
     	command = command.replace("$knifeFile", config);
     	command = command.replace("$clientName", clientName);
 
+    	return command;
+    }
+    
+    public static String getUploadCookbook(String cookbookName, String cookbookParentFolder) {
+    	
+		URL scriptFile = ClassLoader.getSystemResource(CHEF_UPLOAD_COOKBOOK);
+    	String command = null;
+		try {
+			command = FileUtils.readFileToString(new File(scriptFile.getFile()));
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Should not happen");
+		}
+
+        String config = Configuration.get("CHEF_CONFIG_FILE");
+    	command = command.replace("$knifeFile", config);
+    	command = command.replace("$cookbookName", cookbookName);
+    	command = command.replace("$cookbookParentFolder", cookbookParentFolder);
+    	
     	return command;
     }
 }

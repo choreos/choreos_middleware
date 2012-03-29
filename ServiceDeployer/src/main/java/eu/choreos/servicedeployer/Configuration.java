@@ -6,7 +6,7 @@ import java.util.Properties;
 public class Configuration {
 
     private final Properties properties = new Properties();
-    private static String FILE_CONFIGURATION= "servicedeployer.properties";
+    private static String CONFIGURATION_FILE= "servicedeployer.properties";
 
     private static Configuration INSTANCE = new Configuration();
 
@@ -24,7 +24,7 @@ public class Configuration {
 
     private Configuration() {
         try {
-            properties.load(ClassLoader.getSystemResourceAsStream(FILE_CONFIGURATION));
+            properties.load(ClassLoader.getSystemResourceAsStream(CONFIGURATION_FILE));
         } catch (IOException e) {
             e.printStackTrace();
         }

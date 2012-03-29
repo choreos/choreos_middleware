@@ -1,0 +1,15 @@
+- Duplication of code:
+	- Copied and adapted Recipe, RecipeFactory and RecipeDeployer classes from 
+	StorageManager
+	- Copied CLIHelper class from StorageManager
+- Pending requirements:
+	- BPEL deployment
+	- Petals JBI consume
+	- Petals auto-deployment (node pool manager??)
+ 	- RegistryFacade is still very simple and should be improved. Is it possible
+ 	 to interact with chef to store data?
+
+- Move NodePoolManager client functionality to NPM project, since this client it's used by more than one project
+- RecipeDeployer.deployRecipe makes a GET request; it should rely in NodePoolManagerClient to do this!
+- But to achieve this, NodePoolManagerClient needs to implement the GET operation
+- service.port receive the hardcoded 8080 in ServiceDeployer.getServiceURL(). How to improve this?

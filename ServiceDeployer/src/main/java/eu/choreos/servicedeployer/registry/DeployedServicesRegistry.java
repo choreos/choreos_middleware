@@ -9,19 +9,21 @@ public class DeployedServicesRegistry {
 
 	private HashMap<String, Service> availableServices = new HashMap<String, Service>();
 
-	public Service getNode(String nodeUuid) {
-		return availableServices.get(nodeUuid);
+	public void addService(String serviceId, Service service) {
+		availableServices.put(serviceId, service);
+	}
+	
+	public Service getService(String serviceId) {
+		return availableServices.get(serviceId);
 	}
 
-	public Collection<Service> getNodes() {
+	public Collection<Service> getServices() {
 		return availableServices.values();
 	}
 
-	public boolean deleteService(String serviceUuid) {
-		if (availableServices.remove(serviceUuid) == null)
-			return false;
-		else
-			return true;
+	public void deleteService(String serviceId) {
+		if (availableServices.remove(serviceId) == null)
+			throw new IllegalArgumentException("Service " + serviceId + " not registered");
 	}
 
 }

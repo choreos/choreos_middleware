@@ -7,7 +7,9 @@ import org.apache.commons.io.FileUtils;
 
 import eu.choreos.servicedeployer.datamodel.Service;
 
-public class RecipeFactory {
+public class WARRecipeBuilder implements RecipeBuilder {
+	
+	private static final File DEST_DIR = new File("src/main/resources/chef");
 	
 	public Recipe createRecipe(Service service) {
 		Recipe recipe = new Recipe();
@@ -24,30 +26,26 @@ public class RecipeFactory {
 
 			return recipe;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		return null;
 
 	}
+	
+	// methods have "package visibility" to test purposes
 
-	public void changeScriptTemplate(Service service) throws IOException {
-		changeFileContents(service, "chef/service" + service.getId()
-				+ "/templates/default/deploy-service.sh.erb");
-	}
-
-	public void changeMetadataRb(Service service) throws IOException {
+	void changeMetadataRb(Service service) throws IOException {
 		changeFileContents(service, "chef/service" + service.getId()
 				+ "/metadata.rb");
 	}
 
-	public void changeServerRecipe(Service service) throws IOException {
+	void changeServerRecipe(Service service) throws IOException {
 		changeFileContents(service, "chef/service" + service.getId()
 				+ "/recipes/default.rb");
 	}
 
-	public void changeAttributesDefaultRb(Service service) throws IOException {
+	void changeAttributesDefaultRb(Service service) throws IOException {
 		changeFileContents(service, "chef/service" + service.getId()
 				+ "/attributes/default.rb");
 	}
@@ -66,11 +64,11 @@ public class RecipeFactory {
 		FileUtils.writeStringToFile(file, fileData);
 	}
 
-	public String copyTemplate(Service service) throws IOException {
+	String copyTemplate(Service service) throws IOException {
 		
 		File srcFolder = new File("src/main/resources/chef/tomcat-service-deploy-recipe-template");
 		
-		String destPath = RecipeDeployer.DEST_DIR.getAbsolutePath() + "/service" + service.getId();
+		String destPath = DEST_DIR.getAbsolutePath() + "/service" + service.getId();
 		File destFolder = new File(destPath);
 		
 		FileUtils.copyDirectory(srcFolder, destFolder);

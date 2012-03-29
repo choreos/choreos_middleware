@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
@@ -15,14 +14,14 @@ import org.junit.Test;
 import eu.choreos.servicedeployer.datamodel.ResourceImpact;
 import eu.choreos.servicedeployer.datamodel.Service;
 
-public class RecipeFactoryTest {
+public class WARRecipeBuilderTest {
 
-	private RecipeFactory recipeFactory;
+	private WARRecipeBuilder recipeBuilder;
 	private static Service service = new Service();
 	private static String id = "myServletWAR";
 	private static String codeLocationURI = "http://content.hccfl.edu/pollock/AJava/WAR/myServletWAR.war";
 	private static String warFile = "myServletWAR.war";
-	private static eu.choreos.servicedeployer.datamodel.ResourceImpact impact = new ResourceImpact();
+	private static ResourceImpact impact = new ResourceImpact();
 
 	@BeforeClass
 	public static void setUpBeforeClass() {
@@ -41,30 +40,32 @@ public class RecipeFactoryTest {
 
 	@Before
 	public void setUp() {
-		recipeFactory = new RecipeFactory();
+		recipeBuilder = new WARRecipeBuilder();
+	}
+	
+	private static File getResource(String resource) {
+		
+		String resourcesPath = "src/main/resources/";
+		return new File(resourcesPath + resource);
 	}
 
 	@Test
 	public void shouldCreateACopyOfTheFilesInTheTemplate() throws IOException {
 
-		recipeFactory.copyTemplate(service);
-
+		recipeBuilder.copyTemplate(service);
 		assertTemplateFolderWasCopied();
 	}
 
 	private void assertTemplateFolderWasCopied() {
-		String[] extensions = new String[1];
-		extensions[0] = "rb";
-
-		URL fileLocation = ClassLoader.getSystemResource("chef/service" + id);
-		File directory = new File(fileLocation.getFile());
-
+		
+		String[] extensions = {"rb"};
+		File directory = getResource("chef/service" + id);
 		assertTrue((FileUtils.listFiles(directory, extensions, false)).size() > 0);
 	}
 
 	@Test
 	public void shouldReplaceOcurrencesInMetadataRb() throws IOException {
-		recipeFactory.changeMetadataRb(service);
+		recipeBuilder.changeMetadataRb(service);
 
 		assertAllOcurrencesInMetadataRbWereReplaced();
 
@@ -72,10 +73,9 @@ public class RecipeFactoryTest {
 
 	private void assertAllOcurrencesInMetadataRbWereReplaced()
 			throws IOException {
-		URL fileLocation = ClassLoader.getSystemResource("chef/service" + id
+		File fileLocation = getResource("chef/service" + id
 				+ "/metadata.rb");
-		String fileData = FileUtils.readFileToString(new File(fileLocation
-				.getFile()));
+		String fileData = FileUtils.readFileToString(fileLocation);
 
 		assertTrue(fileData.contains("depends \"tomcat\""));
 		assertFalse(fileData.contains("$NAME"));
@@ -86,17 +86,16 @@ public class RecipeFactoryTest {
 
 	@Test
 	public void shouldReplaceOcurrencesInAttributesServerRb() throws Exception {
-		recipeFactory.changeAttributesDefaultRb(service);
+		recipeBuilder.changeAttributesDefaultRb(service);
 
 		assertAllOcurrencesWereReplacedInDefaultRb();
 	}
 
 	private void assertAllOcurrencesWereReplacedInDefaultRb()
 			throws IOException {
-		URL fileLocation = ClassLoader.getSystemResource("chef/service" + id
+		File fileLocation = getResource("chef/service" + id
 				+ "/attributes/default.rb");
-		String fileData = FileUtils.readFileToString(new File(fileLocation
-				.getFile()));
+		String fileData = FileUtils.readFileToString(fileLocation);
 
 		// Ensure the ocurrences of $NAME were replaced with the service ID
 		assertTrue(fileData.contains(id));
@@ -119,17 +118,16 @@ public class RecipeFactoryTest {
 
 	@Test
 	public void shouldReplaceOcurrencesInRecipesServerRb() throws Exception {
-		recipeFactory.changeServerRecipe(service);
+		recipeBuilder.changeServerRecipe(service);
 
 		assertAllOcurrencesWereReplacedInDefaultRecipe();
 	}
 
 	private void assertAllOcurrencesWereReplacedInDefaultRecipe()
 			throws IOException {
-		URL fileLocation = ClassLoader.getSystemResource("chef/service" + id
+		File fileLocation = getResource("chef/service" + id
 				+ "/recipes/default.rb");
-		String fileData = FileUtils.readFileToString(new File(fileLocation
-				.getFile()));
+		String fileData = FileUtils.readFileToString(fileLocation);
 
 		// Ensure the ocurrences of $UUID were replaced with THIS_IS_A_TEST
 		assertTrue(fileData.contains(id));
@@ -139,28 +137,28 @@ public class RecipeFactoryTest {
 		assertTrue(fileData.contains(" IMPORTANT DEVELOPMENT NOTICE:"));
 	}
 
-	private void assertAllOcurrencesWereReplacedInTemplatesShellScript()
-			throws IOException {
-		URL fileLocation = ClassLoader.getSystemResource("chef/service" + id
-				+ "/templates/default/deploy-service.sh.erb");
-		String fileData = FileUtils.readFileToString(new File(fileLocation
-				.getFile()));
-
-		System.out.println(fileLocation);
-		System.out.println(fileData);
-		// Ensure the ocurrences of $UUID were replaced with THIS_IS_A_TEST
-		assertTrue(fileData.contains(id));
-		assertFalse(fileData.contains("$NAME"));
-
-		// Ensures the remainder of the file is left untouched
-		assertTrue(fileData.contains(" IMPORTANT DEVELOPMENT NOTICE:"));
-	}
+//	private void assertAllOcurrencesWereReplacedInTemplatesShellScript()
+//			throws IOException {
+//		URL fileLocation = ClassLoader.getSystemResource("chef/service" + id
+//				+ "/templates/default/deploy-service.sh.erb");
+//		String fileData = FileUtils.readFileToString(new File(fileLocation
+//				.getFile()));
+//
+//		System.out.println(fileLocation);
+//		System.out.println(fileData);
+//		// Ensure the ocurrences of $UUID were replaced with THIS_IS_A_TEST
+//		assertTrue(fileData.contains(id));
+//		assertFalse(fileData.contains("$NAME"));
+//
+//		// Ensures the remainder of the file is left untouched
+//		assertTrue(fileData.contains(" IMPORTANT DEVELOPMENT NOTICE:"));
+//	}
 
 	@Test
 	public void shouldCreateFullRecipe() throws Exception {
 		deleteDirectory();
 
-		Recipe recipe = recipeFactory.createRecipe(service);
+		Recipe recipe = recipeBuilder.createRecipe(service);
 
 		assertTemplateFolderWasCopied();
 		assertAllOcurrencesInMetadataRbWereReplaced();
@@ -186,9 +184,9 @@ public class RecipeFactoryTest {
 	}
 
 	private static void deleteDirectory() {
-		URL fileLocation = ClassLoader.getSystemResource("chef/service" + id);
+		File fileLocation = getResource("chef/service" + id);
 		if (fileLocation != null)
-			FileUtils.deleteQuietly(new File(fileLocation.getFile()));
+			FileUtils.deleteQuietly(fileLocation);
 	}
 
 }

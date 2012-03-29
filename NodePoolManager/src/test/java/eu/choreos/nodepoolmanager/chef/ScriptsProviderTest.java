@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import eu.choreos.nodepoolmanager.Configuration;
-import eu.choreos.nodepoolmanager.chef.ScriptsProvider;
+import eu.choreos.nodepoolmanager.chef.ChefScripts;
 
 public class ScriptsProviderTest {
 
@@ -20,11 +20,11 @@ public class ScriptsProviderTest {
     	String recipe = "recipe";
     	String key = Configuration.get("FIXED_VM_PRIVATE_SSH_KEY");
     	
-        String command = ScriptsProvider.getChefBootstrapScript(key, ip, user);
+        String command = ChefScripts.getChefBootstrapScript(key, ip, user);
         String expected = "knife bootstrap 127.0.0.1 -x myUser -i " + key + " --sudo -c " + config;
         assertEquals(expected.trim(), command.trim());
 
-        command = ScriptsProvider.getChefAddCookbook(hostname, cookbook, recipe);
+        command = ChefScripts.getChefAddCookbook(hostname, cookbook, recipe);
         expected = "knife node run_list add myHost cook::recipe -c " + config;
         assertEquals(expected.trim(), command.trim());
     }
