@@ -45,7 +45,7 @@ public class ServiceDeployer {
 	}
 
 	private Recipe createRecipe(Service service) {
-		ServiceType serviceType = ServiceType.valueOf(service.getServiceType().toUpperCase());
+		ServiceType serviceType = service.getServiceType();
 		RecipeBuilder builder = RecipeBuilderFactory.getRecipeBuilderInstance(serviceType);
 		Recipe serviceRecipe = builder.createRecipe(service);
 		return serviceRecipe;

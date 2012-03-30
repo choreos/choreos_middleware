@@ -2,11 +2,13 @@ package eu.choreos.servicedeployer.datamodel;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import eu.choreos.servicedeployer.ServiceType;
+
 @XmlRootElement
 public class Service {
 
 	private String id; // Who will define the service ID?
-	private String serviceType;
+	private ServiceType serviceType;
 	private String uri;
 	private String codeLocationURI;
 	private String warFile;
@@ -15,7 +17,12 @@ public class Service {
 
 	public Service(ServiceSpec serviceSpec) {
 		codeLocationURI = serviceSpec.getCodeUri();
-		serviceType = serviceSpec.getType();
+		try {
+			serviceType = ServiceType.valueOf(serviceSpec.getType());
+		} catch (IllegalArgumentException e) {
+			serviceType = ServiceType.OTHER;
+		}
+		
 		resourceImpact = serviceSpec.getResourceImpact();
 
 		// We assume that the codeLocationURI ends with "/warFileName.war
@@ -37,11 +44,11 @@ public class Service {
 		this.id = id;
 	}
 
-	public String getServiceType() {
+	public ServiceType getServiceType() {
 		return serviceType;
 	}
 
-	public void setServiceType(String serviceType) {
+	public void setServiceType(ServiceType serviceType) {
 		this.serviceType = serviceType;
 	}
 
@@ -62,7 +69,12 @@ public class Service {
 	}
 
 	public int getPort() {
-		return port;
+		int effectivePort = port;
+
+		if (serviceType == ServiceType.WAR)
+			effectivePort = 8080;
+		
+		return effectivePort;
 	}
 
 	public void setPort(int port) {

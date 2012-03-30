@@ -8,7 +8,9 @@ public class RecipeBuilderFactory {
 
 		switch (serviceType) {
 		case WAR:
-			return new WARRecipeBuilder();
+			return new RecipeBuilderImpl();
+		case JAR:
+			return new RecipeBuilderImpl();
 		default:
 			throw new IllegalArgumentException("Service type " + serviceType
 					+ " not supported");
