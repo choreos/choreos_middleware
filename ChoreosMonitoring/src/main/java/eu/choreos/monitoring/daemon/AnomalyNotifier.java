@@ -63,9 +63,9 @@ public class AnomalyNotifier {
 	return Double.parseDouble(metricsMap.get(metricName).getValue());
     }
 
-    public List<Integer> evaluateAllThresholds() {
+    public List<Threshold> evaluateAllThresholds() {
 	    
-	    List<Integer> thresholdEvaluationList = new ArrayList<Integer>();
+	    List<Threshold> thresholdEvaluationList = new ArrayList<Threshold>();
 
 	    for (Threshold threshold : thresholds){
 
@@ -73,7 +73,7 @@ public class AnomalyNotifier {
 		Double metricValue = getMetricNumericalValue(thresholdName);
 		
 		if (threshold.evaluate(metricValue))
-		    thresholdEvaluationList.add(thresholds.indexOf(threshold));
+		    thresholdEvaluationList.add(threshold);
 	    }
 	    return thresholdEvaluationList;
 	}

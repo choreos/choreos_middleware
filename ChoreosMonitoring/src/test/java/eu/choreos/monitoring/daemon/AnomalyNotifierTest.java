@@ -106,7 +106,7 @@ public class AnomalyNotifierTest {
 	    
 	    notifier.addThreshold(threshold);
 	    
-	    List<Integer> list = notifier.evaluateAllThresholds();
+	    List<Threshold> list = notifier.evaluateAllThresholds();
 	    
 	    assertTrue(list.isEmpty());
 	}
@@ -117,9 +117,9 @@ public class AnomalyNotifierTest {
 	    
 	    int index = notifier.addThreshold(threshold);
 	    
-	    List<Integer> list = notifier.evaluateAllThresholds();
+	    List<Threshold> list = notifier.evaluateAllThresholds();
 	    
-	    assertTrue(list.contains(index));
+	    assertTrue(list.contains(threshold));
 	}
 	
 	@Test
@@ -137,14 +137,14 @@ public class AnomalyNotifierTest {
 	    int index3 = notifier.addThreshold(threshold3);
 	    int index4 = notifier.addThreshold(threshold4);
 	    
-	    List<Integer> list = notifier.evaluateAllThresholds();
+	    List<Threshold> list = notifier.evaluateAllThresholds();
 	    
 	    
 	    
-	    assertTrue(list.contains(index1));
-	    assertFalse(list.contains(index2));
-	    assertFalse(list.contains(index3));
-	    assertTrue(list.contains(index4));
+	    assertTrue(list.contains(threshold1));
+	    assertFalse(list.contains(threshold2));
+	    assertFalse(list.contains(threshold3));
+	    assertTrue(list.contains(threshold4));
 	    
 	}
 
