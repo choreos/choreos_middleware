@@ -1,5 +1,5 @@
 SERVICE DEPLOYER – INSTALLATION GUIDE
-26/04/12
+30/04/12
 Written by Leonardo Leite (USP)
 
 
@@ -7,32 +7,15 @@ Written by Leonardo Leite (USP)
 
 Service Deployer enables you to easily deploy web services into cloud nodes.
 
-At the moment just the WAR option is supported, what means web services must be delivered withing a WAR file.
+At the moment there are two deploy options supported: WAR and JAR services.
 
-At the moment, Service Deployer is not actually calling Node Pool Manager, but rather using a fixed virtual machine running in the development machine.
+WAR services are intended to run in Tomcat (or a complient container).
 
- * This virtual machine must be accessible through 192.168.56.101
- * The host name must be "choreos-node"
- * This machine must be already bootstrapped by Chef as "choreos-node"
- * The machine must have a "choreos" user 
- * This user must have sudo powers without entering password
- * (type $visudo and add the line "choreos ALL = NOPASSWD: ALL")
- * Finally, don't forget also to synchronize the machine time!
- * ($ntpdate ccsl.ime.usp.br)
-
+JAR services are executed by runnable jar files that must contain the services themselves AND the main method to start the services.
 
 == REQUIREMETNS ==
 
-Before you run Service Deployer, you will need:
-
-#1 Java 6 (we are using OpenJDK)
-
-#2 Maven 3  (http://maven.apache.org/download.html)
-
-#3 An Chef account
-
-You can setup your own Chef server, or create an Hosted Chef server account. Hosted Chef is offered by Opscode (http://www.opscode.com/).
-
+Before you run Storage Factory, you will need Node Pool Manager running.
 
 == CONFIGURING IT ==
 
@@ -49,7 +32,7 @@ CHEF_USER_KEY_FILE=/home/leonardo/chef/chef-repo/.chef/leofl.pem
 CHEF_REPO=/home/leonardo/chef/chef-repo
 VALIDATION_CLIENT_NAME=validation_aguia
 
-You will need also to upload the “tomcat”cookbook to your chef repo. To download the cookbook in your workstation: “knife cookbook site install tomcat”.
+You will need also to upload the "tomcat" and the "java" cookbooks to your chef repo. To download a cookbook in your workstation: "knife cookbook site install tomcat".
 
 
 == COMPILING IT ==
@@ -81,7 +64,24 @@ Body:
   <codeUri>LINK</codeUri> 
 </serviceSpec>
 
-Change the port numbers if necessary. Replace “LINK” by an URL pointing to a WAR file. To learn how to build a WAR file containing a web service: http://ccsl.ime.usp.br/redmine/projects/bailevv/wiki/Jaxws_tomcat.
+Change the port numbers if necessary. Replace "LINK" by an URL pointing to a WAR file. To learn how to build a WAR file containing a web service: http://ccsl.ime.usp.br/redmine/projects/bailevv/wiki/Jaxws_tomcat.
 
-The application provided by the WAR file must be accessible by the address http://192.168.56.101:8080/WAR_FILE_NAME.
+The application provided by the WAR file must be accessible by the address http://host:8080/WAR_FILE_NAME.
+Such URL will be informed in the HTTP response body, and the host will be chosen by the Node Pool Manager.
+
+If you prefer to deploy a JAR, requests the following:
+
+HTTP method: POST
+URI: http://localhost:9101/servicedeployer/services
+Content-Type: application/xml
+Body: 
+<serviceSpec> 
+  <type>JAR</type> 
+  <codeUri>LINK</codeUri> 
+  <name>serviceName</name>
+  <port>portNumber</port>
+</serviceSpec>
+
+The "name" and "port" elements must be complient with what the JAR code does. 
+So, the service must be available at http://host:portNumber/serviceName.
 

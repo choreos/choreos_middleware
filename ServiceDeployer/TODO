@@ -12,4 +12,6 @@
 - Move NodePoolManager client functionality to NPM project, since this client it's used by more than one project
 - RecipeDeployer.deployRecipe makes a GET request; it should rely in NodePoolManagerClient to do this!
 - But to achieve this, NodePoolManagerClient needs to implement the GET operation
-- service.port receive the hardcoded 8080 in ServiceDeployer.getServiceURL(). How to improve this?
+
+- POST /services should return code 201 with Location: <serviceId>; 
+- we can keep the service URL on the body or better: write the service XML on the body, which contains the URL
