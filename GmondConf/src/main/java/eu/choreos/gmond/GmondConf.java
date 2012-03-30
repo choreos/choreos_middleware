@@ -3,13 +3,9 @@ package eu.choreos.gmond;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import org.apache.commons.io.FileUtils;
-
-import sun.security.krb5.internal.UDPClient;
 
 import eu.choreos.gmond.reloader.GmondReloader;
 
@@ -29,15 +25,45 @@ public class GmondConf {
 
 	public static void main(String... args) {
 		String fileName = "/etc/ganglia/gmond.conf";
-		String hostName = "";
-		int port;
 
 		validateArgs(args);
 
-			
+		fileName = getConfigFile(args);
+
 		GmondConf gmondConf = new GmondConf();
 
 		gmondConf.load(fileName);
+
+		for (int i = 0; i < args.length; i++) {
+			
+			if (args[i].equals("--add")) {
+				gmondConf.addUdpSendChannel(args[i + 1], args[i + 2]);
+				i += 2;
+			}
+
+			if (args[i].equals("--update-port")) {
+				gmondConf.updateUdpSendChannelPort(args[i + 1],
+						Integer.parseInt(args[i + 2]));
+				i += 2;
+			}
+			
+			if (args[i].equals("--update-channel")) {
+				gmondConf.updateUdpSendChannel(args[i], args[i + 1],
+						Integer.parseInt(args[i + 2]));
+				i += 2;
+			}
+			
+			if (args[i].equals("--update-host")) {
+				gmondConf.updateUdpSendChannelHost(args[i + 1], args[i + 2]);
+				i += 2;
+			}
+			
+			if (args[i].equals("--remove")) {
+				gmondConf.removeUdpSendChannel(args[i + 1]);
+				i += 2;
+			}
+
+		}
 
 		gmondConf.save();
 
@@ -49,11 +75,23 @@ public class GmondConf {
 
 	}
 
+	private static String getConfigFile(String[] arguments) {
+		String fileName = "/etc/ganglia/gmond.conf";
+
+		for (int i = 0; i < arguments.length; i++) {
+
+			if (arguments[i].equals("--config-file")) {
+				fileName = arguments[i + 1];
+			}
+		}
+		return fileName;
+	}
+
 	private static int validateArgs(String[] args) {
 		int returnValue = 0;
 		String string;
-		for (int i = 0; i < args.length; i++) {
-			string = args[i];
+		for (int index = 0; index < args.length; index++) {
+			string = args[index];
 
 			if (string.equals("--add"))
 				returnValue = index + 2;
