@@ -15,3 +15,6 @@ default['service']['$NAME']['URL']          = "$URL"
 # Set the default log filewar_depl
 default['service']['$NAME']['logFile']      = "/dev/stdout"
 
+# Set the destination folder for JAR files
+default['service']['$NAME']['jarFiles']      = "$HOME"
+
