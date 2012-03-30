@@ -8,6 +8,7 @@ public class ServiceSpec {
 	private String type; // bpel, jar, service in the wild // TODO enum
 	private String codeUri;
 	private ResourceImpact resourceImpact;
+	private String port;
 
 	public String getType() {
 		return type;
@@ -75,6 +76,14 @@ public class ServiceSpec {
 	public String toString() {
 		return "ServiceSpec [type=" + type + ", codeUri=" + codeUri
 				+ ", resourceImpact=" + resourceImpact + "]";
+	}
+
+	public String getPort() {
+		return port;
+	}
+
+	public void setPort(String port) {
+		this.port = port;
 	}
 
 }

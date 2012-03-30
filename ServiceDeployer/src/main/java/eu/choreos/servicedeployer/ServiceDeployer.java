@@ -45,7 +45,7 @@ public class ServiceDeployer {
 	}
 
 	private Recipe createRecipe(Service service) {
-		ServiceType serviceType = ServiceType.valueOf(service.getServiceType().toUpperCase());
+		ServiceType serviceType = service.getServiceType();
 		RecipeBuilder builder = RecipeBuilderFactory.getRecipeBuilderInstance(serviceType);
 		Recipe serviceRecipe = builder.createRecipe(service);
 		return serviceRecipe;
@@ -60,7 +60,7 @@ public class ServiceDeployer {
 	}
 
 	private String getServiceURL(Service service, String hostname) {
-		service.setPort(8080); // NOT GOOD
+		service.setPort(8080); // TODO: Define where the port shouldbe set
 		return "http://" + hostname + ":" + service.getPort()
 				+ "/service" + service.getId() + "Deploy/";
 	}
