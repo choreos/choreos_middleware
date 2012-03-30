@@ -23,6 +23,7 @@ public class AnomalyNotifierTest {
 	private AnomalyNotifier notifier;
 	private GmondDataReader dataReader;
 	private Map<String, Gmetric> returnedMap;
+	private Threshold threshold;
 
 	@Before
 	public void setUp() throws Exception {
@@ -39,6 +40,8 @@ public class AnomalyNotifierTest {
 		when(dataReader.getAllMetrics()).thenReturn(returnedMap);
 
 		notifier = new AnomalyNotifier(dataReader);
+		
+		threshold = new Threshold("mem_free", Threshold.MIN, 64000);
 	}
 
 	@After
@@ -50,9 +53,7 @@ public class AnomalyNotifierTest {
 
 		returnedMap.put("load_five", new Gmetric("load_five", "3.8"));
 		
-		int index = notifier.addThreshold(new Threshold("load_five", Threshold.MAX, 3));
-
-		boolean evaluation = notifier.evaluateSingleThreshold(index);
+		boolean evaluation = notifier.evaluateSingleThreshold(new Threshold("load_five", Threshold.MAX, 3));
 
 		assertTrue(evaluation);
 
@@ -63,9 +64,7 @@ public class AnomalyNotifierTest {
 
 		returnedMap.put("load_five", new Gmetric("load_five", "1.8"));
 
-		int index = notifier.addThreshold(new Threshold("load_five", Threshold.MAX, 3));
-
-		boolean evaluation = notifier.evaluateSingleThreshold(index);
+		boolean evaluation = notifier.evaluateSingleThreshold(new Threshold("load_five", Threshold.MAX, 3));
 
 		assertFalse("Evaluated threshold should be false", evaluation);
 
@@ -75,9 +74,7 @@ public class AnomalyNotifierTest {
 	public void shouldIdentifyFreeMemoryLessThan64Mb() {
 		returnedMap.put("mem_free", new Gmetric("mem_free", "16000"));
 
-		int index = notifier.addThreshold(new Threshold("mem_free", Threshold.MIN, 64000));
-
-		boolean evaluation = notifier.evaluateSingleThreshold(index);
+		boolean evaluation = notifier.evaluateSingleThreshold(threshold);
 
 		
 		assertTrue(
@@ -90,9 +87,7 @@ public class AnomalyNotifierTest {
 	public void shouldNotIdentifyFreeMemoryLessThan64Mb() {
 		returnedMap.put("mem_free", new Gmetric("mem_free", "176000"));
 
-		int index = notifier.addThreshold(new Threshold("mem_free", Threshold.MIN, 64000));
-
-		boolean evaluation = notifier.evaluateSingleThreshold(index);
+		boolean evaluation = notifier.evaluateSingleThreshold(threshold);
 
 		assertFalse(
 				"This host has 176MB of free memory. Should not have been triggered.",
@@ -104,7 +99,7 @@ public class AnomalyNotifierTest {
 	public void shouldNotNotifySingleThreshold(){
 	    Threshold threshold = new Threshold("pkts_in",Threshold.MAX, 1000);
 	    
-	    notifier.addThreshold(threshold);
+	    notifier.getThresholds().add(threshold);
 	    
 	    List<Threshold> list = notifier.evaluateAllThresholds();
 	    
@@ -115,7 +110,7 @@ public class AnomalyNotifierTest {
 	public void shouldNotifySingleThreshold(){
 	    Threshold threshold = new Threshold("pkts_in",Threshold.MAX, 100);
 	    
-	    int index = notifier.addThreshold(threshold);
+	    notifier.getThresholds().add(threshold);
 	    
 	    List<Threshold> list = notifier.evaluateAllThresholds();
 	    
@@ -124,18 +119,16 @@ public class AnomalyNotifierTest {
 	
 	@Test
 	public void shouldEvaluateMultipleThresholds(){
-	    List<Threshold> thresholds = new ArrayList<Threshold>();
-
 	    
 	    Threshold threshold1 = new Threshold("pkts_in",	Threshold.MIN, 1000);
 	    Threshold threshold4 = new Threshold("disk_free",	Threshold.MAX, 100);
 	    Threshold threshold2 = new Threshold("mem_cached",	Threshold.MIN, 50000);
 	    Threshold threshold3 = new Threshold("mem_cached",	Threshold.MAX, 1000000);
 
-	    int index1 = notifier.addThreshold(threshold1);
-	    int index2 = notifier.addThreshold(threshold2);
-	    int index3 = notifier.addThreshold(threshold3);
-	    int index4 = notifier.addThreshold(threshold4);
+	    notifier.getThresholds().add(threshold1);
+	    notifier.getThresholds().add(threshold2);
+	    notifier.getThresholds().add(threshold3);
+	    notifier.getThresholds().add(threshold4);
 	    
 	    List<Threshold> list = notifier.evaluateAllThresholds();
 	    

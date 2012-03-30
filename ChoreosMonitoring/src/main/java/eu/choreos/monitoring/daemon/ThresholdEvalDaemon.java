@@ -47,25 +47,25 @@ public class ThresholdEvalDaemon {
 	}
 
 	private static void parseArgs(String[] args) {
-		switch (args.length) {
+	    host = "http://localhost/";
+	    port = 8649;
+		
+	    switch (args.length) {
 		case 0:
-			host = "http://localhost/";
-			port = 8649;
-			break;
-		case 1:
-			host = args[0];
-			port = 8649;
 			break;
 		case 2:
+		    	port = Integer.parseInt(args[1]);
+		case 1:
 			host = args[0];
-			port = Integer.parseInt(args[1]);
+			
 			break;
 		default:
 			System.out
 					.println("USAGE: ThresholdEvalDaemon [hostLocation] [port]");
 			System.out
 					.println("Default values: hostLocation = 'http://localhost/'");
-			System.out.println("                port = 8649");
+			System.out.println("                port = 8649");host = args[0];
+			
 			System.out
 					.println("Note: to set a port, the hostLocation must also be present");
 			break;

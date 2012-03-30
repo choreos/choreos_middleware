@@ -48,9 +48,8 @@ public class AnomalyNotifier {
 
     }
 
-    public boolean evaluateSingleThreshold(int index) {
-	Threshold evaluatedThreshold = thresholds.get(index);
-	return evaluatedThreshold.evaluate(getMetricNumericalValue(evaluatedThreshold.getName()));
+    public boolean evaluateSingleThreshold(Threshold threshold) {
+	return threshold.evaluate(getMetricNumericalValue(threshold.getName()));
     }
 
     private double getMetricNumericalValue(String metricName) {
