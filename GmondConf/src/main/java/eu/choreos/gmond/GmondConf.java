@@ -28,44 +28,60 @@ public class GmondConf {
 	}
 
 	public static void main(String... args) {
-		// String fileName = "/etc/ganglia/gmond.conf";
-		// String hostName = "";
-		// String port = "";
-		//
-		// if (args.length != 2 && args.length != 4 && args.length != 6)
-		// System.out
-		// .println("USAGE: java -jar gmondconf [-h host] [-p port] [-f configFile]");
-		//
-		// for (int i = 0; i < args.length; i += 2) {
-		// if (args[i].equals("-f"))
-		// fileName = args[i + 1];
-		// if (args[i].equals("-h"))
-		// hostName = args[i + 1];
-		// if (args[i].equals("-p"))
-		// port = args[i + 1];
-		// }
-		//
-		// GmondConf gmondConf = new GmondConf();
-		// gmondConf.load(fileName);
-		//
-		// if (hostName.length() > 0) {
-		// gmondConf.setSendChannelHost(hostName);
-		// }
-		//
-		// if (port.length() > 0) {
-		// gmondConf.setSendChannelPort(port);
-		// }
-		//
-		// gmondConf.save();
-		//
-		//
-		// GmondReloader reloader = new GmondReloader();
-		// if (reloader.reload())
-		// System.out.println("gmond restarted.");
-		// else
-		// System.out.println("could not restart gmond");
-		//
+		String fileName = "/etc/ganglia/gmond.conf";
+		String hostName = "";
+		int port;
 
+		validateArgs(args);
+
+			
+		GmondConf gmondConf = new GmondConf();
+
+		gmondConf.load(fileName);
+
+		gmondConf.save();
+
+		GmondReloader reloader = new GmondReloader();
+		if (reloader.reload())
+			System.out.println("gmond restarted.");
+		else
+			System.out.println("could not restart gmond");
+
+	}
+
+	private static int validateArgs(String[] args) {
+		int returnValue = 0;
+		String string;
+		for (int i = 0; i < args.length; i++) {
+			string = args[i];
+
+			if (string.equals("--add"))
+				returnValue = index + 2;
+			if (string.equals("--update-port"))
+				returnValue = index + 2;
+			if (string.equals("--update-channel"))
+				returnValue = index + 3;
+			if (string.equals("--update-host"))
+				returnValue = index + 2;
+			if (string.equals("--remove"))
+				returnValue = index + 1;
+			if (string.equals("--config-file"))
+				returnValue = index + 1;
+
+			if (returnValue == index) {
+				printUsage();
+				System.exit(1);
+			}
+		}
+		return returnValue;
+	}
+
+	private static void printUsage() {
+		System.out.println("" + "USAGE: java -jar gmondconf "
+				+ "[--add host port] " + "[--update-port host port] "
+				+ "[--update-host currentHost newHost] "
+				+ "[--update-channel currentHost newHost newPort]"
+				+ "[--remove host]" + "[--config-file configFile]");
 	}
 
 	public void load(String filePath) {
@@ -95,7 +111,7 @@ public class GmondConf {
 	public void removeUdpSendChannel(String host) {
 
 		List<Integer> udpSendChannelLines = getUdpSendChannelHost(host);
-		for (Integer index : udpSendChannelLines){
+		for (Integer index : udpSendChannelLines) {
 			fileLines.remove(fileLines.get(index));
 		}
 	}
@@ -104,16 +120,17 @@ public class GmondConf {
 			int newPort) {
 
 		List<Integer> udpSendChannelLines = getUdpSendChannelHost(currentHost);
-		for (Integer index : udpSendChannelLines){
+		for (Integer index : udpSendChannelLines) {
 			String line = fileLines.get(index);
 			line = setAttributeIfApplicable("host", newHost, line);
-			line = setAttributeIfApplicable("port", newPort+ "", line);
+			line = setAttributeIfApplicable("port", newPort + "", line);
 			fileLines.set(index, line);
 		}
 	}
 
-	private String setAttributeIfApplicable(String attr, String newValue, String line) {
-		if(line.contains(attr) && line.contains("=")){
+	private String setAttributeIfApplicable(String attr, String newValue,
+			String line) {
+		if (line.contains(attr) && line.contains("=")) {
 			String[] parts = line.split("=");
 			line = parts[0] + "= " + newValue;
 		}
