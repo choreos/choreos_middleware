@@ -60,7 +60,7 @@ public class ServiceDeployer {
 	}
 
 	private String getServiceURL(Service service, String hostname) {
-		service.setPort(8080); // NOT GOOD
+		service.setPort(8080); // TODO: Define where the port shouldbe set
 		return "http://" + hostname + ":" + service.getPort()
 				+ "/service" + service.getId() + "Deploy/";
 	}
