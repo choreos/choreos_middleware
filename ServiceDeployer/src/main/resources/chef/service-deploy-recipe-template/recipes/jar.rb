@@ -25,8 +25,8 @@ remote_file "jar_file" do
   action :create
 end
 
-execute "execute_jar" do
-  command "java -jar service$NAMEDeploy.jar"
-  action :run
-  cwd "#{node['service']['$NAME']['jarDir']}/"
+service "execute_jar" do
+  supports :start => true
+  start_command "java -jar #{node['service']['$NAME']['jarDir']}/service$NAMEDeploy.jar &"
+  action [ :start ]
 end

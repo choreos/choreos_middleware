@@ -11,10 +11,10 @@ import eu.choreos.servicedeployer.datamodel.Service;
 import eu.choreos.servicedeployer.datamodel.ServiceSpec;
 import eu.choreos.servicedeployer.npm.NodePoolManagerClient;
 
-public class ServiceDeployerTest {
+public class WARDeployTest {
 
 	// a known war file
-	private static String WAR_LOCATION = "http://content.hccfl.edu/pollock/AJava/WAR/myServletWAR.war";
+	private static String WAR_LOCATION = "https://github.com/downloads/choreos/choreos_middleware/myServletWAR.war";
 	
 	private WebClient client;
 	private ServiceDeployer deployer;
