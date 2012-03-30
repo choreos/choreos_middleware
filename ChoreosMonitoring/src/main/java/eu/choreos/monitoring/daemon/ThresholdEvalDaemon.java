@@ -1,6 +1,7 @@
 package eu.choreos.monitoring.daemon;
 
-import javax.xml.crypto.Data;
+import java.util.ArrayList;
+import java.util.List;
 
 import eu.choreos.monitoring.GmondDataReader;
 
@@ -20,48 +21,51 @@ public class ThresholdEvalDaemon {
 		ThresholdEvalDaemon daemon = new ThresholdEvalDaemon();
 
 		daemon.setDataReader(new GmondDataReader(host, port));
+		
+		List<Threshold> thresholds = new ArrayList<Threshold>();
+		thresholds.add(new Threshold("load_one", Threshold.MAX, 3));
+		
+		daemon.setThresholdList(thresholds);
+		
 
 		while (true) {
 			daemon.evaluateThresholds();
 			Thread.sleep(600000);
 		}
 	}
+	
+	public void setThresholdList(List<Threshold> thresholds) {
+	    notifier.setThresholds(thresholds);
+	}
 
 	private void evaluateThresholds() {
-	    	int index1 = notifier.addThreshold((new Threshold("load_one", Threshold.MAX, 3)));
-		
-	    	if (notifier.evaluateSingleThreshold(index1)) {
-			System.out.println("Load was exceeded!");
-			System.out.println("Maximum allowed was 3");
-			System.out.println("Current Measure is "
-					+ notifier.getMetricsMap().get("load_one"));
-		} else {
-			System.out.println("Everything is normal.");
-			System.out.println("Load average for the last minute was "
-					+ notifier.getMetricsMap().get("load_one").getValue());
-		}
+	    
+	    for(Threshold threshold: notifier.evaluateAllThresholds()) {
+		System.out.println("Threshold triggered for " + threshold);
+	    }
+	    
 	}
 
 	private static void parseArgs(String[] args) {
-		switch (args.length) {
+	    host = "http://localhost/";
+	    port = 8649;
+		
+	    switch (args.length) {
 		case 0:
-			host = "http://localhost/";
-			port = 8649;
-			break;
-		case 1:
-			host = args[0];
-			port = 8649;
 			break;
 		case 2:
+		    	port = Integer.parseInt(args[1]);
+		case 1:
 			host = args[0];
-			port = Integer.parseInt(args[1]);
+			
 			break;
 		default:
 			System.out
 					.println("USAGE: ThresholdEvalDaemon [hostLocation] [port]");
 			System.out
 					.println("Default values: hostLocation = 'http://localhost/'");
-			System.out.println("                port = 8649");
+			System.out.println("                port = 8649");host = args[0];
+			
 			System.out
 					.println("Note: to set a port, the hostLocation must also be present");
 			break;

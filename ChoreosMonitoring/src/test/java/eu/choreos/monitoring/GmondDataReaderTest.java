@@ -45,7 +45,7 @@ public class GmondDataReaderTest {
 
 	@Test
 	public void testGetMetricByName() throws IOException {
-		Gmetric result = gmondReader.getMetricByName("mem_total");
+		Gmetric result = gmondReader.getAllMetrics().get("mem_total");
 		assertEquals("4118892", result.getValue());
 	}
 
