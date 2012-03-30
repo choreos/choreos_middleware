@@ -7,7 +7,7 @@ import org.apache.commons.io.FileUtils;
 
 import eu.choreos.servicedeployer.datamodel.Service;
 
-public class WARRecipeBuilder implements RecipeBuilder {
+public class RecipeBuilderImpl implements RecipeBuilder {
 	
 	private static final File DEST_DIR = new File("src/main/resources/chef");
 	

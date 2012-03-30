@@ -11,12 +11,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.choreos.servicedeployer.ServiceType;
 import eu.choreos.servicedeployer.datamodel.ResourceImpact;
 import eu.choreos.servicedeployer.datamodel.Service;
 
 public class WARRecipeBuilderTest {
 
-	private WARRecipeBuilder recipeBuilder;
+	private RecipeBuilderImpl recipeBuilder;
 	private static Service service = new Service();
 	private static String id = "myServletWAR";
 	private static String codeLocationURI = "http://content.hccfl.edu/pollock/AJava/WAR/myServletWAR.war";
@@ -33,14 +34,14 @@ public class WARRecipeBuilderTest {
 
 		service.setId(id);
 		service.setCodeLocationURI(codeLocationURI);
-		service.setServiceType("WAR");
+		service.setServiceType(ServiceType.WAR);
 		service.setWarFile(warFile);
 		service.setResourceImpact(impact);
 	}
 
 	@Before
 	public void setUp() {
-		recipeBuilder = new WARRecipeBuilder();
+		recipeBuilder = new RecipeBuilderImpl();
 	}
 	
 	private static File getResource(String resource) {
