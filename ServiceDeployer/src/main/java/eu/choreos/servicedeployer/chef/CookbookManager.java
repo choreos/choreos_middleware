@@ -13,8 +13,8 @@ public class CookbookManager {
 	
 	public static String uploadCookbook(Recipe recipe, boolean verbose) {
 		
-		String command = ChefScripts.getUploadCookbook(recipe.getName(), ".");
-		File folder = new File(recipe.getFolder());
+		String command = ChefScripts.getUploadCookbook(recipe.getCookbookName(), ".");
+		File folder = new File(recipe.getCookbookFolder());
 		String parentFolder = folder.getParentFile().getAbsolutePath();
 		String result = CommandLine.runLocalCommand(command, parentFolder);
 		if (verbose) {

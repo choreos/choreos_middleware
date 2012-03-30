@@ -1,4 +1,4 @@
-package eu.choreos.servicedeployer;
+package eu.choreos.servicedeployer.datamodel;
 
 public enum ServiceType {
 

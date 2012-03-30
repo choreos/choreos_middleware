@@ -8,15 +8,16 @@ import eu.choreos.servicedeployer.recipe.Recipe;
 
 public class CookbookManagerTest {
 
-	private static String COOKBOOK = "tomcat-service-deploy-recipe-template";
-	private static String COOKBOOK_PATH = "src/main/resources/chef/tomcat-service-deploy-recipe-template";
+	private static String COOKBOOK = "service-deploy-recipe-template";
+	private static String COOKBOOK_PATH = "src/main/resources/chef/service-deploy-recipe-template";
 	
 	@Test
 	public void shouldUploadAndDeleteCookbbok() {
 		
 		Recipe recipe = new Recipe();
-		recipe.setName(COOKBOOK);
-		recipe.setFolder(COOKBOOK_PATH);
+		recipe.setName("war");
+		recipe.setCookbookName(COOKBOOK);
+		recipe.setCookbookFolder(COOKBOOK_PATH);
 		
 		CookbookManager.deleteCookbook(COOKBOOK);
 		assertTrue(!CookbookManager.listCookbooks().contains(COOKBOOK));

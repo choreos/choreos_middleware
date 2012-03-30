@@ -1,6 +1,6 @@
 package eu.choreos.servicedeployer.recipe;
 
-import eu.choreos.servicedeployer.ServiceType;
+import eu.choreos.servicedeployer.datamodel.ServiceType;
 
 public class RecipeBuilderFactory {
 

@@ -16,17 +16,17 @@
 #                  #
 ##########################################################################
 
-include_recipe "tomcat"
+include_recipe "java"
 
 remote_file "jar_file" do
   source "#{node['service']['$NAME']['URL']}"
-  path "#{node['service']['$NAME']['jarFiles']}/service$NAMEDeploy.jar"
+  path "#{node['service']['$NAME']['jarDir']}/service$NAMEDeploy.jar"
   mode "0777"
   action :create
 end
 
-execute "execute_jar"
+execute "execute_jar" do
   command "java -jar service$NAMEDeploy.jar"
   action :run
-  cwd "#{node['service']['$NAME']['jarFiles']}/"
+  cwd "#{node['service']['$NAME']['jarDir']}/"
 end

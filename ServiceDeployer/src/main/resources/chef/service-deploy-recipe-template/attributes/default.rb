@@ -1,10 +1,10 @@
 ##########################################################################
-#									 #
+#                                                                        #
 #                IMPORTANT DEVELOPMENT NOTICE:                           #
-#									 #
-# All ocurrences of $NAME must be replaced with the actual service name #
+#                                                                        #
+# All ocurrences of $NAME must be replaced with the actual service name  #
 #            before uploading the recipe to the chef-server              #
-#									 #
+#                                                                        #
 ##########################################################################
 
 
@@ -16,5 +16,5 @@ default['service']['$NAME']['URL']          = "$URL"
 default['service']['$NAME']['logFile']      = "/dev/stdout"
 
 # Set the destination folder for JAR files
-default['service']['$NAME']['jarFiles']      = "$HOME"
+default['service']['$NAME']['jarDir']       = ENV["HOME"]
 

@@ -11,11 +11,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import eu.choreos.servicedeployer.ServiceType;
 import eu.choreos.servicedeployer.datamodel.ResourceImpact;
 import eu.choreos.servicedeployer.datamodel.Service;
+import eu.choreos.servicedeployer.datamodel.ServiceType;
 
-public class WARRecipeBuilderTest {
+public class RecipeBuilderTest {
 
 	private RecipeBuilderImpl recipeBuilder;
 	private static Service service = new Service();
@@ -35,7 +35,7 @@ public class WARRecipeBuilderTest {
 		service.setId(id);
 		service.setCodeLocationURI(codeLocationURI);
 		service.setServiceType(ServiceType.WAR);
-		service.setWarFile(warFile);
+		service.setFile(warFile);
 		service.setResourceImpact(impact);
 	}
 
@@ -110,24 +110,14 @@ public class WARRecipeBuilderTest {
 		assertTrue(fileData.contains(codeLocationURI));
 		assertFalse(fileData.contains("$URL"));
 
-		// Ensure the ocurrences of $SCHEMA were replaced with SKEMA
-		assertFalse(fileData.contains("$"));
-
 		// Ensures the remainder of the file is left untouched
 		assertTrue(fileData.contains("IMPORTANT DEVELOPMENT NOTICE:"));
-	}
-
-	@Test
-	public void shouldReplaceOcurrencesInRecipesServerRb() throws Exception {
-		recipeBuilder.changeServerRecipe(service);
-
-		assertAllOcurrencesWereReplacedInDefaultRecipe();
 	}
 
 	private void assertAllOcurrencesWereReplacedInDefaultRecipe()
 			throws IOException {
 		File fileLocation = getResource("chef/service" + id
-				+ "/recipes/default.rb");
+				+ "/recipes/war.rb");
 		String fileData = FileUtils.readFileToString(fileLocation);
 
 		// Ensure the ocurrences of $UUID were replaced with THIS_IS_A_TEST
@@ -171,9 +161,9 @@ public class WARRecipeBuilderTest {
 
 	private void assertFilesAreAvailableInFolder(Recipe recipe)
 			throws IOException {
-		System.out.println(recipe.getFolder() + "/attributes/default.rb");
+		System.out.println(recipe.getCookbookFolder() + "/attributes/default.rb");
 		String fileData = FileUtils.readFileToString(new File(recipe
-				.getFolder() + "/attributes/default.rb"));
+				.getCookbookFolder() + "/attributes/default.rb"));
 
 		// Ensure the ocurrences of $UUID were replaced with THIS_IS_A_TEST
 		assertTrue(fileData.contains(id));

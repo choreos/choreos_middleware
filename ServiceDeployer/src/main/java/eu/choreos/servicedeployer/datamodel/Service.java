@@ -2,7 +2,6 @@ package eu.choreos.servicedeployer.datamodel;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import eu.choreos.servicedeployer.ServiceType;
 
 @XmlRootElement
 public class Service {
@@ -11,12 +10,24 @@ public class Service {
 	private ServiceType serviceType;
 	private String uri;
 	private String codeLocationURI;
-	private String warFile;
+	private String file; 
 	private ResourceImpact resourceImpact;
+	// port and name are provided if serviceTye == JAR
 	private int port;
+	private String name; 
 
 	public Service(ServiceSpec serviceSpec) {
+		
 		codeLocationURI = serviceSpec.getCodeUri();
+		name = serviceSpec.getName();
+
+		try {
+			port = Integer.parseInt(serviceSpec.getPort());
+		}
+		catch (NumberFormatException e) {
+			port = 0;
+		}
+		
 		try {
 			serviceType = ServiceType.valueOf(serviceSpec.getType());
 		} catch (IllegalArgumentException e) {
@@ -25,11 +36,12 @@ public class Service {
 		
 		resourceImpact = serviceSpec.getResourceImpact();
 
-		// We assume that the codeLocationURI ends with "/warFileName.war
+		// We assume that the codeLocationURI ends with "/fileName.[war,jar]
+		String extension = serviceType.toString().toLowerCase();
 		String[] urlPieces = serviceSpec.getCodeUri().split("/");
-		if (urlPieces[urlPieces.length - 1].contains(".war")) {
-			warFile = urlPieces[urlPieces.length - 1];
-			id = warFile;
+		if (urlPieces[urlPieces.length - 1].contains("." + extension)) {
+			file = urlPieces[urlPieces.length - 1];
+			id = file.substring(0, file.length()-4);
 		}
 	}
 
@@ -81,12 +93,12 @@ public class Service {
 		this.port = port;
 	}
 
-	public String getWarFile() {
-		return warFile;
+	public String getFile() {
+		return file;
 	}
 
-	public void setWarFile(String warFile) {
-		this.warFile = warFile;
+	public void setFile(String file) {
+		this.file = file;
 	}
 
 	public ResourceImpact getResourceImpact() {
@@ -95,6 +107,14 @@ public class Service {
 
 	public void setResourceImpact(ResourceImpact resourceImpact) {
 		this.resourceImpact = resourceImpact;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override

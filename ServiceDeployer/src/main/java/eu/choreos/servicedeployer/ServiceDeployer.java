@@ -8,6 +8,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import eu.choreos.nodepoolmanager.datamodel.NodeRestRepresentation;
 import eu.choreos.servicedeployer.chef.CookbookManager;
 import eu.choreos.servicedeployer.datamodel.Service;
+import eu.choreos.servicedeployer.datamodel.ServiceType;
 import eu.choreos.servicedeployer.npm.NodePoolManager;
 import eu.choreos.servicedeployer.recipe.Recipe;
 import eu.choreos.servicedeployer.recipe.RecipeBuilder;
@@ -52,7 +53,9 @@ public class ServiceDeployer {
 	}
 
 	private String deployService(Recipe serviceRecipe) {
-		String nodeLocation = npm.applyConfig(serviceRecipe.getName());
+		
+		String config = serviceRecipe.getCookbookName() + "::" + serviceRecipe.getName();
+		String nodeLocation = npm.applyConfig(config);
 		WebClient client = WebClient.create(nodeLocation);
 		NodeRestRepresentation node = client.get(NodeRestRepresentation.class);
 		String hostname = node.getIp();
@@ -60,9 +63,19 @@ public class ServiceDeployer {
 	}
 
 	private String getServiceURL(Service service, String hostname) {
-		service.setPort(8080); // TODO: Define where the port shouldbe set
-		return "http://" + hostname + ":" + service.getPort()
-				+ "/service" + service.getId() + "Deploy/";
+
+		switch (service.getServiceType()) {
+		case WAR:
+			return "http://" + hostname + ":" + service.getPort() + "/service"
+					+ service.getId() + "Deploy/";
+		case JAR:
+			return "http://" + hostname + ":" + service.getPort() + "/"
+					+ service.getName() + "/";
+		default:
+			throw new IllegalArgumentException(
+					"Sorry, I don't know how to provide an URL to a "
+							+ service.getServiceType() + " service.");
+		}
 	}
 	
 
