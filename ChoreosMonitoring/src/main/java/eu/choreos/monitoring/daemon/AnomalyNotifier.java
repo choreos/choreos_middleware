@@ -18,6 +18,14 @@ public class AnomalyNotifier {
 	thresholds = new ArrayList<Threshold>();
     }
 
+    public List<Threshold> getThresholds() {
+        return thresholds;
+    }
+
+    public void setThresholds(List<Threshold> thresholds) {
+        this.thresholds = thresholds;
+    }
+
     public Map<String, Gmetric> getMetricsMap() {
 	return metricsMap;
     }
@@ -55,17 +63,18 @@ public class AnomalyNotifier {
 	return Double.parseDouble(metricsMap.get(metricName).getValue());
     }
 
-    public Map<Integer, Boolean> evaluateAllThresholds() {
+    public List<Integer> evaluateAllThresholds() {
 	    
-	    HashMap<Integer, Boolean> thresholdEvaluationMap = new HashMap<Integer, Boolean>();
+	    List<Integer> thresholdEvaluationList = new ArrayList<Integer>();
 
 	    for (Threshold threshold : thresholds){
 
 		String thresholdName = threshold.getName();
 		Double metricValue = getMetricNumericalValue(thresholdName);
 		
-		thresholdEvaluationMap.put(thresholds.indexOf(threshold), threshold.evaluate(metricValue));
+		if (threshold.evaluate(metricValue))
+		    thresholdEvaluationList.add(thresholds.indexOf(threshold));
 	    }
-	    return thresholdEvaluationMap;
+	    return thresholdEvaluationList;
 	}
 }

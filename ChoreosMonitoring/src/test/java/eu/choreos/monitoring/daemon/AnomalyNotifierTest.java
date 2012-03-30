@@ -1,5 +1,6 @@
 package eu.choreos.monitoring.daemon;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -17,7 +18,7 @@ import org.junit.Test;
 import eu.choreos.monitoring.Gmetric;
 import eu.choreos.monitoring.GmondDataReader;
 
-public class TestAnomalyNotifier {
+public class AnomalyNotifierTest {
 
 	private AnomalyNotifier notifier;
 	private GmondDataReader dataReader;
@@ -100,14 +101,25 @@ public class TestAnomalyNotifier {
 	}
 	
 	@Test
-	public void shouldEvaluateSingleThreshold(){
+	public void shouldNotNotifySingleThreshold(){
 	    Threshold threshold = new Threshold("pkts_in",Threshold.MAX, 1000);
+	    
+	    notifier.addThreshold(threshold);
+	    
+	    List<Integer> list = notifier.evaluateAllThresholds();
+	    
+	    assertTrue(list.isEmpty());
+	}
+	
+	@Test
+	public void shouldNotifySingleThreshold(){
+	    Threshold threshold = new Threshold("pkts_in",Threshold.MAX, 100);
 	    
 	    int index = notifier.addThreshold(threshold);
 	    
-	    Map<Integer, Boolean> map = notifier.evaluateAllThresholds();
+	    List<Integer> list = notifier.evaluateAllThresholds();
 	    
-	    assertFalse("The threshold was NOT reached.", map.get(index));
+	    assertTrue(list.contains(index));
 	}
 	
 	@Test
@@ -125,12 +137,15 @@ public class TestAnomalyNotifier {
 	    int index3 = notifier.addThreshold(threshold3);
 	    int index4 = notifier.addThreshold(threshold4);
 	    
-	    Map<Integer, Boolean> map = notifier.evaluateAllThresholds();
+	    List<Integer> list = notifier.evaluateAllThresholds();
 	    
-	    assertTrue("The threshold was NOT reached.", map.get(index1));
-	    assertFalse("The threshold was NOT reached.", map.get(index2));
-	    assertFalse("The threshold was NOT reached.", map.get(index3));
-	    assertTrue("The threshold was NOT reached.", map.get(index4));
+	    
+	    
+	    assertTrue(list.contains(index1));
+	    assertFalse(list.contains(index2));
+	    assertFalse(list.contains(index3));
+	    assertTrue(list.contains(index4));
+	    
 	}
 
 }

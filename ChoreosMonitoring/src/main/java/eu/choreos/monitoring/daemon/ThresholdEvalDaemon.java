@@ -1,6 +1,6 @@
 package eu.choreos.monitoring.daemon;
 
-import javax.xml.crypto.Data;
+import java.util.List;
 
 import eu.choreos.monitoring.GmondDataReader;
 
@@ -20,16 +20,23 @@ public class ThresholdEvalDaemon {
 		ThresholdEvalDaemon daemon = new ThresholdEvalDaemon();
 
 		daemon.setDataReader(new GmondDataReader(host, port));
+		//setThresholds(daemon);
+		
 
 		while (true) {
 			daemon.evaluateThresholds();
 			Thread.sleep(600000);
 		}
 	}
+	
+	public void setThresholdList(List<Threshold> thresholds) {
+	    notifier.setThresholds(thresholds);
+	}
 
 	private void evaluateThresholds() {
-	    	int index1 = notifier.addThreshold((new Threshold("load_one", Threshold.MAX, 3)));
 		
+	    	int index1 = notifier.addThreshold((new Threshold("load_one", Threshold.MAX, 3)));
+	    	
 	    	if (notifier.evaluateSingleThreshold(index1)) {
 			System.out.println("Load was exceeded!");
 			System.out.println("Maximum allowed was 3");
