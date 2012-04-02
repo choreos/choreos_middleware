@@ -1,4 +1,5 @@
 #!/bin/bash
+# Author: Nelson
 
 # Find the interface that has the default route and
 # return the reverse DNS for that interface's IP address.
