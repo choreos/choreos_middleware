@@ -11,17 +11,22 @@ public class ThresholdEvalDaemon {
 	private static int port;
 	private AnomalyNotifier notifier;
 
+	public ThresholdEvalDaemon(){
+		
+	}
+	
+	public ThresholdEvalDaemon(String host,int port){
+		this.setDataReader(new GmondDataReader(host, port));
+	}
+	
 	public void setDataReader(GmondDataReader dataReader) {
 		this.notifier = new AnomalyNotifier(dataReader);
 	}
 
 	public static void main(String[] args) throws InterruptedException {
 		parseArgs(args);
-
-		ThresholdEvalDaemon daemon = new ThresholdEvalDaemon();
-
-		daemon.setDataReader(new GmondDataReader(host, port));
-		
+		ThresholdEvalDaemon daemon = new ThresholdEvalDaemon(host,port);
+	
 		List<Threshold> thresholds = new ArrayList<Threshold>();
 		thresholds.add(new Threshold("load_one", Threshold.MAX, 3));
 		
@@ -38,12 +43,13 @@ public class ThresholdEvalDaemon {
 	    notifier.setThresholds(thresholds);
 	}
 
-	private void evaluateThresholds() {
+	public List<Threshold> evaluateThresholds() {
 	    
-	    for(Threshold threshold: notifier.evaluateAllThresholds()) {
+	    List<Threshold> evaluateAllThresholds = notifier.evaluateAllThresholds();
+		for(Threshold threshold: evaluateAllThresholds) {
 		System.out.println("Threshold triggered for " + threshold);
 	    }
-	    
+	    return evaluateAllThresholds;
 	}
 
 	private static void parseArgs(String[] args) {
