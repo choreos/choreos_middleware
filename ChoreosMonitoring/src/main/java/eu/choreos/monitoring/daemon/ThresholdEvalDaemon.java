@@ -28,7 +28,7 @@ public class ThresholdEvalDaemon {
 		ThresholdEvalDaemon daemon = new ThresholdEvalDaemon(host,port);
 	
 		List<Threshold> thresholds = new ArrayList<Threshold>();
-		thresholds.add(new Threshold("load_one", Threshold.MAX, 3));
+		thresholds.add(new Threshold("load_one", Threshold.MIN, 3));
 		
 		daemon.setThresholdList(thresholds);
 		

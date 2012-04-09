@@ -44,13 +44,16 @@ public class GmondDataReader {
 		NodeList clusterNodeList = gangliaXML.getElementsByTagName("CLUSTER");
 		Element clusterNode = (Element) clusterNodeList.item(0);
 
-		//TODO: How to actually get the Host with the same name as it is not necessarily the 
-		// 		first, and the host name and ip may not be the one used to access it
-		
+		// TODO: How to actually get the Host with the same name as it is not
+		// necessarily the
+		// first, and the host name and ip may not be the one used to access it
+
 		NodeList hostNodeList = clusterNode.getElementsByTagName("HOST");
 		Element hostNode = (Element) hostNodeList.item(0);
-		
-		NodeList metricNodeList = hostNode.getElementsByTagName("METRIC"); // list of metrics
+
+		NodeList metricNodeList = hostNode.getElementsByTagName("METRIC"); // list
+																			// of
+																			// metrics
 
 		for (int i = 0; i < metricNodeList.getLength(); i++) {
 
@@ -64,7 +67,10 @@ public class GmondDataReader {
 
 	private Document getGangliaCurrentMetrics() {
 
-		if(socket==null) createSocket();
+		if (socket == null)
+			createSocket();
+		else if (socket.isClosed())
+			createSocket();
 		Document dom = getGangliaMetricsFromSocket(socket);
 		closeSocket(socket);
 		return dom;
@@ -77,7 +83,7 @@ public class GmondDataReader {
 		closeInputStream(in);
 		return dom;
 	}
-		
+
 	private void closeSocket(Socket socket) {
 		if (socket != null) {
 			try {
