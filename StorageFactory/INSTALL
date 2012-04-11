@@ -38,6 +38,8 @@ Just open the terminal at the project folder, and type “mvn eclipse:eclipse”
 
 You need maven 3 in this step. It can take several minutes.
 
+Before run Storage Factory, you have also to add the NodePoolManager project as a StorageFactory dependency.
+You can do this at the "Projects" tab in the Build Path project configuration.
 
 == RUNNING IT ==
 
