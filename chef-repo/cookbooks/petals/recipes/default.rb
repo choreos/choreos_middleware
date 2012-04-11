@@ -28,9 +28,9 @@ node.save
 
 # Installing java and configuring JAVA_HOME
 # This is run before other packages are installed to update apt database
-include_recipe 'java::sun'
+include_recipe 'java::openjdk'
 
-ENV['JAVA_HOME'] = '/usr/lib/jvm/java-6-sun'
+ENV['JAVA_HOME'] = '/usr/lib/jvm/java-6-openjdk'
 
 template "/etc/profile.d/java.sh" do
   source "etc/profile.d/java.sh.erb"
@@ -125,7 +125,7 @@ service 'petals' do
   action [ :start ]
   notifies :run, 'bash[wait petals]', :immediately
 end
-
+ 
 bash 'wait petals' do
   cwd "#{node['petals']['dir']}/logs"
   code <<-EOH
@@ -156,9 +156,3 @@ execute "install components" do
   action :run
   notifies :run, 'bash[wait petals]', :immediately
 end
-
-#things needed to run services
-package "ant" do
-  action :install
-end
-
