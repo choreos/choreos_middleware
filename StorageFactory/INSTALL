@@ -38,6 +38,8 @@ Just open the terminal at the project folder, and type “mvn eclipse:eclipse”
 
 You need maven 3 in this step. It can take several minutes.
 
+Before run Storage Factory, you have also to add the NodePoolManager project as a StorageFactory dependency.
+You can do this at the "Projects" tab in the Build Path project configuration.
 
 == RUNNING IT ==
 
@@ -68,4 +70,6 @@ $mysql -u choreos -h localhost -p
 Enter the password (choreos), and if the mysql prompt appears it is working!
 
 IMPORTANT NOTE: Currently, the user is not able to remotely connect to a data base created in a AWS node, although the remote connection is possible if Node Pool Manager uses the “fixed cloud provider”, which uses a virtual machine instance running in the development machine. Anyway, it is an issue we must still work on.
+
+
 
