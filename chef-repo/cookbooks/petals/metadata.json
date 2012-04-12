@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "java": ">= 0.0.0",
-    "mysql": ">= 0.0.0"
   },
   "recommendations": {
   },
@@ -27,5 +26,5 @@
   },
   "recipes": {
   },
-  "version": "0.0.11"
+  "version": "0.0.12"
 }

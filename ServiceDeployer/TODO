@@ -16,6 +16,5 @@
 - POST /services should return code 201 with Location: <serviceId>; 
 - we can keep the service URL on the body or better: write the service XML on the body, which contains the URL
 
-- remove mysql dependence from petals recipe
 - return status 201 (instead 200)
 - return service xml in the body
