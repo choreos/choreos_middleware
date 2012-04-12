@@ -48,7 +48,7 @@ public class ServiceDeployerStandaloneServer implements Runnable {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Stoping CHOReOS Middleware...");
+		System.out.println("Stoping CHOReOS Service Deployer...");
 
 	}
 

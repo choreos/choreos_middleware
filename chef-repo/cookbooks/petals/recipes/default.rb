@@ -39,17 +39,6 @@ template "/etc/profile.d/java.sh" do
   action :create_if_missing
 end
 
-# MySQL database
-include_recipe 'mysql::server'
-
-mysql_database "creates petals database" do
-  host "localhost"
-  username "root"
-  password node[:mysql][:server_root_password]
-  database "petals"
-  action :create_db
-end
-
 DOWNLOAD_SERVER = "http://valinhos.ime.usp.br:54080/demo"
 
 def download(filename)
