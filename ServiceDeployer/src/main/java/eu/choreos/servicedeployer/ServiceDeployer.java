@@ -38,7 +38,7 @@ public class ServiceDeployer {
 
 		String hostname = deployService(serviceRecipe);
 		
-		service.setHostname(hostname);
+		service.setHost(hostname);
 
 		registry.addService(service.getId(), service);
 		

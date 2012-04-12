@@ -14,13 +14,13 @@ public class Service {
 	private ResourceImpact resourceImpact;
 	// port and name are provided if serviceTye == JAR
 	private int port;
-	private String name; 
+	private String endpointName; 
 	private String hostname;
 
 	public Service(ServiceSpec serviceSpec) {
 		
 		codeLocationURI = serviceSpec.getCodeUri();
-		name = serviceSpec.getName();
+		endpointName = serviceSpec.getEndpointName();
 
 		try {
 			port = Integer.parseInt(serviceSpec.getPort());
@@ -82,22 +82,22 @@ public class Service {
 
 	public String getUri() {
 		
+		// interesting note about the ending slash
+		// http://www.searchenginejournal.com/to-slash-or-not-to-slash-thats-a-server-header-question/6763/
+		
 		if (hostname == null)
 			throw new IllegalStateException("Sorry, I don't know the hostname yet");
 		
 		String uriContext;
 		switch (serviceType) {
 			case WAR:
-				uriContext = "/service" + id + "Deploy/";
+				uriContext = "service" + id + "Deploy/";
 				break;
 			case JAR:
-				uriContext = name + "/";
+				uriContext = endpointName + "/";
 				break;
 			case PETALS:
-				String suffix = "";
-				if (codeLocationURI.contains("provide"))
-					suffix = "PortService";
-				uriContext = "petals/services/" + id + suffix;
+				uriContext = "petals/services/" + endpointName + "Service/";
 				break;
 			default:
 				throw new IllegalStateException(
@@ -112,8 +112,20 @@ public class Service {
 		this.uri = uri;
 	}
 	
-	public void setHostname(String hostname) {
-		this.hostname = hostname;
+	/**
+	 * 
+	 * @param host It can be the IP or the host name where the service was deployed
+	 */
+	public void setHost(String host) {
+		this.hostname = host;
+	}
+	
+	/**
+	 * 
+	 * @return It can be the IP or the host name where the service was deployed
+	 */
+	public String getHost() {
+		return hostname;
 	}
 
 	public String getCodeLocationURI() {
@@ -157,11 +169,11 @@ public class Service {
 	}
 	
 	public String getName() {
-		return name;
+		return endpointName;
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.endpointName = name;
 	}
 
 	@Override

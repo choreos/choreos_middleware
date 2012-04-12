@@ -35,16 +35,14 @@ public class WARDeployTest {
 	public void shouldDeployAWarServiceInANode() throws Exception {
 
 		service = new Service(specWar);
-		service.setUri("http://this.should.not.work/");
-		service.setId("myServletWAR");
+		//service.setId("myServletWAR");
 
 		String url = deployer.deploy(service);
+		System.out.println("Service at " + url);
 		
-		Thread.sleep(15000);
-		client = WebClient.create(url);
-
+		Thread.sleep(1000);
+		client = WebClient.create(url); 
 		String body = client.get(String.class);
-		
 		String excerpt = "myServletWAR Web Application";
 		assertTrue(body.contains(excerpt));
 	}

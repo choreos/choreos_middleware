@@ -25,7 +25,7 @@ public class JARDeployTest {
 		
 		spec.setCodeUri(JAR_LOCATION);
 		spec.setType("JAR");
-		spec.setName("");
+		spec.setEndpointName("");
 		spec.setPort("8042");
 		deployer = new ServiceDeployer(new NodePoolManagerClient());
 	}
@@ -36,8 +36,9 @@ public class JARDeployTest {
 		service = new Service(spec);
 
 		String url = deployer.deploy(service);
+		System.out.println("Service at " + url);
 		
-		Thread.sleep(15000);
+		Thread.sleep(1000);
 		client = WebClient.create(url);
 
 		String body = client.get(String.class);

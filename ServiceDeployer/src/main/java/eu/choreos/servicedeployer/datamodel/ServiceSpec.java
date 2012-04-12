@@ -8,7 +8,7 @@ public class ServiceSpec {
 	private String type; 
 	private String codeUri;
 	private String port;
-	private String name;
+	private String endpointName;
 	private ResourceImpact resourceImpact;
 
 	public String getType() {
@@ -35,12 +35,12 @@ public class ServiceSpec {
 		this.resourceImpact = resourceImpact;
 	}
 	
-	public String getName() {
-		return name;
+	public String getEndpointName() {
+		return endpointName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setEndpointName(String name) {
+		this.endpointName = name;
 	}
 
 	public String getPort() {
@@ -56,7 +56,7 @@ public class ServiceSpec {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((codeUri == null) ? 0 : codeUri.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((endpointName == null) ? 0 : endpointName.hashCode());
 		result = prime * result + ((port == null) ? 0 : port.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
@@ -76,10 +76,10 @@ public class ServiceSpec {
 				return false;
 		} else if (!codeUri.equals(other.codeUri))
 			return false;
-		if (name == null) {
-			if (other.name != null)
+		if (endpointName == null) {
+			if (other.endpointName != null)
 				return false;
-		} else if (!name.equals(other.name))
+		} else if (!endpointName.equals(other.endpointName))
 			return false;
 		if (port == null) {
 			if (other.port != null)
@@ -97,7 +97,7 @@ public class ServiceSpec {
 	@Override
 	public String toString() {
 		return "ServiceSpec [type=" + type + ", codeUri=" + codeUri + ", port="
-				+ port + ", name=" + name + "]";
+				+ port + ", name=" + endpointName + "]";
 	}
 
 }

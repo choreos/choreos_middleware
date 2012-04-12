@@ -20,7 +20,7 @@ include_recipe "petals"
 
 remote_file "sa_file" do
   source "#{node['service']['$NAME']['URL']}"
-  path "#{node['petals']['install_dir']}/$NAME.sa"
+  path "#{node['petals']['install_dir']}/$NAME.zip"
   mode "0755"
   action :create
 end
