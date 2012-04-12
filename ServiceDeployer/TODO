@@ -6,7 +6,6 @@ Service Deployer TODO
 
 - DeployedServicesRegistry: improvement needed?
 Is it possible to interact with chef to store data?
-- POST /services should return code 201 with Location: <serviceId>; 
-- we can keep the service URL on the body or better: write the service XML on the body, which contains the URL
+- BUG: GET /services is not working properly
 - to Petals services the endpoint-name must be provided,
 however it could be parsed from XML

@@ -1,6 +1,7 @@
 package eu.choreos.servicedeployer.rest;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -10,9 +11,12 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.JAXBElement;
 
 import eu.choreos.servicedeployer.ServiceDeployer;
@@ -46,7 +50,8 @@ public class ServicesResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response deployService(JAXBElement<ServiceSpec> serviceSpecXML) {
+	public Response deployService(JAXBElement<ServiceSpec> serviceSpecXML, 
+			@Context UriInfo uriInfo) {
 
 		ServiceSpec serviceSpec = serviceSpecXML.getValue();
 		if (serviceSpec.getCodeUri() == null || serviceSpec.getType() == null)
@@ -54,10 +59,13 @@ public class ServicesResource {
 
 		try {
 			Service service = new Service(serviceSpec);
-			String deployedHost = serviceDeployer.deploy(service);
+			serviceDeployer.deploy(service);
 			
-			// TODO must return created(http://...serviceId)
-			return Response.ok(deployedHost).build();
+			UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+			uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getId());
+			URI location = uriBuilder.build();
+
+			return Response.created(location).entity(service).build();
 		} catch (MalformedURLException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
