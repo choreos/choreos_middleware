@@ -6,11 +6,13 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 
 import eu.choreos.servicedeployer.datamodel.Service;
+import eu.choreos.servicedeployer.datamodel.ServiceType;
 
 public class RecipeBuilderImpl implements RecipeBuilder {
 	
 	private static final String TEMPLATE_DIR = "src/main/resources/chef/service-deploy-recipe-template";
 	private static final File DEST_DIR = new File("src/main/resources/chef");
+	private static final String PETALS_RECIPE = "sa";
 	
 	private String recipeFile;
 	
@@ -19,10 +21,11 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 		String absolutePath;
 
 		try {
-			String extension = service.getServiceType().toString().toLowerCase();
-			recipe.setName(extension);
+			
+			String recipeName = getRecipeName(service);
+			recipe.setName(recipeName);
 			recipe.setCookbookName("service" + service.getId());
-			this.recipeFile = extension + ".rb";
+			this.recipeFile = recipeName + ".rb";
 			
 			absolutePath = copyTemplate(service);
 			recipe.setCookbookFolder(absolutePath);
@@ -38,6 +41,18 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 
 		return null;
 
+	}
+
+	private String getRecipeName(Service service) {
+		String extension = service.getExtension();
+		String recipeName = "";
+		ServiceType type = service.getServiceType();
+		if (type == ServiceType.JAR || type == ServiceType.WAR) {
+			recipeName = extension;
+		} else if (type == ServiceType.PETALS) {
+			recipeName = PETALS_RECIPE;
+		}
+		return recipeName;
 	}
 	
 	// methods have "package visibility" to test purposes

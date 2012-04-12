@@ -38,7 +38,7 @@ public class ServiceDeployer {
 
 		String hostname = deployService(serviceRecipe);
 		
-		service.setUri(getServiceURL(service, hostname));
+		service.setHostname(hostname);
 
 		registry.addService(service.getId(), service);
 		
@@ -61,23 +61,6 @@ public class ServiceDeployer {
 		String hostname = node.getIp();
 		return hostname;
 	}
-
-	private String getServiceURL(Service service, String hostname) {
-
-		switch (service.getServiceType()) {
-		case WAR:
-			return "http://" + hostname + ":" + service.getPort() + "/service"
-					+ service.getId() + "Deploy/";
-		case JAR:
-			return "http://" + hostname + ":" + service.getPort() + "/"
-					+ service.getName() + "/";
-		default:
-			throw new IllegalArgumentException(
-					"Sorry, I don't know how to provide an URL to a "
-							+ service.getServiceType() + " service.");
-		}
-	}
-	
 
 	public Service getService(String serviceID) {
 		return registry.getService(serviceID);

@@ -11,6 +11,8 @@ public class RecipeBuilderFactory {
 			return new RecipeBuilderImpl();
 		case JAR:
 			return new RecipeBuilderImpl();
+		case PETALS:
+			return new RecipeBuilderImpl();
 		default:
 			throw new IllegalArgumentException("Service type " + serviceType
 					+ " not supported");

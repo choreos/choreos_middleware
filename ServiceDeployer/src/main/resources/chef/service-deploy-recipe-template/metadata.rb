@@ -6,7 +6,7 @@ long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          "0.0.1"
 
 depends "tomcat"
-
+depends "petals"
 
 attribute "service/$NAME/WarFile",
   :display_NAME => "WAR file name to be deployed",

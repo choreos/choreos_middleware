@@ -15,6 +15,7 @@ public class Service {
 	// port and name are provided if serviceTye == JAR
 	private int port;
 	private String name; 
+	private String hostname;
 
 	public Service(ServiceSpec serviceSpec) {
 		
@@ -37,7 +38,7 @@ public class Service {
 		resourceImpact = serviceSpec.getResourceImpact();
 
 		// We assume that the codeLocationURI ends with "/fileName.[war,jar]
-		String extension = serviceType.toString().toLowerCase();
+		String extension = getExtension();
 		String[] urlPieces = serviceSpec.getCodeUri().split("/");
 		if (urlPieces[urlPieces.length - 1].contains("." + extension)) {
 			file = urlPieces[urlPieces.length - 1];
@@ -48,6 +49,21 @@ public class Service {
 	public Service() {
 	}
 
+	/**
+	 * 
+	 * @return deploy file extension
+	 */
+	public String getExtension() {
+		
+		if (serviceType == ServiceType.JAR || serviceType == ServiceType.WAR) {
+			return serviceType.toString().toLowerCase();
+		} else if (serviceType == ServiceType.PETALS) {
+			return "zip";
+		} else {
+			return null;
+		}
+	}
+	
 	public String getId() {
 		return id;
 	}
@@ -65,11 +81,39 @@ public class Service {
 	}
 
 	public String getUri() {
-		return uri;
+		
+		if (hostname == null)
+			throw new IllegalStateException("Sorry, I don't know the hostname yet");
+		
+		String uriContext;
+		switch (serviceType) {
+			case WAR:
+				uriContext = "/service" + id + "Deploy/";
+				break;
+			case JAR:
+				uriContext = name + "/";
+				break;
+			case PETALS:
+				String suffix = "";
+				if (codeLocationURI.contains("provide"))
+					suffix = "PortService";
+				uriContext = "petals/services/" + id + suffix;
+				break;
+			default:
+				throw new IllegalStateException(
+						"Sorry, I don't know how to provide an URL to a "
+								+ serviceType + " service.");
+		}
+		
+		return "http://" + hostname + ":" + getPort() + "/" + uriContext;
 	}
 
 	public void setUri(String uri) {
 		this.uri = uri;
+	}
+	
+	public void setHostname(String hostname) {
+		this.hostname = hostname;
 	}
 
 	public String getCodeLocationURI() {
@@ -85,6 +129,9 @@ public class Service {
 
 		if (serviceType == ServiceType.WAR)
 			effectivePort = 8080;
+		
+		if (serviceType == ServiceType.PETALS)
+			effectivePort = 8084;
 		
 		return effectivePort;
 	}
