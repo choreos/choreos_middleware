@@ -1,0 +1,39 @@
+package eu.choreos.servicedeployer;
+
+import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+
+import eu.choreos.enactment.Configuration;
+import eu.choreos.servicedeployer.datamodel.Service;
+import eu.choreos.servicedeployer.datamodel.ServiceSpec;
+
+public class ServiceDeployerClient implements ServiceDeployer {
+
+	private String HOST;
+	private WebClient client;
+	
+	public ServiceDeployerClient() {
+		
+		HOST = Configuration.get("SERVICE_DEPLOYER");
+		client = WebClient.create(HOST);
+		
+		// remove time out
+		// not proud of it!
+		HTTPConduit http = (HTTPConduit)WebClient.getConfig(client).getConduit();
+		HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
+		httpClientPolicy.setConnectionTimeout(0);//indefined
+		httpClientPolicy.setReceiveTimeout(0);//indefined
+		http.setClient(httpClientPolicy);
+	}
+	
+	@Override
+	public Service deploy(ServiceSpec spec) {
+
+		client.path("services");   	
+        Service service = client.post(spec, Service.class);
+        System.out.println("Response " + client.getResponse().getStatus());
+        return service;
+	}
+
+}

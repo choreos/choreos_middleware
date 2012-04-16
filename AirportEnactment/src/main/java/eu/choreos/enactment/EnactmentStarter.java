@@ -18,7 +18,7 @@ public class EnactmentStarter implements Enacter {
 		
 		System.out.println("Starting airport enactment...");
 		for (Enacter enacter: enacters) {
-			enacter.enact(); // can you read this two lines? =P
+			enacter.enact(); // can you read these two lines? =P
 		}
 	}
 	
