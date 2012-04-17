@@ -1,4 +1,5 @@
-* Write Service Deployer client
-* Deploy coordels
-* Deploy backend systems (?)
+* Write Service Deployer client (DONE)
+* Full integrated coordel deploy test (need to update Petals recipe)
+* Deploy backend systems (NOT NEEDED)
 * Paralelizar os pedidos de deploy
+* setChoreogrpahyContext
