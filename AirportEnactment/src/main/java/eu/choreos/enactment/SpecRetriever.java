@@ -8,15 +8,21 @@ import java.util.Set;
 
 import eu.choreos.servicedeployer.datamodel.ServiceSpec;
 
-public class POWSRetriever implements ServicesRetriever {
+public class SpecRetriever {
 
-	private static final String SERVICE_TYPE = "JAR";
 	private static final String PROPERTIES_FILE = "services.properties";
 	
-	@Override
+	private SpecBuilder[] specBuilders;
+	private Properties properties;
+	
+	public SpecRetriever(SpecBuilder[] specBuilders) {
+		
+		this.specBuilders = specBuilders;
+	}
+	
 	public Set<ServiceSpec> retrieve() {
 
-		Properties properties = new Properties();
+		properties = new Properties();
 		try {
 			properties.load(ClassLoader.getSystemResourceAsStream(PROPERTIES_FILE));
 		} catch (IOException e) {
@@ -26,31 +32,18 @@ public class POWSRetriever implements ServicesRetriever {
 		
 		Set<ServiceSpec> specs = new HashSet<ServiceSpec>();
 		
-		for (String name: Info.SERVICES_NAMES) {
+		for (String serviceName: Info.SERVICES_NAMES) {
 
-			ServiceSpec spec = new ServiceSpec();
-			spec.setType(SERVICE_TYPE);
-			
-			String endpointName = name.toLowerCase();
-			spec.setEndpointName(endpointName);
-
-			String key = name + ".codeUri";
-			String codeUri = properties.getProperty(key); 
-			checkNull(key, codeUri);
-			spec.setCodeUri(codeUri);
-			
-			key = name + ".port";
-			String port = properties.getProperty(key);
-			checkNull(key, port);
-			spec.setPort(port);
-			
-			specs.add(spec);
+			for (SpecBuilder specBuilder: specBuilders) {
+				ServiceSpec spec = specBuilder.getSpec(serviceName, properties);
+				specs.add(spec);
+			}
 		}
 		
 		return specs;
 	}
-
-	private void checkNull(String key, String value) {
+	
+	public static void checkNull(String key, String value) {
 		if (value == null) {
 			throw new MissingResourceException("Missing property " + key + " in "
 					+ PROPERTIES_FILE, Properties.class.toString(), key);

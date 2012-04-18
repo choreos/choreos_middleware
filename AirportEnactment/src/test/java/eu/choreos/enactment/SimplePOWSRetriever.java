@@ -5,9 +5,8 @@ import java.util.Set;
 
 import eu.choreos.servicedeployer.datamodel.ServiceSpec;
 
-public class SimplePOWSRetriever implements ServicesRetriever {
+public class SimplePOWSRetriever {
 
-	@Override
 	public Set<ServiceSpec> retrieve() {
 
 		ServiceSpec spec = new ServiceSpec();

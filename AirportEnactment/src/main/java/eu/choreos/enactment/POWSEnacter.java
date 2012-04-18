@@ -15,16 +15,16 @@ public class POWSEnacter implements Enacter {
 		
 		System.out.println("Enacting POWS...");
 		
-		ServicesRetriever retriever = new SimplePOWSRetriever();
-		// ServicesRetriever retriever = new POWSRetriever();
+		SpecBuilder[] builders = {new POWSSpecBuilder()};
+		SpecRetriever retriever = new SpecRetriever(builders);
 		Set<ServiceSpec> specs = retriever.retrieve();
 		
 		ServiceDeployer deployer = new ServiceDeployerClient();
 		for (ServiceSpec spec: specs) {
 			System.out.println("Deploying JAR " + spec.getEndpointName()
 					+ " from " + spec.getCodeUri());
-			Service service = deployer.deploy(spec);
-			System.out.println("Service deployed = " + service);
+//			Service service = deployer.deploy(spec);
+//			System.out.println("Service deployed = " + service);
 		}
 	}
 

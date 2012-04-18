@@ -11,7 +11,7 @@ public class EnactmentStarter implements Enacter {
 		
 		enacters = new ArrayList<Enacter>();
 		enacters.add(new POWSEnacter());
-		// enacters.add(new CoordelEnacter());
+		enacters.add(new SAEnacter());
 	}
 	
 	public void enact() {
