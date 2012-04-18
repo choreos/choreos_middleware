@@ -1,5 +1,8 @@
 package eu.choreos.monitoring.daemon;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import eu.choreos.monitoring.Gmetric;
 
 public class Threshold {
@@ -10,6 +13,7 @@ public class Threshold {
 
     private String name;
     private double value;
+    private double lastMesurement;
     private int comparison;
 
     public String getName() {
@@ -76,17 +80,18 @@ public class Threshold {
     }
 
     public Boolean evaluate(Double metricValue) {
-	switch (comparison) {
-	case MIN:
-	    return (metricValue <= value);
-	case MAX:
-	    return (metricValue >= value);
-	case EQUALS:
-	    return (metricValue == value);
-	default:
-	}
-
-	return null;
+    	lastMesurement = metricValue;
+		switch (comparison) {
+		case MIN:
+		    return (lastMesurement <= value);
+		case MAX:
+		    return (lastMesurement >= value);
+		case EQUALS:
+		    return (lastMesurement == value);
+		default:
+		}
+	
+		return null;
     }
     
     private String comparisonString() {
@@ -103,7 +108,16 @@ public class Threshold {
     }
     
     public String toString() {
-	return name + " " + comparisonString() + " " + value;
+    	return "Triggered: " + name + " " + comparisonString() + " " + value + ". Measured: " + lastMesurement + " in " + getHostName();
     }
+
+	private String getHostName() {
+		try {
+			return InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
 
 }

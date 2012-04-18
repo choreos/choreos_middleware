@@ -35,7 +35,7 @@ public class ThresholdEvalDaemon {
 
 		while (true) {
 			daemon.evaluateThresholds();
-			Thread.sleep(600000);
+			Thread.sleep(6000);
 		}
 	}
 	
@@ -47,7 +47,7 @@ public class ThresholdEvalDaemon {
 	    
 	    List<Threshold> evaluateAllThresholds = notifier.evaluateAllThresholds();
 		for(Threshold threshold: evaluateAllThresholds) {
-		System.out.println("Threshold triggered for " + threshold);
+		System.out.println(threshold);
 	    }
 	    return evaluateAllThresholds;
 	}
