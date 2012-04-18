@@ -53,7 +53,7 @@ public class ThresholdEvalDaemon {
 	}
 
 	private static void parseArgs(String[] args) {
-	    host = "http://localhost/";
+	    host = "localhost";
 	    port = 8649;
 		
 	    switch (args.length) {
