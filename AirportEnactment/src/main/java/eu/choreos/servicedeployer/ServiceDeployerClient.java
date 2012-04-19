@@ -11,12 +11,14 @@ import eu.choreos.servicedeployer.datamodel.ServiceSpec;
 public class ServiceDeployerClient implements ServiceDeployer {
 
 	private String HOST;
-	private WebClient client;
 	
 	public ServiceDeployerClient() {
-		
 		HOST = Configuration.get("SERVICE_DEPLOYER");
-		client = WebClient.create(HOST);
+	}
+
+	private WebClient setupClient() {
+
+		WebClient client = WebClient.create(HOST);
 		
 		// remove time out
 		// not proud of it!
@@ -25,11 +27,14 @@ public class ServiceDeployerClient implements ServiceDeployer {
 		httpClientPolicy.setConnectionTimeout(0);//indefined
 		httpClientPolicy.setReceiveTimeout(0);//indefined
 		http.setClient(httpClientPolicy);
+		
+		return client;
 	}
 	
 	@Override
 	public Service deploy(ServiceSpec spec) {
 
+		WebClient client = setupClient();
 		client.path("services");   	
         Service service = client.post(spec, Service.class);
         System.out.println("Response " + client.getResponse().getStatus());

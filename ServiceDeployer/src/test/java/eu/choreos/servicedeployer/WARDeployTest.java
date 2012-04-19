@@ -14,7 +14,7 @@ import eu.choreos.servicedeployer.npm.NodePoolManagerClient;
 public class WARDeployTest {
 
 	// a known war file
-	private static String WAR_LOCATION = "https://github.com/downloads/choreos/choreos_middleware/myServletWAR.war";
+	public static String WAR_LOCATION = "https://github.com/downloads/choreos/choreos_middleware/myServletWAR.war";
 	
 	private WebClient client;
 	private ServiceDeployer deployer;

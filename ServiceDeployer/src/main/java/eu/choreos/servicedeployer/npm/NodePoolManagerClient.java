@@ -16,11 +16,14 @@ import eu.choreos.servicedeployer.Configuration;
 public class NodePoolManagerClient implements NodePoolManager {
 
 	private String HOST; 
-	private WebClient client;
 	
 	public NodePoolManagerClient() {
 		HOST = Configuration.get("NODE_POOL_MANAGER");
-		client = WebClient.create(HOST);
+	}
+
+	private WebClient setupClient() {
+		
+		WebClient client = WebClient.create(HOST);
 		
 		// remove time out
 		// not proud of it!
@@ -29,11 +32,14 @@ public class NodePoolManagerClient implements NodePoolManager {
 		httpClientPolicy.setConnectionTimeout(0);//indefined
 		httpClientPolicy.setReceiveTimeout(0);//indefined
 		http.setClient(httpClientPolicy);
+		
+		return client;
 	}
 	
 	@Override
 	public String applyConfig(String configName) {
 
+		WebClient client = setupClient();
 		client.path("nodes/configs");   	
 		Config config = new Config();
     	config.setName(configName);

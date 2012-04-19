@@ -13,7 +13,7 @@ import eu.choreos.servicedeployer.npm.NodePoolManagerClient;
 public class JARDeployTest {
 
 	// a known jar file
-	private static String JAR_LOCATION = "https://github.com/downloads/choreos/choreos_middleware/simplews.jar";
+	public static String JAR_LOCATION = "https://github.com/downloads/choreos/choreos_middleware/simplews.jar";
 	
 	private WebClient client;
 	private ServiceDeployer deployer;

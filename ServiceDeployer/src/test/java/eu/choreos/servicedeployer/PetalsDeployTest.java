@@ -16,7 +16,7 @@ import eu.choreos.servicedeployer.npm.NodePoolManagerClient;
 public class PetalsDeployTest {
 
 	// a known sa file
-	private static String SA_LOCATION = "https://github.com/downloads/choreos/choreos_middleware/sa-HelloService-provide.zip";
+	public static String SA_LOCATION = "https://github.com/downloads/choreos/choreos_middleware/sa-HelloService-provide.zip";
 	
 	private WebClient client;
 	private ServiceDeployer deployer;
