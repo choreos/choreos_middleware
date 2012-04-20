@@ -22,6 +22,32 @@
 	</repositories>
 
 	<dependencies>
+
+	<dependency>
+                    <groupId>choreosLocal</groupId>
+                    <artifactId>ComplexEventRule</artifactId>
+                    <version>1.0</version>
+                    <scope>system</scope> 
+                    <systemPath>${basedir}/../lib/ComplexEventRule.jar</systemPath>   
+        </dependency>
+
+	<dependency>
+                    <groupId>choreosLocal</groupId>
+                    <artifactId>ComplexEventResponse</artifactId>
+                    <version>1.0</version>
+                    <scope>system</scope> 
+                    <systemPath>${basedir}/../lib/ComplexEventResponse.jar</systemPath>   
+        </dependency>
+
+	<dependency>
+                    <groupId>choreosLocal</groupId>
+                    <artifactId>ComplexEventException</artifactId>
+                    <version>1.0</version>
+                    <scope>system</scope> 
+                    <systemPath>${basedir}/../lib/ComplexEventException.jar</systemPath>   
+        </dependency>
+
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
