@@ -5,6 +5,12 @@
 	<artifactId>ChoreosMonitoring</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
+	<parent>
+		<groupId>eu.choreos</groupId>
+		<artifactId>ChoreosMonitoringService</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+
 	<repositories>
 		<repository>
 			<id>ccslrepository</id>
@@ -12,6 +18,7 @@
 			<url>http://valinhos.ime.usp.br:54080/maven/</url>
 		</repository>
 	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -29,9 +36,4 @@
 		</dependency>
 	</dependencies>
 
-	<parent>
-		<groupId>eu.choreos</groupId>
-		<artifactId>ChoreosMonitoringService</artifactId>
-		<version>0.1-SNAPSHOT</version>
-	</parent>
 </project>
