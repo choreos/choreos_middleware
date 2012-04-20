@@ -1,7 +1,9 @@
 package eu.choreos.monitoring.daemon;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.InetAddress;
+import java.net.URL;
 import java.net.UnknownHostException;
 
 import eu.choreos.monitoring.Gmetric;
@@ -128,19 +130,18 @@ public class Threshold {
 	public String getScriptCommand() {
 
 		String command;
-		File file = new File(ClassLoader.getSystemResource("hostname.sh")
-				.getFile());
+		URL location = this.getClass().getClassLoader().getResource("hostname.sh");		
+		
+		File file = new File(location.getFile());
 	
 		if (file.exists()){
 			file.setExecutable(true);
 			command = "/bin/bash "
-					+ ClassLoader.getSystemResource("hostname.sh").getFile()
-							.replace("%20", " ");
+					+ (file.getAbsolutePath()).replace("%20", " ");
 		}
 		else{
 			command = "/bin/bash hostname.sh";
 		}
-		System.out.println(command);
 
 		return command;
 	}
