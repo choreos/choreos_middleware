@@ -12,10 +12,10 @@ public class ThresholdTest {
 	Threshold threshold;
 	
 	String pwd = ShellHandler
-			.runLocalCommand("pwd").replace("\n", "");
+			.runLocalCommand("pwd").replace("\n", "").replace("%20", " ");
 	
 	String hostname = ShellHandler
-			.runLocalCommand("/bin/bash "+ pwd + "/target/classes/hostname.sh").replace("\n", "");
+			.runLocalCommand("/bin/bash "+ pwd + "/target/classes/hostname.sh").replace("\n", "").replace("%20", " ");
 
 	@Before
 	public void setUp() {
@@ -24,7 +24,6 @@ public class ThresholdTest {
 
 	@Test
 	public void testToString() {
-		System.out.println(hostname);
 		threshold.wasSurpassed(4.0);
 		assertEquals("Triggered: Test <= 3.0. Measured: 4.0 in " + hostname,
 				threshold.toString());
@@ -33,7 +32,7 @@ public class ThresholdTest {
 	@Test
 	public void testGetScriptCommand() {
 		assertEquals(
-				"/bin/bash "+pwd + "/target/classes/hostname.sh",
+				"/bin/bash " + pwd + "/target/classes/hostname.sh",
 				threshold.getScriptCommand());
 	}
 
