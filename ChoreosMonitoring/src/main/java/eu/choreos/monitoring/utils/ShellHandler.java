@@ -37,7 +37,7 @@ public class ShellHandler {
 			e.printStackTrace();
 		}
 
-		return commandReturn;
+		return commandReturn.replace("%20", " ");
 	}
 
 }

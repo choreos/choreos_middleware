@@ -12,10 +12,10 @@ public class ThresholdTest {
 	Threshold threshold;
 	
 	String pwd = ShellHandler
-			.runLocalCommand("pwd").replace("\n", "").replace("%20", " ");
+			.runLocalCommand("pwd").replace("\n", "");
 	
 	String hostname = ShellHandler
-			.runLocalCommand("/bin/bash "+ pwd + "/target/classes/hostname.sh").replace("\n", "").replace("%20", " ");
+			.runLocalCommand("/bin/bash "+ pwd + "/target/classes/hostname.sh").replace("\n", "");
 
 	@Before
 	public void setUp() {
