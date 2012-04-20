@@ -30,7 +30,7 @@ public class GangliaProbe extends GlimpseAbstractProbe {
 	private void thresholdEval(String host,int port, GlimpseBaseEvent<String> message){
 		daemon = new ThresholdEvalDaemon(host,port);
 		List<Threshold> thresholds = new ArrayList<Threshold>();
-		thresholds.add(new Threshold("load_one", Threshold.MIN, 3));
+		thresholds.add(new Threshold("load_one", Threshold.MAX, 1));
 		daemon.setThresholdList(thresholds);
 		
 		while (true) {
