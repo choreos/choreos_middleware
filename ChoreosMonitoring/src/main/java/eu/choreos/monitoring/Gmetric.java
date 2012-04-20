@@ -4,7 +4,7 @@ public class Gmetric {
 
 	private String name;
 	private String value;
-	
+
 	public Gmetric(String name, String value) {
 		super();
 		this.name = name;
@@ -14,7 +14,7 @@ public class Gmetric {
 	public String getValue() {
 		return value;
 	}
-	
+
 	public void setValue(String value) {
 		this.value = value;
 	}

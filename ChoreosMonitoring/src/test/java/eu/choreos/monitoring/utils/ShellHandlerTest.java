@@ -16,16 +16,16 @@ public class ShellHandlerTest {
 
 	@Test
 	public void shouldExecuteLsCommandOnCommandLineInterface() {
-		
+
 		String command = "ls /";
 		assertTrue("Cannot use Command Line Interface!", ShellHandler
 				.runLocalCommand(command).contains("usr"));
 
 	}
-	
+
 	@Test
 	public void shouldExecuteLsCommandOnCommandLineInterfaceAtSpecifiedFolder() {
-		
+
 		String command = "ls";
 		assertTrue("Cannot use Command Line Interface!", ShellHandler
 				.runLocalCommand(command, "/").contains("usr"));

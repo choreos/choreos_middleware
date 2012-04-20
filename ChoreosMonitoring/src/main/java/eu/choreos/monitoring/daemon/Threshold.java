@@ -16,7 +16,7 @@ public class Threshold {
 	private double limitValue;
 	private double lastMeasurement;
 	private int comparison;
-	
+
 	public String getName() {
 		return name;
 	}
@@ -114,17 +114,20 @@ public class Threshold {
 	}
 
 	public String toString() {
-		return "Triggered: " + name + " " + comparisonString() + " " + limitValue
-				+ ". Measured: " + lastMeasurement + " in " + getHostName();
+		return "Triggered: " + name + " " + comparisonString() + " "
+				+ limitValue + ". Measured: " + lastMeasurement + " in "
+				+ getHostName();
 	}
 
 	public String getHostName() {
-		return ShellHandler.runLocalCommand(getScriptCommand()).replace("\n", "");
+		return ShellHandler.runLocalCommand(getScriptCommand()).replace("\n",
+				"");
 	}
 
 	public String getScriptCommand() {
 		return "/bin/bash "
-				+ ClassLoader.getSystemResource("hostname.sh").getFile().replace("%20",	 " ");
+				+ ClassLoader.getSystemResource("hostname.sh").getFile()
+						.replace("%20", " ");
 	}
 
 }
