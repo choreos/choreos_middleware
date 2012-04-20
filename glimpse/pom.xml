@@ -23,29 +23,29 @@
 
 	<dependencies>
 
-	<dependency>
-                    <groupId>choreosLocal</groupId>
-                    <artifactId>ComplexEventRule</artifactId>
-                    <version>1.0</version>
-                    <scope>system</scope> 
-                    <systemPath>${basedir}/../lib/ComplexEventRule.jar</systemPath>   
-        </dependency>
+		<dependency>
+			<groupId>choreosLocal</groupId>
+			<artifactId>ComplexEventRule</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/../lib/ComplexEventRule.jar</systemPath>
+		</dependency>
 
-	<dependency>
-                    <groupId>choreosLocal</groupId>
-                    <artifactId>ComplexEventResponse</artifactId>
-                    <version>1.0</version>
-                    <scope>system</scope> 
-                    <systemPath>${basedir}/../lib/ComplexEventResponse.jar</systemPath>   
-        </dependency>
+		<dependency>
+			<groupId>choreosLocal</groupId>
+			<artifactId>ComplexEventResponse</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/../lib/ComplexEventResponse.jar</systemPath>
+		</dependency>
 
-	<dependency>
-                    <groupId>choreosLocal</groupId>
-                    <artifactId>ComplexEventException</artifactId>
-                    <version>1.0</version>
-                    <scope>system</scope> 
-                    <systemPath>${basedir}/../lib/ComplexEventException.jar</systemPath>   
-        </dependency>
+		<dependency>
+			<groupId>choreosLocal</groupId>
+			<artifactId>ComplexEventException</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/../lib/ComplexEventException.jar</systemPath>
+		</dependency>
 
 
 		<dependency>
@@ -100,5 +100,39 @@
 		</dependency>
 
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>eu.choreos.monitoring.glimpse.probe.GangliaProbeLauncher</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-my-jar-with-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
 
 </project>

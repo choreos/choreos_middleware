@@ -24,7 +24,7 @@ public class GangliaProbe extends GlimpseAbstractProbe {
 	
 	public void notifyMessages(GangliaProbe gangliaProbe,
 			GlimpseBaseEvent<String> message) {
-			thresholdEval("eclipse.ime.usp.br",8649,message);
+			thresholdEval("localhost",8649,message);
 	}
 	
 	private void thresholdEval(String host,int port, GlimpseBaseEvent<String> message){
