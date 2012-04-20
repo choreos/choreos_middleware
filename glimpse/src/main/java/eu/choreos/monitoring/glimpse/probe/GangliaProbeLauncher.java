@@ -8,10 +8,15 @@ import java.util.Properties;
 
 public class GangliaProbeLauncher {
 	public static void main(String[] args) {
-		
+		String javaNamingProviderUrl = "tcp://dsbchoreos.petalslink.org:61616";
+		if(args.length ==1){
+			javaNamingProviderUrl = args[0];
+			
+		}
+		System.out.println("using: "+ javaNamingProviderUrl);
 		Properties createProbeSettingsPropertiesObject = Manager.createProbeSettingsPropertiesObject(
 				"org.apache.activemq.jndi.ActiveMQInitialContextFactory",
-				"tcp://localhost:61616", 
+				javaNamingProviderUrl, 
 				"system", 
 				"manager", 
 				"GangliaFactory", 

@@ -5,7 +5,6 @@ import it.cnr.isti.labse.glimpse.xml.complexEventException.ComplexEventException
 import it.cnr.isti.labse.glimpse.xml.complexEventResponse.ComplexEventResponse;
 
 import java.util.Properties;
-
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
