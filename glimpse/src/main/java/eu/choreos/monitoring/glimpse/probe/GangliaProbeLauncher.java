@@ -11,7 +11,7 @@ public class GangliaProbeLauncher {
 		
 		Properties createProbeSettingsPropertiesObject = Manager.createProbeSettingsPropertiesObject(
 				"org.apache.activemq.jndi.ActiveMQInitialContextFactory",
-				"tcp://localhost:61616", 
+				"tcp://dsbchoreos.petalslink.org:61616", 
 				"system", 
 				"manager", 
 				"GangliaFactory", 
