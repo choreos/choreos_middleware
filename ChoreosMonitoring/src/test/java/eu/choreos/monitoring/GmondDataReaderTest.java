@@ -52,16 +52,15 @@ public class GmondDataReaderTest {
 	@Test
 	public void testGetAllMetrics() {
 		Map<String, Gmetric> result = gmondReader.getAllMetrics();
-		
+
 		String memTotal = result.get("mem_total").getValue();
 		assertEquals("4118892", memTotal);
-		
+
 		String load = result.get("load_five").getValue();
 		assertEquals("0.04", load);
-		
+
 		String swap = result.get("swap_free").getValue();
 		assertEquals("1951740", swap);
-		
-		
+
 	}
 }
