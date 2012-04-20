@@ -1,0 +1,52 @@
+=============================================================
+
+This is a README file to Ganglia integration of the Monitoring module of the CHOReOS project
+
+=============================================================
+
+
+
+
+
+=============================================================
+
+HOW TO COMPILE:
+
+1) Install requirements: maven 3.x, jdk1.6, eclipse IDE
+	
+	
+2) Clone source repository. To do this run the comands below:
+
+	git clone git://github.com/felps/CHOReOS-Monitoring-Service.git
+	cd CHOReOS-Monitoring-Service/ChoreosMonitoring
+	mvn eclipse:eclipse
+
+	cd CHOReOS-Monitoring-Service/glimpse/
+	mvn eclipse:eclipse
+	
+3) Open your eclipse IDE and import both projects:
+	
+	File->Export->Generals->Existing projects into workspace->select a root directory->(put path to workspace)
+	click in Glimpse project and import it
+	click in ChoreosMonitoring and import it
+	
+4) Export to jar file:
+
+	To do this, right click on Glimpse project and click on export menu. 
+	Select Java->Runnable jar file and press Next button. Select Launcher 
+	configuration to GlimpseProbeLauncher - Glimpse, give a  path to save 
+	the genarated jar file and press finish button.
+
+=============================================================
+
+=============================================================
+
+RUNNING:
+
+	To run just enter jar directory and type the follow command
+	
+	java -jar <jar-file-name>.jar [link to activemq link]
+	
+	If link to activemq is specified, tcp://dsbchoreos.petalslink.org:61616 will be used
+
+=============================================================
