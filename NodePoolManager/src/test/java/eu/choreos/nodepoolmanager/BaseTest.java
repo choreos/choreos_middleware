@@ -36,7 +36,7 @@ public class BaseTest {
     	
     	client = WebClient.create(NodePoolManagerStandaloneServer.URL);
     	
-        NodePoolManagerStandaloneServer.start();
+        NodePoolManagerStandaloneServer.startNodePoolManager();
         Configuration.set("DEFAULT_PROVIDER", TEST_DEFAULT_PROVIDER);
         createSampleNode();
 
@@ -48,7 +48,7 @@ public class BaseTest {
     @AfterClass
     public static void stopServer() throws UnsupportedEncodingException {
     	infrastructure.destroyNode(sampleNode.getId());
-        NodePoolManagerStandaloneServer.stop();
+        NodePoolManagerStandaloneServer.stopNodePoolManager();
     }
 
     public static void createSampleNode() throws RunNodesException {

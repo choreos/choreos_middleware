@@ -16,15 +16,18 @@ public class NodePoolManagerStandaloneServer implements Runnable {
     	URL = "http://localhost:" + port + "/nodepoolmanager/";
     }
 
-    public static void start() throws InterruptedException {
-        new Thread(new NodePoolManagerStandaloneServer()).start();
+    public static void startNodePoolManager() throws InterruptedException {
+        Runnable npmServer = new NodePoolManagerStandaloneServer();
+		
+        new Thread(npmServer).start();
+        
         while (!running) {
             Thread.sleep(1);
         }
 
     }
 
-    public static void stop() {
+    public static void stopNodePoolManager() {
         running = false;
     }
 
@@ -48,6 +51,6 @@ public class NodePoolManagerStandaloneServer implements Runnable {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        NodePoolManagerStandaloneServer.start();
+        NodePoolManagerStandaloneServer.startNodePoolManager();
     }
 }
