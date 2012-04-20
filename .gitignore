@@ -1,2 +1,6 @@
 .metadata/*
 GmondConf/target/*
+*/.classpath
+*/.project
+*/target
+*~
