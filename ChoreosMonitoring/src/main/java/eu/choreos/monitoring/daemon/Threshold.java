@@ -124,7 +124,7 @@ public class Threshold {
 
 	public String getScriptCommand() {
 		return "/bin/bash "
-				+ ClassLoader.getSystemResource("hostname.sh").getFile();
+				+ ClassLoader.getSystemResource("hostname.sh").getFile().replace("%20",	 " ");
 	}
 
 }
