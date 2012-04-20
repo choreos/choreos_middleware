@@ -9,6 +9,8 @@
 
   <modules>
     <module>ChoreosMonitoring</module>
+    <module>glimpse</module>
+    <module>GmondConf</module>
   </modules>
 
 
