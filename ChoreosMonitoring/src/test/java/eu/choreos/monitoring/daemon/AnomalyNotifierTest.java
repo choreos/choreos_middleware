@@ -53,7 +53,7 @@ public class AnomalyNotifierTest {
 
 		returnedMap.put("load_five", new Gmetric("load_five", "3.8"));
 		
-		boolean evaluation = notifier.evaluateSingleThreshold(new Threshold("load_five", Threshold.MAX, 3));
+		boolean evaluation = notifier.wasSurpassed(new Threshold("load_five", Threshold.MAX, 3));
 
 		assertTrue(evaluation);
 
@@ -64,7 +64,7 @@ public class AnomalyNotifierTest {
 
 		returnedMap.put("load_five", new Gmetric("load_five", "1.8"));
 
-		boolean evaluation = notifier.evaluateSingleThreshold(new Threshold("load_five", Threshold.MAX, 3));
+		boolean evaluation = notifier.wasSurpassed(new Threshold("load_five", Threshold.MAX, 3));
 
 		assertFalse("Evaluated threshold should be false", evaluation);
 
@@ -74,7 +74,7 @@ public class AnomalyNotifierTest {
 	public void shouldIdentifyFreeMemoryLessThan64Mb() {
 		returnedMap.put("mem_free", new Gmetric("mem_free", "16000"));
 
-		boolean evaluation = notifier.evaluateSingleThreshold(threshold);
+		boolean evaluation = notifier.wasSurpassed(threshold);
 
 		
 		assertTrue(
@@ -87,7 +87,7 @@ public class AnomalyNotifierTest {
 	public void shouldNotIdentifyFreeMemoryLessThan64Mb() {
 		returnedMap.put("mem_free", new Gmetric("mem_free", "176000"));
 
-		boolean evaluation = notifier.evaluateSingleThreshold(threshold);
+		boolean evaluation = notifier.wasSurpassed(threshold);
 
 		assertFalse(
 				"This host has 176MB of free memory. Should not have been triggered.",
@@ -101,7 +101,7 @@ public class AnomalyNotifierTest {
 	    
 	    notifier.getThresholds().add(threshold);
 	    
-	    List<Threshold> list = notifier.evaluateAllThresholds();
+	    List<Threshold> list = notifier.getAllSurpassedThresholds();
 	    
 	    assertTrue(list.isEmpty());
 	}
@@ -112,7 +112,7 @@ public class AnomalyNotifierTest {
 	    
 	    notifier.getThresholds().add(threshold);
 	    
-	    List<Threshold> list = notifier.evaluateAllThresholds();
+	    List<Threshold> list = notifier.getAllSurpassedThresholds();
 	    
 	    assertTrue(list.contains(threshold));
 	}
@@ -130,7 +130,7 @@ public class AnomalyNotifierTest {
 	    notifier.getThresholds().add(threshold3);
 	    notifier.getThresholds().add(threshold4);
 	    
-	    List<Threshold> list = notifier.evaluateAllThresholds();
+	    List<Threshold> list = notifier.getAllSurpassedThresholds();
 	    
 	    
 	    

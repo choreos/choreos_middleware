@@ -45,7 +45,7 @@ public class ThresholdEvalDaemon {
 
 	public List<Threshold> evaluateThresholds() {
 	    
-	    List<Threshold> evaluateAllThresholds = notifier.evaluateAllThresholds();
+	    List<Threshold> evaluateAllThresholds = notifier.getAllSurpassedThresholds();
 		for(Threshold threshold: evaluateAllThresholds) {
 		System.out.println(threshold);
 	    }
