@@ -19,9 +19,9 @@ HOW TO COMPILE:
 
 	git clone git://github.com/felps/CHOReOS-Monitoring-Service.git
 	cd CHOReOS-Monitoring-Service/ChoreosMonitoring
-	mvn eclipse:eclipse
+	mvn install
 
-	cd CHOReOS-Monitoring-Service/glimpse/
+	cd ../glimpse/
 	mvn eclipse:eclipse
 	
 3) Open your eclipse IDE and import both projects:
