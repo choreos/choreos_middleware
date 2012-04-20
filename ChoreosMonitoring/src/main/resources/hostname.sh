@@ -6,6 +6,8 @@
 # This name is used by chef to identify the node and
 # this cannot be easily overriden.
 
+unset LANG LANGUAGE LC_ALL
+
 defaultroute_line=`route -n | grep '^0\.0\.0\.0'`
 
 if ! echo $defaultroute_line | grep -q '^0\.0\.0\.0'; then
@@ -14,8 +16,10 @@ echo "No default route on this machine!" 1>&2
 fi
 
 defaultroute_interface=`echo $defaultroute_line | tr -s " "| cut -f8 -d" "`
-
+echo $defaultroute_interface
 ip=`ifconfig $defaultroute_interface | sed -n 2p | tr -s " " | cut -f2 -d: | cut -f1 -d" "`
+
+echo $ip
 
 if ! echo $ip | egrep -q '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'; then
 echo "Could not determine IP address!" 1>&2
