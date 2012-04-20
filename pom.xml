@@ -11,4 +11,20 @@
     <module>ChoreosMonitoring</module>
   </modules>
 
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cobertura-maven-plugin</artifactId>
+        <version>2.5.1</version>
+      </plugin>
+    </plugins>
+  </reporting>
+
+  <reports>
+    <report>maven-cobertura-plugin</report>
+  </reports>
+
+
 </project>
