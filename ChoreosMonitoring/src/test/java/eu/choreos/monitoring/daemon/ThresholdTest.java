@@ -5,29 +5,40 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
+import eu.choreos.monitoring.utils.ShellHandler;
+
 public class ThresholdTest {
+
+	Threshold threshold;
 	
-	Threshold threshold ;
+	String pwd = ShellHandler
+			.runLocalCommand("pwd").replace("\n", "");
 	
+	String hostname = ShellHandler
+			.runLocalCommand("/bin/bash "+ pwd + "/target/classes/hostname.sh").replace("\n", "");
+
 	@Before
 	public void setUp() {
 		threshold = new Threshold("Test", Threshold.MAX, 3);
 	}
 
-	//TODO Make this not environment dependent
 	@Test
 	public void testToString() {
+		System.out.println(hostname);
 		threshold.wasSurpassed(4.0);
-		assertEquals("Triggered: Test <= 3.0. Measured: 4.0 in hubble.eclipse.ime.usp.br", threshold.toString());
+		assertEquals("Triggered: Test <= 3.0. Measured: 4.0 in " + hostname,
+				threshold.toString());
 	}
 
 	@Test
 	public void testGetScriptCommand() {
-		assertEquals("/bin/bash /home/users/pbmoura/desenvolvimento/CHOReOS-Monitoring-Service/ChoreosMonitoring/target/classes/hostname.sh", threshold.getScriptCommand());
+		assertEquals(
+				"/bin/bash "+pwd + "/target/classes/hostname.sh",
+				threshold.getScriptCommand());
 	}
 
 	@Test
 	public void shouldGetHostname() throws Exception {
-		assertEquals("hubble.eclipse.ime.usp.br", threshold.getHostName());
+		assertEquals(hostname, threshold.getHostName());
 	}
 }
