@@ -6,6 +6,7 @@ import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.Set;
 
+import eu.choreos.enactment.spec.SpecBuilder;
 import eu.choreos.servicedeployer.datamodel.ServiceSpec;
 
 public class SpecRetriever {

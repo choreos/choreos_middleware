@@ -1,6 +1,7 @@
 package eu.choreos.servicedeployer.datamodel;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement
 public class ServiceSpec {
@@ -9,7 +10,17 @@ public class ServiceSpec {
 	private String codeUri;
 	private String port;
 	private String endpointName;
+	private String role;
 	private ResourceImpact resourceImpact;
+
+	@XmlTransient
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 
 	public String getType() {
 		return type;
@@ -56,9 +67,6 @@ public class ServiceSpec {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((codeUri == null) ? 0 : codeUri.hashCode());
-		result = prime * result + ((endpointName == null) ? 0 : endpointName.hashCode());
-		result = prime * result + ((port == null) ? 0 : port.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 
@@ -76,28 +84,14 @@ public class ServiceSpec {
 				return false;
 		} else if (!codeUri.equals(other.codeUri))
 			return false;
-		if (endpointName == null) {
-			if (other.endpointName != null)
-				return false;
-		} else if (!endpointName.equals(other.endpointName))
-			return false;
-		if (port == null) {
-			if (other.port != null)
-				return false;
-		} else if (!port.equals(other.port))
-			return false;
-		if (type == null) {
-			if (other.type != null)
-				return false;
-		} else if (!type.equals(other.type))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
 		return "ServiceSpec [type=" + type + ", codeUri=" + codeUri + ", port="
-				+ port + ", name=" + endpointName + "]";
+				+ port + ", endpointName=" + endpointName + ", role=" + role
+				+ "]";
 	}
 
 }

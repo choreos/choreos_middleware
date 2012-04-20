@@ -1,38 +1,35 @@
 package eu.choreos.enactment;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
-import eu.choreos.enactment.context.ChoreographyContext;
-import eu.choreos.enactment.context.ContextCaster;
+import eu.choreos.enactment.context.ChorContextCaster;
+import eu.choreos.servicedeployer.datamodel.Service;
 
-public class EnactmentStarter implements Enacter {
+public class EnactmentStarter {
 	
-	private List<Enacter> enacters;
+	private Enacter powsEnacter = EnacterFactory.getPOWSEnacter();
+	private Enacter cdEnacter = EnacterFactory.getCDEnacter();
+	private Enacter consumeEnacter = EnacterFactory.getSoapConsumeEnacter();
+	private Enacter provideEnacter = EnacterFactory.getSoapProvideEnacter();
 	
-	public EnactmentStarter() {
-		
-		enacters = new ArrayList<Enacter>();
-		enacters.add(new POWSEnacter());
-		enacters.add(new SAEnacter());
-	}
-	
-	public void enact(ChoreographyContext context) {
+	public void enact() {
 		
 		System.out.println("Starting airport enactment...");
-		for (Enacter enacter: enacters) {
-			enacter.enact(context); // can you read these two lines? =P
-		}
-		
-		ContextCaster contextCaster = new ContextCaster(context);
-		contextCaster.cast();
+		Set<Service> powss = powsEnacter.enact();
+		Set<Service> provides = provideEnacter.enact();
+		Set<Service> consumes = consumeEnacter.enact();
+		cdEnacter.enact();
+
+		System.out.println("Passing context");
+		ChorContextCaster caster = new ChorContextCaster();
+		caster.cast(powss, provides, consumes);
 	}
 	
 	
 	public static void main(String[] args) {
 
 		EnactmentStarter enacter = new EnactmentStarter();
-		enacter.enact(new ChoreographyContext());
+		enacter.enact();
 	}
 
 }

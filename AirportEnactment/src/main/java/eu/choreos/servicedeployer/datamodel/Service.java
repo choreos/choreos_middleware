@@ -1,6 +1,7 @@
 package eu.choreos.servicedeployer.datamodel;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 
 @XmlRootElement
@@ -8,6 +9,7 @@ public class Service {
 
 	private String id; // Who will define the service ID?
 	private ServiceType serviceType;
+	private String role;
 	private String uri;
 	private String codeLocationURI;
 	private String file; 
@@ -21,6 +23,7 @@ public class Service {
 		
 		codeLocationURI = serviceSpec.getCodeUri();
 		endpointName = serviceSpec.getEndpointName();
+		role = serviceSpec.getRole();
 
 		try {
 			port = Integer.parseInt(serviceSpec.getPort());
@@ -63,7 +66,16 @@ public class Service {
 			return null;
 		}
 	}
-	
+
+	@XmlTransient
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 	public String getId() {
 		return id;
 	}

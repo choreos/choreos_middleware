@@ -1,6 +1,6 @@
-package eu.choreos.enactment;
+package eu.choreos.enactment.spec;
 
-public class EndpointResolver {
+class EndpointResolver {
 
 	public enum SAType {SOAP_PROVIDE, SOAP_CONSUME, CD_PROVIDE};
 	
@@ -10,7 +10,7 @@ public class EndpointResolver {
 		case SOAP_CONSUME:
 			return serviceName.toLowerCase() + "1234";
 		case SOAP_PROVIDE:
-			return serviceName + "PortService";
+			return serviceName + "Port";
 		case CD_PROVIDE:
 			return "CD" + serviceName + "Port";
 		}

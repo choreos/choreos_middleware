@@ -1,30 +1,24 @@
 package eu.choreos.enactment.context;
 
+import java.util.Set;
 
-public class ContextCaster {
+import eu.choreos.servicedeployer.datamodel.Service;
 
-	private ChoreographyContext context;
-	
-	public ContextCaster(ChoreographyContext context) {
-	
-		this.context = context;
-	}
-	
-	public void cast() {
+class ContextCaster {
+
+	/**
+	 * Pass the <code>context</code> to the <code>service</code>
+	 * @param service
+	 * @param context
+	 */
+	public void cast(Service service, Set<Service> context) {
 		
-		for (String service: context.getContext().keySet()) {
+		for (Service partner: context) {
 			
-			System.out.println("Setting context on " + service);
-			
-			for (String s: context.getContext().keySet()) {
-				
-				if (!s.equals(service)) {
-					
-					System.out.println("Call " + service
-							+ ".setChoreographyContext(" + s + ", "
-							+ context.getContext().get(s) + ")");
-				}
+			if (!service.equals(partner)) {
+				System.out.println(service.getId() + ".setInvocationAddress("
+						+ partner.getRole() + ", " + partner.getUri());
 			}
-		}
+		}	
 	}
 }

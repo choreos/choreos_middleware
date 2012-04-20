@@ -1,8 +1,9 @@
-package eu.choreos.enactment;
+package eu.choreos.enactment.spec;
 
 import java.util.Properties;
 
-import eu.choreos.enactment.EndpointResolver.SAType;
+import eu.choreos.enactment.spec.EndpointResolver.SAType;
+import eu.choreos.enactment.SpecRetriever;
 import eu.choreos.servicedeployer.datamodel.ServiceSpec;
 
 public class CDSpecBuilder implements SpecBuilder {
@@ -14,6 +15,7 @@ public class CDSpecBuilder implements SpecBuilder {
 
 		ServiceSpec spec = new ServiceSpec();
 		spec.setType(SERVICE_TYPE);
+		spec.setRole(serviceName);
 
 		String endpointName = EndpointResolver.getEndpointName(serviceName,
 				SAType.CD_PROVIDE);
