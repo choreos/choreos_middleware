@@ -33,7 +33,7 @@ public class NodePoolManagerStandaloneServer implements Runnable {
         sf.setResourceClasses(ConfigsResource.class, NodesResource.class);
         sf.setAddress(URL);
         sf.create();
-        System.out.println("Starting Node Pool Manager ...");
+        System.out.println("Node Pool Manager is started...");
         running = true;
 
         while (running) {
