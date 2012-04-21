@@ -8,10 +8,16 @@ import java.util.Properties;
 
 public class GangliaProbeLauncher {
 	public static void main(String[] args) {
+		String host = "localhost";
+		Integer port = 8649;
 		String javaNamingProviderUrl = "tcp://dsbchoreos.petalslink.org:61616";
 		if(args.length ==1){
 			javaNamingProviderUrl = args[0];
 			
+		} else if(args.length == 3){
+			javaNamingProviderUrl = args[0];
+			host = args[1];
+			port = Integer.parseInt(args[2]);
 		}
 		System.out.println("using: "+ javaNamingProviderUrl);
 		Properties createProbeSettingsPropertiesObject = Manager.createProbeSettingsPropertiesObject(
@@ -37,7 +43,7 @@ public class GangliaProbeLauncher {
 				false);
 		
 		for(;;){
-			gangliaProbe.notifyMessages(gangliaProbe, message);
+			gangliaProbe.notifyMessages(message,host,port);
 		}
 		
 	}

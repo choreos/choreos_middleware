@@ -22,9 +22,8 @@ public class GangliaProbe extends GlimpseAbstractProbe {
 		super(settings);
 	}
 	
-	public void notifyMessages(GangliaProbe gangliaProbe,
-			GlimpseBaseEvent<String> message) {
-			thresholdEval("localhost",8649,message);
+	public void notifyMessages(GlimpseBaseEvent<String> message,String host,int port) {
+			thresholdEval(host,port,message);
 	}
 	
 	private void thresholdEval(String host,int port, GlimpseBaseEvent<String> message){

@@ -144,7 +144,7 @@ public class Threshold {
 			e.printStackTrace();
 		}
 		if (tmpFile.exists()){
-			file.setExecutable(true);
+			tmpFile.setExecutable(true);
 			command = "/bin/bash "
 					+ (tmpFile.getAbsolutePath()).replace("%20", " ");
 		}
