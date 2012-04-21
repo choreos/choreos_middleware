@@ -35,6 +35,10 @@ public class AWSCloudProvider implements CloudProvider {
 	private static String DEFAULT_USER = "ubuntu";
 	private static String PROVIDER="aws-ec2";
 	private static String DEFAULT_IMAGE= "us-east-1/ami-ccf405a5";
+	
+	public String getproviderName() {
+		return PROVIDER;
+	}
 
 	private ComputeService getClient(String imageId) {
 		// If we specify the image, it doesn't download info about all others
@@ -163,4 +167,5 @@ public class AWSCloudProvider implements CloudProvider {
 		}
 		return createNode(node);
 	}
+
 }
