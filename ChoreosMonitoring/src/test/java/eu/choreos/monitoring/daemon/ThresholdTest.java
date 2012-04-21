@@ -14,7 +14,7 @@ public class ThresholdTest {
 	String pwd = ShellHandler.runLocalCommand("pwd").replace("\n", "");
 
 	String hostname = ShellHandler.runLocalCommand(
-			"/bin/bash " + pwd + "/target/classes/hostname.sh").replace("\n",
+			"/bin/bash " + "/tmp/hostname.sh").replace("\n",
 			"");
 
 	@Before
@@ -31,7 +31,7 @@ public class ThresholdTest {
 
 	@Test
 	public void testGetScriptCommand() {
-		assertEquals("/bin/bash " + pwd + "/target/classes/hostname.sh",
+		assertEquals("/bin/bash " +"/tmp/hostname.sh",
 				threshold.getScriptCommand());
 	}
 
