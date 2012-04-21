@@ -1,4 +1,4 @@
-package eu.choreos.enactment;
+package eu.choreos.enactment.spec;
 
 import java.util.Properties;
 

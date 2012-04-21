@@ -1,7 +1,8 @@
-package eu.choreos.enactment;
+package eu.choreos.enactment.spec;
 
 import java.util.Properties;
 
+import eu.choreos.enactment.SpecRetriever;
 import eu.choreos.servicedeployer.datamodel.ServiceSpec;
 
 public class POWSSpecBuilder implements SpecBuilder {
@@ -13,6 +14,7 @@ public class POWSSpecBuilder implements SpecBuilder {
 
 		ServiceSpec spec = new ServiceSpec();
 		spec.setType(SERVICE_TYPE);
+		spec.setRole(serviceName);
 		
 		String endpointName = serviceName.toLowerCase();
 		spec.setEndpointName(endpointName);
