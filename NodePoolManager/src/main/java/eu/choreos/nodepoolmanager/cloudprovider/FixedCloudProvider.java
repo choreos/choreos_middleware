@@ -67,4 +67,8 @@ public class FixedCloudProvider implements CloudProvider {
 		return node;
 	}
 
+	public String getproviderName() {
+		return "Fixed Provider";
+	}
+
 }
