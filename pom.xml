@@ -1,265 +1,267 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>br.usp.ime.ccsl.choreos</groupId>
-  <artifactId>middleware</artifactId>
-  <packaging>pom</packaging>
-  <version>0.2-SNAPSHOT</version>
-  <name>CHOReOS Middleware</name>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>br.usp.ime.ccsl.choreos</groupId>
+	<artifactId>middleware</artifactId>
+	<packaging>pom</packaging>
+	<version>0.2-SNAPSHOT</version>
+	<name>CHOReOS Middleware</name>
 
-  <modules>
-    <module>choreos-web</module>
-    <module>su-Jsr-181-RoleAssignmentService-provide</module>
-    <module>ChoreosWebServiceProxy</module>
-  </modules>
-  <scm>
-    <connection>scm:git@github.com:choreos/choreos_middleware.git</connection>
-    <developerConnection>scm:git@github.com:choreos/choreos_middleware.git</developerConnection>
-    <url>https://github.com/choreos/choreos_middleware</url>
-  </scm>
-  <ciManagement>
-    <system>Hudson</system>
-    <notifiers>
-      <notifier>
-        <configuration>
-          <address>baile-xp-middleware@googlegroups.com</address>
-        </configuration>
-      </notifier>
-    </notifiers>
-  </ciManagement>
-  <issueManagement>
-    <system>Xplanner</system>
-    <url>http://eclipse.ime.usp.br/xplanner/do/view/project?oid=7214</url>
-  </issueManagement>
-  <repositories>
-    <repository>
-      <id>maven-restlet</id>
-      <name>Public online Restlet repository</name>
-      <url>http://maven.restlet.org</url>
-    </repository> 
-    <repository>
-      <id>eviware</id>
-      <name>eviWare</name>
-      <url>http://www.eviware.com/repository/maven2/</url>
-    </repository>
-    <repository>
-      <id>petals</id>
-      <url>http://maven.ow2.org/maven2</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-        <id>petalslink</id>
-        <name>Petalslink</name>
-        <url>http://maven.petalslink.com/public/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
-    <repository>
-      <id>ccslrepository</id>
-      <name>ccsl</name>
-      <url>http://valinhos.ime.usp.br:54080/maven/</url>
-    </repository>
-  </repositories>
+	<modules>
+		<module>choreos-web</module>
+		<!-- <module>su-Jsr-181-RoleAssignmentService-provide</module> <module>ChoreosWebServiceProxy</module>- -->
+		<module> ServiceDeployer</module>
+		<module>StorageFactory</module>
+	</modules>
+	<scm>
+		<connection>scm:git@github.com:choreos/choreos_middleware.git</connection>
+		<developerConnection>scm:git@github.com:choreos/choreos_middleware.git</developerConnection>
+		<url>https://github.com/choreos/choreos_middleware</url>
+	</scm>
+	<ciManagement>
+		<system>Hudson</system>
+		<notifiers>
+			<notifier>
+				<configuration>
+					<address>baile-xp-middleware@googlegroups.com</address>
+				</configuration>
+			</notifier>
+		</notifiers>
+	</ciManagement>
+	<issueManagement>
+		<system>Xplanner</system>
+		<url>http://eclipse.ime.usp.br/xplanner/do/view/project?oid=7214</url>
+	</issueManagement>
+	<repositories>
+		<repository>
+			<id>maven-restlet</id>
+			<name>Public online Restlet repository</name>
+			<url>http://maven.restlet.org</url>
+		</repository>
+		<repository>
+			<id>eviware</id>
+			<name>eviWare</name>
+			<url>http://www.eviware.com/repository/maven2/</url>
+		</repository>
+		<repository>
+			<id>petals</id>
+			<url>http://maven.ow2.org/maven2</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>petalslink</id>
+			<name>Petalslink</name>
+			<url>http://maven.petalslink.com/public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>ccslrepository</id>
+			<name>ccsl</name>
+			<url>http://valinhos.ime.usp.br:54080/maven/</url>
+		</repository>
+	</repositories>
 
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>Codehaus repository</id>
-      <url>http://repository.codehaus.org/</url>
-    </pluginRepository>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>Codehaus repository</id>
+			<url>http://repository.codehaus.org/</url>
+		</pluginRepository>
 
-    <pluginRepository>
-      <id>apache.snapshots</id>
-      <name>Maven Central Plugins Development Repository</name>
-      <url>http://cvs.apache.org/maven-snapshot-repository</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </pluginRepository>
-  </pluginRepositories>
-  <developers>
-    <developer>
-      <id>daniel.cukier</id>
-      <name>Daniel cukier</name>
-      <email>danicuki@ime.usp.br</email>
-      <organization>IME-USP</organization>
-    </developer>
-    <developer>
-      <id>thiago.colucci</id>
-      <name>Thiago Colucci</name>
-      <email>colucci@ime.usp.br</email>
-      <organization>IME-USP</organization>
-    </developer>
-  </developers>
-  
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.8.2</version>
-      <type>jar</type>
-      <scope>test</scope>
-      <optional>true</optional>
-    </dependency>
-  </dependencies>
+		<pluginRepository>
+			<id>apache.snapshots</id>
+			<name>Maven Central Plugins Development Repository</name>
+			<url>http://cvs.apache.org/maven-snapshot-repository</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
+	<developers>
+		<developer>
+			<id>daniel.cukier</id>
+			<name>Daniel cukier</name>
+			<email>danicuki@ime.usp.br</email>
+			<organization>IME-USP</organization>
+		</developer>
+		<developer>
+			<id>thiago.colucci</id>
+			<name>Thiago Colucci</name>
+			<email>colucci@ime.usp.br</email>
+			<organization>IME-USP</organization>
+		</developer>
+	</developers>
 
-  <build>
-    <plugins>
-      <!-- <plugin>
-      <artifactId>maven-antrun-plugin</artifactId>
-      <dependencies>
-      <dependency>
-      <groupId>org.apache.ant</groupId>
-      <artifactId>ant-jsch</artifactId>
-      <version>1.7.1</version>
-      </dependency>
-      </dependencies>
-      </plugin> -->
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+			<type>jar</type>
+			<scope>test</scope>
+			<optional>true</optional>
+		</dependency>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <version>3.0-beta-3</version>
-        <configuration>
-          <reportPlugins>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-project-info-reports-plugin</artifactId>
-              <version>2.2</version>
-              <configuration>
-                <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
-                <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-              </configuration>
-              <reports>
-                <report>index</report>
-                <report>scm</report>
-                <report>plugin-management</report>
-                <report>mailing-list</report>
-                <report>issue-tracking</report>
-                <report>help</report>
-                <report>plugins</report>
-                <report>dependency-convergence</report>
-                <report>summary</report>
-                <report>dependency-management</report>
-                <report>license</report>
-                <report>modules</report>
-                <report>project-team</report>
-                <report>cim</report>
-              </reports>
-            </plugin>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-javadoc-plugin</artifactId>
-              <version>2.7</version>
-            </plugin>
-            
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>findbugs-maven-plugin</artifactId>
-              <version>2.3.2</version>
-              <configuration>
-                <xmlOutput>true</xmlOutput>
-                <effort>Max</effort>
-              </configuration>
-            </plugin>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-checkstyle-plugin</artifactId>
-              <version>2.6</version>
-              <configuration>
-                <configLocation>checkstyle.xml</configLocation>
-              </configuration>
-            </plugin>
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>javancss-maven-plugin</artifactId>
-              <version>2.0</version>
-            </plugin>
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>cobertura-maven-plugin</artifactId>
-              <version>2.4</version>
-              <configuration>
-                <formats>
-                  <format>xml</format>
-                  <format>html</format>
-                </formats>
-              </configuration>
-            </plugin>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-pmd-plugin</artifactId>
-              <configuration>
-                <minimumTokens>30</minimumTokens>
-                <targetJdk>1.6</targetJdk>
-                <excludes>
-                  <exclude>**/*Test.java</exclude>
-                </excludes>
-              </configuration>
-            </plugin>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-surefire-report-plugin</artifactId>
-              <version>2.4.1</version>
-            </plugin>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-changes-plugin</artifactId>
-              <configuration>
-                <issueLinkTemplate>%URL%/userstory?oid=%ISSUE%</issueLinkTemplate>
-                <introduction>
-                  Bem vindo ao CHOReOS Middleware
-                </introduction>
-                <mailSender>
-                  <name>CHOReOS Middleware</name>
-                  <email>baile-xp-middleware@googlegroups.com</email>
-                </mailSender>
-                <templateDirectory>/</templateDirectory>
-                <developmentTeam>CHOReOS USP TEam</developmentTeam>
-                <finalName>${project.build.finalName}</finalName>
-                <urlDownload>${project.url}</urlDownload>
-                <smtpHost>?</smtpHost>
-                <username>?</username>
-                <password>?</password>
-                <smtpPort implementation="java.lang.Integer">25</smtpPort>
-                <toAddresses>
-                  <toAddress implementation="java.lang.String">
-                    baile-xp-middleware@googlegroups.com
-                  </toAddress>
-                </toAddresses>
-              </configuration>
-            </plugin>
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>taglist-maven-plugin</artifactId>
-            </plugin>
-            
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>dashboard-maven-plugin</artifactId>
-              <configuration>
-                <dialect>org.hibernate.dialect.MySQLDialect</dialect>
-                <driverClass>com.mysql.jdbc.Driver</driverClass>
-                <username>root</username>
-                <password></password>
-                <connectionUrl>
-                  jdbc:mysql://localhost:3306/choreos
-                </connectionUrl>
-              </configuration>
-            </plugin>
-            
-          </reportPlugins>
-        </configuration>
-      </plugin>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.8.5</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- <plugin> <artifactId>maven-antrun-plugin</artifactId> <dependencies> 
+				<dependency> <groupId>org.apache.ant</groupId> <artifactId>ant-jsch</artifactId> 
+				<version>1.7.1</version> </dependency> </dependencies> </plugin> -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.0-beta-3</version>
+				<configuration>
+					<reportPlugins>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-project-info-reports-plugin</artifactId>
+							<version>2.2</version>
+							<configuration>
+								<dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+								<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+							</configuration>
+							<reports>
+								<report>index</report>
+								<report>scm</report>
+								<report>plugin-management</report>
+								<report>mailing-list</report>
+								<report>issue-tracking</report>
+								<report>help</report>
+								<report>plugins</report>
+								<report>dependency-convergence</report>
+								<report>summary</report>
+								<report>dependency-management</report>
+								<report>license</report>
+								<report>modules</report>
+								<report>project-team</report>
+								<report>cim</report>
+							</reports>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-javadoc-plugin</artifactId>
+							<version>2.7</version>
+						</plugin>
+
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>findbugs-maven-plugin</artifactId>
+							<version>2.3.2</version>
+							<configuration>
+								<xmlOutput>true</xmlOutput>
+								<effort>Max</effort>
+							</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-checkstyle-plugin</artifactId>
+							<version>2.6</version>
+							<configuration>
+								<configLocation>checkstyle.xml</configLocation>
+							</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>javancss-maven-plugin</artifactId>
+							<version>2.0</version>
+						</plugin>
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>cobertura-maven-plugin</artifactId>
+							<version>2.4</version>
+							<configuration>
+								<formats>
+									<format>xml</format>
+									<format>html</format>
+								</formats>
+							</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-pmd-plugin</artifactId>
+							<configuration>
+								<minimumTokens>30</minimumTokens>
+								<targetJdk>1.6</targetJdk>
+								<excludes>
+									<exclude>**/*Test.java</exclude>
+								</excludes>
+							</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-surefire-report-plugin</artifactId>
+							<version>2.4.1</version>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-changes-plugin</artifactId>
+							<configuration>
+								<issueLinkTemplate>%URL%/userstory?oid=%ISSUE%</issueLinkTemplate>
+								<introduction>
+									Bem vindo ao CHOReOS Middleware
+								</introduction>
+								<mailSender>
+									<name>CHOReOS Middleware</name>
+									<email>baile-xp-middleware@googlegroups.com</email>
+								</mailSender>
+								<templateDirectory>/</templateDirectory>
+								<developmentTeam>CHOReOS USP TEam</developmentTeam>
+								<finalName>${project.build.finalName}</finalName>
+								<urlDownload>${project.url}</urlDownload>
+								<smtpHost>?</smtpHost>
+								<username>?</username>
+								<password>?</password>
+								<smtpPort implementation="java.lang.Integer">25</smtpPort>
+								<toAddresses>
+									<toAddress implementation="java.lang.String">
+										baile-xp-middleware@googlegroups.com
+									</toAddress>
+								</toAddresses>
+							</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>taglist-maven-plugin</artifactId>
+						</plugin>
+
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>dashboard-maven-plugin</artifactId>
+							<configuration>
+								<dialect>org.hibernate.dialect.MySQLDialect</dialect>
+								<driverClass>com.mysql.jdbc.Driver</driverClass>
+								<username>root</username>
+								<password></password>
+								<connectionUrl>
+									jdbc:mysql://localhost:3306/choreos
+								</connectionUrl>
+							</configuration>
+						</plugin>
+
+					</reportPlugins>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.ow2.petals</groupId>
 				<artifactId>maven-petals-plugin</artifactId>
@@ -288,20 +290,20 @@
 			</plugin>
 
 
-    </plugins>
-  </build>
-  <properties>
-    <eclipse.dependency>true</eclipse.dependency>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+		</plugins>
+	</build>
+	<properties>
+		<eclipse.dependency>true</eclipse.dependency>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
-  <distributionManagement>
-  <site>
-  <id>PabxManagement</id>
-  <url>
+	<distributionManagement>
+		<site>
+			<id>PabxManagement</id>
+			<url>
      scp://danicuki@valinhos.ime.usp.br:54022/var/www/choreos/
   </url>
-  </site>
-  </distributionManagement>
+		</site>
+	</distributionManagement>
 
 </project>
