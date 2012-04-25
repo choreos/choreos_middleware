@@ -1,7 +1,6 @@
 package eu.choreos.monitoring.daemon;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import eu.choreos.monitoring.*;

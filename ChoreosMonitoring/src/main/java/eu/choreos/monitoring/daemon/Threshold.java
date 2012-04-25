@@ -2,13 +2,10 @@ package eu.choreos.monitoring.daemon;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.InetAddress;
 import java.net.URL;
-import java.net.UnknownHostException;
+
 import org.apache.commons.io.FileUtils;
 
-import eu.choreos.monitoring.Gmetric;
 import eu.choreos.monitoring.utils.ShellHandler;
 
 public class Threshold {
@@ -133,7 +130,6 @@ public class Threshold {
 		String command;
 		URL location = this.getClass().getClassLoader().getResource("hostname.sh");		
 		
-		File file = new File(location.getFile());
 		File tmpFile = new File("/tmp/hostname.sh");
 		try {
 			if (tmpFile.exists())
