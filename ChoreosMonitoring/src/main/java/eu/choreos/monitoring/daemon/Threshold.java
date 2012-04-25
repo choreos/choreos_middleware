@@ -120,8 +120,7 @@ public class Threshold {
 
 	public String toString() {
 		return "Triggered: " + name + " " + comparisonString() + " "
-				+ limitValue + ". Measured: " + lastMeasurement + " in "
-				+ getHostName();
+				+ limitValue + ". Measured: " + lastMeasurement ;
 	}
 
 	public String getHostName() {
