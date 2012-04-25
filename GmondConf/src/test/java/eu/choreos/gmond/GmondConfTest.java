@@ -1,10 +1,10 @@
 package eu.choreos.gmond;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -146,18 +146,14 @@ public class GmondConfTest {
 		assertFalse(fileContents.contains("port = 1234"));
 		int portLocation = fileContents.indexOf("port = 8649");
 
-		int hostLocation = fileContents.indexOf("host = eclipse.ime.usp.br");
-
 		GmondConf.main( "-p", "1234", "-f", testFile.getAbsolutePath());
 
 		fileContents = FileUtils.readFileToString(testFile);
 
-
 		assertTrue("Altered line not located!",
 				fileContents.contains("port = 1234"));
 
-		assertEquals(portLocation, fileContents.indexOf("port = 1234"));
-		
+		assertEquals(portLocation, fileContents.indexOf("port = 1234"));	
 	}
 		
 	@Test

@@ -1,13 +1,11 @@
 package eu.choreos.gmond.reloader;
 
-import java.io.IOException;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
-import static org.mockito.Mockito.*;
 import org.junit.Test;
-
-import eu.choreos.gmond.reloader.GmondReloader;
-import static org.junit.Assert.*;
 public class GmondReloaderTest {
 	
 	private GmondReloader gmondReloader;
