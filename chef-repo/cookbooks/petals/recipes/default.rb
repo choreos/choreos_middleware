@@ -39,7 +39,7 @@ template "/etc/profile.d/java.sh" do
   action :create_if_missing
 end
 
-DOWNLOAD_SERVER = "http://valinhos.ime.usp.br:54080/demo"
+DOWNLOAD_SERVER = "http://valinhos.ime.usp.br:54080/demo2"
 
 def download(filename)
   diskFile = "/tmp/#{filename}"
