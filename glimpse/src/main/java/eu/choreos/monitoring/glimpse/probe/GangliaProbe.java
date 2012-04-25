@@ -39,6 +39,8 @@ public class GangliaProbe extends GlimpseAbstractProbe {
 	
 	private void sendStringMsg(GlimpseBaseEvent<String> event) {
 		List<Threshold> triggeredThresholds = daemon.evaluateThresholds();
+		if(!triggeredThresholds.isEmpty())
+			event.setNetworkedSystemSource(triggeredThresholds.get(0).getHostName());
 		for(Threshold threshold:triggeredThresholds){
 			try {
 				event.setData(threshold.toString());
