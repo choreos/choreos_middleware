@@ -52,8 +52,25 @@ public class SimpleRoundRobinSelector implements NodeSelector {
 	}
 
 	public void changeNodePoolSize(int newSize) {
-		createInstantiatedNodePool(newSize, cloudProvider);
+		int currentSize = availableNodes.size();
+		System.out.println(newSize + "  " + currentSize);
+		if (newSize > currentSize){
+			createInstantiatedNodePool(newSize, cloudProvider);
+		}
+		else {
+			int nodesToKill = currentSize - newSize;
+			System.out.println("Nodes to kill: " + nodesToKill);
+			for(int i = 0; i < nodesToKill; i++){
+				System.out.println("Killing node...");
+				destroyLastNode();
+			}
+		}
 
+	}
+
+	private void destroyLastNode() {
+		int lastNodeIndex = availableNodes.size()-1;
+		cloudProvider.destroyNode(availableNodes.get(lastNodeIndex).getId());
 	}
 
 	public Node selectNode(Config config) {
@@ -66,10 +83,10 @@ public class SimpleRoundRobinSelector implements NodeSelector {
 	public int getNextIndex() {
 		lastUsedNode++;
 
-		if (lastUsedNode == availableNodes.size()){
+		if (lastUsedNode == availableNodes.size()) {
 			lastUsedNode = 0;
 		}
-		
+
 		return lastUsedNode;
 	}
 

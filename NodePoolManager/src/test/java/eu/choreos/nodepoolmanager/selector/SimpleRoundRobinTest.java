@@ -1,9 +1,8 @@
 package eu.choreos.nodepoolmanager.selector;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,6 +104,31 @@ public class SimpleRoundRobinTest {
 		assertEquals(4, nodePoolSize);
 
 		testEveryIndexAndThenReturnToZero(4);
+	}
+
+	@Test
+	public void shouldDecreaseNodePoolSizeUponRequest() {
+		selector = new SimpleRoundRobinSelector(mockedProvider, 6);
+		
+		int nodePoolSize = selector.getAvailableNodes().size();
+		assertEquals(6, nodePoolSize);
+
+		selector.changeNodePoolSize(4);
+		verify(mockedProvider, times(2)).destroyNode(any(String.class));
+		
+	}
+
+	@Test
+	public void shouldNotChangeNodePoolSizeUnlessNecessary() {
+		selector = new SimpleRoundRobinSelector(mockedProvider, 6);
+		
+		int nodePoolSize = selector.getAvailableNodes().size();
+		assertEquals(6, nodePoolSize);
+
+		selector.changeNodePoolSize(6);
+		
+		verify(mockedProvider, times(0)).destroyNode(any(String.class));
+		
 	}
 
 	@Test
