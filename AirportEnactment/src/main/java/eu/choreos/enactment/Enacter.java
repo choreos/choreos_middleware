@@ -11,6 +11,7 @@ public class Enacter {
 
 	private String type;
 	private SpecBuilder[] specBuilders;
+	private Set<Service> deployed = new HashSet<Service>();
 	
 	public Enacter(String type, SpecBuilder[] specBuilders) {
 		this.type = type;
@@ -21,24 +22,51 @@ public class Enacter {
 		
 		System.out.println("Enacting " + type + "s...");
 
-		Set<Service>	deployed = new HashSet<Service>();
-		
 		SpecRetriever retriever = new SpecRetriever(specBuilders);
 		Set<ServiceSpec> specs = retriever.retrieve();
+
+		// each threads deploy one service
+		Thread[] trds = new Thread[specs.size()];
 		
-//		ServiceDeployer deployer = new ServiceDeployerClient();
+		int i = 0;
 		for (ServiceSpec spec: specs) {
+			trds[i] = new Thread(new SpecEnacter(spec));
+			trds[i].start();
+			i++;
+		}
+		
+		// wait for all threads finish
+		for (Thread t: trds) {
+			try {
+				t.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return deployed;
+	}
+	
+	private class SpecEnacter implements Runnable {
+
+		private ServiceSpec spec;
+		public SpecEnacter(ServiceSpec spec) {
+			this.spec = spec;
+		}
+		
+		@Override
+		public void run() {
 			System.out.println("Deploying " + type + " " + spec.getRole()
 					+ " from " + spec.getCodeUri());
+//			ServiceDeployer deployer = new ServiceDeployerClient();
 //			Service service = deployer.deploy(spec);
 //			System.out.println("Service deployed = " + service);
 			Service service = new Service(spec);
 			service.setHost("localhost"); // fake
 			deployed.add(service);
-			System.out.println(service.getId() + " deployed at " + service.getUri());
+			System.out.println(service.getId() + " deployed at " + service.getUri());			
 		}
-
-		return deployed;
+		
 	}
 
 }
