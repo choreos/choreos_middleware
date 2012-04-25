@@ -3,6 +3,9 @@ package eu.choreos.monitoring.glimpse.probe;
 import it.cnr.isti.labse.glimpse.event.GlimpseBaseEvent;
 import it.cnr.isti.labse.glimpse.probe.GlimpseAbstractProbe;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -10,8 +13,11 @@ import java.util.Properties;
 import javax.jms.JMSException;
 import javax.naming.NamingException;
 
+import org.apache.commons.io.FileUtils;
+
 import eu.choreos.monitoring.daemon.Threshold;
 import eu.choreos.monitoring.daemon.ThresholdEvalDaemon;
+import eu.choreos.monitoring.utils.ShellHandler;
 
 public class GangliaProbe extends GlimpseAbstractProbe {
 
@@ -39,8 +45,10 @@ public class GangliaProbe extends GlimpseAbstractProbe {
 	
 	private void sendStringMsg(GlimpseBaseEvent<String> event) {
 		List<Threshold> triggeredThresholds = daemon.evaluateThresholds();
-		if(!triggeredThresholds.isEmpty())
-			event.setNetworkedSystemSource(triggeredThresholds.get(0).getHostName());
+	
+		event.setNetworkedSystemSource(this.getHostName());
+		
+		System.out.println("Sending event with hosname "+event.getNetworkedSystemSource());
 		for(Threshold threshold:triggeredThresholds){
 			try {
 				event.setData(threshold.toString());
@@ -54,6 +62,36 @@ public class GangliaProbe extends GlimpseAbstractProbe {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public String getHostName() {
+		return ShellHandler.runLocalCommand(getScriptCommand()).replace("\n",
+				"");
+	}
+
+	public String getScriptCommand() {
+
+		String command;
+		URL location = this.getClass().getClassLoader().getResource("hostname.sh");		
+		
+		File tmpFile = new File("/tmp/hostname.sh");
+		try {
+			if (tmpFile.exists())
+				FileUtils.forceDelete(tmpFile);
+			FileUtils.copyURLToFile(location, tmpFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if (tmpFile.exists()){
+			tmpFile.setExecutable(true);
+			command = "/bin/bash "
+					+ (tmpFile.getAbsolutePath()).replace("%20", " ");
+		}
+		else{
+			command = "/bin/bash /tmp/hostname.sh";
+		}
+		
+		return command;
 	}
 	
 	@Override
