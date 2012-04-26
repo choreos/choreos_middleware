@@ -6,4 +6,4 @@
 * The first deploy must not be concurrent,
   since the other nodes must recognize it as the master node
 * Remove the setInvocationAddress from coordels (DONE)
-* Solve the ServiceDeployer endpoint issue
+* Solve the ServiceDeployer endpoint issue (DONE)

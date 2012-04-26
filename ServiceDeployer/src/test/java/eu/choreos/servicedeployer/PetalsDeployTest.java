@@ -8,20 +8,18 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.choreos.servicedeployer.datamodel.ResourceImpact;
 import eu.choreos.servicedeployer.datamodel.Service;
 import eu.choreos.servicedeployer.datamodel.ServiceSpec;
 import eu.choreos.servicedeployer.npm.NodePoolManagerClient;
 
 public class PetalsDeployTest {
 
-	// a known sa file
+	// a known SA file
 	public static String SA_LOCATION = "https://github.com/downloads/choreos/choreos_middleware/sa-HelloService-provide.zip";
 	
 	private WebClient client;
 	private ServiceDeployer deployer;
 	private ServiceSpec spec = new ServiceSpec();
-	private ResourceImpact resourceImpact = new ResourceImpact();
 	private Service service;
 
 	@Before
@@ -29,8 +27,7 @@ public class PetalsDeployTest {
 		
 		spec.setCodeUri(SA_LOCATION);
 		spec.setType("PETALS");
-		spec.setEndpointName("HelloImplPort"); // information inside JBI
-		spec.setResourceImpact(resourceImpact);
+		spec.setEndpointName("HelloImplPortService"); // information inside JBI
 		deployer = new ServiceDeployer(new NodePoolManagerClient());
 	}
 

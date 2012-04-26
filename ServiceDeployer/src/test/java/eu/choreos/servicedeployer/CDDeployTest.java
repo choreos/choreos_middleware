@@ -44,7 +44,6 @@ public class CDDeployTest {
 
 		this.deployCD();
 		this.deployCDConsume();
-		verifyCoordelWsdl("23.22.1.171");
 	}
 	
 	

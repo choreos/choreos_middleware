@@ -10,7 +10,7 @@ class EndpointResolver {
 		case SOAP_CONSUME:
 			return serviceName.toLowerCase() + "1234";
 		case SOAP_PROVIDE:
-			return serviceName + "Port";
+			return serviceName + "PortService";
 		case CD_PROVIDE:
 			return "CD" + serviceName + "Port";
 		}

@@ -97,7 +97,7 @@ public class Service {
 				uriContext = endpointName + "/";
 				break;
 			case PETALS:
-				uriContext = "petals/services/" + endpointName + "Service/";
+				uriContext = "petals/services/" + endpointName + "/";
 				break;
 			default:
 				throw new IllegalStateException(
