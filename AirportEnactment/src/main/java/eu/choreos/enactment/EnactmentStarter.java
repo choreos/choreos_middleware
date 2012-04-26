@@ -3,6 +3,8 @@ package eu.choreos.enactment;
 import java.util.Set;
 
 import eu.choreos.enactment.context.ChorContextCaster;
+import eu.choreos.servicedeployer.ServiceDeployer;
+import eu.choreos.servicedeployer.ServiceDeployerClient;
 import eu.choreos.servicedeployer.datamodel.Service;
 import eu.choreos.servicedeployer.datamodel.ServiceSpec;
 
@@ -77,8 +79,8 @@ public class EnactmentStarter {
 		ServiceSpec spec = new SpecRetriever(null).getFirstSpec();
 		System.out.println("Deploying master node: CD " + spec.getRole()
 				+ " from " + spec.getCodeUri());	
-		Service service = new Service(spec);
-		service.setHost("localhost"); // fake
+		ServiceDeployer deployer = new ServiceDeployerClient();
+		Service service = deployer.deploy(spec);
 		System.out.println(service.getId() + " deployed at " + service.getUri());
 	}
 

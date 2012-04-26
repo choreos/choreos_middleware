@@ -37,7 +37,8 @@ public class ServiceDeployerClient implements ServiceDeployer {
 		WebClient client = setupClient();
 		client.path("services");   	
         Service service = client.post(spec, Service.class);
-        System.out.println("Response " + client.getResponse().getStatus());
+		System.out.println("Response from " + service.getName()
+				+ " deployment: " + client.getResponse().getStatus());
         
         service.setRole(spec.getRole());
         return service;

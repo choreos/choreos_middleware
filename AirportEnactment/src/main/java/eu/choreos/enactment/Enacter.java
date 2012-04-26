@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import eu.choreos.enactment.spec.SpecBuilder;
+import eu.choreos.servicedeployer.ServiceDeployer;
+import eu.choreos.servicedeployer.ServiceDeployerClient;
 import eu.choreos.servicedeployer.datamodel.Service;
 import eu.choreos.servicedeployer.datamodel.ServiceSpec;
 
@@ -58,13 +60,10 @@ public class Enacter {
 		public void run() {
 			System.out.println("Deploying " + type + " " + spec.getRole()
 					+ " from " + spec.getCodeUri());
-//			ServiceDeployer deployer = new ServiceDeployerClient();
-//			Service service = deployer.deploy(spec);
-//			System.out.println("Service deployed = " + service);
-			Service service = new Service(spec);
-			service.setHost("localhost"); // fake
-			deployed.add(service);
+			ServiceDeployer deployer = new ServiceDeployerClient();
+			Service service = deployer.deploy(spec);
 			System.out.println(service.getId() + " deployed at " + service.getUri());			
+			deployed.add(service);
 		}
 		
 	}
