@@ -9,4 +9,5 @@ Is it possible to interact with chef to store data?
 - BUG: GET /services is not working properly
 - to Petals services the endpoint-name must be provided,
 however it could be parsed from XML
-- BUG: concurrent requests to deploy the same service (create multiple instances) doens't work
+- The CDDeployTest should verify if the given URI really returns a WSDL and not just to check for the 200 status code
+- BUG: the ServiceDeployer.deploy() is not always returning the correct URI, like in CDDeployTest. 

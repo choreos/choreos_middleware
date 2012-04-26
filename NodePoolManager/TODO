@@ -8,3 +8,7 @@ Code improvements
 If not, return an error
 
 * Pick up already existing nodes in order to reduce middleware testing time
+
+* To change initial message from "Node Pool Manager is started..."
+to "Node Pool Manager has started in http://localhost:9100/nodepoolmanager/"
+This applies to ServiceDeployer and StorageFactory as well

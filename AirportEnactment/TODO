@@ -1,5 +1,8 @@
 * Write Service Deployer client (DONE)
 * Full integrated coordel deploy test (need to update Petals recipe)
 * Deploy backend systems (NOT NEEDED)
-* Paralelizar os pedidos de deploy
-* setChoreogrpahyContext
+* Paralelizar os pedidos de deploy (DONE)
+* setChoreogrpahyContext (DONE)
+* The first deploy must not be concurrent,
+  since the other nodes must recognize it as the master node
+* Remove the setInvocationAddress from coordels
