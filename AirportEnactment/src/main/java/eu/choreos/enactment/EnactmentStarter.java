@@ -4,6 +4,7 @@ import java.util.Set;
 
 import eu.choreos.enactment.context.ChorContextCaster;
 import eu.choreos.servicedeployer.datamodel.Service;
+import eu.choreos.servicedeployer.datamodel.ServiceSpec;
 
 public class EnactmentStarter {
 	
@@ -24,6 +25,9 @@ public class EnactmentStarter {
 
 	private void deployArtifacts() {
 
+		// we have to deploy a petals node first: it will be the master node
+		this.deployMasterNode();
+		
 		// each thread enacts a different group of artifacts
 		Thread[] trds = new Thread[4];
 		
@@ -69,6 +73,15 @@ public class EnactmentStarter {
 		}
 	}
 	
+	private void deployMasterNode() {
+		ServiceSpec spec = new SpecRetriever(null).getFirstSpec();
+		System.out.println("Deploying master node: CD " + spec.getRole()
+				+ " from " + spec.getCodeUri());	
+		Service service = new Service(spec);
+		service.setHost("localhost"); // fake
+		System.out.println(service.getId() + " deployed at " + service.getUri());
+	}
+
 	private void passContext() {
 		
 		System.out.println("Passing context");
