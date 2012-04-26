@@ -27,7 +27,7 @@ public class ServiceDeployer {
 	/**
 	 * 
 	 * @param service
-	 * @return
+	 * @return service URI
 	 * @throws MalformedURLException
 	 */
 	public String deploy(Service service) throws MalformedURLException {

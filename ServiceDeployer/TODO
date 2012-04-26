@@ -11,3 +11,5 @@ Is it possible to interact with chef to store data?
 however it could be parsed from XML
 - The CDDeployTest should verify if the given URI really returns a WSDL and not just to check for the 200 status code
 - BUG: the ServiceDeployer.deploy() is not always returning the correct URI, like in CDDeployTest. 
+- run clean_aws.sh after every test
+  must be done also in NodePoolManager and StorageFactory
