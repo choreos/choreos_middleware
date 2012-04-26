@@ -88,6 +88,7 @@ public class CDDeployTest {
 		System.out.println("Verifying " + wsdl);
 		WebClient client = WebClient.create(wsdl);
 
+		client.get(); // at the first requisition, answers comes in blank
 		String xml = client.get(String.class);
 		System.out.println(xml);
 		String excerpt = "<w:portType name=\"Hotel\">";

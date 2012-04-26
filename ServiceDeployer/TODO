@@ -13,3 +13,8 @@ however it could be parsed from XML
 - BUG: the ServiceDeployer.deploy() is not always returning the correct URI, like in CDDeployTest. 
 - run clean_aws.sh after every test
   must be done also in NodePoolManager and StorageFactory
+- the CDTestDeploy is working, but it's failing
+  I think it was because the "first blank requisition"
+  I've corrected this, but not properly tested yet
+  In a nut shell: just run CDTestDeploy test again
+  
