@@ -17,7 +17,7 @@ class ContextCaster {
 			
 			if (!service.equals(partner)) {
 				System.out.println(service.getId() + ".setInvocationAddress("
-						+ partner.getRole() + ", " + partner.getUri());
+						+ partner.getRole() + ", " + partner.getUri() + ")");
 			}
 		}	
 	}

@@ -12,7 +12,7 @@ public class EnactmentStarter {
 	private Enacter consumeEnacter = EnacterFactory.getSoapConsumeEnacter();
 	private Enacter provideEnacter = EnacterFactory.getSoapProvideEnacter();
 	
-	private Set<Service> powss, provides, consumes;
+	private Set<Service> powss, consumes;
 	
 	public void enact() {
 		
@@ -46,7 +46,7 @@ public class EnactmentStarter {
 		trds[2] = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				provides = provideEnacter.enact();				
+				provideEnacter.enact();				
 			}
 		});
 		trds[2].start();
@@ -73,7 +73,7 @@ public class EnactmentStarter {
 		
 		System.out.println("Passing context");
 		ChorContextCaster caster = new ChorContextCaster();
-		caster.cast(powss, provides, consumes);		
+		caster.cast(powss, consumes);		
 	}
 	
 	public static void main(String[] args) {
