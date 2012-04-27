@@ -39,25 +39,37 @@ public class GangliaProbe extends GlimpseAbstractProbe {
 		daemon.setThresholdList(thresholds);
 		
 		while (true) {
-			sendStringMsg(message);
+			sendAllThresholdMsgs(message);
+			sleep(6000);
 		}
 	}
 	
-	private void sendStringMsg(GlimpseBaseEvent<String> event) {
+	private void sendAllThresholdMsgs(GlimpseBaseEvent<String> event) {
 		List<Threshold> triggeredThresholds = daemon.evaluateThresholds();
 		event.setNetworkedSystemSource(this.getHostName());
 		for(Threshold threshold:triggeredThresholds){
-			try {
-				event.setData(threshold.toString());
-				this.sendEventMessage(event,false);
-				Thread.sleep(6000);
-			} catch (JMSException e) {
-				e.printStackTrace();
-			} catch (NamingException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			event.setData(threshold.toString());
+			sendMessage(event);
+		}
+	}
+
+	private void sendMessage(GlimpseBaseEvent<String> event) {
+		try {
+			this.sendEventMessage(event,false);
+		} catch (JMSException e) {
+			e.printStackTrace();
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void sleep(int time) {
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	

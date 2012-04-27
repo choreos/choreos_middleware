@@ -1,12 +1,5 @@
 package eu.choreos.monitoring.daemon;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
-import org.apache.commons.io.FileUtils;
-
-import eu.choreos.monitoring.utils.ShellHandler;
 
 public class Threshold {
 
@@ -119,35 +112,4 @@ public class Threshold {
 		return "Triggered: " + name + " " + comparisonString() + " "
 				+ limitValue + ". Measured: " + lastMeasurement ;
 	}
-
-	public String getHostName() {
-		return ShellHandler.runLocalCommand(getScriptCommand()).replace("\n",
-				"");
-	}
-
-	public String getScriptCommand() {
-
-		String command;
-		URL location = this.getClass().getClassLoader().getResource("hostname.sh");		
-		
-		File tmpFile = new File("/tmp/hostname.sh");
-		try {
-			if (tmpFile.exists())
-				FileUtils.forceDelete(tmpFile);
-			FileUtils.copyURLToFile(location, tmpFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if (tmpFile.exists()){
-			tmpFile.setExecutable(true);
-			command = "/bin/bash "
-					+ (tmpFile.getAbsolutePath()).replace("%20", " ");
-		}
-		else{
-			command = "/bin/bash /tmp/hostname.sh";
-		}
-		
-		return command;
-	}
-
 }

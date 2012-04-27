@@ -28,15 +28,4 @@ public class ThresholdTest {
 		assertEquals("Triggered: Test <= 3.0. Measured: 4.0 in " + hostname,
 				threshold.toString());
 	}
-
-	@Test
-	public void testGetScriptCommand() {
-		assertEquals("/bin/bash " +"/tmp/hostname.sh",
-				threshold.getScriptCommand());
-	}
-
-	@Test
-	public void shouldGetHostname() throws Exception {
-		assertEquals(hostname, threshold.getHostName());
-	}
 }
