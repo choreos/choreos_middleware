@@ -8,7 +8,7 @@
   <name>CHOReOS Monitoring</name>
 
   <modules>
-    <module>ChoreosMonitoring</module>
+    <module>ThresholdEvaluationDaemon</module>
     <module>glimpse</module>
     <module>GmondConf</module>
   </modules>
