@@ -33,6 +33,14 @@
 
 		<dependency>
 			<groupId>choreosLocal</groupId>
+			<artifactId>glimpse-api</artifactId>
+			<version>3.3.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/../lib/glimpse-api.3.3.1.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>choreosLocal</groupId>
 			<artifactId>ComplexEventResponse</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
