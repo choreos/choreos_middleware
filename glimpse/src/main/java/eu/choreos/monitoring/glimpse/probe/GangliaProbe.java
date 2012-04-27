@@ -39,12 +39,12 @@ public class GangliaProbe extends GlimpseAbstractProbe {
 		daemon.setThresholdList(thresholds);
 		
 		while (true) {
-			sendAllThresholdMsgs(message);
+			sendStringMsg(message);
 			sleep(6000);
 		}
 	}
 	
-	private void sendAllThresholdMsgs(GlimpseBaseEvent<String> event) {
+	private void sendStringMsg(GlimpseBaseEvent<String> event) {
 		List<Threshold> triggeredThresholds = daemon.evaluateThresholds();
 		event.setNetworkedSystemSource(this.getHostName());
 		for(Threshold threshold:triggeredThresholds){

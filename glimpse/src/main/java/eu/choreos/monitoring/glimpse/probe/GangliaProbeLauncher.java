@@ -42,7 +42,7 @@ public class GangliaProbeLauncher {
 				"NS1",
 				false);
 		
-		for(;;){
+		while(true){
 			gangliaProbe.notifyMessages(message,host,port);
 		}
 		
