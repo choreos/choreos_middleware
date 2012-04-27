@@ -34,7 +34,7 @@ public class GmondDataReaderTest {
 	}
 
 	@Test
-	public void testGetGangliaCurrentMetrics() {
+	public void testParseGangliaCurrentMetrics() {
 		InputStream in = getClass().getResourceAsStream("/campinas.xml");
 		Document dom = gmondReader.convertToDomDocument(in);
 

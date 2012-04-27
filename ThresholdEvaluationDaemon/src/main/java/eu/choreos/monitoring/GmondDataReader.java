@@ -35,7 +35,7 @@ public class GmondDataReader {
 		return metrics;
 	}
 
-	public void setMetrics(Document gangliaXML) {
+	private void setMetrics(Document gangliaXML) {
 
 		if (gangliaXML == null) {
 			System.err.println("Error on parse ganglia XML file!");
@@ -79,7 +79,7 @@ public class GmondDataReader {
 
 	}
 
-	public Document getGangliaMetricsFromSocket(Socket socket) {
+	private Document getGangliaMetricsFromSocket(Socket socket) {
 		InputStream in = getStreamFromSocket(socket);
 		Document dom = convertToDomDocument(in);
 		closeInputStream(in);
@@ -137,10 +137,6 @@ public class GmondDataReader {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-	}
-
-	public Socket getSocket() {
-		return socket;
 	}
 
 	public void setSocket(Socket socket) {
