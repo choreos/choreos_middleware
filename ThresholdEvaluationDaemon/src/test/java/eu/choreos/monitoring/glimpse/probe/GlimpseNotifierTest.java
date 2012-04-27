@@ -12,7 +12,7 @@ import eu.choreos.monitoring.daemon.ThresholdEvalDaemon;
 import eu.choreos.monitoring.glimpse.notifier.GlimpseNotifier;
 import eu.choreos.monitoring.utils.ShellHandler;
 
-public class GangliaProbeTest {
+public class GlimpseNotifierTest {
 	
 	GlimpseNotifier glimpseNotifier;
 	ThresholdEvalDaemon daemon;
