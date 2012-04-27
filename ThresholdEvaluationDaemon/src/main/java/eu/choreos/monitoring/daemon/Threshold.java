@@ -16,26 +16,6 @@ public class Threshold {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public double getValue() {
-		return limitValue;
-	}
-
-	public void setValue(double value) {
-		this.limitValue = value;
-	}
-
-	public int getComparison() {
-		return comparison;
-	}
-
-	public void setComparison(int comparison) {
-		this.comparison = comparison;
-	}
-
 	public Threshold(String name, int comparison, double value) {
 		this.name = name;
 		this.comparison = comparison;
