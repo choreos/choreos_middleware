@@ -17,16 +17,8 @@ public class AnomalyNotifier {
 		thresholds = new ArrayList<Threshold>();
 	}
 
-	public List<Threshold> getThresholds() {
-		return thresholds;
-	}
-
 	public void setThresholds(List<Threshold> thresholds) {
 		this.thresholds = thresholds;
-	}
-
-	public Map<String, Gmetric> getMetricsMap() {
-		return metricsMap;
 	}
 
 	public int addThreshold(Threshold threshold) {
@@ -38,7 +30,6 @@ public class AnomalyNotifier {
 	public void removeThreshold(Threshold threshold) {
 		thresholds.remove(threshold);
 		return;
-
 	}
 
 	public void removeThreshold(int index) {

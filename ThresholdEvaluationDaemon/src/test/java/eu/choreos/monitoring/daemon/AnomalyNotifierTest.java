@@ -98,7 +98,7 @@ public class AnomalyNotifierTest {
 	public void shouldNotNotifySingleThreshold() {
 		Threshold threshold = new Threshold("pkts_in", Threshold.MAX, 1000);
 
-		notifier.getThresholds().add(threshold);
+		notifier.addThreshold(threshold);
 
 		List<Threshold> list = notifier.getAllSurpassedThresholds();
 
@@ -109,7 +109,7 @@ public class AnomalyNotifierTest {
 	public void shouldNotifySingleThreshold() {
 		Threshold threshold = new Threshold("pkts_in", Threshold.MAX, 100);
 
-		notifier.getThresholds().add(threshold);
+		notifier.addThreshold(threshold);
 
 		List<Threshold> list = notifier.getAllSurpassedThresholds();
 
@@ -125,10 +125,10 @@ public class AnomalyNotifierTest {
 		Threshold threshold3 = new Threshold("mem_cached", Threshold.MAX,
 				1000000);
 
-		notifier.getThresholds().add(threshold1);
-		notifier.getThresholds().add(threshold2);
-		notifier.getThresholds().add(threshold3);
-		notifier.getThresholds().add(threshold4);
+		notifier.addThreshold(threshold1);
+		notifier.addThreshold(threshold2);
+		notifier.addThreshold(threshold3);
+		notifier.addThreshold(threshold4);
 
 		List<Threshold> list = notifier.getAllSurpassedThresholds();
 
