@@ -9,11 +9,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import eu.choreos.monitoring.daemon.ThresholdEvalDaemon;
+import eu.choreos.monitoring.glimpse.notifier.GlimpseNotifier;
 import eu.choreos.monitoring.utils.ShellHandler;
 
 public class GangliaProbeTest {
 	
-	GangliaProbe gangliaProbe;
+	GlimpseNotifier glimpseNotifier;
 	ThresholdEvalDaemon daemon;
 	String hostname = ShellHandler.runLocalCommand("/bin/bash "+ "/tmp/hostname.sh").replace("\n", "");
 
@@ -31,18 +32,18 @@ public class GangliaProbeTest {
 				"probeName", 
 				"probeTopic");
 		
-		gangliaProbe = new GangliaProbe(createProbeSettingsPropertiesObject);
+		glimpseNotifier = new GlimpseNotifier(createProbeSettingsPropertiesObject);
 
 	}
 
 	@Test
 	public void testGetScriptCommand() {
-		assertEquals("/bin/bash " + "/tmp/hostname.sh", gangliaProbe.getScriptCommand());
+		assertEquals("/bin/bash /tmp/hostname.sh", glimpseNotifier.getScriptCommand());
 	}
 	
 	@Test
 	public void shouldGetHostname() throws Exception {
-		assertEquals(hostname, gangliaProbe.getHostName());
+		assertEquals(hostname, glimpseNotifier.getHostName());
 	}
 
 }
