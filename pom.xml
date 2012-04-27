@@ -9,7 +9,7 @@
 
   <modules>
     <module>ThresholdEvaluationDaemon</module>
-    <module>glimpse</module>
+    <module>GlimpseConsumer</module>
     <module>GmondConf</module>
   </modules>
 
