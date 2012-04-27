@@ -1,0 +1,19 @@
+            <container type="slave" name="$SLAVE_PRIVATE_DNS">
+                <description>description of the slave container</description>
+                <host>$SLAVE_PRIVATE_IP</host>
+                <user>petals</user>
+                <password>petals</password>
+                <jmx-service>
+                    <rmi-port>7700</rmi-port>
+                </jmx-service>
+                <transport-service>
+                    <tcp-port>7800</tcp-port>
+                </transport-service>
+                <registry-service>
+                    <port>7900</port>
+                </registry-service>
+                <webservice-service>
+                    <port>7600</port>
+                    <prefix>petals/ws</prefix>
+                </webservice-service>
+            </container>

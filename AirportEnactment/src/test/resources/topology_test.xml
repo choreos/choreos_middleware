@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<topology xmlns="http://petals.ow2.org/topology">
+    <domain name="PEtALS" mode="dynamic">
+        <description>The dynamic domain configuration</description>
+        <sub-domain name="subdomain1" mode="master-slave">
+            <description>description of the subdomain</description>
+            <container type="master" name="CHOREOS-MASTER">
+                <description>description of the master container</description>
+                <host>192.168.0.101</host>
+                <user>petals</user>
+                <password>petals</password>
+                <jmx-service>
+                    <rmi-port>7700</rmi-port>
+                </jmx-service>
+                <transport-service>
+                    <tcp-port>7800</tcp-port>
+                </transport-service>
+                <registry-service>
+                    <port>7900</port>
+                </registry-service>
+                <webservice-service>
+                    <port>7600</port>
+                    <prefix>petals/ws</prefix>
+                </webservice-service>
+            </container>
+
+            <container type="slave" name="SLAVE1">
+                <description>description of the slave container</description>
+                <host>192.168.0.102</host>
+                <user>petals</user>
+                <password>petals</password>
+                <jmx-service>
+                    <rmi-port>7700</rmi-port>
+                </jmx-service>
+                <transport-service>
+                    <tcp-port>7800</tcp-port>
+                </transport-service>
+                <registry-service>
+                    <port>7900</port>
+                </registry-service>
+                <webservice-service>
+                    <port>7600</port>
+                    <prefix>petals/ws</prefix>
+                </webservice-service>
+            </container>
+            <container type="slave" name="SLAVE2">
+                <description>description of the slave container</description>
+                <host>192.168.0.103</host>
+                <user>petals</user>
+                <password>petals</password>
+                <jmx-service>
+                    <rmi-port>7700</rmi-port>
+                </jmx-service>
+                <transport-service>
+                    <tcp-port>7800</tcp-port>
+                </transport-service>
+                <registry-service>
+                    <port>7900</port>
+                </registry-service>
+                <webservice-service>
+                    <port>7600</port>
+                    <prefix>petals/ws</prefix>
+                </webservice-service>
+            </container>
+        </sub-domain>
+    </domain>
+</topology>
