@@ -71,7 +71,7 @@ public class GmondConf {
 		if (reloader.reload())
 			System.out.println("gmond restarted.");
 		else
-			System.out.println("could not restart gmond");
+			System.out.println("could not restart gmond. Are you root? Do you have the necessary privileges?");
 
 	}
 
