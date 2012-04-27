@@ -1,5 +1,6 @@
 package eu.choreos.monitoring.daemon;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
@@ -21,6 +22,28 @@ public class ThresholdTest {
 	public void setUp() {
 		threshold = new Threshold("Test", Threshold.MAX, 3);
 	}
+	
+	@Test
+	public void upperBoundarySurpassed(){
+		assertTrue(threshold.wasSurpassed(4.0));
+	}
+
+	@Test
+	public void upperBoundaryNotSurpassed(){
+		assertFalse(threshold.wasSurpassed(2.0));
+	}
+	
+	@Test
+	public void lowerBoundarySurpassed(){
+		threshold = new Threshold("Test", Threshold.MIN, 3);
+		assertTrue(threshold.wasSurpassed(2.0));
+	}
+	@Test
+	public void lowerBoundaryNotSurpassed(){
+		threshold = new Threshold("Test", Threshold.MIN, 3);
+		assertFalse(threshold.wasSurpassed(4.0));
+	}
+
 
 	@Test
 	public void testToString() {
