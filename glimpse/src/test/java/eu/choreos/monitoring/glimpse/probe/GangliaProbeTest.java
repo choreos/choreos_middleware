@@ -1,3 +1,5 @@
+package eu.choreos.monitoring.glimpse.probe;
+
 import static org.junit.Assert.*;
 
 import java.util.Properties;
