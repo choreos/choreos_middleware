@@ -19,11 +19,11 @@ import eu.choreos.monitoring.daemon.Threshold;
 import eu.choreos.monitoring.daemon.ThresholdEvalDaemon;
 import eu.choreos.monitoring.utils.ShellHandler;
 
-public class GangliaProbe extends GlimpseAbstractProbe {
+public class GlimpseNotifier extends GlimpseAbstractProbe {
 
 	private ThresholdEvalDaemon daemon;
 
-	public GangliaProbe(Properties settings) {
+	public GlimpseNotifier(Properties settings) {
 		super(settings);
 	}
 	

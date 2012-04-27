@@ -6,7 +6,7 @@ import it.cnr.isti.labse.glimpse.utils.Manager;
 
 import java.util.Properties;
 
-public class GangliaProbeLauncher {
+public class GlimpseNotifierLauncher {
 	public static void main(String[] args) {
 		String host = "localhost";
 		Integer port = 8649;
@@ -31,7 +31,7 @@ public class GangliaProbeLauncher {
 				"probeName", 
 				"probeTopic");
 		
-		GangliaProbe gangliaProbe = new GangliaProbe(createProbeSettingsPropertiesObject);
+		GlimpseNotifier gangliaProbe = new GlimpseNotifier(createProbeSettingsPropertiesObject);
 		
 		GlimpseBaseEvent<String> message = new GlimpseBaseEventImpl<String>("thresholdAlarm",
 				"connector1","connInstance1",
