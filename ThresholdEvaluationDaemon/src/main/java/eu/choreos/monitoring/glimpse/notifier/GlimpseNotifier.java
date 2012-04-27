@@ -19,73 +19,75 @@ import eu.choreos.monitoring.daemon.Threshold;
 import eu.choreos.monitoring.daemon.ThresholdEvalDaemon;
 import eu.choreos.monitoring.utils.ShellHandler;
 
-public class GlimpseNotifier extends GlimpseAbstractProbe {
+public class GlimpseNotifier {
 
+	private static final int ALIVE_INTERVAL = 120000;
+	private static final int NOTIFICATION_INTERVAL = 6000;
 	private ThresholdEvalDaemon daemon;
+	private GlimpseMessageHandler messageHandler;
+	private int nonSentMessagesIterationsCounter = 0;
 
-	public GlimpseNotifier(Properties settings) {
-		super(settings);
-	}
-	
-	public void notifyMessages(GlimpseBaseEvent<String> message,String host,int port) {
-			thresholdEval(host,port,message);
-	}
-	
-	private void thresholdEval(String host,int port, GlimpseBaseEvent<String> message){
-		daemon = new ThresholdEvalDaemon(host,port);
+	public GlimpseNotifier(Properties settings, String host, int port,
+			GlimpseMessageHandler msgHandler, ThresholdEvalDaemon evalDaemon) {
+		daemon = evalDaemon;
+		messageHandler = msgHandler;
+
 		List<Threshold> thresholds = new ArrayList<Threshold>();
 		thresholds.add(new Threshold("load_one", Threshold.MAX, 1));
 		daemon.setThresholdList(thresholds);
-		
+
+	}
+
+	public GlimpseNotifier(Properties settings, String host, int port) {
+		this(settings, host, port, (new GlimpseMessageHandler(settings)),
+				(new ThresholdEvalDaemon()));
+	}
+
+	public void continuouslyEvaluateThresholdsAndSendMessages(
+			GlimpseBaseEvent<String> message) {
+
 		while (true) {
-			trySendMessage(message);
+			evaluateThresholdsSendMessagesAndSleep(message,
+					NOTIFICATION_INTERVAL);
 		}
 	}
 
-	private void trySendMessage(GlimpseBaseEvent<String> message) {
-		int timesCount = 0;
-		int messageInterval = 6000;
-		int aliveInterval = 120000;
-		boolean messageWasSent = sendStringMsg(message);
-		
-		if(!messageWasSent) {
-			++timesCount;
-			if((timesCount * messageInterval) >= aliveInterval) {
-				sendAliveMessage(message);
-				timesCount = 0;
-			}
+	public void evaluateThresholdsSendMessagesAndSleep(
+			GlimpseBaseEvent<String> message, int sleepingTime) {
+
+		if (thereAreSurpassedThresholds()) {
+			sendAllSurpassedThresholdMessages(message);
 		} else {
-			timesCount = 0;
-			sendStringMsg(message);
-			sleep(6000);
+			nonSentMessagesIterationsCounter++;
+			if (nonSentMessagesIterationsCounter * NOTIFICATION_INTERVAL >= ALIVE_INTERVAL) {
+				sendAliveMessage(message);
+			}
 		}
-		
-		sleep(messageInterval);
+
+		sleep(sleepingTime);
 	}
-	
-	private void sendAliveMessage(GlimpseBaseEvent<String> message) {
+
+	public void sendAliveMessage(GlimpseBaseEvent<String> message) {
 		message.setNetworkedSystemSource(this.getHostName());
 		message.setData("Alive");
-		sendMessage(message);	
+		sendMessage(message);
 	}
 
-	public boolean sendStringMsg(GlimpseBaseEvent<String> event) {
-		List<Threshold> triggeredThresholds = daemon.evaluateThresholds();
+	private void sendMessage(GlimpseBaseEvent<String> message) {
+		messageHandler.sendMessage(message);
+		nonSentMessagesIterationsCounter = 0;
+	}
+
+	public boolean thereAreSurpassedThresholds() {
+		return !daemon.evaluateThresholds().isEmpty();
+	}
+
+	public void sendAllSurpassedThresholdMessages(GlimpseBaseEvent<String> event) {
 		event.setNetworkedSystemSource(this.getHostName());
-		for(Threshold threshold:triggeredThresholds){
+
+		for (Threshold threshold : daemon.evaluateThresholds()) {
 			event.setData(threshold.toString());
 			sendMessage(event);
-		}
-		return !triggeredThresholds.isEmpty();
-	}
-
-	private void sendMessage(GlimpseBaseEvent<String> event) {
-		try {
-			this.sendEventMessage(event,false);
-		} catch (JMSException e) {
-			e.printStackTrace();
-		} catch (NamingException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -96,7 +98,7 @@ public class GlimpseNotifier extends GlimpseAbstractProbe {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public String getHostName() {
 		return ShellHandler.runLocalCommand(getScriptCommand()).replace("\n",
 				"");
@@ -105,8 +107,9 @@ public class GlimpseNotifier extends GlimpseAbstractProbe {
 	public String getScriptCommand() {
 
 		String command;
-		URL location = this.getClass().getClassLoader().getResource("hostname.sh");		
-		
+		URL location = this.getClass().getClassLoader()
+				.getResource("hostname.sh");
+
 		File tmpFile = new File("/tmp/hostname.sh");
 		try {
 			if (tmpFile.exists())
@@ -115,21 +118,14 @@ public class GlimpseNotifier extends GlimpseAbstractProbe {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if (tmpFile.exists()){
+		if (tmpFile.exists()) {
 			tmpFile.setExecutable(true);
 			command = "/bin/bash "
 					+ (tmpFile.getAbsolutePath()).replace("%20", " ");
-		}
-		else{
+		} else {
 			command = "/bin/bash /tmp/hostname.sh";
 		}
-		
+
 		return command;
 	}
-	
-	@Override
-	public void sendMessage(GlimpseBaseEvent<?> event, boolean debug) {
-		//TODO
-	}
-
 }
