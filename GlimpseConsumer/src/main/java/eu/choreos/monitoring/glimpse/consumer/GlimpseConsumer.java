@@ -9,9 +9,9 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
 
-public class GangliaConsumer extends GlimpseAbstractConsumer {
+public class GlimpseConsumer extends GlimpseAbstractConsumer {
 
-	public GangliaConsumer(Properties settings, String plainTextRule) {
+	public GlimpseConsumer(Properties settings, String plainTextRule) {
 		super(settings, plainTextRule);
 	}
 
