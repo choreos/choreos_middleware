@@ -13,8 +13,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.choreos.monitoring.Gmetric;
 import eu.choreos.monitoring.GmondDataReader;
+import eu.choreos.monitoring.datatypes.Gmetric;
 
 public class AnomalyNotifierTest {
 

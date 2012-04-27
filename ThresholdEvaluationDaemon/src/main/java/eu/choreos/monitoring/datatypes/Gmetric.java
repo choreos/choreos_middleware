@@ -1,4 +1,4 @@
-package eu.choreos.monitoring;
+package eu.choreos.monitoring.datatypes;
 
 public class Gmetric {
 

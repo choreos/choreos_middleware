@@ -14,6 +14,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import eu.choreos.monitoring.datatypes.Gmetric;
+
 public class GmondDataReader {
 
 	private String host;

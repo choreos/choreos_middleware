@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import eu.choreos.monitoring.*;
+import eu.choreos.monitoring.datatypes.Gmetric;
 
 public class AnomalyNotifier {
 
