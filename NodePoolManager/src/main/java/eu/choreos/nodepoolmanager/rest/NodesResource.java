@@ -46,10 +46,13 @@ public class NodesResource {
     @Consumes(MediaType.APPLICATION_XML)
     public Response createNode(NodeRestRepresentation node, @Context UriInfo uriInfo) throws URISyntaxException {
 
-    	String nodeId = controller.createNode(new Node(node));
-
-		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-		uriBuilder = uriBuilder.path(NodesResource.class).path(nodeId);
+    	Node newNode = new Node();
+    	controller.createNode(newNode);
+		
+    	UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+    	// TODO should be getId instead nodeIp
+    	// and the node should be in the body
+		uriBuilder = uriBuilder.path(NodesResource.class).path(newNode.getIp());
 		URI uri = uriBuilder.build();
     	return Response.created(uri).build();
     }
