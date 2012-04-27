@@ -23,7 +23,7 @@ public class GmondConf {
 
 	}
 
-	public static void main(String... args) {
+	public static void main(String... args) throws Exception {
 		String fileName = "/etc/ganglia/gmond.conf";
 
 		validateArgs(args);
@@ -35,7 +35,7 @@ public class GmondConf {
 		gmondConf.load(fileName);
 
 		for (int i = 0; i < args.length; i++) {
-			
+
 			if (args[i].equals("--add")) {
 				gmondConf.addUdpSendChannel(args[i + 1], args[i + 2]);
 				i += 2;
@@ -46,18 +46,18 @@ public class GmondConf {
 						Integer.parseInt(args[i + 2]));
 				i += 2;
 			}
-			
+
 			if (args[i].equals("--update-channel")) {
 				gmondConf.updateUdpSendChannel(args[i], args[i + 1],
 						Integer.parseInt(args[i + 2]));
 				i += 2;
 			}
-			
+
 			if (args[i].equals("--update-host")) {
 				gmondConf.updateUdpSendChannelHost(args[i + 1], args[i + 2]);
 				i += 2;
 			}
-			
+
 			if (args[i].equals("--remove")) {
 				gmondConf.removeUdpSendChannel(args[i + 1]);
 				i += 2;
@@ -87,39 +87,38 @@ public class GmondConf {
 		return fileName;
 	}
 
-	private static int validateArgs(String[] args) {
-		int returnValue = 0;
+	private static void validateArgs(String[] args) throws Exception {
 		String string;
+
 		for (int index = 0; index < args.length; index++) {
 			string = args[index];
 
 			if (string.equals("--add"))
-				returnValue = index + 2;
-			if (string.equals("--update-port"))
-				returnValue = index + 2;
-			if (string.equals("--update-channel"))
-				returnValue = index + 3;
-			if (string.equals("--update-host"))
-				returnValue = index + 2;
-			if (string.equals("--remove"))
-				returnValue = index + 1;
-			if (string.equals("--config-file"))
-				returnValue = index + 1;
-
-			if (returnValue == index) {
+				index = index + 2;
+			else if (string.equals("--update-port"))
+				index = index + 2;
+			else if (string.equals("--update-channel"))
+				index = index + 3;
+			else if (string.equals("--update-host"))
+				index = index + 2;
+			else if (string.equals("--remove"))
+				index = index + 1;
+			else if (string.equals("--config-file"))
+				index = index + 1;
+			else {
 				printUsage();
 				System.exit(1);
 			}
 		}
-		return returnValue;
 	}
 
-	private static void printUsage() {
+	private static void printUsage() throws Exception {
 		System.out.println("" + "USAGE: java -jar gmondconf "
 				+ "[--add host port] " + "[--update-port host port] "
 				+ "[--update-host currentHost newHost] "
 				+ "[--update-channel currentHost newHost newPort]"
 				+ "[--remove host]" + "[--config-file configFile]");
+		throw (new Exception());
 	}
 
 	public void load(String filePath) {
@@ -189,15 +188,17 @@ public class GmondConf {
 		return null;
 	}
 
-	public void updateUdpSendChannelHost(String newHost, String currentHost) {
+	public void updateUdpSendChannelHost(String currentHost, String newHost) {
 
 		searchIndex = 0;
 		List<Integer> indexes = getUdpSendChannelHost(currentHost);
 
-		for (int index : indexes) {
-			if (fileLines.get(index).contains("host")
-					&& fileLines.get(index).contains(currentHost)) {
-				fileLines.set(index, "  host = " + newHost);
+		if (indexes != null) {
+			for (int index : indexes) {
+				if (fileLines.get(index).contains("host")
+						&& fileLines.get(index).contains(currentHost)) {
+					fileLines.set(index, "  host = " + newHost);
+				}
 			}
 		}
 
