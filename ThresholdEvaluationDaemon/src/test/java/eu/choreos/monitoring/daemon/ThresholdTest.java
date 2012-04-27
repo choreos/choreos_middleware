@@ -25,7 +25,6 @@ public class ThresholdTest {
 	@Test
 	public void testToString() {
 		threshold.wasSurpassed(4.0);
-		assertEquals("Triggered: Test <= 3.0. Measured: 4.0 in " + hostname,
-				threshold.toString());
+		assertEquals("Triggered: Test <= 3.0. Measured: 4.0", threshold.toString());
 	}
 }
