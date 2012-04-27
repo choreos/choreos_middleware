@@ -39,18 +39,45 @@ public class GangliaProbe extends GlimpseAbstractProbe {
 		daemon.setThresholdList(thresholds);
 		
 		while (true) {
+			trySendMessage(message);
+		}
+	}
+
+	private void trySendMessage(GlimpseBaseEvent<String> message) {
+		int timesCount = 0;
+		int messageInterval = 6000;
+		int aliveInterval = 120000;
+		boolean messageWasSent = sendStringMsg(message);
+		
+		if(!messageWasSent) {
+			++timesCount;
+			if((timesCount * messageInterval) >= aliveInterval) {
+				sendAliveMessage(message);
+				timesCount = 0;
+			}
+		} else {
+			timesCount = 0;
 			sendStringMsg(message);
 			sleep(6000);
 		}
+		
+		sleep(messageInterval);
 	}
 	
-	private void sendStringMsg(GlimpseBaseEvent<String> event) {
+	private void sendAliveMessage(GlimpseBaseEvent<String> message) {
+		message.setNetworkedSystemSource(this.getHostName());
+		message.setData("Alive");
+		sendMessage(message);	
+	}
+
+	private boolean sendStringMsg(GlimpseBaseEvent<String> event) {
 		List<Threshold> triggeredThresholds = daemon.evaluateThresholds();
 		event.setNetworkedSystemSource(this.getHostName());
 		for(Threshold threshold:triggeredThresholds){
 			event.setData(threshold.toString());
 			sendMessage(event);
 		}
+		return !triggeredThresholds.isEmpty();
 	}
 
 	private void sendMessage(GlimpseBaseEvent<String> event) {
@@ -59,7 +86,6 @@ public class GangliaProbe extends GlimpseAbstractProbe {
 		} catch (JMSException e) {
 			e.printStackTrace();
 		} catch (NamingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
