@@ -24,7 +24,6 @@ public class SshUtil {
         	Session session = getSshSession();
         	session.connect(5000);
         } catch (JSchException e) {
-        	System.out.println("** " + e.getMessage());
             return false;
         }
         return true;
