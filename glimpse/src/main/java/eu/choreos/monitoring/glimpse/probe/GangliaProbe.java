@@ -23,7 +23,6 @@ public class GangliaProbe extends GlimpseAbstractProbe {
 
 	private ThresholdEvalDaemon daemon;
 
-
 	public GangliaProbe(Properties settings) {
 		super(settings);
 	}
@@ -70,7 +69,7 @@ public class GangliaProbe extends GlimpseAbstractProbe {
 		sendMessage(message);	
 	}
 
-	private boolean sendStringMsg(GlimpseBaseEvent<String> event) {
+	public boolean sendStringMsg(GlimpseBaseEvent<String> event) {
 		List<Threshold> triggeredThresholds = daemon.evaluateThresholds();
 		event.setNetworkedSystemSource(this.getHostName());
 		for(Threshold threshold:triggeredThresholds){
@@ -94,7 +93,6 @@ public class GangliaProbe extends GlimpseAbstractProbe {
 		try {
 			Thread.sleep(time);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
