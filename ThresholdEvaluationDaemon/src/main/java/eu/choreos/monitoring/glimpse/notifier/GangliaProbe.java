@@ -1,4 +1,4 @@
-package eu.choreos.monitoring.glimpse.probe;
+package eu.choreos.monitoring.glimpse.notifier;
 
 import it.cnr.isti.labse.glimpse.event.GlimpseBaseEvent;
 import it.cnr.isti.labse.glimpse.probe.GlimpseAbstractProbe;
