@@ -25,8 +25,9 @@ public class TopologyCaster {
 		File topology = builder.build();
 		
 		TopologySender sender = new TopologySender();
-		for (CloudNode node: slaves) {
-			sender.send(topology, node.getHostname());
+		sender.send(topology, master.getHostname());
+		for (CloudNode slave: slaves) {
+			sender.send(topology, slave.getHostname());
 		}
 	}
 }

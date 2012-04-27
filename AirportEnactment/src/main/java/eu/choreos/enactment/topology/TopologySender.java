@@ -1,49 +1,46 @@
 package eu.choreos.enactment.topology;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
-import org.apache.commons.io.FileUtils;
 
 import eu.choreos.enactment.Configuration;
 import eu.choreos.enactment.utils.CommandLine;
+import eu.choreos.enactment.utils.SshUtil;
 
 class TopologySender {
 
-	private static final String scpCommand = 
-			"scp -i $key $file ubuntu@$host:$path";
-	private static final String topologyFolder = 
+	private static final String SCP_COMMAND = 
+			"scp -i $key $file ubuntu@$host:";
+	private static final String TOPOLOGY_FOLDER = 
 			"/opt/dsb-fulldistribution/dsb-distribution-1.0-SNAPSHOT/conf/";
+	private static final String USER = "ubuntu";
 	
 	public void send(File topology, String hostname) {
 		
-		String key = getKey();
+		String key = Configuration.get("AMAZON_PRIVATE_SSH_KEY");
 		
-		String command = getCommand(topology.getAbsolutePath(), key);
-		CommandLine.runLocalCommand(command);
+		String up = getUpCommand(topology.getAbsolutePath(), hostname, key);
+		System.out.println(up);
+		CommandLine.runLocalCommand(up);
+
+		String mv = "sudo mv topology.xml " + TOPOLOGY_FOLDER;
+		System.out.println(mv);
+		SshUtil ssh = new SshUtil(hostname, USER, key);
+		try {
+			System.out.println(ssh.runCommand(mv));
+		} catch (Exception e) {
+			System.out.println("Could not copy topology to " + hostname);
+			e.printStackTrace();
+		}
 	}
 	
-	private String getCommand(String topology, String key) {
+	private String getUpCommand(String topology, String host, String key) {
 		
-		String command = scpCommand;
-		command.replace("$key", key);
-		command.replace("$file", topology);
-		command.replace("$path", topologyFolder);
+		String command = SCP_COMMAND;
+		command = command.replace("$key", key);
+		command = command.replace("$file", topology);
+		command = command.replace("$path", TOPOLOGY_FOLDER);
+		command = command.replace("$host", host);		
 		return command;
 	}
 
-	private String getKey() {
-		
-		String keyFileName = Configuration.get("AMAZON_PRIVATE_SSH_KEY");
-		URL keyFile = ClassLoader.getSystemResource(keyFileName);
-		try {
-			return FileUtils.readFileToString(new File(keyFile.getFile()));
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Not possible retrieve SSH key");
-		}		
-		
-		return null;
-	}
 }
