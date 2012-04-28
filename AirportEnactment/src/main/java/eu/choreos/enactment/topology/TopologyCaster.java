@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.choreos.enactment.CloudNode;
+
 public class TopologyCaster {
 
 	private CloudNode master;
@@ -14,8 +16,10 @@ public class TopologyCaster {
 		
 		this.master = new CloudNode(masterHostname);
 		this.slaves = new ArrayList<CloudNode>();
-		for (String host: slaveHostnames) {
-			this.slaves.add(new CloudNode(host));
+		if (slaveHostnames != null) {
+			for (String host: slaveHostnames) {
+				this.slaves.add(new CloudNode(host));
+			}
 		}
 	}
 	

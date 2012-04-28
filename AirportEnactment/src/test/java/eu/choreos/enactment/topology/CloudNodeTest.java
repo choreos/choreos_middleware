@@ -1,5 +1,7 @@
 package eu.choreos.enactment.topology;
 
+import eu.choreos.enactment.CloudNode;
+
 public class CloudNodeTest {
 
 	// use a valid IP

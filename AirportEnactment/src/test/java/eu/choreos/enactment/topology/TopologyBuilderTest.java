@@ -12,6 +12,8 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
+import eu.choreos.enactment.CloudNode;
+
 public class TopologyBuilderTest {
 
 	// the generated topology must be the same as TOPOLOGY_TEST

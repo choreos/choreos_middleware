@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
+import eu.choreos.enactment.CloudNode;
+
 class TopologyBuilder {
 
 	private static final String TEMPLATE_FILE_NAME = "topology_template.xml";

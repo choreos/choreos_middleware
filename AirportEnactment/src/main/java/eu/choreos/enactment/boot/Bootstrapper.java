@@ -3,6 +3,7 @@ package eu.choreos.enactment.boot;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.choreos.enactment.topology.TopologyCaster;
 import eu.choreos.npm.NodePoolManager;
 import eu.choreos.npm.NodePoolManagerClient;
 
@@ -15,7 +16,7 @@ import eu.choreos.npm.NodePoolManagerClient;
  */
 public class Bootstrapper {
 
-	private static final int VMS_NUM = 1; // how many VMs we will use
+	private static final int VMS_NUM = 2; // how many VMs we will use
 	
 	// ips
 	private String master;
@@ -30,7 +31,7 @@ public class Bootstrapper {
 	public void boot() {
 		
 		System.out.println("Creating VMs...");
-		List<String> slaves = createVMs();
+		slaves = createVMs();
 		master = slaves.remove(0); // first VM will be the master
 		
 		System.out.println("Master: " + master);
@@ -39,45 +40,16 @@ public class Bootstrapper {
 		}
 		
 		installPetals();
-	}
 
-	private void installPetals() {
-
-		Thread[] trds = new Thread[VMS_NUM];
-
-		trds[0] = new Thread(new Runnable() {
-			@Override public void run() {
-				PetalsInstaller installer = new PetalsInstaller();
-				installer.install(master);
-			}
-		});
-		trds[0].start();
-
-		int i = 1;
-		for (final String slave: slaves) {
-			trds[i] = new Thread(new Runnable() {
-				@Override public void run() {
-					PetalsInstaller installer = new PetalsInstaller();
-					installer.install(slave);
-				}
-			});
-			trds[i].start();
-			i++;
-		}
+		TopologyCaster caster = new TopologyCaster(master, slaves);
+		caster.cast();
 		
-		// wait for all threads finish
-		for (Thread t: trds) {
-			try {
-				t.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		startPetals();
 	}
 
 	// invoke AWS to create VMs and retrieve their IPs
 	private List<String> createVMs() {
-
+	
 		final List<String> vms = new ArrayList<String>();
 		Thread[] trds = new Thread[VMS_NUM];
 		
@@ -92,7 +64,65 @@ public class Bootstrapper {
 			trds[i].start();
 		}
 		
-		// wait for all threads finish
+		waitThreads(trds);
+		
+		return vms;
+	}
+
+	private void installPetals() {
+
+		List<String> nodes = getAllNodes();
+		Thread[] trds = new Thread[VMS_NUM];
+		
+		int i = 0;
+		for (final String node: nodes) {
+			trds[i] = new Thread(new Runnable() {
+				@Override public void run() {
+					PetalsManager installer = new PetalsManager(node);
+					installer.install();
+				}
+			});
+			trds[i].start();
+			i++;
+		}
+		
+		waitThreads(trds);
+	}
+
+	// starts and install components
+	private void startPetals() {
+
+		Thread[] trds = new Thread[VMS_NUM];
+
+		// it's better start first the master
+		trds[0] = new Thread(new Runnable() {
+			@Override public void run() {
+				PetalsManager starter = new PetalsManager(master);
+				starter.start();
+				starter.installComponents();
+				System.out.println("Bootstrap complete at " + master);
+			}
+		});
+		trds[0].start();
+
+		int i = 1;
+		for (final String slv: slaves) {
+			trds[i] = new Thread(new Runnable() {
+				@Override public void run() {
+					PetalsManager starter = new PetalsManager(slv);
+					starter.start();
+					starter.installComponents();
+					System.out.println("Bootstrap complete at " + slv);
+				}
+			});
+			trds[i].start();
+			i++;
+		}
+		
+		waitThreads(trds);
+	}
+	
+	private void waitThreads(Thread[] trds) {
 		for (Thread t: trds) {
 			try {
 				t.join();
@@ -100,8 +130,15 @@ public class Bootstrapper {
 				e.printStackTrace();
 			}
 		}
-		
-		return vms;
 	}
-
+	
+	private List<String> getAllNodes() {
+		
+		List<String> nodes = new ArrayList<String>();
+		nodes.add(master);
+		for (String slv: slaves) {
+			nodes.add(slv);
+		}
+		return nodes;
+	}
 }

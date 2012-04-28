@@ -1,4 +1,4 @@
-package eu.choreos.enactment.topology;
+package eu.choreos.enactment;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import eu.choreos.enactment.utils.SshUtil;
  * @author leonardo
  *
  */
-class CloudNode {
+public class CloudNode {
 
 	private static final String PRIVATE_DNS_SCRIPT = "private_dns.sh";
 	private static final String USER = "ubuntu";
@@ -76,7 +76,7 @@ class CloudNode {
 			System.out.println("Could not retrieve private DNS");
 		}
 
-		return dns;
+		return dns.replace("\n", "").trim();
 	}
 
 	private String retrievePriveteIP() {
@@ -106,7 +106,7 @@ class CloudNode {
  			System.out.println("Could not retrieve the IP");
  		}
  		
-		return ip;
+		return ip.replace("\n", "").trim();
 	}
 
 	@Override
