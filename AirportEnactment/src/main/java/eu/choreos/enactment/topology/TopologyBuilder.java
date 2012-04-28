@@ -58,7 +58,10 @@ class TopologyBuilder {
 	private String getSlaveFragment(CloudNode slave) {
 
 		String frag = getSlaveFragmentAsString();
-		frag = frag.replace("$SLAVE_PRIVATE_DNS", slave.getPrivateDNS());
+		String name = slave.getPrivateDNS();
+		name = name.replace(".compute-1.internal", "");
+		name = name.replace(".ec2.internal", "");
+		frag = frag.replace("$SLAVE_PRIVATE_DNS", name);
 		frag = frag.replace("$SLAVE_PRIVATE_IP", slave.getPrivateIp());
 		return frag;
 	}
