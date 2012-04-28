@@ -2,6 +2,7 @@ package eu.choreos.enactment;
 
 import java.util.Set;
 
+import eu.choreos.enactment.boot.Bootstrapper;
 import eu.choreos.enactment.context.ChorContextCaster;
 import eu.choreos.servicedeployer.ServiceDeployer;
 import eu.choreos.servicedeployer.ServiceDeployerClient;
@@ -10,6 +11,7 @@ import eu.choreos.servicedeployer.datamodel.ServiceSpec;
 
 public class EnactmentStarter {
 	
+	private Bootstrapper bootstrapper = new Bootstrapper();
 	private Enacter powsEnacter = EnacterFactory.getPOWSEnacter();
 	private Enacter cdEnacter = EnacterFactory.getCDEnacter();
 	private Enacter consumeEnacter = EnacterFactory.getSoapConsumeEnacter();
@@ -21,6 +23,7 @@ public class EnactmentStarter {
 		
 		System.out.println("Starting airport enactment...");
 
+		this.bootstrapper.boot();
 		this.deployArtifacts();
 		this.passContext();
 	}

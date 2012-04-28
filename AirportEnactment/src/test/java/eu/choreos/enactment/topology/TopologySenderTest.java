@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.choreos.enactment.CloudNode;
+
 public class TopologySenderTest {
 
 	// use a valid IP

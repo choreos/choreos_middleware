@@ -39,7 +39,11 @@ class TopologyBuilder {
 	private String generateTopology(String template) {
 
 		String topology = template;
-		topology = topology.replace("$MASTER_PRIVATE_DNS", master.getPrivateDNS());
+		String name = master.getPrivateDNS();
+		name = name.replace(".compute-1.internal", "");
+		name = name.replace(".ec2.internal", "");
+		// in the chef recipe, "name" was node['hostname'] 
+		topology = topology.replace("$MASTER_PRIVATE_DNS", name);
 		topology = topology.replace("$MASTER_PRIVATE_IP", master.getPrivateIp());
 		
 		StringBuilder slavesXml = new StringBuilder("");

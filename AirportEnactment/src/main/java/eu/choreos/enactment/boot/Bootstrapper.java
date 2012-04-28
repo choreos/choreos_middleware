@@ -16,7 +16,7 @@ import eu.choreos.npm.NodePoolManagerClient;
  */
 public class Bootstrapper {
 
-	private static final int VMS_NUM = 2; // how many VMs we will use
+	private static final int VMS_NUM = 1; // how many VMs we will use
 	
 	// ips
 	private String master;

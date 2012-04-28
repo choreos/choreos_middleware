@@ -55,7 +55,7 @@ public class PetalsManager {
 		SshUtil ssh = new SshUtil(ip, USER, key);
 		try {
 			ssh.runCommand("cd " + PETALS_HOME + "/bin");
-			ssh.runCommand("sudo -i " + PETALS_HOME + "/bin/startup.sh");
+			ssh.runCommand("sudo -i " + PETALS_HOME + "/bin/startup.sh -D");
 		} catch (Exception e) {
 			System.out.println("Could not start petals on " + ip);
 			e.printStackTrace();
