@@ -94,20 +94,15 @@ public class Bootstrapper {
 	// starts and install components
 	private void startPetals() {
 
-		Thread[] trds = new Thread[VMS_NUM];
+		Thread[] trds = new Thread[VMS_NUM-1];
 
 		// it's better start first the master
-		trds[0] = new Thread(new Runnable() {
-			@Override public void run() {
-				PetalsManager starter = new PetalsManager(master);
-				starter.start();
-				starter.installComponents();
-				System.out.println("Bootstrap complete at " + master);
-			}
-		});
-		trds[0].start();
+		PetalsManager starter = new PetalsManager(master);
+		starter.start();
+		starter.installComponents();
+		System.out.println("Bootstrap complete at " + master);
 
-		int i = 1;
+		int i = 0;
 		for (final String slv: slaves) {
 			trds[i] = new Thread(new Runnable() {
 				@Override public void run() {
