@@ -94,8 +94,12 @@ public class PetalsManager {
 			Thread.sleep(1000);
 			String logFile = ssh.runCommand("ls -tr " + folder + "/*.log | tail -n 1");
 			System.out.println("Looking to " + logFile + " in " + ip);
-			ssh.runCommand("while ! grep -q 'Time to look for new services to expose' " + logFile + ";"
-					+ "do sleep 0.5; done");
+			String excerpt = "Time to look for new services to expose";
+			String grep = "";
+			while (!grep.contains(excerpt)) {
+				grep = ssh.runCommand("grep '" + excerpt + "' " + logFile);
+				Thread.sleep(500);
+			}
 		} catch (Exception e) {
 			System.out.println("Could not wait petals be started on " + ip);
 			e.printStackTrace();

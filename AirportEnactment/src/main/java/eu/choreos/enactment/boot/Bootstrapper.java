@@ -45,6 +45,8 @@ public class Bootstrapper {
 		caster.cast();
 		
 		startPetals();
+		
+		System.out.println("### Bootstrap completed ###");
 	}
 
 	// invoke AWS to create VMs and retrieve their IPs
