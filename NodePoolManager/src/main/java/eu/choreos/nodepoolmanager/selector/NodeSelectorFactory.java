@@ -9,7 +9,10 @@ public class NodeSelectorFactory {
 		VERY_SIMPLE, ROUND_ROBIN
 	};
 
-	public static NodeSelector getNodeSelectorInstance(
+	// singleton
+	private static NodeSelector roundRobinSelector;
+	
+	public static NodeSelector getInstance(
 			CloudProvider cloudProvider) {
 
 		String selector = Configuration.get("NODE_SELECTOR");
@@ -32,24 +35,30 @@ public class NodeSelectorFactory {
 			return new VerySimpleSelector(cloudProvider);
 
 		case ROUND_ROBIN:
-			String nodesQuantityStr = null;
-			nodesQuantityStr = Configuration.get("NODES_QUANTITY");
-			if (nodesQuantityStr == null) {
-				throw new IllegalStateException(
-						"Properties file must declare NODES_QUANTITY");
-			}
-			int nodesQuantity;
-			try {
-				nodesQuantity = Integer.parseInt(nodesQuantityStr);
-			} catch (NumberFormatException e) {
-				throw new IllegalStateException(
-						"Invalid NODES_QUANTITY in properties file");
-			}
-			return new SimpleRoundRobinSelector(cloudProvider, nodesQuantity);
-
+			if (roundRobinSelector == null)
+				roundRobinSelector = getRoundRobinSelector(cloudProvider);
+			return roundRobinSelector;
+			
 		default:
 			throw new IllegalStateException("Could not choose NodeSelector");
 		}
+	}
+	
+	private static NodeSelector getRoundRobinSelector(CloudProvider provider) {
+		String nodesQuantityStr = null;
+		nodesQuantityStr = Configuration.get("NODES_QUANTITY");
+		if (nodesQuantityStr == null) {
+			throw new IllegalStateException(
+					"Properties file must declare NODES_QUANTITY");
+		}
+		int nodesQuantity;
+		try {
+			nodesQuantity = Integer.parseInt(nodesQuantityStr);
+		} catch (NumberFormatException e) {
+			throw new IllegalStateException(
+					"Invalid NODES_QUANTITY in properties file");
+		}
+		return new SimpleRoundRobinSelector(provider, nodesQuantity);
 	}
 
 }
