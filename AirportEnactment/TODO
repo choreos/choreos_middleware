@@ -7,3 +7,4 @@
   since the other nodes must recognize it as the master node
 * Remove the setInvocationAddress from coordels (DONE)
 * Solve the ServiceDeployer endpoint issue (DONE)
+* The first deploy (after bootstrap) is not special anymore (master issue)
