@@ -1,50 +1,73 @@
 package eu.choreos.monitoring.daemon;
 
-import java.util.ArrayList;
+import it.cnr.isti.labse.glimpse.event.GlimpseBaseEvent;
+
 import java.util.List;
+import java.util.Properties;
 
 import eu.choreos.monitoring.GmondDataReader;
+import eu.choreos.monitoring.glimpse.notifier.GlimpseMessageHandler;
+import eu.choreos.monitoring.utils.HostnameHandler;
 
 public class ThresholdEvalDaemon {
 
-	private static String host;
-	private static int port;
-	private AnomalyNotifier notifier;
+	private static final int ALIVE_INTERVAL = 120000;
+	private static final int NOTIFICATION_INTERVAL = 6000;
+	private GlimpseMessageHandler messageHandler;
+	private int nonSentMessagesIterationsCounter = 0;
 
-	public ThresholdEvalDaemon() {
+	private AnomalyAnalyser analyser;
 
+	public ThresholdEvalDaemon(Properties settings, String host, int port) {
+		this(settings, host, port, (new GlimpseMessageHandler(settings)),
+				(new GmondDataReader(host, port)));
 	}
 
-	public ThresholdEvalDaemon(String host, int port) {
-		this.setDataReader(new GmondDataReader(host, port));
+	public ThresholdEvalDaemon(Properties settings, String host, int port,
+			GlimpseMessageHandler msgHandler, GmondDataReader dataReader) {
+		messageHandler = msgHandler;
+		analyser = new AnomalyAnalyser(dataReader);
 	}
 
-	public void setDataReader(GmondDataReader dataReader) {
-		this.notifier = new AnomalyNotifier(dataReader);
+	public void addThreshold(Threshold threshold) {
+		analyser.addThreshold(threshold);
 	}
 
-	public static void main(String[] args) throws InterruptedException {
-		parseArgs(args);
-		ThresholdEvalDaemon daemon = new ThresholdEvalDaemon(host, port);
-
-		List<Threshold> thresholds = new ArrayList<Threshold>();
-		thresholds.add(new Threshold("load_one", Threshold.MIN, 3));
-
-		daemon.setThresholdList(thresholds);
+	public void continuouslyEvaluateThresholdsAndSendMessages(
+			GlimpseBaseEvent<String> message) {
 
 		while (true) {
-			daemon.evaluateThresholds();
-			Thread.sleep(6000);
+			evaluateThresholdsSendMessagesAndSleep(message,
+					NOTIFICATION_INTERVAL);
 		}
 	}
 
-	public void setThresholdList(List<Threshold> thresholds) {
-		notifier.setThresholds(thresholds);
+	public void evaluateThresholdsSendMessagesAndSleep(
+			GlimpseBaseEvent<String> message, int sleepingTime) {
+
+		if (thereAreSurpassedThresholds()) {
+			sendAllSurpassedThresholdMessages(message);
+		} else {
+			nonSentMessagesIterationsCounter++;
+
+			int timeSinceLastMessage = nonSentMessagesIterationsCounter
+					* NOTIFICATION_INTERVAL;
+
+			if (timeSinceLastMessage >= ALIVE_INTERVAL) {
+				sendHeartbeat(message);
+			}
+		}
+
+		sleep(sleepingTime);
 	}
 
-	public List<Threshold> evaluateThresholds() {
+	public boolean thereAreSurpassedThresholds() {
+		return !getSurpassedThresholds().isEmpty();
+	}
 
-		List<Threshold> evaluateAllThresholds = notifier
+	public List<Threshold> getSurpassedThresholds() {
+
+		List<Threshold> evaluateAllThresholds = analyser
 				.getAllSurpassedThresholds();
 		for (Threshold threshold : evaluateAllThresholds) {
 			System.out.println(threshold);
@@ -52,30 +75,30 @@ public class ThresholdEvalDaemon {
 		return evaluateAllThresholds;
 	}
 
-	private static void parseArgs(String[] args) {
-		host = "localhost";
-		port = 8649;
+	public void sendHeartbeat(GlimpseBaseEvent<String> message) {
+		message.setNetworkedSystemSource(HostnameHandler.getHostName());
+		message.setData("Alive");
+		sendMessage(message);
+	}
 
-		switch (args.length) {
-		case 0:
-			break;
-		case 2:
-			port = Integer.parseInt(args[1]);
-		case 1:
-			host = args[0];
+	private void sendMessage(GlimpseBaseEvent<String> message) {
+		messageHandler.sendMessage(message);
+		nonSentMessagesIterationsCounter = 0;
+	}
 
-			break;
-		default:
-			System.out
-					.println("USAGE: ThresholdEvalDaemon [hostLocation] [port]");
-			System.out
-					.println("Default values: hostLocation = 'http://localhost/'");
-			System.out.println("                port = 8649");
-			host = args[0];
+	private void sleep(int time) {
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 
-			System.out
-					.println("Note: to set a port, the hostLocation must also be present");
-			break;
+	private void sendAllSurpassedThresholdMessages(
+			GlimpseBaseEvent<String> message) {
+		for (Threshold surpassed : getSurpassedThresholds()) {
+			message.setData(surpassed.toString());
+			sendMessage(message);
 		}
 	}
 
