@@ -18,8 +18,8 @@ import java.util.Properties;
 import org.junit.Before;
 import org.junit.Test;
 
+import eu.choreos.monitoring.platform.daemon.notifier.GlimpseMessageHandler;
 import eu.choreos.monitoring.platform.datatypes.Gmetric;
-import eu.choreos.monitoring.platform.notifier.GlimpseMessageHandler;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
 
 public class ThresholdEvalDaemonTest {

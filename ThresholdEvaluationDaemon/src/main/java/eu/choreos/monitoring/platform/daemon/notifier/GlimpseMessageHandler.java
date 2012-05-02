@@ -1,4 +1,4 @@
-package eu.choreos.monitoring.platform.notifier;
+package eu.choreos.monitoring.platform.daemon.notifier;
 
 import java.util.Properties;
 

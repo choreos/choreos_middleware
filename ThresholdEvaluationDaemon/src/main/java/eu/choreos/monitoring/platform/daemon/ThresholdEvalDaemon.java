@@ -5,7 +5,7 @@ import it.cnr.isti.labse.glimpse.event.GlimpseBaseEvent;
 import java.util.List;
 import java.util.Properties;
 
-import eu.choreos.monitoring.platform.notifier.GlimpseMessageHandler;
+import eu.choreos.monitoring.platform.daemon.notifier.GlimpseMessageHandler;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
 import eu.choreos.monitoring.platform.utils.HostnameHandler;
 
