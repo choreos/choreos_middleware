@@ -3,7 +3,6 @@ package eu.choreos.enactment.boot;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.choreos.enactment.topology.TopologyCaster;
 import eu.choreos.npm.NodePoolManager;
 import eu.choreos.npm.NodePoolManagerClient;
 
@@ -16,38 +15,49 @@ import eu.choreos.npm.NodePoolManagerClient;
  */
 public class Bootstrapper {
 
-	private static final int VMS_NUM = 3; // how many VMs we will use
+	private static final int VMS_NUM = 2; // how many VMs we will use
 	
 	// ips
 	private String master;
 	private List<String> slaves;
-	
+
 	/**
 	 * Creates VMs,
-	 * install petals,
-	 * generate and copy topology to nodes,
-	 * start petals
 	 */
 	public void boot() {
 		
 		System.out.println("Creating VMs...");
-		slaves = createVMs();
-		master = slaves.remove(0); // first VM will be the master
-		
-		System.out.println("Master: " + master);
-		for (String slave: slaves) {
-			System.out.println("Slave: " + slave);
-		}
-		
-		installPetals();
-
-		TopologyCaster caster = new TopologyCaster(master, slaves);
-		caster.cast();
-		
-		startPetals();
-		
+		createVMs();
 		System.out.println("### Bootstrap completed ###");
 	}
+
+//	/**
+//	 * Creates VMs,
+//	 * install petals,
+//	 * generate and copy topology to nodes,
+//	 * start petals
+//	 */
+//	public void boot() {
+//		
+//		System.out.println("Creating VMs...");
+//		
+//		slaves = createVMs();
+//		master = slaves.remove(0); // first VM will be the master
+//		
+//		System.out.println("Master: " + master);
+//		for (String slave: slaves) {
+//			System.out.println("Slave: " + slave);
+//		}
+//		
+//		installPetals();
+//
+//		TopologyCaster caster = new TopologyCaster(master, slaves);
+//		caster.cast();
+//		
+//		startPetals();
+//		
+//		System.out.println("### Bootstrap completed ###");
+//	}
 
 	// invoke AWS to create VMs and retrieve their IPs
 	private List<String> createVMs() {
@@ -71,6 +81,7 @@ public class Bootstrapper {
 		return vms;
 	}
 
+	@SuppressWarnings("unused")
 	private void installPetals() {
 
 		List<String> nodes = getAllNodes();
@@ -92,6 +103,7 @@ public class Bootstrapper {
 	}
 
 	// starts and install components
+	@SuppressWarnings("unused")
 	private void startPetals() {
 
 		Thread[] trds = new Thread[VMS_NUM-1];
@@ -101,7 +113,13 @@ public class Bootstrapper {
 		starter.start();
 		starter.installComponents();
 		System.out.println("Bootstrap complete at " + master);
-
+		try {
+			Thread.sleep(60000); 
+		} catch (InterruptedException e) {
+			System.out.println("Fell asleep and never came back!");
+			e.printStackTrace();
+		}
+		
 		int i = 0;
 		for (final String slv: slaves) {
 			trds[i] = new Thread(new Runnable() {
