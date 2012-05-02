@@ -11,7 +11,6 @@ import eu.choreos.nodepoolmanager.datamodel.Node;
 import eu.choreos.nodepoolmanager.selector.NodeSelector;
 import eu.choreos.nodepoolmanager.selector.NodeSelectorFactory;
 
-
 public class Controller {
 
 	private final CloudProvider infrastructure;
