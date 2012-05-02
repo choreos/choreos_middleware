@@ -1,12 +1,9 @@
 package eu.choreos.monitoring.platform.daemon;
 
-import java.util.Properties;
-
-import sun.misc.JavaNetAccess;
-
-import it.cnr.isti.labse.glimpse.event.GlimpseBaseEvent;
 import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventImpl;
 import it.cnr.isti.labse.glimpse.utils.Manager;
+
+import java.util.Properties;
 
 public class ThresholdEvalDaemonLauncher {
 

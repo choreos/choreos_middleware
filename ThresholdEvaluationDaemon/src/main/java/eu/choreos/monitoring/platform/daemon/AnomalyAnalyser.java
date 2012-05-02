@@ -3,7 +3,6 @@ package eu.choreos.monitoring.platform.daemon;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import eu.choreos.monitoring.platform.*;
 import eu.choreos.monitoring.platform.datatypes.Gmetric;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
 

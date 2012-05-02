@@ -3,23 +3,21 @@ package eu.choreos.monitoring.platform.daemon;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import static org.mockito.Mockito.*;
-
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventImpl;
 import it.cnr.isti.labse.glimpse.utils.Manager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.choreos.monitoring.platform.daemon.Threshold;
-import eu.choreos.monitoring.platform.daemon.ThresholdEvalDaemon;
 import eu.choreos.monitoring.platform.datatypes.Gmetric;
 import eu.choreos.monitoring.platform.notifier.GlimpseMessageHandler;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
@@ -54,6 +52,7 @@ public class ThresholdEvalDaemonTest {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void shouldSendAliveMessage() {
 		daemon.sendHeartbeat(message);
@@ -95,6 +94,7 @@ public class ThresholdEvalDaemonTest {
 		assertFalse(daemon.thereAreSurpassedThresholds());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void shouldSendAllThresholdsMessage() {
 		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
