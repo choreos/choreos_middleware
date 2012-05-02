@@ -18,7 +18,7 @@ import eu.choreos.monitoring.datatypes.Gmetric;
 
 public class AnomalyNotifierTest {
 
-	private AnomalyNotifier notifier;
+	private AnomalyAnalyser notifier;
 	private GmondDataReader dataReader;
 	private Map<String, Gmetric> returnedMap;
 	private Threshold threshold;
@@ -37,7 +37,7 @@ public class AnomalyNotifierTest {
 		dataReader = mock(GmondDataReader.class);
 		when(dataReader.getAllMetrics()).thenReturn(returnedMap);
 
-		notifier = new AnomalyNotifier(dataReader);
+		notifier = new AnomalyAnalyser(dataReader);
 
 		threshold = new Threshold("mem_free", Threshold.MIN, 64000);
 	}

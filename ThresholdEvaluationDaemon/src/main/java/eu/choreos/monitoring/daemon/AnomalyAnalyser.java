@@ -6,13 +6,13 @@ import java.util.Map;
 import eu.choreos.monitoring.*;
 import eu.choreos.monitoring.datatypes.Gmetric;
 
-public class AnomalyNotifier {
+public class AnomalyAnalyser {
 
 	private GmondDataReader dataReader;
 	private List<Threshold> thresholds;
 	private Map<String, Gmetric> metricsMap;
 
-	public AnomalyNotifier(GmondDataReader dataReader) {
+	public AnomalyAnalyser(GmondDataReader dataReader) {
 		this.dataReader = dataReader;
 		thresholds = new ArrayList<Threshold>();
 	}
