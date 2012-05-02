@@ -82,6 +82,7 @@ public class ThresholdEvalDaemon {
 	}
 
 	private void sendMessage(GlimpseBaseEvent<String> message) {
+		System.out.println("Sent a message: " + message.getData());
 		messageHandler.sendMessage(message);
 		nonSentMessagesIterationsCounter = 0;
 	}
