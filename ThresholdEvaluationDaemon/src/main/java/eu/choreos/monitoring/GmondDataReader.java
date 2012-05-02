@@ -46,10 +46,6 @@ public class GmondDataReader {
 		NodeList clusterNodeList = gangliaXML.getElementsByTagName("CLUSTER");
 		Element clusterNode = (Element) clusterNodeList.item(0);
 
-		// TODO: How to actually get the Host with the same name as it is not
-		// necessarily the
-		// first, and the host name and ip may not be the one used to access it
-
 		NodeList hostNodeList = clusterNode.getElementsByTagName("HOST");
 		Element hostNode = (Element) hostNodeList.item(0);
 
