@@ -9,7 +9,7 @@ import eu.choreos.nodepoolmanager.cloudprovider.CloudProvider;
 import eu.choreos.nodepoolmanager.datamodel.Config;
 import eu.choreos.nodepoolmanager.datamodel.Node;
 import eu.choreos.nodepoolmanager.selector.NodeSelector;
-import eu.choreos.nodepoolmanager.selector.VerySimpleSelector;
+import eu.choreos.nodepoolmanager.selector.NodeSelectorFactory;
 
 
 public class Controller {
@@ -54,7 +54,7 @@ public class Controller {
 	 */
 	public Node applyConfig(Config config) {
 		
-		NodeSelector selector = new VerySimpleSelector(this.infrastructure);
+		NodeSelector selector = NodeSelectorFactory.getInstance(this.infrastructure);
 		Node node = selector.selectNode(config);
 		if (node == null)
 			return null;
