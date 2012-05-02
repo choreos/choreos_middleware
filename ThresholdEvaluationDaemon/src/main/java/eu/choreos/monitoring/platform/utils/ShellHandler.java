@@ -1,4 +1,4 @@
-package eu.choreos.monitoring.utils;
+package eu.choreos.monitoring.platform.utils;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -1,4 +1,4 @@
-package eu.choreos.monitoring;
+package eu.choreos.monitoring.platform.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +14,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import eu.choreos.monitoring.datatypes.Gmetric;
+import eu.choreos.monitoring.platform.datatypes.Gmetric;
 
 public class GmondDataReader {
 

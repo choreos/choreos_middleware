@@ -1,4 +1,4 @@
-package eu.choreos.monitoring.daemon;
+package eu.choreos.monitoring.platform.daemon;
 
 import java.util.Properties;
 

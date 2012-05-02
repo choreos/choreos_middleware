@@ -1,13 +1,13 @@
-package eu.choreos.monitoring.daemon;
+package eu.choreos.monitoring.platform.daemon;
 
 import it.cnr.isti.labse.glimpse.event.GlimpseBaseEvent;
 
 import java.util.List;
 import java.util.Properties;
 
-import eu.choreos.monitoring.GmondDataReader;
-import eu.choreos.monitoring.glimpse.notifier.GlimpseMessageHandler;
-import eu.choreos.monitoring.utils.HostnameHandler;
+import eu.choreos.monitoring.platform.notifier.GlimpseMessageHandler;
+import eu.choreos.monitoring.platform.utils.GmondDataReader;
+import eu.choreos.monitoring.platform.utils.HostnameHandler;
 
 public class ThresholdEvalDaemon {
 

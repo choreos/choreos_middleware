@@ -1,4 +1,4 @@
-package eu.choreos.monitoring.daemon;
+package eu.choreos.monitoring.platform.daemon;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
@@ -6,7 +6,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.choreos.monitoring.utils.ShellHandler;
+import eu.choreos.monitoring.platform.daemon.Threshold;
+import eu.choreos.monitoring.platform.utils.ShellHandler;
 
 public class ThresholdTest {
 

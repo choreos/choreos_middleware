@@ -1,4 +1,4 @@
-package eu.choreos.monitoring;
+package eu.choreos.monitoring.platform;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -15,7 +15,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import eu.choreos.monitoring.datatypes.Gmetric;
+import eu.choreos.monitoring.platform.datatypes.Gmetric;
+import eu.choreos.monitoring.platform.utils.GmondDataReader;
 
 public class GmondDataReaderTest {
 

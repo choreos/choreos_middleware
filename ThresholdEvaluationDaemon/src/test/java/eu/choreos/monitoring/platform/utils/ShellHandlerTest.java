@@ -1,10 +1,10 @@
-package eu.choreos.monitoring.utils;
+package eu.choreos.monitoring.platform.utils;
 
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import eu.choreos.monitoring.utils.ShellHandler;
+import eu.choreos.monitoring.platform.utils.ShellHandler;
 
 public class ShellHandlerTest {
 

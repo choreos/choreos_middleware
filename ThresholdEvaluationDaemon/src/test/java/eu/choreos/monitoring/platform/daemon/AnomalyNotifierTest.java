@@ -1,4 +1,4 @@
-package eu.choreos.monitoring.daemon;
+package eu.choreos.monitoring.platform.daemon;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -13,8 +13,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.choreos.monitoring.GmondDataReader;
-import eu.choreos.monitoring.datatypes.Gmetric;
+import eu.choreos.monitoring.platform.daemon.AnomalyAnalyser;
+import eu.choreos.monitoring.platform.daemon.Threshold;
+import eu.choreos.monitoring.platform.datatypes.Gmetric;
+import eu.choreos.monitoring.platform.utils.GmondDataReader;
 
 public class AnomalyNotifierTest {
 

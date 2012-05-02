@@ -1,4 +1,4 @@
-package eu.choreos.monitoring.glimpse.notifier;
+package eu.choreos.monitoring.platform.notifier;
 
 import java.util.Properties;
 

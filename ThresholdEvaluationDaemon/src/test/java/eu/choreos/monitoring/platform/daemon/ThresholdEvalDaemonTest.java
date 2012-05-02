@@ -1,4 +1,4 @@
-package eu.choreos.monitoring.daemon;
+package eu.choreos.monitoring.platform.daemon;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -18,9 +18,11 @@ import java.util.Properties;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.choreos.monitoring.GmondDataReader;
-import eu.choreos.monitoring.datatypes.Gmetric;
-import eu.choreos.monitoring.glimpse.notifier.GlimpseMessageHandler;
+import eu.choreos.monitoring.platform.daemon.Threshold;
+import eu.choreos.monitoring.platform.daemon.ThresholdEvalDaemon;
+import eu.choreos.monitoring.platform.datatypes.Gmetric;
+import eu.choreos.monitoring.platform.notifier.GlimpseMessageHandler;
+import eu.choreos.monitoring.platform.utils.GmondDataReader;
 
 public class ThresholdEvalDaemonTest {
 
