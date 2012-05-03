@@ -62,6 +62,9 @@ execute 'extract petals' do
   command "unzip /tmp/#{filename} -d /opt"
   creates node['petals']['dir']
   action :run
+  not_if do
+    File.exists?("/opt/petals_is_installed")
+  end
 end
 
 # Configure
@@ -78,6 +81,9 @@ bash 'fix installs on startup' do
   code <<-EOH
   sed -i 's/embedded.component.list=.*/embedded.component.list=/' dsb.cfg
   EOH
+  not_if do
+    File.exists?("/opt/petals_is_installed")
+  end
 end
 
 bash 'shorten topology timeouts' do
@@ -87,6 +93,9 @@ bash 'shorten topology timeouts' do
   sed -i 's/topology.update.period=.*/topology.update.period=10/' server.properties
   sed -i 's/registry.synchro.period=.*/registry.synchro.period=30/' server.properties
   EOH
+  not_if do
+    File.exists?("/opt/petals_is_installed")
+  end
 end
 
 bash 'fix permissions' do
@@ -95,6 +104,9 @@ bash 'fix permissions' do
   code <<-EOH
   /bin/chmod 755 *.sh
   EOH
+  not_if do
+    File.exists?("/opt/petals_is_installed")
+  end
 end
 
 # Configure topology
@@ -137,6 +149,9 @@ execute "extract components" do
   command "tar xzf /tmp/#{filename} -C /tmp/"
   creates "/tmp/components"
   action :run
+  not_if do
+    File.exists?("/opt/petals_is_installed")
+  end
 end
 
 execute "install components" do
@@ -144,4 +159,12 @@ execute "install components" do
   creates "#{node['petals']['dir']}/installed/petals-bc-ejb-1.3.zip"
   action :run
   notifies :run, 'bash[wait petals]', :immediately
+  not_if do
+    File.exists?("/opt/petals_is_installed")
+  end
+end
+
+file "/opt/petals_is_installed" do
+	action :create_if_missing
+	mode "644"
 end
