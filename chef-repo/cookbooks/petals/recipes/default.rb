@@ -73,6 +73,9 @@ template "#{node['petals']['dir']}/conf/server.properties" do
   owner "root"
   group "root"
   mode "0644"
+  not_if do
+    File.exists?("/opt/petals_is_installed")
+  end
 end
 
 bash 'fix installs on startup' do
@@ -116,6 +119,9 @@ template "#{node['petals']['dir']}/conf/topology.xml" do
   group "root"
   mode "0644"
   variables({:master => master})
+  not_if do
+    File.exists?("/opt/petals_is_installed")
+  end
 end
 
 # Start petals
@@ -125,6 +131,9 @@ service 'petals' do
   supports :start => true, :stop => true
   action [ :start ]
   notifies :run, 'bash[wait petals]', :immediately
+  not_if do
+    File.exists?("/opt/petals_is_installed")
+  end
 end
  
 bash 'wait petals' do
