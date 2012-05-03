@@ -54,6 +54,7 @@ public class ConfigurationManager {
 			String chefClientName = ssh.runCommand(command);
 			if (chefClientName == null || chefClientName.isEmpty())
 				chefClientName = node.getHostname();
+			chefClientName = chefClientName.replace("\n", "").trim();
 			node.setChefName(chefClientName);
 		} catch (Exception e) {
 			e.printStackTrace();
