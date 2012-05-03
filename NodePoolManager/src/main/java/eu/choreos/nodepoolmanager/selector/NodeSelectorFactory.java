@@ -6,7 +6,7 @@ import eu.choreos.nodepoolmanager.cloudprovider.CloudProvider;
 public class NodeSelectorFactory {
 
 	public enum NodeSelectorType {
-		VERY_SIMPLE, ROUND_ROBIN
+		ALWAYS_CREATE, ROUND_ROBIN, DEMO
 	};
 
 	// singleton
@@ -31,13 +31,16 @@ public class NodeSelectorFactory {
 
 		switch (nodeSelectorType) {
 
-		case VERY_SIMPLE:
+		case ALWAYS_CREATE:
 			return new VerySimpleSelector(cloudProvider);
 
 		case ROUND_ROBIN:
 			if (roundRobinSelector == null)
 				roundRobinSelector = new RoundRobinSelector(cloudProvider);
 			return roundRobinSelector;
+			
+		case DEMO:
+			return new DemoSelector(cloudProvider);
 			
 		default:
 			throw new IllegalStateException("Could not choose NodeSelector");
