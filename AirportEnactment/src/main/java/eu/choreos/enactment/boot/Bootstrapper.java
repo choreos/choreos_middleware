@@ -27,7 +27,9 @@ public class Bootstrapper {
 	public void boot() {
 		
 		System.out.println("Creating VMs...");
-		createVMs();
+		System.out.print("Created machines: ");
+		for (String vm: createVMs()) 
+			System.out.print(vm + "  ");
 		System.out.println("### Bootstrap completed ###");
 	}
 

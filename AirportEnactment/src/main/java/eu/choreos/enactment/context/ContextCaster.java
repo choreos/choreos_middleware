@@ -16,8 +16,15 @@ class ContextCaster {
 		for (Service partner: context) {
 			
 			if (!service.equals(partner)) {
-				System.out.println(service.getId() + ".setInvocationAddress("
-						+ partner.getRole() + ", " + partner.getUri() + ")");
+				ContextSender sender = new ContextSender();
+				boolean ok = sender.sendContext(service.getUri(), partner.getRole(), partner.getUri());
+				if (ok) {
+					System.out.println(service.getId() + ".setInvocationAddress("
+							+ partner.getRole() + ", " + partner.getUri() + ")");
+				} else {
+					System.out.println("Could not pass " + partner.getRole() + " endpoint to the " +
+							service.getRole() + " service.");					
+				}
 			}
 		}	
 	}

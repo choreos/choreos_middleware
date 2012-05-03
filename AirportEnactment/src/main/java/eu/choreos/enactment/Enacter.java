@@ -62,8 +62,10 @@ public class Enacter {
 					+ " from " + spec.getCodeUri());
 			ServiceDeployer deployer = new ServiceDeployerClient();
 			Service service = deployer.deploy(spec);
-			System.out.println(service.getId() + " deployed at " + service.getUri());			
-			deployed.add(service);
+			if (service != null) {
+				System.out.println(service.getId() + " deployed at " + service.getUri());			
+				deployed.add(service);
+			}
 		}
 		
 	}
