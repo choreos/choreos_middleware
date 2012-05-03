@@ -260,12 +260,8 @@ public class Node {
 
 	@Override
 	public String toString() {
-		return "Node [id=" + id + ", cpus=" + cpus + ", ram=" + ram
-				+ ", storage=" + storage + ", so=" + so + ", zone=" + zone
-				+ ", ip=" + ip + ", hostname=" + hostname + ", user=" + user
-				+ ", privateKeyFile=" + privateKeyFile + ", image=" + image
-				+ ", state=" + state + ", chefName=" + chefName + "]";
+		return "Node [id=" + id + ", ip=" + ip + ", hostname=" + hostname
+				+ ", chefName=" + chefName + "]";
 	}
-
 	
 }

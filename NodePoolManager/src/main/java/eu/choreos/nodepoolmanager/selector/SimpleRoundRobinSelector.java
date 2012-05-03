@@ -75,6 +75,8 @@ public class SimpleRoundRobinSelector implements NodeSelector {
 
 	public Node selectNode(Config config) {
 
+		System.out.println("nodes in selector: " + availableNodes.size());
+		System.out.println("Pointer: " + lastUsedNode);
 		Node node = availableNodes.get(getNextIndex());
 
 		return node;

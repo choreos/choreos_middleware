@@ -39,21 +39,26 @@ public class ConfigurationManager {
 			CommandLine.runLocalCommand(command, CHEF_REPO);
 			System.out.println("Bootstrap completed");
 			
-			// get chef name
-			command = ChefScripts.getChefName();
-			String chefClientName = ssh.runCommand(command);
-			if (chefClientName == null || chefClientName.isEmpty())
-				chefClientName = node.getHostname();
-			node.setChefName(chefClientName);
-			
-			// install cookbook
+			this.retrieveChefName(node);
 			this.installInitialRecipe(node);
-		} catch (IOException e) {
-			e.printStackTrace();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
  	}
+    
+    private void retrieveChefName(Node node) {
+		try {
+	 		SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
+			String command = ChefScripts.getChefName();
+			String chefClientName = ssh.runCommand(command);
+			if (chefClientName == null || chefClientName.isEmpty())
+				chefClientName = node.getHostname();
+			node.setChefName(chefClientName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
     
     public boolean isInitialized(Node node) throws NodeNotAccessible, Exception {
         
@@ -103,6 +108,8 @@ public class ConfigurationManager {
 			return false;
 		}
 		
+		if (node.getChefName() == null)
+			this.retrieveChefName(node);
 		String command = ChefScripts.getChefAddCookbook(node.getChefName(), cookbook, recipe);
 		System.out.println("Install recipe command = [" + command+"]");
         CommandLine.runLocalCommand(command);
