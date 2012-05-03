@@ -1,6 +1,8 @@
 package eu.choreos.nodepoolmanager;
 
 import java.io.IOException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import eu.choreos.nodepoolmanager.chef.ChefScripts;
 import eu.choreos.nodepoolmanager.datamodel.Node;
@@ -13,9 +15,24 @@ public class ConfigurationManager {
 	private static String INITIAL_RECIPE = "getting-started";
 	private static String CHEF_REPO = Configuration.get("CHEF_REPO");
 	
-    private String updateNodeConfiguration(Node node) throws Exception {
-    	return new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile()).runCommand("sudo chef-client\n");
-    }
+	private static ConcurrentMap<Node, Boolean> updating = new ConcurrentHashMap<Node, Boolean>();
+	private static ConcurrentMap<Node, Boolean> needUpdate = new ConcurrentHashMap<Node, Boolean>();
+
+	private void updateNodeConfiguration(final Node node) throws Exception {
+		needUpdate.put(node, true);
+
+		if (updating.containsKey(node) && updating.get(node)) {
+			return;
+		}
+
+		while (needUpdate.get(node)) {
+			needUpdate.put(node, false);
+
+			updating.put(node, true);
+			new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile()).runCommand("sudo chef-client\n");
+			updating.put(node, false);
+		}
+	}
     
     public void initializeNode(Node node) {
  		
