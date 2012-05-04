@@ -109,7 +109,7 @@ public class GmondConfTest {
 		int location = fileContents.indexOf("port = 8649");
 
 		gmondConf.load(testFile.getAbsolutePath());
-		gmondConf.updateUdpSendChannelPort("eclipse.ime.usp.br", 1234);
+		gmondConf.updateUdpSendChannelPort("eclipse.ime.usp.br", "1234");
 		gmondConf.save();
 
 		fileContents = FileUtils.readFileToString(testFile);
@@ -198,6 +198,9 @@ public class GmondConfTest {
 		assertEquals(expected, indexes);
 	}
 
+
+	// Warning suppressed to ensure usage of mock reloader
+	@SuppressWarnings("static-access")
 	@Test
 	public void shouldChangeHostFromMain() throws Exception {
 		// [--update-host currentHost newHost]
@@ -210,7 +213,7 @@ public class GmondConfTest {
 
 		int hostLocation = fileContents.indexOf("host = eclipse.ime.usp.br");
 
-		GmondConf.main("--update-host", "eclipse.ime.usp.br", "localhost",
+		gmondConf.main("--update-host", "eclipse.ime.usp.br", "localhost",
 				"--config-file", testFile.getAbsolutePath());
 
 		fileContents = FileUtils.readFileToString(testFile);
@@ -224,6 +227,7 @@ public class GmondConfTest {
 
 	}
 
+	@SuppressWarnings("static-access")
 	@Test
 	public void shouldChangePortFromMain() throws Exception {
 		// [--update-port host port]
@@ -233,7 +237,7 @@ public class GmondConfTest {
 		assertFalse(fileContents.contains("port = 1234"));
 		int portLocation = fileContents.indexOf("port = 8649");
 
-		GmondConf.main("--update-port", "eclipse.ime.usp.br", "1234",
+		gmondConf.main("--update-port", "eclipse.ime.usp.br", "1234",
 				"--config-file", testFile.getAbsolutePath());
 
 		fileContents = FileUtils.readFileToString(testFile);
@@ -244,6 +248,8 @@ public class GmondConfTest {
 		assertEquals(portLocation, fileContents.indexOf("port = 1234"));
 	}
 
+	// Warning suppressed to ensure usage of mock reloader
+	@SuppressWarnings("static-access")
 	@Test
 	public void shouldRemoveChannelFromMain() throws Exception {
 		// [--remove host]
@@ -252,7 +258,7 @@ public class GmondConfTest {
 		String fileContents = FileUtils.readFileToString(testFile);
 		assertTrue(fileContents.contains("host = eclipse.ime.usp.br"));
 
-		GmondConf.main("--remove", "eclipse.ime.usp.br", "--config-file",
+		gmondConf.main("--remove", "eclipse.ime.usp.br", "--config-file",
 				testFile.getAbsolutePath());
 
 		fileContents = FileUtils.readFileToString(testFile);
@@ -262,6 +268,9 @@ public class GmondConfTest {
 
 	}
 
+	// Warning suppressed to ensure usage of mock reloader
+	@SuppressWarnings("static-access")
+	@Test
 	public void shouldUpdateHostAndPortChannelFromMain() throws Exception {
 		// [--update-channel currentHost newHost newPort]
 		// [--config-file configFile]
@@ -277,6 +286,8 @@ public class GmondConfTest {
 
 		fileContents = FileUtils.readFileToString(testFile);
 
+		System.out.println(fileContents);
+		
 		assertFalse("Original host was found!",
 				fileContents.contains("host = eclipse.ime.usp.br"));
 		assertFalse("Original port was found!",
@@ -288,6 +299,11 @@ public class GmondConfTest {
 
 	}
 
+
+
+	// Warning suppressed to ensure usage of mock reloader
+	@SuppressWarnings("static-access")
+	@Test
 	public void shouldAddChannelFromMain() throws Exception {
 		// [--add host port]
 		// [--config-file configFile]

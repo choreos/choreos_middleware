@@ -47,15 +47,14 @@ public class GmondConf {
 			}
 
 			if (args[i].equals("--update-port")) {
-				gmondConf.updateUdpSendChannelPort(args[i + 1],
-						Integer.parseInt(args[i + 2]));
+				gmondConf.updateUdpSendChannelPort(args[i + 1], args[i + 2]);
 				i += 2;
 			}
 
 			if (args[i].equals("--update-channel")) {
-				gmondConf.updateUdpSendChannel(args[i], args[i + 1],
-						Integer.parseInt(args[i + 2]));
-				i += 2;
+				gmondConf.updateUdpSendChannel(args[i + 1], args[i + 2],
+						args[i + 3]);
+				i += 3;
 			}
 
 			if (args[i].equals("--update-host")) {
@@ -160,14 +159,14 @@ public class GmondConf {
 		}
 	}
 
-	public void updateUdpSendChannel(String newHost, String currentHost,
-			int newPort) {
+	public void updateUdpSendChannel(String currentHost, String newHost,
+			String newPort) {
 
 		List<Integer> udpSendChannelLines = getUdpSendChannelHost(currentHost);
 		for (Integer index : udpSendChannelLines) {
 			String line = fileLines.get(index);
 			line = setAttributeIfApplicable("host", newHost, line);
-			line = setAttributeIfApplicable("port", newPort + "", line);
+			line = setAttributeIfApplicable("port", newPort, line);
 			fileLines.set(index, line);
 		}
 	}
@@ -211,7 +210,7 @@ public class GmondConf {
 
 	}
 
-	public void updateUdpSendChannelPort(String host, int port) {
+	public void updateUdpSendChannelPort(String host, String port) {
 		updateUdpSendChannel(host, host, port);
 	}
 
