@@ -65,17 +65,19 @@ public class ConfigurationManager {
  	}
     
     private void retrieveChefName(Node node) {
-		try {
-	 		SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-			String command = ChefScripts.getChefName();
-			String chefClientName = ssh.runCommand(command);
-			if (chefClientName == null || chefClientName.isEmpty())
-				chefClientName = node.getHostname();
-			chefClientName = chefClientName.replace("\n", "").trim();
-			node.setChefName(chefClientName);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    	while (node.getChefName() == null) {
+	    	try {
+		 		SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
+				String command = ChefScripts.getChefName();
+				String chefClientName = ssh.runCommand(command, true);
+				if (chefClientName == null || chefClientName.isEmpty())
+					chefClientName = node.getHostname();
+				chefClientName = chefClientName.replace("\n", "").trim();
+				node.setChefName(chefClientName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+    	}
     }
     
     public boolean isInitialized(Node node) throws NodeNotAccessible, Exception {

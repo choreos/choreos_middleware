@@ -10,7 +10,7 @@ public class NodeSelectorFactory {
 	};
 
 	// singleton
-	private static NodeSelector roundRobinSelector;
+	private static NodeSelector roundRobinSelector, demoSelector;
 	
 	public static NodeSelector getInstance(
 			CloudProvider cloudProvider) {
@@ -40,7 +40,9 @@ public class NodeSelectorFactory {
 			return roundRobinSelector;
 			
 		case DEMO:
-			return new DemoSelector(cloudProvider);
+			if (demoSelector == null)
+				demoSelector = new DemoSelector(cloudProvider);
+			return demoSelector;
 			
 		default:
 			throw new IllegalStateException("Could not choose NodeSelector");
