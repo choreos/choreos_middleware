@@ -119,6 +119,31 @@ public class GmondConfTest {
 
 		assertEquals(location, fileContents.indexOf("port = 1234"));
 	}
+	@Test
+	public void shouldChangeChannelHostAndPort() throws IOException {
+
+		String fileContents = FileUtils.readFileToString(testFile);
+		assertFalse(fileContents.contains("port = 1234"));
+
+		int location = fileContents.indexOf("port = 8649");
+
+		gmondConf.load(testFile.getAbsolutePath());
+		gmondConf.updateUdpSendChannel("eclipse.ime.usp.br", "localhost", "1234");
+		gmondConf.save();
+
+		fileContents = FileUtils.readFileToString(testFile);
+
+		assertTrue("Altered port not located!",
+				fileContents.contains("port = 1234"));
+		assertFalse("Previous port not removed!",
+				fileContents.contains("port = 8649"));
+		assertTrue("Altered host not located!",
+				fileContents.contains("host = localhost"));
+		assertFalse("Previous host not removed!",
+				fileContents.contains("host = eclipse.ime.usp.br"));
+
+		assertEquals(location, fileContents.indexOf("port = 1234"));
+	}
 
 	@Test
 	public void shouldFindOneUdpSendChannel() throws IOException {
@@ -286,8 +311,6 @@ public class GmondConfTest {
 
 		fileContents = FileUtils.readFileToString(testFile);
 
-		System.out.println(fileContents);
-		
 		assertFalse("Original host was found!",
 				fileContents.contains("host = eclipse.ime.usp.br"));
 		assertFalse("Original port was found!",
