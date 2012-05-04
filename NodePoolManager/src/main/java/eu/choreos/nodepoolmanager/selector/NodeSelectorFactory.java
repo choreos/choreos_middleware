@@ -21,7 +21,7 @@ public class NodeSelectorFactory {
 			type = NodeSelectorType.valueOf(selector);
 		} catch (IllegalArgumentException e) {
 			throw new IllegalStateException(
-					"Invalid NODE_SELECTOR in properties file");
+					"Invalid NODE_SELECTOR in properties file: " + selector);
 		}
 		return getNodeSelectorInstance(cloudProvider, type);
 	}
