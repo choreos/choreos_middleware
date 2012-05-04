@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 import eu.choreos.gmond.reloader.GmondReloader;
 
 public class GmondConf {
+	private static GmondReloader reloader = null;
 	private String gmondFile = "/etc/ganglia/gmond.conf";
 	private List<String> fileLines;
 	private int searchIndex;
@@ -21,6 +22,10 @@ public class GmondConf {
 	public GmondConf() {
 		searchIndex = 0;
 
+	}
+
+	public void setReloader(GmondReloader newReloader) {
+		reloader = newReloader;
 	}
 
 	public static void main(String... args) throws Exception {
@@ -67,11 +72,13 @@ public class GmondConf {
 
 		gmondConf.save();
 
-		GmondReloader reloader = new GmondReloader();
+		if (reloader == null)
+			reloader = new GmondReloader();
 		if (reloader.reload())
 			System.out.println("Gmond restarted.");
 		else
-			System.out.println("Could not restart gmond. Are you root? Do you have the necessary privileges?");
+			System.out
+					.println("Could not restart gmond. Are you root? Do you have the necessary privileges?");
 
 	}
 

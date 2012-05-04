@@ -3,6 +3,7 @@ package eu.choreos.gmond;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,8 @@ import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import eu.choreos.gmond.reloader.GmondReloader;
 
 public class GmondConfTest {
 
@@ -36,6 +39,9 @@ public class GmondConfTest {
 		testMultipleFile = new File("gmondMultiple.conf");
 
 		FileUtils.copyFile(exampleMultipleFile, testMultipleFile);
+		GmondReloader mockedReloader = mock(GmondReloader.class);
+		when(mockedReloader.reload()).thenReturn(true);
+		gmondConf.setReloader(mockedReloader);
 	}
 
 	@After
