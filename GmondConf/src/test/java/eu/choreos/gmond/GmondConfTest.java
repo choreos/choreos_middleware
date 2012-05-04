@@ -119,6 +119,7 @@ public class GmondConfTest {
 
 		assertEquals(location, fileContents.indexOf("port = 1234"));
 	}
+	
 	@Test
 	public void shouldChangeChannelHostAndPort() throws IOException {
 
