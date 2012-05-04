@@ -1,19 +1,9 @@
 #!/bin/bash
-#Remove the AWS nodes and clients created on chef-server
-#Author: Leonardo Leite
+# Terminates all running Amazon instances. Requires ec2-api-tools (http://va.mu/U5L5)
+# Author: Carlos Eduardo Moreira dos Santos
 
-for node in `knife node list`
-do
-  if [ ${node:0:3} = 'ip-' -o ${node:0:5} = 'domU-' ]  
-  then
-    knife node delete $node -y 
-  fi
-done
-
-for client in `knife client list`
-do
-  if [ ${client:0:3} = 'ip-' -o ${client:0:5} = 'domU-' ]  
-  then
-    knife client delete $client -y 
-  fi
-done
+AMAZON_INSTANCES=$(ec2-describe-instances --filter instance-state-name=running | grep INSTANCE | tr -s "\t" | cut -f 2 | xargs)
+if [ ! -z "$AMAZON_INSTANCES" ]; then
+    echo "Terminating $AMAZON_INSTANCES"
+    ec2-terminate-instances $AMAZON_INSTANCES
+fi
