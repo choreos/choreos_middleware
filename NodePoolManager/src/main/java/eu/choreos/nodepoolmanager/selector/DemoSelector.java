@@ -24,7 +24,7 @@ public class DemoSelector implements NodeSelector {
 	 * Before select a node, the cloud provider must contains two clean VMs
 	 * @param cloudProvider
 	 */
-	public DemoSelector(CloudProvider cloudProvider) {
+	DemoSelector(CloudProvider cloudProvider) {
 		
 		this.node1 = cloudProvider.getNodes().get(0);
 		this.node2 = cloudProvider.getNodes().get(1);		
