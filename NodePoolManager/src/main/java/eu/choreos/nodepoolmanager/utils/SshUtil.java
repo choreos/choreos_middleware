@@ -11,6 +11,7 @@ import com.jcraft.jsch.Session;
 public class SshUtil {
 
     private final String hostname, user, privateKeyFile;
+    private Session session;
 
     public SshUtil(String hostname, String user, String privateKeyFile) {
         
@@ -21,7 +22,7 @@ public class SshUtil {
     
     public boolean isAccessible() {
         try{
-        	Session session = getSshSession();
+        	session = getSshSession();
         	session.connect(5000);
         } catch (JSchException e) {
         	System.out.println("** " + e.getMessage());
@@ -31,39 +32,68 @@ public class SshUtil {
     }
 
     public String runCommand(String command) throws Exception {
-        Session session = getSshSession();
+    	return runCommand(command, false);
+    }
+    
+    public String runCommand(String command, boolean retry) throws Exception {
+    	String output = null;
+    	
+    	try {
+    		output = runCommandOnce(command);
+    	} catch (Exception e) {
+    		if (retry) {
+    			return runCommand(command, retry);
+    		} else {
+    			throw e;
+    		}
+    	}
+    	
+    	return output;
+    }
+    
+    public String runCommandOnce(String command) throws Exception {
+    	String output = null;
+    	
+    	if (session == null) {
+    		session = getSshSession();
+    	}
 
         try {
-        	session.connect(5000);
+       		session.connect(5000);
+
+        	Channel channel = session.openChannel("exec");
+            ((ChannelExec) channel).setCommand(command);
+            StringBuffer sb = new StringBuffer();
+            channel.setOutputStream(new StringBufferOutputStream(sb));
+
+            channel.connect();
+
+            while (!channel.isClosed()) {
+                Thread.sleep(10);
+            }
+
+            channel.disconnect();
+            session.disconnect();
+            output = sb.toString();
         }
         catch(JSchException e) {
         	System.out.println("Could not connect " + user + "@" + hostname + " with " + privateKeyFile);
+        	throw e;
         }
-        Channel channel = session.openChannel("exec");
-        ((ChannelExec) channel).setCommand(command);
-        StringBuffer sb = new StringBuffer();
-        channel.setOutputStream(new StringBufferOutputStream(sb));
-
-        channel.connect();
-
-        while (!channel.isClosed()) {
-            Thread.sleep(10);
-        }
-
-        channel.disconnect();
-        session.disconnect();
-        return sb.toString();
+        
+        return output;
     }
 
 	private Session getSshSession() throws JSchException {
 		
         JSch jsch = new JSch();       
         jsch.addIdentity(privateKeyFile);
-        
-        Session session = jsch.getSession(user, hostname);
+
+    	Session session = jsch.getSession(user, hostname);
         session.setConfig("StrictHostKeyChecking", "no");
         
 		return session;
 	}
 
+	
 }

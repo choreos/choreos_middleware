@@ -6,12 +6,20 @@ Service Deployer TODO
 
 - DeployedServicesRegistry: improvement needed?
 Is it possible to interact with chef to store data?
+
 - BUG: GET /services is not working properly
+
 - to Petals services the endpoint-name must be provided,
 however it could be parsed from XML
+
 - The CDDeployTest should verify if the given URI really returns a WSDL and not just to check for the 200 status code
+
 - run clean_aws.sh after every test
   must be done also in NodePoolManager and StorageFactory
+
 - Would be better ServiceDeployer tests start and stop NodePoolManager,
   instead developer having to start NodePoolManager manually
   To achieve this, a "project dependence" is necessary
+
+- The POST /services should support receiving a list of services,
+and not just one service

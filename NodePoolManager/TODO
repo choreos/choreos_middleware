@@ -2,8 +2,6 @@ NodePoolManager ToDo list
 
 Code improvements
 
-* Update ChefScripts as in SeviceDeployer, no file reading
-
 * After applying a configuration, use "knife node show NODE" to verify if the recipe was installed with success
 If not, return an error
 
@@ -12,3 +10,18 @@ If not, return an error
 * To change initial message from "Node Pool Manager is started..."
 to "Node Pool Manager has started in http://localhost:9100/nodepoolmanager/"
 This applies to ServiceDeployer and StorageFactory as well
+
+* POST /nodes/configs is returning the node ip on location header
+It should return the node id in the location header
+and it would be better return the node representation on the body response
+
+* Is indeed useful a REST operation POST /nodes/{id}/configs
+So we can deploy a given configuration in a specific node
+
+* The singleton instance management of NodeSelector implementation
+should be performed by the implementing classes themselves,
+and not by the Factory class.
+So, the FactoryClass can just call NodeSelectorImpl.getInstance()
+
+* The POST /configs should support receiving a list of configs,
+and not only one config 
