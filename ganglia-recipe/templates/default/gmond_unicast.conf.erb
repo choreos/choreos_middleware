@@ -8,7 +8,7 @@ globals {
   max_udp_msg_len = 1472        
   mute = no             
   deaf = no             
-  host_dmax = 0 /*secs */ 
+  host_dmax = 300 /*secs */ 
   cleanup_threshold = 300 /*secs */ 
   gexec = no             
   send_metadata_interval = 30     
@@ -33,9 +33,9 @@ host {
    used to only support having a single channel */ 
 udp_send_channel { 
   host = <%= @host %>
-  port = 8649 
-  ttl = 1 
-} 
+  port = 8649
+  ttl = 1
+}
 
 /* You can specify as many udp_recv_channels as you like as well. */ 
 udp_recv_channel { 
@@ -60,10 +60,13 @@ modules {
     name = "cpu_module" 
     path = "/usr/lib/ganglia/modcpu.so" 
   } 
-  module { 
-    name = "disk_module" 
-    path = "/usr/lib/ganglia/moddisk.so" 
-  } 
+/* ARGH! There is a bug in ganglia that prevents this from working with
+   machines where there is an NFS mount. Gmond crashes!
+   https://bugs.launchpad.net/ubuntu/+source/ganglia/+bug/910678 */
+#  module { 
+#    name = "disk_module" 
+#    path = "/usr/lib/ganglia/moddisk.so" 
+#  } 
   module { 
     name = "load_module" 
     path = "/usr/lib/ganglia/modload.so" 

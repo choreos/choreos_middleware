@@ -17,9 +17,17 @@
 # limitations under the License.
 #
 
+service "ganglia-monitor" do
+  pattern "gmond"
+  supports :restart => true
+  action :nothing
+end
+
 case node[:platform]
 when "ubuntu", "debian"
-  package "ganglia-monitor"
+  package "ganglia-monitor" do
+    notifies :create, "template[/etc/ganglia/gmond.conf]"
+  end
 when "redhat", "centos", "fedora"
   include_recipe "ganglia::source"
 
@@ -56,7 +64,5 @@ when false
 end
 
 service "ganglia-monitor" do
-  pattern "gmond"
-  supports :restart => true
   action [ :enable, :start ]
 end
