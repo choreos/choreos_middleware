@@ -13,55 +13,71 @@ public class SshUtil {
     private final String hostname, user, privateKeyFile;
     private Session session;
 
-    public SshUtil(String hostname, String user, String privateKeyFile) {
-        
-    	this.hostname = hostname;
-    	this.user = user;
-    	this.privateKeyFile = privateKeyFile;
+    public SshUtil(String hostname, String user, String privateKeyFile) throws JSchException {
+        this.hostname = hostname;
+        this.user = user;
+        this.privateKeyFile = privateKeyFile;
     }
-    
+
+    private Session getSession() throws JSchException {
+        if (this.session != null && this.session.isConnected()) {
+            return this.session;
+        }
+
+        JSch jsch = new JSch();
+        jsch.addIdentity(privateKeyFile);
+
+        Session session = jsch.getSession(user, hostname);
+        session.setConfig("StrictHostKeyChecking", "no");
+
+        return session;
+    }
+
     public boolean isAccessible() {
-        try{
-        	session = getSshSession();
-        	session.connect(5000);
+        Session session = null;
+
+        try {
+            // Once upon a time, an old session caused a lot of trouble...
+            session = getSession();
+            session.connect(5000);
         } catch (JSchException e) {
-        	System.out.println("** " + e.getMessage());
             return false;
         }
+
+        // We can keep a successful session
+        this.session = session;
         return true;
     }
 
     public String runCommand(String command) throws Exception {
-    	return runCommand(command, false);
+        return runCommand(command, false);
     }
-    
+
     public String runCommand(String command, boolean retry) throws Exception {
-    	String output = null;
-    	
-    	try {
-    		output = runCommandOnce(command);
-    	} catch (Exception e) {
-    		if (retry) {
-    			return runCommand(command, retry);
-    		} else {
-    			throw e;
-    		}
-    	}
-    	
-    	return output;
-    }
-    
-    public String runCommandOnce(String command) throws Exception {
-    	String output = null;
-    	
-    	if (session == null) {
-    		session = getSshSession();
-    	}
+        String output = null;
 
         try {
-       		session.connect(5000);
+            output = runCommandOnce(command);
+        } catch (Exception e) {
+            if (retry) {
+                return runCommand(command, retry);
+            } else {
+                // Backward compatibility
+                throw e;
+            }
+        }
 
-        	Channel channel = session.openChannel("exec");
+        return output;
+    }
+
+    public String runCommandOnce(String command) throws JSchException, InterruptedException {
+        String output = null;
+        Session session = getSession();
+
+        try {
+            session.connect(5000);
+
+            Channel channel = session.openChannel("exec");
             ((ChannelExec) channel).setCommand(command);
             StringBuffer sb = new StringBuffer();
             channel.setOutputStream(new StringBufferOutputStream(sb));
@@ -75,25 +91,12 @@ public class SshUtil {
             channel.disconnect();
             session.disconnect();
             output = sb.toString();
+        } catch (JSchException e) {
+            System.out.println("Could not connect to " + user + "@" + hostname + " with key "
+                    + privateKeyFile);
+            throw e;
         }
-        catch(JSchException e) {
-        	System.out.println("Could not connect " + user + "@" + hostname + " with " + privateKeyFile);
-        	throw e;
-        }
-        
+
         return output;
     }
-
-	private Session getSshSession() throws JSchException {
-		
-        JSch jsch = new JSch();       
-        jsch.addIdentity(privateKeyFile);
-
-    	Session session = jsch.getSession(user, hostname);
-        session.setConfig("StrictHostKeyChecking", "no");
-        
-		return session;
-	}
-
-	
 }

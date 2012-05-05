@@ -38,6 +38,7 @@ public class NodePoolManagerClient implements NodePoolManager {
 	
 	@Override
 	public String applyConfig(String configName) {
+	    System.out.println("NodePoolManagerClient.applyConfig("+ configName + ")");
 
 		WebClient client = setupClient();
 		client.path("nodes/configs");   	

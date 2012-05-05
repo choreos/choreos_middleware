@@ -95,7 +95,6 @@ public class EnactmentStarter {
 	}
 	
 	public static void main(String[] args) {
-
 		EnactmentStarter enacter = new EnactmentStarter();
 		enacter.enact();
 	}

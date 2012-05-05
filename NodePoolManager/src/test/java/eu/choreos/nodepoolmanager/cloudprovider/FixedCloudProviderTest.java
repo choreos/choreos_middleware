@@ -4,6 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.jcraft.jsch.JSchException;
+
 import eu.choreos.nodepoolmanager.Configuration;
 import eu.choreos.nodepoolmanager.ConfigurationManager;
 import eu.choreos.nodepoolmanager.chef.ChefScripts;
@@ -46,7 +48,7 @@ public class FixedCloudProviderTest {
         assertTrue(configurationManager.isInitialized(node));
 	}
 
-	private void waitSsh(Node node) {
+	private void waitSsh(Node node) throws JSchException {
 		
 		SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
         while (!ssh.isAccessible())

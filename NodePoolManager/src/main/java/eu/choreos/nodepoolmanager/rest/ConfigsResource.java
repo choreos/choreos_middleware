@@ -30,9 +30,9 @@ public class ConfigsResource {
 		if (config == null || config.getName() == null || config.getName().isEmpty())
 			return Response.status(Status.BAD_REQUEST).build();
 		
-		System.out.println("***applying");
+		System.out.println("***applying config " + config.getName());
     	Node node = controller.applyConfig(config);
-		System.out.println("***aplied on " + node);
+		System.out.println("***applied config " + config.getName());
     	
     	if (node == null)  // config not applied!
     		return Response.status(Status.INTERNAL_SERVER_ERROR).build();
