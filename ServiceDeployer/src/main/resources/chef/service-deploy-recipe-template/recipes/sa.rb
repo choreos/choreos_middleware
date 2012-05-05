@@ -23,4 +23,7 @@ remote_file "sa_file" do
   path "#{node['petals']['install_dir']}/$NAME.zip"
   mode "0755"
   action :create
+  not_if do
+    File.exists?("#{node['petals']['install_dir']}/../installed/$NAME.zip")
+  end
 end

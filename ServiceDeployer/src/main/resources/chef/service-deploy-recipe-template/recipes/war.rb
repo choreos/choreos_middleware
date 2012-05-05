@@ -22,5 +22,5 @@ remote_file "war_file" do
   source "#{node['service']['$NAME']['URL']}"
   path "#{node['tomcat']['webapp_dir']}/service$NAMEDeploy.war"
   mode "0755"
-  action :create
+  action :create_if_missing
 end

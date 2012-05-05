@@ -22,7 +22,7 @@ remote_file "jar_file" do
   source "#{node['service']['$NAME']['URL']}"
   path "#{node['service']['$NAME']['jarDir']}/service$NAMEDeploy.jar"
   mode "0777"
-  action :create
+  action :create_if_missing
 end
 
 service "execute_jar" do
