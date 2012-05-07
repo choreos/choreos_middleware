@@ -20,10 +20,16 @@ include_recipe "petals"
 
 remote_file "sa_file" do
   source "#{node['service']['$NAME']['URL']}"
-  path "#{node['petals']['install_dir']}/$NAME.zip"
+  path "/tmp/$NAME.zip"
   mode "0755"
   action :create
   not_if do
     File.exists?("#{node['petals']['install_dir']}/../installed/$NAME.zip")
   end
+end
+
+execute "install sa" do
+  command "cp /tmp/$NAME.zip #{node['petals']['install_dir']}/"
+  creates "#{node['petals']['install_dir']}/../installed/$NAME.zip"
+  action :run
 end
