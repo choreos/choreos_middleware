@@ -19,4 +19,6 @@ public interface NodePoolManager {
 	 * @return the just-created node public ip
 	 */
 	public String createNode();
+
+	public void upgradeNodes();
 }

@@ -1,1 +1,3 @@
 /servicedeployer.properties
+chef
+!chef/service-deploy-recipe-template

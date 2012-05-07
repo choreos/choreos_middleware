@@ -23,6 +23,13 @@ public class ConfigsResource {
 
 	private Controller controller = new Controller(new AWSCloudProvider());
 	
+	/**
+	 * Updates node cookbook list. To apply, post to nodes/upgrade.
+	 * @param config
+	 * @param uriInfo
+	 * @return
+	 * @throws URISyntaxException
+	 */
     @POST
     @Consumes(MediaType.APPLICATION_XML)
     public Response applyConfig(Config config, @Context UriInfo uriInfo) throws URISyntaxException {

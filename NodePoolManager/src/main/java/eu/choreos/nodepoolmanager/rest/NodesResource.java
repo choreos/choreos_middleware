@@ -84,5 +84,24 @@ public class NodesResource {
         return Response.status(Status.OK).build();
     }
     
+    /**
+     * Runs chef-client on nodes.
+     * Concurrency problems with "knife add run_list".
+     * @return
+     */
+    @POST
+    @Path("upgrade")
+    public Response upgradeNodes() {
+        Response response;
+
+        try {
+            controller.upgradeNodes();
+            response = Response.status(Status.OK).build();
+        } catch (Exception e) {
+            response = Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return response;
+    }
    
 }

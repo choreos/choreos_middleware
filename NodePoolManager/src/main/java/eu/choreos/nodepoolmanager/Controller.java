@@ -16,6 +16,14 @@ public class Controller {
     private final CloudProvider infrastructure;
     private ConfigurationManager configurationManager = new ConfigurationManager();
 
+    public void upgradeNodes() throws Exception {
+        List<Node> nodes = infrastructure.getNodes();
+
+        for (Node node : nodes) {
+            configurationManager.updateNodeConfiguration(node);
+        }
+    }
+
     public Controller(CloudProvider provider) {
         infrastructure = provider;
     }

@@ -75,4 +75,14 @@ public class NodePoolManagerClient implements NodePoolManager {
         return publicIp;
 	}
 
+	@Override
+	public void upgradeNodes() {
+	    WebClient client = setupClient();
+        client.path("nodes/upgrade");
+        Response response = client.post(null);
+
+        if (response.getStatus() == 500) {
+            System.out.println("Error on upgrading nodes @ NPMClient.");
+        }
+	}
 }

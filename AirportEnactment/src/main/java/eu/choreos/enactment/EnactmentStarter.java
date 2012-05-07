@@ -4,6 +4,8 @@ import java.util.Set;
 
 import eu.choreos.enactment.boot.Bootstrapper;
 import eu.choreos.enactment.context.ChorContextCaster;
+import eu.choreos.npm.NodePoolManager;
+import eu.choreos.npm.NodePoolManagerClient;
 import eu.choreos.servicedeployer.ServiceDeployer;
 import eu.choreos.servicedeployer.ServiceDeployerClient;
 import eu.choreos.servicedeployer.datamodel.Service;
@@ -51,7 +53,7 @@ public class EnactmentStarter {
 			}
 		});
 		trds[1].start();
-		
+
 		trds[2] = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -76,6 +78,8 @@ public class EnactmentStarter {
 				e.printStackTrace();
 			}
 		}
+
+		upgradeNodes();
 	}
 	
 	private void deployMasterNode() {
@@ -84,8 +88,16 @@ public class EnactmentStarter {
 				+ " from " + spec.getCodeUri());	
 		ServiceDeployer deployer = new ServiceDeployerClient();
 		Service service = deployer.deploy(spec);
+
+		upgradeNodes();
+
 		System.out.println(service.getId() + " deployed at " + service.getUri());
 	}
+
+    private void upgradeNodes() {
+        NodePoolManager npm = new NodePoolManagerClient();
+		npm.upgradeNodes();
+    }
 
 	private void passContext() {
 		

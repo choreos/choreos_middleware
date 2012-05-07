@@ -19,7 +19,7 @@ public class ConfigurationManager {
     private static ConcurrentMap<Node, Boolean> updating = new ConcurrentHashMap<Node, Boolean>();
     private static ConcurrentMap<Node, Boolean> needUpdate = new ConcurrentHashMap<Node, Boolean>();
 
-    private void updateNodeConfiguration(final Node node) throws Exception {
+    public void updateNodeConfiguration(final Node node) throws Exception {
         needUpdate.put(node, true);
 
         if (updating.containsKey(node) && updating.get(node)) {
@@ -120,11 +120,14 @@ public class ConfigurationManager {
         System.out.println("node name = " + node.getChefName());
         String command = ChefScripts.getChefAddCookbook(node.getChefName(), cookbook, recipe);
         System.out.println("Install recipe command = [" + command + "]");
-        CommandLine.runLocalCommand(command);
+
+        // Chef fails silently when adding multiple recipes concurrently
+        synchronized(ConfigurationManager.class) {
+            CommandLine.runLocalCommand(command);
+        }
+
         // TODO we should verify if the recipe install was OK
         // but it is very awkward make this without using the chef API!
-
-        this.updateNodeConfiguration(node);
     }
 
     private void installInitialRecipe(Node node) {
