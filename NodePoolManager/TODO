@@ -25,3 +25,5 @@ So, the FactoryClass can just call NodeSelectorImpl.getInstance()
 
 * The POST /configs should support receiving a list of configs,
 and not only one config 
+
+* Controller should be singleton
