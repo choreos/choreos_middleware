@@ -16,7 +16,7 @@ public class DemoSelector implements NodeSelector {
 			"Airport", "GroundTransportationCompany" };
 
 	private static final String[] VM2 = { "Hotel", "StandAndGateManagement",
-			"Travelagency", "WeatherForecastService" };
+			"Travelagency", "Weather" };
 
 	private Node node1, node2;
 
