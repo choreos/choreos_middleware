@@ -12,10 +12,11 @@ import eu.choreos.nodepoolmanager.datamodel.Node;
  */
 public class DemoSelector implements NodeSelector {
 
+    // P.S. AirlineGroundStaffMID is caught by Airline
 	private static final String[] VM1 = { "Airline", "AirlineGroundStaffMID",
 			"Airport", "GroundTransportationCompany" };
 
-	private static final String[] VM2 = { "Hotel", "StandAndGateManagement",
+	private static final String[] VM2 = { "Hotel", "StandAndGate",
 			"Travelagency", "Weather" };
 
 	private Node node1, node2;

@@ -1,5 +1,6 @@
 package eu.choreos.nodepoolmanager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jclouds.compute.RunNodesException;
@@ -17,10 +18,18 @@ public class Controller {
     private ConfigurationManager configurationManager = new ConfigurationManager();
 
     public void upgradeNodes() throws Exception {
-        List<Node> nodes = infrastructure.getNodes();
+        final List<Node> nodes = infrastructure.getNodes();
 
+        List<Thread> threads = new ArrayList<Thread>();
+        Thread t;
         for (Node node : nodes) {
-            configurationManager.updateNodeConfiguration(node);
+            t = new Thread(new NodeUpgrader(node));
+            t.start();
+            threads.add(t);
+        }
+
+        for (Thread thread : threads) {
+            thread.join();
         }
     }
 
@@ -79,5 +88,23 @@ public class Controller {
         }
 
         return node;
+    }
+
+    private class NodeUpgrader implements Runnable {
+
+        private Node node;
+
+        public NodeUpgrader(Node node) {
+            this.node = node;
+        }
+
+        @Override
+        public void run() {
+            try {
+                configurationManager.updateNodeConfiguration(node);
+            } catch (Exception e) {
+                System.out.println("Error on Controller while upgrading node " + node);
+            }
+        }
     }
 }

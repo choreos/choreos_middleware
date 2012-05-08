@@ -18,14 +18,9 @@
 
 include_recipe "petals"
 
-remote_file "sa_file" do
+remote_file "/tmp/$NAME.zip" do
   source "#{node['service']['$NAME']['URL']}"
-  path "/tmp/$NAME.zip"
-  mode "0755"
-  action :create
-  not_if do
-    File.exists?("#{node['petals']['install_dir']}/../installed/$NAME.zip")
-  end
+  action :create_if_missing
 end
 
 execute "install sa" do

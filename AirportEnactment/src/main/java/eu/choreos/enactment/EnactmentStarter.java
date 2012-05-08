@@ -95,6 +95,8 @@ public class EnactmentStarter {
 	}
 
     private void upgradeNodes() {
+        System.out.println("Upgrading nodes...");
+
         NodePoolManager npm = new NodePoolManagerClient();
 		npm.upgradeNodes();
     }

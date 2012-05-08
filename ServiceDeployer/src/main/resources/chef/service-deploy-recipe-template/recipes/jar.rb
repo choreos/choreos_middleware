@@ -18,10 +18,8 @@
 
 include_recipe "java"
 
-remote_file "jar_file" do
+remote_file "#{node['service']['$NAME']['jarDir']}/service$NAMEDeploy.jar" do
   source "#{node['service']['$NAME']['URL']}"
-  path "#{node['service']['$NAME']['jarDir']}/service$NAMEDeploy.jar"
-  mode "0777"
   action :create_if_missing
 end
 
