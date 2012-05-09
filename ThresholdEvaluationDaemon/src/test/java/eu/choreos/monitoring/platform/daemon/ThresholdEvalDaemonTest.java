@@ -5,9 +5,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.stub;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import it.cnr.isti.labse.glimpse.event.GlimpseBaseEvent;
 import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventImpl;
 import it.cnr.isti.labse.glimpse.utils.Manager;
 
@@ -17,6 +19,8 @@ import java.util.Properties;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import eu.choreos.monitoring.platform.daemon.notifier.GlimpseMessageHandler;
 import eu.choreos.monitoring.platform.datatypes.Gmetric;
@@ -63,14 +67,20 @@ public class ThresholdEvalDaemonTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void shouldSendOneHeartBeatMessage() {
-		for(int i = 0; i < 20; i++)
-			daemon.evaluateThresholdsSendMessagesAndSleep(message, 0);
+		prepareSendMessageToCheckAlive();
+
+		for(int i = 0; i < 20; i++) {
+			 daemon.evaluateThresholdsSendMessagesAndSleep(message, 0);
+		}
 		verify(msgHandler, times(1)).sendMessage(any(GlimpseBaseEventImpl.class));
 	}
 	
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void shouldSendTwoHeartBeatMessage() {
+		prepareSendMessageToCheckAlive();
+		
 		for(int i = 0; i < 40; i++)
 			daemon.evaluateThresholdsSendMessagesAndSleep(message, 0);
 		verify(msgHandler, times(2)).sendMessage(any(GlimpseBaseEventImpl.class));
@@ -135,5 +145,15 @@ public class ThresholdEvalDaemonTest {
 						"GangliaFactory", "jms.probeTopic", true, "probeName",
 						"probeTopic");
 		return createProbeSettingsPropertiesObject;
+	}
+	
+	private void prepareSendMessageToCheckAlive() {
+		stub(msgHandler.sendMessage(any(GlimpseBaseEventImpl.class))).toAnswer(new Answer() {
+			public Object answer(InvocationOnMock invocation) {
+				Object[] args = invocation.getArguments();
+				assertEquals(((GlimpseBaseEvent<String>)args[0]).getData(),"Alive");
+				return args[0];	
+			}
+		});
 	}
 }

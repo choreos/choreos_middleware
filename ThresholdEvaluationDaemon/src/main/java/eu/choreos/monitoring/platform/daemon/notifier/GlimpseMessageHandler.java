@@ -16,7 +16,7 @@ public class GlimpseMessageHandler extends GlimpseAbstractProbe {
 		super(settings);
 	}
 
-	public void sendMessage(GlimpseBaseEvent<String> event) {
+	public GlimpseBaseEvent<String> sendMessage(GlimpseBaseEvent<String> event) {
 		event.setNetworkedSystemSource(HostnameHandler.getHostName());
 		try {
 			this.sendEventMessage(event, false);
@@ -25,6 +25,7 @@ public class GlimpseMessageHandler extends GlimpseAbstractProbe {
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
+		return event;
 	}
 
 	@Override
