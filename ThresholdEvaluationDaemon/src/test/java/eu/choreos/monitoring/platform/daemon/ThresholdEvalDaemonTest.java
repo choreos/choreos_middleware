@@ -59,6 +59,22 @@ public class ThresholdEvalDaemonTest {
 		verify(msgHandler, times(1)).sendMessage(
 				any(GlimpseBaseEventImpl.class));
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void shouldSendOneHeartBeatMessage() {
+		for(int i = 0; i < 20; i++)
+			daemon.evaluateThresholdsSendMessagesAndSleep(message, 0);
+		verify(msgHandler, times(1)).sendMessage(any(GlimpseBaseEventImpl.class));
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void shouldSendTwoHeartBeatMessage() {
+		for(int i = 0; i < 40; i++)
+			daemon.evaluateThresholdsSendMessagesAndSleep(message, 0);
+		verify(msgHandler, times(2)).sendMessage(any(GlimpseBaseEventImpl.class));
+	}
 
 	@Test
 	public void shouldCheckIfThereAreSurpassedThresholds() {
