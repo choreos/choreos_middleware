@@ -2,6 +2,8 @@ package eu.choreos.gmond.reloader;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -24,6 +26,9 @@ public class GmondReloaderTest {
 		
 		gmondReloader.setRuntime(runtime);
 		assertTrue(gmondReloader.reload());
+		verify(runtime, times(1)).exec("/etc/init.d/ganglia-monitor restart");
+		verify(proc, times(1)).waitFor();
+				
 	}
 
 }

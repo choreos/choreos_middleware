@@ -1,16 +1,14 @@
 package eu.choreos.gmond.reloader;
 
-
-
 public class GmondReloader {
-	
+
 	private String commandRestartMonitor;
 
 	private Runtime runtime;
+	@SuppressWarnings("unused") //Used for testing purposes
 	private Process proc;
-	
 
-	public GmondReloader(){
+	public GmondReloader() {
 		commandRestartMonitor = "/etc/init.d/ganglia-monitor restart";
 		runtime = null;
 	}
@@ -18,8 +16,8 @@ public class GmondReloader {
 	public void setRuntime(Runtime runtime) {
 		this.runtime = runtime;
 	}
-	
-	public boolean reload(){
+
+	public boolean reload() {
 		Process procReturned = runCommand(commandRestartMonitor);
 		try {
 			procReturned.waitFor();
@@ -33,20 +31,17 @@ public class GmondReloader {
 
 	private Process runCommand(String cmd) {
 		Runtime runtime = null;
-		if (this.runtime==null) 
+		if (this.runtime == null)
 			runtime = Runtime.getRuntime();
-		else runtime =  this.runtime;
-		
+		else
+			runtime = this.runtime;
+
 		Process proc = null;
 		try {
 			proc = runtime.exec(cmd);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return proc;
-	}
-
-	public Process getProc() {
 		return proc;
 	}
 

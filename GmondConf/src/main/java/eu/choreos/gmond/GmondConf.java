@@ -15,13 +15,8 @@ public class GmondConf {
 	private List<String> fileLines;
 	private int searchIndex;
 
-	public List<String> getFileLines() {
-		return fileLines;
-	}
-
 	public GmondConf() {
 		searchIndex = 0;
-
 	}
 
 	public void setReloader(GmondReloader newReloader) {
@@ -132,12 +127,22 @@ public class GmondConf {
 		load();
 	}
 
-	public void load() {
+	private void load() {
 		try {
 			fileLines = FileUtils.readLines((new File(gmondFile)));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not find desired file: "
 					+ gmondFile);
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+
+	public void save() {
+		try {
+			FileUtils.writeLines((new File(gmondFile)), fileLines);
+		} catch (IOException e) {
+			System.out.println("ERROR: Could not write to file " + gmondFile);
 			e.printStackTrace();
 			System.exit(1);
 		}
@@ -151,24 +156,25 @@ public class GmondConf {
 		fileLines.add("}");
 	}
 
-	public void removeUdpSendChannel(String host) {
-
-		List<Integer> udpSendChannelLines = getUdpSendChannelHost(host);
-		for (Integer index : udpSendChannelLines) {
-			fileLines.remove(fileLines.get(index));
-		}
-	}
-
 	public void updateUdpSendChannel(String currentHost, String newHost,
 			String newPort) {
 
-		List<Integer> udpSendChannelLines = getUdpSendChannelHost(currentHost);
+		List<Integer> udpSendChannelLines = getUdpSendChannelLineIndexes(currentHost);
 		for (Integer index : udpSendChannelLines) {
 			String line = fileLines.get(index);
 			line = setAttributeIfApplicable("host", newHost, line);
 			line = setAttributeIfApplicable("port", newPort, line);
 			fileLines.set(index, line);
 		}
+	}
+
+	public void updateUdpSendChannelHost(String currentHost, String newHost) {
+		String currentPort = getUdpSendChannelPort(currentHost);
+		updateUdpSendChannel(currentHost, newHost, currentPort);
+	}
+
+	public void updateUdpSendChannelPort(String host, String port) {
+		updateUdpSendChannel(host, host, port);
 	}
 
 	private String setAttributeIfApplicable(String attr, String newValue,
@@ -180,9 +186,33 @@ public class GmondConf {
 		return line;
 	}
 
-	public List<Integer> getUdpSendChannelHost(String host) {
-		List<Integer> udpSendChannel = new ArrayList<Integer>();
+	public void removeUdpSendChannel(String host) {
+	
+		List<Integer> udpSendChannelLines = getUdpSendChannelLineIndexes(host);
+		for (Integer index : udpSendChannelLines) {
+			fileLines.remove(fileLines.get(index));
+		}
+	}
 
+	private String getUdpSendChannelPort(String currentHost) {
+		List<Integer> sendChannelLineIndexes = getUdpSendChannelLineIndexes(currentHost);
+		String currentPort = null;
+	
+		for (int lineIndex : sendChannelLineIndexes) {
+			String line = fileLines.get(lineIndex);
+			System.out.println(line);
+			if (line.contains("port") && line.contains("="))
+				currentPort = line.split("=")[1];
+		}
+		System.out.println(currentPort);
+		return currentPort;
+	}
+
+	public List<Integer> getUdpSendChannelLineIndexes(String host) {
+		List<Integer> udpSendChannel = new ArrayList<Integer>();
+	
+		searchIndex = 0;
+		
 		while ((udpSendChannel = findNextUdpSendChannel(fileLines)) != null) {
 			for (int index : udpSendChannel) {
 				String line = fileLines.get(index);
@@ -194,49 +224,19 @@ public class GmondConf {
 		return null;
 	}
 
-	public void updateUdpSendChannelHost(String currentHost, String newHost) {
-
-		searchIndex = 0;
-		List<Integer> indexes = getUdpSendChannelHost(currentHost);
-
-		if (indexes != null) {
-			for (int index : indexes) {
-				if (fileLines.get(index).contains("host")
-						&& fileLines.get(index).contains(currentHost)) {
-					fileLines.set(index, "  host = " + newHost);
-				}
-			}
-		}
-
-	}
-
-	public void updateUdpSendChannelPort(String host, String port) {
-		updateUdpSendChannel(host, host, port);
-	}
-
-	public void save() {
-		try {
-			FileUtils.writeLines((new File(gmondFile)), fileLines);
-		} catch (IOException e) {
-			System.out.println("ERROR: Could not write to file " + gmondFile);
-			e.printStackTrace();
-			System.exit(1);
-		}
-	}
-
 	public List<Integer> findNextUdpSendChannel(List<String> fileContents) {
 		List<Integer> lineIndexes = new ArrayList<Integer>();
 		int initialLine = searchIndex;
 		for (int i = initialLine; i < fileContents.size(); i++) {
 			String line = fileContents.get(i);
-
+	
 			if (line.contains("udp_send_channel") && line.contains("{")) {
-
+	
 				do {
 					lineIndexes.add(i);
 					searchIndex = i;
 				} while (!fileContents.get(i++).contains("}"));
-
+	
 				return lineIndexes;
 			}
 		}
