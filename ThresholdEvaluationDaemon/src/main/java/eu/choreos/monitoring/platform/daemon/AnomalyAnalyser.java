@@ -17,24 +17,10 @@ public class AnomalyAnalyser {
 		thresholds = new ArrayList<Threshold>();
 	}
 
-	public void setThresholds(List<Threshold> thresholds) {
-		this.thresholds = thresholds;
-	}
-
 	public int addThreshold(Threshold threshold) {
-		thresholds.add(threshold);
+		if(! thresholds.contains(threshold))
+			thresholds.add(threshold);
 		return thresholds.indexOf(threshold);
-
-	}
-
-	public void removeThreshold(Threshold threshold) {
-		thresholds.remove(threshold);
-		return;
-	}
-
-	public void removeThreshold(int index) {
-		thresholds.remove(thresholds.get(index));
-		return;
 
 	}
 
@@ -66,5 +52,13 @@ public class AnomalyAnalyser {
 				surpassedThresholds.add(threshold);
 		}
 		return surpassedThresholds;
+	}
+
+	public Threshold getThreshold(int index) {
+		return thresholds.get(index);
+	}
+
+	public int getThresholdSize() {
+		return thresholds.size();
 	}
 }

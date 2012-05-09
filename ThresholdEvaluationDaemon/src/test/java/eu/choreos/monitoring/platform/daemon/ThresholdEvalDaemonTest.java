@@ -68,7 +68,6 @@ public class ThresholdEvalDaemonTest {
 
 	@Test
 	public void shouldCheckIfThereAreNoneSurpassedThresholds() {
-		System.out.println("PAU VV");
 		daemon.addThreshold(new Threshold("load_one", Threshold.MIN, 1.0));
 		assertEquals(false, daemon.thereAreSurpassedThresholds());
 	}
