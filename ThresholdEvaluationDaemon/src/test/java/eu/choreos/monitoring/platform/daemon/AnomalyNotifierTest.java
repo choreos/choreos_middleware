@@ -53,6 +53,17 @@ public class AnomalyNotifierTest {
 		int index = notifier.addThreshold(threshold);
 		assertEquals(threshold, notifier.getThreshold(index));
 	}
+	
+	@Test
+	public void shouldNotAddEqualThresholds() {
+		assertEquals(0, notifier.getThresholdSize());
+		Threshold threshold1 = new Threshold("load_one", Threshold.MAX, 3);
+		Threshold threshold2 = new Threshold("load_one", Threshold.MAX, 3);
+		int index1 = notifier.addThreshold(threshold1);
+		int index2 = notifier.addThreshold(threshold2);
+		assertEquals(1, notifier.getThresholdSize());
+		assertEquals(index1, index2);
+	}
 
 	@Test
 	public void shouldIdentifyLoadAverageGreaterThanThreeInTheLastFiveMinutes() {

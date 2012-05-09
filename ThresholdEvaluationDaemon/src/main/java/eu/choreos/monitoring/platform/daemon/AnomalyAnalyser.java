@@ -18,7 +18,8 @@ public class AnomalyAnalyser {
 	}
 
 	public int addThreshold(Threshold threshold) {
-		thresholds.add(threshold);
+		if(! thresholds.contains(threshold))
+			thresholds.add(threshold);
 		return thresholds.indexOf(threshold);
 
 	}
@@ -55,5 +56,9 @@ public class AnomalyAnalyser {
 
 	public Threshold getThreshold(int index) {
 		return thresholds.get(index);
+	}
+
+	public int getThresholdSize() {
+		return thresholds.size();
 	}
 }
