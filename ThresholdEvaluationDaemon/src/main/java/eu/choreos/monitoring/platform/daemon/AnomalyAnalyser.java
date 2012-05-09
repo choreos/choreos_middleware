@@ -23,17 +23,6 @@ public class AnomalyAnalyser {
 
 	}
 
-	public void removeThreshold(Threshold threshold) {
-		thresholds.remove(threshold);
-		return;
-	}
-
-	public void removeThreshold(int index) {
-		thresholds.remove(thresholds.get(index));
-		return;
-
-	}
-
 	public boolean wasSurpassed(Threshold threshold) {
 		return threshold.wasSurpassed(getMetricNumericalValue(threshold
 				.getName()));
