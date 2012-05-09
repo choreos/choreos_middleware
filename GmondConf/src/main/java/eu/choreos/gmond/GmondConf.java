@@ -15,6 +15,10 @@ public class GmondConf {
 	private List<String> fileLines;
 	private int searchIndex;
 
+	public void setSearchIndex(int searchIndex) {
+		this.searchIndex = searchIndex;
+	}
+
 	public GmondConf() {
 		searchIndex = 0;
 	}
@@ -209,7 +213,7 @@ public class GmondConf {
 	}
 
 	public List<Integer> getUdpSendChannelLineIndexes(String host) {
-		List<Integer> udpSendChannel = new ArrayList<Integer>();
+		List<Integer> udpSendChannel;
 	
 		searchIndex = 0;
 		

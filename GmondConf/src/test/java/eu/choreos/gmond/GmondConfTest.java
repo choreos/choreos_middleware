@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,18 +51,44 @@ public class GmondConfTest {
 		FileUtils.deleteQuietly(testFile);
 	}
 
+	@Test(expected = Exception.class)
+	public void shouldPrintUsage() throws Exception {
+		GmondConf.main("anything");
+	}
+
+	@Test
+	public void shouldNotFindNonExistingUdpSendChannel() {
+		gmondConf.load(testMultipleFile.getAbsolutePath());
+
+		List<Integer> indexes = gmondConf
+				.getUdpSendChannelLineIndexes("anything");
+
+		assertEquals(null, indexes);
+	}
+
+	@Test
+	public void shouldNotSearchOutsideOfFileBoundaries() throws IOException {
+		List<String> fileContents = FileUtils.readLines(testFile);
+		int nonExistingLine = fileContents.size() + 15;
+
+		gmondConf.setSearchIndex(nonExistingLine);
+		assertEquals(null, gmondConf.findNextUdpSendChannel(fileContents));
+
+	}
+
 	@Test
 	public void shouldAddUdpSendChannel() throws IOException {
 		String fileContents = FileUtils.readFileToString(testFile);
 		assertFalse(fileContents.contains("host = 127.0.0.1"));
-	
+
 		gmondConf.load(testFile.getAbsolutePath());
 		gmondConf.addUdpSendChannel("127.0.0.1", "8649");
 		gmondConf.save();
-	
+
 		fileContents = FileUtils.readFileToString(testFile);
-	
-		assertTrue("Should have added an udp send channel to the config file",fileContents.contains("host = 127.0.0.1"));
+
+		assertTrue("Should have added an udp send channel to the config file",
+				fileContents.contains("host = 127.0.0.1"));
 	}
 
 	@Test
@@ -75,22 +102,24 @@ public class GmondConfTest {
 
 		fileContents = FileUtils.readFileToString(testFile);
 
-		assertFalse("Should have removed eclipse.ime.usp.br udp send channel from the config file", fileContents.contains("host = eclipse.ime.usp.br"));
+		assertFalse(
+				"Should have removed eclipse.ime.usp.br udp send channel from the config file",
+				fileContents.contains("host = eclipse.ime.usp.br"));
 	}
 
 	@Test
 	public void shouldChangeUdpSendChannelHost() throws IOException {
-	
+
 		String fileContents = FileUtils.readFileToString(testFile);
 		assertTrue(fileContents.contains("host = eclipse.ime.usp.br"));
 		assertFalse(fileContents.contains("host = localhost"));
-	
+
 		gmondConf.load(testFile.getAbsolutePath());
 		gmondConf.updateUdpSendChannelHost("eclipse.ime.usp.br", "localhost");
 		gmondConf.save();
-	
+
 		fileContents = FileUtils.readFileToString(testFile);
-	
+
 		assertFalse("Original line was found!",
 				fileContents.contains("host = eclipse.ime.usp.br"));
 		assertTrue("Altered line not located!",
@@ -101,39 +130,39 @@ public class GmondConfTest {
 
 	@Test
 	public void shouldUpdateUdpSendChannelPort() throws IOException {
-	
+
 		String fileContents = FileUtils.readFileToString(testFile);
 		assertFalse(fileContents.contains("port = 1234"));
-	
+
 		int location = fileContents.indexOf("port = 8649");
-	
+
 		gmondConf.load(testFile.getAbsolutePath());
 		gmondConf.updateUdpSendChannelPort("eclipse.ime.usp.br", "1234");
 		gmondConf.save();
-	
+
 		fileContents = FileUtils.readFileToString(testFile);
-	
+
 		assertTrue("Altered line not located!",
 				fileContents.contains("port = 1234"));
-	
+
 		assertEquals(location, fileContents.indexOf("port = 1234"));
 	}
 
 	@Test
 	public void shouldUpdateUdpSendChannelHostAndPort() throws IOException {
-	
+
 		String fileContents = FileUtils.readFileToString(testFile);
 		assertFalse(fileContents.contains("port = 1234"));
-	
+
 		int location = fileContents.indexOf("port = 8649");
-	
+
 		gmondConf.load(testFile.getAbsolutePath());
 		gmondConf.updateUdpSendChannel("eclipse.ime.usp.br", "localhost",
 				"1234");
 		gmondConf.save();
-	
+
 		fileContents = FileUtils.readFileToString(testFile);
-	
+
 		assertTrue("Altered port not located!",
 				fileContents.contains("port = 1234"));
 		assertFalse("Previous port not removed!",
@@ -142,21 +171,22 @@ public class GmondConfTest {
 				fileContents.contains("host = localhost"));
 		assertFalse("Previous host not removed!",
 				fileContents.contains("host = eclipse.ime.usp.br"));
-	
+
 		assertEquals(location, fileContents.indexOf("port = 1234"));
 	}
 
 	@Test
 	public void shouldGetCorrectUdpSendChannel() {
 		gmondConf.load(testMultipleFile.getAbsolutePath());
-	
-		List<Integer> indexes = gmondConf.getUdpSendChannelLineIndexes("127.0.0.1");
-	
+
+		List<Integer> indexes = gmondConf
+				.getUdpSendChannelLineIndexes("127.0.0.1");
+
 		List<Integer> expected = new ArrayList<Integer>();
 		for (int i = 38; i <= 41; i++) {
 			expected.add(i);
 		}
-	
+
 		assertEquals(expected, indexes);
 	}
 
