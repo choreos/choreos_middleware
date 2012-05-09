@@ -31,28 +31,25 @@
 			<groupId>glimpse</groupId>
 			<artifactId>ComplexEventRule</artifactId>
 			<version>3.3.1</version>
-			<scope>jar</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>glimpse</groupId>
 			<artifactId>glimpse-api</artifactId>
 			<version>3.3.1</version>
-			<scope>jar</scope>
+			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>glimpse</groupId>
 			<artifactId>ComplexEventResponse</artifactId>
 			<version>3.3.1</version>
-			<scope>jar</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>glimpse</groupId>
 			<artifactId>ComplexEventException</artifactId>
 			<version>3.3.1</version>
-			<scope>jar</scope>
 		</dependency>
 
 
