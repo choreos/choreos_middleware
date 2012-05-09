@@ -5,6 +5,7 @@ public class GmondReloader {
 	private String commandRestartMonitor;
 
 	private Runtime runtime;
+	@SuppressWarnings("unused") //Used for testing purposes
 	private Process proc;
 
 	public GmondReloader() {

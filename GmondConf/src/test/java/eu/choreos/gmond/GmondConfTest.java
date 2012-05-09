@@ -3,7 +3,6 @@ package eu.choreos.gmond;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -290,7 +289,6 @@ public class GmondConfTest {
 	}
 
 	// Warning suppressed to ensure usage of mock reloader
-	@SuppressWarnings("static-access")
 	@Test
 	public void shouldUpdateHostAndPortChannelFromMain() throws Exception {
 		// [--update-channel currentHost newHost newPort]
@@ -319,7 +317,6 @@ public class GmondConfTest {
 	}
 
 	// Warning suppressed to ensure usage of mock reloader
-	@SuppressWarnings("static-access")
 	@Test
 	public void shouldAddChannelFromMain() throws Exception {
 		// [--add host port]
