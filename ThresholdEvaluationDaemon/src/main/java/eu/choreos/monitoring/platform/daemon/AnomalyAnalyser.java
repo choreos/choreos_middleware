@@ -17,10 +17,6 @@ public class AnomalyAnalyser {
 		thresholds = new ArrayList<Threshold>();
 	}
 
-	public void setThresholds(List<Threshold> thresholds) {
-		this.thresholds = thresholds;
-	}
-
 	public int addThreshold(Threshold threshold) {
 		thresholds.add(threshold);
 		return thresholds.indexOf(threshold);
@@ -66,5 +62,9 @@ public class AnomalyAnalyser {
 				surpassedThresholds.add(threshold);
 		}
 		return surpassedThresholds;
+	}
+
+	public Threshold getThreshold(int index) {
+		return thresholds.get(index);
 	}
 }

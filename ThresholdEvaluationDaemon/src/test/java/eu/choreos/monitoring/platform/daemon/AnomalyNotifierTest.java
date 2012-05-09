@@ -1,5 +1,6 @@
 package eu.choreos.monitoring.platform.daemon;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -13,8 +14,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.choreos.monitoring.platform.daemon.AnomalyAnalyser;
-import eu.choreos.monitoring.platform.daemon.Threshold;
 import eu.choreos.monitoring.platform.datatypes.Gmetric;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
 
@@ -46,6 +45,13 @@ public class AnomalyNotifierTest {
 
 	@After
 	public void tearDown() throws Exception {
+	}
+	
+	@Test
+	public void shouldAddOneThreshold() {
+		Threshold threshold = new Threshold("load_one", Threshold.MAX, 3);
+		int index = notifier.addThreshold(threshold);
+		assertEquals(threshold, notifier.getThreshold(index));
 	}
 
 	@Test
