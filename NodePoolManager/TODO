@@ -27,3 +27,6 @@ So, the FactoryClass can just call NodeSelectorImpl.getInstance()
 and not only one config 
 
 * Controller should be singleton
+
+* We were having problems with concurrent calls to EC2 and knife APIs.
+Find out why. Although it seems to be server fault, could it be our client's problem?

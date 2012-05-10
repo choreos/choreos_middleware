@@ -8,3 +8,4 @@
 * Remove the setInvocationAddress from coordels (DONE)
 * Solve the ServiceDeployer endpoint issue (DONE)
 * The first deploy (after bootstrap) is not special anymore (master issue)
+* It seems CDs are echoing received calls, rather than forwarding them
