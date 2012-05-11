@@ -204,11 +204,9 @@ public class GmondConf {
 	
 		for (int lineIndex : sendChannelLineIndexes) {
 			String line = fileLines.get(lineIndex);
-			System.out.println(line);
 			if (line.contains("port") && line.contains("="))
 				currentPort = line.split("=")[1];
 		}
-		System.out.println(currentPort);
 		return currentPort;
 	}
 

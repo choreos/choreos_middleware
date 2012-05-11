@@ -1,5 +1,9 @@
 package eu.choreos.gmond.reloader;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class GmondReloader {
 
 	private String commandRestartMonitor;
@@ -8,8 +12,11 @@ public class GmondReloader {
 	@SuppressWarnings("unused") //Used for testing purposes
 	private Process proc;
 
+	private String commandReloadMonitor;
+
 	public GmondReloader() {
 		commandRestartMonitor = "/etc/init.d/ganglia-monitor restart";
+		commandReloadMonitor = "kill -1 $( cat /var/run/gmond.pid )";
 		runtime = null;
 	}
 
@@ -18,7 +25,11 @@ public class GmondReloader {
 	}
 
 	public boolean reload() {
-		Process procReturned = runCommand(commandRestartMonitor);
+		Process procReturned;
+		if(gmondIsRunning())
+			procReturned = runCommand(commandReloadMonitor);
+		else
+			procReturned = runCommand(commandRestartMonitor);
 		try {
 			procReturned.waitFor();
 		} catch (InterruptedException e) {
@@ -26,6 +37,30 @@ public class GmondReloader {
 		}
 		if (procReturned.exitValue() == 0)
 			return true;
+		return false;
+	}
+
+	private boolean gmondIsRunning() {
+		
+		Process process = runCommand("ps -ef | grep gmond");
+		
+		try {
+			process.waitFor();
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		
+		BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		String line;
+		
+		try {
+			while ((line = in.readLine()) != null) {
+				if(line.contains("/usr/sbin/gmond")) return true;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+				
 		return false;
 	}
 
