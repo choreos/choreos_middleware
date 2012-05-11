@@ -17,16 +17,29 @@
 			<name>ccsl</name>
 			<url>http://valinhos.ime.usp.br:54080/maven/</url>
 		</repository>
+
+		<repository>
+			<id>Sonatype-public</id>
+			<name>SnakeYAML repository</name>
+			<url>http://oss.sonatype.org/content/groups/public/</url>
+		</repository>
+
 	</repositories>
 
 	<dependencies>
+	
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.11-SNAPSHOT</version>
+		</dependency>
 
 		<dependency>
 			<groupId>eu.choreos</groupId>
 			<artifactId>ChoreosMonitoring</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>glimpse</groupId>
 			<artifactId>ComplexEventRule</artifactId>
