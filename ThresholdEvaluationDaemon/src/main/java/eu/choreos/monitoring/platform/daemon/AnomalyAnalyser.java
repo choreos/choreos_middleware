@@ -24,6 +24,12 @@ public class AnomalyAnalyser {
 
 	}
 
+	public void addMultipleThresholds(List<Threshold> thresholdList) {
+		for (Threshold threshold : thresholdList) {
+			addThreshold(threshold);
+		}
+	}
+
 	public boolean wasSurpassed(Threshold threshold) {
 		return threshold.wasSurpassed(getMetricNumericalValue(threshold
 				.getName()));
@@ -61,4 +67,5 @@ public class AnomalyAnalyser {
 	public int getThresholdSize() {
 		return thresholds.size();
 	}
+
 }
