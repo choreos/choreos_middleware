@@ -37,7 +37,7 @@ public class YamlParser {
 		String fileContents = FileUtils.readFileToString(file);
 
 		List<Threshold> returnValue = getThresholdsFromString(fileContents);
-		
+
 		return returnValue;
 	}
 

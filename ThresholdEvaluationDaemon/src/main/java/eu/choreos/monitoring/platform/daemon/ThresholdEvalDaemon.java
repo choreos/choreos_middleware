@@ -73,9 +73,6 @@ public class ThresholdEvalDaemon {
 
 		List<Threshold> evaluateAllThresholds = analyser
 				.getAllSurpassedThresholds();
-		for (Threshold threshold : evaluateAllThresholds) {
-			System.out.println(threshold);
-		}
 		return evaluateAllThresholds;
 	}
 
@@ -86,7 +83,6 @@ public class ThresholdEvalDaemon {
 	}
 
 	private void sendMessage(GlimpseBaseEvent<String> message) {
-		System.out.println("Sent a message: " + message.getData());
 		messageHandler.sendMessage(message);
 		nonSentMessagesIterationsCounter = 0;
 	}
@@ -106,6 +102,5 @@ public class ThresholdEvalDaemon {
 			sendMessage(message);
 		}
 	}
-
 
 }
