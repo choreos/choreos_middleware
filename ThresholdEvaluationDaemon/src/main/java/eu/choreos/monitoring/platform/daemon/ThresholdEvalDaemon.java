@@ -33,6 +33,10 @@ public class ThresholdEvalDaemon {
 		analyser.addThreshold(threshold);
 	}
 
+	public void addMultipleThreshold(List<Threshold> thresholdList) {
+		analyser.addMultipleThresholds(thresholdList);
+	}
+
 	public void continuouslyEvaluateThresholdsAndSendMessages(
 			GlimpseBaseEvent<String> message) {
 
@@ -102,5 +106,6 @@ public class ThresholdEvalDaemon {
 			sendMessage(message);
 		}
 	}
+
 
 }
