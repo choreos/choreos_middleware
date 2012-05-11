@@ -1,0 +1,34 @@
+=== MODULES DESCRIPTION ===
+
+== GmondConf ==
+
+GmondConf is a tool for reconfiguring Ganglia in the local machine. It enables users to create, edit and/or remove UDP send channels from the ganglia configuration file in an automated fashion.
+
+It automatically creates the updated configuration and sends a signal for gmond (ganglia's monitor daemon) to load the new configuration without necessarily restarting the monitor process.
+
+To use it one should issue the following command:
+java -jar gmondconf [--add host port] [--update-port host port] [--update-host currentHost newHost] [--update-channel currentHost newHost newPort] [--remove host] [--config-file configFile]
+
+As can be seen, all of the parameters are optional. These options are described below:
+
+--add :
+	creates a new UDP send channel, with the provided host and port combination.
+
+--update-port :
+	updates the UDP send channel for the provided host to use the newly appointed port.
+
+--update-host :
+	updates the UDP send channel for the provided currentHost, replacing it with newHost.
+
+--update-channel :
+	removes the UDP send channel for the provided currentHost, replacing it with a new one for newHost at the provided port.
+
+--remove :
+	removes the UDP send channel for the provided host. 
+
+--config-file :
+	indicates the configuration file location. If not provided, "/etc/ganglia/gmond.conf" location is presumed.
+
+== ThresholdEvalDaemon ==
+
+
