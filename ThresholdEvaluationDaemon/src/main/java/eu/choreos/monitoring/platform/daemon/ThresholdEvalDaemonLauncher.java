@@ -3,40 +3,50 @@ package eu.choreos.monitoring.platform.daemon;
 import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventImpl;
 import it.cnr.isti.labse.glimpse.utils.Manager;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+
+import eu.choreos.monitoring.platform.utils.YamlParser;
 
 public class ThresholdEvalDaemonLauncher {
 
 	private static String host;
 	private static int port;
 	private static String javaNamingProviderUrl = null;
+	private static String thresholdListFileName = null;
 
 	private static void parseArgs(String[] args) {
 		host = "localhost";
 		port = 8649;
+		javaNamingProviderUrl=null;
+		thresholdListFileName = "";
 
 		switch (args.length) {
-		case 0:
-			break;
-		case 3:
-			javaNamingProviderUrl = args[2];
-		case 2:
-			port = Integer.parseInt(args[1]);
 		case 1:
-			host = args[0];
-
+			thresholdListFileName = args[0];
 			break;
+
+		case 4:
+			javaNamingProviderUrl = args[3];
+		
+		case 3:
+			port = Integer.parseInt(args[2]);
+		
+		case 2:
+			host = args[1];
+			break;
+
 		default:
 			System.out
-					.println("USAGE: ThresholdEvalDaemon [hostLocation] [port] [java naming provider URL]");
+					.println("USAGE: ThresholdEvalDaemon THRESHOLD_LIST_FILE [HOST_LOCATION] [PORT] [JAVA_NAMING_PROVIDER_URL]");
 			System.out
 					.println("Default values: hostLocation = 'http://localhost/'");
 			System.out.println("                port = 8649");
-			host = args[0];
-
 			System.out
 					.println("Note: to set a port, the hostLocation must also be present");
-			break;
+			System.exit(1);
 		}
 	}
 
@@ -62,13 +72,14 @@ public class ThresholdEvalDaemonLauncher {
 	}
 
 	
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, IOException {
 		parseArgs(args);
 		
 		ThresholdEvalDaemon daemon = new ThresholdEvalDaemon(getProperties(),
 				host, port);
 		
-		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1));
+		List<Threshold> thresholdList = YamlParser.getThresholdsFromFile(thresholdListFileName);
+		daemon.addMultipleThreshold(thresholdList);
 		daemon.continuouslyEvaluateThresholdsAndSendMessages(getBaseEvent());
 	}
 
