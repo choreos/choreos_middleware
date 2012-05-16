@@ -20,7 +20,6 @@ public class GlimpseMessageHandler extends GlimpseAbstractProbe {
 	public GlimpseBaseEvent<String> sendMessage(GlimpseBaseEvent<String> event) throws MessageHandlingFault {
 		String hostName;
 		try {
-
 			hostName = HostnameHandler.getHostName();
 			event.setNetworkedSystemSource(hostName);
 			this.sendEventMessage(event, false);

@@ -86,17 +86,8 @@ public class ThresholdEvalDaemon {
 	}
 
 	public void sendHeartbeat(GlimpseBaseEvent<String> message) {
-
-		try {
-			String hostName = "";
-
-			hostName = HostnameHandler.getHostName();
-			message.setNetworkedSystemSource(hostName);
-			message.setData("Alive");
-			sendMessage(message);
-		} catch (CommandRuntimeException e) {
-			e.handleException();
-		}
+		message.setData("Alive");
+		sendMessage(message);
 
 	}
 
