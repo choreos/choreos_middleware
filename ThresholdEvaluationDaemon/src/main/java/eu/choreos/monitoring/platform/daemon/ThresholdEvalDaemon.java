@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Properties;
 
 import eu.choreos.monitoring.platform.daemon.notifier.GlimpseMessageHandler;
+import eu.choreos.monitoring.platform.exception.GangliaException;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
 import eu.choreos.monitoring.platform.utils.HostnameHandler;
 
@@ -16,7 +17,7 @@ public class ThresholdEvalDaemon {
 	private GlimpseMessageHandler messageHandler;
 	private int nonSentMessagesIterationsCounter = 0;
 
-	private AnomalyAnalyser analyser;
+	private ThresholdManager analyser;
 
 	public ThresholdEvalDaemon(Properties settings, String host, int port) {
 		this(settings, host, port, (new GlimpseMessageHandler(settings)),
@@ -26,7 +27,7 @@ public class ThresholdEvalDaemon {
 	public ThresholdEvalDaemon(Properties settings, String host, int port,
 			GlimpseMessageHandler msgHandler, GmondDataReader dataReader) {
 		messageHandler = msgHandler;
-		analyser = new AnomalyAnalyser(dataReader);
+		analyser = new ThresholdManager(dataReader);
 	}
 
 	public void addThreshold(Threshold threshold) {
@@ -41,13 +42,18 @@ public class ThresholdEvalDaemon {
 			GlimpseBaseEvent<String> message) {
 
 		while (true) {
-			evaluateThresholdsSendMessagesAndSleep(message,
-					NOTIFICATION_INTERVAL);
+			try {
+				evaluateThresholdsSendMessagesAndSleep(message,
+						NOTIFICATION_INTERVAL);
+			} catch (GangliaException e) {
+				e.handleException();
+				sleep(NOTIFICATION_INTERVAL);
+			}
 		}
 	}
 
 	public void evaluateThresholdsSendMessagesAndSleep(
-			GlimpseBaseEvent<String> message, int sleepingTime) {
+			GlimpseBaseEvent<String> message, int sleepingTime) throws GangliaException {
 
 		if (thereAreSurpassedThresholds()) {
 			sendAllSurpassedThresholdMessages(message);
@@ -65,11 +71,11 @@ public class ThresholdEvalDaemon {
 		sleep(sleepingTime);
 	}
 
-	public boolean thereAreSurpassedThresholds() {
+	public boolean thereAreSurpassedThresholds() throws GangliaException {
 		return !getSurpassedThresholds().isEmpty();
 	}
 
-	public List<Threshold> getSurpassedThresholds() {
+	public List<Threshold> getSurpassedThresholds() throws GangliaException {
 
 		List<Threshold> evaluateAllThresholds = analyser
 				.getAllSurpassedThresholds();
@@ -96,7 +102,7 @@ public class ThresholdEvalDaemon {
 	}
 
 	private void sendAllSurpassedThresholdMessages(
-			GlimpseBaseEvent<String> message) {
+			GlimpseBaseEvent<String> message) throws GangliaException {
 		for (Threshold surpassed : getSurpassedThresholds()) {
 			message.setData(surpassed.toString());
 			sendMessage(message);

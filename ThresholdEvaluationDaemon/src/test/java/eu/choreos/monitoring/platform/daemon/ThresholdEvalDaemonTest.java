@@ -22,8 +22,9 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import eu.choreos.monitoring.platform.daemon.datatypes.Gmetric;
 import eu.choreos.monitoring.platform.daemon.notifier.GlimpseMessageHandler;
-import eu.choreos.monitoring.platform.datatypes.Gmetric;
+import eu.choreos.monitoring.platform.exception.GangliaException;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
 
 public class ThresholdEvalDaemonTest {
@@ -66,7 +67,7 @@ public class ThresholdEvalDaemonTest {
 	
 	@SuppressWarnings("unchecked")
 	@Test
-	public void shouldSendOneHeartBeatMessage() {
+	public void shouldSendOneHeartBeatMessage() throws GangliaException {
 		prepareSendMessageToCheckAlive();
 
 		for(int i = 0; i < 20; i++) {
@@ -78,7 +79,7 @@ public class ThresholdEvalDaemonTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void shouldSendTwoHeartBeatMessage() {
+	public void shouldSendTwoHeartBeatMessage() throws GangliaException {
 		prepareSendMessageToCheckAlive();
 		
 		for(int i = 0; i < 40; i++)
@@ -87,33 +88,33 @@ public class ThresholdEvalDaemonTest {
 	}
 
 	@Test
-	public void shouldCheckIfThereAreSurpassedThresholds() {
+	public void shouldCheckIfThereAreSurpassedThresholds() throws GangliaException {
 		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
 		assertTrue(daemon.thereAreSurpassedThresholds());
 	}
 
 	@Test
-	public void shouldCheckIfThereAreNoneSurpassedThresholds() {
+	public void shouldCheckIfThereAreNoneSurpassedThresholds() throws GangliaException {
 		daemon.addThreshold(new Threshold("load_one", Threshold.MIN, 1.0));
 		assertEquals(false, daemon.thereAreSurpassedThresholds());
 	}
 
 	@Test
-	public void shouldCheckIfThereAreSurpassedThresholdsAmongMany() {
+	public void shouldCheckIfThereAreSurpassedThresholdsAmongMany() throws GangliaException {
 		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
 		daemon.addThreshold(new Threshold("load_five", Threshold.MIN, 1.0));
 		assertTrue(daemon.thereAreSurpassedThresholds());
 	}
 	
 	@Test
-	public void shouldCheckIfThereAreSurpassedThresholdsAmongManyNotAllTrue() {
+	public void shouldCheckIfThereAreSurpassedThresholdsAmongManyNotAllTrue() throws GangliaException {
 		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
 		daemon.addThreshold(new Threshold("load_five", Threshold.MAX, 1.0));
 		assertTrue(daemon.thereAreSurpassedThresholds());
 	}
 
 	@Test
-	public void shouldCheckIfThereAreNoneSurpassedThresholdsAmongMany() {
+	public void shouldCheckIfThereAreNoneSurpassedThresholdsAmongMany() throws GangliaException {
 		daemon.addThreshold(new Threshold("load_one", Threshold.MIN, 1.0));
 		daemon.addThreshold(new Threshold("ram", Threshold.MIN, 500.0));
 		assertFalse(daemon.thereAreSurpassedThresholds());
@@ -121,7 +122,7 @@ public class ThresholdEvalDaemonTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void shouldSendAllThresholdsMessage() {
+	public void shouldSendAllThresholdsMessage() throws GangliaException {
 		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
 		daemon.addThreshold(new Threshold("load_five", Threshold.MIN, 1.0));
 		
@@ -147,6 +148,7 @@ public class ThresholdEvalDaemonTest {
 		return createProbeSettingsPropertiesObject;
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void prepareSendMessageToCheckAlive() {
 		stub(msgHandler.sendMessage(any(GlimpseBaseEventImpl.class))).toAnswer(new Answer() {
 			public Object answer(InvocationOnMock invocation) {

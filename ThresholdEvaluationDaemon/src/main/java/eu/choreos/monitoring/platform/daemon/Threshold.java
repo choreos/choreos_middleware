@@ -1,6 +1,5 @@
 package eu.choreos.monitoring.platform.daemon;
 
-
 public class Threshold {
 
 	public static final int MIN = 1;
@@ -22,6 +21,43 @@ public class Threshold {
 		this.limitValue = value;
 	}
 
+	public Boolean wasSurpassed(Double metricValue) {
+		return !isWithinBoundaries(metricValue);
+	}
+
+	private Boolean isWithinBoundaries(Double metricValue) {
+		lastMeasurement = metricValue;
+		switch (comparison) {
+		case MIN:
+			return (lastMeasurement >= limitValue);
+		case MAX:
+			return (lastMeasurement <= limitValue);
+		case EQUALS:
+			return (lastMeasurement == limitValue);
+		default:
+		}
+
+		return null;
+	}
+
+	private String getComparisonAsString() {
+		switch (comparison) {
+		case MIN:
+			return ">=";
+		case MAX:
+			return "<=";
+		case EQUALS:
+			return "==";
+		default:
+			return "undefined";
+		}
+	}
+
+	public String toString() {
+		return "Triggered: " + name + " " + getComparisonAsString() + " "
+				+ limitValue + ". Measured: " + lastMeasurement ;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -56,40 +92,4 @@ public class Threshold {
 		return true;
 	}
 
-	public Boolean wasSurpassed(Double metricValue) {
-		return !isWithinBoundaries(metricValue);
-	}
-
-	private Boolean isWithinBoundaries(Double metricValue) {
-		lastMeasurement = metricValue;
-		switch (comparison) {
-		case MIN:
-			return (lastMeasurement >= limitValue);
-		case MAX:
-			return (lastMeasurement <= limitValue);
-		case EQUALS:
-			return (lastMeasurement == limitValue);
-		default:
-		}
-
-		return null;
-	}
-
-	private String comparisonString() {
-		switch (comparison) {
-		case MIN:
-			return ">=";
-		case MAX:
-			return "<=";
-		case EQUALS:
-			return "==";
-		default:
-			return "undefined";
-		}
-	}
-
-	public String toString() {
-		return "Triggered: " + name + " " + comparisonString() + " "
-				+ limitValue + ". Measured: " + lastMeasurement ;
-	}
 }

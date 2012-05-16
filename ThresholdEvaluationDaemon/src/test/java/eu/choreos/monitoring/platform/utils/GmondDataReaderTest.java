@@ -15,7 +15,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import eu.choreos.monitoring.platform.datatypes.Gmetric;
+import eu.choreos.monitoring.platform.daemon.datatypes.Gmetric;
+import eu.choreos.monitoring.platform.exception.GangliaException;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
 
 public class GmondDataReaderTest {
@@ -35,7 +36,7 @@ public class GmondDataReaderTest {
 	}
 
 	@Test
-	public void testParseGangliaCurrentMetrics() {
+	public void testParseGangliaCurrentMetrics() throws GangliaException {
 		InputStream in = getClass().getResourceAsStream("/campinas.xml");
 		Document dom = gmondReader.convertToDomDocument(in);
 
@@ -47,7 +48,7 @@ public class GmondDataReaderTest {
 	}
 
 	@Test
-	public void testGetAllMetrics() {
+	public void testGetAllMetrics() throws GangliaException {
 		Map<String, Gmetric> result = gmondReader.getAllMetrics();
 
 		String memTotal = result.get("mem_total").getValue();

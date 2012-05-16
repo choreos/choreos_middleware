@@ -1,6 +1,6 @@
 package eu.choreos.monitoring.platform.daemon;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -14,12 +14,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.choreos.monitoring.platform.datatypes.Gmetric;
+import eu.choreos.monitoring.platform.daemon.datatypes.Gmetric;
+import eu.choreos.monitoring.platform.exception.GangliaException;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
 
 public class AnomalyNotifierTest {
 
-	private AnomalyAnalyser notifier;
+	private ThresholdManager notifier;
 	private GmondDataReader dataReader;
 	private Map<String, Gmetric> returnedMap;
 	private Threshold threshold;
@@ -38,7 +39,7 @@ public class AnomalyNotifierTest {
 		dataReader = mock(GmondDataReader.class);
 		when(dataReader.getAllMetrics()).thenReturn(returnedMap);
 
-		notifier = new AnomalyAnalyser(dataReader);
+		notifier = new ThresholdManager(dataReader);
 
 		threshold = new Threshold("mem_free", Threshold.MIN, 64000);
 	}
@@ -50,8 +51,8 @@ public class AnomalyNotifierTest {
 	@Test
 	public void shouldAddOneThreshold() {
 		Threshold threshold = new Threshold("load_one", Threshold.MAX, 3);
-		int index = notifier.addThreshold(threshold);
-		assertEquals(threshold, notifier.getThreshold(index));
+		notifier.addThreshold(threshold);
+		assertEquals(1, notifier.getThresholdSize());
 	}
 	
 	@Test
@@ -59,14 +60,13 @@ public class AnomalyNotifierTest {
 		assertEquals(0, notifier.getThresholdSize());
 		Threshold threshold1 = new Threshold("load_one", Threshold.MAX, 3);
 		Threshold threshold2 = new Threshold("load_one", Threshold.MAX, 3);
-		int index1 = notifier.addThreshold(threshold1);
-		int index2 = notifier.addThreshold(threshold2);
+		notifier.addThreshold(threshold1);
+		notifier.addThreshold(threshold2);
 		assertEquals(1, notifier.getThresholdSize());
-		assertEquals(index1, index2);
 	}
 
 	@Test
-	public void shouldIdentifyLoadAverageGreaterThanThreeInTheLastFiveMinutes() {
+	public void shouldIdentifyLoadAverageGreaterThanThreeInTheLastFiveMinutes() throws GangliaException {
 
 		returnedMap.put("load_five", new Gmetric("load_five", "3.8"));
 
@@ -78,7 +78,7 @@ public class AnomalyNotifierTest {
 	}
 
 	@Test
-	public void shouldNotIdentifyLoadAverageGreaterThanThreeInTheLastFiveMinutes() {
+	public void shouldNotIdentifyLoadAverageGreaterThanThreeInTheLastFiveMinutes() throws GangliaException {
 
 		returnedMap.put("load_five", new Gmetric("load_five", "1.8"));
 
@@ -90,7 +90,7 @@ public class AnomalyNotifierTest {
 	}
 
 	@Test
-	public void shouldIdentifyFreeMemoryLessThan64Mb() {
+	public void shouldIdentifyFreeMemoryLessThan64Mb() throws GangliaException {
 		returnedMap.put("mem_free", new Gmetric("mem_free", "16000"));
 
 		boolean evaluation = notifier.wasSurpassed(threshold);
@@ -102,7 +102,7 @@ public class AnomalyNotifierTest {
 	}
 
 	@Test
-	public void shouldNotIdentifyFreeMemoryLessThan64Mb() {
+	public void shouldNotIdentifyFreeMemoryLessThan64Mb() throws GangliaException {
 		returnedMap.put("mem_free", new Gmetric("mem_free", "176000"));
 
 		boolean evaluation = notifier.wasSurpassed(threshold);
@@ -114,7 +114,7 @@ public class AnomalyNotifierTest {
 	}
 
 	@Test
-	public void shouldNotNotifySingleThreshold() {
+	public void shouldNotNotifySingleThreshold() throws GangliaException {
 		Threshold threshold = new Threshold("pkts_in", Threshold.MAX, 1000);
 
 		notifier.addThreshold(threshold);
@@ -125,7 +125,7 @@ public class AnomalyNotifierTest {
 	}
 
 	@Test
-	public void shouldNotifySingleThreshold() {
+	public void shouldNotifySingleThreshold() throws GangliaException {
 		Threshold threshold = new Threshold("pkts_in", Threshold.MAX, 100);
 
 		notifier.addThreshold(threshold);
@@ -136,7 +136,7 @@ public class AnomalyNotifierTest {
 	}
 
 	@Test
-	public void shouldEvaluateMultipleThresholds() {
+	public void shouldEvaluateMultipleThresholds() throws GangliaException {
 
 		Threshold threshold1 = new Threshold("pkts_in", Threshold.MIN, 1000);
 		Threshold threshold4 = new Threshold("disk_free", Threshold.MAX, 100);
