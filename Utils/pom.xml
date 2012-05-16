@@ -1,0 +1,57 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>eu.choreos</groupId>
+	<artifactId>Utils</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+
+	<parent>
+		<groupId>eu.choreos</groupId>
+		<artifactId>ChoreosMonitoringService</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+
+	<repositories>
+		<repository>
+			<id>ccslrepository</id>
+			<name>ccsl</name>
+			<url>http://valinhos.ime.usp.br:54080/maven/</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.directory.studio</groupId>
+			<artifactId>org.apache.commons.io</artifactId>
+			<version>2.1</version>
+			
+			<type>jar</type>
+		</dependency>
+		
+		<dependency>
+			<groupId>eu.choreos</groupId>
+			<artifactId>Utils</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<type>jar</type>
+		</dependency>
+		
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.0</version>
+			<type>jar</type>
+			<!-- <scope>test</scope> -->
+			<optional>true</optional>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+</project>
