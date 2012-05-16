@@ -1,51 +1,46 @@
 package eu.choreos.monitoring.platform.daemon;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import eu.choreos.monitoring.platform.datatypes.Gmetric;
+import java.util.Set;
+
+import eu.choreos.monitoring.platform.daemon.datatypes.Gmetric;
+import eu.choreos.monitoring.platform.exception.GangliaException;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
 
-public class AnomalyAnalyser {
+public class ThresholdManager {
 
 	private GmondDataReader dataReader;
-	private List<Threshold> thresholds;
+	private Set<Threshold> thresholds;
 	private Map<String, Gmetric> metricsMap;
 
-	public AnomalyAnalyser(GmondDataReader dataReader) {
+	public ThresholdManager(GmondDataReader dataReader) {
 		this.dataReader = dataReader;
-		thresholds = new ArrayList<Threshold>();
+		thresholds = new HashSet<Threshold>();
 	}
 
-	public int addThreshold(Threshold threshold) {
-		if(! thresholds.contains(threshold))
+	public void addThreshold(Threshold threshold) {
 			thresholds.add(threshold);
-		return thresholds.indexOf(threshold);
-
+		return;
 	}
 
 	public void addMultipleThresholds(List<Threshold> thresholdList) {
-		for (Threshold threshold : thresholdList) {
-			addThreshold(threshold);
-		}
+		thresholds.addAll(thresholdList);
 	}
 
-	public boolean wasSurpassed(Threshold threshold) {
+	public boolean wasSurpassed(Threshold threshold) throws GangliaException {
 		return threshold.wasSurpassed(getMetricNumericalValue(threshold
 				.getName()));
 	}
 
-	private double getMetricNumericalValue(String metricName) {
+	private double getMetricNumericalValue(String metricName) throws GangliaException {
 		metricsMap = dataReader.getAllMetrics();
-
-		if (metricsMap == null) {
-			System.out.println("ERROR: Could not get metrics");
-			System.exit(1);
-		}
 		return Double.parseDouble(metricsMap.get(metricName).getValue());
 	}
 
-	public List<Threshold> getAllSurpassedThresholds() {
+	public List<Threshold> getAllSurpassedThresholds() throws GangliaException {
 
 		List<Threshold> surpassedThresholds = new ArrayList<Threshold>();
 
@@ -58,10 +53,6 @@ public class AnomalyAnalyser {
 				surpassedThresholds.add(threshold);
 		}
 		return surpassedThresholds;
-	}
-
-	public Threshold getThreshold(int index) {
-		return thresholds.get(index);
 	}
 
 	public int getThresholdSize() {
