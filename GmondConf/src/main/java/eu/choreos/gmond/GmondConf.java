@@ -11,10 +11,10 @@ import eu.choreos.gmond.reloader.GmondReloader;
 
 public class GmondConf {
 	private static GmondReloader reloader = null;
-	private String gmondFile = "/etc/ganglia/gmond.conf";
 	private List<String> fileLines;
 	private int searchIndex;
-
+	private String gmondFile;
+	
 	public void setSearchIndex(int searchIndex) {
 		this.searchIndex = searchIndex;
 	}
@@ -27,104 +27,7 @@ public class GmondConf {
 		reloader = newReloader;
 	}
 
-	public static void main(String... args) throws Exception {
-		String fileName = "/etc/ganglia/gmond.conf";
 
-		validateArgs(args);
-
-		fileName = getConfigFile(args);
-
-		GmondConf gmondConf = new GmondConf();
-
-		gmondConf.load(fileName);
-
-		for (int i = 0; i < args.length; i++) {
-
-			if (args[i].equals("--add")) {
-				gmondConf.addUdpSendChannel(args[i + 1], args[i + 2]);
-				i += 2;
-			}
-
-			if (args[i].equals("--update-port")) {
-				gmondConf.updateUdpSendChannelPort(args[i + 1], args[i + 2]);
-				i += 2;
-			}
-
-			if (args[i].equals("--update-channel")) {
-				gmondConf.updateUdpSendChannel(args[i + 1], args[i + 2],
-						args[i + 3]);
-				i += 3;
-			}
-
-			if (args[i].equals("--update-host")) {
-				gmondConf.updateUdpSendChannelHost(args[i + 1], args[i + 2]);
-				i += 2;
-			}
-
-			if (args[i].equals("--remove")) {
-				gmondConf.removeUdpSendChannel(args[i + 1]);
-				i += 2;
-			}
-
-		}
-
-		gmondConf.save();
-
-		if (reloader == null)
-			reloader = new GmondReloader();
-		if (reloader.reload())
-			System.out.println("Gmond restarted.");
-		else
-			System.out
-					.println("Could not restart gmond. Are you root? Do you have the necessary privileges?");
-
-	}
-
-	private static String getConfigFile(String[] arguments) {
-		String fileName = "/etc/ganglia/gmond.conf";
-
-		for (int i = 0; i < arguments.length; i++) {
-
-			if (arguments[i].equals("--config-file")) {
-				fileName = arguments[i + 1];
-			}
-		}
-		return fileName;
-	}
-
-	private static void validateArgs(String[] args) throws Exception {
-		String string;
-
-		for (int index = 0; index < args.length; index++) {
-			string = args[index];
-
-			if (string.equals("--add"))
-				index = index + 2;
-			else if (string.equals("--update-port"))
-				index = index + 2;
-			else if (string.equals("--update-channel"))
-				index = index + 3;
-			else if (string.equals("--update-host"))
-				index = index + 2;
-			else if (string.equals("--remove"))
-				index = index + 1;
-			else if (string.equals("--config-file"))
-				index = index + 1;
-			else {
-				printUsage();
-				System.exit(1);
-			}
-		}
-	}
-
-	private static void printUsage() throws Exception {
-		System.out.println("" + "USAGE: java -jar gmondconf "
-				+ "[--add host port] " + "[--update-port host port] "
-				+ "[--update-host currentHost newHost] "
-				+ "[--update-channel currentHost newHost newPort]"
-				+ "[--remove host]" + "[--config-file configFile]");
-		throw (new Exception());
-	}
 
 	public void load(String filePath) {
 		gmondFile = filePath;
@@ -224,6 +127,18 @@ public class GmondConf {
 			}
 		}
 		return null;
+	}
+	
+	public void reloadConfigurations() {
+
+		if (reloader == null)
+			reloader = new GmondReloader();
+
+		if (reloader.reload())
+			System.out.println("Gmond restarted.");
+		else
+			System.out
+					.println("Could not restart gmond. Are you root? Do you have the necessary privileges?");
 	}
 
 	public List<Integer> findNextUdpSendChannel(List<String> fileContents) {

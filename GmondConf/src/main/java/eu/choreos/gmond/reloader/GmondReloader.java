@@ -1,17 +1,14 @@
 package eu.choreos.gmond.reloader;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import eu.choreos.platform.utils.CommandRuntimeException;
+import eu.choreos.platform.utils.ShellHandler;
 
 public class GmondReloader {
 
 	private String commandRestartMonitor;
 
-	private Runtime runtime;
-	@SuppressWarnings("unused") //Used for testing purposes
-	private Process proc;
-
+	private ShellHandler runtime;
+	
 	private String commandReloadMonitor;
 
 	public GmondReloader() {
@@ -20,65 +17,26 @@ public class GmondReloader {
 		runtime = null;
 	}
 
-	public void setRuntime(Runtime runtime) {
+	public void setRuntime(ShellHandler runtime) {
 		this.runtime = runtime;
 	}
 
+	
 	public boolean reload() {
-		Process procReturned;
-		if(gmondIsRunning())
-			procReturned = runCommand(commandReloadMonitor);
-		else
-			procReturned = runCommand(commandRestartMonitor);
 		try {
-			procReturned.waitFor();
-		} catch (InterruptedException e) {
-		}
-		if (procReturned.exitValue() == 0)
+			if (gmondIsRunning())
+				runtime.runLocalCommand(commandReloadMonitor);
+			else
+				runtime.runLocalCommand(commandRestartMonitor);
+			
 			return true;
-		return false;
+		} catch (CommandRuntimeException e) {
+			return false;
+		}
 	}
 
-	private boolean gmondIsRunning() {
-		
-		Process process = runCommand("ps -ef | grep gmond");
-		
-		try {
-			process.waitFor();
-		} catch (InterruptedException e1) {
-		}
-		
-		BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
-		String line;
-		
-		try {
-			while ((line = in.readLine()) != null) {
-				if(line.contains("/usr/sbin/gmond")) return true;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-				
-		return false;
-	}
-
-	private Process runCommand(String cmd) {
-		Runtime runtime = null;
-		if (this.runtime == null)
-			runtime = Runtime.getRuntime();
-		else
-			runtime = this.runtime;
-
-		Process proc = null;
-		try {
-			proc = runtime.exec(cmd);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return proc;
-	}
-
-	public void setProc(Process proc) {
-		this.proc = proc;
+	private boolean gmondIsRunning() throws CommandRuntimeException {
+		String stdout = runtime.runLocalCommand("ps -ef | grep gmond");
+		return stdout.contains("/usr/sbin/gmond");
 	}
 }

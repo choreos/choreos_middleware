@@ -6,50 +6,40 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringBufferInputStream;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import eu.choreos.platform.utils.ShellHandler;
+
 public class GmondReloaderTest {
 	
 	private GmondReloader gmondReloader;
-	Runtime runtime;
-	Process proc;
+	private ShellHandler runtime;
 
 	@Before
 	public void setUp() throws Exception {
 		gmondReloader = new GmondReloader();
-		runtime = mock(Runtime.class);
-		proc = mock(Process.class);
-		when(proc.waitFor()).thenReturn(0);
-		when(proc.exitValue()).thenReturn(0);
+		runtime = mock(ShellHandler.class);
+		
 	}
 
 	@Test
 	public void testRestartTrue() throws Exception {
-		when(proc.getInputStream()).thenReturn(new StringBufferInputStream(""));
-		when(runtime.exec("/etc/init.d/ganglia-monitor restart")).thenReturn(proc);
-		when(runtime.exec("ps -ef | grep gmond")).thenReturn(proc);
+		when(runtime.runLocalCommand("/etc/init.d/ganglia-monitor restart")).thenReturn("");
+		when(runtime.runLocalCommand("ps -ef | grep gmond")).thenReturn("anything but what it should");
 		
 		gmondReloader.setRuntime(runtime);
 		assertTrue(gmondReloader.reload());
-		verify(runtime, times(1)).exec("/etc/init.d/ganglia-monitor restart");
-		verify(proc, times(2)).waitFor();
-				
+		verify(runtime, times(1)).runLocalCommand("/etc/init.d/ganglia-monitor restart");
 	}
 
 	@Test
 	public void testReloadTrue() throws Exception {
-		when(proc.getInputStream()).thenReturn(new StringBufferInputStream("/usr/sbin/gmond"));
-		when(runtime.exec("kill -1 $( cat /var/run/gmond.pid )")).thenReturn(proc);
-		when(runtime.exec("ps -ef | grep gmond")).thenReturn(proc);
+		when(runtime.runLocalCommand("kill -1 $( cat /var/run/gmond.pid )")).thenReturn("");
+		when(runtime.runLocalCommand("ps -ef | grep gmond")).thenReturn("/usr/sbin/gmond");
 		
 		gmondReloader.setRuntime(runtime);
 		assertTrue(gmondReloader.reload());
-		verify(runtime, times(1)).exec("kill -1 $( cat /var/run/gmond.pid )");
-		verify(proc, times(2)).waitFor();
-		
+		verify(runtime, times(1)).runLocalCommand("kill -1 $( cat /var/run/gmond.pid )");
 	}
 }
