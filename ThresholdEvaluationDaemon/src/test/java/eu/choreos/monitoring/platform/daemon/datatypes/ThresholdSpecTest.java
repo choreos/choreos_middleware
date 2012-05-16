@@ -1,16 +1,12 @@
 package eu.choreos.monitoring.platform.daemon.datatypes;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import eu.choreos.monitoring.platform.daemon.Threshold;
-
-import sun.awt.windows.ThemeReader;
 
 public class ThresholdSpecTest {
 
