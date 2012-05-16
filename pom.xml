@@ -10,6 +10,7 @@
   <modules>
     <module>ThresholdEvaluationDaemon</module>
     <module>GmondConf</module>
+    <module>Utils</module>
   </modules>
 
 
