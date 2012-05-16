@@ -33,7 +33,6 @@ public class GmondReloader {
 		try {
 			procReturned.waitFor();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
 		if (procReturned.exitValue() == 0)
 			return true;
@@ -47,7 +46,6 @@ public class GmondReloader {
 		try {
 			process.waitFor();
 		} catch (InterruptedException e1) {
-			e1.printStackTrace();
 		}
 		
 		BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
