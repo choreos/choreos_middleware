@@ -17,17 +17,8 @@ public class ThresholdTest {
 
 	Threshold threshold;
 
-	String pwd;
-
-	String hostname;
-
-	private ShellHandler shellHandler = new ShellHandler();
-
 	@Before
 	public void setUp() throws CommandRuntimeException {
-		hostname = shellHandler.runLocalCommand("/bin/bash /tmp/hostname.sh")
-				.replace("\n", "");
-		pwd = shellHandler.runLocalCommand("pwd").replace("\n", "");
 		threshold = new Threshold("Test", Threshold.MAX, 3);
 	}
 
