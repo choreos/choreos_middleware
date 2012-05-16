@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Properties;
 
 import eu.choreos.monitoring.platform.daemon.notifier.GlimpseMessageHandler;
+import eu.choreos.monitoring.platform.daemon.notifier.MessageHandlingFault;
 import eu.choreos.monitoring.platform.exception.GangliaException;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
 import eu.choreos.monitoring.platform.utils.HostnameHandler;
+import eu.choreos.platform.utils.CommandRuntimeException;
 
 public class ThresholdEvalDaemon {
 
@@ -53,7 +55,8 @@ public class ThresholdEvalDaemon {
 	}
 
 	public void evaluateThresholdsSendMessagesAndSleep(
-			GlimpseBaseEvent<String> message, int sleepingTime) throws GangliaException {
+			GlimpseBaseEvent<String> message, int sleepingTime)
+			throws GangliaException {
 
 		if (thereAreSurpassedThresholds()) {
 			sendAllSurpassedThresholdMessages(message);
@@ -83,13 +86,26 @@ public class ThresholdEvalDaemon {
 	}
 
 	public void sendHeartbeat(GlimpseBaseEvent<String> message) {
-		message.setNetworkedSystemSource(HostnameHandler.getHostName());
-		message.setData("Alive");
-		sendMessage(message);
+
+		try {
+			String hostName = "";
+
+			hostName = HostnameHandler.getHostName();
+			message.setNetworkedSystemSource(hostName);
+			message.setData("Alive");
+			sendMessage(message);
+		} catch (CommandRuntimeException e) {
+			e.handleException();
+		}
+
 	}
 
 	private void sendMessage(GlimpseBaseEvent<String> message) {
-		messageHandler.sendMessage(message);
+		try {
+			messageHandler.sendMessage(message);
+		} catch (MessageHandlingFault e) {
+			e.handleException();
+		}
 		nonSentMessagesIterationsCounter = 0;
 	}
 

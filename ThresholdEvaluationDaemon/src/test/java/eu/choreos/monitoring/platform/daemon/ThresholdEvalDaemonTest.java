@@ -24,6 +24,7 @@ import org.mockito.stubbing.Answer;
 
 import eu.choreos.monitoring.platform.daemon.datatypes.Gmetric;
 import eu.choreos.monitoring.platform.daemon.notifier.GlimpseMessageHandler;
+import eu.choreos.monitoring.platform.daemon.notifier.MessageHandlingFault;
 import eu.choreos.monitoring.platform.exception.GangliaException;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
 
@@ -59,7 +60,7 @@ public class ThresholdEvalDaemonTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void shouldSendAliveMessage() {
+	public void shouldSendAliveMessage() throws MessageHandlingFault {
 		daemon.sendHeartbeat(message);
 		verify(msgHandler, times(1)).sendMessage(
 				any(GlimpseBaseEventImpl.class));
@@ -67,7 +68,7 @@ public class ThresholdEvalDaemonTest {
 	
 	@SuppressWarnings("unchecked")
 	@Test
-	public void shouldSendOneHeartBeatMessage() throws GangliaException {
+	public void shouldSendOneHeartBeatMessage() throws GangliaException, MessageHandlingFault {
 		prepareSendMessageToCheckAlive();
 
 		for(int i = 0; i < 20; i++) {
@@ -79,7 +80,7 @@ public class ThresholdEvalDaemonTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void shouldSendTwoHeartBeatMessage() throws GangliaException {
+	public void shouldSendTwoHeartBeatMessage() throws GangliaException, MessageHandlingFault {
 		prepareSendMessageToCheckAlive();
 		
 		for(int i = 0; i < 40; i++)
@@ -122,7 +123,7 @@ public class ThresholdEvalDaemonTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void shouldSendAllThresholdsMessage() throws GangliaException {
+	public void shouldSendAllThresholdsMessage() throws GangliaException, MessageHandlingFault {
 		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
 		daemon.addThreshold(new Threshold("load_five", Threshold.MIN, 1.0));
 		
@@ -149,7 +150,7 @@ public class ThresholdEvalDaemonTest {
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void prepareSendMessageToCheckAlive() {
+	private void prepareSendMessageToCheckAlive() throws MessageHandlingFault {
 		stub(msgHandler.sendMessage(any(GlimpseBaseEventImpl.class))).toAnswer(new Answer() {
 			public Object answer(InvocationOnMock invocation) {
 				Object[] args = invocation.getArguments();
