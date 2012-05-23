@@ -14,14 +14,21 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<pluginRepositories>
+		<pluginRepository>
+			<id>duns-maven-snapshots</id>
+			<name>Duns' Maven Snapshots</name>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<url>http://github.com/duns/maven-snapshots/raw/gh-pages</url>
+		</pluginRepository>
+	</pluginRepositories>
+
 	<repositories>
-
-
-		<repository>
-			<id>nar</id>
-			<name>NarPluginRepository</name>
-			<url>http://duns.github.com/maven-snapshots</url>
-		</repository>
 
 		<repository>
 			<id>ccslrepository</id>
@@ -41,10 +48,23 @@
 	</dependencies>
 
 	<build>
+		<defaultGoal>install</defaultGoal>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-nar-plugin</artifactId>
+					<version>2.1-SNAPSHOT</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-nar-plugin</artifactId>
 				<extensions>true</extensions>
+				<version>2.1-SNAPSHOT</version>
 				<configuration>
 					<libraries>
 						<library>
