@@ -18,7 +18,7 @@ import eu.choreos.monitoring.platform.daemon.datatypes.Gmetric;
 import eu.choreos.monitoring.platform.exception.GangliaException;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
 
-public class AnomalyNotifierTest {
+public class ThresholdManagerTest {
 
 	private ThresholdManager notifier;
 	private GmondDataReader dataReader;
@@ -35,9 +35,13 @@ public class AnomalyNotifierTest {
 		returnedMap.put("disk_free", new Gmetric("disk_free", "224.231"));
 		returnedMap.put("mem_cached", new Gmetric("mem_cached", "412908"));
 		returnedMap.put("pkts_in", new Gmetric("pkts_in", "124.93"));
-
+		
 		dataReader = mock(GmondDataReader.class);
-		when(dataReader.getAllMetrics()).thenReturn(returnedMap);
+		
+		for(String metric:returnedMap.keySet()) {
+		when(dataReader.getMetricValue(metric)).thenReturn(returnedMap.get(metric).getValue());
+			
+		}
 
 		notifier = new ThresholdManager(dataReader);
 
@@ -63,54 +67,6 @@ public class AnomalyNotifierTest {
 		notifier.addThreshold(threshold1);
 		notifier.addThreshold(threshold2);
 		assertEquals(1, notifier.getThresholdSize());
-	}
-
-	@Test
-	public void shouldIdentifyLoadAverageGreaterThanThreeInTheLastFiveMinutes() throws GangliaException {
-
-		returnedMap.put("load_five", new Gmetric("load_five", "3.8"));
-
-		boolean evaluation = notifier.wasSurpassed(new Threshold("load_five",
-				Threshold.MAX, 3));
-
-		assertTrue(evaluation);
-
-	}
-
-	@Test
-	public void shouldNotIdentifyLoadAverageGreaterThanThreeInTheLastFiveMinutes() throws GangliaException {
-
-		returnedMap.put("load_five", new Gmetric("load_five", "1.8"));
-
-		boolean evaluation = notifier.wasSurpassed(new Threshold("load_five",
-				Threshold.MAX, 3));
-
-		assertFalse("Evaluated threshold should be false", evaluation);
-
-	}
-
-	@Test
-	public void shouldIdentifyFreeMemoryLessThan64Mb() throws GangliaException {
-		returnedMap.put("mem_free", new Gmetric("mem_free", "16000"));
-
-		boolean evaluation = notifier.wasSurpassed(threshold);
-
-		assertTrue(
-				"This host has only 16MB of free memory. Should not have been triggered.",
-				evaluation);
-
-	}
-
-	@Test
-	public void shouldNotIdentifyFreeMemoryLessThan64Mb() throws GangliaException {
-		returnedMap.put("mem_free", new Gmetric("mem_free", "176000"));
-
-		boolean evaluation = notifier.wasSurpassed(threshold);
-
-		assertFalse(
-				"This host has 176MB of free memory. Should not have been triggered.",
-				evaluation);
-
 	}
 
 	@Test
