@@ -11,6 +11,7 @@
     <module>ThresholdEvaluationDaemon</module>
     <module>GmondConf</module>
     <module>Utils</module>
+    <module>SignalUtils</module>
   </modules>
 
 
