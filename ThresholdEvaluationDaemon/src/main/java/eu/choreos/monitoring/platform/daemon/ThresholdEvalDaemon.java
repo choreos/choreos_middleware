@@ -19,7 +19,9 @@ public class ThresholdEvalDaemon {
 	private GlimpseMessageHandler messageHandler;
 	private int nonSentMessagesIterationsCounter = 0;
 
-	private ThresholdManager analyser;
+	private ThresholdManager thresholdManager;
+	private HostManager hostManager;
+	private GmondDataReader dataReader;
 
 	public ThresholdEvalDaemon(Properties settings, String host, int port) {
 		this(settings, host, port, (new GlimpseMessageHandler(settings)),
@@ -29,15 +31,17 @@ public class ThresholdEvalDaemon {
 	public ThresholdEvalDaemon(Properties settings, String host, int port,
 			GlimpseMessageHandler msgHandler, GmondDataReader dataReader) {
 		messageHandler = msgHandler;
-		analyser = new ThresholdManager(dataReader);
+		this.dataReader = dataReader;
+		thresholdManager = new ThresholdManager(dataReader);
+		hostManager = new HostManager(dataReader);
 	}
 
 	public void addThreshold(Threshold threshold) {
-		analyser.addThreshold(threshold);
+		thresholdManager.addThreshold(threshold);
 	}
 
 	public void addMultipleThreshold(List<Threshold> thresholdList) {
-		analyser.addMultipleThresholds(thresholdList);
+		thresholdManager.addMultipleThresholds(thresholdList);
 	}
 
 	public void continuouslyEvaluateThresholdsAndSendMessages(
@@ -57,7 +61,7 @@ public class ThresholdEvalDaemon {
 	public void evaluateThresholdsSendMessagesAndSleep(
 			GlimpseBaseEvent<String> message, int sleepingTime)
 			throws GangliaException {
-
+		updateManager();
 		if (thereAreSurpassedThresholds()) {
 			sendAllSurpassedThresholdMessages(message);
 		} else {
@@ -74,13 +78,18 @@ public class ThresholdEvalDaemon {
 		sleep(sleepingTime);
 	}
 
+	private void updateManager() throws GangliaException {
+		dataReader.update();
+		
+	}
+
 	public boolean thereAreSurpassedThresholds() throws GangliaException {
 		return !getSurpassedThresholds().isEmpty();
 	}
 
 	public List<Threshold> getSurpassedThresholds() throws GangliaException {
 
-		List<Threshold> evaluateAllThresholds = analyser
+		List<Threshold> evaluateAllThresholds = thresholdManager
 				.getAllSurpassedThresholds();
 		return evaluateAllThresholds;
 	}
@@ -114,6 +123,11 @@ public class ThresholdEvalDaemon {
 			message.setData(surpassed.toString());
 			sendMessage(message);
 		}
+	}
+
+	public boolean thereAreHostsDown() {
+		// TODO Auto-generated method stub
+		return hostManager.thereAreHostsDown();
 	}
 
 }
