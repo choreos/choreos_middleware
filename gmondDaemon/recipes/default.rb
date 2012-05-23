@@ -10,5 +10,5 @@
 include_recipe "ganglia"
 
 execute "set_hostname" do
-  command "gmetric --name hostname --value #{node['hostname']} --type string"
+  command "gmetric --name hostname_chef --value #{node['hostname']} --type string"
 end
