@@ -10,7 +10,7 @@ Java_SignalSender_sendSignalByPID(
 	jint pid, 
 	jint signal) {
 
-	return sigqueue(pid, signal, NULL);
+	return 0; //sigqueue(pid, signal, NULL);
 
 }
 
@@ -22,6 +22,6 @@ Java_SignalSender_sendSignalByProcessName(
 	jstring pname, 
 	jint signal) {
 
-	return sigqueue(pid_from_process_name((char*) pname), signal, NULL);
+	return 0; //sigqueue(pid_from_process_name((char*) pname), signal, NULL);
 
 }

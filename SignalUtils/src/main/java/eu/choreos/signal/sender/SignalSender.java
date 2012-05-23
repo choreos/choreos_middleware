@@ -1,21 +1,38 @@
 package eu.choreos.signal.sender;
 
+import java.util.*;
 
-
-public class SignalSender {
+class SignalSender {
 	
-	public native int sendSignalByPID(int pid, int sig);
-	public native int sendSignalByProcessName(String name, int sig);
+	native int sendSignalByPID(int pid, int sig);
+	native int sendSignalByProcessName(String name, int sig);
 
 	static {
-		System.load("SignalSender");
+		System.loadLibrary("signalsender");
 	}
 
 	public static void main(String[] args) {
 
 		SignalSender sigsender = new SignalSender();
 
-		// sendsignal <signal> -n name
-		// sendsignal 
+		/*
+		 Example of uses
+
+		 sendsignal <signal> -n name -s 1
+		 sendsignal <signal> -p pid -s 1 
+		*/
+
+		if(args.length != 5) {
+			System.out.println("Usage: TODO");
+			return;
+
+		}
+
+		if( args[1] == "-n" ) {
+			sigsender.sendSignalByProcessName(args[2], Integer.parseInt(args[4]));
+		}
+		else if ( args[1] == "-p" ) {
+			sigsender.sendSignalByPID(Integer.parseInt(args[2]), Integer.parseInt(args[4]));
+		}
 	}
 }
