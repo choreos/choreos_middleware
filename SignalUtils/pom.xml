@@ -1,0 +1,60 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>eu.choreos</groupId>
+	<artifactId>SignalUtils</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>nar</packaging>
+
+	<name>SignalUtils</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<repositories>
+
+
+		<repository>
+			<id>nar</id>
+			<name>NarPluginRepository</name>
+			<url>http://duns.github.com/maven-snapshots</url>
+		</repository>
+
+		<repository>
+			<id>ccslrepository</id>
+			<name>ccsl</name>
+			<url>http://valinhos.ime.usp.br:54080/maven/</url>
+		</repository>
+
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-nar-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<libraries>
+						<library>
+							<type>jni</type>
+							<narSystemPackage>com.riskfocusinc.demo</narSystemPackage>
+							<linkCPP>false</linkCPP>
+						</library>
+					</libraries>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
