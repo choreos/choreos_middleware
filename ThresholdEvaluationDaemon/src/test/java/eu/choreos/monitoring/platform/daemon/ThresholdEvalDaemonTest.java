@@ -51,7 +51,11 @@ public class ThresholdEvalDaemonTest {
 		metricsMap.put("load_five", new Gmetric("load_five", "0.8"));
 		metricsMap.put("ram", new Gmetric("ram", "512"));
 		
-		when(dataReader.getAllMetrics()).thenReturn(metricsMap);
+		
+		for(String metric:metricsMap.keySet()) {
+		when(dataReader.getMetricValue(metric)).thenReturn(metricsMap.get(metric).getValue());
+			
+		}
 		
 		daemon = new ThresholdEvalDaemon(getProperties(), "localhost", 8649,
 				msgHandler, dataReader);
@@ -93,6 +97,7 @@ public class ThresholdEvalDaemonTest {
 		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
 		assertTrue(daemon.thereAreSurpassedThresholds());
 	}
+	
 
 	@Test
 	public void shouldCheckIfThereAreNoneSurpassedThresholds() throws GangliaException {
@@ -133,6 +138,7 @@ public class ThresholdEvalDaemonTest {
 				any(GlimpseBaseEventImpl.class));
 	}
 
+	
 	private GlimpseBaseEventImpl<String> getDefaultMessage() {
 		return new GlimpseBaseEventImpl<String>("thresholdAlarm", "connector1",
 				"connInstance1", "connExecution1", 1, 2,

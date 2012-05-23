@@ -24,7 +24,7 @@ public class Threshold {
 	public Boolean wasSurpassed(Double metricValue) {
 		return !isWithinBoundaries(metricValue);
 	}
-
+	
 	private Boolean isWithinBoundaries(Double metricValue) {
 		lastMeasurement = metricValue;
 		switch (comparison) {
