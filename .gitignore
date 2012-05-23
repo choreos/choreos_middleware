@@ -4,3 +4,4 @@ GmondConf/target/*
 */.project
 */target
 *~
+*.class
