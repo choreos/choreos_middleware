@@ -14,7 +14,6 @@ public class ThresholdManager {
 
 	private GmondDataReader dataReader;
 	private Set<Threshold> thresholds;
-	private Map<String, Gmetric> metricsMap;
 
 	public ThresholdManager(GmondDataReader dataReader) {
 		this.dataReader = dataReader;
@@ -30,14 +29,9 @@ public class ThresholdManager {
 		thresholds.addAll(thresholdList);
 	}
 
-	public boolean wasSurpassed(Threshold threshold) throws GangliaException {
-		return threshold.wasSurpassed(getMetricNumericalValue(threshold
-				.getName()));
-	}
-
 	private double getMetricNumericalValue(String metricName) throws GangliaException {
-		metricsMap = dataReader.getAllMetrics();
-		return Double.parseDouble(metricsMap.get(metricName).getValue());
+		String value = dataReader.getMetricValue(metricName);
+		return Double.parseDouble(value);
 	}
 
 	public List<Threshold> getAllSurpassedThresholds() throws GangliaException {
@@ -54,7 +48,7 @@ public class ThresholdManager {
 		}
 		return surpassedThresholds;
 	}
-
+	
 	public int getThresholdSize() {
 		return thresholds.size();
 	}
