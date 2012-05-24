@@ -80,6 +80,9 @@
 					</c>
 
 					<cpp>
+						<options>
+                                                <option>-std=gnu99</option>
+                                                </options>
 					</cpp>
 
 				</configuration>

@@ -1,7 +1,5 @@
 package eu.choreos.signal.sender;
 
-import java.util.*;
-
 class SignalSender {
 	
 	native int sendSignalByPID(int pid, int sig);
