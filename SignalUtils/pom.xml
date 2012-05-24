@@ -72,13 +72,16 @@
 							<linkCPP>false</linkCPP>
 						</library>
 					</libraries>
-					
-					<cpp>
+
+					<c>
 						<options>
-							<option/>-Wall -Wno-long-long -Wpointer-arith -Wconversion -std=gnu99
+						<option>-std=gnu99</option>
 						</options>
+					</c>
+
+					<cpp>
 					</cpp>
-					
+
 				</configuration>
 			</plugin>
 		</plugins>
