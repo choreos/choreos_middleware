@@ -24,7 +24,7 @@
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
-			<url>http://github.com/duns/maven-snapshots/raw/gh-pages</url>
+			<url>https://raw.github.com/duns/maven-snapshots/gh-pages/</url>
 		</pluginRepository>
 	</pluginRepositories>
 
