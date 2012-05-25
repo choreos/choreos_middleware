@@ -6,7 +6,7 @@ class SignalSender {
 	native int sendSignalByProcessName(String name, int sig);
 
 	static {
-		System.loadLibrary("signalsender");
+		NarSystem.loadLibrary();
 	}
 
 	public static void main(String[] args) {
