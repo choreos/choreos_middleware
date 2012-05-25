@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <string.h>
+#include <dirent.h>
 
 // to compile use: gcc -std=gnu99 sigsender.c ...
 
@@ -68,7 +70,7 @@ pid_from_process_name(
 	
             			if (getline(&taskName, &taskNameSize, cmdline) > 0) // if can get the first line
             			{
-               				if (strstr(taskName, argv[1]) != 0) //verify if process name is substring of line
+               				if (strstr(taskName, csProcessName) != 0) //verify if process name is substring of line
                				{
                					return pid; // return pid
 					}

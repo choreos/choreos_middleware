@@ -68,7 +68,7 @@
 					<libraries>
 						<library>
 							<type>jni</type>
-							<narSystemPackage>com.riskfocusinc.demo</narSystemPackage>
+							<narSystemPackage>eu.choreos.signal.sender</narSystemPackage>
 							<linkCPP>false</linkCPP>
 						</library>
 					</libraries>
@@ -76,12 +76,14 @@
 					<c>
 						<options>
 						<option>-std=gnu99</option>
+						<option>-shared</option>
 						</options>
 					</c>
 
 					<cpp>
 						<options>
                                                 <option>-std=gnu99</option>
+						<option>-shared</option>
                                                 </options>
 					</cpp>
 
