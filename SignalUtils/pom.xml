@@ -6,9 +6,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>nar</packaging>
 
-	<!-- name>SignalUtils</name>
-	<url>http://maven.apache.org</url>
- -->
+	<!-- name>SignalUtils</name> <url>http://maven.apache.org</url> -->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -61,6 +59,42 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>eu.choreos.signal.sender.SignalSender</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>eu.choreos.signal.sender.SignalSender</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-my-jar-with-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-nar-plugin</artifactId>
 				<extensions>true</extensions>
 				<version>2.1-SNAPSHOT</version>
@@ -75,21 +109,21 @@
 
 					<c>
 						<options>
-						<option>-std=gnu99</option>
-						<option>-shared</option>
+							<option>-std=gnu99</option>
+							<option>-shared</option>
 						</options>
 					</c>
 
 					<cpp>
 						<options>
-                                                <option>-std=gnu99</option>
-						<option>-shared</option>
-                                                </options>
+							<option>-std=gnu99</option>
+							<option>-shared</option>
+						</options>
 					</cpp>
 
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
