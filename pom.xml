@@ -12,7 +12,7 @@
     <module>GmondConf</module>
     <module>Utils</module>
 <!-- Pending initial fixing	-->
-<!--    <module>SignalUtils</module>-->
+    <module>SignalUtils</module>
   </modules>
 
 
