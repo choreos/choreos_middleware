@@ -23,13 +23,13 @@ public class ThresholdEvalDaemon {
 	private HostManager hostManager;
 	private GmondDataReader dataReader;
 
-	public ThresholdEvalDaemon(Properties settings, String host, int port) {
+	public ThresholdEvalDaemon(Properties settings, String host, int port) throws GangliaException {
 		this(settings, host, port, (new GlimpseMessageHandler(settings)),
 				(new GmondDataReader(host, port)));
 	}
 
 	public ThresholdEvalDaemon(Properties settings, String host, int port,
-			GlimpseMessageHandler msgHandler, GmondDataReader dataReader) {
+			GlimpseMessageHandler msgHandler, GmondDataReader dataReader) throws GangliaException {
 		messageHandler = msgHandler;
 		this.dataReader = dataReader;
 		thresholdManager = new ThresholdManager(dataReader);
@@ -79,7 +79,7 @@ public class ThresholdEvalDaemon {
 	}
 
 	private void updateManager() throws GangliaException {
-		dataReader.update();
+		//dataReader.update();
 		
 	}
 
@@ -125,8 +125,7 @@ public class ThresholdEvalDaemon {
 		}
 	}
 
-	public boolean thereAreHostsDown() {
-		// TODO Auto-generated method stub
+	public boolean thereAreHostsDown() throws GangliaException {
 		return hostManager.thereAreHostsDown();
 	}
 

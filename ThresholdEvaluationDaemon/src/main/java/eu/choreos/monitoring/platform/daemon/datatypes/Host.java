@@ -8,12 +8,20 @@ import org.w3c.dom.NodeList;
 
 public class Host {
 
-	private Map<String, Gmetric> metrics;
+	private Map<String, Metric> metrics;
+	private String clusterName;
 	private String hostName;
 	private String ip;
+	private boolean isDown;
 	
-	public Host(Element hostNode) {
+	public Host(Element hostNode, String clusterName) {
 		setMetrics(hostNode);
+		this.clusterName = clusterName;
+		isDown = false;
+	}
+	
+	public String toString() {
+		return this.getHostName() + " " + this.getIp();
 	}
 	
 	public String getHostName() {
@@ -23,9 +31,20 @@ public class Host {
 	public String getIp() {
 		return ip;
 	}
-
 	
-	public void setMetrics(Map<String, Gmetric> metrics) {
+	public boolean getIsDown() {
+		return isDown;
+	}
+	
+	public void setIsDown(boolean isDown) {
+		this.isDown = isDown;
+	}
+	
+	public String getClusterName() {
+		return clusterName;
+	}
+	
+	public void setMetrics(Map<String, Metric> metrics) {
 		this.metrics = metrics;
 	}
 	
@@ -38,7 +57,7 @@ public class Host {
 	}
 	
 	public void setMetrics(Element hostNode) {
-		metrics = new HashMap<String, Gmetric>();
+		metrics = new HashMap<String, Metric>();
 		hostName = hostNode.getAttributeNode("NAME").getNodeValue();
 		ip = hostNode.getAttributeNode("IP").getNodeValue();
 		
@@ -49,7 +68,7 @@ public class Host {
 			Element el = (Element) metricNodeList.item(i);
 
 			metrics.put(el.getAttributeNode("NAME").getNodeValue(),
-					new Gmetric(el.getAttributeNode("NAME").getNodeValue(), el
+					new Metric(el.getAttributeNode("NAME").getNodeValue(), el
 							.getAttributeNode("VAL").getNodeValue()));
 		}
 	}

@@ -31,30 +31,30 @@ public class GmondDataReader {
 	public GmondDataReader(String host, int port) {
 		this.host = host;
 		this.port = port;
-		
+		hosts = new ArrayList<Host>();
 	}
 
-	public void update() throws GangliaException {
+	private void update() throws GangliaException {
 		parseGangliaMetrics(getGangliaCurrentMetrics());
-	}
-		
-	public String getMetricValue(String metric)  {
-		return hosts.get(0).getMetricValue(metric);
 	}
 
 	private void parseGangliaMetrics(Document gangliaXML) {
-		hosts = new ArrayList<Host>();
+		hosts.clear();
 		gangliaXML.getDocumentElement().normalize();
 		NodeList clusterNodeList = gangliaXML.getElementsByTagName("CLUSTER");
-		Element clusterNode = (Element) clusterNodeList.item(0);
-
-		NodeList hostNodeList = clusterNode.getElementsByTagName("HOST");
-		for(int i = 0; i < hostNodeList.getLength(); i++) {
-			Element element = (Element)hostNodeList.item(i);
-			Host host = new Host(element);
-			hosts.add(host);
-		}
 		
+		for (int i = 0; i < clusterNodeList.getLength(); i++) {
+			
+			Element newClusterNode = (Element) clusterNodeList.item(i);
+			NodeList newHostNodeList = newClusterNode.getElementsByTagName("HOST");
+			String clusterName = newClusterNode.getAttribute("NAME");
+			
+			for (int j = 0; j < newHostNodeList.getLength(); j++) {
+				Element element = (Element) newHostNodeList.item(j);
+				Host host = new Host(element, clusterName);
+				hosts.add(host);				
+			}
+		}
 	}
 
 	private Document getGangliaCurrentMetrics() throws GangliaException {
@@ -72,7 +72,6 @@ public class GmondDataReader {
 		Document dom = getGangliaMetricsFromSocket(socket);
 		closeSocket(socket);
 		return dom;
-
 	}
 
 	private Document getGangliaMetricsFromSocket(Socket socket)
@@ -149,8 +148,8 @@ public class GmondDataReader {
 		this.socket = socket;
 	}
 
-	public List<Host> getHosts() {
-		// TODO Auto-generated method stub
+	public List<Host> getHosts() throws GangliaException {
+		update();
 		return hosts;
 	}
 }
