@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
+import eu.choreos.monitoring.platform.exception.GangliaException;
 import eu.choreos.monitoring.platform.utils.YamlParser;
 
 public class ThresholdEvalDaemonLauncher {
@@ -74,8 +75,13 @@ public class ThresholdEvalDaemonLauncher {
 	public static void main(String[] args) throws InterruptedException, IOException {
 		parseArgs(args);
 		
-		ThresholdEvalDaemon daemon = new ThresholdEvalDaemon(getProperties(),
-				host, port);
+		ThresholdEvalDaemon daemon = null;
+		try {
+			daemon = new ThresholdEvalDaemon(getProperties(),
+					host, port);
+		} catch (GangliaException e) {
+			e.printStackTrace();
+		}
 		
 		List<Threshold> thresholdList = YamlParser.getThresholdsFromFile(thresholdListFileName);
 		daemon.addMultipleThreshold(thresholdList);

@@ -1,11 +1,11 @@
 package eu.choreos.monitoring.platform.daemon.datatypes;
 
-public class Gmetric {
+public class Metric {
 
 	private String name;
 	private String value;
 
-	public Gmetric(String name, String value) {
+	public Metric(String name, String value) {
 		super();
 		this.name = name;
 		this.value = value;
