@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 
+import eu.choreos.monitoring.platform.exception.GangliaException;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
 
 public class HostManagerTest {
@@ -17,7 +18,7 @@ public class HostManagerTest {
 	private GmondDataReader dataReader;
 
 	@Before
-	public void setUp() {
+	public void setUp() throws GangliaException {
 		dataReader = mock(GmondDataReader.class);
 		hostManager = new HostManager(dataReader);
 	}

@@ -8,11 +8,15 @@
 
 	<parent>
 		<groupId>eu.choreos</groupId>
-		<artifactId>SignalUtils</artifactId>		
+		<artifactId>SignalUtils</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-		<pluginRepositories>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<pluginRepositories>
 		<pluginRepository>
 			<id>duns-maven-snapshots</id>
 			<name>Duns' Maven Snapshots</name>
@@ -60,13 +64,48 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>eu.choreos.signal.sender.SignalSender</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>eu.choreos.signal.sender.SignalSender</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-my-jar-with-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-nar-plugin</artifactId>
 				<extensions>true</extensions>
 				<version>2.1-SNAPSHOT</version>
 				<configuration>
-					<!--<targetDirectory>${project.build.directory}/felpsLib</targetDirectory>
-					<output>FelpsOutput</output>
-					<aol>YOOHOO</aol> -->
+					<!--<targetDirectory>${project.build.directory}/felpsLib</targetDirectory> 
+						<output>FelpsOutput</output> <aol>YOOHOO</aol> -->
 					<libraries>
 						<library>
 							<type>jni</type>
@@ -77,20 +116,30 @@
 
 					<c>
 						<options>
-						<option>-std=gnu99</option>
-						<option>-shared</option>
+							<option>-std=gnu99</option>
+							<option>-shared</option>
 						</options>
 					</c>
 
 					<cpp>
 						<options>
-                                                <option>-std=gnu99</option>
-						<option>-shared</option>
-                                                </options>
+							<option>-std=gnu99</option>
+							<option>-shared</option>
+						</options>
 					</cpp>
 
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 
