@@ -11,8 +11,6 @@
     <module>ThresholdEvaluationDaemon</module>
     <module>GmondConf</module>
     <module>Utils</module>
-<!-- Pending initial fixing	-->
-    <module>SignalUtils</module>
   </modules>
 
 

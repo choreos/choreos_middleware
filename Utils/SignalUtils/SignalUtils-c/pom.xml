@@ -2,18 +2,17 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.choreos</groupId>
-	<artifactId>SignalUtils</artifactId>
+	<artifactId>SignalUtils-c</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>nar</packaging>
 
-	<!-- name>SignalUtils</name>
-	<url>http://maven.apache.org</url>
- -->
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+	<parent>
+		<groupId>eu.choreos</groupId>
+		<artifactId>SignalUtils</artifactId>		
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
 
-	<pluginRepositories>
+		<pluginRepositories>
 		<pluginRepository>
 			<id>duns-maven-snapshots</id>
 			<name>Duns' Maven Snapshots</name>
@@ -65,6 +64,9 @@
 				<extensions>true</extensions>
 				<version>2.1-SNAPSHOT</version>
 				<configuration>
+					<!--<targetDirectory>${project.build.directory}/felpsLib</targetDirectory>
+					<output>FelpsOutput</output>
+					<aol>YOOHOO</aol> -->
 					<libraries>
 						<library>
 							<type>jni</type>
@@ -91,4 +93,6 @@
 			</plugin>
 		</plugins>
 	</build>
+
+
 </project>
