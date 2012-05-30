@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
@@ -15,6 +16,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import eu.choreos.monitoring.platform.daemon.datatypes.Host;
 import eu.choreos.monitoring.platform.daemon.datatypes.Metric;
 import eu.choreos.monitoring.platform.exception.GangliaException;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
@@ -28,8 +30,6 @@ public class GmondDataReaderTest {
 	public void setUp() throws IOException, GangliaException {
 		gmondReader = new GmondDataReader("http://localhost/", 8649);
 		socket = mock(Socket.class);
-
-
 		gmondReader.setSocket(socket);
 
 	}
@@ -38,19 +38,23 @@ public class GmondDataReaderTest {
 	public void testParseGangliaCurrentMetricsWithOneHost() throws Exception {
 		when(socket.getInputStream()).thenReturn(
 				getClass().getResourceAsStream("/campinas.xml"));
-//		gmondReader.update();
+		List<Host> hosts = gmondReader.getUpToDateHostsInfo();
 
-		assertEquals(1, gmondReader.getHosts().size());
-	//	assertEquals("0.00", gmondReader.getMetricValue("load_one"));
+		assertEquals(1, hosts.size());
+		assertEquals("0.00", hosts.get(0).getMetricValue("load_one"));
 	}
 	
 	@Test
 	public void testParseGangliaCurrentMetricsWithManyHosts() throws Exception {
 		when(socket.getInputStream()).thenReturn(
 				getClass().getResourceAsStream("/ganglia_opencirrus.xml"));
-	//	gmondReader.update();
 
-		assertEquals(25, gmondReader.getHosts().size());
+		List<Host> hosts = gmondReader.getUpToDateHostsInfo();
+
+		assertEquals(25, hosts.size());
+		assertEquals("opencirrus-08029.hpl.hp.com", hosts.get(0).getHostName());
+		assertEquals("opencirrus-07901.hpl.hp.com", hosts.get(13).getHostName());
+		assertEquals("cirrus078-mgmt-n3.hpl.hp.com", hosts.get(24).getHostName());
+		
 	}
-
 }

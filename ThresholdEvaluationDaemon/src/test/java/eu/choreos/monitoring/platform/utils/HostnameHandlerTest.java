@@ -36,7 +36,7 @@ public class HostnameHandlerTest {
 		assertTrue("Could not find created file!", tmpFile.exists());
 	}
 
-//	@Test
+	@Test
 	public void createdFileShouldContainOriginalContents() throws IOException {
 		HostnameHandler.getScriptCommand();
 		File tmpFile = new File("/tmp/hostname.sh");

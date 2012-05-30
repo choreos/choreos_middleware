@@ -8,8 +8,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
 import eu.choreos.platform.utils.CommandRuntimeException;
 import eu.choreos.platform.utils.ShellHandler;
 

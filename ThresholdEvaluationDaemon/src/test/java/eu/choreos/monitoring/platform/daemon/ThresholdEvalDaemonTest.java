@@ -53,7 +53,7 @@ public class ThresholdEvalDaemonTest {
 		
 		
 		for(String metric:metricsMap.keySet()) {
-	//	when(dataReader.getMetricValue(metric)).thenReturn(metricsMap.get(metric).getValue());
+//		when(dataReader. ).thenReturn(metricsMap.get(metric).getValue());
 			
 		}
 		
@@ -92,7 +92,7 @@ public class ThresholdEvalDaemonTest {
 		verify(msgHandler, times(2)).sendMessage(any(GlimpseBaseEventImpl.class));
 	}
 
-	//@Test
+//	@Test
 	public void shouldCheckIfThereAreSurpassedThresholds() throws GangliaException {
 		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
 		assertTrue(daemon.thereAreSurpassedThresholds());
