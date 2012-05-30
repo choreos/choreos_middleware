@@ -6,6 +6,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -18,6 +19,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import eu.choreos.monitoring.platform.daemon.datatypes.Host;
+import eu.choreos.monitoring.platform.daemon.datatypes.Metric;
 import eu.choreos.monitoring.platform.exception.GangliaException;
 
 public class GmondDataReader {
@@ -25,21 +27,21 @@ public class GmondDataReader {
 	private String host;
 	private int port;
 
-	private List<Host> hosts;
+	private List<Host> lastKnownHosts;
 	private Socket socket;
 
 	public GmondDataReader(String host, int port) {
 		this.host = host;
 		this.port = port;
-		hosts = new ArrayList<Host>();
+		lastKnownHosts = new ArrayList<Host>();
 	}
 
-	private void update() throws GangliaException {
-		parseGangliaMetrics(getGangliaCurrentMetrics());
+	public List<Host> getUpToDateHostsInfo() throws GangliaException {
+		return parseGangliaMetrics(getGangliaCurrentMetrics());
 	}
 
-	private void parseGangliaMetrics(Document gangliaXML) {
-		hosts.clear();
+	private List<Host> parseGangliaMetrics(Document gangliaXML) {
+		lastKnownHosts.clear();
 		gangliaXML.getDocumentElement().normalize();
 		NodeList clusterNodeList = gangliaXML.getElementsByTagName("CLUSTER");
 		
@@ -51,10 +53,11 @@ public class GmondDataReader {
 			
 			for (int j = 0; j < newHostNodeList.getLength(); j++) {
 				Element element = (Element) newHostNodeList.item(j);
-				Host host = new Host(element, clusterName);
-				hosts.add(host);				
+				Host host = createHostFromElement(element, clusterName);
+				lastKnownHosts.add(host);				
 			}
 		}
+		return lastKnownHosts;
 	}
 
 	private Document getGangliaCurrentMetrics() throws GangliaException {
@@ -148,8 +151,24 @@ public class GmondDataReader {
 		this.socket = socket;
 	}
 
-	public List<Host> getHosts() throws GangliaException {
-		update();
-		return hosts;
+	private Host createHostFromElement(Element hostNode, String clusterName) {
+		HashMap<String, Metric> metrics = new HashMap<String, Metric>();
+		String hostName = hostNode.getAttributeNode("NAME").getNodeValue();
+		String ip = hostNode.getAttributeNode("IP").getNodeValue();
+		
+		NodeList metricNodeList = hostNode.getElementsByTagName("METRIC");
+
+		for (int i = 0; i < metricNodeList.getLength(); i++) {
+
+			Element el = (Element) metricNodeList.item(i);
+
+			metrics.put(el.getAttributeNode("NAME").getNodeValue(),
+					new Metric(el.getAttributeNode("NAME").getNodeValue(), el
+							.getAttributeNode("VAL").getNodeValue()));
+		}
+		
+		Host host = new Host(clusterName, hostName, ip, metrics);
+		return host;
 	}
+
 }

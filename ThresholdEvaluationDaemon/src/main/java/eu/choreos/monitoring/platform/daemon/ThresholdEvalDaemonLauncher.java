@@ -50,7 +50,7 @@ public class ThresholdEvalDaemonLauncher {
 		}
 	}
 
-	private static Properties getProperties() {
+	public static Properties getProperties() {
 		if (javaNamingProviderUrl == null)
 			javaNamingProviderUrl = "tcp://dsbchoreos.petalslink.org:61616";
 		Properties probeSettingsProperties = Manager

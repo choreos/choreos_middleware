@@ -3,6 +3,7 @@ package eu.choreos.monitoring.platform.daemon;
 import it.cnr.isti.labse.glimpse.event.GlimpseBaseEvent;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import eu.choreos.monitoring.platform.daemon.notifier.GlimpseMessageHandler;
@@ -21,19 +22,19 @@ public class ThresholdEvalDaemon {
 
 	private ThresholdManager thresholdManager;
 	private HostManager hostManager;
-	private GmondDataReader dataReader;
 
-	public ThresholdEvalDaemon(Properties settings, String host, int port) throws GangliaException {
+	public ThresholdEvalDaemon(Properties settings, String host, int port)
+			throws GangliaException {
 		this(settings, host, port, (new GlimpseMessageHandler(settings)),
 				(new GmondDataReader(host, port)));
 	}
 
 	public ThresholdEvalDaemon(Properties settings, String host, int port,
-			GlimpseMessageHandler msgHandler, GmondDataReader dataReader) throws GangliaException {
+			GlimpseMessageHandler msgHandler, GmondDataReader dataReader)
+			throws GangliaException {
 		messageHandler = msgHandler;
-		this.dataReader = dataReader;
-		thresholdManager = new ThresholdManager(dataReader);
 		hostManager = new HostManager(dataReader);
+		thresholdManager = new ThresholdManager(hostManager);
 	}
 
 	public void addThreshold(Threshold threshold) {
@@ -49,6 +50,8 @@ public class ThresholdEvalDaemon {
 
 		while (true) {
 			try {
+				hostManager.updateHostsInfo();
+				
 				evaluateThresholdsSendMessagesAndSleep(message,
 						NOTIFICATION_INTERVAL);
 			} catch (GangliaException e) {
@@ -61,7 +64,7 @@ public class ThresholdEvalDaemon {
 	public void evaluateThresholdsSendMessagesAndSleep(
 			GlimpseBaseEvent<String> message, int sleepingTime)
 			throws GangliaException {
-		updateManager();
+
 		if (thereAreSurpassedThresholds()) {
 			sendAllSurpassedThresholdMessages(message);
 		} else {
@@ -78,19 +81,15 @@ public class ThresholdEvalDaemon {
 		sleep(sleepingTime);
 	}
 
-	private void updateManager() throws GangliaException {
-		//dataReader.update();
-		
-	}
-
 	public boolean thereAreSurpassedThresholds() throws GangliaException {
 		return !getSurpassedThresholds().isEmpty();
 	}
 
-	public List<Threshold> getSurpassedThresholds() throws GangliaException {
+	public Map<String, List<Threshold>> getSurpassedThresholds()
+			throws GangliaException {
 
-		List<Threshold> evaluateAllThresholds = thresholdManager
-				.getAllSurpassedThresholds();
+		Map<String, List<Threshold>> evaluateAllThresholds = thresholdManager
+				.getSurpassedThresholdsForAllHosts();
 		return evaluateAllThresholds;
 	}
 
@@ -119,14 +118,14 @@ public class ThresholdEvalDaemon {
 
 	private void sendAllSurpassedThresholdMessages(
 			GlimpseBaseEvent<String> message) throws GangliaException {
-		for (Threshold surpassed : getSurpassedThresholds()) {
-			message.setData(surpassed.toString());
-			sendMessage(message);
+		
+		Map<String, List<Threshold>> surpassedThresholds = getSurpassedThresholds();
+		
+		for (String host : surpassedThresholds.keySet()) {
+			for (Threshold threshold : surpassedThresholds.get(host)) {
+				message.setData(host + ": " + threshold.toString());
+				sendMessage(message);
+			}
 		}
 	}
-
-	public boolean thereAreHostsDown() throws GangliaException {
-		return hostManager.thereAreHostsDown();
-	}
-
 }

@@ -13,25 +13,27 @@ public class HostManager {
 	private List<Host> hostsDown;
 	private List<Host> registeredHosts;
 	
-	private void updateHostsInfo() throws GangliaException {
-		hostsDown.clear(); 
-		registeredHosts.clear();
-		registeredHosts = dataReader.getHosts();
-		
-		for(Host host: registeredHosts) {
-			if (host.isMetricsEmpty()) {
-				host.setIsDown(true);
-				hostsDown.add(host);
-			}
-		}
-		
-	}
-
 	public HostManager(GmondDataReader dataReader) throws GangliaException {
 		this.dataReader = dataReader;
 		registeredHosts = new ArrayList<Host>();
 		hostsDown = new ArrayList<Host>();
 		updateHostsInfo();
+	}
+
+	public void updateHostsInfo() throws GangliaException {
+		hostsDown.clear(); 
+		registeredHosts.clear();
+		
+		registeredHosts = dataReader.getUpToDateHostsInfo();
+		updateHostsDown();		
+	}
+
+	private void updateHostsDown() {
+		for(Host host: registeredHosts) {
+			if (host.isDown()) {
+				hostsDown.add(host);
+			}
+		}
 	}
 	
 	public List<Host> getHostsDown() {
@@ -44,15 +46,5 @@ public class HostManager {
 
 	public boolean thereAreHostsDown() throws GangliaException {
 		return !hostsDown.isEmpty();
-	}
-	
-	public static void main(String[] args) {
-		
-		try {
-			HostManager m = new HostManager(new GmondDataReader("eclipse.ime.usp.br", 8649));
-			System.out.println(m.getHostsDown());
-		} catch (GangliaException e1) {
-			e1.printStackTrace();
-		}
 	}
 }
