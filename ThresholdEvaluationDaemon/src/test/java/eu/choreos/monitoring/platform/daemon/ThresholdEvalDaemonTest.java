@@ -13,6 +13,7 @@ import it.cnr.isti.labse.glimpse.event.GlimpseBaseEvent;
 import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventImpl;
 import it.cnr.isti.labse.glimpse.utils.Manager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -22,6 +23,7 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import eu.choreos.monitoring.platform.daemon.datatypes.Host;
 import eu.choreos.monitoring.platform.daemon.datatypes.Metric;
 import eu.choreos.monitoring.platform.daemon.notifier.GlimpseMessageHandler;
 import eu.choreos.monitoring.platform.daemon.notifier.MessageHandlingFault;
@@ -33,8 +35,9 @@ public class ThresholdEvalDaemonTest {
 	private ThresholdEvalDaemon daemon;
 	private GlimpseBaseEventImpl<String> message;
 	private GlimpseMessageHandler msgHandler;
-	private GmondDataReader dataReader;
 	private String javaNamingProviderUrl;
+	private GmondDataReader dataReader;
+	private Host aHost;
 
 	@Before
 	public void setUp() throws Exception {
@@ -44,6 +47,7 @@ public class ThresholdEvalDaemonTest {
 
 		msgHandler = mock(GlimpseMessageHandler.class);
 		dataReader = mock(GmondDataReader.class);
+		
 
 		Map<String, Metric> metricsMap = new HashMap<String, Metric>();
 		
@@ -51,45 +55,16 @@ public class ThresholdEvalDaemonTest {
 		metricsMap.put("load_five", new Metric("load_five", "0.8"));
 		metricsMap.put("ram", new Metric("ram", "512"));
 		
+		aHost = new Host("cluster", "hostname", "10.0.0.01", metricsMap);
 		
-		for(String metric:metricsMap.keySet()) {
-//		when(dataReader. ).thenReturn(metricsMap.get(metric).getValue());
-			
-		}
+		ArrayList<Host> hostList = new ArrayList<Host>();
+		hostList.add(aHost);
+		
+		when(dataReader.getUpToDateHostsInfo()).thenReturn(hostList);
 		
 		daemon = new ThresholdEvalDaemon(getProperties(), "localhost", 8649,
 				msgHandler, dataReader);
 
-	}
-
-	@SuppressWarnings("unchecked")
-	@Test
-	public void shouldSendAliveMessage() throws MessageHandlingFault {
-		daemon.sendHeartbeat(message);
-		verify(msgHandler, times(1)).sendMessage(
-				any(GlimpseBaseEventImpl.class));
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Test
-	public void shouldSendOneHeartBeatMessage() throws GangliaException, MessageHandlingFault {
-		prepareSendMessageToCheckAlive();
-
-		for(int i = 0; i < 20; i++) {
-			 daemon.evaluateThresholdsSendMessagesAndSleep(message, 0);
-		}
-		verify(msgHandler, times(1)).sendMessage(any(GlimpseBaseEventImpl.class));
-	}
-	
-
-	@SuppressWarnings("unchecked")
-	@Test
-	public void shouldSendTwoHeartBeatMessage() throws GangliaException, MessageHandlingFault {
-		prepareSendMessageToCheckAlive();
-		
-		for(int i = 0; i < 40; i++)
-			daemon.evaluateThresholdsSendMessagesAndSleep(message, 0);
-		verify(msgHandler, times(2)).sendMessage(any(GlimpseBaseEventImpl.class));
 	}
 
 //	@Test
@@ -155,14 +130,4 @@ public class ThresholdEvalDaemonTest {
 		return createProbeSettingsPropertiesObject;
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void prepareSendMessageToCheckAlive() throws MessageHandlingFault {
-		stub(msgHandler.sendMessage(any(GlimpseBaseEventImpl.class))).toAnswer(new Answer() {
-			public Object answer(InvocationOnMock invocation) {
-				Object[] args = invocation.getArguments();
-				assertEquals(((GlimpseBaseEvent<String>)args[0]).getData(),"Alive");
-				return args[0];	
-			}
-		});
-	}
 }

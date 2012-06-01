@@ -6,19 +6,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import eu.choreos.monitoring.platform.daemon.datatypes.Host;
 import eu.choreos.monitoring.platform.daemon.notifier.GlimpseMessageHandler;
 import eu.choreos.monitoring.platform.daemon.notifier.MessageHandlingFault;
 import eu.choreos.monitoring.platform.exception.GangliaException;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
-import eu.choreos.monitoring.platform.utils.HostnameHandler;
-import eu.choreos.platform.utils.CommandRuntimeException;
 
 public class ThresholdEvalDaemon {
 
-	private static final int ALIVE_INTERVAL = 120000;
 	private static final int NOTIFICATION_INTERVAL = 6000;
 	private GlimpseMessageHandler messageHandler;
-	private int nonSentMessagesIterationsCounter = 0;
 
 	private ThresholdManager thresholdManager;
 	private HostManager hostManager;
@@ -50,7 +47,7 @@ public class ThresholdEvalDaemon {
 
 		while (true) {
 			try {
-				hostManager.updateHostsInfo();
+				thresholdManager.updateThresholdsInfo();
 				
 				evaluateThresholdsSendMessagesAndSleep(message,
 						NOTIFICATION_INTERVAL);
@@ -67,36 +64,35 @@ public class ThresholdEvalDaemon {
 
 		if (thereAreSurpassedThresholds()) {
 			sendAllSurpassedThresholdMessages(message);
-		} else {
-			nonSentMessagesIterationsCounter++;
-
-			int timeSinceLastMessage = nonSentMessagesIterationsCounter
-					* NOTIFICATION_INTERVAL;
-
-			if (timeSinceLastMessage >= ALIVE_INTERVAL) {
-				sendHeartbeat(message);
-			}
+		}
+		if (thereAreHostsDown()) {
+			sendHostsDown(message);
 		}
 
 		sleep(sleepingTime);
 	}
 
 	public boolean thereAreSurpassedThresholds() throws GangliaException {
-		return !getSurpassedThresholds().isEmpty();
+		return thresholdManager.thereAreSurpassedThresholds();
+	}
+	
+	public boolean thereAreHostsDown() throws GangliaException {
+		return hostManager.thereAreHostsDown();
 	}
 
 	public Map<String, List<Threshold>> getSurpassedThresholds()
 			throws GangliaException {
 
 		Map<String, List<Threshold>> evaluateAllThresholds = thresholdManager
-				.getSurpassedThresholdsForAllHosts();
+				.getSurpassedThresholds();
 		return evaluateAllThresholds;
 	}
-
-	public void sendHeartbeat(GlimpseBaseEvent<String> message) {
-		message.setData("Alive");
-		sendMessage(message);
-
+	
+	public void sendHostsDown(GlimpseBaseEvent<String> message) {
+		for(Host host: hostManager.getHostsDown()) {
+			message.setData(host.getHostName() + " is down");
+			sendMessage(message);
+		}
 	}
 
 	private void sendMessage(GlimpseBaseEvent<String> message) {
@@ -105,7 +101,6 @@ public class ThresholdEvalDaemon {
 		} catch (MessageHandlingFault e) {
 			e.handleException();
 		}
-		nonSentMessagesIterationsCounter = 0;
 	}
 
 	private void sleep(int time) {

@@ -23,7 +23,8 @@ public class ThresholdManagerTest {
 
 	private ThresholdManager notifier;
 	private HostManager hostManager;
-	private Map<String, Metric> metricsMap;
+	private Map<String, Metric> metricsMap1;
+	private Map<String, Metric> metricsMap2;
 	private Threshold threshold;
 	private ArrayList<Host> hostList;
 	private Host host2;
@@ -31,18 +32,19 @@ public class ThresholdManagerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		metricsMap = new HashMap<String, Metric>();
-		metricsMap.put("load_one", new Metric("load_one", "0.8"));
-		metricsMap.put("mem_total", new Metric("mem_total", "9876543"));
-		metricsMap.put("proc_run", new Metric("proc_run", "1"));
-		metricsMap.put("load_five", new Metric("load_five", "0.04"));
-		metricsMap.put("disk_free", new Metric("disk_free", "224.231"));
-		metricsMap.put("mem_cached", new Metric("mem_cached", "412908"));
-		metricsMap.put("pkts_in", new Metric("pkts_in", "124.93"));
+		metricsMap1 = new HashMap<String, Metric>();
+		metricsMap2 = new HashMap<String, Metric>();
+		metricsMap1.put("load_one", new Metric("load_one", "1.0"));
+		metricsMap1.put("mem_total", new Metric("mem_total", "9876543"));
+		metricsMap1.put("proc_run", new Metric("proc_run", "1"));
+		metricsMap2.put("load_one", new Metric("load_one", "2.0"));
+		metricsMap2.put("load_five", new Metric("load_five", "0.04"));
+		metricsMap2.put("disk_free", new Metric("disk_free", "224.231"));
+		metricsMap2.put("mem_cached", new Metric("mem_cached", "412908"));
 
 		hostManager = mock(HostManager.class);
-		host1 = new Host("test1", "hostname1", "ip1", metricsMap);
-		host2 = new Host("test1", "hostname2", "ip2", metricsMap);
+		host1 = new Host("test1", "hostname1", "ip1", metricsMap1);
+		host2 = new Host("test1", "hostname2", "ip2", metricsMap2);
 
 		hostList = new ArrayList<Host>();
 		hostList.add(host1);
@@ -51,8 +53,8 @@ public class ThresholdManagerTest {
 		when(hostManager.getRegisteredHosts()).thenReturn(hostList);
 
 		notifier = new ThresholdManager(hostManager);
+		
 
-		threshold = new Threshold("mem_free", Threshold.MIN, 64000);
 	}
 
 	@After
@@ -76,108 +78,48 @@ public class ThresholdManagerTest {
 		assertEquals(1, notifier.getThresholdSize());
 	}
 
-	@Test
-	public void shouldNotNotifySingleThresholdInSingleHost()
-			throws GangliaException {
-		Threshold threshold = new Threshold("pkts_in", Threshold.MAX, 1000);
-
-		notifier.addThreshold(threshold);
-
-		List<Threshold> list = notifier.getAllSurpassedThresholds(host1);
-
-		assertTrue(list.isEmpty());
-	}
-
-	@Test
-	public void shouldNotifySingleThresholdInSingleHost()
-			throws GangliaException {
-		Threshold threshold = new Threshold("pkts_in", Threshold.MAX, 100);
-
-		notifier.addThreshold(threshold);
-
-		List<Threshold> list = notifier.getAllSurpassedThresholds(host1);
-
-		assertTrue(list.contains(threshold));
-	}
 
 	@Test
 	public void shouldEvaluateMultipleThresholdsInSingleHost()
 			throws GangliaException {
 
-		Threshold threshold1 = new Threshold("pkts_in", Threshold.MIN, 1000);
-		Threshold threshold4 = new Threshold("disk_free", Threshold.MAX, 100);
-		Threshold threshold2 = new Threshold("mem_cached", Threshold.MIN, 50000);
-		Threshold threshold3 = new Threshold("mem_cached", Threshold.MAX,
-				1000000);
+		Threshold threshold1 = new Threshold("load_one", Threshold.MIN, 1.5);
 
 		notifier.addThreshold(threshold1);
-		notifier.addThreshold(threshold2);
-		notifier.addThreshold(threshold3);
-		notifier.addThreshold(threshold4);
+		
+		notifier.updateThresholdsInfo();
 
-		List<Threshold> list = notifier.getAllSurpassedThresholds(host1);
+		Map<String, List<Threshold>> list1 = notifier.getSurpassedThresholds();
+		
+		assertEquals(1, list1.size());
 
+		List<Threshold> list = list1.get(host1.getHostName());
+		
 		assertTrue(list.contains(threshold1));
-		assertFalse(list.contains(threshold2));
-		assertFalse(list.contains(threshold3));
-		assertTrue(list.contains(threshold4));
 
 	}
 
 	@Test
 	public void shouldNotifySingleThresholdInMultipleHosts()
 			throws GangliaException {
-		Threshold threshold = new Threshold("pkts_in", Threshold.MAX, 100);
+		Threshold threshold = new Threshold("load_one", Threshold.MAX, 0.8);
 
 		notifier.addThreshold(threshold);
+		notifier.updateThresholdsInfo();
 
+		Map<String, List<Threshold>> list1 = notifier.getSurpassedThresholds();
+		
+		assertEquals(2, list1.size());
+		
 		List<Threshold> list;
 
-		list = notifier.getSurpassedThresholdsForAllHosts().get(
-				host1.getHostName());
+		list = list1.get(host1.getHostName());
 		assertTrue(list.contains(threshold));
 
-		list = notifier.getSurpassedThresholdsForAllHosts().get(
-				host2.getHostName());
+		list = list1.get(host2.getHostName());
 		assertTrue(list.contains(threshold));
 
 	}
 
-	@Test
-	public void shouldEvaluateMultipleThresholdsInMultipleHosts()
-			throws GangliaException {
-
-		Threshold threshold1 = new Threshold("pkts_in", Threshold.MIN, 1000);
-		Threshold threshold4 = new Threshold("disk_free", Threshold.MAX, 100);
-		Threshold threshold2 = new Threshold("mem_cached", Threshold.MIN, 50000);
-		Threshold threshold3 = new Threshold("mem_cached", Threshold.MAX,
-				1000000);
-
-		notifier.addThreshold(threshold1);
-		notifier.addThreshold(threshold2);
-		notifier.addThreshold(threshold3);
-		notifier.addThreshold(threshold4);
-
-		List<Threshold> list;
-		
-		list = notifier.getSurpassedThresholdsForAllHosts().get(
-				host1.getHostName());
-
-		assertTrue(list.contains(threshold1));
-		assertFalse(list.contains(threshold2));
-		assertFalse(list.contains(threshold3));
-		assertTrue(list.contains(threshold4));
-
-		list.clear();
-		
-		list = notifier.getSurpassedThresholdsForAllHosts().get(
-				host1.getHostName());
-
-		assertTrue(list.contains(threshold1));
-		assertFalse(list.contains(threshold2));
-		assertFalse(list.contains(threshold3));
-		assertTrue(list.contains(threshold4));
-
-	}
 
 }
