@@ -11,37 +11,33 @@ public class HostManager {
 	
 	private GmondDataReader dataReader;
 	private List<Host> hostsDown;
-	private List<Host> registeredHosts;
+	private List<Host> hosts;
 	
 	public HostManager(GmondDataReader dataReader) throws GangliaException {
 		this.dataReader = dataReader;
-		registeredHosts = new ArrayList<Host>();
-		hostsDown = new ArrayList<Host>();
-		updateHostsInfo();
+		this.hosts = new ArrayList<Host>();
+		this.hostsDown = new ArrayList<Host>();
+		getDataReaderHostInfo();
 	}
 
-	public void updateHostsInfo() throws GangliaException {
-		hostsDown.clear(); 
-		registeredHosts.clear();
+	public void getDataReaderHostInfo() throws GangliaException {
+		hosts.clear(); hostsDown.clear();
+		hosts = dataReader.getUpToDateHostsInfo();
 		
-		registeredHosts = dataReader.getUpToDateHostsInfo();
-		updateHostsDown();		
-	}
-
-	private void updateHostsDown() {
-		for(Host host: registeredHosts) {
+		for(Host host: hosts) {
 			if (host.isDown()) {
 				hostsDown.add(host);
 			}
 		}
 	}
-	
-	public List<Host> getHostsDown() {
+
+	public List<Host> getHostsDown() throws GangliaException {
+		//TODO: update data each time request info
 		return hostsDown;
 	}
 	
-	public List<Host> getRegisteredHosts() {
-		return registeredHosts;
+	public List<Host> getHosts() throws GangliaException {
+		return hosts;
 	}
 
 	public boolean thereAreHostsDown() throws GangliaException {

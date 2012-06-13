@@ -33,17 +33,20 @@ public class ThresholdManager {
 	
 	public void updateThresholdsInfo() throws GangliaException {
 		surpassedThresholds.clear();
-		hostManager.updateHostsInfo();
+		hostManager.getDataReaderHostInfo();
 		surpassedThresholds = getSurpassedThresholdsForAllHosts();
 	}
 	
-	public boolean thereAreSurpassedThresholds() {
+	public boolean thereAreSurpassedThresholds() throws GangliaException {
+		updateThresholdsInfo();
 		return !surpassedThresholds.isEmpty();
 	}
 	
-	public Map<String, List<Threshold>> getSurpassedThresholds() {
+	public Map<String, List<Threshold>> getSurpassedThresholds() throws GangliaException {
+		updateThresholdsInfo();
 		return surpassedThresholds;
 	}
+	
 
 	private double getMetricNumericalValue(String metricName, Host host) throws GangliaException {
 		String value = host.getMetricValue(metricName);
@@ -53,6 +56,11 @@ public class ThresholdManager {
 	private List<Threshold> getAllSurpassedThresholds(Host host) throws GangliaException {
 
 		List<Threshold> surpassedThresholds = new ArrayList<Threshold>();
+		
+		if(host.isDown()) {
+			Threshold t = new Threshold("host_down", Threshold.DOWN, 0);
+			surpassedThresholds.add(t); return surpassedThresholds;
+		}
 
 		for (Threshold threshold : thresholds) {
 
@@ -68,13 +76,14 @@ public class ThresholdManager {
 	private Map<String, List<Threshold>> getSurpassedThresholdsForAllHosts() throws GangliaException {
 		Map<String, List<Threshold>> surpassedThresholds = new HashMap<String, List<Threshold>>();
 
-		for(Host host : hostManager.getRegisteredHosts()){
-			List<Threshold> thresolds = getAllSurpassedThresholds(host);
-			if (!thresolds.isEmpty()) {
+		for(Host host : hostManager.getHosts()){
+			List<Threshold> thresholdsOfHost = getAllSurpassedThresholds(host);
+			
+			if (!thresholdsOfHost.isEmpty()) {
 				surpassedThresholds.put(host.getHostName(), new ArrayList<Threshold>());
 			
-				for(Threshold threshold : thresholds)
-					surpassedThresholds.get(host.getHostName()).add(threshold);
+				for(Threshold t : thresholdsOfHost)
+					surpassedThresholds.get(host.getHostName()).add(t);
 			}
 		}
 		

@@ -5,6 +5,7 @@ public class Threshold {
 	public static final int MIN = 1;
 	public static final int EQUALS = 2;
 	public static final int MAX = 3;
+	public static final int DOWN = 4;
 
 	private String name;
 	private double limitValue;
@@ -48,12 +49,15 @@ public class Threshold {
 			return "<=";
 		case EQUALS:
 			return "==";
+		case DOWN:
+			return "host down";
 		default:
 			return "undefined";
 		}
 	}
 
 	public String toString() {
+		
 		return "Triggered: " + name + " " + getComparisonAsString() + " "
 				+ limitValue + ". Measured: " + lastMeasurement ;
 	}

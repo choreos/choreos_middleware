@@ -67,27 +67,26 @@ public class ThresholdEvalDaemonTest {
 
 	}
 
-//	@Test
+	//@Test
 	public void shouldCheckIfThereAreSurpassedThresholds() throws GangliaException {
 		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
 		assertTrue(daemon.thereAreSurpassedThresholds());
 	}
 	
-
 	@Test
 	public void shouldCheckIfThereAreNoneSurpassedThresholds() throws GangliaException {
 		daemon.addThreshold(new Threshold("load_one", Threshold.MIN, 1.0));
 		assertEquals(false, daemon.thereAreSurpassedThresholds());
 	}
 
-//	@Test
+	//@Test
 	public void shouldCheckIfThereAreSurpassedThresholdsAmongMany() throws GangliaException {
 		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
 		daemon.addThreshold(new Threshold("load_five", Threshold.MIN, 1.0));
 		assertTrue(daemon.thereAreSurpassedThresholds());
 	}
-	
-//	@Test
+
+	//@Test
 	public void shouldCheckIfThereAreSurpassedThresholdsAmongManyNotAllTrue() throws GangliaException {
 		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
 		daemon.addThreshold(new Threshold("load_five", Threshold.MAX, 1.0));
@@ -101,8 +100,8 @@ public class ThresholdEvalDaemonTest {
 		assertFalse(daemon.thereAreSurpassedThresholds());
 	}
 
-//	@SuppressWarnings("unchecked")
-//	@Test
+	@SuppressWarnings("unchecked")
+	//@Test
 	public void shouldSendAllThresholdsMessage() throws GangliaException, MessageHandlingFault {
 		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
 		daemon.addThreshold(new Threshold("load_five", Threshold.MIN, 1.0));

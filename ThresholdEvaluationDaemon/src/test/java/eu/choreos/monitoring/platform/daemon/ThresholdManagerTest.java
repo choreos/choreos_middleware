@@ -15,6 +15,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import sun.awt.windows.ThemeReader;
+
 import eu.choreos.monitoring.platform.daemon.datatypes.Host;
 import eu.choreos.monitoring.platform.daemon.datatypes.Metric;
 import eu.choreos.monitoring.platform.exception.GangliaException;
@@ -25,7 +27,6 @@ public class ThresholdManagerTest {
 	private HostManager hostManager;
 	private Map<String, Metric> metricsMap1;
 	private Map<String, Metric> metricsMap2;
-	private Threshold threshold;
 	private ArrayList<Host> hostList;
 	private Host host2;
 	private Host host1;
@@ -50,7 +51,7 @@ public class ThresholdManagerTest {
 		hostList.add(host1);
 		hostList.add(host2);
 
-		when(hostManager.getRegisteredHosts()).thenReturn(hostList);
+		when(hostManager.getHosts()).thenReturn(hostList);
 
 		notifier = new ThresholdManager(hostManager);
 		
@@ -119,6 +120,26 @@ public class ThresholdManagerTest {
 		list = list1.get(host2.getHostName());
 		assertTrue(list.contains(threshold));
 
+	}
+	
+	@Test
+	public void thereAreNotSurpassedThreshold() throws GangliaException {
+		Threshold t = new Threshold("load_one", Threshold.MAX, 3);
+		
+		notifier.addThreshold(t);
+		notifier.updateThresholdsInfo();
+		
+		assertFalse(notifier.thereAreSurpassedThresholds());
+	}
+	
+	@Test
+	public void thereAreSurpassedThreshold() throws GangliaException {
+		Threshold t = new Threshold("load_one", Threshold.MAX, 0);
+		
+		notifier.addThreshold(t);
+		notifier.updateThresholdsInfo();
+		
+		assertTrue(notifier.thereAreSurpassedThresholds());
 	}
 
 

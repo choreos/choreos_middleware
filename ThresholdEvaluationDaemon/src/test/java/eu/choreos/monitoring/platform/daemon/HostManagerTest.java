@@ -46,7 +46,7 @@ public class HostManagerTest {
 		hostList.add(new Host("test", "test", "ip", hashMap));
 		when(dataReader.getUpToDateHostsInfo()).thenReturn(hostList);
 		
-		hostManager.updateHostsInfo();
+		hostManager.getDataReaderHostInfo();
 		
 		assertEquals(0, hostManager.getHostsDown().size());
 		assertEquals(false, hostManager.thereAreHostsDown());
@@ -58,7 +58,7 @@ public class HostManagerTest {
 		hostList.add(new Host("test", "test", "ip", hashMap));
 		when(dataReader.getUpToDateHostsInfo()).thenReturn(hostList);
 		
-		hostManager.updateHostsInfo();
+		hostManager.getDataReaderHostInfo();
 		
 		assertEquals(1, hostManager.getHostsDown().size());
 		assertEquals(true, hostManager.thereAreHostsDown());

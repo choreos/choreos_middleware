@@ -27,20 +27,20 @@ public class IntegrationTests {
 		
 	}
 
-	@Test
+	//@Test
 	public void shouldReadDataFromGanglia() throws GangliaException {
 
 		assertFalse(dataReader.getUpToDateHostsInfo().isEmpty());
 	}
 
-	@Test
+	//@Test
 	public void shouldGetAtLeastOneHost() throws GangliaException {
 		hostManager = new HostManager(dataReader);
 		
-		assertTrue(hostManager.getRegisteredHosts().size() >= 1);
+		assertTrue(hostManager.getHosts().size() >= 1);
 	}
 	
-	@Test
+	//@Test
 	public void shouldEvaluateAThreshold() throws GangliaException{
 		Properties settings = ThresholdEvalDaemonLauncher.getProperties();
 		thresholdManager = new ThresholdEvalDaemon(settings ,"localhost", 8649);

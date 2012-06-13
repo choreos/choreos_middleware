@@ -16,10 +16,8 @@ public class ThresholdEvalDaemon {
 
 	private static final int NOTIFICATION_INTERVAL = 6000;
 	private GlimpseMessageHandler messageHandler;
-
 	private ThresholdManager thresholdManager;
-	private HostManager hostManager;
-
+	
 	public ThresholdEvalDaemon(Properties settings, String host, int port)
 			throws GangliaException {
 		this(settings, host, port, (new GlimpseMessageHandler(settings)),
@@ -30,8 +28,7 @@ public class ThresholdEvalDaemon {
 			GlimpseMessageHandler msgHandler, GmondDataReader dataReader)
 			throws GangliaException {
 		messageHandler = msgHandler;
-		hostManager = new HostManager(dataReader);
-		thresholdManager = new ThresholdManager(hostManager);
+		thresholdManager = new ThresholdManager(new HostManager(dataReader));
 	}
 
 	public void addThreshold(Threshold threshold) {
@@ -48,7 +45,6 @@ public class ThresholdEvalDaemon {
 		while (true) {
 			try {
 				thresholdManager.updateThresholdsInfo();
-				
 				evaluateThresholdsSendMessagesAndSleep(message,
 						NOTIFICATION_INTERVAL);
 			} catch (GangliaException e) {
@@ -65,19 +61,12 @@ public class ThresholdEvalDaemon {
 		if (thereAreSurpassedThresholds()) {
 			sendAllSurpassedThresholdMessages(message);
 		}
-		if (thereAreHostsDown()) {
-			sendHostsDown(message);
-		}
 
 		sleep(sleepingTime);
 	}
 
 	public boolean thereAreSurpassedThresholds() throws GangliaException {
 		return thresholdManager.thereAreSurpassedThresholds();
-	}
-	
-	public boolean thereAreHostsDown() throws GangliaException {
-		return hostManager.thereAreHostsDown();
 	}
 
 	public Map<String, List<Threshold>> getSurpassedThresholds()
@@ -88,13 +77,6 @@ public class ThresholdEvalDaemon {
 		return evaluateAllThresholds;
 	}
 	
-	public void sendHostsDown(GlimpseBaseEvent<String> message) {
-		for(Host host: hostManager.getHostsDown()) {
-			message.setData(host.getHostName() + " is down");
-			sendMessage(message);
-		}
-	}
-
 	private void sendMessage(GlimpseBaseEvent<String> message) {
 		try {
 			messageHandler.sendMessage(message);
