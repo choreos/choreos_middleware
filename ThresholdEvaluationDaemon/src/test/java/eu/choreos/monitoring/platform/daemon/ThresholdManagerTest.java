@@ -28,8 +28,9 @@ public class ThresholdManagerTest {
 	private Map<String, Metric> metricsMap1;
 	private Map<String, Metric> metricsMap2;
 	private ArrayList<Host> hostList;
-	private Host host2;
 	private Host host1;
+	private Host host2;
+	private Host host3;
 
 	@Before
 	public void setUp() throws Exception {
@@ -40,12 +41,14 @@ public class ThresholdManagerTest {
 		metricsMap1.put("proc_run", new Metric("proc_run", "1"));
 		metricsMap2.put("load_one", new Metric("load_one", "2.0"));
 		metricsMap2.put("load_five", new Metric("load_five", "0.04"));
+		metricsMap2.put("mem_total", new Metric("mem_total", "4000"));
 		metricsMap2.put("disk_free", new Metric("disk_free", "224.231"));
 		metricsMap2.put("mem_cached", new Metric("mem_cached", "412908"));
 
 		hostManager = mock(HostManager.class);
 		host1 = new Host("test1", "hostname1", "ip1", metricsMap1);
 		host2 = new Host("test1", "hostname2", "ip2", metricsMap2);
+		host3 = new Host("test1", "hostname3", "ip3", new HashMap<String, Metric>()); 
 
 		hostList = new ArrayList<Host>();
 		hostList.add(host1);
@@ -85,8 +88,10 @@ public class ThresholdManagerTest {
 			throws GangliaException {
 
 		Threshold threshold1 = new Threshold("load_one", Threshold.MIN, 1.5);
+		Threshold threshold2 = new Threshold("mem_total", Threshold.MAX, 50000);
 
 		notifier.addThreshold(threshold1);
+		notifier.addThreshold(threshold2);
 		
 		notifier.updateThresholdsInfo();
 
@@ -96,8 +101,8 @@ public class ThresholdManagerTest {
 
 		List<Threshold> list = list1.get(host1.getHostName());
 		
-		assertTrue(list.contains(threshold1));
-
+		assertEquals(2, list.size());
+		
 	}
 
 	@Test
@@ -142,5 +147,13 @@ public class ThresholdManagerTest {
 		assertTrue(notifier.thereAreSurpassedThresholds());
 	}
 
+	@Test
+	public void thereIsAHostDown() throws GangliaException {
+		hostList.add(host3);
+		notifier.updateThresholdsInfo();
+		Map<String, List<Threshold>> t = notifier.getSurpassedThresholds();
+		assertTrue(t.containsKey(host3.getHostName()));
+		assertEquals("host_down", t.get(host3.getHostName()).get(0).getName());
+	}
 
 }
