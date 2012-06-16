@@ -5,23 +5,20 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import it.cnr.isti.labse.glimpse.event.GlimpseBaseEvent;
 import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventImpl;
 import it.cnr.isti.labse.glimpse.utils.Manager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import eu.choreos.monitoring.platform.daemon.datatypes.Host;
 import eu.choreos.monitoring.platform.daemon.datatypes.Metric;
@@ -38,70 +35,35 @@ public class ThresholdEvalDaemonTest {
 	private String javaNamingProviderUrl;
 	private GmondDataReader dataReader;
 	private Host aHost;
+	
+	
+	private ThresholdManager thresholdManager;
 
 	@Before
 	public void setUp() throws Exception {
+		thresholdManager = mock(ThresholdManager.class);
+		when(thresholdManager.thereAreSurpassedThresholds()).thenReturn(true);
+		
+		List<Threshold> host1ThresholdsList = new ArrayList<Threshold>();
+		host1ThresholdsList.add(new Threshold("load_one", Threshold.MAX, 3));
+		host1ThresholdsList.add(new Threshold("load_five", Threshold.MAX, 3));
+		
+		Map<String, List<Threshold>> thresholdsMap = new HashMap<String, List<Threshold>>();
+		thresholdsMap.put("host1", host1ThresholdsList);
+		
+		when(thresholdManager.getSurpassedThresholds()).thenReturn(thresholdsMap);
+		
+		
 		javaNamingProviderUrl = "tcp://dsbchoreos.petalslink.org:61616";
-
 		message = getDefaultMessage();
-
 		msgHandler = mock(GlimpseMessageHandler.class);
-		dataReader = mock(GmondDataReader.class);
-		
-
-		Map<String, Metric> metricsMap = new HashMap<String, Metric>();
-		
-		metricsMap.put("load_one", new Metric("load_one", "2"));
-		metricsMap.put("load_five", new Metric("load_five", "0.8"));
-		metricsMap.put("ram", new Metric("ram", "512"));
-		
-		aHost = new Host("cluster", "hostname", "10.0.0.01", metricsMap);
-		
-		ArrayList<Host> hostList = new ArrayList<Host>();
-		hostList.add(aHost);
-		
-		when(dataReader.getUpToDateHostsInfo()).thenReturn(hostList);
-		
 		daemon = new ThresholdEvalDaemon(getProperties(), "localhost", 8649,
-				msgHandler, dataReader);
+				msgHandler, thresholdManager);
 
-	}
-
-	//@Test
-	public void shouldCheckIfThereAreSurpassedThresholds() throws GangliaException {
-		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
-		assertTrue(daemon.thereAreSurpassedThresholds());
-	}
-	
-	@Test
-	public void shouldCheckIfThereAreNoneSurpassedThresholds() throws GangliaException {
-		daemon.addThreshold(new Threshold("load_one", Threshold.MIN, 1.0));
-		assertEquals(false, daemon.thereAreSurpassedThresholds());
-	}
-
-	//@Test
-	public void shouldCheckIfThereAreSurpassedThresholdsAmongMany() throws GangliaException {
-		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
-		daemon.addThreshold(new Threshold("load_five", Threshold.MIN, 1.0));
-		assertTrue(daemon.thereAreSurpassedThresholds());
-	}
-
-	//@Test
-	public void shouldCheckIfThereAreSurpassedThresholdsAmongManyNotAllTrue() throws GangliaException {
-		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
-		daemon.addThreshold(new Threshold("load_five", Threshold.MAX, 1.0));
-		assertTrue(daemon.thereAreSurpassedThresholds());
-	}
-
-	@Test
-	public void shouldCheckIfThereAreNoneSurpassedThresholdsAmongMany() throws GangliaException {
-		daemon.addThreshold(new Threshold("load_one", Threshold.MIN, 1.0));
-		daemon.addThreshold(new Threshold("ram", Threshold.MIN, 500.0));
-		assertFalse(daemon.thereAreSurpassedThresholds());
 	}
 
 	@SuppressWarnings("unchecked")
-	//@Test
+	@Test
 	public void shouldSendAllThresholdsMessage() throws GangliaException, MessageHandlingFault {
 		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
 		daemon.addThreshold(new Threshold("load_five", Threshold.MIN, 1.0));

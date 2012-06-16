@@ -17,18 +17,19 @@ public class ThresholdEvalDaemon {
 	private static final int NOTIFICATION_INTERVAL = 6000;
 	private GlimpseMessageHandler messageHandler;
 	private ThresholdManager thresholdManager;
-	
+
 	public ThresholdEvalDaemon(Properties settings, String host, int port)
 			throws GangliaException {
 		this(settings, host, port, (new GlimpseMessageHandler(settings)),
-				(new GmondDataReader(host, port)));
+				(new ThresholdManager(new HostManager(new GmondDataReader(host,
+						port)))));
 	}
 
 	public ThresholdEvalDaemon(Properties settings, String host, int port,
-			GlimpseMessageHandler msgHandler, GmondDataReader dataReader)
+			GlimpseMessageHandler msgHandler, ThresholdManager tshdManager)
 			throws GangliaException {
 		messageHandler = msgHandler;
-		thresholdManager = new ThresholdManager(new HostManager(dataReader));
+		thresholdManager = tshdManager;
 	}
 
 	public void addThreshold(Threshold threshold) {
@@ -76,7 +77,7 @@ public class ThresholdEvalDaemon {
 				.getSurpassedThresholds();
 		return evaluateAllThresholds;
 	}
-	
+
 	private void sendMessage(GlimpseBaseEvent<String> message) {
 		try {
 			messageHandler.sendMessage(message);
@@ -95,9 +96,9 @@ public class ThresholdEvalDaemon {
 
 	private void sendAllSurpassedThresholdMessages(
 			GlimpseBaseEvent<String> message) throws GangliaException {
-		
+
 		Map<String, List<Threshold>> surpassedThresholds = getSurpassedThresholds();
-		
+
 		for (String host : surpassedThresholds.keySet()) {
 			for (Threshold threshold : surpassedThresholds.get(host)) {
 				message.setData(host + ": " + threshold.toString());
