@@ -12,9 +12,4 @@
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 
-	<modules>
-		<module>SignalUtils-c</module>
-		<module>SignalUtils-java</module>
-	</modules>
-
 </project>
