@@ -4,11 +4,10 @@
 	<groupId>eu.choreos</groupId>
 	<artifactId>SignalUtils</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>pom</packaging>
 
 	<parent>
 		<groupId>eu.choreos</groupId>
-		<artifactId>ChoreosMonitoringService</artifactId>
+		<artifactId>Utils</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 	
