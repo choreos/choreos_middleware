@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.apache.log4j.Logger;
+
 import com.jcraft.jsch.JSchException;
 
 import eu.choreos.nodepoolmanager.chef.ChefScripts;
@@ -13,6 +15,8 @@ import eu.choreos.nodepoolmanager.utils.SshUtil;
 
 public class ConfigurationManager {
 
+	private Logger logger = Logger.getLogger(ConfigurationManager.class);
+	
     private static String INITIAL_RECIPE = "getting-started";
     private static String CHEF_REPO = Configuration.get("CHEF_REPO");
 
@@ -20,7 +24,8 @@ public class ConfigurationManager {
     private static ConcurrentMap<Node, Boolean> needUpdate = new ConcurrentHashMap<Node, Boolean>();
 
     public void updateNodeConfiguration(final Node node) throws Exception {
-        needUpdate.put(node, true);
+        
+    	needUpdate.put(node, true);
 
         if (updating.containsKey(node) && updating.get(node)) {
             return;
@@ -38,36 +43,36 @@ public class ConfigurationManager {
 
     public void initializeNode(Node node) throws JSchException {
 
-        System.out.println("Waiting for SSH...");
+        logger.debug("Waiting for SSH...");
         SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
 
         while (!ssh.isAccessible()) {
-            System.out.println("Could not connect to " + node.getUser() + "@" + node.getIp()
+            logger.debug("Could not connect to " + node.getUser() + "@" + node.getIp()
                     + " with key " + node.getPrivateKeyFile() + " yet");
-            System.out.println("Trying again in 5 seconds");
+            logger.debug("Trying again in 5 seconds");
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
             }
         }
 
-        System.out.println("Connected");
+        logger.debug("Connected");
 
         String command;
         try {
             // bootstrap node
-            System.out.println("Bootstraping " + node.getHostname());
+        	logger.info("Bootstraping " + node.getHostname());
             command = ChefScripts.getChefBootstrapScript(node.getPrivateKeyFile(), node.getIp(),
                     node.getUser());
-            System.out.println(command);
+            logger.debug(command);
             CommandLine.runLocalCommand(command, CHEF_REPO);
-            System.out.println("Bootstrap completed");
+            logger.debug("Bootstrap completed");
 
             this.retrieveChefName(node);
             this.installInitialRecipe(node);
 
         } catch (Exception e) {
-            e.printStackTrace();
+        	logger.error("Could not bootstrap node " + node, e);
         }
     }
 
@@ -90,7 +95,7 @@ public class ConfigurationManager {
         String createdFile = "chef-getting-started.txt";
         String returnText = null;
         returnText = ssh.runCommand("ls " + createdFile, true);
-        System.out.println(">>" + returnText.trim() + "<<");
+        logger.debug(">>" + returnText.trim() + "<<");
 
         return returnText.trim().equals(createdFile);
     }
@@ -111,15 +116,15 @@ public class ConfigurationManager {
     public void installRecipe(Node node, String cookbook, String recipe) throws Exception {
 
         if (!isInitialized(node)) {
-            System.out.println("Node not initialized yet. Going to initialize it.");
+        	logger.debug("Node not initialized yet. Going to initialize it.");
             this.initializeNode(node);
         }
 
         if (node.getChefName() == null)
             this.retrieveChefName(node);
-        System.out.println("node name = " + node.getChefName());
+        logger.debug("node name = " + node.getChefName());
         String command = ChefScripts.getChefAddCookbook(node.getChefName(), cookbook, recipe);
-        System.out.println("Install recipe command = [" + command + "]");
+        logger.debug("Install recipe command = [" + command + "]");
 
         // Chef fails silently when adding multiple recipes concurrently
         synchronized(ConfigurationManager.class) {
@@ -134,7 +139,7 @@ public class ConfigurationManager {
 
         String command = ChefScripts.getChefAddCookbook(node.getChefName(), INITIAL_RECIPE,
                 "default");
-        System.out.println("Install recipe command = [" + command + "]");
+        logger.debug("Install recipe command = [" + command + "]");
         CommandLine.runLocalCommand(command);
 
         try {

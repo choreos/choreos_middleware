@@ -7,6 +7,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.apache.cxf.common.util.StringUtils;
+import org.apache.log4j.Logger;
 import org.jclouds.aws.ec2.compute.AWSEC2ComputeService;
 import org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions;
 import org.jclouds.aws.ec2.reference.AWSEC2Constants;
@@ -21,7 +22,6 @@ import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.ec2.domain.InstanceType;
 
-
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.inject.Module;
@@ -31,6 +31,8 @@ import eu.choreos.nodepoolmanager.NodeNotFoundException;
 import eu.choreos.nodepoolmanager.datamodel.Node;
 
 public class AWSCloudProvider implements CloudProvider {
+	
+	private Logger logger = Logger.getLogger(AWSCloudProvider.class);
 
 	private static String DEFAULT_USER = "ubuntu";
 	private static String PROVIDER="aws-ec2";
@@ -57,7 +59,8 @@ public class AWSCloudProvider implements CloudProvider {
 	}
 
 	public Node createNode(Node node) throws RunNodesException {
-		System.out.println("Creating node...");
+		
+		logger.debug("Creating node...");
 
 		String imageId = node.getImage();
 		if (StringUtils.isEmpty(imageId)) {
@@ -73,7 +76,7 @@ public class AWSCloudProvider implements CloudProvider {
 		setNodeProperties(node, cloudNode);
 		client.getContext().close();
 
-		System.out.println("Node created");
+		logger.debug("Node created");
 		return node;
 	}
 

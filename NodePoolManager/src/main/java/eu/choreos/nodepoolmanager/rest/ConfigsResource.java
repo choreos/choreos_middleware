@@ -9,9 +9,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Response.Status;
+
+import org.apache.log4j.Logger;
 
 import eu.choreos.nodepoolmanager.Controller;
 import eu.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
@@ -21,6 +23,7 @@ import eu.choreos.nodepoolmanager.datamodel.Node;
 @Path("nodes/configs")
 public class ConfigsResource {
 
+	private Logger logger = Logger.getLogger(ConfigsResource.class);
 	private Controller controller = new Controller(new AWSCloudProvider());
 	
 	/**
@@ -34,16 +37,18 @@ public class ConfigsResource {
     @Consumes(MediaType.APPLICATION_XML)
     public Response applyConfig(Config config, @Context UriInfo uriInfo) throws URISyntaxException {
         
+    	logger.debug("Request to apply " + config.getName());
+    	
 		if (config == null || config.getName() == null || config.getName().isEmpty())
 			return Response.status(Status.BAD_REQUEST).build();
 		
-		System.out.println("***applying config " + config.getName());
     	Node node = controller.applyConfig(config);
-		System.out.println("***applied config " + config.getName());
     	
     	if (node == null)  // config not applied!
     		return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-    	
+
+		logger.info(config.getName() + " applied on " + node.getIp());
+
 		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
 		uriBuilder = uriBuilder.path(NodesResource.class).path(node.getId());
 		URI uri = uriBuilder.build();

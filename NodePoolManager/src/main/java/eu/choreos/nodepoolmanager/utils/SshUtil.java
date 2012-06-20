@@ -1,6 +1,7 @@
 package eu.choreos.nodepoolmanager.utils;
 
 import org.apache.geronimo.mail.util.StringBufferOutputStream;
+import org.apache.log4j.Logger;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
@@ -10,6 +11,7 @@ import com.jcraft.jsch.Session;
 
 public class SshUtil {
 
+	private Logger logger = Logger.getLogger(SshUtil.class);
     private final String hostname, user, privateKeyFile;
     private Session session;
 
@@ -92,7 +94,7 @@ public class SshUtil {
             session.disconnect();
             output = sb.toString();
         } catch (JSchException e) {
-            System.out.println("Could not connect to " + user + "@" + hostname + " with key "
+        	logger.debug("Could not connect to " + user + "@" + hostname + " with key "
                     + privateKeyFile);
             throw e;
         }

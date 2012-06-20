@@ -18,6 +18,8 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.log4j.Logger;
+
 import eu.choreos.nodepoolmanager.Controller;
 import eu.choreos.nodepoolmanager.NodeNotFoundException;
 import eu.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
@@ -29,12 +31,14 @@ import eu.choreos.nodepoolmanager.datamodel.NodeRestRepresentation;
 @Path("nodes")
 public class NodesResource {
 
-    
+	private Logger logger = Logger.getLogger(NodesResource.class);
     private Controller controller = new Controller(new AWSCloudProvider());
     
     @GET
     public List<NodeRestRepresentation> getNodes() {
 
+    	logger.debug("Request to get nodes");
+    	
     	List<NodeRestRepresentation> restNodeList = new ArrayList<NodeRestRepresentation>();
     	for (Node node: controller.getNodes()){
     		restNodeList.add(node.getRestRepresentation());
@@ -46,8 +50,12 @@ public class NodesResource {
     @Consumes(MediaType.APPLICATION_XML)
     public Response createNode(NodeRestRepresentation node, @Context UriInfo uriInfo) throws URISyntaxException {
 
+    	logger.debug("Request to create node");
+    	
     	Node newNode = new Node();
     	controller.createNode(newNode);
+    	
+    	logger.info(newNode + " created");
 		
     	UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
     	// TODO should be getId instead nodeIp
@@ -61,6 +69,8 @@ public class NodesResource {
     @Path("{node_id:.+}")
     public Response getNode(@PathParam("node_id") String id) {
         
+    	logger.debug("Request to get nodes");
+    	
     	Response response;
         CloudProvider infrastructure = new AWSCloudProvider();
 
@@ -78,9 +88,13 @@ public class NodesResource {
     @Path("{node_id:.+}")
     public Response deleteNode(@PathParam("node_id") String id) {
     	
+    	logger.debug("Request to delete node");
+    	
     	CloudProvider infrastructure = new AWSCloudProvider();
         infrastructure.destroyNode(id);
 
+        logger.info("Node " + id + " deleted");
+        
         return Response.status(Status.OK).build();
     }
     
@@ -92,8 +106,10 @@ public class NodesResource {
     @POST
     @Path("upgrade")
     public Response upgradeNodes() {
-        Response response;
 
+    	logger.debug("Request to upgrade");
+    	
+    	Response response;
         try {
             controller.upgradeNodes();
             response = Response.status(Status.OK).build();
@@ -101,6 +117,8 @@ public class NodesResource {
             response = Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
 
+        logger.info("Nodes upgraded");
+        
         return response;
     }
    

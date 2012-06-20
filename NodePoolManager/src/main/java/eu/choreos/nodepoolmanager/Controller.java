@@ -3,6 +3,7 @@ package eu.choreos.nodepoolmanager;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.jclouds.compute.RunNodesException;
 
 import eu.choreos.nodepoolmanager.chef.ConfigToChef;
@@ -14,6 +15,7 @@ import eu.choreos.nodepoolmanager.selector.NodeSelectorFactory;
 
 public class Controller {
 
+	private Logger logger = Logger.getLogger(Controller.class);;
     private final CloudProvider infrastructure;
     private ConfigurationManager configurationManager = new ConfigurationManager();
 
@@ -50,9 +52,9 @@ public class Controller {
                                                               // a Static Class
             configurationManager.initializeNode(node);
         } catch (RunNodesException e) {
-            e.printStackTrace();
-        } catch (Exception e2) {
-            e2.printStackTrace();
+            logger.error("Could not create node " + node, e);
+        } catch (Exception e) {
+            logger.error("Could not create node " + node, e);
         }
 
         return node.getId();
@@ -79,7 +81,6 @@ public class Controller {
 
         String cookbook = ConfigToChef.getCookbookNameFromConfigName(config.getName());
         String recipe = ConfigToChef.getRecipeNameFromConfigName(config.getName());
-        System.out.println("Controller: Installing Recipe ...");
 
         try {
             this.configurationManager.installRecipe(node, cookbook, recipe);
@@ -103,7 +104,7 @@ public class Controller {
             try {
                 configurationManager.updateNodeConfiguration(node);
             } catch (Exception e) {
-                System.out.println("Error on Controller while upgrading node " + node);
+                logger.error("Error on Controller while upgrading node " + node, e);
             }
         }
     }
