@@ -33,7 +33,10 @@ Java_SignalSender_sendSignalByProcessName(
 	jint signal) 
 {
 
-	return Java_SignalSender_sendSignalByPID(env, jobj, pid_from_process_name((char*) pname), signal);
+	const char *nativeString = (*env)->GetStringUTFChars(env, pname, 0);
+   	int pid = pid_from_process_name(nativeString);
+   	(*env)->ReleaseStringUTFChars(env, pname, nativeString);
+	return Java_SignalSender_sendSignalByPID(env, jobj, pid, signal);
 
 }
 
