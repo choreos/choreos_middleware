@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.log4j.Logger;
 
 import eu.choreos.nodepoolmanager.datamodel.NodeRestRepresentation;
 import eu.choreos.servicedeployer.chef.CookbookManager;
@@ -17,6 +18,8 @@ import eu.choreos.servicedeployer.registry.DeployedServicesRegistry;
 
 public class ServiceDeployer {
 
+	private Logger logger = Logger.getLogger(ServiceDeployer.class);
+	
 	private DeployedServicesRegistry registry = new DeployedServicesRegistry();
 	private NodePoolManager npm;
 	
@@ -56,9 +59,14 @@ public class ServiceDeployer {
 		
 		String config = serviceRecipe.getCookbookName() + "::" + serviceRecipe.getName();
 		String nodeLocation = npm.applyConfig(config);
+		logger.debug("nodeLocation= " + nodeLocation);
 		WebClient client = WebClient.create(nodeLocation);
-		NodeRestRepresentation node = client.get(NodeRestRepresentation.class);
-		String hostname = node.getIp();
+		
+		String hostname = "";
+		synchronized (ServiceDeployer.class) {
+			NodeRestRepresentation node = client.get(NodeRestRepresentation.class);
+			hostname = node.getIp();
+		}
 		return hostname;
 	}
 

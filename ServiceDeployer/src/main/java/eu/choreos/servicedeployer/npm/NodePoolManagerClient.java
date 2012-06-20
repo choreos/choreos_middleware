@@ -7,6 +7,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+import org.apache.log4j.Logger;
 
 import eu.choreos.nodepoolmanager.datamodel.Config;
 import eu.choreos.nodepoolmanager.datamodel.NodeRestRepresentation;
@@ -15,6 +16,7 @@ import eu.choreos.servicedeployer.Configuration;
 
 public class NodePoolManagerClient implements NodePoolManager {
 
+	private Logger logger = Logger.getLogger(NodePoolManagerClient.class);
 	private String HOST; 
 	
 	public NodePoolManagerClient() {
@@ -38,7 +40,7 @@ public class NodePoolManagerClient implements NodePoolManager {
 	
 	@Override
 	public String applyConfig(String configName) {
-	    System.out.println("NodePoolManagerClient.applyConfig("+ configName + ")");
+	    logger.info("NodePoolManagerClient.applyConfig("+ configName + ")");
 
 		WebClient client = setupClient();
 		client.path("nodes/configs");   	

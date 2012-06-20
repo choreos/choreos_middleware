@@ -1,8 +1,10 @@
 package eu.choreos.servicedeployer.rest;
 
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
+import org.apache.log4j.Logger;
 
 import eu.choreos.servicedeployer.Configuration;
+import eu.choreos.servicedeployer.utils.LogConfigurator;
 
 
 /**
@@ -13,6 +15,8 @@ import eu.choreos.servicedeployer.Configuration;
  */
 public class ServiceDeployerStandaloneServer implements Runnable {
 
+	private static Logger logger;
+	
 	public static String URL;
 	private static boolean running = false;
 
@@ -38,7 +42,7 @@ public class ServiceDeployerStandaloneServer implements Runnable {
 		sf.setResourceClasses(ServicesResource.class);
 		sf.setAddress(URL);
 		sf.create();
-		System.out.println("Starting Service Deployer...");
+		logger.info("Service Deployer has started");
 		running = true;
 
 		while (running) {
@@ -48,11 +52,15 @@ public class ServiceDeployerStandaloneServer implements Runnable {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Stoping CHOReOS Service Deployer...");
+		logger.info("Service Deployer has stopped");
 
 	}
 
 	public static void main(String[] args) throws InterruptedException {
+		
+    	LogConfigurator.configLog();
+        logger = Logger.getLogger(ServiceDeployerStandaloneServer.class);
+        
 		ServiceDeployerStandaloneServer.start();
 	}
 }

@@ -4,11 +4,14 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 import eu.choreos.servicedeployer.datamodel.Service;
 import eu.choreos.servicedeployer.datamodel.ServiceType;
 
 public class RecipeBuilderImpl implements RecipeBuilder {
+	
+	private Logger logger = Logger.getLogger(RecipeBuilderImpl.class);
 	
 	private static final String TEMPLATE_DIR = "src/main/resources/chef/service-deploy-recipe-template";
 	private static final File DEST_DIR = new File("src/main/resources/chef");
@@ -36,7 +39,7 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 
 			return recipe;
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Could not create recipe", e);
 		}
 
 		return null;

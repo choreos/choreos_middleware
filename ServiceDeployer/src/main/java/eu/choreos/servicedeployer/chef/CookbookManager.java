@@ -16,11 +16,7 @@ public class CookbookManager {
 		String command = ChefScripts.getUploadCookbook(recipe.getCookbookName(), ".");
 		File folder = new File(recipe.getCookbookFolder());
 		String parentFolder = folder.getParentFile().getAbsolutePath();
-		String result = CommandLine.runLocalCommand(command, parentFolder);
-		if (verbose) {
-			System.out.println(command);
-			System.out.println(result);
-		}
+		String result = CommandLine.runLocalCommand(command, parentFolder, verbose);
 		return result;
 	}
 	

@@ -19,6 +19,8 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.JAXBElement;
 
+import org.apache.log4j.Logger;
+
 import eu.choreos.servicedeployer.ServiceDeployer;
 import eu.choreos.servicedeployer.datamodel.Service;
 import eu.choreos.servicedeployer.datamodel.ServiceSpec;
@@ -34,6 +36,8 @@ import eu.choreos.servicedeployer.npm.NodePoolManagerClient;
  */
 @Path("services")
 public class ServicesResource {
+	
+	private Logger logger = Logger.getLogger(ServicesResource.class);
 
 	private NodePoolManager npm = new NodePoolManagerClient();
 	private ServiceDeployer serviceDeployer = new ServiceDeployer(npm);
@@ -56,10 +60,14 @@ public class ServicesResource {
 		ServiceSpec serviceSpec = serviceSpecXML.getValue();
 		if (serviceSpec.getCodeUri() == null || serviceSpec.getType() == null)
 			return Response.status(Status.BAD_REQUEST).build();
+		
+		logger.debug("Request to deploy " + serviceSpec.getCodeUri());
 
 		try {
 			Service service = new Service(serviceSpec);
 			serviceDeployer.deploy(service);
+			
+			logger.info(service.getName() + " deployed on " + service.getHost());
 			
 			UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
 			uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getId());
@@ -82,6 +90,8 @@ public class ServicesResource {
 	@Path("{serviceID}")
 	@Produces(MediaType.APPLICATION_XML)
 	public Service getService(@PathParam("serviceID") String serviceID) {
+		
+		logger.debug("Request to get service " + serviceID);
 
 		// TODO trocar bloco abaixo para o que precisamos fazer
 		Service service = serviceDeployer.getService(serviceID);
@@ -102,7 +112,12 @@ public class ServicesResource {
 		if (service.getId() == null || service.getUri() == null)
 			return Response.status(Status.BAD_REQUEST).build();
 
+		logger.debug("Request to update service " + service.getName());
+		
 		Service updatedService = serviceDeployer.updateService(service);
+		
+		logger.info("Service " + service.getName() + " updated");
+		
 		return Response.ok(updatedService).build();
 	}
 
@@ -118,12 +133,14 @@ public class ServicesResource {
 		if (serviceID.length() == 0)
 			return Response.status(Status.BAD_REQUEST).build();
 
+		logger.debug("Request to delete service " + serviceID);
+		
 		if (serviceDeployer.getService(serviceID) == null)
 			return Response.status(Status.NOT_FOUND).build();
 
 		serviceDeployer.deleteService(serviceID);
 
-		System.out.println("deleting service " + serviceID);
+		logger.info("Service " + serviceID + " deleted");
 
 		return Response.ok().build();
 	}
