@@ -100,6 +100,18 @@
 			<email>colucci@ime.usp.br</email>
 			<organization>IME-USP</organization>
 		</developer>
+		<developer>
+			<id>leonardo.leite</id>
+			<name>Leonardo Leite</name>
+			<email>leofl@ime.usp.br</email>
+			<organization>IME-USP</organization>
+		</developer>
+		<developer>
+			<id>cems</id>
+			<name>Cadu</name>
+			<email>cadu@ime.usp.br</email>
+			<organization>IME-USP</organization>
+		</developer>
 	</developers>
 
 	<dependencies>
@@ -113,12 +125,13 @@
 		</dependency>
 
 
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.8.5</version>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+         <groupId>log4j</groupId>
+         <artifactId>log4j</artifactId>
+         <version>1.2.17</version>
+         <type>jar</type>
+        </dependency>
+
 	</dependencies>
 
 	<build>

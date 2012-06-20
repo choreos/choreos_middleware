@@ -1,6 +1,12 @@
 package eu.choreos.nodepoolmanager.rest;
 
+import java.io.IOException;
+import java.util.Properties;
+
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 import eu.choreos.nodepoolmanager.Configuration;
 
@@ -8,6 +14,9 @@ import eu.choreos.nodepoolmanager.Configuration;
 
 public class NodePoolManagerStandaloneServer implements Runnable {
 
+	private static final String LOG_CONFIG_FILE = "log.properties";
+	private static Logger logger;
+	
 	public static String URL;
     private static boolean running = false;
     
@@ -16,6 +25,19 @@ public class NodePoolManagerStandaloneServer implements Runnable {
     	URL = "http://localhost:" + port + "/nodepoolmanager/";
     }
 
+    private static void configureLog() {
+    	
+    	Properties logProperties = new Properties();
+    	try {
+			logProperties.load(ClassLoader.getSystemResourceAsStream(LOG_CONFIG_FILE));
+			PropertyConfigurator.configure(logProperties); 
+		} catch (IOException e) {
+			System.out.println("Could not load log.properties. Let's use basic log.");
+			BasicConfigurator.configure();
+		} 
+    }
+
+    
     public static void startNodePoolManager() throws InterruptedException {
         Runnable npmServer = new NodePoolManagerStandaloneServer();
 		
@@ -32,11 +54,12 @@ public class NodePoolManagerStandaloneServer implements Runnable {
     }
 
     public void run() {
+    	
         JAXRSServerFactoryBean sf = new JAXRSServerFactoryBean();
         sf.setResourceClasses(ConfigsResource.class, NodesResource.class);
         sf.setAddress(URL);
         sf.create();
-        System.out.println("Node Pool Manager is started...");
+        logger.info("Node Pool Manager has started");
         running = true;
 
         while (running) {
@@ -46,11 +69,14 @@ public class NodePoolManagerStandaloneServer implements Runnable {
                 e.printStackTrace();
             }
         }
-        System.out.println("Stoping CHOReOS Middleware...");
-
+        logger.info("Node Pool Manager has stopped");
     }
 
     public static void main(String[] args) throws InterruptedException {
+    	
+    	configureLog();
+        logger = Logger.getLogger(NodePoolManagerStandaloneServer.class);
+        
         NodePoolManagerStandaloneServer.startNodePoolManager();
     }
 }
