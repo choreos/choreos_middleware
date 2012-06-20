@@ -5,3 +5,10 @@ GmondConf/target/*
 **/target
 *~
 *.class
+GmondConf/.settings/
+Utils/CommandLineUtils/.classpath
+Utils/CommandLineUtils/.project
+Utils/CommandLineUtils/.settings/
+Utils/SignalUtils/.gitignore
+Utils/SignalUtils/Cfiles/libMiddlewareSignalSender.so
+*/*.so
