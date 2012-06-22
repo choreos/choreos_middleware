@@ -10,7 +10,7 @@ import org.apache.commons.io.FileUtils;
  * Provide access to Chef functionalities using scripts with knife commands
  *
  */
-public class ChefScripts {
+class ChefScripts {
 	
 	private static final String CHEF_NAME_SCRIPT = "chef/my_chef_name.sh";
 	private static final String KNIFE_BOOTSTRAP = "knife bootstrap $ip -x $user -i $privateKeyFile --sudo -c $knifeFile";
@@ -27,7 +27,7 @@ public class ChefScripts {
 	
 	/**
 	 * 
-	 * @param chefConfigFile The knife.rb fle
+	 * @param chefConfigFile The knife.rb file
 	 */
 	public ChefScripts(String chefConfigFile) {
 		
