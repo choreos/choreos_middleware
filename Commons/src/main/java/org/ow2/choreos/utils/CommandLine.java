@@ -11,19 +11,19 @@ public class CommandLine {
 	
 	private static Logger logger = Logger.getLogger(CommandLine.class);
 
-	public static String runLocalCommand(String command) {
-		return runLocalCommand(command, false);
+	public static String run(String command) {
+		return run(command, false);
 	}
 	
-	public static String runLocalCommand(String command, boolean verbose) {
-		return runLocalCommand(command, ".", verbose);
+	public static String run(String command, boolean verbose) {
+		return run(command, ".", verbose);
 	}
 	
-	public static String runLocalCommand(String command, String workingDirectory) {
-		return runLocalCommand(command, workingDirectory, false);
+	public static String run(String command, String workingDirectory) {
+		return run(command, workingDirectory, false);
 	}
 	
-	public static String runLocalCommand(String command, String workingDirectory, boolean verbose) {
+	public static String run(String command, String workingDirectory, boolean verbose) {
 		String commandReturn = "";
 		File wd = new File(workingDirectory);
 
