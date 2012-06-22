@@ -38,12 +38,8 @@ public class ThresholdManagerTest {
 		metricsMap2 = new HashMap<String, Metric>();
 		metricsMap1.put("load_one", new Metric("load_one", "1.0"));
 		metricsMap1.put("mem_total", new Metric("mem_total", "9876543"));
-		metricsMap1.put("proc_run", new Metric("proc_run", "1"));
 		metricsMap2.put("load_one", new Metric("load_one", "2.0"));
-		metricsMap2.put("load_five", new Metric("load_five", "0.04"));
 		metricsMap2.put("mem_total", new Metric("mem_total", "4000"));
-		metricsMap2.put("disk_free", new Metric("disk_free", "224.231"));
-		metricsMap2.put("mem_cached", new Metric("mem_cached", "412908"));
 
 		hostManager = mock(HostManager.class);
 		host1 = new Host("test1", "hostname1", "ip1", metricsMap1);

@@ -24,9 +24,6 @@ public class ThresholdEvalDaemonLauncher {
 		thresholdListFileName = "";
 
 		switch (args.length) {
-		case 1:
-			thresholdListFileName = args[0];
-			break;
 
 		case 4:
 			javaNamingProviderUrl = args[3];
@@ -36,6 +33,9 @@ public class ThresholdEvalDaemonLauncher {
 		
 		case 2:
 			host = args[1];
+
+		case 1:
+			thresholdListFileName = args[0];
 			break;
 
 		default:

@@ -45,7 +45,6 @@ public class ThresholdEvalDaemon {
 
 		while (true) {
 			try {
-				thresholdManager.updateThresholdsInfo();
 				evaluateThresholdsSendMessagesAndSleep(message,
 						NOTIFICATION_INTERVAL);
 			} catch (GangliaException e) {
