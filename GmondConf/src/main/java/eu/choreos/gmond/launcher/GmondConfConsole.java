@@ -1,7 +1,9 @@
-package eu.choreos.gmond;
+package eu.choreos.gmond.launcher;
+
+import eu.choreos.gmond.GmondConf;
 
 
-public class GmondConfLauncher {
+public class GmondConfConsole {
 	private static GmondConf gmondConf = null;
 	
 	public static void main(String... args) throws Exception {
@@ -14,7 +16,7 @@ public class GmondConfLauncher {
 		if (gmondConf == null)
 		gmondConf = new GmondConf();
 
-		gmondConf.load(fileName);
+		gmondConf.setConfigFile(fileName);
 
 		for (int i = 0; i < args.length; i++) {
 
@@ -47,8 +49,6 @@ public class GmondConfLauncher {
 		}
 
 		gmondConf.save();
-		
-		gmondConf.reloadConfigurations();
 		
 	}
 
@@ -99,6 +99,6 @@ public class GmondConfLauncher {
 	}
 
 	public static void setGmondConf(GmondConf gmondConf) {
-		GmondConfLauncher.gmondConf = gmondConf;
+		GmondConfConsole.gmondConf = gmondConf;
 	}
 }

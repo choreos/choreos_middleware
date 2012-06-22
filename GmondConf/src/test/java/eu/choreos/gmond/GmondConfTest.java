@@ -16,6 +16,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import eu.choreos.gmond.launcher.GmondConfConsole;
 import eu.choreos.gmond.reloader.GmondReloader;
 
 //Warning suppressed to ensure usage of mock reloader
@@ -27,7 +28,7 @@ public class GmondConfTest {
 	private File testFile;
 	private File testMultipleFile;
 	private File exampleMultipleFile;
-	private GmondConfLauncher gmondConfLauncher;
+	private GmondConfConsole gmondConfLauncher;
 
 	@Before
 	public void setUp() throws IOException {
@@ -55,27 +56,7 @@ public class GmondConfTest {
 
 	@Test(expected = Exception.class)
 	public void shouldPrintUsage() throws Exception {
-		GmondConfLauncher.main("anything");
-	}
-
-	@Test
-	public void shouldNotFindNonExistingUdpSendChannel() {
-		gmondConf.load(testMultipleFile.getAbsolutePath());
-
-		List<Integer> indexes = gmondConf
-				.getUdpSendChannelLineIndexes("anything");
-
-		assertEquals(null, indexes);
-	}
-
-	@Test
-	public void shouldNotSearchOutsideOfFileBoundaries() throws IOException {
-		List<String> fileContents = FileUtils.readLines(testFile);
-		int nonExistingLine = fileContents.size() + 15;
-
-		gmondConf.setSearchIndex(nonExistingLine);
-		assertEquals(null, gmondConf.findNextUdpSendChannel(fileContents));
-
+		GmondConfConsole.main("anything");
 	}
 
 	@Test
@@ -83,7 +64,7 @@ public class GmondConfTest {
 		String fileContents = FileUtils.readFileToString(testFile);
 		assertFalse(fileContents.contains("host = 127.0.0.1"));
 
-		gmondConf.load(testFile.getAbsolutePath());
+		gmondConf.setConfigFile(testFile.getAbsolutePath());
 		gmondConf.addUdpSendChannel("127.0.0.1", "8649");
 		gmondConf.save();
 
@@ -98,7 +79,7 @@ public class GmondConfTest {
 		String fileContents = FileUtils.readFileToString(testFile);
 		assertTrue(fileContents.contains("host = eclipse.ime.usp.br"));
 
-		gmondConf.load(testFile.getAbsolutePath());
+		gmondConf.setConfigFile(testFile.getAbsolutePath());
 		gmondConf.removeUdpSendChannel("eclipse.ime.usp.br");
 		gmondConf.save();
 
@@ -116,7 +97,7 @@ public class GmondConfTest {
 		assertTrue(fileContents.contains("host = eclipse.ime.usp.br"));
 		assertFalse(fileContents.contains("host = localhost"));
 
-		gmondConf.load(testFile.getAbsolutePath());
+		gmondConf.setConfigFile(testFile.getAbsolutePath());
 		gmondConf.updateUdpSendChannelHost("eclipse.ime.usp.br", "localhost");
 		gmondConf.save();
 
@@ -138,7 +119,7 @@ public class GmondConfTest {
 
 		int location = fileContents.indexOf("port = 8649");
 
-		gmondConf.load(testFile.getAbsolutePath());
+		gmondConf.setConfigFile(testFile.getAbsolutePath());
 		gmondConf.updateUdpSendChannelPort("eclipse.ime.usp.br", "1234");
 		gmondConf.save();
 
@@ -158,7 +139,7 @@ public class GmondConfTest {
 
 		int location = fileContents.indexOf("port = 8649");
 
-		gmondConf.load(testFile.getAbsolutePath());
+		gmondConf.setConfigFile(testFile.getAbsolutePath());
 		gmondConf.updateUdpSendChannel("eclipse.ime.usp.br", "localhost",
 				"1234");
 		gmondConf.save();
@@ -178,60 +159,6 @@ public class GmondConfTest {
 	}
 
 	@Test
-	public void shouldGetCorrectUdpSendChannel() {
-		gmondConf.load(testMultipleFile.getAbsolutePath());
-
-		List<Integer> indexes = gmondConf
-				.getUdpSendChannelLineIndexes("127.0.0.1");
-
-		List<Integer> expected = new ArrayList<Integer>();
-		for (int i = 38; i <= 41; i++) {
-			expected.add(i);
-		}
-
-		assertEquals(expected, indexes);
-	}
-
-	@Test
-	public void shouldFindOneUdpSendChannel() throws IOException {
-
-		List<String> fileContents = FileUtils.readLines(testFile);
-		List<Integer> lineIndexes = gmondConf
-				.findNextUdpSendChannel(fileContents);
-
-		List<Integer> expectedLines = new ArrayList<Integer>();
-
-		for (int i = 33; i <= 36; i++)
-			expectedLines.add(i);
-
-		assertEquals(expectedLines, lineIndexes);
-	}
-
-	@Test
-	public void shouldFindTwoUdpSendChannel() throws IOException {
-
-		List<String> fileContents = FileUtils.readLines(testMultipleFile);
-		List<Integer> lineIndexes = gmondConf
-				.findNextUdpSendChannel(fileContents);
-
-		List<Integer> expectedLines = new ArrayList<Integer>();
-
-		for (int i = 33; i <= 36; i++)
-			expectedLines.add(i);
-
-		assertEquals(expectedLines, lineIndexes);
-
-		lineIndexes.clear();
-		expectedLines.clear();
-		lineIndexes = gmondConf.findNextUdpSendChannel(fileContents);
-
-		for (int i = 38; i <= 41; i++)
-			expectedLines.add(i);
-
-		assertEquals(expectedLines, lineIndexes);
-	}
-
-	@Test
 	public void shouldChangeSecondChannelHost() throws IOException {
 		List<String> fileContents = FileUtils.readLines(testMultipleFile);
 		assertTrue(fileContents.contains("  host = eclipse.ime.usp.br"));
@@ -240,7 +167,7 @@ public class GmondConfTest {
 
 		int location = fileContents.indexOf("host = eclipse.ime.usp.br");
 
-		gmondConf.load(testMultipleFile.getAbsolutePath());
+		gmondConf.setConfigFile(testMultipleFile.getAbsolutePath());
 		gmondConf.updateUdpSendChannelHost("eclipse.ime.usp.br", "localhost");
 		gmondConf.save();
 
