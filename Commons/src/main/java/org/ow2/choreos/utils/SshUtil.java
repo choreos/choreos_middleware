@@ -12,32 +12,34 @@ import com.jcraft.jsch.Session;
 public class SshUtil {
 
 	private Logger logger = Logger.getLogger(SshUtil.class);
-    private final String hostname, user, privateKeyFile;
+    
+	private final String hostname, user, privateKeyFile;
     private Session session;
 
-    public SshUtil(String hostname, String user, String privateKeyFile) throws JSchException {
+    public SshUtil(String hostname, String user, String privateKeyFile) {
+    	
         this.hostname = hostname;
         this.user = user;
         this.privateKeyFile = privateKeyFile;
     }
 
     private Session getSession() throws JSchException {
+    	
         if (this.session != null && this.session.isConnected()) {
             return this.session;
         }
 
         JSch jsch = new JSch();
         jsch.addIdentity(privateKeyFile);
+        this.session = jsch.getSession(user, hostname);
+        this.session.setConfig("StrictHostKeyChecking", "no");
 
-        Session session = jsch.getSession(user, hostname);
-        session.setConfig("StrictHostKeyChecking", "no");
-
-        return session;
+        return this.session;
     }
 
     public boolean isAccessible() {
-        Session session = null;
-
+        
+    	Session session = null;
         try {
             // Once upon a time, an old session caused a lot of trouble...
             session = getSession();
@@ -51,20 +53,20 @@ public class SshUtil {
         return true;
     }
 
-    public String runCommand(String command) throws Exception {
+    public String runCommand(String command) throws JSchException {
         return runCommand(command, false);
     }
 
-    public String runCommand(String command, boolean retry) throws Exception {
-        String output = null;
+    public String runCommand(String command, boolean retry) throws JSchException {
+        
+    	String output = null;
 
         try {
             output = runCommandOnce(command);
-        } catch (Exception e) {
+        } catch (JSchException e) {
             if (retry) {
                 return runCommand(command, retry);
             } else {
-                // Backward compatibility
                 throw e;
             }
         }
@@ -72,8 +74,9 @@ public class SshUtil {
         return output;
     }
 
-    public String runCommandOnce(String command) throws JSchException, InterruptedException {
-        String output = null;
+    public String runCommandOnce(String command) throws JSchException {
+        
+    	String output = null;
         Session session = getSession();
 
         try {
@@ -87,12 +90,17 @@ public class SshUtil {
             channel.connect();
 
             while (!channel.isClosed()) {
-                Thread.sleep(10);
+                try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					logger.error("Sleep exception \"u.u", e);
+				}
             }
 
             channel.disconnect();
             session.disconnect();
             output = sb.toString();
+            
         } catch (JSchException e) {
         	logger.debug("Could not connect to " + user + "@" + hostname + " with key "
                     + privateKeyFile);
