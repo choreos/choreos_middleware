@@ -14,7 +14,6 @@
   </parent>
 
   <modules>
-    <module>SignalUtils</module>
     <module>CommandLineUtils</module>
   </modules>
 
