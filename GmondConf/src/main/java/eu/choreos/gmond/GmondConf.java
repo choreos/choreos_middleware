@@ -25,8 +25,8 @@ public class GmondConf implements IGmondConf {
 	}
 	
 	public GmondConf() {
-		searchIndex = 0;
 		this("/etc/ganglia/gmond.conf");
+		searchIndex = 0;
 	}
 
 	/* (non-Javadoc)
