@@ -21,10 +21,11 @@ public class GmondConf implements IGmondConf {
 	
 	
 	public GmondConf(String configFile) {
-		setConfigFile(configFile);
+		gmondFile = configFile;
 	}
 	
 	public GmondConf() {
+		searchIndex = 0;
 		this("/etc/ganglia/gmond.conf");
 	}
 
