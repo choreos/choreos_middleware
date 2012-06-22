@@ -43,7 +43,6 @@ public class ThresholdManager {
 	}
 	
 	public Map<String, List<Threshold>> getSurpassedThresholds() throws GangliaException {
-		updateThresholdsInfo();
 		return surpassedThresholds;
 	}
 	
