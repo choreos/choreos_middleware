@@ -51,15 +51,16 @@ public class GmondConf implements IGmondConf {
 		reloader = newReloader;
 	}
 
-	private void load() {
+	private String load() {
 		try {
 			fileLines = FileUtils.readLines((new File(gmondFile)));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not find desired file: "
 					+ gmondFile);
 			e.printStackTrace();
-			System.exit(1);
+			return e.getMessage();
 		}
+		return "OK";
 	}
 
 	/* (non-Javadoc)
@@ -69,18 +70,17 @@ public class GmondConf implements IGmondConf {
 	public String save() {
 		try {
 			FileUtils.writeLines((new File(gmondFile)), fileLines);
-			reloadConfigurations();
+			return reloadConfigurations();
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not write to file " + gmondFile);
 			e.printStackTrace();
 			return e.getMessage();
 		}
-		return "OK";
 	}
 	
 	@Override
-	public void rollBack() {
-		load();
+	public String rollBack() {
+		return load();
 	}
 
 	/* (non-Javadoc)
@@ -99,15 +99,20 @@ public class GmondConf implements IGmondConf {
 	 * @see eu.choreos.gmond.IGmondConfWeb#updateUdpSendChannel(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void updateUdpSendChannel(String currentHost, String newHost,
+	public String updateUdpSendChannel(String currentHost, String newHost,
 			String newPort) {
 
 		List<Integer> udpSendChannelLines = getUdpSendChannelLineIndexes(currentHost);
-		for (Integer index : udpSendChannelLines) {
-			String line = fileLines.get(index);
-			line = setAttributeIfApplicable("host", newHost, line);
-			line = setAttributeIfApplicable("port", newPort, line);
-			fileLines.set(index, line);
+		if (udpSendChannelLines != null) {
+			for (Integer index : udpSendChannelLines) {
+				String line = fileLines.get(index);
+				line = setAttributeIfApplicable("host", newHost, line);
+				line = setAttributeIfApplicable("port", newPort, line);
+				fileLines.set(index, line);
+			}
+			return "OK";
+		} else {
+			return currentHost + " not found";
 		}
 	}
 
@@ -115,17 +120,17 @@ public class GmondConf implements IGmondConf {
 	 * @see eu.choreos.gmond.IGmondConfWeb#updateUdpSendChannelHost(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void updateUdpSendChannelHost(String currentHost, String newHost) {
+	public String updateUdpSendChannelHost(String currentHost, String newHost) {
 		String currentPort = getUdpSendChannelPort(currentHost);
-		updateUdpSendChannel(currentHost, newHost, currentPort);
+		return updateUdpSendChannel(currentHost, newHost, currentPort);
 	}
 
 	/* (non-Javadoc)
 	 * @see eu.choreos.gmond.IGmondConfWeb#updateUdpSendChannelPort(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void updateUdpSendChannelPort(String host, String port) {
-		updateUdpSendChannel(host, host, port);
+	public String updateUdpSendChannelPort(String host, String port) {
+		return updateUdpSendChannel(host, host, port);
 	}
 
 	private String setAttributeIfApplicable(String attr, String newValue,
@@ -141,11 +146,16 @@ public class GmondConf implements IGmondConf {
 	 * @see eu.choreos.gmond.IGmondConfWeb#removeUdpSendChannel(java.lang.String)
 	 */
 	@Override
-	public void removeUdpSendChannel(String host) {
+	public String removeUdpSendChannel(String host) {
 	
 		List<Integer> udpSendChannelLines = getUdpSendChannelLineIndexes(host);
-		for (int i = 0; i < udpSendChannelLines.size(); i++)
-			fileLines.remove(udpSendChannelLines.get(0).intValue());
+		if (udpSendChannelLines != null) {
+			for (int i = 0; i < udpSendChannelLines.size(); i++)
+				fileLines.remove(udpSendChannelLines.get(0).intValue());
+			return "OK";
+		} else {
+			return host + " not found";
+		}
 	}
 
 	private String getUdpSendChannelPort(String currentHost) {
@@ -175,16 +185,15 @@ public class GmondConf implements IGmondConf {
 		return null;
 	}
 
-	private void reloadConfigurations() {
+	private String reloadConfigurations() {
 
 		if (reloader == null)
 			reloader = new GmondReloader();
 
 		if (reloader.reload())
-			System.out.println("Gmond restarted.");
+			return "Gmond restarted.";
 		else
-			System.out
-					.println("Could not restart gmond. Are you root? Do you have the necessary privileges?");
+			return "Could not restart gmond. Do you have the necessary privileges?";
 	}
 
 	private List<Integer> findNextUdpSendChannel(List<String> fileContents) {

@@ -20,23 +20,23 @@ public interface IGmondConf {
 	public String save();
 	
 	@WebMethod
-	public void rollBack();
+	public String rollBack();
 
 	@WebMethod
 	public void addUdpSendChannel(String host, String port);
 
 	@WebMethod
-	public void updateUdpSendChannel(String currentHost, String newHost,
+	public String updateUdpSendChannel(String currentHost, String newHost,
 			String newPort);
 
 	@WebMethod
-	public void updateUdpSendChannelHost(String currentHost, String newHost);
+	public String updateUdpSendChannelHost(String currentHost, String newHost);
 
 	@WebMethod
-	public void updateUdpSendChannelPort(String host, String port);
+	public String updateUdpSendChannelPort(String host, String port);
 
 	@WebMethod
-	public void removeUdpSendChannel(String host);
+	public String removeUdpSendChannel(String host);
 	
 	@WebMethod
 	public Channel[] listUdpSendChannel();
