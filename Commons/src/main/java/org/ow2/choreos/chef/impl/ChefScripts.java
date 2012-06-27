@@ -2,6 +2,8 @@ package org.ow2.choreos.chef.impl;
 
 /**
  * Provide access to Chef functionalities using scripts with knife commands
+ * 
+ * Projected to Chef version 10.12.0
  *
  */
 public class ChefScripts {
