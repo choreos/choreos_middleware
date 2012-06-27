@@ -1,4 +1,4 @@
-#include "eu_choreos_signal_sender_SignalSender.h"
+#include "SignalSender.h"
 #include <sys/param.h>
 #include <sys/user.h>
 #include <sys/sysctl.h>
@@ -19,9 +19,7 @@ Java_SignalSender_sendSignalByPID(
 	jint pid, 
 	jint signal) 
 {
-
 	return kill(pid, signal);
-
 }
 
 
@@ -32,12 +30,11 @@ Java_SignalSender_sendSignalByProcessName(
 	jstring pname, 
 	jint signal) 
 {
-
 	const char *nativeString = (*env)->GetStringUTFChars(env, pname, 0);
    	int pid = pid_from_process_name(nativeString);
    	(*env)->ReleaseStringUTFChars(env, pname, nativeString);
-	return Java_SignalSender_sendSignalByPID(env, jobj, pid, signal);
-
+	jint _pid = pid;
+	return Java_SignalSender_sendSignalByPID(env, jobj, _pid, signal);
 }
 
 pid_t 
