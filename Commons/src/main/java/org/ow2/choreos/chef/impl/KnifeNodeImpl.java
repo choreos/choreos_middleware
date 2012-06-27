@@ -1,5 +1,8 @@
 package org.ow2.choreos.chef.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.chef.KnifeNode;
 import org.ow2.choreos.utils.CommandLine;
@@ -26,10 +29,16 @@ public class KnifeNodeImpl implements KnifeNode {
 	}
 
 	@Override
-	public String list() throws KnifeException {
+	public List<String> list() throws KnifeException {
 
 		String command = scripts.getKnifeNodeList();
-		return CommandLine.run(command);
+		String result = CommandLine.run(command);
+		
+		List<String> nodes = new ArrayList<String>();
+		for (String node: result.split("\n"))
+			nodes.add(node.trim());
+		
+		return nodes;
 	}
 
 	@Override

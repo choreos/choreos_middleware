@@ -1,8 +1,10 @@
 package org.ow2.choreos.chef;
 
+import java.util.List;
+
 public interface KnifeNode {
 
-	public String list() throws KnifeException;
+	public List<String> list() throws KnifeException;
 
 	public String show(String nodeName) throws KnifeException;
 
