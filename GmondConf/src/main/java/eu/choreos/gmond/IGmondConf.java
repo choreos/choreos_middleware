@@ -17,7 +17,7 @@ public interface IGmondConf {
 	public String getConfigFile();
 
 	@WebMethod
-	public void save();
+	public String save();
 	
 	@WebMethod
 	public void rollBack();

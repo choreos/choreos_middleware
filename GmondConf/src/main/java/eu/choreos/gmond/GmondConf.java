@@ -21,7 +21,7 @@ public class GmondConf implements IGmondConf {
 	
 	
 	public GmondConf(String configFile) {
-		gmondFile = configFile;
+		setConfigFile(configFile);
 	}
 	
 	public GmondConf() {
@@ -66,15 +66,16 @@ public class GmondConf implements IGmondConf {
 	 * @see eu.choreos.gmond.IGmondConfWeb#save()
 	 */
 	@Override
-	public void save() {
+	public String save() {
 		try {
 			FileUtils.writeLines((new File(gmondFile)), fileLines);
 			reloadConfigurations();
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not write to file " + gmondFile);
 			e.printStackTrace();
-			System.exit(1);
+			return e.getMessage();
 		}
+		return "OK";
 	}
 	
 	@Override
