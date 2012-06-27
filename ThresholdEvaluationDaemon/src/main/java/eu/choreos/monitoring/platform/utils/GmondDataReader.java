@@ -163,8 +163,11 @@ public class GmondDataReader {
 			Element el = (Element) metricNodeList.item(i);
 
 			metrics.put(el.getAttributeNode("NAME").getNodeValue(),
-					new Metric(el.getAttributeNode("NAME").getNodeValue(), el
-							.getAttributeNode("VAL").getNodeValue()));
+					new Metric(el.getAttributeNode("NAME").getNodeValue(), 
+							   el.getAttributeNode("VAL").getNodeValue(),
+							   Integer.parseInt(el.getAttributeNode("TN").getNodeValue()),
+							   Integer.parseInt(el.getAttributeNode("TMAX").getNodeValue()),
+							   Integer.parseInt(el.getAttributeNode("DMAX").getNodeValue())));
 		}
 		
 		Host host = new Host(clusterName, hostName, ip, metrics);

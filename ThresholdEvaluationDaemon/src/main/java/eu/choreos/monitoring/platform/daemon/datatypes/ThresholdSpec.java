@@ -43,6 +43,8 @@ public class ThresholdSpec {
 			return Threshold.MIN;
 		if (comparison.contentEquals("EQUALS"))
 			return Threshold.EQUALS;
+		if (comparison.contentEquals("DOWN"))
+			return Threshold.DOWN;
 
 		return -1;
 

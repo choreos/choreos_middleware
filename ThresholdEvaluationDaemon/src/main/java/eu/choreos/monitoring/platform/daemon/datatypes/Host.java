@@ -19,9 +19,20 @@ public class Host {
 		this.hostName = hostname;
 		this.ip = ip;
 		this.metrics = metrics;
-		isDown = this.isMetricsEmpty();
+		//isDown = this.isMetricsEmpty();
+		isDown = this.thereAreTNSurpassed();
 	}
 	
+	private boolean thereAreTNSurpassed() {
+		
+		for (String s : metrics.keySet()) {
+			if(metrics.get(s).getTn() > metrics.get(s).getTmax() + metrics.get(s).getDmax())
+				return true;
+		}
+		
+		return false;
+	}
+
 	public String toString() {
 		return this.getHostName() + " " + this.getIp();
 	}

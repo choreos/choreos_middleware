@@ -42,7 +42,7 @@ public class HostManagerTest {
 	@Test
 	public void shouldNotFindHostsDown() throws GangliaException {
 		HashMap<String, Metric> hashMap = new HashMap<String, Metric>();
-		hashMap.put("test", (new Metric("test", "0.0")));
+		hashMap.put("test", (new Metric("test", "0.0", 10, 30, 0)));
 		hostList.add(new Host("test", "test", "ip", hashMap));
 		when(dataReader.getUpToDateHostsInfo()).thenReturn(hostList);
 		
@@ -55,6 +55,7 @@ public class HostManagerTest {
 	@Test
 	public void shouldFindHostsDown() throws GangliaException {
 		HashMap<String, Metric> hashMap = new HashMap<String, Metric>();
+		hashMap.put("load_one", new Metric("load_one", "value", 90, 20, 10));
 		hostList.add(new Host("test", "test", "ip", hashMap));
 		when(dataReader.getUpToDateHostsInfo()).thenReturn(hostList);
 		
