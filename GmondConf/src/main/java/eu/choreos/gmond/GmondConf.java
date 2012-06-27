@@ -144,9 +144,8 @@ public class GmondConf implements IGmondConf {
 	public void removeUdpSendChannel(String host) {
 	
 		List<Integer> udpSendChannelLines = getUdpSendChannelLineIndexes(host);
-		for (Integer index : udpSendChannelLines) {
-			fileLines.remove(fileLines.get(index));
-		}
+		for (int i = 0; i < udpSendChannelLines.size(); i++)
+			fileLines.remove(udpSendChannelLines.get(0).intValue());
 	}
 
 	private String getUdpSendChannelPort(String currentHost) {
@@ -169,14 +168,13 @@ public class GmondConf implements IGmondConf {
 		while ((udpSendChannel = findNextUdpSendChannel(fileLines)) != null) {
 			for (int index : udpSendChannel) {
 				String line = fileLines.get(index);
-				if (line.contains("host") && line.contains("=")
-						&& line.contains(host))
+				if (line.contains("host") && line.contains("=")	&& line.contains(host))
 					return udpSendChannel;
 			}
 		}
 		return null;
 	}
-	
+
 	private void reloadConfigurations() {
 
 		if (reloader == null)
