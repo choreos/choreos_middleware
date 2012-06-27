@@ -12,7 +12,6 @@ import org.apache.commons.io.FileUtils;
  */
 class ChefScripts {
 	
-	private static final String CHEF_NAME_SCRIPT = "chef/my_chef_name.sh";
 	private static final String KNIFE_BOOTSTRAP = "knife bootstrap $ip -x $user -i $privateKeyFile --sudo -c $knifeFile";
 	private static final String KNIFE_RUN_LIST_ADD = "knife node run_list add $nodeName $cookbook::$recipe -c $knifeFile";
 	private static final String KNIFE_NODE_LIST = "knife node list -c $knifeFile";
@@ -33,19 +32,6 @@ class ChefScripts {
 		
 		this.config = chefConfigFile;
 	}
-	
-    public String getChefName() {
-    	
-    	URL scriptFile = ClassLoader.getSystemResource(CHEF_NAME_SCRIPT);
-    	String command = null;
-		try {
-			command = FileUtils.readFileToString(new File(scriptFile.getFile()));
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Should not happen");
-		}
-    	return command;
-    }
     
     public String getKnifeBootstrap(String pKeyFile, String ip, String user) {
     	
