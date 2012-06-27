@@ -8,6 +8,17 @@ public class KnifeException extends Exception {
 	
 	/**
 	 * 
+	 * @param message explanation about the exception
+	 * @param command the knife command that caused the exception
+	 */
+	public KnifeException(String message, String command) {
+		
+		super(message);
+		this.command = command;
+	}
+	
+	/**
+	 * 
 	 * @return the knife command that caused the exception
 	 */
 	public String getCommand() {
