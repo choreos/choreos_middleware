@@ -14,7 +14,7 @@ public class GmondReloader {
 	public GmondReloader() {
 		commandRestartMonitor = "/etc/init.d/ganglia-monitor restart";
 		commandReloadMonitor = "kill -1 $( cat /var/run/gmond.pid )";
-		runtime = null;
+		runtime = new ShellHandler();
 	}
 
 	public void setRuntime(ShellHandler runtime) {

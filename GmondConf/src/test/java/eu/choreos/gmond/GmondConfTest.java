@@ -32,12 +32,13 @@ public class GmondConfTest {
 
 	@Before
 	public void setUp() throws IOException {
-		gmondConf = new GmondConf();
 		exampleFile = new File(ClassLoader.getSystemResource(
 				"gmond.conf.template").getFile());
 		testFile = new File("gmond.conf");
 
 		FileUtils.copyFile(exampleFile, testFile);
+
+		gmondConf = new GmondConf(testFile.getAbsolutePath());
 
 		exampleMultipleFile = new File(ClassLoader.getSystemResource(
 				"gmondmultipleudp.conf.template").getFile());
@@ -64,7 +65,6 @@ public class GmondConfTest {
 		String fileContents = FileUtils.readFileToString(testFile);
 		assertFalse(fileContents.contains("host = 127.0.0.1"));
 
-		gmondConf.setConfigFile(testFile.getAbsolutePath());
 		gmondConf.addUdpSendChannel("127.0.0.1", "8649");
 		gmondConf.save();
 
@@ -79,7 +79,7 @@ public class GmondConfTest {
 		String fileContents = FileUtils.readFileToString(testFile);
 		assertTrue(fileContents.contains("host = eclipse.ime.usp.br"));
 
-		gmondConf.setConfigFile(testFile.getAbsolutePath());
+		
 		gmondConf.removeUdpSendChannel("eclipse.ime.usp.br");
 		gmondConf.save();
 
@@ -97,7 +97,7 @@ public class GmondConfTest {
 		assertTrue(fileContents.contains("host = eclipse.ime.usp.br"));
 		assertFalse(fileContents.contains("host = localhost"));
 
-		gmondConf.setConfigFile(testFile.getAbsolutePath());
+		
 		gmondConf.updateUdpSendChannelHost("eclipse.ime.usp.br", "localhost");
 		gmondConf.save();
 
@@ -119,7 +119,7 @@ public class GmondConfTest {
 
 		int location = fileContents.indexOf("port = 8649");
 
-		gmondConf.setConfigFile(testFile.getAbsolutePath());
+		
 		gmondConf.updateUdpSendChannelPort("eclipse.ime.usp.br", "1234");
 		gmondConf.save();
 
@@ -139,7 +139,7 @@ public class GmondConfTest {
 
 		int location = fileContents.indexOf("port = 8649");
 
-		gmondConf.setConfigFile(testFile.getAbsolutePath());
+		
 		gmondConf.updateUdpSendChannel("eclipse.ime.usp.br", "localhost",
 				"1234");
 		gmondConf.save();
