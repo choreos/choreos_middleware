@@ -32,14 +32,14 @@ public class ChefNodeNameRetriever {
      * Connects to the node via ssh and returns the chef-node name.
      * @param host hostname or IP
      * @param user ssh connection
-     * @param pkey_path path to the file containing the private key to be used to the ssh connection
+     * @param pKeyPath path to the file containing the private key to be used to the ssh connection
      * @return chef node name, to be used on chef commands to handle the node on <code>host</code>
      * @throws JSchException if it is not possible to connect on <code>host</code>
      */
-    public String getChefNodeName(String host, String user, String pkey_path) throws JSchException {
+    public String getChefNodeName(String host, String user, String pKeyPath) throws JSchException {
     	
     	String script = getScript();
-        SshUtil ssh = new SshUtil(host, user, pkey_path);
+        SshUtil ssh = new SshUtil(host, user, pKeyPath);
         String chefNodeName = ssh.runCommand(script, true);
 
         if (chefNodeName == null || chefNodeName.isEmpty())

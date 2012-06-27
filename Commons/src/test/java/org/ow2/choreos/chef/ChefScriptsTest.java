@@ -3,6 +3,7 @@ package org.ow2.choreos.chef;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.ow2.choreos.chef.impl.ChefScripts;
 
 public class ChefScriptsTest {
 

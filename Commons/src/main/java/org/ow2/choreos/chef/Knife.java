@@ -11,22 +11,12 @@ package org.ow2.choreos.chef;
  */
 public interface Knife {
 
+	public KnifeNode node();
+	
+	public KnifeCookbook cookbook();
+	
+	public KnifeClient client();
+	
 	public String bootstrap(String pKeyFile, String ip, String user) throws KnifeException;
     
-    public String runListAdd(String nodeName, String cookbook, String recipe) throws KnifeException;
-    
-    public String nodeList() throws KnifeException;
-    
-    public String nodeShow(String nodeName) throws KnifeException;
-    
-    public String nodeDelete(String nodeName) throws KnifeException;
-
-    public String clientDelete(String clientName) throws KnifeException;
-    
-    public String cookbookUpload(String cookbookName, String cookbookParentFolder) throws KnifeException;
-    
-    public String cookbookDelete(String cookbookName) throws KnifeException;
-    
-    public String cookbooksList() throws KnifeException;
-
 }

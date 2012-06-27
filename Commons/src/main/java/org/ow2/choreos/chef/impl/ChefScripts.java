@@ -1,22 +1,17 @@
-package org.ow2.choreos.chef;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
-import org.apache.commons.io.FileUtils;
+package org.ow2.choreos.chef.impl;
 
 /**
  * Provide access to Chef functionalities using scripts with knife commands
  *
  */
-class ChefScripts {
+public class ChefScripts {
 	
 	private static final String KNIFE_BOOTSTRAP = "knife bootstrap $ip -x $user -i $privateKeyFile --sudo -c $knifeFile";
 	private static final String KNIFE_RUN_LIST_ADD = "knife node run_list add $nodeName $cookbook::$recipe -c $knifeFile";
 	private static final String KNIFE_NODE_LIST = "knife node list -c $knifeFile";
 	private static final String KNIFE_NODE_SHOW = "knife node show $nodeName -c $knifeFile";
 	private static final String KNIFE_NODE_DELETE = "knife node delete $nodeName -c $knifeFile -y";
+	private static final String KNIFE_NODE_CREATE = "knife node create -d $nodeName -c $knifeFile";
 	private static final String KNIFE_CLIENT_DELETE = "knife client delete $clientName -c $knifeFile -y";
 	private static final String KNIFE_COOKBOOK_UPLOAD = "knife cookbook upload $cookbookName -o $cookbookParentFolder -c $knifeFile";
 	private static final String KNIFE_COOKBOOK_DELETE = "knife cookbook delete $cookbookName -y -c $knifeFile";
@@ -71,6 +66,14 @@ class ChefScripts {
     public String getKnifeNodeDelete(String nodeName) {
     	
     	String command = KNIFE_NODE_DELETE;
+    	command = command.replace("$knifeFile", config);
+    	command = command.replace("$nodeName", nodeName);
+    	return command;
+    }
+    
+    public String getKnifeNodeCreate(String nodeName) {
+    	
+    	String command = KNIFE_NODE_CREATE;
     	command = command.replace("$knifeFile", config);
     	command = command.replace("$nodeName", nodeName);
     	return command;
