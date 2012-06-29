@@ -9,7 +9,10 @@ public class GmondConfWeb {
 	
 	public static void main(String[] args) {
 		IGmondConf gmondconf = new GmondConf();
-		Endpoint.publish("http://localhost:1234/gmond", gmondconf);
+		if (args.length == 0)
+			Endpoint.publish("http://localhost:1234/gmond", gmondconf);
+		else
+			Endpoint.publish(args[0], gmondconf);
 		
 	}
 
