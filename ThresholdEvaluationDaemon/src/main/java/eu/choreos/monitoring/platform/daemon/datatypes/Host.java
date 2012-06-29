@@ -15,7 +15,7 @@ public class Host {
 	private String ip;
 	private int tn;
 	private int tmax;
-	
+
 	public int getTmax() {
 		return tmax;
 	}
@@ -41,11 +41,11 @@ public class Host {
 		this.tn = tn;
 		this.tmax = tmax;
 	}
-	
+
 	public String toString() {
 		return this.getHostName() + " " + this.getIp();
 	}
-	
+
 	public String getHostName() {
 		return hostName;
 	}
@@ -53,18 +53,17 @@ public class Host {
 	public String getIp() {
 		return ip;
 	}
-	
+
 	public boolean isDown() {
 		return tn > REST * tmax;// + dmax;
 	}
-	
+
 	public String getClusterName() {
 		return clusterName;
 	}
-	
+
 	public String getMetricValue(String metric)  {
 		return metrics.get(metric).getValue();
 	}
-	
 
 }

@@ -55,7 +55,7 @@ public class ThresholdManagerTest {
 		when(hostManager.getHosts()).thenReturn(hostList);
 
 		notifier = new ThresholdManager(hostManager);
-		
+
 
 	}
 

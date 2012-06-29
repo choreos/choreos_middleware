@@ -38,16 +38,16 @@ public class HostManagerTest {
 		hostManager = new HostManager(dataReader);
 		hostList = new ArrayList<Host>();
 	}
-	
+
 	@Test
 	public void shouldNotFindHostsDown() throws GangliaException {
 		HashMap<String, Metric> hashMap = new HashMap<String, Metric>();
 		hashMap.put("test", (new Metric("test", "0.0", 10, 30, 0)));
 		hostList.add(new Host("test", "test", "ip", hashMap, 20,30));
 		when(dataReader.getUpToDateHostsInfo()).thenReturn(hostList);
-		
+
 		hostManager.getDataReaderHostInfo();
-		
+
 		assertEquals(0, hostManager.getHostsDown().size());
 		assertEquals(false, hostManager.thereAreHostsDown());
 	}
@@ -58,9 +58,9 @@ public class HostManagerTest {
 		hashMap.put("load_one", new Metric("load_one", "value", 90, 20, 10));
 		hostList.add(new Host("test", "test", "ip", hashMap, 35, 20));
 		when(dataReader.getUpToDateHostsInfo()).thenReturn(hostList);
-		
+
 		hostManager.getDataReaderHostInfo();
-		
+
 		assertEquals(1, hostManager.getHostsDown().size());
 		assertEquals(true, hostManager.thereAreHostsDown());
 	}
