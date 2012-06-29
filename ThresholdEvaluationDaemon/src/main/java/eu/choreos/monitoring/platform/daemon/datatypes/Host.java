@@ -8,31 +8,40 @@ import org.w3c.dom.NodeList;
 
 public class Host {
 
+	private static final double REST = 1.5;
 	private Map<String, Metric> metrics;
 	private String clusterName;
 	private String hostName;
 	private String ip;
-	private boolean isDown;
+	private int tn;
+	private int tmax;
 	
-	public Host(String clusterName, String hostname, String ip, Map<String, Metric> metrics) {
+	public int getTmax() {
+		return tmax;
+	}
+
+	public void setTmax(int tmax) {
+		this.tmax = tmax;
+	}
+
+	public int getTn() {
+		return tn;
+	}
+
+	public void setTn(int tn) {
+		this.tn = tn;
+	}
+
+	public Host(String clusterName, String hostname, String ip, Map<String, Metric> metrics,
+			int tn, int tmax) {
 		this.clusterName = clusterName;
 		this.hostName = hostname;
 		this.ip = ip;
 		this.metrics = metrics;
-		//isDown = this.isMetricsEmpty();
-		isDown = this.thereAreTNSurpassed();
+		this.tn = tn;
+		this.tmax = tmax;
 	}
 	
-	private boolean thereAreTNSurpassed() {
-		
-		for (String s : metrics.keySet()) {
-			if(metrics.get(s).getTn() > metrics.get(s).getTmax() + metrics.get(s).getDmax())
-				return true;
-		}
-		
-		return false;
-	}
-
 	public String toString() {
 		return this.getHostName() + " " + this.getIp();
 	}
@@ -46,15 +55,11 @@ public class Host {
 	}
 	
 	public boolean isDown() {
-		return isDown;
+		return tn > REST * tmax;// + dmax;
 	}
 	
 	public String getClusterName() {
 		return clusterName;
-	}
-	
-	private boolean isMetricsEmpty() {
-		return metrics.isEmpty();
 	}
 	
 	public String getMetricValue(String metric)  {

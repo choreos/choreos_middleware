@@ -155,6 +155,8 @@ public class GmondDataReader {
 		HashMap<String, Metric> metrics = new HashMap<String, Metric>();
 		String hostName = hostNode.getAttributeNode("NAME").getNodeValue();
 		String ip = hostNode.getAttributeNode("IP").getNodeValue();
+		int tn = Integer.parseInt(hostNode.getAttributeNode("TN").getNodeValue());
+		int tmax = Integer.parseInt(hostNode.getAttributeNode("TMAX").getNodeValue());
 		
 		NodeList metricNodeList = hostNode.getElementsByTagName("METRIC");
 
@@ -170,7 +172,7 @@ public class GmondDataReader {
 							   Integer.parseInt(el.getAttributeNode("DMAX").getNodeValue())));
 		}
 		
-		Host host = new Host(clusterName, hostName, ip, metrics);
+		Host host = new Host(clusterName, hostName, ip, metrics, tn, tmax);
 		return host;
 	}
 

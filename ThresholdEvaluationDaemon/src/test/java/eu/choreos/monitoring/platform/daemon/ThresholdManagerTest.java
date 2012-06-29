@@ -42,11 +42,11 @@ public class ThresholdManagerTest {
 		metricsMap2.put("mem_total", new Metric("mem_total", "4000", 10, 30, 0));
 
 		hostManager = mock(HostManager.class);
-		host1 = new Host("test1", "hostname1", "ip1", metricsMap1);
-		host2 = new Host("test1", "hostname2", "ip2", metricsMap2);
+		host1 = new Host("test1", "hostname1", "ip1", metricsMap1, 20,20);
+		host2 = new Host("test1", "hostname2", "ip2", metricsMap2, 20,20);
 		HashMap<String, Metric> m = new HashMap<String, Metric>();
 		m.put("load_one"	, new Metric("load_one", "value", 90, 20, 0));
-		host3 = new Host("test1", "hostname3", "ip3", m); 
+		host3 = new Host("test1", "hostname3", "ip3", m, 40,20); 
 
 		hostList = new ArrayList<Host>();
 		hostList.add(host1);
