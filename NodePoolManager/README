@@ -9,3 +9,29 @@ Eclipse IDE
 $ ./install_jclouds-chef.sh
 $ mvn -Dwtpversion=2.0 eclipse:eclipse
 Then import existent project in Eclipse IDE and change compiler version to 1.6 (also search for facets in project -> properties)
+
+Configuring a Local VM for Faster and Cheaper Tests
+===================================================
+
+There are some useful links in the end. Below there are instructions on how to configure a VM, bootstrap it and revert it to a previous state (including chef run list). You must have a chef knife configured first (chef-repo/README).
+
+VM Creation
+-----------
+Be sure you can:
+- SSH to it without typing a password.
+- Use sudo without typing a password.
+
+Configure the FIXED_VM settings in the file src/main/resources/nodepoolmanager.properties (you will find a template there).
+
+Chef Bootstrap
+--------------
+The easiest way to bootstrap your local VM is to run the java junit bootstrap test. It can take a few minutes and it will save you a lot of time if you take a snapshot after bootstraping.
+
+Restoring a Snapshot
+--------------------
+After testing and installing some recipes in the VM, you can restore the bootstrapped snapshot (as well as any other you have) by manually doing it in your preferred virtualization software (e.g. VirtualBox) and resetting the chef node run list. The last step can be easily done using the script chef-repo/run_list_reset.sh (create chef-repo/run_list_reset.conf according to the template (.template suffix).
+
+Links
+-----
+- Configuring VirtualBox Network: http://ccsl.ime.usp.br/foswiki/bin/view/Choreos/VMs
+- Passwordless SSH: http://www.integrade.org.br/ssh-without-password

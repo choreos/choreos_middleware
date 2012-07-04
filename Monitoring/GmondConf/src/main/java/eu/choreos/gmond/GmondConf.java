@@ -5,144 +5,88 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jws.WebService;
+
 import org.apache.commons.io.FileUtils;
 
+import eu.choreos.gmond.beans.Channel;
 import eu.choreos.gmond.reloader.GmondReloader;
 
-public class GmondConf {
+@WebService
+public class GmondConf implements IGmondConf {
 	private static GmondReloader reloader = null;
-	private String gmondFile = "/etc/ganglia/gmond.conf";
 	private List<String> fileLines;
 	private int searchIndex;
-
-	public List<String> getFileLines() {
-		return fileLines;
+	private String gmondFile;
+	
+	
+	public GmondConf(String configFile) {
+		setConfigFile(configFile);
 	}
-
+	
 	public GmondConf() {
+		this("/etc/ganglia/gmond.conf");
 		searchIndex = 0;
-
 	}
 
+	/* (non-Javadoc)
+	 * @see eu.choreos.gmond.IGmondConfWeb#setConfigFile(java.lang.String)
+	 */
+	@Override
+	public void setConfigFile(String fileName) {
+		gmondFile = fileName;
+		load();
+		searchIndex = 0;
+	}
+	
+	/* (non-Javadoc)
+	 * @see eu.choreos.gmond.IGmondConfWeb#getConfigFile()
+	 */
+	@Override
+	public String getConfigFile() {
+		return gmondFile;
+	}
+	
 	public void setReloader(GmondReloader newReloader) {
 		reloader = newReloader;
 	}
 
-	public static void main(String... args) throws Exception {
-		String fileName = "/etc/ganglia/gmond.conf";
-
-		validateArgs(args);
-
-		fileName = getConfigFile(args);
-
-		GmondConf gmondConf = new GmondConf();
-
-		gmondConf.load(fileName);
-
-		for (int i = 0; i < args.length; i++) {
-
-			if (args[i].equals("--add")) {
-				gmondConf.addUdpSendChannel(args[i + 1], args[i + 2]);
-				i += 2;
-			}
-
-			if (args[i].equals("--update-port")) {
-				gmondConf.updateUdpSendChannelPort(args[i + 1], args[i + 2]);
-				i += 2;
-			}
-
-			if (args[i].equals("--update-channel")) {
-				gmondConf.updateUdpSendChannel(args[i + 1], args[i + 2],
-						args[i + 3]);
-				i += 3;
-			}
-
-			if (args[i].equals("--update-host")) {
-				gmondConf.updateUdpSendChannelHost(args[i + 1], args[i + 2]);
-				i += 2;
-			}
-
-			if (args[i].equals("--remove")) {
-				gmondConf.removeUdpSendChannel(args[i + 1]);
-				i += 2;
-			}
-
-		}
-
-		gmondConf.save();
-
-		if (reloader == null)
-			reloader = new GmondReloader();
-		if (reloader.reload())
-			System.out.println("Gmond restarted.");
-		else
-			System.out
-					.println("Could not restart gmond. Are you root? Do you have the necessary privileges?");
-
-	}
-
-	private static String getConfigFile(String[] arguments) {
-		String fileName = "/etc/ganglia/gmond.conf";
-
-		for (int i = 0; i < arguments.length; i++) {
-
-			if (arguments[i].equals("--config-file")) {
-				fileName = arguments[i + 1];
-			}
-		}
-		return fileName;
-	}
-
-	private static void validateArgs(String[] args) throws Exception {
-		String string;
-
-		for (int index = 0; index < args.length; index++) {
-			string = args[index];
-
-			if (string.equals("--add"))
-				index = index + 2;
-			else if (string.equals("--update-port"))
-				index = index + 2;
-			else if (string.equals("--update-channel"))
-				index = index + 3;
-			else if (string.equals("--update-host"))
-				index = index + 2;
-			else if (string.equals("--remove"))
-				index = index + 1;
-			else if (string.equals("--config-file"))
-				index = index + 1;
-			else {
-				printUsage();
-				System.exit(1);
-			}
-		}
-	}
-
-	private static void printUsage() throws Exception {
-		System.out.println("" + "USAGE: java -jar gmondconf "
-				+ "[--add host port] " + "[--update-port host port] "
-				+ "[--update-host currentHost newHost] "
-				+ "[--update-channel currentHost newHost newPort]"
-				+ "[--remove host]" + "[--config-file configFile]");
-		throw (new Exception());
-	}
-
-	public void load(String filePath) {
-		gmondFile = filePath;
-		load();
-	}
-
-	public void load() {
+	private String load() {
 		try {
 			fileLines = FileUtils.readLines((new File(gmondFile)));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not find desired file: "
 					+ gmondFile);
 			e.printStackTrace();
-			System.exit(1);
+			return e.getMessage();
 		}
+		return "OK";
 	}
 
+	/* (non-Javadoc)
+	 * @see eu.choreos.gmond.IGmondConfWeb#save()
+	 */
+	@Override
+	public String save() {
+		try {
+			FileUtils.writeLines((new File(gmondFile)), fileLines);
+			return reloadConfigurations();
+		} catch (IOException e) {
+			System.out.println("ERROR: Could not write to file " + gmondFile);
+			e.printStackTrace();
+			return e.getMessage();
+		}
+	}
+	
+	@Override
+	public String rollBack() {
+		return load();
+	}
+
+	/* (non-Javadoc)
+	 * @see eu.choreos.gmond.IGmondConfWeb#addUdpSendChannel(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public void addUdpSendChannel(String host, String port) {
 		fileLines.add("");
 		fileLines.add("udp_send_channel {");
@@ -151,24 +95,42 @@ public class GmondConf {
 		fileLines.add("}");
 	}
 
-	public void removeUdpSendChannel(String host) {
+	/* (non-Javadoc)
+	 * @see eu.choreos.gmond.IGmondConfWeb#updateUdpSendChannel(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public String updateUdpSendChannel(String currentHost, String newHost,
+			String newPort) {
 
-		List<Integer> udpSendChannelLines = getUdpSendChannelHost(host);
-		for (Integer index : udpSendChannelLines) {
-			fileLines.remove(fileLines.get(index));
+		List<Integer> udpSendChannelLines = getUdpSendChannelLineIndexes(currentHost);
+		if (udpSendChannelLines != null) {
+			for (Integer index : udpSendChannelLines) {
+				String line = fileLines.get(index);
+				line = setAttributeIfApplicable("host", newHost, line);
+				line = setAttributeIfApplicable("port", newPort, line);
+				fileLines.set(index, line);
+			}
+			return "OK";
+		} else {
+			return currentHost + " not found";
 		}
 	}
 
-	public void updateUdpSendChannel(String currentHost, String newHost,
-			String newPort) {
+	/* (non-Javadoc)
+	 * @see eu.choreos.gmond.IGmondConfWeb#updateUdpSendChannelHost(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public String updateUdpSendChannelHost(String currentHost, String newHost) {
+		String currentPort = getUdpSendChannelPort(currentHost);
+		return updateUdpSendChannel(currentHost, newHost, currentPort);
+	}
 
-		List<Integer> udpSendChannelLines = getUdpSendChannelHost(currentHost);
-		for (Integer index : udpSendChannelLines) {
-			String line = fileLines.get(index);
-			line = setAttributeIfApplicable("host", newHost, line);
-			line = setAttributeIfApplicable("port", newPort, line);
-			fileLines.set(index, line);
-		}
+	/* (non-Javadoc)
+	 * @see eu.choreos.gmond.IGmondConfWeb#updateUdpSendChannelPort(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public String updateUdpSendChannelPort(String host, String port) {
+		return updateUdpSendChannel(host, host, port);
 	}
 
 	private String setAttributeIfApplicable(String attr, String newValue,
@@ -180,67 +142,103 @@ public class GmondConf {
 		return line;
 	}
 
-	public List<Integer> getUdpSendChannelHost(String host) {
-		List<Integer> udpSendChannel = new ArrayList<Integer>();
+	/* (non-Javadoc)
+	 * @see eu.choreos.gmond.IGmondConfWeb#removeUdpSendChannel(java.lang.String)
+	 */
+	@Override
+	public String removeUdpSendChannel(String host) {
+	
+		List<Integer> udpSendChannelLines = getUdpSendChannelLineIndexes(host);
+		if (udpSendChannelLines != null) {
+			for (int i = 0; i < udpSendChannelLines.size(); i++)
+				fileLines.remove(udpSendChannelLines.get(0).intValue());
+			return "OK";
+		} else {
+			return host + " not found";
+		}
+	}
 
+	private String getUdpSendChannelPort(String currentHost) {
+		List<Integer> sendChannelLineIndexes = getUdpSendChannelLineIndexes(currentHost);
+		String currentPort = null;
+	
+		for (int lineIndex : sendChannelLineIndexes) {
+			String line = fileLines.get(lineIndex);
+			if (line.contains("port") && line.contains("="))
+				currentPort = line.split("=")[1];
+		}
+		return currentPort;
+	}
+
+	private List<Integer> getUdpSendChannelLineIndexes(String host) {
+		List<Integer> udpSendChannel;
+	
+		searchIndex = 0;
+		
 		while ((udpSendChannel = findNextUdpSendChannel(fileLines)) != null) {
 			for (int index : udpSendChannel) {
 				String line = fileLines.get(index);
-				if (line.contains("host") && line.contains("=")
-						&& line.contains(host))
+				if (line.contains("host") && line.contains("=")	&& line.contains(host))
 					return udpSendChannel;
 			}
 		}
 		return null;
 	}
 
-	public void updateUdpSendChannelHost(String currentHost, String newHost) {
+	private String reloadConfigurations() {
 
-		searchIndex = 0;
-		List<Integer> indexes = getUdpSendChannelHost(currentHost);
+		if (reloader == null)
+			reloader = new GmondReloader();
 
-		if (indexes != null) {
-			for (int index : indexes) {
-				if (fileLines.get(index).contains("host")
-						&& fileLines.get(index).contains(currentHost)) {
-					fileLines.set(index, "  host = " + newHost);
-				}
-			}
-		}
-
+		if (reloader.reload())
+			return "Gmond restarted.";
+		else
+			return "Could not restart gmond. Do you have the necessary privileges?";
 	}
 
-	public void updateUdpSendChannelPort(String host, String port) {
-		updateUdpSendChannel(host, host, port);
-	}
-
-	public void save() {
-		try {
-			FileUtils.writeLines((new File(gmondFile)), fileLines);
-		} catch (IOException e) {
-			System.out.println("ERROR: Could not write to file " + gmondFile);
-			e.printStackTrace();
-			System.exit(1);
-		}
-	}
-
-	public List<Integer> findNextUdpSendChannel(List<String> fileContents) {
+	private List<Integer> findNextUdpSendChannel(List<String> fileContents) {
 		List<Integer> lineIndexes = new ArrayList<Integer>();
 		int initialLine = searchIndex;
 		for (int i = initialLine; i < fileContents.size(); i++) {
 			String line = fileContents.get(i);
-
+	
 			if (line.contains("udp_send_channel") && line.contains("{")) {
-
+	
 				do {
 					lineIndexes.add(i);
 					searchIndex = i;
 				} while (!fileContents.get(i++).contains("}"));
-
+	
 				return lineIndexes;
 			}
 		}
 		return null;
 	}
 
+	@Override
+	public Channel[] listUdpSendChannel() {
+		List<Integer> udpSendChannel;
+		List<Channel> channels = new ArrayList<Channel>();
+		
+		searchIndex = 0;
+		
+		while ((udpSendChannel = findNextUdpSendChannel(fileLines)) != null) {
+			channels.add(createChannel(udpSendChannel));
+		}
+		return channels.toArray(new Channel[0]);
+	}
+
+	private Channel createChannel(List<Integer> indexes) {
+		Channel channel = new Channel();
+		for(Integer i: indexes) {
+			String line = fileLines.get(i); 
+			if (line.contains("host"))
+				channel.setHost(line.split("=")[1]);
+			if (line.contains("port"))
+				channel.setPort(line.split("=")[1]);
+		}
+		return channel;
+	}
+	
+	
 }

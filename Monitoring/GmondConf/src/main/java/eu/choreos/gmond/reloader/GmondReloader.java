@@ -1,56 +1,42 @@
 package eu.choreos.gmond.reloader;
 
-
+import eu.choreos.platform.utils.CommandRuntimeException;
+import eu.choreos.platform.utils.ShellHandler;
 
 public class GmondReloader {
-	
+
 	private String commandRestartMonitor;
 
-	private Runtime runtime;
-	private Process proc;
+	private ShellHandler runtime;
 	
+	private String commandReloadMonitor;
 
-	public GmondReloader(){
+	public GmondReloader() {
 		commandRestartMonitor = "/etc/init.d/ganglia-monitor restart";
-		runtime = null;
+		commandReloadMonitor = "kill -1 $( cat /var/run/gmond.pid )";
+		runtime = new ShellHandler();
 	}
 
-	public void setRuntime(Runtime runtime) {
+	public void setRuntime(ShellHandler runtime) {
 		this.runtime = runtime;
 	}
+
 	
-	public boolean reload(){
-		Process procReturned = runCommand(commandRestartMonitor);
+	public boolean reload() {
 		try {
-			procReturned.waitFor();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		if (procReturned.exitValue() == 0)
+			if (gmondIsRunning())
+				runtime.runLocalCommand(commandReloadMonitor);
+			else
+				runtime.runLocalCommand(commandRestartMonitor);
+			
 			return true;
-		return false;
-	}
-
-	private Process runCommand(String cmd) {
-		Runtime runtime = null;
-		if (this.runtime==null) 
-			runtime = Runtime.getRuntime();
-		else runtime =  this.runtime;
-		
-		Process proc = null;
-		try {
-			proc = runtime.exec(cmd);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (CommandRuntimeException e) {
+			return false;
 		}
-		return proc;
 	}
 
-	public Process getProc() {
-		return proc;
-	}
-
-	public void setProc(Process proc) {
-		this.proc = proc;
+	private boolean gmondIsRunning() throws CommandRuntimeException {
+		String stdout = runtime.runLocalCommand("ps -ef | grep gmond");
+		return stdout.contains("/usr/sbin/gmond");
 	}
 }

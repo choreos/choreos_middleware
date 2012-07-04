@@ -11,15 +11,20 @@ import static org.mockito.Mockito.when;
 import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventImpl;
 import it.cnr.isti.labse.glimpse.utils.Manager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import eu.choreos.monitoring.platform.daemon.datatypes.Host;
+import eu.choreos.monitoring.platform.daemon.datatypes.Metric;
 import eu.choreos.monitoring.platform.daemon.notifier.GlimpseMessageHandler;
-import eu.choreos.monitoring.platform.datatypes.Gmetric;
+import eu.choreos.monitoring.platform.daemon.notifier.MessageHandlingFault;
+import eu.choreos.monitoring.platform.exception.GangliaException;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
 
 public class ThresholdEvalDaemonTest {
@@ -27,76 +32,39 @@ public class ThresholdEvalDaemonTest {
 	private ThresholdEvalDaemon daemon;
 	private GlimpseBaseEventImpl<String> message;
 	private GlimpseMessageHandler msgHandler;
-	private GmondDataReader dataReader;
 	private String javaNamingProviderUrl;
+	private GmondDataReader dataReader;
+	private Host aHost;
+	
+	
+	private ThresholdManager thresholdManager;
 
 	@Before
 	public void setUp() throws Exception {
+		thresholdManager = mock(ThresholdManager.class);
+		when(thresholdManager.thereAreSurpassedThresholds()).thenReturn(true);
+		
+		List<Threshold> host1ThresholdsList = new ArrayList<Threshold>();
+		host1ThresholdsList.add(new Threshold("load_one", Threshold.MAX, 3));
+		host1ThresholdsList.add(new Threshold("load_five", Threshold.MAX, 3));
+		
+		Map<String, List<Threshold>> thresholdsMap = new HashMap<String, List<Threshold>>();
+		thresholdsMap.put("host1", host1ThresholdsList);
+		
+		when(thresholdManager.getSurpassedThresholds()).thenReturn(thresholdsMap);
+		
+		
 		javaNamingProviderUrl = "tcp://dsbchoreos.petalslink.org:61616";
-
 		message = getDefaultMessage();
-
 		msgHandler = mock(GlimpseMessageHandler.class);
-		dataReader = mock(GmondDataReader.class);
-
-		Map<String, Gmetric> metricsMap = new HashMap<String, Gmetric>();
-		
-		metricsMap.put("load_one", new Gmetric("load_one", "2"));
-		metricsMap.put("load_five", new Gmetric("load_five", "0.8"));
-		metricsMap.put("ram", new Gmetric("ram", "512"));
-		
-		when(dataReader.getAllMetrics()).thenReturn(metricsMap);
-		
 		daemon = new ThresholdEvalDaemon(getProperties(), "localhost", 8649,
-				msgHandler, dataReader);
+				msgHandler, thresholdManager);
 
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void shouldSendAliveMessage() {
-		daemon.sendHeartbeat(message);
-		verify(msgHandler, times(1)).sendMessage(
-				any(GlimpseBaseEventImpl.class));
-	}
-
-	@Test
-	public void shouldCheckIfThereAreSurpassedThresholds() {
-		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
-		assertTrue(daemon.thereAreSurpassedThresholds());
-	}
-
-	@Test
-	public void shouldCheckIfThereAreNoneSurpassedThresholds() {
-		System.out.println("PAU VV");
-		daemon.addThreshold(new Threshold("load_one", Threshold.MIN, 1.0));
-		assertEquals(false, daemon.thereAreSurpassedThresholds());
-	}
-
-	@Test
-	public void shouldCheckIfThereAreSurpassedThresholdsAmongMany() {
-		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
-		daemon.addThreshold(new Threshold("load_five", Threshold.MIN, 1.0));
-		assertTrue(daemon.thereAreSurpassedThresholds());
-	}
-	
-	@Test
-	public void shouldCheckIfThereAreSurpassedThresholdsAmongManyNotAllTrue() {
-		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
-		daemon.addThreshold(new Threshold("load_five", Threshold.MAX, 1.0));
-		assertTrue(daemon.thereAreSurpassedThresholds());
-	}
-
-	@Test
-	public void shouldCheckIfThereAreNoneSurpassedThresholdsAmongMany() {
-		daemon.addThreshold(new Threshold("load_one", Threshold.MIN, 1.0));
-		daemon.addThreshold(new Threshold("ram", Threshold.MIN, 500.0));
-		assertFalse(daemon.thereAreSurpassedThresholds());
-	}
-
-	@SuppressWarnings("unchecked")
-	@Test
-	public void shouldSendAllThresholdsMessage() {
+	public void shouldSendAllThresholdsMessage() throws GangliaException, MessageHandlingFault {
 		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
 		daemon.addThreshold(new Threshold("load_five", Threshold.MIN, 1.0));
 		
@@ -106,6 +74,7 @@ public class ThresholdEvalDaemonTest {
 				any(GlimpseBaseEventImpl.class));
 	}
 
+	
 	private GlimpseBaseEventImpl<String> getDefaultMessage() {
 		return new GlimpseBaseEventImpl<String>("thresholdAlarm", "connector1",
 				"connInstance1", "connExecution1", 1, 2,
@@ -121,4 +90,5 @@ public class ThresholdEvalDaemonTest {
 						"probeTopic");
 		return createProbeSettingsPropertiesObject;
 	}
+	
 }

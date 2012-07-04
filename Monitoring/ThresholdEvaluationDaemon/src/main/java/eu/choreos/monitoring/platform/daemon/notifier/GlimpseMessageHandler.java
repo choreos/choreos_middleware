@@ -6,6 +6,7 @@ import javax.jms.JMSException;
 import javax.naming.NamingException;
 
 import eu.choreos.monitoring.platform.utils.HostnameHandler;
+import eu.choreos.platform.utils.CommandRuntimeException;
 
 import it.cnr.isti.labse.glimpse.event.GlimpseBaseEvent;
 import it.cnr.isti.labse.glimpse.probe.GlimpseAbstractProbe;
@@ -16,15 +17,16 @@ public class GlimpseMessageHandler extends GlimpseAbstractProbe {
 		super(settings);
 	}
 
-	public void sendMessage(GlimpseBaseEvent<String> event) {
-		event.setNetworkedSystemSource(HostnameHandler.getHostName());
+	public GlimpseBaseEvent<String> sendMessage(GlimpseBaseEvent<String> event) throws MessageHandlingFault {
+		String hostName;
 		try {
 			this.sendEventMessage(event, false);
 		} catch (JMSException e) {
-			e.printStackTrace();
+			throw new MessageHandlingFault("JMS Exception");
 		} catch (NamingException e) {
-			e.printStackTrace();
+			throw new MessageHandlingFault("Naming Exception");
 		}
+		return event;
 	}
 
 	@Override

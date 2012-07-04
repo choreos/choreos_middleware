@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
@@ -15,49 +16,45 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import eu.choreos.monitoring.platform.datatypes.Gmetric;
+import eu.choreos.monitoring.platform.daemon.datatypes.Host;
+import eu.choreos.monitoring.platform.daemon.datatypes.Metric;
+import eu.choreos.monitoring.platform.exception.GangliaException;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
 
 public class GmondDataReaderTest {
 
 	private GmondDataReader gmondReader;
-
+	private Socket socket;
+	
 	@Before
-	public void setUp() throws IOException {
+	public void setUp() throws IOException, GangliaException {
 		gmondReader = new GmondDataReader("http://localhost/", 8649);
-		Socket socket = mock(Socket.class);
-
-		when(socket.getInputStream()).thenReturn(
-				getClass().getResourceAsStream("/campinas.xml"));
-
+		socket = mock(Socket.class);
 		gmondReader.setSocket(socket);
 
 	}
 
 	@Test
-	public void testParseGangliaCurrentMetrics() {
-		InputStream in = getClass().getResourceAsStream("/campinas.xml");
-		Document dom = gmondReader.convertToDomDocument(in);
+	public void testParseGangliaCurrentMetricsWithOneHost() throws Exception {
+		when(socket.getInputStream()).thenReturn(
+				getClass().getResourceAsStream("/campinas.xml"));
+		List<Host> hosts = gmondReader.getUpToDateHostsInfo();
 
-		dom.getDocumentElement().normalize();
-		NodeList clusterNodeList = dom.getElementsByTagName("CLUSTER");
-
-		assertEquals("LCPD",
-				((Element) clusterNodeList.item(0)).getAttribute("NAME"));
+		assertEquals(1, hosts.size());
+		assertEquals("0.00", hosts.get(0).getMetricValue("load_one"));
 	}
-
+	
 	@Test
-	public void testGetAllMetrics() {
-		Map<String, Gmetric> result = gmondReader.getAllMetrics();
+	public void testParseGangliaCurrentMetricsWithManyHosts() throws Exception {
+		when(socket.getInputStream()).thenReturn(
+				getClass().getResourceAsStream("/ganglia_opencirrus.xml"));
 
-		String memTotal = result.get("mem_total").getValue();
-		assertEquals("4118892", memTotal);
+		List<Host> hosts = gmondReader.getUpToDateHostsInfo();
 
-		String load = result.get("load_five").getValue();
-		assertEquals("0.04", load);
-
-		String swap = result.get("swap_free").getValue();
-		assertEquals("1951740", swap);
-
+		assertEquals(22, hosts.size());
+		assertEquals("opencirrus-08039.hpl.hp.com", hosts.get(0).getHostName());
+		//assertEquals("opencirrus-07901.hpl.hp.com", hosts.get(13).getHostName());
+		//assertEquals("cirrus078-mgmt-n3.hpl.hp.com", hosts.get(24).getHostName());
+		
 	}
 }

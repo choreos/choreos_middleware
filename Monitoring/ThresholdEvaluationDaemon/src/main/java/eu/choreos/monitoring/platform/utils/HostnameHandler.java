@@ -6,6 +6,8 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 
+import eu.choreos.platform.utils.CommandRuntimeException;
+import eu.choreos.platform.utils.ShellHandler;
 
 public class HostnameHandler {
 
@@ -34,8 +36,8 @@ public class HostnameHandler {
 		return command;
 	}
 
-	public static String getHostName() {
-		return ShellHandler.runLocalCommand(getScriptCommand()).replace("\n",
-				"");
+	public static String getHostName() throws CommandRuntimeException {
+		return (new ShellHandler()).runLocalCommand(getScriptCommand())
+				.replace("\n", "");
 	}
 }
