@@ -13,6 +13,7 @@ import org.junit.Test;
 import com.jcraft.jsch.JSchException;
 
 import eu.choreos.nodepoolmanager.ConfigurationManager;
+import eu.choreos.nodepoolmanager.chef.ChefScripts;
 import eu.choreos.nodepoolmanager.datamodel.Node;
 import eu.choreos.nodepoolmanager.utils.LogConfigurator;
 import eu.choreos.nodepoolmanager.utils.SshUtil;
@@ -21,7 +22,6 @@ import eu.choreos.nodepoolmanager.utils.SshUtil;
  * Please, before running these tests, read the README file
  *  
  * @author leonardo
- *
  */
 public class FixedCloudProviderTest {
 	
@@ -80,5 +80,4 @@ public class FixedCloudProviderTest {
         	System.out.println("Node was already bootstrapped");
         }
 	}
-	
 }

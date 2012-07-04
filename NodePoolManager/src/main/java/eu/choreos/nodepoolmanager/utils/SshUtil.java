@@ -11,7 +11,7 @@ import com.jcraft.jsch.Session;
 
 public class SshUtil {
 
-	private Logger logger = Logger.getLogger(SshUtil.class);
+    private Logger logger = Logger.getLogger(SshUtil.class);
     private final String hostname, user, privateKeyFile;
     private Session session;
 
@@ -41,8 +41,10 @@ public class SshUtil {
         try {
             // Once upon a time, an old session caused a lot of trouble...
             session = getSession();
-            session.connect(5000);
+            session.connect(10000);
         } catch (JSchException e) {
+            System.err.println("SshUtil: SSH to " + user + "@" + hostname + " failed: "
+                    + e.getMessage());
             return false;
         }
 
@@ -94,7 +96,7 @@ public class SshUtil {
             session.disconnect();
             output = sb.toString();
         } catch (JSchException e) {
-        	logger.debug("Could not connect to " + user + "@" + hostname + " with key "
+            logger.debug("Could not connect to " + user + "@" + hostname + " with key "
                     + privateKeyFile);
             throw e;
         }
