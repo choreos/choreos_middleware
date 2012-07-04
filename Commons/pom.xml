@@ -1,15 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>org.ow2.choreos</groupId>
 	<artifactId>MiddlewareCommons</artifactId>
-	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>MiddlewareCommons</name>
-	<url>http://valinhos.ime.usp.br:54080/hudson/</url>
+	<packaging>jar</packaging>
 
 	<parent>
-		<groupId>br.usp.ime.ccsl.choreos</groupId>
+		<groupId>org.ow2.choreos</groupId>
 		<artifactId>middleware</artifactId>
 		<version>0.2-SNAPSHOT</version>
 	</parent>
@@ -20,12 +19,6 @@
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
 			<version>0.1.44-1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-bundle</artifactId>
-			<version>2.2.5</version>
 		</dependency>
 
 	</dependencies>

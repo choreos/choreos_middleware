@@ -6,13 +6,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>br.usp.ime.ccsl.choreos</groupId>
+		<groupId>org.ow2.choreos</groupId>
 		<artifactId>middleware</artifactId>
 		<version>0.2-SNAPSHOT</version>
 	</parent>
 
 
-	<groupId>br.usp.ime.ccsl</groupId>
+	<groupId>org.ow2.choreos</groupId>
 	<artifactId>choreos-web</artifactId>
 	<version>0.2-SNAPSHOT</version>
 	<packaging>war</packaging>

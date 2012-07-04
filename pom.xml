@@ -1,23 +1,63 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>br.usp.ime.ccsl.choreos</groupId>
-	<artifactId>middleware</artifactId>
-	<packaging>pom</packaging>
-	<version>0.2-SNAPSHOT</version>
-	<name>CHOReOS Middleware</name>
 
-	<modules>
-		<module>choreos-web</module>
-		<!-- <module>su-Jsr-181-RoleAssignmentService-provide</module> <module>ChoreosWebServiceProxy</module>- -->
-		<module> ServiceDeployer</module>
-		<module>StorageFactory</module>
-	</modules>
+	<groupId>org.ow2.choreos</groupId>
+	<artifactId>middleware</artifactId>
+	<version>0.2-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>CHOReOS Middleware</name>
+    <description>The CHOReOS cloud moddielware</description>
+    <url>http://www.choreos.eu</url>
+    <inceptionYear>2011</inceptionYear>
+
+    <licenses>
+      <license>
+        <name>GNU LESSER GENERAL PUBLIC LICENSE</name>
+        <url>http://www.gnu.org/licenses/lgpl.html</url>
+      </license>
+    </licenses>
+
+    <organization>
+        <name>USP FLOSS Competence Center (CCSL-USP)</name>
+        <url>http://ccsl.ime.usp.br/en</url>
+    </organization>
+
 	<scm>
 		<connection>scm:git@github.com:choreos/choreos_middleware.git</connection>
 		<developerConnection>scm:git@github.com:choreos/choreos_middleware.git</developerConnection>
 		<url>https://github.com/choreos/choreos_middleware</url>
 	</scm>
+
+	<developers>
+		<developer>
+			<id>daniel.cukier</id>
+			<name>Daniel cukier</name>
+			<email>danicuki@ime.usp.br</email>
+			<organization>IME-USP</organization>
+		</developer>
+		<developer>
+			<id>thiago.colucci</id>
+			<name>Thiago Colucci</name>
+			<email>colucci@ime.usp.br</email>
+			<organization>IME-USP</organization>
+		</developer>
+		<developer>
+			<id>leofl</id>
+			<name>Leonardo Leite</name>
+			<email>leofl@ime.usp.br</email>
+			<organization>IME-USP</organization>
+		</developer>
+		<developer>
+			<id>cems</id>
+			<name>Cadu</name>
+			<email>cadu@ime.usp.br</email>
+			<organization>IME-USP</organization>
+		</developer>
+	</developers>
+
+<!-- not used at the moment
 	<ciManagement>
 		<system>Hudson</system>
 		<notifiers>
@@ -28,10 +68,29 @@
 			</notifier>
 		</notifiers>
 	</ciManagement>
+
+
 	<issueManagement>
 		<system>Xplanner</system>
 		<url>http://eclipse.ime.usp.br/xplanner/do/view/project?oid=7214</url>
 	</issueManagement>
+
+	<distributionManagement>
+		<site>
+			<id>PabxManagement</id>
+			<url>scp://danicuki@valinhos.ime.usp.br:54022/var/www/choreos/</url>
+		</site>
+	</distributionManagement>
+-->
+
+	<modules>
+		<module>choreos-web</module>
+		<module>Commons</module>
+		<module>NodePoolManager</module>
+		<module>ServiceDeployer</module>
+		<module>StorageFactory</module>
+	</modules>
+
 	<repositories>
 		<repository>
 			<id>maven-restlet</id>
@@ -68,7 +127,6 @@
 		</repository>
 	</repositories>
 
-
 	<pluginRepositories>
 		<pluginRepository>
 			<id>Codehaus repository</id>
@@ -87,32 +145,6 @@
 			</releases>
 		</pluginRepository>
 	</pluginRepositories>
-	<developers>
-		<developer>
-			<id>daniel.cukier</id>
-			<name>Daniel cukier</name>
-			<email>danicuki@ime.usp.br</email>
-			<organization>IME-USP</organization>
-		</developer>
-		<developer>
-			<id>thiago.colucci</id>
-			<name>Thiago Colucci</name>
-			<email>colucci@ime.usp.br</email>
-			<organization>IME-USP</organization>
-		</developer>
-		<developer>
-			<id>leonardo.leite</id>
-			<name>Leonardo Leite</name>
-			<email>leofl@ime.usp.br</email>
-			<organization>IME-USP</organization>
-		</developer>
-		<developer>
-			<id>cems</id>
-			<name>Cadu</name>
-			<email>cadu@ime.usp.br</email>
-			<organization>IME-USP</organization>
-		</developer>
-	</developers>
 
 	<dependencies>
 		<dependency>
@@ -136,6 +168,18 @@
          <artifactId>log4j</artifactId>
          <version>1.2.17</version>
          <type>jar</type>
+        </dependency>
+
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-bundle</artifactId>
+			<version>2.2.5</version>
+		</dependency>
+
+        <dependency>
+	        <groupId>org.apache.commons</groupId>
+	        <artifactId>commons-io</artifactId>
+	        <version>1.3.2</version>
         </dependency>
 
 	</dependencies>
@@ -311,18 +355,10 @@
 
 		</plugins>
 	</build>
+
 	<properties>
 		<eclipse.dependency>true</eclipse.dependency>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
-	<distributionManagement>
-		<site>
-			<id>PabxManagement</id>
-			<url>
-     scp://danicuki@valinhos.ime.usp.br:54022/var/www/choreos/
-  </url>
-		</site>
-	</distributionManagement>
 
 </project>
