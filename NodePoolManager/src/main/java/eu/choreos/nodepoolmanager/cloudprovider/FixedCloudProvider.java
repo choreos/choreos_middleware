@@ -21,11 +21,11 @@ import eu.choreos.nodepoolmanager.datamodel.Node;
  */
 public class FixedCloudProvider implements CloudProvider {
 
-	private String nodeIp = Configuration.get("FIXED_VM_IP");
-	private String nodeHostname = Configuration.get("FIXED_VM_HOSTNAME");
-	private String nodeUser = Configuration.get("FIXED_VM_USER");
-	private String nodePkey = Configuration.get("FIXED_VM_PRIVATE_SSH_KEY");
-	private String nodeId = "1";
+	private final String nodeIp = Configuration.get("FIXED_VM_IP");
+	private final String nodeHostname = Configuration.get("FIXED_VM_HOSTNAME");
+	private final String nodeUser = Configuration.get("FIXED_VM_USER");
+	private final String nodePkey = Configuration.get("FIXED_VM_PRIVATE_SSH_KEY");
+	private final String nodeId = "1";
 	private Node node;
 	
 	public FixedCloudProvider() {
@@ -36,7 +36,7 @@ public class FixedCloudProvider implements CloudProvider {
 		node.setCpus(1);
 		node.setHostname(nodeHostname);
 		node.setRam(512);
-		node.setSo("Ubuntu server 11.10");
+		node.setSo("Ubuntu server 10.04");
 		node.setStorage(10000);
 		node.setZone("BR");
 		node.setUser(nodeUser);
