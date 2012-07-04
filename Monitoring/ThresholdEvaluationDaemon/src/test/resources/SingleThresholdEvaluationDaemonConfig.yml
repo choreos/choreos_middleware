@@ -1,0 +1,4 @@
+attribute:    load_one
+comparison:   MAX
+limit_value:  1
+

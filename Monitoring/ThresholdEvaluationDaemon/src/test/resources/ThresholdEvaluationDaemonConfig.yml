@@ -1,0 +1,10 @@
+---
+ attribute:    load_one
+ comparison:   MAX
+ limit_value:  1
+
+---
+ attribute:    load_three
+ comparison:   MIN
+ limit_value:  0.7
+
