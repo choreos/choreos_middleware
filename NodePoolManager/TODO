@@ -2,6 +2,8 @@ NodePoolManager ToDo list
 
 Code improvements
 
+* Make FixedCloudProvider deal with several VMs
+
 * After applying a configuration, use "knife node show NODE" to verify if the recipe was installed with success
 If not, return an error
 

@@ -20,7 +20,7 @@ VM Creation
 Be sure you can:
 - SSH to it without typing a password.
 - Use sudo without typing a password (type `$sudo visudo` and add the line "user ALL = NOPASSWD: ALL".
-Also synchronize the machine time ($ntpdate ccsl.ime.usp.br).
+Also synchronize the machine time (#ntpdate ccsl.ime.usp.br).
 
 Configure the FIXED_VM settings in the file src/main/resources/nodepoolmanager.properties (you will find a template there).
 
@@ -37,3 +37,4 @@ Links
 -----
 - Configuring VirtualBox Network: http://ccsl.ime.usp.br/foswiki/bin/view/Choreos/VMs
 - Passwordless SSH: http://www.integrade.org.br/ssh-without-password
+Obs: don't use a key with password.

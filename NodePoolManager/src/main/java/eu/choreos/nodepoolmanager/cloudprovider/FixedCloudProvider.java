@@ -11,43 +11,49 @@ import eu.choreos.nodepoolmanager.datamodel.Node;
 
 
 /**
- * Returns always the same node 
+ * Returns always the same node
+ * 
+ * FixedCloudProvider does not create new nodes
+ * TODO: Make FixedCloudProvider deal with several VMs 
  * 
  * @author leonardo, felps
  *
  */
 public class FixedCloudProvider implements CloudProvider {
 
-	private String NODE_IP = Configuration.get("FIXED_VM_IP");
-	private String NODE_ID = "1";
+	private String nodeIp = Configuration.get("FIXED_VM_IP");
+	private String nodeHostname = Configuration.get("FIXED_VM_HOSTNAME");
+	private String nodeUser = Configuration.get("FIXED_VM_USER");
+	private String nodePkey = Configuration.get("FIXED_VM_PRIVATE_SSH_KEY");
+	private String nodeId = "1";
 	private Node node;
 	
 	public FixedCloudProvider() {
 		
 		node = new Node();
-		node.setIp(NODE_IP);
-		node.setId(NODE_ID);
+		node.setIp(nodeIp);
+		node.setId(nodeId);
 		node.setCpus(1);
-		node.setHostname("choreos-node");
+		node.setHostname(nodeHostname);
 		node.setRam(512);
 		node.setSo("Ubuntu server 11.10");
 		node.setStorage(10000);
 		node.setZone("BR");
-		node.setUser("choreos");
-		node.setPrivateKey(Configuration.get("FIXED_VM_PRIVATE_SSH_KEY"));
+		node.setUser(nodeUser);
+		node.setPrivateKey(nodePkey);
 	}
 	
 	public Node createNode(Node node) throws RunNodesException {
 
-		return this.node;
+		throw new UnsupportedOperationException("FixedCloudProvider cannot create new nodes");
 	}
 
 	public Node getNode(String nodeId) throws NodeNotFoundException {
 		
-		if (nodeId.equals(NODE_ID))
+		if (nodeId.equals(nodeId))
 			return node;
 		else
-			return null;
+			throw new NodeNotFoundException();
 	}
 
 	public List<Node> getNodes() {
@@ -59,12 +65,12 @@ public class FixedCloudProvider implements CloudProvider {
 
 	public void destroyNode(String id) {
 		
-		return;
+		throw new UnsupportedOperationException("FixedCloudProvider does not destroy nodes");
 	}
 
 	public Node createOrUseExistingNode(Node node) throws RunNodesException {
 
-		return node;
+		return this.node;
 	}
 
 	public String getproviderName() {
