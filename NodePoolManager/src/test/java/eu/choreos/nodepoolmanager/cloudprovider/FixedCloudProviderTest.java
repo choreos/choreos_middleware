@@ -1,7 +1,7 @@
 package eu.choreos.nodepoolmanager.cloudprovider;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,11 +12,8 @@ import org.junit.Test;
 
 import com.jcraft.jsch.JSchException;
 
-import eu.choreos.nodepoolmanager.Configuration;
 import eu.choreos.nodepoolmanager.ConfigurationManager;
-import eu.choreos.nodepoolmanager.chef.ChefScripts;
 import eu.choreos.nodepoolmanager.datamodel.Node;
-import eu.choreos.nodepoolmanager.utils.CommandLine;
 import eu.choreos.nodepoolmanager.utils.LogConfigurator;
 import eu.choreos.nodepoolmanager.utils.SshUtil;
 
@@ -69,15 +66,10 @@ public class FixedCloudProviderTest {
 	@Test
 	public void shouldLeaveNodeBootstraped() throws Exception {
 
-		//cleanChefServer();
-		
 		CloudProvider cp = new FixedCloudProvider();
 		Node node = cp.createOrUseExistingNode(new Node());
 		System.out.println(node);
 
-//        waitSsh(node);
-//        System.out.println("waited");
-        
         ConfigurationManager configurationManager = new ConfigurationManager();
         if (!configurationManager.isInitialized(node)) {
         	System.out.println("Going to bootstrap the node");
@@ -89,19 +81,4 @@ public class FixedCloudProviderTest {
         }
 	}
 	
-	private void waitSsh(Node node) throws JSchException {
-		
-		SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-        while (!ssh.isAccessible())
-            System.out.println("Going to try again");
-	}
-
-	private void cleanChefServer() {
-		
-		String workdir = Configuration.get("CHEF_REPO");
-		String deleteChoreosNode = ChefScripts.getDeleteNode("choreos-node");
-		String deleteChoreosClient = ChefScripts.getDeleteClient("choreos-node");
-		CommandLine.runLocalCommand(deleteChoreosClient, workdir, true);
-		CommandLine.runLocalCommand(deleteChoreosNode, workdir, true);
-	}
 }
