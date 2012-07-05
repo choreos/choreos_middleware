@@ -1,46 +1,53 @@
 package eu.choreos.nodepoolmanager;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.jclouds.compute.RunNodesException;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
-import eu.choreos.nodepoolmanager.Configuration;
-import eu.choreos.nodepoolmanager.ConfigurationManager;
-import eu.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
+import eu.choreos.nodepoolmanager.cloudprovider.CloudProvider;
+import eu.choreos.nodepoolmanager.cloudprovider.FixedCloudProvider;
 import eu.choreos.nodepoolmanager.datamodel.Node;
-import eu.choreos.nodepoolmanager.utils.SshUtil;
+import eu.choreos.nodepoolmanager.utils.LogConfigurator;
 
-
+/**
+ * Before run this test, restore your VM to a snapshot before the bootstrap
+ * 
+ * If the machine is already bootstrapped the test must still pass,
+ * but it will not properly test the system
+ * 
+ * @author leonardo
+ *
+ */
 public class NodeInitializerTest {
     
-	private final static AWSCloudProvider infra = new AWSCloudProvider();
-    private static Node node = new Node();
+	@Before
+	public void setUp() {
+		LogConfigurator.configLog();
+	}
+	
+	/**
+	 * Beware, this test will leave the node bootstrapped
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void shouldLeaveNodeBootstraped() throws Exception {
 
-    @BeforeClass
-    public static void createNode() throws RunNodesException {
-        node.setImage("us-east-1/ami-ccf405a5");
-        Configuration.set("DEFAULT_PROVIDER", "");
-        node = infra.createNode(node);
-    }
-    
-    @Test
-    public void initializeNode() throws Exception {
-        
-    	// Waiting ssh to start
-        SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-        while (!ssh.isAccessible())
-            ;
+		CloudProvider cp = new FixedCloudProvider();
+		Node node = cp.createOrUseExistingNode(new Node());
+		System.out.println(node);
 
-        ConfigurationManager configurationManager = new ConfigurationManager();
-        assertFalse(configurationManager.isInitialized(node));
-        
-        configurationManager.initializeNode(node);
-		assertTrue(configurationManager.isInitialized(node));
-    }
-    
+		ConfigurationManager configurationManager = new ConfigurationManager();
+		if (!configurationManager.isInitialized(node)) {
+			System.out.println("Going to bootstrap the node");
+			configurationManager.initializeNode(node);
+			System.out.println("Checking if bootstrap was OK");
+			assertTrue(configurationManager.isInitialized(node));
+		} else {
+			System.out.println("Node was already bootstrapped");
+		}
+	}
         
     
 }

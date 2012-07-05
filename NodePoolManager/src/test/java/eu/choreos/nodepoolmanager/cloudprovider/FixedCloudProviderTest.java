@@ -12,72 +12,49 @@ import org.junit.Test;
 
 import com.jcraft.jsch.JSchException;
 
-import eu.choreos.nodepoolmanager.ConfigurationManager;
 import eu.choreos.nodepoolmanager.datamodel.Node;
 import eu.choreos.nodepoolmanager.utils.LogConfigurator;
 import eu.choreos.nodepoolmanager.utils.SshUtil;
 
 /**
  * Please, before running these tests, read the README file
- *
+ * 
  * @author leonardo
  */
 public class FixedCloudProviderTest {
 
-    @Before
-    public void setUp() {
-        LogConfigurator.configLog();
-    }
+	@Before
+	public void setUp() {
+		LogConfigurator.configLog();
+	}
 
-    @Test
-    public void shouldReturnNodeInfo() throws RunNodesException {
+	@Test
+	public void shouldReturnNodeInfo() throws RunNodesException {
 
-        CloudProvider cp = new FixedCloudProvider();
-        Node node = cp.createOrUseExistingNode(new Node());
+		CloudProvider cp = new FixedCloudProvider();
+		Node node = cp.createOrUseExistingNode(new Node());
 
-        assertTrue(node.getHostname() != null && !node.getHostname().isEmpty());
+		assertTrue(node.getHostname() != null && !node.getHostname().isEmpty());
 
-        Pattern pat = Pattern.compile("(\\d{1,3}\\.){3}\\d{1,3}");
-        Matcher matcher = pat.matcher(node.getIp());
-        assertTrue(matcher.matches());
-    }
+		Pattern pat = Pattern.compile("(\\d{1,3}\\.){3}\\d{1,3}");
+		Matcher matcher = pat.matcher(node.getIp());
+		assertTrue(matcher.matches());
+	}
 
-    @Test
-    public void shouldConnectToTheNode() throws RunNodesException {
+	@Test
+	public void shouldConnectToTheNode() throws RunNodesException {
 
-        CloudProvider cp = new FixedCloudProvider();
-        Node node = cp.createOrUseExistingNode(new Node());
+		CloudProvider cp = new FixedCloudProvider();
+		Node node = cp.createOrUseExistingNode(new Node());
 
-        try {
-            SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-            assertTrue(ssh.isAccessible());
-            ssh.disconnect();
-        } catch (JSchException e) {
-            System.out.println("Could not connect! " + e);
-            fail();
-        }
-    }
-
-    /**
-     * Beware, this test will leave the node bootstrapped
-     *
-     * @throws Exception
-     */
-    @Test
-    public void shouldLeaveNodeBootstraped() throws Exception {
-
-        CloudProvider cp = new FixedCloudProvider();
-        Node node = cp.createOrUseExistingNode(new Node());
-        System.out.println(node);
-
-        ConfigurationManager configurationManager = new ConfigurationManager();
-        if (!configurationManager.isInitialized(node)) {
-            System.out.println("Going to bootstrap the node");
-            configurationManager.initializeNode(node);
-            System.out.println("Checking if bootstrap was OK");
-            assertTrue(configurationManager.isInitialized(node));
-        } else {
-            System.out.println("Node was already bootstrapped");
-        }
-    }
+		try {
+			SshUtil ssh = new SshUtil(node.getIp(), node.getUser(),
+					node.getPrivateKeyFile());
+			assertTrue(ssh.isAccessible());
+			ssh.disconnect();
+		} catch (JSchException e) {
+			System.out.println("Could not connect! " + e);
+			fail();
+		}
+	}
 }
