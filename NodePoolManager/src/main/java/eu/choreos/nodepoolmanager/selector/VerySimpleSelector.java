@@ -18,7 +18,7 @@ public class VerySimpleSelector implements NodeSelector {
 		
 		Node node = new Node();
 		try {
-			this.cloudProvider.createOrUseExistingNode(node);
+			node = this.cloudProvider.createOrUseExistingNode(node);
 		} catch (RunNodesException e) {
 			e.printStackTrace();
 			return null;

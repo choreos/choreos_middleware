@@ -21,14 +21,14 @@ public class NodePoolManagerStandaloneServer implements Runnable {
     }
 
     public static void startNodePoolManager() throws InterruptedException {
+    	
+    	logger = Logger.getLogger(NodePoolManagerStandaloneServer.class);
+    	
         Runnable npmServer = new NodePoolManagerStandaloneServer();
-		
         new Thread(npmServer).start();
-        
         while (!running) {
             Thread.sleep(1);
         }
-
     }
 
     public static void stopNodePoolManager() {
@@ -57,7 +57,6 @@ public class NodePoolManagerStandaloneServer implements Runnable {
     public static void main(String[] args) throws InterruptedException {
     	
     	LogConfigurator.configLog();
-        logger = Logger.getLogger(NodePoolManagerStandaloneServer.class);
         
         NodePoolManagerStandaloneServer.startNodePoolManager();
     }

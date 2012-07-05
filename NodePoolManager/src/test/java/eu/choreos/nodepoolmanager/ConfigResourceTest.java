@@ -11,18 +11,14 @@ import javax.ws.rs.core.Response.Status;
 import org.junit.Test;
 
 import eu.choreos.nodepoolmanager.datamodel.Config;
-import eu.choreos.nodepoolmanager.datamodel.NodeRestRepresentation;
 import eu.choreos.nodepoolmanager.utils.SshUtil;
 
 public class ConfigResourceTest extends BaseTest {
 	
-	private String SSH_USER = "ubuntu";
-	private String SSH_KEY = Configuration.get("AMAZON_PRIVATE_SSH_KEY");
+	private String IP = Configuration.get("FIXED_VM_IP");
+	private String SSH_USER = Configuration.get("FIXED_VM_USER");
+	private String SSH_KEY = Configuration.get("FIXED_VM_PRIVATE_SSH_KEY");
 	
-    public void resetPath() {
-        client.back(true);
-    }
-    
     /**
      * This test supposes the "getting-started2" recipe is already available on the chef server 
      * This recipe must create the getting-started2.txt file on home directory
@@ -38,30 +34,28 @@ public class ConfigResourceTest extends BaseTest {
     	
     	Config config = new Config();
     	config.setName(RECIPE_NAME);
-        Response response = client.post(config);
-        NodeRestRepresentation responseNode = getNodeFromResponse(response);
-
-        // verify cloud node 
-        assertEquals(EXPECTED_IMAGE, responseNode.getImage());
-        assertEquals(Status.CREATED.getStatusCode(), response.getStatus());
+        Response responseApplyConfig = client.post(config);
+        // TODO: retrieve responseNode from response body (representation on body not implemented yet)
+        //NodeRestRepresentation responseNode = getNodeFromResponse(response);
+        
+        client.back(true);
+        client.path("nodes/upgrade");
+        Response responseUpgrade = client.post(null);
+        
+        assertEquals(Status.CREATED.getStatusCode(), responseApplyConfig.getStatus());
+        assertEquals(Status.OK.getStatusCode(), responseUpgrade.getStatus());
         
         // verify resource location
-        List<Object> list =  response.getMetadata().get("Location");
+        List<Object> list =  responseApplyConfig.getMetadata().get("Location");
         assertTrue(list != null && !list.isEmpty());
         String location = list.get(0).toString();
         assertTrue(isNodeLocation(location));
         
         // verify if the file getting-started2 is actually there
-    	SshUtil ssh = new SshUtil(responseNode.getIp(), SSH_USER, SSH_KEY);
-    	while (!ssh.isAccessible()){
-				System.out.println("Could not connect; Trying again in 5 seconds");
-				try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {}
-		}
+        SshUtil ssh = new SshUtil(IP, SSH_USER, SSH_KEY);
     	String createdFile = "chef-getting-started2.txt";
     	String returnText = null;
-		returnText = ssh.runCommand("ls " + createdFile);
+		returnText = ssh.runCommand("ls " + createdFile, true);
     	assertTrue(returnText.trim().equals(createdFile));
     }
     

@@ -8,15 +8,15 @@ import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
-import org.jclouds.compute.RunNodesException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
-import eu.choreos.nodepoolmanager.Configuration;
-import eu.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
+import eu.choreos.nodepoolmanager.cloudprovider.CloudProvider;
+import eu.choreos.nodepoolmanager.cloudprovider.FixedCloudProvider;
 import eu.choreos.nodepoolmanager.datamodel.Node;
 import eu.choreos.nodepoolmanager.datamodel.NodeRestRepresentation;
 import eu.choreos.nodepoolmanager.rest.NodePoolManagerStandaloneServer;
+import eu.choreos.nodepoolmanager.utils.LogConfigurator;
 
 
 public class BaseTest {
@@ -27,18 +27,20 @@ public class BaseTest {
 	private static String RESOURCE = "nodes";
 	
 	protected static WebClient client;
-    protected static AWSCloudProvider infrastructure = new AWSCloudProvider();
+    protected static CloudProvider infrastructure = new FixedCloudProvider();
     protected static Node sampleNode;
     
 
     @BeforeClass
     public static void startServer() throws Exception {
     	
+    	LogConfigurator.configLog();
+    	
     	client = WebClient.create(NodePoolManagerStandaloneServer.URL);
     	
         NodePoolManagerStandaloneServer.startNodePoolManager();
         Configuration.set("DEFAULT_PROVIDER", TEST_DEFAULT_PROVIDER);
-        createSampleNode();
+        // createSampleNode();
 
         HTTPConduit conduit = WebClient.getConfig(client).getHttpConduit();
         conduit.getClient().setReceiveTimeout(Long.MAX_VALUE);
@@ -47,16 +49,16 @@ public class BaseTest {
 
     @AfterClass
     public static void stopServer() throws UnsupportedEncodingException {
-    	infrastructure.destroyNode(sampleNode.getId());
+    	//infrastructure.destroyNode(sampleNode.getId());
         NodePoolManagerStandaloneServer.stopNodePoolManager();
     }
 
-    public static void createSampleNode() throws RunNodesException {
-        sampleNode = new Node();
-        sampleNode.setImage(TEST_IMAGE);
-
-        infrastructure.createNode(sampleNode);
-    }
+//    public static void createSampleNode() throws RunNodesException {
+//        sampleNode = new Node();
+//        sampleNode.setImage(TEST_IMAGE);
+//
+//        infrastructure.createNode(sampleNode);
+//    }
     
     protected static NodeRestRepresentation getNodeFromResponse(Response response) {
     	
@@ -77,6 +79,10 @@ public class BaseTest {
     	Matcher matcher = pattern.matcher(uri);
     	
     	return matcher.matches();
+    }
+    
+    protected void resetPath() {
+        client.back(true);
     }
 
 }

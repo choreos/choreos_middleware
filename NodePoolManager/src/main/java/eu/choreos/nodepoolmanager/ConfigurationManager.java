@@ -91,6 +91,7 @@ public class ConfigurationManager {
     public boolean isInitialized(Node node) throws NodeNotAccessible, Exception {
 
         SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
+        logger.debug("Going to connect to " + node);
 
         String createdFile = "chef-getting-started.txt";
         String returnText = null;

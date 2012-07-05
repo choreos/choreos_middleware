@@ -15,8 +15,9 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
 
+import eu.choreos.nodepoolmanager.Configuration;
 import eu.choreos.nodepoolmanager.Controller;
-import eu.choreos.nodepoolmanager.cloudprovider.AWSCloudProvider;
+import eu.choreos.nodepoolmanager.cloudprovider.CloudProviderFactory;
 import eu.choreos.nodepoolmanager.datamodel.Config;
 import eu.choreos.nodepoolmanager.datamodel.Node;
 
@@ -24,7 +25,8 @@ import eu.choreos.nodepoolmanager.datamodel.Node;
 public class ConfigsResource {
 
 	private Logger logger = Logger.getLogger(ConfigsResource.class);
-	private Controller controller = new Controller(new AWSCloudProvider());
+	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
+	private Controller controller = new Controller(CloudProviderFactory.getInstance(cloudProviderType));
 	
 	/**
 	 * Updates node cookbook list. To apply, post to nodes/upgrade.
