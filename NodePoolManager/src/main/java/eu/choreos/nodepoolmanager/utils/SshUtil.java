@@ -79,7 +79,7 @@ public class SshUtil {
         Session session = getSession();
 
         try {
-            session.connect(5000);
+            session.connect(10000);
 
             Channel channel = session.openChannel("exec");
             ((ChannelExec) channel).setCommand(command);
@@ -102,5 +102,17 @@ public class SshUtil {
         }
 
         return output;
+    }
+
+    public void disconnect() {
+        if (session != null && session.isConnected()) {
+            session.disconnect();
+        }
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        disconnect();
+        super.finalize();
     }
 }

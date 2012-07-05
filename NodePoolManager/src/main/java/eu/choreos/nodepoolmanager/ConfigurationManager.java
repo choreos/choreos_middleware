@@ -54,6 +54,7 @@ public class ConfigurationManager {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
             }
+            ssh.disconnect();
         }
 
         logger.debug("Connected");
