@@ -89,7 +89,7 @@ public class ConfigurationManager {
         node.setChefName(chefClientName);
     }
 
-    public boolean isInitialized(Node node) throws NodeNotAccessible, Exception {
+    public boolean isInitialized(Node node) throws NodeNotAccessibleException, Exception {
 
         SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
         logger.debug("Going to connect to " + node);
