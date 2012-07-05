@@ -65,7 +65,7 @@ public class ConfigurationManager {
             command = ChefScripts.getChefBootstrapScript(node.getPrivateKeyFile(), node.getIp(),
                     node.getUser());
             logger.debug(command);
-            CommandLine.runLocalCommand(command, CHEF_REPO);
+            CommandLine.runLocalCommand(command, CHEF_REPO, true);
             logger.debug("Bootstrap completed");
 
             this.retrieveChefName(node);
