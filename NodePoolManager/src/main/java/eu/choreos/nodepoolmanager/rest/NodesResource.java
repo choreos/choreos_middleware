@@ -72,14 +72,14 @@ public class NodesResource {
     @Path("{node_id:.+}")
     public Response getNode(@PathParam("node_id") String id) {
         
-    	logger.debug("Request to get nodes");
+    	logger.debug("Request to get node " + id);
     	
     	Response response;
-        CloudProvider infrastructure = new AWSCloudProvider();
 
         try {
-            NodeRestRepresentation node = infrastructure.getNode(id).getRestRepresentation();
-            response = Response.ok(node).build();
+            Node node = controller.getNode(id);
+            NodeRestRepresentation nodeRest = new NodeRestRepresentation(node);
+            response = Response.ok(nodeRest).build();
         } catch (NodeNotFoundException e) {
             response = Response.status(Status.NOT_FOUND).build();
         }

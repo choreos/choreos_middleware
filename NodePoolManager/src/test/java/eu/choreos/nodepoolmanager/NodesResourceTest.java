@@ -1,10 +1,6 @@
 package eu.choreos.nodepoolmanager;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Collection;
-import java.util.List;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -12,55 +8,43 @@ import javax.ws.rs.core.Response.Status;
 import org.junit.After;
 import org.junit.Test;
 
+import eu.choreos.nodepoolmanager.cloudprovider.CloudProvider;
+import eu.choreos.nodepoolmanager.cloudprovider.FixedCloudProvider;
+import eu.choreos.nodepoolmanager.datamodel.Node;
 import eu.choreos.nodepoolmanager.datamodel.NodeRestRepresentation;
 
-
 public class NodesResourceTest extends BaseTest {
-	
-    @After
-    public void resetPath() {
-        client.back(true);
-    }
 
-    @Test
-    public void createNode() throws Exception {
-        client.path("nodes");
+	@After
+	public void resetPath() {
+		client.back(true);
+	}
 
-        NodeRestRepresentation requestNode = new NodeRestRepresentation();
-        Response response = client.post(requestNode);
-        NodeRestRepresentation responseNode = getNodeFromResponse(response);
+	@Test
+	public void getNode() throws Exception {
 
-        assertEquals(EXPECTED_IMAGE, responseNode.getImage());
-        assertEquals(Status.CREATED.getStatusCode(), response.getStatus());
-        
-        List<Object> list =  response.getMetadata().get("Location");
-        assertTrue(list != null && !list.isEmpty());
-        String location = list.get(0).toString();
-        System.out.println("location= " + location);
-        assertTrue(isNodeLocation(location));
-    }
+		CloudProvider cp = new FixedCloudProvider();
+		Node node = cp.createOrUseExistingNode(null);
+		
+		System.out.println(node);
+		client.path("nodes/" + node.getId());
+		NodeRestRepresentation nodeRest = client.get(NodeRestRepresentation.class);
 
-    @Test
-    public void listNodes() throws Exception {
-        final String image2 = TEST_IMAGE;
+		System.out.println(node);
+		System.out.println(nodeRest);
+		
+		assertEquals(node.getId(), nodeRest.getId());
+		assertEquals(node.getHostname(), nodeRest.getHostname());
+		assertEquals(node.getIp(), nodeRest.getIp());
+	}
 
-        NodeRestRepresentation node = new NodeRestRepresentation();
-        node.setImage(image2);
+	@Test
+	public void getInvalidNode() {
+		
+		String NO_EXISTING_NODE = "nodes/696969696969";
+		client.path(NO_EXISTING_NODE);
+		Response response = client.get();
+		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
+	}
 
-        client.path("nodes");
-        client.post(node);
-
-        Collection<? extends NodeRestRepresentation> nodeCollection = client.getCollection(NodeRestRepresentation.class);
-        int nodeAmount = nodeCollection.size();
-        NodeRestRepresentation[] nodes = nodeCollection.toArray(new NodeRestRepresentation[nodeAmount]);
-
-        assertTrue(nodeAmount >= 2);
-        assertEquals(EXPECTED_IMAGE, nodes[nodeAmount - 2].getImage());
-        assertEquals(EXPECTED_IMAGE, nodes[nodeAmount - 1].getImage());
-
-        resetPath();
-        String id = (nodes[nodeAmount - 1]).getId();
-        infrastructure.destroyNode(id);
-    }
-    
 }

@@ -63,6 +63,18 @@ public class Controller {
     public List<Node> getNodes() {
         return infrastructure.getNodes();
     }
+    
+    public Node getNode(String id) throws NodeNotFoundException {
+    	
+    	List<Node> nodes = getNodes();
+    	if (nodes != null) {
+    		for (Node node: nodes) {
+    			if (node.getId().equals(id))
+    				return node;
+    		}
+    	} 
+		throw new NodeNotFoundException("Node" + id + " not found");
+    }
 
     /**
      * Applies the received configuration in a node that will be selected by the Node Pool Manager

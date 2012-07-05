@@ -69,7 +69,7 @@ public class ConfigResourceTest extends BaseTest {
     	
     	String INVALID_RECIPE = "xyz";
     	
-    	resetPath();
+    	client.back(true);
     	client.path("nodes/configs");   	
     	
     	Config config2 = new Config();

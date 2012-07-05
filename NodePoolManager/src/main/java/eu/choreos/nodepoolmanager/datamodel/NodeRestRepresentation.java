@@ -70,6 +70,24 @@ public class NodeRestRepresentation {
     protected String hostname;
     protected String image;
     protected Integer state;
+    
+    public NodeRestRepresentation() {
+    	
+    }
+    
+    public NodeRestRepresentation(Node node) {
+    	
+    	this.id = node.getId();
+    	this.cpus = node.getCpus();
+    	this.ram = node.getRam();
+    	this.state = node.getStorage();
+    	this.so = node.getSo();
+    	this.zone = node.getZone();
+    	this.ip = node.getIp();
+    	this.hostname = node.getHostname();
+    	this.image = node.getImage();
+    	this.state = node.getState();
+    }
 
     /**
      * Gets the value of the id property.
