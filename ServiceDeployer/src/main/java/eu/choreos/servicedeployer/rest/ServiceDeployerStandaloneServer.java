@@ -42,7 +42,7 @@ public class ServiceDeployerStandaloneServer implements Runnable {
 		sf.setResourceClasses(ServicesResource.class);
 		sf.setAddress(URL);
 		sf.create();
-		logger.info("Service Deployer has started");
+		logger.info("Service Deployer has started [" + URL + "]");
 		running = true;
 
 		while (running) {

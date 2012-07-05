@@ -77,10 +77,8 @@ You will also need to download the “getting-started” recipe into your cookbo
 
 == COMPILING IT ==
 
-After installing Maven 3, open the terminal at the NodePoolManager folder, and enter the following commands:
+After installing Maven 3, open the terminal at the NodePoolManager folder, and enter the following command:
 
-$ chmod +x install_jclouds-chef.sh 
-$ ./install_jclouds-chef.sh 
 $ mvn eclipse:eclipse
 
 It can take several minutes.
