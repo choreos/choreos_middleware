@@ -20,6 +20,7 @@ import eu.choreos.nodepoolmanager.Controller;
 import eu.choreos.nodepoolmanager.cloudprovider.CloudProviderFactory;
 import eu.choreos.nodepoolmanager.datamodel.Config;
 import eu.choreos.nodepoolmanager.datamodel.Node;
+import eu.choreos.nodepoolmanager.datamodel.NodeRestRepresentation;
 
 @Path("nodes/configs")
 public class ConfigsResource {
@@ -29,10 +30,13 @@ public class ConfigsResource {
 	private Controller controller = new Controller(CloudProviderFactory.getInstance(cloudProviderType));
 	
 	/**
-	 * Updates node cookbook list. To apply, post to nodes/upgrade.
-	 * @param config
+	 * Updates node configuration. 
+	 * To apply the configuration, post to nodes/upgrade.
+	 * 
+	 * @param config <code>config.name</code> corresponds to the chef recipe to be deployed
 	 * @param uriInfo
-	 * @return
+	 * @return Response with location = id of the node where the config is going to be applied, 
+	 * 			and the body contains the representation of such node
 	 * @throws URISyntaxException
 	 */
     @POST
@@ -54,6 +58,7 @@ public class ConfigsResource {
 		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
 		uriBuilder = uriBuilder.path(NodesResource.class).path(node.getId());
 		URI uri = uriBuilder.build();
-    	return Response.created(uri).build();
+		NodeRestRepresentation nodeRest = new NodeRestRepresentation(node);
+    	return Response.created(uri).entity(nodeRest).build();
     }
 }

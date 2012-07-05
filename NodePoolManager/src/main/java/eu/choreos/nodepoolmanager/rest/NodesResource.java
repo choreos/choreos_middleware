@@ -61,11 +61,10 @@ public class NodesResource {
     	logger.info(newNode + " created");
 		
     	UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-    	// TODO should be getId instead nodeIp
-    	// and the node should be in the body
-		uriBuilder = uriBuilder.path(NodesResource.class).path(newNode.getIp());
+		uriBuilder = uriBuilder.path(NodesResource.class).path(newNode.getId());
 		URI uri = uriBuilder.build();
-    	return Response.created(uri).build();
+		NodeRestRepresentation nodeRest = new NodeRestRepresentation(newNode);
+    	return Response.created(uri).entity(nodeRest).build();
     }
     
     @GET
