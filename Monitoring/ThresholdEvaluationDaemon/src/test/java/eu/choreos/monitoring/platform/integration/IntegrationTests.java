@@ -1,16 +1,16 @@
 package eu.choreos.monitoring.platform.integration;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Properties;
 
 import org.junit.Before;
-import org.junit.Test;
 
-import eu.choreos.monitoring.platform.daemon.ThresholdEvalDaemon;
 import eu.choreos.monitoring.platform.daemon.HostManager;
-import eu.choreos.monitoring.platform.daemon.Threshold;
+import eu.choreos.monitoring.platform.daemon.SingleThreshold;
+import eu.choreos.monitoring.platform.daemon.ThresholdEvalDaemon;
 import eu.choreos.monitoring.platform.daemon.ThresholdEvalDaemonLauncher;
 import eu.choreos.monitoring.platform.exception.GangliaException;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
@@ -45,7 +45,7 @@ public class IntegrationTests {
 		Properties settings = ThresholdEvalDaemonLauncher.getProperties();
 		thresholdManager = new ThresholdEvalDaemon(settings ,"localhost", 8649);
 		
-		Threshold shouldBeSurpassed = new Threshold("load_one", Threshold.MAX, 0);
+		SingleThreshold shouldBeSurpassed = new SingleThreshold("load_one", SingleThreshold.MAX, 0);
 		
 		thresholdManager.addThreshold(shouldBeSurpassed);
 		

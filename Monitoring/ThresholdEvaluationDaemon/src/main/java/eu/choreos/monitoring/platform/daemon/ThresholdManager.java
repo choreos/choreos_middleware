@@ -13,21 +13,21 @@ import eu.choreos.monitoring.platform.exception.GangliaException;
 public class ThresholdManager {
 
 	private HostManager hostManager;
-	private Set<Threshold> thresholds;
-	Map<String, List<Threshold>> surpassedThresholds;
+	private Set<AbstractThreshold> thresholds;
+	Map<String, List<AbstractThreshold>> surpassedThresholds;
 
 	public ThresholdManager(HostManager hostManager) {
 		this.hostManager = hostManager;
-		thresholds = new HashSet<Threshold>();
-		surpassedThresholds = new HashMap<String, List<Threshold>>();
+		thresholds = new HashSet<AbstractThreshold>();
+		surpassedThresholds = new HashMap<String, List<AbstractThreshold>>();
 	}
 
-	public void addThreshold(Threshold threshold) {
+	public void addThreshold(AbstractThreshold threshold) {
 			thresholds.add(threshold);
 		return;
 	}
 
-	public void addMultipleThresholds(List<Threshold> thresholdList) {
+	public void addMultipleThresholds(List<AbstractThreshold> thresholdList) {
 		thresholds.addAll(thresholdList);
 	}
 	
@@ -42,7 +42,7 @@ public class ThresholdManager {
 		return !surpassedThresholds.isEmpty();
 	}
 	
-	public Map<String, List<Threshold>> getSurpassedThresholds() throws GangliaException {
+	public Map<String, List<AbstractThreshold>> getSurpassedThresholds() throws GangliaException {
 		return surpassedThresholds;
 	}
 	
@@ -52,16 +52,16 @@ public class ThresholdManager {
 		return Double.parseDouble(value);
 	}
 
-	private List<Threshold> getAllSurpassedThresholds(Host host) throws GangliaException {
+	private List<AbstractThreshold> getAllSurpassedThresholds(Host host) throws GangliaException {
 
-		List<Threshold> surpassedThresholds = new ArrayList<Threshold>();
+		List<AbstractThreshold> surpassedThresholds = new ArrayList<AbstractThreshold>();
 		
 		if(host.isDown()) {
-			Threshold t = new Threshold("host_down", Threshold.DOWN, 0);
+			SingleThreshold t = new SingleThreshold("host_down", SingleThreshold.DOWN, 0);
 			surpassedThresholds.add(t); return surpassedThresholds;
 		}
 
-		for (Threshold threshold : thresholds) {
+		for (AbstractThreshold threshold : thresholds) {
 
 			String thresholdName = threshold.getName();
 			Double metricValue = getMetricNumericalValue(thresholdName, host);
@@ -72,16 +72,16 @@ public class ThresholdManager {
 		return surpassedThresholds;
 	}
 	
-	private Map<String, List<Threshold>> getSurpassedThresholdsForAllHosts() throws GangliaException {
-		Map<String, List<Threshold>> surpassedThresholds = new HashMap<String, List<Threshold>>();
+	private Map<String, List<AbstractThreshold>> getSurpassedThresholdsForAllHosts() throws GangliaException {
+		Map<String, List<AbstractThreshold>> surpassedThresholds = new HashMap<String, List<AbstractThreshold>>();
 
 		for(Host host : hostManager.getHosts()){
-			List<Threshold> thresholdsOfHost = getAllSurpassedThresholds(host);
+			List<AbstractThreshold> thresholdsOfHost = getAllSurpassedThresholds(host);
 			
 			if (!thresholdsOfHost.isEmpty()) {
-				surpassedThresholds.put(host.getHostName(), new ArrayList<Threshold>());
+				surpassedThresholds.put(host.getHostName(), new ArrayList<AbstractThreshold>());
 			
-				for(Threshold t : thresholdsOfHost)
+				for(AbstractThreshold t : thresholdsOfHost)
 					surpassedThresholds.get(host.getHostName()).add(t);
 			}
 		}

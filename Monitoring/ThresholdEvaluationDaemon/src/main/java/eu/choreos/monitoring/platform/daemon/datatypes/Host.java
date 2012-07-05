@@ -1,10 +1,6 @@
 package eu.choreos.monitoring.platform.daemon.datatypes;
 
-import java.util.HashMap;
 import java.util.Map;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 public class Host {
 

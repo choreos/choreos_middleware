@@ -1,8 +1,5 @@
 package eu.choreos.monitoring.platform.daemon;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -20,12 +17,9 @@ import java.util.Properties;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.choreos.monitoring.platform.daemon.datatypes.Host;
-import eu.choreos.monitoring.platform.daemon.datatypes.Metric;
 import eu.choreos.monitoring.platform.daemon.notifier.GlimpseMessageHandler;
 import eu.choreos.monitoring.platform.daemon.notifier.MessageHandlingFault;
 import eu.choreos.monitoring.platform.exception.GangliaException;
-import eu.choreos.monitoring.platform.utils.GmondDataReader;
 
 public class ThresholdEvalDaemonTest {
 
@@ -33,8 +27,6 @@ public class ThresholdEvalDaemonTest {
 	private GlimpseBaseEventImpl<String> message;
 	private GlimpseMessageHandler msgHandler;
 	private String javaNamingProviderUrl;
-	private GmondDataReader dataReader;
-	private Host aHost;
 	
 	
 	private ThresholdManager thresholdManager;
@@ -44,11 +36,11 @@ public class ThresholdEvalDaemonTest {
 		thresholdManager = mock(ThresholdManager.class);
 		when(thresholdManager.thereAreSurpassedThresholds()).thenReturn(true);
 		
-		List<Threshold> host1ThresholdsList = new ArrayList<Threshold>();
-		host1ThresholdsList.add(new Threshold("load_one", Threshold.MAX, 3));
-		host1ThresholdsList.add(new Threshold("load_five", Threshold.MAX, 3));
+		List<AbstractThreshold> host1ThresholdsList = new ArrayList<AbstractThreshold>();
+		host1ThresholdsList.add(new SingleThreshold("load_one", SingleThreshold.MAX, 3));
+		host1ThresholdsList.add(new SingleThreshold("load_five", SingleThreshold.MAX, 3));
 		
-		Map<String, List<Threshold>> thresholdsMap = new HashMap<String, List<Threshold>>();
+		Map<String, List<AbstractThreshold>> thresholdsMap = new HashMap<String, List<AbstractThreshold>>();
 		thresholdsMap.put("host1", host1ThresholdsList);
 		
 		when(thresholdManager.getSurpassedThresholds()).thenReturn(thresholdsMap);
@@ -65,8 +57,8 @@ public class ThresholdEvalDaemonTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void shouldSendAllThresholdsMessage() throws GangliaException, MessageHandlingFault {
-		daemon.addThreshold(new Threshold("load_one", Threshold.MAX, 1.0));
-		daemon.addThreshold(new Threshold("load_five", Threshold.MIN, 1.0));
+		daemon.addThreshold(new SingleThreshold("load_one", SingleThreshold.MAX, 1.0));
+		daemon.addThreshold(new SingleThreshold("load_five", SingleThreshold.MIN, 1.0));
 		
 		daemon.evaluateThresholdsSendMessagesAndSleep(message, 0);
 		

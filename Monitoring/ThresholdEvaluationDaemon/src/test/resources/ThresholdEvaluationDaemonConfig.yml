@@ -1,10 +1,15 @@
----
- attribute:    load_one
- comparison:   MAX
- limit_value:  1
-
----
- attribute:    load_three
- comparison:   MIN
- limit_value:  0.7
-
+--- !!eu.choreos.monitoring.platform.daemon.datatypes.SingleThresholdSpec
+  attribute:    load_one
+  comparison:   MAX
+  limit_value:  1
+  
+--- !!eu.choreos.monitoring.platform.daemon.datatypes.SingleThresholdSpec
+  attribute:    load_three
+  comparison:   MIN
+  limit_value:  0.7
+  
+--- !!eu.choreos.monitoring.platform.daemon.datatypes.DoubleThresholdSpec
+  attribute:    load_five
+  comparison:   BETWEEN
+  limit_inf:    0.6
+  limit_sup:    0.7

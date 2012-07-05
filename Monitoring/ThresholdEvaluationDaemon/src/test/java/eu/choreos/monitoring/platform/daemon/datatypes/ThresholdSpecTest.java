@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.choreos.monitoring.platform.daemon.Threshold;
+import eu.choreos.monitoring.platform.daemon.SingleThreshold;
 
 public class ThresholdSpecTest {
 
@@ -20,21 +20,21 @@ public class ThresholdSpecTest {
 
 	@Test
 	public void testGetComparisonConstant() {
-		ThresholdSpec threshold = new ThresholdSpec();
+		SingleThresholdSpec threshold = new SingleThresholdSpec();
 		threshold.comparison = "MAX";
-		assertEquals(Threshold.MAX, threshold.getComparisonConstant());
+		assertEquals(SingleThreshold.MAX, threshold.getComparisonConstant());
 
 		threshold.comparison = "MIN";
-		assertEquals(Threshold.MIN, threshold.getComparisonConstant());
+		assertEquals(SingleThreshold.MIN, threshold.getComparisonConstant());
 
 		threshold.comparison = "EQUALS";
-		assertEquals(Threshold.EQUALS, threshold.getComparisonConstant());
+		assertEquals(SingleThreshold.EQUALS, threshold.getComparisonConstant());
 	}
 
 	@Test
 	public void testToThreshold() {
-		Threshold threshold = new Threshold("load_one", Threshold.MAX, 1.0);
-		ThresholdSpec thresholdSpec = new ThresholdSpec();
+		SingleThreshold threshold = new SingleThreshold("load_one", SingleThreshold.MAX, 1.0);
+		SingleThresholdSpec thresholdSpec = new SingleThresholdSpec();
 		thresholdSpec.attribute = "load_one";
 		thresholdSpec.comparison = "MAX";
 		thresholdSpec.limit_value = "1.0";

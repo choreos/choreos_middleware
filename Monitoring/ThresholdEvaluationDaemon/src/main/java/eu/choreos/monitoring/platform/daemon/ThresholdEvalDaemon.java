@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import eu.choreos.monitoring.platform.daemon.datatypes.Host;
 import eu.choreos.monitoring.platform.daemon.notifier.GlimpseMessageHandler;
 import eu.choreos.monitoring.platform.daemon.notifier.MessageHandlingFault;
 import eu.choreos.monitoring.platform.exception.GangliaException;
@@ -32,11 +31,11 @@ public class ThresholdEvalDaemon {
 		thresholdManager = tshdManager;
 	}
 
-	public void addThreshold(Threshold threshold) {
+	public void addThreshold(SingleThreshold threshold) {
 		thresholdManager.addThreshold(threshold);
 	}
 
-	public void addMultipleThreshold(List<Threshold> thresholdList) {
+	public void addMultipleThreshold(List<AbstractThreshold> thresholdList) {
 		thresholdManager.addMultipleThresholds(thresholdList);
 	}
 
@@ -69,10 +68,10 @@ public class ThresholdEvalDaemon {
 		return thresholdManager.thereAreSurpassedThresholds();
 	}
 
-	public Map<String, List<Threshold>> getSurpassedThresholds()
+	public Map<String, List<AbstractThreshold>> getSurpassedThresholds()
 			throws GangliaException {
 
-		Map<String, List<Threshold>> evaluateAllThresholds = thresholdManager
+		Map<String, List<AbstractThreshold>> evaluateAllThresholds = thresholdManager
 				.getSurpassedThresholds();
 		return evaluateAllThresholds;
 	}
@@ -96,10 +95,10 @@ public class ThresholdEvalDaemon {
 	private void sendAllSurpassedThresholdMessages(
 			GlimpseBaseEvent<String> message) throws GangliaException {
 
-		Map<String, List<Threshold>> surpassedThresholds = getSurpassedThresholds();
+		Map<String, List<AbstractThreshold>> surpassedThresholds = getSurpassedThresholds();
 
 		for (String host : surpassedThresholds.keySet()) {
-			for (Threshold threshold : surpassedThresholds.get(host)) {
+			for (AbstractThreshold threshold : surpassedThresholds.get(host)) {
 				message.setData(host + ": " + threshold.toString());
 				sendMessage(message);
 			}

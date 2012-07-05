@@ -13,6 +13,10 @@
     <module>Utils</module>
   </modules>
 
+  <build>
+    <defaultGoal>install</defaultGoal>
+  </build>
+
 
   <reporting>
     <plugins>

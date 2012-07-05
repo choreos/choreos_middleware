@@ -5,21 +5,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.Socket;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import eu.choreos.monitoring.platform.daemon.datatypes.Host;
-import eu.choreos.monitoring.platform.daemon.datatypes.Metric;
 import eu.choreos.monitoring.platform.exception.GangliaException;
-import eu.choreos.monitoring.platform.utils.GmondDataReader;
 
 public class GmondDataReaderTest {
 

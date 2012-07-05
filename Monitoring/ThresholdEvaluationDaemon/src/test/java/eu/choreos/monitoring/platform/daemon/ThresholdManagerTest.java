@@ -15,8 +15,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import sun.awt.windows.ThemeReader;
-
 import eu.choreos.monitoring.platform.daemon.datatypes.Host;
 import eu.choreos.monitoring.platform.daemon.datatypes.Metric;
 import eu.choreos.monitoring.platform.exception.GangliaException;
@@ -65,7 +63,7 @@ public class ThresholdManagerTest {
 
 	@Test
 	public void shouldAddOneThreshold() {
-		Threshold threshold = new Threshold("load_one", Threshold.MAX, 3);
+		SingleThreshold threshold = new SingleThreshold("load_one", SingleThreshold.MAX, 3);
 		notifier.addThreshold(threshold);
 		assertEquals(1, notifier.getThresholdSize());
 	}
@@ -73,8 +71,8 @@ public class ThresholdManagerTest {
 	@Test
 	public void shouldNotAddEqualThresholds() {
 		assertEquals(0, notifier.getThresholdSize());
-		Threshold threshold1 = new Threshold("load_one", Threshold.MAX, 3);
-		Threshold threshold2 = new Threshold("load_one", Threshold.MAX, 3);
+		SingleThreshold threshold1 = new SingleThreshold("load_one", SingleThreshold.MAX, 3);
+		SingleThreshold threshold2 = new SingleThreshold("load_one", SingleThreshold.MAX, 3);
 		notifier.addThreshold(threshold1);
 		notifier.addThreshold(threshold2);
 		assertEquals(1, notifier.getThresholdSize());
@@ -85,19 +83,19 @@ public class ThresholdManagerTest {
 	public void shouldEvaluateMultipleThresholdsInSingleHost()
 			throws GangliaException {
 
-		Threshold threshold1 = new Threshold("load_one", Threshold.MIN, 1.5);
-		Threshold threshold2 = new Threshold("mem_total", Threshold.MAX, 50000);
+		SingleThreshold threshold1 = new SingleThreshold("load_one", SingleThreshold.MIN, 1.5);
+		SingleThreshold threshold2 = new SingleThreshold("mem_total", SingleThreshold.MAX, 50000);
 
 		notifier.addThreshold(threshold1);
 		notifier.addThreshold(threshold2);
 		
 		notifier.updateThresholdsInfo();
 
-		Map<String, List<Threshold>> list1 = notifier.getSurpassedThresholds();
+		Map<String, List<AbstractThreshold>> list1 = notifier.getSurpassedThresholds();
 		
 		assertEquals(1, list1.size());
 
-		List<Threshold> list = list1.get(host1.getHostName());
+		List<AbstractThreshold> list = list1.get(host1.getHostName());
 		
 		assertEquals(2, list.size());
 		
@@ -106,16 +104,16 @@ public class ThresholdManagerTest {
 	@Test
 	public void shouldNotifySingleThresholdInMultipleHosts()
 			throws GangliaException {
-		Threshold threshold = new Threshold("load_one", Threshold.MAX, 0.8);
+		SingleThreshold threshold = new SingleThreshold("load_one", SingleThreshold.MAX, 0.8);
 
 		notifier.addThreshold(threshold);
 		notifier.updateThresholdsInfo();
 
-		Map<String, List<Threshold>> list1 = notifier.getSurpassedThresholds();
+		Map<String, List<AbstractThreshold>> list1 = notifier.getSurpassedThresholds();
 		
 		assertEquals(2, list1.size());
 		
-		List<Threshold> list;
+		List<AbstractThreshold> list;
 
 		list = list1.get(host1.getHostName());
 		assertTrue(list.contains(threshold));
@@ -127,7 +125,7 @@ public class ThresholdManagerTest {
 	
 	@Test
 	public void thereAreNotSurpassedThreshold() throws GangliaException {
-		Threshold t = new Threshold("load_one", Threshold.MAX, 3);
+		SingleThreshold t = new SingleThreshold("load_one", SingleThreshold.MAX, 3);
 		
 		notifier.addThreshold(t);
 		notifier.updateThresholdsInfo();
@@ -137,7 +135,7 @@ public class ThresholdManagerTest {
 	
 	@Test
 	public void thereAreSurpassedThreshold() throws GangliaException {
-		Threshold t = new Threshold("load_one", Threshold.MAX, 0);
+		SingleThreshold t = new SingleThreshold("load_one", SingleThreshold.MAX, 0);
 		
 		notifier.addThreshold(t);
 		notifier.updateThresholdsInfo();
@@ -149,7 +147,7 @@ public class ThresholdManagerTest {
 	public void thereIsAHostDown() throws GangliaException {
 		hostList.add(host3);
 		notifier.updateThresholdsInfo();
-		Map<String, List<Threshold>> t = notifier.getSurpassedThresholds();
+		Map<String, List<AbstractThreshold>> t = notifier.getSurpassedThresholds();
 		assertTrue(t.containsKey(host3.getHostName()));
 		assertEquals("host_down", t.get(host3.getHostName()).get(0).getName());
 	}

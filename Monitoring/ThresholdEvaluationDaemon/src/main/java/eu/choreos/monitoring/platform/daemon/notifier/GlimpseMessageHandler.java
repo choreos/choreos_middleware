@@ -1,15 +1,12 @@
 package eu.choreos.monitoring.platform.daemon.notifier;
 
+import it.cnr.isti.labse.glimpse.event.GlimpseBaseEvent;
+import it.cnr.isti.labse.glimpse.probe.GlimpseAbstractProbe;
+
 import java.util.Properties;
 
 import javax.jms.JMSException;
 import javax.naming.NamingException;
-
-import eu.choreos.monitoring.platform.utils.HostnameHandler;
-import eu.choreos.platform.utils.CommandRuntimeException;
-
-import it.cnr.isti.labse.glimpse.event.GlimpseBaseEvent;
-import it.cnr.isti.labse.glimpse.probe.GlimpseAbstractProbe;
 
 public class GlimpseMessageHandler extends GlimpseAbstractProbe {
 
@@ -18,7 +15,6 @@ public class GlimpseMessageHandler extends GlimpseAbstractProbe {
 	}
 
 	public GlimpseBaseEvent<String> sendMessage(GlimpseBaseEvent<String> event) throws MessageHandlingFault {
-		String hostName;
 		try {
 			this.sendEventMessage(event, false);
 		} catch (JMSException e) {

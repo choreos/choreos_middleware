@@ -83,7 +83,7 @@ public class ThresholdEvalDaemonLauncher {
 			e.printStackTrace();
 		}
 		
-		List<Threshold> thresholdList = YamlParser.getThresholdsFromFile(thresholdListFileName);
+		List<AbstractThreshold> thresholdList = YamlParser.getThresholdsFromFile(thresholdListFileName);
 		daemon.addMultipleThreshold(thresholdList);
 		daemon.continuouslyEvaluateThresholdsAndSendMessages(getBaseEvent());
 	}

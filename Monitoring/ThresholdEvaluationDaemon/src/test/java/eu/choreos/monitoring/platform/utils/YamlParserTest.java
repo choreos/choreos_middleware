@@ -9,7 +9,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.choreos.monitoring.platform.daemon.Threshold;
+import eu.choreos.monitoring.platform.daemon.AbstractThreshold;
+import eu.choreos.monitoring.platform.daemon.DoubleThreshold;
+import eu.choreos.monitoring.platform.daemon.SingleThreshold;
 
 public class YamlParserTest {
 	
@@ -21,12 +23,12 @@ public class YamlParserTest {
 	public void shouldReadSingleThresholds() throws IOException{
 		String fileName = ClassLoader.getSystemResource("SingleThresholdEvaluationDaemonConfig.yml").getFile();
 		
-		Threshold threshold1 = new Threshold("load_one",Threshold.MAX,1);
+		SingleThreshold threshold1 = new SingleThreshold("load_one",SingleThreshold.MAX,1);
 
-		List<Threshold> expectedList = new ArrayList<Threshold>();
+		List<SingleThreshold> expectedList = new ArrayList<SingleThreshold>();
 		expectedList.add(threshold1);
 		
-		List<Threshold> thresholds = YamlParser.getThresholdsFromFile(fileName);
+		List<AbstractThreshold> thresholds = YamlParser.getThresholdsFromFile(fileName);
 		assertEquals(1, thresholds.size());
 		
 		assertEquals(threshold1, thresholds.get(0));
@@ -37,19 +39,23 @@ public class YamlParserTest {
 		String fileName = ClassLoader.getSystemResource("ThresholdEvaluationDaemonConfig.yml").getFile();
 
 		
-		List<Threshold> expectedList = new ArrayList<Threshold>();
+		List<AbstractThreshold> expectedList = new ArrayList<AbstractThreshold>();
 		
-		Threshold threshold1 = new Threshold("load_one",Threshold.MAX,1);
+		SingleThreshold threshold1 = new SingleThreshold("load_one",SingleThreshold.MAX,1);
 		expectedList.add(threshold1);
-		Threshold threshold2 = new Threshold("load_three",Threshold.MIN,0.7);
+		SingleThreshold threshold2 = new SingleThreshold("load_three",SingleThreshold.MIN,0.7);
 		expectedList.add(threshold2);
+		DoubleThreshold threshold3 = new DoubleThreshold("load_five", DoubleThreshold.BETWEEN, 0.6, 0.7);
+		expectedList.add(threshold3);
 
-		List<Threshold> thresholds = YamlParser.getThresholdsFromFile(fileName);
+		List<AbstractThreshold> thresholds = YamlParser.getThresholdsFromFile(fileName);
 		assertEquals(expectedList.size(),thresholds.size());
 		
 
 		assertEquals(threshold1, thresholds.get(0));
 
 		assertEquals(threshold2, thresholds.get(1));
+		
+		assertEquals(threshold3, thresholds.get(2));
 	}
 }

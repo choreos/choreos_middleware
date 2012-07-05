@@ -6,37 +6,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.yaml.snakeyaml.*;
-import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.Yaml;
 
-import eu.choreos.monitoring.platform.daemon.Threshold;
-import eu.choreos.monitoring.platform.daemon.datatypes.ThresholdSpec;
+import eu.choreos.monitoring.platform.daemon.AbstractThreshold;
+import eu.choreos.monitoring.platform.daemon.datatypes.AbstractThresholdSpec;
+import eu.choreos.monitoring.platform.daemon.datatypes.DoubleThresholdSpec;
+import eu.choreos.monitoring.platform.daemon.datatypes.SingleThresholdSpec;
 
 public class YamlParser {
 
-	private static List<Threshold> getThresholdsFromString(String content) {
+	private static List<AbstractThreshold> getThresholdsFromString(String content) {
 
-		Constructor skeleton = new Constructor(ThresholdSpec.class);
-		Yaml yaml = new Yaml(skeleton);
+		Yaml yaml = new Yaml();
 
-		List<Threshold> thresholds = new ArrayList<Threshold>();
+		List<AbstractThreshold> thresholds = new ArrayList<AbstractThreshold>();
 
 		for (Object data : yaml.loadAll(content)) {
-			Threshold readThreshold = ((ThresholdSpec) data).toThreshold();
-			thresholds.add(readThreshold);
+			AbstractThresholdSpec readThreshold = null;
+			
+			if(data instanceof SingleThresholdSpec) {
+				readThreshold = (SingleThresholdSpec) data;
+			} else
+				if(data instanceof DoubleThresholdSpec) {
+					readThreshold = (DoubleThresholdSpec) data;
+				}
+			
+			if(readThreshold != null)
+				thresholds.add(readThreshold.toThreshold());
 		}
 
 		return thresholds;
 
 	}
 
-	public static List<Threshold> getThresholdsFromFile(String fileName)
+	public static List<AbstractThreshold> getThresholdsFromFile(String fileName)
 			throws IOException {
 
 		File file = new File(fileName);
 		String fileContents = FileUtils.readFileToString(file);
 
-		List<Threshold> returnValue = getThresholdsFromString(fileContents);
+		List<AbstractThreshold> returnValue = getThresholdsFromString(fileContents);
 
 		return returnValue;
 	}
