@@ -7,31 +7,22 @@ import java.util.regex.Pattern;
 import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.client.WebClient;
-import org.apache.cxf.transport.http.HTTPConduit;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.ow2.choreos.npm.datamodel.NodeRestRepresentation;
 import org.ow2.choreos.npm.rest.NodePoolManagerStandaloneServer;
 import org.ow2.choreos.npm.utils.LogConfigurator;
 
-
-
 public class BaseTest {
 	
-	protected static WebClient client;
-
+	protected static String nodePoolManagerHost;
+	
     @BeforeClass
     public static void startServer() throws Exception {
     	
     	LogConfigurator.configLog();
-    	
-    	client = WebClient.create(NodePoolManagerStandaloneServer.URL);
-    	
         NodePoolManagerStandaloneServer.startNodePoolManager();
-
-        HTTPConduit conduit = WebClient.getConfig(client).getHttpConduit();
-        conduit.getClient().setReceiveTimeout(Long.MAX_VALUE);
-        conduit.getClient().setConnectionTimeout(Long.MAX_VALUE);
+        nodePoolManagerHost = NodePoolManagerStandaloneServer.URL;
     }
 
     @AfterClass
@@ -58,6 +49,13 @@ public class BaseTest {
     	Pattern pattern = Pattern.compile(regex);
     	Matcher matcher = pattern.matcher(uri);
     	
+    	return matcher.matches();
+    }
+    
+    protected boolean isIp(String ip) {
+    	
+    	Pattern pat = Pattern.compile("(\\d{1,4}\\.){3}\\d{1,4}");
+    	Matcher matcher = pat.matcher(ip);
     	return matcher.matches();
     }
 }

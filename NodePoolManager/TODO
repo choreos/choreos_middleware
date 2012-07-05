@@ -2,8 +2,6 @@ NodePoolManager ToDo list
 
 Code improvements
 
-* Bring NPM client to NPM project
-
 * The singleton instance management of NodeSelector implementation
 should be performed by the implementing classes themselves,
 and not by the Factory class.
@@ -32,6 +30,8 @@ Find out why. Although it seems to be server fault, could it be our client's pro
 
 * ALWAYS_CREATE corresponds to VerySimpleSelector, but VerySimpleSelector does not always create a new node
 
+* Bootstrap verification: think in a better way than checking getting-started.txt
+
 ============ DONE ============
 
 * Create a Java project Utils to avoid code replication
@@ -48,5 +48,7 @@ This applies to ServiceDeployer and StorageFactory as well
 * Pick up already existing nodes in order to reduce middleware testing time
 
 * Change package name
+
+* Bring NPM client to NPM project
 
 

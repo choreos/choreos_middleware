@@ -3,22 +3,17 @@ package org.ow2.choreos.npm;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import org.junit.Test;
-import org.ow2.choreos.npm.Configuration;
-import org.ow2.choreos.npm.datamodel.Config;
+import org.ow2.choreos.npm.client.NodePoolManager;
+import org.ow2.choreos.npm.client.NodePoolManagerClient;
+import org.ow2.choreos.npm.cloudprovider.CloudProvider;
+import org.ow2.choreos.npm.cloudprovider.FixedCloudProvider;
+import org.ow2.choreos.npm.datamodel.Node;
+import org.ow2.choreos.npm.datamodel.NodeRestRepresentation;
 import org.ow2.choreos.npm.utils.SshUtil;
 
 
 public class ConfigResourceTest extends BaseTest {
-	
-	private String IP = Configuration.get("FIXED_VM_IP");
-	private String SSH_USER = Configuration.get("FIXED_VM_USER");
-	private String SSH_KEY = Configuration.get("FIXED_VM_PRIVATE_SSH_KEY");
 	
     /**
      * This test supposes the "getting-started2" recipe is already available on the chef server 
@@ -30,34 +25,24 @@ public class ConfigResourceTest extends BaseTest {
     public void shouldApplyValidCookbook() throws Exception{
     	
     	String RECIPE_NAME = "getting-started2";
+    	String CREATED_FILE = "chef-getting-started2.txt";
+		CloudProvider cp = new FixedCloudProvider();
+		Node node = cp.createOrUseExistingNode(null);
     	
-    	client.path("nodes/configs");   	
-    	
-    	Config config = new Config();
-    	config.setName(RECIPE_NAME);
-        Response responseApplyConfig = client.post(config);
-        // TODO: retrieve responseNode from response body (representation on body not implemented yet)
-        //NodeRestRepresentation responseNode = getNodeFromResponse(response);
-        
-        client.back(true);
-        client.path("nodes/upgrade");
-        Response responseUpgrade = client.post(null);
-        
-        assertEquals(Status.CREATED.getStatusCode(), responseApplyConfig.getStatus());
-        assertEquals(Status.OK.getStatusCode(), responseUpgrade.getStatus());
-        
-        // verify resource location
-        List<Object> list =  responseApplyConfig.getMetadata().get("Location");
-        assertTrue(list != null && !list.isEmpty());
-        String location = list.get(0).toString();
-        assertTrue(isNodeLocation(location));
+    	NodePoolManager npm = new NodePoolManagerClient(nodePoolManagerHost);
+    	NodeRestRepresentation noder = npm.applyConfig(RECIPE_NAME);
+    	assertTrue(noder != null);
+        assertTrue(!noder.getId().isEmpty());
+        assertTrue(isIp(noder.getIp()));
+        assertEquals(node.getIp(), noder.getIp());
+
+        boolean upgraded = npm.upgradeNodes();
+        assertTrue(upgraded);
         
         // verify if the file getting-started2 is actually there
-        SshUtil ssh = new SshUtil(IP, SSH_USER, SSH_KEY);
-    	String createdFile = "chef-getting-started2.txt";
-    	String returnText = null;
-		returnText = ssh.runCommand("ls " + createdFile, true);
-    	assertTrue(returnText.trim().equals(createdFile));
+        SshUtil ssh = new SshUtil(noder.getIp(), node.getUser(), node.getPrivateKeyFile());
+    	String returnText = ssh.runCommand("ls " + CREATED_FILE, true);
+    	assertTrue(returnText.trim().equals(CREATED_FILE));
     }
     
     /**
@@ -70,16 +55,11 @@ public class ConfigResourceTest extends BaseTest {
     	
     	String INVALID_RECIPE = "xyz";
     	
-    	client.back(true);
-    	client.path("nodes/configs");   	
+    	NodePoolManager npm = new NodePoolManagerClient(nodePoolManagerHost);
+    	NodeRestRepresentation noder1 = npm.applyConfig("");
+    	NodeRestRepresentation noder2 = npm.applyConfig(INVALID_RECIPE);
     	
-    	Config config2 = new Config();
-        Response response = client.post(config2);
-        assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-        
-    	Config config = new Config();
-    	config.setName(INVALID_RECIPE);
-        response = client.post(config);
-        assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
+        assertTrue(noder1 == null);
+        assertTrue(noder2 == null);
     }
 }

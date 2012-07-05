@@ -1,10 +1,10 @@
 package org.ow2.choreos.npm.client;
 
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
@@ -47,21 +47,29 @@ public class NodePoolManagerClient implements NodePoolManager {
 		client.path("nodes/configs");   	
 		Config config = new Config();
     	config.setName(configName);
-        Response response = client.post(config);
+    	NodeRestRepresentation node = null;
+    	try {
+    		node = client.post(config, NodeRestRepresentation.class);
+    	} catch (WebApplicationException e) {
+    		; // node remains null
+    	}
 
-        NodeRestRepresentation node = null;
-        try {
-        	node = (NodeRestRepresentation) response.getEntity();
-        } catch (ClassCastException e) {
-        	; // node remains null
-        }
-        
         return node;
 	}
 
 	@Override
 	public NodeRestRepresentation getNode(String nodeId) {
-		throw new NotImplementedException();
+
+		WebClient client = setupClient();
+		client.path("nodes/" + nodeId);
+		NodeRestRepresentation nodeRest = null;
+		try {
+			nodeRest = client.get(NodeRestRepresentation.class);
+		} catch (WebApplicationException e) {
+			; // nodeRest remains null
+		}
+		
+		return nodeRest;
 	}
 
 	@Override
