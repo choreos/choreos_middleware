@@ -1,8 +1,8 @@
-*.classpath
-*.project
-*.settings
 *.jar
-*target/
-*~
 *.log
-*.metadata/
+*/.classpath
+*/.metadata
+*/.project
+*/.settings
+*/target
+*~

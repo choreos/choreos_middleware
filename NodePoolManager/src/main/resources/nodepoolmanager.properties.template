@@ -9,7 +9,8 @@ CLOUD_PROVIDER=FIXED
 FIXED_VM_IP=192.168.56.101
 FIXED_VM_HOSTNAME=choreos-node
 FIXED_VM_PRIVATE_SSH_KEY=/home/leonardo/.ssh/id_rsa
-FIXED_VM_USER=choreos # the make the OS login
+# user with passwordless login and sudo
+FIXED_VM_USER=choreos
 
 AMAZON_ACCESS_KEY_ID=secret
 AMAZON_SECRET_KEY=secret

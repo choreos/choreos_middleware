@@ -15,7 +15,7 @@ fi
 . "$CONF"
 
 echo 'Clearing current run list...'
-CURRENT_RUN_LIST=$(knife node show $NODE -a run_list | cut -f2 -d\: | sed 's/,//g')
+CURRENT_RUN_LIST=$(knife node show $NODE -a run_list | cut -f2- -d\: | sed 's/,//g')
 
 for item in $CURRENT_RUN_LIST; do
   CMD="knife node run_list remove $NODE $item"
