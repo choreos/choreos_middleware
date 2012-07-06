@@ -77,7 +77,11 @@ You will also need to download the “getting-started” recipe into your cookbo
 
 == COMPILING IT ==
 
-After installing Maven 3, open the terminal at the NodePoolManager folder, and enter the following command:
+After installing Maven 3, open the terminal at the Commons project folder, and enter the following command:
+
+$ mvn install -Dmaven.test.skip=true
+
+After, go to NodePoolManager project folder, and type:
 
 $ mvn eclipse:eclipse
 

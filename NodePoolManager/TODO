@@ -2,10 +2,7 @@ NodePoolManager ToDo list
 
 Code improvements
 
-* The singleton instance management of NodeSelector implementation
-should be performed by the implementing classes themselves,
-and not by the Factory class.
-So, the FactoryClass can just call NodeSelectorImpl.getInstance()
+* It seems there is some overlaping between INSTALL and README files. Handle this.
 
 * NPM project must use the Commons project
 
@@ -50,5 +47,13 @@ This applies to ServiceDeployer and StorageFactory as well
 * Change package name
 
 * Bring NPM client to NPM project
+
+* The singleton instance management of NodeSelector implementation
+should be performed by the implementing classes themselves,
+and not by the Factory class.
+So, the FactoryClass can just call NodeSelectorImpl.getInstance()
+-> Aborted. Not so good, since NodeSelector must receive a CloudProvider in its constructor
+
+
 
 
