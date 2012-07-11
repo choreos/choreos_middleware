@@ -9,7 +9,7 @@ import org.ow2.choreos.npm.cloudprovider.CloudProvider;
 import org.ow2.choreos.npm.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.npm.datamodel.Config;
 import org.ow2.choreos.npm.datamodel.Node;
-import org.ow2.choreos.npm.utils.SshUtil;
+import org.ow2.choreos.utils.SshUtil;
 
 
 public class ConfigResourceTest extends BaseTest {

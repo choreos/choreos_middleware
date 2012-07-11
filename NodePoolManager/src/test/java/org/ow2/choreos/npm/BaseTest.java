@@ -10,8 +10,8 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.ow2.choreos.npm.datamodel.NodeRestRepresentation;
-import org.ow2.choreos.npm.rest.NodePoolManagerStandaloneServer;
-import org.ow2.choreos.npm.utils.LogConfigurator;
+import org.ow2.choreos.npm.rest.NPMStandaloneServer;
+import org.ow2.choreos.utils.LogConfigurator;
 
 public class BaseTest {
 	
@@ -21,14 +21,14 @@ public class BaseTest {
     public static void startServer() throws Exception {
     	
     	LogConfigurator.configLog();
-        NodePoolManagerStandaloneServer.startNodePoolManager();
-        nodePoolManagerHost = NodePoolManagerStandaloneServer.URL;
+        NPMStandaloneServer.startNodePoolManager();
+        nodePoolManagerHost = NPMStandaloneServer.URL;
     }
 
     @AfterClass
     public static void stopServer() throws UnsupportedEncodingException {
     	
-        NodePoolManagerStandaloneServer.stopNodePoolManager();
+        NPMStandaloneServer.stopNodePoolManager();
     }
 
     protected static NodeRestRepresentation getNodeFromResponse(Response response) {
@@ -45,7 +45,7 @@ public class BaseTest {
      */
     protected boolean isNodeLocation(String uri) {
     	
-    	String regex = NodePoolManagerStandaloneServer.URL + "nodes/.+";
+    	String regex = NPMStandaloneServer.URL + "nodes/.+";
     	Pattern pattern = Pattern.compile(regex);
     	Matcher matcher = pattern.matcher(uri);
     	

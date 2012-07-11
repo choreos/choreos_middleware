@@ -3,12 +3,9 @@ package org.ow2.choreos.npm.rest;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.npm.Configuration;
-import org.ow2.choreos.npm.utils.LogConfigurator;
+import org.ow2.choreos.utils.LogConfigurator;
 
-
-
-
-public class NodePoolManagerStandaloneServer implements Runnable {
+public class NPMStandaloneServer implements Runnable {
 
 	private static Logger logger;
 	
@@ -22,9 +19,9 @@ public class NodePoolManagerStandaloneServer implements Runnable {
 
     public static void startNodePoolManager() throws InterruptedException {
     	
-    	logger = Logger.getLogger(NodePoolManagerStandaloneServer.class);
+    	logger = Logger.getLogger(NPMStandaloneServer.class);
     	
-        Runnable npmServer = new NodePoolManagerStandaloneServer();
+        Runnable npmServer = new NPMStandaloneServer();
         new Thread(npmServer).start();
         while (!running) {
             Thread.sleep(1);
@@ -58,6 +55,6 @@ public class NodePoolManagerStandaloneServer implements Runnable {
     	
     	LogConfigurator.configLog();
         
-        NodePoolManagerStandaloneServer.startNodePoolManager();
+        NPMStandaloneServer.startNodePoolManager();
     }
 }

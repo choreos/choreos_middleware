@@ -4,11 +4,10 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.ow2.choreos.npm.ConfigurationManager;
 import org.ow2.choreos.npm.cloudprovider.CloudProvider;
 import org.ow2.choreos.npm.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.npm.datamodel.Node;
-import org.ow2.choreos.npm.utils.LogConfigurator;
+import org.ow2.choreos.utils.LogConfigurator;
 
 
 /**

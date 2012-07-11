@@ -1,7 +1,6 @@
 package org.ow2.choreos.npm.cloudprovider;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,13 +8,9 @@ import java.util.regex.Pattern;
 import org.jclouds.compute.RunNodesException;
 import org.junit.Before;
 import org.junit.Test;
-import org.ow2.choreos.npm.cloudprovider.CloudProvider;
-import org.ow2.choreos.npm.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.npm.datamodel.Node;
-import org.ow2.choreos.npm.utils.LogConfigurator;
-import org.ow2.choreos.npm.utils.SshUtil;
-
-import com.jcraft.jsch.JSchException;
+import org.ow2.choreos.utils.LogConfigurator;
+import org.ow2.choreos.utils.SshUtil;
 
 
 /**
@@ -49,14 +44,10 @@ public class FixedCloudProviderTest {
 		CloudProvider cp = new FixedCloudProvider();
 		Node node = cp.createOrUseExistingNode(new Node());
 
-		try {
-			SshUtil ssh = new SshUtil(node.getIp(), node.getUser(),
-					node.getPrivateKeyFile());
-			assertTrue(ssh.isAccessible());
-			ssh.disconnect();
-		} catch (JSchException e) {
-			System.out.println("Could not connect! " + e);
-			fail();
-		}
+		SshUtil ssh = null;
+		ssh = new SshUtil(node.getIp(), node.getUser(),
+				node.getPrivateKeyFile());
+		assertTrue(ssh.isAccessible());
+		ssh.disconnect();
 	}
 }

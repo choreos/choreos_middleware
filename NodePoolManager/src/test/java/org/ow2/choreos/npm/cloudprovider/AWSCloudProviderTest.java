@@ -7,10 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.ow2.choreos.npm.Configuration;
 import org.ow2.choreos.npm.NodeNotFoundException;
-import org.ow2.choreos.npm.cloudprovider.AWSCloudProvider;
-import org.ow2.choreos.npm.cloudprovider.CloudProvider;
 import org.ow2.choreos.npm.datamodel.Node;
-import org.ow2.choreos.npm.utils.SshUtil;
+import org.ow2.choreos.utils.SshUtil;
 
 import com.jcraft.jsch.JSchException;
 

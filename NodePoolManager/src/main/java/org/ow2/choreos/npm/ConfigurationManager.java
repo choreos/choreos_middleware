@@ -7,8 +7,8 @@ import java.util.concurrent.ConcurrentMap;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.npm.chef.ChefScripts;
 import org.ow2.choreos.npm.datamodel.Node;
-import org.ow2.choreos.npm.utils.CommandLine;
-import org.ow2.choreos.npm.utils.SshUtil;
+import org.ow2.choreos.utils.CommandLine;
+import org.ow2.choreos.utils.SshUtil;
 
 import com.jcraft.jsch.JSchException;
 
@@ -66,7 +66,7 @@ public class ConfigurationManager {
             command = ChefScripts.getChefBootstrapScript(node.getPrivateKeyFile(), node.getIp(),
                     node.getUser());
             logger.debug(command);
-            CommandLine.runLocalCommand(command, CHEF_REPO, true);
+            CommandLine.run(command, CHEF_REPO, true);
             logger.debug("Bootstrap completed");
 
             this.retrieveChefName(node);
@@ -130,7 +130,7 @@ public class ConfigurationManager {
 
         // Chef fails silently when adding multiple recipes concurrently
         synchronized(ConfigurationManager.class) {
-            CommandLine.runLocalCommand(command);
+            CommandLine.run(command);
         }
 
         // TODO we should verify if the recipe install was OK
@@ -142,7 +142,7 @@ public class ConfigurationManager {
         String command = ChefScripts.getChefAddCookbook(node.getChefName(), INITIAL_RECIPE,
                 "default");
         logger.debug("Install recipe command = [" + command + "]");
-        CommandLine.runLocalCommand(command);
+        CommandLine.run(command);
 
         try {
             this.updateNodeConfiguration(node);
