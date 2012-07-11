@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.jclouds.compute.RunNodesException;
+import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.npm.chef.ConfigToChef;
 import org.ow2.choreos.npm.cloudprovider.CloudProvider;
 import org.ow2.choreos.npm.datamodel.Config;
@@ -34,11 +35,13 @@ public class NPMImpl implements NodePoolManager {
                                                               // a Static Class
             configurationManager.initializeNode(node);
         } catch (RunNodesException e) {
-            logger.error("Could not create node " + node, e);
+        	logger.error("Could not create node " + node, e);
+        } catch (KnifeException e) {
+            logger.error("Could not initialize node " + node, e);
         } catch (JSchException e) {
         	logger.error("Could not connect to the node " + node, e);
-		} 
-
+        }
+        
         return node;
     }
 
@@ -72,13 +75,12 @@ public class NPMImpl implements NodePoolManager {
         String cookbook = ConfigToChef.getCookbookNameFromConfigName(config.getName());
         String recipe = ConfigToChef.getRecipeNameFromConfigName(config.getName());
 
-        try {
-            this.configurationManager.installRecipe(node, cookbook, recipe);
-        } catch (Exception e) {
-            return null;
-        }
+        boolean ok = this.configurationManager.installRecipe(node, cookbook, recipe);
 
-        return node;
+        if (ok)
+        	return node;
+        else
+        	return null;
     }
     
     @Override
@@ -125,11 +127,11 @@ public class NPMImpl implements NodePoolManager {
         @Override
         public void run() {
             try {
-                configurationManager.updateNodeConfiguration(node);
-            } catch (Exception e) {
-                logger.error("Error on Controller while upgrading node " + node, e);
+				configurationManager.updateNodeConfiguration(node);
+			} catch (JSchException e) {
+                logger.error("Could not connect to node " + node, e);
                 ok = false;
-            }
+			}
         }
     }
 }

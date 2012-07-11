@@ -34,7 +34,12 @@ public class KnifeNodeTest {
         	System.out.println("knifeConfigFile is null");
         	fail();
         }
-    	this.knife = new KnifeImpl(knifeConfigFile);
+        String chefRepo = chefProperties.getProperty("CHEF_REPO");
+        if (chefRepo == null) {
+        	System.out.println("chefRepo is null");
+        	fail();
+        }
+    	this.knife = new KnifeImpl(knifeConfigFile, chefRepo, true);
 	}
 
 	@Test

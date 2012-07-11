@@ -16,11 +16,16 @@ public class KnifeImpl implements Knife {
 	private KnifeCookbook knifeCookbook;
 	private KnifeClient knifeClient;
 	
+	private String chefRepo;
+	private boolean verbose;
+	
 	/**
 	 * 
 	 * @param knifeConfigFile The path to the knife.rb file
+	 * @param chefRepo the path to the folder containing the cookbooks folders
+	 * @param verbose prints knife outputs if <code>verbose</code> is <code>true</code>
 	 */
-	public KnifeImpl(String knifeConfigFile) {
+	public KnifeImpl(String knifeConfigFile, String chefRepo, boolean verbose) {
 		
 		File knifeConfig = new File(knifeConfigFile);
 		if (!knifeConfig.exists()) {
@@ -28,9 +33,20 @@ public class KnifeImpl implements Knife {
 		}
 		
 		this.scripts = new ChefScripts(knifeConfigFile);
-		this.knifeNode = new KnifeNodeImpl(knifeConfigFile);
-		this.knifeCookbook = new KnifeCookbookImpl(knifeConfigFile);
-		this.knifeClient = new KnifeClientImpl(knifeConfigFile);
+		this.knifeNode = new KnifeNodeImpl(knifeConfigFile, verbose);
+		this.knifeCookbook = new KnifeCookbookImpl(knifeConfigFile, verbose);
+		this.knifeClient = new KnifeClientImpl(knifeConfigFile, verbose);
+		this.chefRepo = chefRepo;
+		this.verbose = verbose;
+	}
+	
+	/**
+	 * 
+	 * @param knifeConfigFile The path to the knife.rb file
+	 * @param chefRepo the path to the folder containing the cookbooks folders
+	 */
+	public KnifeImpl(String knifeConfigFile, String chefRepo) {
+		this(knifeConfigFile, chefRepo, false);
 	}
 	
 	@Override
@@ -56,7 +72,7 @@ public class KnifeImpl implements Knife {
 			throws KnifeException {
 
 		String command = scripts.getKnifeBootstrap(pKeyFile, ip, user);
-		return CommandLine.run(command);
+		return CommandLine.run(command, chefRepo, verbose);
 	}
 
 

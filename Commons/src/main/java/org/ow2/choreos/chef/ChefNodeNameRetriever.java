@@ -43,11 +43,15 @@ public class ChefNodeNameRetriever {
         String chefNodeName = ssh.runCommand(script, true);
 
         if (chefNodeName == null || chefNodeName.isEmpty())
-        	chefNodeName = host;
+        	chefNodeName = getHostname(ssh);
         chefNodeName = chefNodeName.replace("\n", "").trim();
 
         return chefNodeName;
-        // TODO: chefNodeName OR chefClientName ???
     }
+
+	private String getHostname(SshUtil ssh) throws JSchException {
+
+		return ssh.runCommand("hostname");
+	}
     
 }

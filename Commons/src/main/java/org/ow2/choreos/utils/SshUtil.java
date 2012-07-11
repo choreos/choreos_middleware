@@ -109,4 +109,16 @@ public class SshUtil {
 
         return output;
     }
+    
+    public void disconnect() {
+        if (session != null && session.isConnected()) {
+            session.disconnect();
+        }
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        disconnect();
+        super.finalize();
+    }
 }
