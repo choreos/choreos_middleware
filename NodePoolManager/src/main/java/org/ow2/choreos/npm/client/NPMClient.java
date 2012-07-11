@@ -1,6 +1,8 @@
 package org.ow2.choreos.npm.client;
 
 
+import java.util.List;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -8,10 +10,22 @@ import javax.ws.rs.core.Response;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+import org.ow2.choreos.npm.NodePoolManager;
 import org.ow2.choreos.npm.datamodel.Config;
+import org.ow2.choreos.npm.datamodel.Node;
 import org.ow2.choreos.npm.datamodel.NodeRestRepresentation;
 
-public class NodePoolManagerClient implements NodePoolManager {
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+/**
+ * Access Node Pool Manager functionalities through the REST API.
+ * 
+ * The user of <code>NPMClient</code> does not need to worry with the REST communication.
+ * 
+ * @author leonardo
+ *
+ */
+public class NPMClient implements NodePoolManager {
 
 	private String host; 
 
@@ -20,7 +34,7 @@ public class NodePoolManagerClient implements NodePoolManager {
 	 * @param host ex: 'http://localhost:9100/'
 	 * 
 	 */
-	public NodePoolManagerClient(String host) {
+	public NPMClient(String host) {
 		
 		this.host = host;
 	}
@@ -41,24 +55,27 @@ public class NodePoolManagerClient implements NodePoolManager {
 	}
 	
 	@Override
-	public NodeRestRepresentation applyConfig(String configName) {
+	public Node applyConfig(Config config) {
 
 		WebClient client = setupClient();
 		client.path("nodes/configs");   	
-		Config config = new Config();
-    	config.setName(configName);
-    	NodeRestRepresentation node = null;
+    	NodeRestRepresentation nodeRest = null;
     	try {
-    		node = client.post(config, NodeRestRepresentation.class);
+    		nodeRest = client.post(config, NodeRestRepresentation.class);
     	} catch (WebApplicationException e) {
-    		; // node remains null
+    		return null;
     	}
 
-        return node;
+        return new Node(nodeRest);
+	}
+	
+	@Override
+	public List<Node> getNodes() {
+		throw new NotImplementedException();
 	}
 
 	@Override
-	public NodeRestRepresentation getNode(String nodeId) {
+	public Node getNode(String nodeId) {
 
 		WebClient client = setupClient();
 		client.path("nodes/" + nodeId);
@@ -66,28 +83,27 @@ public class NodePoolManagerClient implements NodePoolManager {
 		try {
 			nodeRest = client.get(NodeRestRepresentation.class);
 		} catch (WebApplicationException e) {
-			; // nodeRest remains null
+			return null;
 		}
 		
-		return nodeRest;
+		return new Node(nodeRest);
 	}
 
 	@Override
-	public NodeRestRepresentation createNode() {
+	public Node createNode(Node node) {
 
 		WebClient client = setupClient();
 		client.path("nodes");   	
 		client.type(MediaType.APPLICATION_XML);
-        Response response = client.post("<node/>");
+		NodeRestRepresentation nodeRest = null;
 
-        NodeRestRepresentation node = null;
         try {
-        	node = (NodeRestRepresentation) response.getEntity();
-        } catch (ClassCastException e) {
-        	; // node remains null
+        	nodeRest = client.post(node, NodeRestRepresentation.class);
+        } catch (WebApplicationException e) {
+        	return null;
         }
         
-        return node;
+        return new Node(nodeRest);
 	}
 
 	@Override
@@ -103,4 +119,5 @@ public class NodePoolManagerClient implements NodePoolManager {
         	return false;
         }
 	}
+
 }

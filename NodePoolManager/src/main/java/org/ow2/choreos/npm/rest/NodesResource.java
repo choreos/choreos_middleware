@@ -20,8 +20,8 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.npm.Configuration;
-import org.ow2.choreos.npm.Controller;
-import org.ow2.choreos.npm.NodeNotFoundException;
+import org.ow2.choreos.npm.NPMImpl;
+import org.ow2.choreos.npm.NodePoolManager;
 import org.ow2.choreos.npm.cloudprovider.AWSCloudProvider;
 import org.ow2.choreos.npm.cloudprovider.CloudProvider;
 import org.ow2.choreos.npm.cloudprovider.CloudProviderFactory;
@@ -35,20 +35,8 @@ public class NodesResource {
 
 	private Logger logger = Logger.getLogger(NodesResource.class);
 	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
-	private Controller controller = new Controller(CloudProviderFactory.getInstance(cloudProviderType));
+	private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
     
-    @GET
-    public List<NodeRestRepresentation> getNodes() {
-
-    	logger.debug("Request to get nodes");
-    	
-    	List<NodeRestRepresentation> restNodeList = new ArrayList<NodeRestRepresentation>();
-    	for (Node node: controller.getNodes()){
-    		restNodeList.add(node.getRestRepresentation());
-    	}
-        return restNodeList;
-    }
-
     @POST
     @Consumes(MediaType.APPLICATION_XML)
     public Response createNode(NodeRestRepresentation node, @Context UriInfo uriInfo) throws URISyntaxException {
@@ -56,7 +44,12 @@ public class NodesResource {
     	logger.debug("Request to create node");
     	
     	Node newNode = new Node();
-    	controller.createNode(newNode);
+    	npm.createNode(newNode);
+    	
+    	if (!newNode.hasIp()) {
+    		logger.warn("Node not created");
+    		return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+    	}
     	
     	logger.info(newNode + " created");
 		
@@ -68,20 +61,31 @@ public class NodesResource {
     }
     
     @GET
+    public List<NodeRestRepresentation> getNodes() {
+
+    	logger.debug("Request to get nodes");
+    	
+    	List<NodeRestRepresentation> restNodeList = new ArrayList<NodeRestRepresentation>();
+    	for (Node node: npm.getNodes()){
+    		restNodeList.add(node.getRestRepresentation());
+    	}
+        return restNodeList;
+    }
+    
+    @GET
     @Path("{node_id:.+}")
     public Response getNode(@PathParam("node_id") String id) {
         
     	logger.debug("Request to get node " + id);
     	
-    	Response response;
+        Node node = npm.getNode(id);
+        NodeRestRepresentation nodeRest = new NodeRestRepresentation(node);
+        Response response;
 
-        try {
-            Node node = controller.getNode(id);
-            NodeRestRepresentation nodeRest = new NodeRestRepresentation(node);
-            response = Response.ok(nodeRest).build();
-        } catch (NodeNotFoundException e) {
-            response = Response.status(Status.NOT_FOUND).build();
-        }
+        if (node != null)
+        	response = Response.ok(nodeRest).build();
+        else
+        	response = Response.status(Status.NOT_FOUND).build();
 
         return response;
     }
@@ -110,17 +114,17 @@ public class NodesResource {
     public Response upgradeNodes() {
 
     	logger.debug("Request to upgrade");
+    	boolean ok = npm.upgradeNodes();
     	
     	Response response;
-        try {
-            controller.upgradeNodes();
-            response = Response.status(Status.OK).build();
-        } catch (Exception e) {
-            response = Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        if (ok) {
+        	logger.info("Nodes upgraded");
+        	response = Response.status(Status.OK).build();
+        } else {
+        	logger.info("Nodes not upgraded");
+        	response = Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
 
-        logger.info("Nodes upgraded");
-        
         return response;
     }
    

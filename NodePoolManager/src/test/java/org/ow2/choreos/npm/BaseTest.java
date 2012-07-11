@@ -51,11 +51,5 @@ public class BaseTest {
     	
     	return matcher.matches();
     }
-    
-    protected boolean isIp(String ip) {
-    	
-    	Pattern pat = Pattern.compile("(\\d{1,4}\\.){3}\\d{1,4}");
-    	Matcher matcher = pat.matcher(ip);
-    	return matcher.matches();
-    }
+
 }

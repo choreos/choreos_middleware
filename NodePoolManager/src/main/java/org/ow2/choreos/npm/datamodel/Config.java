@@ -10,6 +10,13 @@ public class Config {
     private String name;
     private ResourceImpact resourceImpact;
 
+    public Config() {
+    }
+
+    public Config(String name) {
+    	this.name = name;
+    }
+    
     @XmlElement(required = true)
     public String getName() {
         return name;

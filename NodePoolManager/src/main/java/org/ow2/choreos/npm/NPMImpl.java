@@ -12,39 +12,21 @@ import org.ow2.choreos.npm.datamodel.Node;
 import org.ow2.choreos.npm.selector.NodeSelector;
 import org.ow2.choreos.npm.selector.NodeSelectorFactory;
 
+import com.jcraft.jsch.JSchException;
 
-public class Controller {
 
-	private Logger logger = Logger.getLogger(Controller.class);;
+public class NPMImpl implements NodePoolManager {
+
+	private Logger logger = Logger.getLogger(NPMImpl.class);;
     private final CloudProvider infrastructure;
     private ConfigurationManager configurationManager = new ConfigurationManager();
 
-    public void upgradeNodes() throws Exception {
-        final List<Node> nodes = infrastructure.getNodes();
-
-        List<Thread> threads = new ArrayList<Thread>();
-        Thread t;
-        for (Node node : nodes) {
-            t = new Thread(new NodeUpgrader(node));
-            t.start();
-            threads.add(t);
-        }
-
-        for (Thread thread : threads) {
-            thread.join();
-        }
-    }
-
-    public Controller(CloudProvider provider) {
+    public NPMImpl(CloudProvider provider) {
         infrastructure = provider;
     }
 
-    /**
-     * 
-     * @param nodeRest
-     * @return the node id
-     */
-    public String createNode(Node node) {
+    @Override
+    public Node createNode(Node node) {
 
         try {
             infrastructure.createNode(node);
@@ -53,18 +35,20 @@ public class Controller {
             configurationManager.initializeNode(node);
         } catch (RunNodesException e) {
             logger.error("Could not create node " + node, e);
-        } catch (Exception e) {
-            logger.error("Could not create node " + node, e);
-        }
+        } catch (JSchException e) {
+        	logger.error("Could not connect to the node " + node, e);
+		} 
 
-        return node.getId();
+        return node;
     }
 
+    @Override
     public List<Node> getNodes() {
         return infrastructure.getNodes();
     }
     
-    public Node getNode(String id) throws NodeNotFoundException {
+    @Override
+    public Node getNode(String id) {
     	
     	List<Node> nodes = getNodes();
     	if (nodes != null) {
@@ -73,16 +57,10 @@ public class Controller {
     				return node;
     		}
     	} 
-		throw new NodeNotFoundException("Node" + id + " not found");
+		return null;
     }
 
-    /**
-     * Applies the received configuration in a node that will be selected by the Node Pool Manager
-     * 
-     * @param config
-     *            the <code>name</code> in the <code>config</code> corresponds to a chef recipe name
-     * @return the node where the <code>config</code> was applied or null if not applied
-     */
+    @Override
     public Node applyConfig(Config config) {
 
         NodeSelector selector = NodeSelectorFactory.getInstance(this.infrastructure);
@@ -97,18 +75,51 @@ public class Controller {
         try {
             this.configurationManager.installRecipe(node, cookbook, recipe);
         } catch (Exception e) {
-            node = null;
+            return null;
         }
 
         return node;
+    }
+    
+    @Override
+    public boolean upgradeNodes() {
+    	
+        List<Node> nodes = infrastructure.getNodes();
+        List<Thread> threads = new ArrayList<Thread>();
+        List<NodeUpgrader> upgraders = new ArrayList<NodeUpgrader>();
+
+        for (Node node : nodes) {
+        	NodeUpgrader upgrader = new NodeUpgrader(node);
+        	upgraders.add(upgrader);
+            Thread t = new Thread(upgrader);
+            threads.add(t);
+            t.start();
+        }
+
+        for (int i=0; i<threads.size(); i++) {
+            try {
+				threads.get(i).join();
+				if (!upgraders.get(i).isOk())
+					return false;
+			} catch (InterruptedException e) {
+				logger.error("Could not join thread", e);
+				return false;
+			}
+        }
+        return true;
     }
 
     private class NodeUpgrader implements Runnable {
 
         private Node node;
+        private boolean ok = true;
 
         public NodeUpgrader(Node node) {
             this.node = node;
+        }
+        
+        public boolean isOk() {
+        	return ok;
         }
 
         @Override
@@ -117,6 +128,7 @@ public class Controller {
                 configurationManager.updateNodeConfiguration(node);
             } catch (Exception e) {
                 logger.error("Error on Controller while upgrading node " + node, e);
+                ok = false;
             }
         }
     }

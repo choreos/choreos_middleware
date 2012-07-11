@@ -1,5 +1,8 @@
 package org.ow2.choreos.npm.datamodel;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Node {
 
 	private String id;
@@ -49,6 +52,13 @@ public class Node {
 		return rest;
 	}
 
+	static Pattern IP_PATTERN = Pattern.compile("(\\d{1,4}\\.){3}\\d{1,4}");
+	public boolean hasIp() {
+		if (ip == null || ip.isEmpty())
+			return false;
+    	Matcher matcher = IP_PATTERN.matcher(ip);
+    	return matcher.matches();
+	}
 	
 	public String getChefName() {
 		return chefName;

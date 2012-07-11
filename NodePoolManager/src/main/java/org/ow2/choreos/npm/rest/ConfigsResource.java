@@ -15,7 +15,8 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.npm.Configuration;
-import org.ow2.choreos.npm.Controller;
+import org.ow2.choreos.npm.NPMImpl;
+import org.ow2.choreos.npm.NodePoolManager;
 import org.ow2.choreos.npm.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.npm.datamodel.Config;
 import org.ow2.choreos.npm.datamodel.Node;
@@ -27,7 +28,7 @@ public class ConfigsResource {
 
 	private Logger logger = Logger.getLogger(ConfigsResource.class);
 	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
-	private Controller controller = new Controller(CloudProviderFactory.getInstance(cloudProviderType));
+	private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
 	
 	/**
 	 * Updates node configuration. 
@@ -48,7 +49,7 @@ public class ConfigsResource {
 		if (config == null || config.getName() == null || config.getName().isEmpty())
 			return Response.status(Status.BAD_REQUEST).build();
 		
-    	Node node = controller.applyConfig(config);
+    	Node node = npm.applyConfig(config);
     	
     	if (node == null)  // config not applied!
     		return Response.status(Status.INTERNAL_SERVER_ERROR).build();
