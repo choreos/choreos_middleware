@@ -4,10 +4,8 @@ Code improvements
 
 * It seems there is some overlaping between INSTALL and README files. Handle this.
 
-* NPM project must use the Commons project
-
 * Controller should be singleton
-Idea: Controller, as NPMClient, should implement the interface NodePoolManager
+Should it?
 
 * After applying a configuration, use "knife node show NODE" to verify if the recipe was installed with success
 If not, return an error
@@ -54,6 +52,7 @@ and not by the Factory class.
 So, the FactoryClass can just call NodeSelectorImpl.getInstance()
 -> Aborted. Not so good, since NodeSelector must receive a CloudProvider in its constructor
 
+* NPM project must use the Commons project
 
-
+* Controller, as NPMClient, should implement the interface NodePoolManager
 
