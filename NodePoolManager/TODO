@@ -4,9 +4,6 @@ Code improvements
 
 * It seems there is some overlaping between INSTALL and README files. Handle this.
 
-* Controller should be singleton
-Should it?
-
 * After applying a configuration, use "knife node show NODE" to verify if the recipe was installed with success
 If not, return an error
 
@@ -55,4 +52,9 @@ So, the FactoryClass can just call NodeSelectorImpl.getInstance()
 * NPM project must use the Commons project
 
 * Controller, as NPMClient, should implement the interface NodePoolManager
+
+* Controller should be singleton
+Should it? I didnot do this.
+
+
 

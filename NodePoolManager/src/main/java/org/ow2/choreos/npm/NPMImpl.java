@@ -18,21 +18,19 @@ import com.jcraft.jsch.JSchException;
 
 public class NPMImpl implements NodePoolManager {
 
-	private Logger logger = Logger.getLogger(NPMImpl.class);;
-    private final CloudProvider infrastructure;
+	private Logger logger = Logger.getLogger(NPMImpl.class);
+    private CloudProvider cloudProvider;
     private ConfigurationManager configurationManager = new ConfigurationManager();
 
     public NPMImpl(CloudProvider provider) {
-        infrastructure = provider;
+        cloudProvider = provider;
     }
 
     @Override
     public Node createNode(Node node) {
 
         try {
-            infrastructure.createNode(node);
-            configurationManager = new ConfigurationManager();// Don't need a hostname and could be
-                                                              // a Static Class
+            cloudProvider.createNode(node);
             configurationManager.initializeNode(node);
         } catch (RunNodesException e) {
         	logger.error("Could not create node " + node, e);
@@ -47,7 +45,7 @@ public class NPMImpl implements NodePoolManager {
 
     @Override
     public List<Node> getNodes() {
-        return infrastructure.getNodes();
+        return cloudProvider.getNodes();
     }
     
     @Override
@@ -66,7 +64,7 @@ public class NPMImpl implements NodePoolManager {
     @Override
     public Node applyConfig(Config config) {
 
-        NodeSelector selector = NodeSelectorFactory.getInstance(this.infrastructure);
+        NodeSelector selector = NodeSelectorFactory.getInstance(this.cloudProvider);
         Node node = selector.selectNode(config);
 
         if (node == null)
@@ -86,7 +84,7 @@ public class NPMImpl implements NodePoolManager {
     @Override
     public boolean upgradeNodes() {
     	
-        List<Node> nodes = infrastructure.getNodes();
+        List<Node> nodes = cloudProvider.getNodes();
         List<Thread> threads = new ArrayList<Thread>();
         List<NodeUpgrader> upgraders = new ArrayList<NodeUpgrader>();
 
