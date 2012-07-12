@@ -83,8 +83,7 @@ public class ConfigurationManager {
         logger.debug("Connected");
 
     	logger.info("Bootstrapping " + node.getHostname());
-		knife.bootstrap(node.getPrivateKeyFile(), node.getIp(),
-				node.getUser());
+		knife.bootstrap(node.getIp(), node.getUser(), node.getPrivateKeyFile());
 		logger.debug("Bootstrap completed");
 		this.retrieveChefName(node);
 		this.installInitialRecipe(node);

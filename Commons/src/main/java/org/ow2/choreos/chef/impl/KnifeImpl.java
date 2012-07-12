@@ -68,7 +68,7 @@ public class KnifeImpl implements Knife {
 	}
 
 	@Override
-	public String bootstrap(String pKeyFile, String ip, String user)
+	public String bootstrap(String ip, String user, String pKeyFile)
 			throws KnifeException {
 
 		String command = scripts.getKnifeBootstrap(pKeyFile, ip, user);

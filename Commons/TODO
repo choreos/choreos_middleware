@@ -1,10 +1,12 @@
 
 * ChefNodeNameRetriever is actually searching my_chef_name.sh on NPM resources folder
 
-* private key argument on bootstrap should be the last argument
 
 **** DONE ****
 
 * When using the Commons classes in NPM there is no javadoc.
 We must install Commons on maven repository with its javadoc. 
 mvn clean javadoc:jar source:jar install
+
+* private key argument on bootstrap should be the last argument
+

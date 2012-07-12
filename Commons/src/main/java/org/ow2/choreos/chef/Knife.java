@@ -17,6 +17,6 @@ public interface Knife {
 	
 	public KnifeClient client();
 	
-	public String bootstrap(String pKeyFile, String ip, String user) throws KnifeException;
+	public String bootstrap(String ip, String user, String pKeyFile) throws KnifeException;
     
 }
