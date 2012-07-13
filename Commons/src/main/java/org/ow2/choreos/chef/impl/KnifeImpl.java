@@ -34,7 +34,7 @@ public class KnifeImpl implements Knife {
 		
 		this.scripts = new ChefScripts(knifeConfigFile);
 		this.knifeNode = new KnifeNodeImpl(knifeConfigFile, verbose);
-		this.knifeCookbook = new KnifeCookbookImpl(knifeConfigFile, verbose);
+		this.knifeCookbook = new KnifeCookbookImpl(knifeConfigFile, chefRepo, verbose);
 		this.knifeClient = new KnifeClientImpl(knifeConfigFile, verbose);
 		this.chefRepo = chefRepo;
 		this.verbose = verbose;

@@ -7,16 +7,19 @@ import org.ow2.choreos.utils.CommandLine;
 public class KnifeCookbookImpl implements KnifeCookbook {
 
 	private ChefScripts scripts;
+	private String chefRepo;
 	private boolean verbose;
 	
 	/**
 	 * 
 	 * @param knifeConfigFile The pat to the knife.rb file
+	 * @param chefRepo the path to the folder containing the cookbooks folders
 	 * @param verbose prints knife outputs if <code>verbose</code> is <code>true</code>
 	 */
-	public KnifeCookbookImpl(String knifeConfigFile, boolean verbose) {
+	public KnifeCookbookImpl(String knifeConfigFile, String chefRepo, boolean verbose) {
 		
 		this.scripts = new ChefScripts(knifeConfigFile);
+		this.chefRepo = chefRepo;
 		this.verbose = verbose;
 	}
 	
@@ -24,8 +27,8 @@ public class KnifeCookbookImpl implements KnifeCookbook {
 	 * 
 	 * @param knifeConfigFile The pat to the knife.rb file
 	 */
-	public KnifeCookbookImpl(String knifeConfigFile) {
-		this(knifeConfigFile, false);
+	public KnifeCookbookImpl(String knifeConfigFile, String chefRepo) {
+		this(knifeConfigFile, chefRepo, false);
 	}
 	
 	@Override
@@ -34,6 +37,11 @@ public class KnifeCookbookImpl implements KnifeCookbook {
 
 		String command = scripts.getKnifeCookbookUpload(cookbookName, cookbookParentFolder);
 		return CommandLine.run(command, verbose);
+	}
+	
+	@Override
+	public String upload(String cookbookName) throws KnifeException {
+		return this.upload(cookbookName, this.chefRepo);
 	}
 
 	@Override
