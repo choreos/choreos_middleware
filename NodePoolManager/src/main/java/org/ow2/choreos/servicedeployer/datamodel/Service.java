@@ -18,6 +18,7 @@ public class Service {
 	private int port;
 	private String endpointName; 
 	private String hostname;
+	private String ip;
 
 	public Service(ServiceSpec serviceSpec) {
 		
@@ -75,14 +76,22 @@ public class Service {
 	public void setType(ServiceType serviceType) {
 		this.type = serviceType;
 	}
+	
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
 
 	public String getUri() {
 		
 		// interesting note about the ending slash
 		// http://www.searchenginejournal.com/to-slash-or-not-to-slash-thats-a-server-header-question/6763/
 		
-		if (hostname == null)
-			throw new IllegalStateException("Sorry, I don't know the hostname yet");
+		if (hostname == null && ip == null)
+			throw new IllegalStateException("Sorry, I don't know neither the hostname nor the IP yet");
 		
 		String uriContext;
 		switch (type) {
@@ -101,7 +110,10 @@ public class Service {
 								+ type + " service.");
 		}
 		
-		return "http://" + hostname + ":" + getPort() + "/" + uriContext;
+		if (ip != null && !ip.isEmpty())
+			return "http://" + ip + ":" + getPort() + "/" + uriContext;
+		else
+			return "http://" + hostname + ":" + getPort() + "/" + uriContext;
 	}
 
 	public void setUri(String uri) {

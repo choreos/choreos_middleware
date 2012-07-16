@@ -1,6 +1,8 @@
 package org.ow2.choreos.servicedeployer;
 
 
+import java.io.File;
+
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeException;
@@ -43,11 +45,14 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 			return null;
 		} 
 
-		String hostname = deployService(serviceRecipe); 
-		if (hostname == null || hostname.isEmpty())
+		Node node = deployService(serviceRecipe);
+		String hostname = node.getHostname();
+		String ip = node.getIp();
+		if ((hostname == null || hostname.isEmpty())
+				&& (ip == null || ip.isEmpty()))
 			return null;
-		
 		service.setHost(hostname);
+		service.setIp(ip);
 		registry.addService(service.getId(), service);
 		
 		return service;
@@ -63,20 +68,24 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 	private void uploadRecipe(Recipe serviceRecipe) throws KnifeException {
 		
 		Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO); 
-		knife.cookbook().upload(serviceRecipe.getCookbookName(),
-				serviceRecipe.getCookbookFolder());
+		File folder = new File(serviceRecipe.getCookbookFolder());
+		String parent = folder.getParent();
+		logger.debug("Uploading recipe " + serviceRecipe.getName());
+		String result = knife.cookbook().upload(serviceRecipe.getCookbookName(),
+				parent);
+		logger.debug(result);
 	}
 
-	private String deployService(Recipe serviceRecipe) {
+	private Node deployService(Recipe serviceRecipe) {
 		
 		String configName = serviceRecipe.getCookbookName() + "::" + serviceRecipe.getName();
 		Config config = new Config(configName);
 		Node node = npm.applyConfig(config);
 		if (node == null)
 			return null;
-		String hostname = node.getHostname();
-		logger.debug("nodeLocation= " + hostname);
-		return hostname;
+		logger.debug("nodeLocation= " + node.getHostname() + "; node IP="
+				+ node.getIp());
+		return node;
 	}
 
 	@Override
