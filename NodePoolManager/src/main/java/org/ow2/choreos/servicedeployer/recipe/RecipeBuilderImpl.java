@@ -13,8 +13,8 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 	
 	private Logger logger = Logger.getLogger(RecipeBuilderImpl.class);
 	
-	private static final String TEMPLATE_DIR = "src/main/resources/service-deploy-recipe-template";
-	private static final File DEST_DIR = new File("src/main/resources/recipes");
+	private static final String TEMPLATE_DIR = "src/main/resources/chef/service-deploy-recipe-template";
+	private static final File DEST_DIR = new File("src/main/resources/chef/recipes");
 	private static final String PETALS_RECIPE = "sa";
 	
 	private String recipeFile;
@@ -62,24 +62,24 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 	// methods have "package visibility" to test purposes
 
 	void changeMetadataRb(Service service) throws IOException {
-		changeFileContents(service, "chef/service" + service.getId()
+		changeFileContents(service, "/service" + service.getId()
 				+ "/metadata.rb");
 	}
 
 	private void changeServerRecipe(Service service) throws IOException {
-		changeFileContents(service, "chef/service" + service.getId()
+		changeFileContents(service, "/service" + service.getId()
 				+ "/recipes/"+this.recipeFile);
 	}
 
 	void changeAttributesDefaultRb(Service service) throws IOException {
-		changeFileContents(service, "chef/service" + service.getId()
+		changeFileContents(service, "/service" + service.getId()
 				+ "/attributes/default.rb");
 	}
 
 	private void changeFileContents(Service service, String fileLocation)
 			throws IOException {
 
-		File file = new File("src/main/resources/" + fileLocation);
+		File file = new File(DEST_DIR + fileLocation);
 		String fileData = FileUtils.readFileToString(file);
 
 		fileData = fileData.replace("$NAME", service.getId());

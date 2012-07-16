@@ -2,6 +2,8 @@ package org.ow2.choreos.servicedeployer.datamodel;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.ow2.choreos.npm.datamodel.ResourceImpact;
+
 @XmlRootElement
 public class ServiceSpec {
 
