@@ -44,7 +44,9 @@ public class KnifeNodeImpl implements KnifeNode {
 
 	@Override
 	public String runListAdd(String nodeName, String cookbook) throws KnifeException {
-		return this.runListAdd(nodeName, cookbook, "default");
+		synchronized(KnifeNodeImpl.class) { 
+			return this.runListAdd(nodeName, cookbook, "default");
+		}
 	}
 	
 	@Override

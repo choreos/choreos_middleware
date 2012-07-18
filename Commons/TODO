@@ -2,6 +2,13 @@ Commons ToDo list
 
 * ChefNodeNameRetriever is actually searching my_chef_name.sh on NPM resources folder
 
+* Concurrent Knife
+To avoid failures on "knife node runlist add", the execution of this command is synchronized
+However, if we have different virtual machines executing this command, the result will be not safer
+There is two possible solutions:
+  * Trying to use the REST API, instead knife commands
+  * After executing the knife command, check the runlit with "knife node show"
+    If the requested recipe is not there, execute the command "runlist add" again
 
 **** DONE ****
 
