@@ -18,6 +18,17 @@ public class ChorService extends ServiceSpec {
 	private List<String> roles = new ArrayList<String>();
 	private List<ServiceDependence> dependences = new ArrayList<ServiceDependence>();
 	
+	public ServiceSpec getServiceSpec() {
+
+		ServiceSpec spec = new ServiceSpec();
+		spec.setCodeUri(super.codeUri);
+		spec.setEndpointName(super.endpointName);
+		spec.setPort(super.port);
+		spec.setResourceImpact(super.resourceImpact);
+		spec.setType(super.type);
+		return spec;
+	}
+	
 	public String getName() {
 		return name;
 	}
