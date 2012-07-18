@@ -1,8 +1,10 @@
 package org.ow2.choreos.chef.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ow2.choreos.chef.ChefNode;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.chef.KnifeNode;
 import org.ow2.choreos.utils.CommandLine;
@@ -41,6 +43,11 @@ public class KnifeNodeImpl implements KnifeNode {
 	}
 
 	@Override
+	public String runListAdd(String nodeName, String cookbook) throws KnifeException {
+		return this.runListAdd(nodeName, cookbook, "default");
+	}
+	
+	@Override
 	public List<String> list() throws KnifeException {
 
 		String command = scripts.getKnifeNodeList();
@@ -54,10 +61,21 @@ public class KnifeNodeImpl implements KnifeNode {
 	}
 
 	@Override
-	public String show(String nodeName) throws KnifeException {
+	public ChefNode show(String nodeName) throws KnifeException {
 
 		String command = scripts.getKnifeNodeShow(nodeName);
-		return CommandLine.run(command, verbose);
+		String output = CommandLine.run(command, verbose);
+		ShowNodeParser parser = new ShowNodeParser();
+		ChefNode node = null;
+		try {
+			node = parser.parse(output);
+		} catch (IOException e) {
+			throw new KnifeException("Could not parse output", command);
+		}
+		if (node == null) {
+			throw new KnifeException("Could not parse output", command);
+		}
+		return node;
 	}
 
 	@Override

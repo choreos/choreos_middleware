@@ -6,10 +6,19 @@ public interface KnifeNode {
 
 	public List<String> list() throws KnifeException;
 
-	public String show(String nodeName) throws KnifeException;
+	public ChefNode show(String nodeName) throws KnifeException;
 
 	public String runListAdd(String nodeName, String cookbook, String recipe) throws KnifeException;
-	
+
+	/**
+	 * Uses default recipe
+	 * @param nodeName
+	 * @param cookbook
+	 * @return
+	 * @throws KnifeException
+	 */
+	public String runListAdd(String nodeName, String cookbook) throws KnifeException;
+
 	public String runListRemove(String nodeName, String cookbook, String recipe) throws KnifeException;
     
     public String create(String nodeName) throws KnifeException;

@@ -1,6 +1,7 @@
 package org.ow2.choreos.utils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.log4j.BasicConfigurator;
@@ -14,11 +15,20 @@ public class LogConfigurator {
 	    	
     	Properties logProperties = new Properties();
     	try {
-			logProperties.load(ClassLoader.getSystemResourceAsStream(LOG_CONFIG_FILE));
-			PropertyConfigurator.configure(logProperties); 
+    		InputStream is = ClassLoader.getSystemResourceAsStream(LOG_CONFIG_FILE);
+			if (is != null) {
+	    		logProperties.load(is);
+				PropertyConfigurator.configure(logProperties);
+			} else {
+				basicConfiguration();
+			}
 		} catch (IOException e) {
-			System.out.println("Could not load log.properties. Let's use basic log.");
-			BasicConfigurator.configure();
+			basicConfiguration();
 		} 
+	}
+	
+	public static void basicConfiguration() {
+		System.out.println("Let's use basic log.");
+		BasicConfigurator.configure();
 	}
 }
