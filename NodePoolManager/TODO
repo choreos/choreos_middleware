@@ -1,5 +1,9 @@
 NodePoolManager ToDo list
 
+* Concurrent requests can trigger concurrent bootstraps on the same node!
+It's not desirable. However, often recipes are applied when node is alredy bootstrapped,
+since 'create node' also bootstraps the node.
+
 * Improve javadoc of REST operations (ex: detail return codes)
 
 * It seems there is some overlaping between INSTALL and README files. Handle this.

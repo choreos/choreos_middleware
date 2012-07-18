@@ -58,7 +58,6 @@ public class ConfigurationManager {
         String returnText = null;
         returnText = ssh.runCommand("ls " + createdFile, true);
         logger.debug(">>" + returnText.trim() + "<<");
-
         return returnText.trim().equals(createdFile);
     }
     
