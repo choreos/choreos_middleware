@@ -16,7 +16,7 @@
 #                  #
 ##########################################################################
 
-include_recipe "apt"
+include_recipe "apt" # java recipe is failing without recipe apt
 include_recipe "java"
 
 remote_file "#{node['service']['$NAME']['jarDir']}/service$NAMEDeploy.jar" do

@@ -16,6 +16,7 @@
 #									 #
 ##########################################################################
 
+include_recipe "apt" # java recipe is failing without recipe apt (and tomcat depends on java)
 include_recipe "tomcat"
 
 remote_file "war_file" do
