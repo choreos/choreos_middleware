@@ -84,11 +84,14 @@
 -->
 
 	<modules>
-		<module>choreos-web</module>
 		<module>Commons</module>
 		<module>NodePoolManager</module>
+        <module>EnactmentEngine</module>
+<!--
 		<module>ServiceDeployer</module>
 		<module>StorageFactory</module>
+		<module>choreos-web</module>
+-->
 	</modules>
 
 	<repositories>
