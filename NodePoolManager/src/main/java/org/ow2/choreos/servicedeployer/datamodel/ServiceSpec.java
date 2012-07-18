@@ -7,11 +7,11 @@ import org.ow2.choreos.npm.datamodel.ResourceImpact;
 @XmlRootElement
 public class ServiceSpec {
 
-	private ServiceType type; 
-	private String codeUri;
-	private int port;
-	private String endpointName;
-	private ResourceImpact resourceImpact;
+	protected ServiceType type; 
+	protected String codeUri;
+	protected int port;
+	protected String endpointName;
+	protected ResourceImpact resourceImpact;
 
 	public ServiceType getType() {
 		return type;
