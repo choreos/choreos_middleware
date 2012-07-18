@@ -12,7 +12,7 @@ import org.ow2.choreos.utils.LogConfigurator;
  * @author alfonso, leonardo
  * 
  */
-public class ServiceDeployerStandaloneServer implements Runnable {
+public class ServiceDeployerServer implements Runnable {
 
 	private static Logger logger;
 	
@@ -24,10 +24,16 @@ public class ServiceDeployerStandaloneServer implements Runnable {
     	URL = "http://localhost:" + port + "/servicedeployer/";
     }
     
-	public static void start() throws InterruptedException {
-		new Thread(new ServiceDeployerStandaloneServer()).start();
+	public static void start() {
+		
+		logger = Logger.getLogger(ServiceDeployerServer.class);
+		new Thread(new ServiceDeployerServer()).start();
 		while (!running) {
-			Thread.sleep(1);
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				logger.error(e);
+			}
 		}
 
 	}
@@ -58,8 +64,6 @@ public class ServiceDeployerStandaloneServer implements Runnable {
 	public static void main(String[] args) throws InterruptedException {
 		
     	LogConfigurator.configLog();
-        logger = Logger.getLogger(ServiceDeployerStandaloneServer.class);
-        
-		ServiceDeployerStandaloneServer.start();
+		ServiceDeployerServer.start();
 	}
 }

@@ -7,6 +7,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
@@ -15,7 +16,6 @@ import org.ow2.choreos.npm.datamodel.Config;
 import org.ow2.choreos.npm.datamodel.Node;
 import org.ow2.choreos.npm.datamodel.NodeRestRepresentation;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Access Node Pool Manager functionalities through the REST API.
@@ -31,7 +31,7 @@ public class NPMClient implements NodePoolManager {
 
 	/**
 	 * 
-	 * @param host ex: 'http://localhost:9100/'
+	 * @param host ex: 'http://localhost:9100/nodepoolmanager'
 	 * 
 	 */
 	public NPMClient(String host) {

@@ -5,7 +5,13 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.npm.Configuration;
 import org.ow2.choreos.utils.LogConfigurator;
 
-public class NPMStandaloneServer implements Runnable {
+/**
+ * Stand alone server that makes the REST API available to clients
+ * 
+ * @author alfonso, leonardo, felps, nelson
+ * 
+ */
+public class NPMServer implements Runnable {
 
 	private static Logger logger;
 	
@@ -17,18 +23,22 @@ public class NPMStandaloneServer implements Runnable {
     	URL = "http://localhost:" + port + "/nodepoolmanager/";
     }
 
-    public static void startNodePoolManager() throws InterruptedException {
+    public static void start() {
     	
-    	logger = Logger.getLogger(NPMStandaloneServer.class);
+    	logger = Logger.getLogger(NPMServer.class);
     	
-        Runnable npmServer = new NPMStandaloneServer();
+        Runnable npmServer = new NPMServer();
         new Thread(npmServer).start();
         while (!running) {
-            Thread.sleep(1);
+            try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				logger.error(e);
+			}
         }
     }
 
-    public static void stopNodePoolManager() {
+    public static void stop() {
         running = false;
     }
 
@@ -55,6 +65,6 @@ public class NPMStandaloneServer implements Runnable {
     	
     	LogConfigurator.configLog();
         
-        NPMStandaloneServer.startNodePoolManager();
+        NPMServer.start();
     }
 }
