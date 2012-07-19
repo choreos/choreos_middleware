@@ -12,7 +12,7 @@ public class EnactEngImpl implements EnactmentEngine {
 	private Logger logger = Logger.getLogger(EnactEngImpl.class);
 	
 	@Override
-	public void enact(Choreography chor) {
+	public Map<String, Service> enact(Choreography chor) {
 
 		logger.info("Starting enactment");
 		
@@ -23,6 +23,8 @@ public class EnactEngImpl implements EnactmentEngine {
 		caster.cast(chor, deployed);
 		
 		logger.info("Enactment completed");
+		
+		return deployed;
 	}
 
 }

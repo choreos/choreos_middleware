@@ -7,6 +7,19 @@ public class Choreography {
 
 	private List<ChorService> services = new ArrayList<ChorService>();
 
+	public ChorService getServiceByName(String serviceName) {
+		
+		for (ChorService svc: services) {
+			if (serviceName.equals(svc.getName()))
+				return svc;
+		}
+		return null;
+	}
+	
+	public void addService(ChorService service) {
+		this.services.add(service);
+	}
+	
 	public List<ChorService> getServices() {
 		return services;
 	}

@@ -1,0 +1,4 @@
+EnactmentEngine TODO list
+
+* EnactmentEngine tests should start NPMServer and ServiceDeployerServer,
+but this step is not working. Now, we have to start the servers before run tests.
