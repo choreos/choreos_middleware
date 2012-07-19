@@ -1,5 +1,14 @@
 package org.ow2.choreos.enactment.context;
 
+import java.io.IOException;
+
+import org.apache.xmlbeans.XmlException;
+
+import eu.choreos.vv.clientgenerator.WSClient;
+import eu.choreos.vv.exceptions.FrameworkException;
+import eu.choreos.vv.exceptions.InvalidOperationNameException;
+import eu.choreos.vv.exceptions.WSDLException;
+
 
 
 public class ContextSender {
@@ -17,27 +26,27 @@ public class ContextSender {
 	public boolean sendContext(String serviceEndpoint, 
 			String partnerRole, String partnerEndpoint) {
 		
-//		try {
-//
-//			WSClient client = new WSClient(serviceEndpoint + "?wsdl");
-//			client.request("setInvocationAddress", partnerRole, partnerEndpoint);
-//			
-//		} catch (WSDLException e) {
-//			e.printStackTrace();
-//			return false;
-//		} catch (XmlException e) {
-//			e.printStackTrace();
-//			return false;
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			return false;
-//		} catch (FrameworkException e) {
-//			e.printStackTrace();
-//			return false;
-//		} catch (InvalidOperationNameException e) {
-//			e.printStackTrace();
-//			return false;
-//		}
+		try {
+
+			WSClient client = new WSClient(serviceEndpoint + "?wsdl");
+			client.request("setInvocationAddress", partnerRole, partnerEndpoint);
+			
+		} catch (WSDLException e) {
+			e.printStackTrace();
+			return false;
+		} catch (XmlException e) {
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		} catch (FrameworkException e) {
+			e.printStackTrace();
+			return false;
+		} catch (InvalidOperationNameException e) {
+			e.printStackTrace();
+			return false;
+		}
 		
 		return true;
 	}

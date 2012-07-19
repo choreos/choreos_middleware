@@ -1,0 +1,108 @@
+package org.ow2.choreos.enactment;
+
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.xmlbeans.XmlException;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.ow2.choreos.enactment.context.ContextCaster;
+import org.ow2.choreos.enactment.datamodel.ChorService;
+import org.ow2.choreos.enactment.datamodel.Choreography;
+import org.ow2.choreos.enactment.datamodel.ServiceDependence;
+import org.ow2.choreos.servicedeployer.datamodel.Service;
+import org.ow2.choreos.utils.LogConfigurator;
+
+import eu.choreos.vv.clientgenerator.Item;
+import eu.choreos.vv.clientgenerator.WSClient;
+import eu.choreos.vv.exceptions.FrameworkException;
+import eu.choreos.vv.exceptions.InvalidOperationNameException;
+import eu.choreos.vv.exceptions.WSDLException;
+
+
+/**
+ * To run this test you must before
+ * start the airline and travel-agency services
+ * provided within the samples/EnactmentEngineServices project
+ * on localhost.
+ * 
+ * You must not also call the travel agency setInvocationAddress
+ * operation before run the test
+ * 
+ * @author leonardo
+ *
+ */
+public class ContextCasterTest {
+
+	private static final String AIRLINE = "airline";
+	private static final String TRAVEL_AGENCY = "travelagency";	
+	private static final String AIRLINE_URI = "http://localhost:1234/airline";
+	private static final String TRAVEL_AGENCY_URI = "http://localhost:1235/travelagency";	
+	
+	private Choreography chorSpec; 
+	private Map<String, Service> deployedServices;
+	
+	@BeforeClass
+	public static void configLog() {
+		LogConfigurator.configLog();
+	}
+
+	@Before
+	public void setUp() {
+		
+		chorSpec = new Choreography(); 
+		deployedServices = new HashMap<String, Service>();
+		
+		ChorService airline = new ChorService();
+		airline.setName(AIRLINE);
+		airline.getRoles().add(AIRLINE);
+		chorSpec.addService(airline);
+		
+		ChorService travel = new ChorService();
+		travel.setName(TRAVEL_AGENCY);
+		travel.getRoles().add(TRAVEL_AGENCY);
+		ServiceDependence dep = new ServiceDependence(AIRLINE, AIRLINE);
+		travel.getDependences().add(dep);
+		chorSpec.addService(travel);
+		
+		Service airlineServ = new Service();
+		airlineServ.setName(AIRLINE);
+		airlineServ.setUri(AIRLINE_URI);
+		deployedServices.put(AIRLINE, airlineServ);
+
+		Service travelServ = new Service();
+		travelServ.setName(TRAVEL_AGENCY);
+		travelServ.setUri(TRAVEL_AGENCY_URI);
+		deployedServices.put(TRAVEL_AGENCY, travelServ);
+	}
+	
+	
+	@Test
+	public void test() throws WSDLException, XmlException, IOException, FrameworkException, InvalidOperationNameException, NoSuchFieldException {
+		
+		checkPreCondition();
+		
+		ContextCaster caster = new ContextCaster();
+		caster.cast(chorSpec, deployedServices);
+		
+		WSClient travel = new WSClient(TRAVEL_AGENCY_URI + "?wsdl");
+		Item response = travel.request("buyTrip");
+		String codes = response.getChild("return").getContent();
+		
+		assertEquals("33--22", codes);
+	}
+
+	private void checkPreCondition() throws WSDLException, XmlException, IOException, FrameworkException, InvalidOperationNameException, NoSuchFieldException {
+
+		WSClient travel = new WSClient(TRAVEL_AGENCY_URI + "?wsdl");
+		Item response = travel.request("buyTrip");
+		String codes = response.getChild("return").getContent();
+		
+		assertEquals("Not possible to buy now", codes);
+	}
+
+}

@@ -5,6 +5,11 @@ import java.util.Properties;
 
 public class AirportProperties {
 
+	public static final String[] SERVICES_NAMES = { "Airline",
+		"AirlineGroundStaffMID", "Airport", "GroundTransportationCompany",
+		"Hotel", "StandAndGateManagement", "Travelagency",
+		"WeatherForecastService" };
+	
 	private static String PROPERTIES_FILE = "airport.properties";
 	
 	private static AirportProperties INSTANCE = new AirportProperties();

@@ -87,6 +87,9 @@ public class Service {
 
 	public String getUri() {
 		
+		if (uri != null && !uri.isEmpty()) // someone has set the URI
+			return uri;
+		
 		// interesting note about the ending slash
 		// http://www.searchenginejournal.com/to-slash-or-not-to-slash-thats-a-server-header-question/6763/
 		
