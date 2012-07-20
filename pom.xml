@@ -85,10 +85,9 @@
 
 	<modules>
 		<module>Commons</module>
-		<module>NodePoolManager</module>
+		<module>ServiceDeployer</module>
         <module>EnactmentEngine</module>
 <!--
-		<module>ServiceDeployer</module>
 		<module>StorageFactory</module>
 		<module>choreos-web</module>
 -->
