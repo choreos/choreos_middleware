@@ -1,7 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>eu.choreos</groupId>
 	<artifactId>ThresholdEvaluationDaemon</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
@@ -27,20 +26,20 @@
 	</repositories>
 
 	<dependencies>
-	
+
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
 			<version>1.11-SNAPSHOT</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>eu.choreos</groupId>
 			<artifactId>Utils</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<type>jar</type>
 		</dependency>
-		
+
 
 		<dependency>
 			<groupId>glimpse</groupId>
@@ -105,6 +104,15 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
+					<!-- Set the target configuration directory to be used in the bin scripts -->
+					<configurationDirectory>conf</configurationDirectory>
+					<!-- Copy the contents from "/src/main/config" to the target configuration 
+						directory in the assembled application -->
+					<copyConfigurationDirectory>true</copyConfigurationDirectory>
+					<!-- Include the target configuration directory in the beginning of 
+						the classpath declaration in the bin scripts -->
+					<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+
 				</configuration>
 			</plugin>
 			<plugin>
@@ -129,7 +137,13 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.3.2</version>
+			</plugin>
 		</plugins>
+		<defaultGoal>install</defaultGoal>
 	</build>
 
 </project>

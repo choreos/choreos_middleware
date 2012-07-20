@@ -2,33 +2,45 @@ package eu.choreos.monitoring.platform.daemon;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import eu.choreos.monitoring.platform.daemon.datatypes.Host;
 import eu.choreos.monitoring.platform.exception.GangliaException;
 
 public class ThresholdManager {
+	
+	/* Config Object that constains threshold configurations */
+	//private Config config = new Config(null); // null means monitoring will use default file
 
 	private HostManager hostManager;
-	private Set<AbstractThreshold> thresholds;
+	//private Set<AbstractThreshold> thresholds;
+	
+	/* Map of thresholds to be analysed */
+	Map<String, List<AbstractThreshold>> thresholds;
+	
+	/* Map for put surpassed thresholds separated per host */
 	Map<String, List<AbstractThreshold>> surpassedThresholds;
 
 	public ThresholdManager(HostManager hostManager) {
 		this.hostManager = hostManager;
-		thresholds = new HashSet<AbstractThreshold>();
+		thresholds = new HashMap<String, List<AbstractThreshold>>();
 		surpassedThresholds = new HashMap<String, List<AbstractThreshold>>();
 	}
 
-	public void addThreshold(AbstractThreshold threshold) {
-			thresholds.add(threshold);
+	/* add a threshold to a list of threshold for instances of type instanceType */
+	public void addThreshold(String instanceType, AbstractThreshold threshold) {
+		if(thresholds.get(instanceType) == null)
+			thresholds.put(instanceType, new ArrayList<AbstractThreshold>());
+		thresholds.get(instanceType).add(threshold);
 		return;
 	}
 
-	public void addMultipleThresholds(List<AbstractThreshold> thresholdList) {
-		thresholds.addAll(thresholdList);
+	/* add a list of threshold to a list of threshold for instance of type instanceType */
+	public void addMultipleThresholds(String instanceType, List<AbstractThreshold> thresholdList) {
+		if(thresholds.get(instanceType) == null)
+			thresholds.put(instanceType, new ArrayList<AbstractThreshold>());
+		thresholds.get(instanceType).addAll(thresholdList);
 	}
 	
 	public void updateThresholdsInfo() throws GangliaException {
@@ -52,24 +64,59 @@ public class ThresholdManager {
 		return Double.parseDouble(value);
 	}
 
+	/* Could return a List cause here all surpassed threshold differs only host name */
 	private List<AbstractThreshold> getAllSurpassedThresholds(Host host) throws GangliaException {
 
-		List<AbstractThreshold> surpassedThresholds = new ArrayList<AbstractThreshold>();
+		List<AbstractThreshold> tempSurpassedThresholds = new ArrayList<AbstractThreshold>();
 		
 		if(host.isDown()) {
 			SingleThreshold t = new SingleThreshold("host_down", SingleThreshold.DOWN, 0);
-			surpassedThresholds.add(t); return surpassedThresholds;
+			tempSurpassedThresholds.add(t); 
+			
+			/* remove this return statement to continue send last measured threshold. Can be used to
+			 * get information about cause of host is down */
+			return tempSurpassedThresholds;
 		}
+		
+		if(host.getInstanceType().equalsIgnoreCase("small")) {
+			
+			tempSurpassedThresholds.addAll(this.getSurpassedThresholdByInstanceType("default", host));
+			
+		} else if(host.getInstanceType() == "medium") {
+			
+			tempSurpassedThresholds.addAll(this.getSurpassedThresholdByInstanceType("default", host));
+		
+		} else if(host.getInstanceType() == "large") {
+			
+			tempSurpassedThresholds.addAll(this.getSurpassedThresholdByInstanceType("default", host));
+		
+		} else if(host.getInstanceType() == "extralarge") {
+		
+			tempSurpassedThresholds.addAll(this.getSurpassedThresholdByInstanceType("default", host));
+		
+		}
+		
+		/* apply default thresholds. */
+		tempSurpassedThresholds.addAll(this.getSurpassedThresholdByInstanceType("default", host));
 
-		for (AbstractThreshold threshold : thresholds) {
+		return tempSurpassedThresholds;
+	}
+	
+	private List<AbstractThreshold> getSurpassedThresholdByInstanceType(String instancetype, Host host) throws GangliaException {
 
+		List<AbstractThreshold> surpassed = new ArrayList<AbstractThreshold>();
+
+		if(!thresholds.keySet().contains(instancetype)) return surpassed;
+			
+		for (AbstractThreshold threshold : thresholds.get(instancetype)) {
 			String thresholdName = threshold.getName();
 			Double metricValue = getMetricNumericalValue(thresholdName, host);
 
 			if (threshold.wasSurpassed(metricValue))
-				surpassedThresholds.add(threshold);
+				surpassed.add(threshold);
 		}
-		return surpassedThresholds;
+		
+		return surpassed;
 	}
 	
 	private Map<String, List<AbstractThreshold>> getSurpassedThresholdsForAllHosts() throws GangliaException {
@@ -92,6 +139,12 @@ public class ThresholdManager {
 
 	public int getThresholdSize() {
 		return thresholds.size();
+	}
+
+	public void addAllThreshold(
+			Map<String, List<AbstractThreshold>> thresholdConfig) {
+
+		this.thresholds = thresholdConfig;
 	}
 
 }
