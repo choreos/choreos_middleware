@@ -8,7 +8,7 @@ public class AirlineStarter {
 
 		Airline service = new AirlineService();
 		Endpoint endpoint = Endpoint.create(service);
-		endpoint.publish("http://localhost:1234/airline");
+		endpoint.publish("http://0.0.0.0:1234/airline");
 	}
 
 }

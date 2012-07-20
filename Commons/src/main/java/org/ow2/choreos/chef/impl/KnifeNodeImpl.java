@@ -37,16 +37,17 @@ public class KnifeNodeImpl implements KnifeNode {
 	@Override
 	public String runListAdd(String nodeName, String cookbook, String recipe)
 			throws KnifeException {
-
+		
 		String command = scripts.getKnifeRunListAdd(nodeName, cookbook, recipe);
-		return CommandLine.run(command, verbose);
+		synchronized(KnifeNodeImpl.class) { 
+			return CommandLine.run(command, verbose);
+		}
 	}
 
 	@Override
 	public String runListAdd(String nodeName, String cookbook) throws KnifeException {
-		synchronized(KnifeNodeImpl.class) { 
-			return this.runListAdd(nodeName, cookbook, "default");
-		}
+		
+		return this.runListAdd(nodeName, cookbook, "default");
 	}
 	
 	@Override

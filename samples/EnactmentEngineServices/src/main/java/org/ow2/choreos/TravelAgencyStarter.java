@@ -8,7 +8,7 @@ public class TravelAgencyStarter {
 
 		TravelAgency service = new TravelAgencyService();
 		Endpoint endpoint = Endpoint.create(service);
-		endpoint.publish("http://localhost:1235/travelagency");
+		endpoint.publish("http://0.0.0.0:1235/travelagency");
 	}
 	
 }

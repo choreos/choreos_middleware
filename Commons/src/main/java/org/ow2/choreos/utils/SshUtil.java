@@ -12,6 +12,8 @@ import com.jcraft.jsch.Session;
 public class SshUtil {
 
 	private Logger logger = Logger.getLogger(SshUtil.class);
+	
+	private static final int CONNECTION_TIMEOUT = 5000;
     
 	private final String hostname, user, privateKeyFile;
     private Session session;
@@ -43,7 +45,7 @@ public class SshUtil {
         try {
             // Once upon a time, an old session caused a lot of trouble...
             session = getSession();
-            session.connect(5000);
+            session.connect(CONNECTION_TIMEOUT);
         } catch (JSchException e) {
             return false;
         }
@@ -80,7 +82,7 @@ public class SshUtil {
         Session session = getSession();
 
         try {
-            session.connect(5000);
+            session.connect(CONNECTION_TIMEOUT);
 
             Channel channel = session.openChannel("exec");
             ((ChannelExec) channel).setCommand(command);

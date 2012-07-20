@@ -1,6 +1,6 @@
 package org.ow2.choreos.enactment;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.Map;
@@ -12,10 +12,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.enactment.datamodel.ChorService;
 import org.ow2.choreos.enactment.datamodel.Choreography;
-import org.ow2.choreos.npm.rest.NPMServer;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
-import org.ow2.choreos.servicedeployer.rest.ServiceDeployerServer;
 import org.ow2.choreos.utils.LogConfigurator;
 
 import eu.choreos.vv.clientgenerator.Item;

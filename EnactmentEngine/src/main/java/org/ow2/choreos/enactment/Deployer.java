@@ -34,6 +34,7 @@ public class Deployer {
 		
 		for (ChorService service: chor.getServices()) {
 			ServiceSpec serviceSpec = service.getServiceSpec();
+			logger.debug("Requesting deploy of " + serviceSpec);
 			Service deployed = deployer.deploy(serviceSpec);
 			if (deployed != null) {
 				deployedServices.put(service.getName(), deployed);
