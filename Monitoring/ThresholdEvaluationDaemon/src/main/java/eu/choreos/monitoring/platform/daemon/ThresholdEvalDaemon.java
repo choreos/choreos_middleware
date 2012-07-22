@@ -16,6 +16,7 @@ public class ThresholdEvalDaemon {
 	private static final int NOTIFICATION_INTERVAL = 6000;
 	private GlimpseMessageHandler messageHandler;
 	private ThresholdManager thresholdManager;
+	private Config config;
 
 	public ThresholdEvalDaemon(Properties settings, String host, int port)
 			throws GangliaException {
@@ -29,14 +30,19 @@ public class ThresholdEvalDaemon {
 			throws GangliaException {
 		messageHandler = msgHandler;
 		thresholdManager = tshdManager;
+		
+		if(config == null) config = Config.getInstance(null);
+		
+		/* set threshold map */
+		thresholdManager.addAllThreshold(config.getThresholdConfig());
 	}
 
-	public void addThreshold(SingleThreshold threshold) {
-		thresholdManager.addThreshold(threshold);
+	public void addThreshold(String instanceType, AbstractThreshold threshold) {
+		thresholdManager.addThreshold(instanceType, threshold);
 	}
 
-	public void addMultipleThreshold(List<AbstractThreshold> thresholdList) {
-		thresholdManager.addMultipleThresholds(thresholdList);
+	public void addMultipleThreshold(String instanceType, List<AbstractThreshold> thresholdList) {
+		thresholdManager.addMultipleThresholds(instanceType, thresholdList);
 	}
 
 	public void continuouslyEvaluateThresholdsAndSendMessages(
@@ -103,5 +109,9 @@ public class ThresholdEvalDaemon {
 				sendMessage(message);
 			}
 		}
+	}
+
+	public void setConfig(Config config) {
+		this.config = config;
 	}
 }

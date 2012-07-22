@@ -4,11 +4,9 @@ import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventImpl;
 import it.cnr.isti.labse.glimpse.utils.Manager;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Properties;
 
 import eu.choreos.monitoring.platform.exception.GangliaException;
-import eu.choreos.monitoring.platform.utils.YamlParser;
 
 public class ThresholdEvalDaemonLauncher {
 
@@ -21,7 +19,7 @@ public class ThresholdEvalDaemonLauncher {
 		host = "localhost";
 		port = 8649;
 		javaNamingProviderUrl=null;
-		thresholdListFileName = "";
+		//thresholdListFileName = null;
 
 		switch (args.length) {
 
@@ -83,8 +81,13 @@ public class ThresholdEvalDaemonLauncher {
 			e.printStackTrace();
 		}
 		
-		List<AbstractThreshold> thresholdList = YamlParser.getThresholdsFromFile(thresholdListFileName);
-		daemon.addMultipleThreshold(thresholdList);
+		/* Get configuration */
+		Config config = Config.getInstance(thresholdListFileName);
+		
+		//List<AbstractThreshold> thresholdList = YamlParser.getThresholdsFromFile(thresholdListFileName);
+		//daemon.addMultipleThreshold(thresholdList);
+		
+		daemon.setConfig(config);
 		daemon.continuouslyEvaluateThresholdsAndSendMessages(getBaseEvent());
 	}
 

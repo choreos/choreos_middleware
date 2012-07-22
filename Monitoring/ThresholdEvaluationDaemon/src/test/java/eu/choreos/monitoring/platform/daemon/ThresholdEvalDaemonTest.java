@@ -57,8 +57,8 @@ public class ThresholdEvalDaemonTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void shouldSendAllThresholdsMessage() throws GangliaException, MessageHandlingFault {
-		daemon.addThreshold(new SingleThreshold("load_one", SingleThreshold.MAX, 1.0));
-		daemon.addThreshold(new SingleThreshold("load_five", SingleThreshold.MIN, 1.0));
+		daemon.addThreshold("default", new SingleThreshold("load_one", SingleThreshold.MAX, 1.0));
+		daemon.addThreshold("default", new SingleThreshold("load_five", SingleThreshold.MIN, 1.0));
 		
 		daemon.evaluateThresholdsSendMessagesAndSleep(message, 0);
 		

@@ -2,7 +2,6 @@ package eu.choreos.monitoring.platform.daemon.datatypes;
 
 import eu.choreos.monitoring.platform.daemon.AbstractThreshold;
 import eu.choreos.monitoring.platform.daemon.DoubleThreshold;
-import eu.choreos.monitoring.platform.daemon.SingleThreshold;
 
 public class DoubleThresholdSpec extends AbstractThresholdSpec {
 	

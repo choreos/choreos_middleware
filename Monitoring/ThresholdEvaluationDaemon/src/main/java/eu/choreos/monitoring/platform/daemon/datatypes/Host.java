@@ -1,9 +1,20 @@
 package eu.choreos.monitoring.platform.daemon.datatypes;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
+import java.util.Properties;
 
 public class Host {
-
+	
+	/* small | medium | large | extralarge */
+	private String instanceType = "";
+	private static int SMALL;
+	private static int MEDIUM;
+	private static int LARGE;
+	//private static final int EXTRALARGE = 16000000;
+	
 	private static final double REST = 1.5;
 	private Map<String, Metric> metrics;
 	private String clusterName;
@@ -11,6 +22,14 @@ public class Host {
 	private String ip;
 	private int tn;
 	private int tmax;
+	
+	public String getInstanceType () {
+		return instanceType;
+	}
+	
+	public void setInstanceType (String instanceType) {
+		this.instanceType = instanceType;
+	}
 
 	public int getTmax() {
 		return tmax;
@@ -29,6 +48,12 @@ public class Host {
 	}
 
 	public Host(String clusterName, String hostname, String ip, Map<String, Metric> metrics,
+			int tn, int tmax, String instanceType) {
+		this(clusterName, hostname, ip, metrics, tn, tmax);
+		this.instanceType = instanceType;
+	}
+	
+	public Host(String clusterName, String hostname, String ip, Map<String, Metric> metrics,
 			int tn, int tmax) {
 		this.clusterName = clusterName;
 		this.hostName = hostname;
@@ -36,6 +61,46 @@ public class Host {
 		this.metrics = metrics;
 		this.tn = tn;
 		this.tmax = tmax;
+		this.instanceType = verifyMyInstanceType();
+		
+		// set values		
+		Properties myProps = new Properties();
+		
+		FileInputStream MyInputStream = null;
+		try {
+			MyInputStream = new FileInputStream(
+					ClassLoader.getSystemResource("monitoring.properties").getFile() );
+			myProps.load(MyInputStream);
+
+			String sm = myProps.getProperty("SmallInstance.memory");
+			String me = myProps.getProperty("MediumInstance.memory");
+			String lr = myProps.getProperty("LargeInstance.memory");
+			//String xl = myProps.getProperty("ExtraLargeInstance.memory");
+			
+			SMALL = Integer.parseInt(sm);
+			MEDIUM = Integer.parseInt(me);
+			LARGE = Integer.parseInt(lr);
+					
+			MyInputStream.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	private String verifyMyInstanceType() {
+		if(!this.metrics.containsKey("mem_total")) return "";
+		
+		Metric m = this.metrics.get("mem_total");
+		int mem_total = Integer.parseInt(m.getValue());
+
+		if ( mem_total < SMALL ) return "small";
+		else if ( mem_total >= SMALL && mem_total < MEDIUM ) return "medium";
+		else if ( mem_total >= MEDIUM && mem_total < LARGE ) return "large";
+		else if ( mem_total >= LARGE ) return "extralarge";
+		
+		return "";
 	}
 
 	public String toString() {

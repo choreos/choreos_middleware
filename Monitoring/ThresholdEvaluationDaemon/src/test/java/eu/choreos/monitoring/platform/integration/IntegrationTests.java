@@ -47,7 +47,7 @@ public class IntegrationTests {
 		
 		SingleThreshold shouldBeSurpassed = new SingleThreshold("load_one", SingleThreshold.MAX, 0);
 		
-		thresholdManager.addThreshold(shouldBeSurpassed);
+		thresholdManager.addThreshold("default", shouldBeSurpassed);
 		
 		assertEquals(1, thresholdManager.getSurpassedThresholds().size());
 	}

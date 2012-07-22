@@ -44,6 +44,7 @@ public class ThresholdManagerTest {
 		host2 = new Host("test1", "hostname2", "ip2", metricsMap2, 20,20);
 		HashMap<String, Metric> m = new HashMap<String, Metric>();
 		m.put("load_one"	, new Metric("load_one", "value", 90, 20, 0));
+		m.put("mem_total", new Metric("mem_total", "7550000", 10, 30, 0));
 		host3 = new Host("test1", "hostname3", "ip3", m, 40,20); 
 
 		hostList = new ArrayList<Host>();
@@ -62,9 +63,16 @@ public class ThresholdManagerTest {
 	}
 
 	@Test
-	public void shouldAddOneThreshold() {
+	public void shouldAddOneSingleThreshold() {
 		SingleThreshold threshold = new SingleThreshold("load_one", SingleThreshold.MAX, 3);
-		notifier.addThreshold(threshold);
+		notifier.addThreshold("default", threshold);
+		assertEquals(1, notifier.getThresholdSize());
+	}
+	
+	@Test
+	public void shouldAddOneDoubleThreshold() {
+		DoubleThreshold threshold = new DoubleThreshold("load_five", DoubleThreshold.BETWEEN, 1,1.1);
+		notifier.addThreshold("default", threshold);
 		assertEquals(1, notifier.getThresholdSize());
 	}
 
@@ -73,8 +81,8 @@ public class ThresholdManagerTest {
 		assertEquals(0, notifier.getThresholdSize());
 		SingleThreshold threshold1 = new SingleThreshold("load_one", SingleThreshold.MAX, 3);
 		SingleThreshold threshold2 = new SingleThreshold("load_one", SingleThreshold.MAX, 3);
-		notifier.addThreshold(threshold1);
-		notifier.addThreshold(threshold2);
+		notifier.addThreshold("default", threshold1);
+		notifier.addThreshold("default", threshold2);
 		assertEquals(1, notifier.getThresholdSize());
 	}
 
@@ -86,8 +94,8 @@ public class ThresholdManagerTest {
 		SingleThreshold threshold1 = new SingleThreshold("load_one", SingleThreshold.MIN, 1.5);
 		SingleThreshold threshold2 = new SingleThreshold("mem_total", SingleThreshold.MAX, 50000);
 
-		notifier.addThreshold(threshold1);
-		notifier.addThreshold(threshold2);
+		notifier.addThreshold("default", threshold1);
+		notifier.addThreshold("small", threshold2);
 		
 		notifier.updateThresholdsInfo();
 
@@ -106,7 +114,7 @@ public class ThresholdManagerTest {
 			throws GangliaException {
 		SingleThreshold threshold = new SingleThreshold("load_one", SingleThreshold.MAX, 0.8);
 
-		notifier.addThreshold(threshold);
+		notifier.addThreshold("default", threshold);
 		notifier.updateThresholdsInfo();
 
 		Map<String, List<AbstractThreshold>> list1 = notifier.getSurpassedThresholds();
@@ -127,7 +135,7 @@ public class ThresholdManagerTest {
 	public void thereAreNotSurpassedThreshold() throws GangliaException {
 		SingleThreshold t = new SingleThreshold("load_one", SingleThreshold.MAX, 3);
 		
-		notifier.addThreshold(t);
+		notifier.addThreshold("default", t);
 		notifier.updateThresholdsInfo();
 		
 		assertFalse(notifier.thereAreSurpassedThresholds());
@@ -137,7 +145,7 @@ public class ThresholdManagerTest {
 	public void thereAreSurpassedThreshold() throws GangliaException {
 		SingleThreshold t = new SingleThreshold("load_one", SingleThreshold.MAX, 0);
 		
-		notifier.addThreshold(t);
+		notifier.addThreshold("default", t);
 		notifier.updateThresholdsInfo();
 		
 		assertTrue(notifier.thereAreSurpassedThresholds());
