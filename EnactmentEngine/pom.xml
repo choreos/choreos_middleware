@@ -21,9 +21,18 @@
         <type>jar</type>
     </dependency>
 	<dependency>
+		<groupId>org.ow2.choreos</groupId>
+		<artifactId>MiddlewareCommons</artifactId> 
+		<version>0.0.1-SNAPSHOT</version>
+		<type>jar</type>
+	</dependency>
+	<dependency>
 		<groupId>eu.choreos</groupId>
 		<artifactId>rehearsal</artifactId>
 		<version>0.13</version>
+        <scope>system</scope>
+        <systemPath>${basedir}/lib/rehearsal-0.13.jar</systemPath>
 	</dependency>
+
   </dependencies>
 </project>

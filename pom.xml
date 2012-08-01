@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.ow2.choreos</groupId>
@@ -91,7 +91,8 @@
 		<module>StorageFactory</module>
 		<module>choreos-web</module>
 -->
-	</modules>
+    <module>REST</module>
+  </modules>
 
 	<repositories>
 		<repository>
@@ -184,6 +185,11 @@
 	        <version>1.3.2</version>
         </dependency>
 
+	    <dependency>
+		    <groupId>eu.choreos</groupId>
+		    <artifactId>rehearsal</artifactId>
+		    <version>0.13</version>
+	    </dependency>
 	</dependencies>
 
 	<build>
@@ -317,7 +323,7 @@
 								<dialect>org.hibernate.dialect.MySQLDialect</dialect>
 								<driverClass>com.mysql.jdbc.Driver</driverClass>
 								<username>root</username>
-								<password></password>
+								<password/>
 								<connectionUrl>
 									jdbc:mysql://localhost:3306/choreos
 								</connectionUrl>
