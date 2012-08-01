@@ -15,3 +15,5 @@ they must be deployed on the same node.
 
 * The REST API
 It must be done with ApacheCXF, not with Jersey, due to license issues.
+
+* Registry should use a database instead a static map.
