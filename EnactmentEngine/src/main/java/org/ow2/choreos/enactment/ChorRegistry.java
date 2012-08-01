@@ -36,15 +36,16 @@ public class ChorRegistry {
 	
 	/**
 	 * Creates a new choreography entry
-	 * @return the choreography id
+	 * @return the just created choreography
 	 */
-	public String newChor() {
+	public Choreography newChor() {
 		
 		String id = Integer.toString(counter.incrementAndGet());
 		Choreography chor = new Choreography();
+		chor.setId(id);
 		chors.put(id, chor);
 		
-		return id;
+		return chor;
 	}
 	
 	/**
@@ -58,6 +59,11 @@ public class ChorRegistry {
 		if (chorId == null)
 			throw new IllegalArgumentException();
 		chor.getServices().add(service);
+	}
+	
+	public Choreography get(String chorId) {
+		
+		return chors.get(chorId);
 	}
 
 }

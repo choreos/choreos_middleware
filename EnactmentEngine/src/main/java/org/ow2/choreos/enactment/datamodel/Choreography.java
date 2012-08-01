@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Choreography {
 
+	private String id;
 	private List<ChorService> services = new ArrayList<ChorService>();
 
 	public ChorService getServiceByName(String serviceName) {
@@ -28,12 +29,19 @@ public class Choreography {
 		this.services = services;
 	}
 
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((services == null) ? 0 : services.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -46,17 +54,17 @@ public class Choreography {
 		if (getClass() != obj.getClass())
 			return false;
 		Choreography other = (Choreography) obj;
-		if (services == null) {
-			if (other.services != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!services.equals(other.services))
+		} else if (!id.equals(other.id))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Choreography [services=" + services + "]";
+		return "Choreography [id=" + id + ", services=" + services + "]";
 	}
-	
+
 }
