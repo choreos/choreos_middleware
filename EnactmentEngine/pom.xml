@@ -30,8 +30,17 @@
 		<groupId>eu.choreos</groupId>
 		<artifactId>rehearsal</artifactId>
 		<version>0.13</version>
-        <scope>system</scope>
-        <systemPath>${basedir}/lib/rehearsal-0.13.jar</systemPath>
+        <!-- The Jetty version used by Rehearsal conflicts with the Jetty version used by Apache CXF -->
+		<exclusions>
+			<exclusion>
+				<artifactId>jetty</artifactId>
+				<groupId>jetty</groupId>
+			</exclusion>
+			<exclusion>
+				<artifactId>jetty-util</artifactId>
+				<groupId>jetty</groupId>
+			</exclusion>
+		</exclusions>
 	</dependency>
 
   </dependencies>
