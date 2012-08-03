@@ -35,8 +35,8 @@ public class SimpleServiceEnactmentTest {
 
 	private static final String AIRLINE = "airline";
 	private static final String TRAVEL_AGENCY = "travelagency";	
-	private static final String AIRLINE_JAR = "http://www.ime.usp.br/~leofl/choreos/enact_test/airline-service.jar";
-	private static final String TRAVEL_AGENCY_JAR = "http://www.ime.usp.br/~leofl/choreos/enact_test/travel-agency-service.jar";	
+	private static final String AIRLINE_JAR = "http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar";
+	private static final String TRAVEL_AGENCY_JAR = "http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar";	
 	private static final int AIRLINE_PORT = 1234;
 	private static final int TRAVEL_AGENCY_PORT = 1235;	
 	
