@@ -25,12 +25,6 @@
     </dependency>
 	<dependency>
 		<groupId>org.ow2.choreos</groupId>
-		<artifactId>MiddlewareCommons</artifactId> 
-		<version>0.0.1-SNAPSHOT</version>
-		<type>jar</type>
-	</dependency>
-	<dependency>
-		<groupId>org.ow2.choreos</groupId>
 		<artifactId>EnactmentEngine</artifactId> 
 		<version>0.0.1-SNAPSHOT</version>
 		<type>jar</type>
