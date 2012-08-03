@@ -1,11 +1,13 @@
 package org.ow2.choreos.enactment;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.ow2.choreos.enactment.datamodel.ChorService;
 import org.ow2.choreos.enactment.datamodel.Choreography;
+import org.ow2.choreos.servicedeployer.datamodel.Service;
 
 /**
  * Stores choreography descriptions.
@@ -21,6 +23,7 @@ public class ChorRegistry {
 	
 	// map key is the chor id
 	private Map<String, Choreography> chors = new HashMap<String, Choreography>(); 
+	private Map<String, Collection<Service>> deployed = new HashMap<String, Collection<Service>>();
 	private AtomicInteger counter = new AtomicInteger();
 	
 	private ChorRegistry() {
@@ -53,7 +56,7 @@ public class ChorRegistry {
 	 * @param service the service specification
 	 * @param chorId the choreography id
 	 */
-	public void addService(ChorService service, String chorId) {
+	public void addService(String chorId, ChorService service) {
 		
 		Choreography chor = chors.get(chorId);
 		if (chorId == null)
@@ -64,6 +67,21 @@ public class ChorRegistry {
 	public Choreography get(String chorId) {
 		
 		return chors.get(chorId);
+	}
+	
+	/**
+	 * Associates deployed services with a choreography
+	 * @param deployed
+	 * @param chorId
+	 */
+	public void addDeployedServices(String chorId, Collection<Service> deployedServices) {
+		
+		deployed.put(chorId, deployedServices);
+	}
+	
+	public Collection<Service> getDeployedServices(String chorId) {
+		
+		return deployed.get(chorId);
 	}
 
 }
