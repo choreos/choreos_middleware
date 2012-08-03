@@ -2,10 +2,8 @@ package org.ow2.choreos.enactment;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
 import java.util.Map;
 
-import org.apache.xmlbeans.XmlException;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -19,8 +17,6 @@ import org.ow2.choreos.utils.LogConfigurator;
 
 import eu.choreos.vv.clientgenerator.Item;
 import eu.choreos.vv.clientgenerator.WSClient;
-import eu.choreos.vv.exceptions.FrameworkException;
-import eu.choreos.vv.exceptions.InvalidOperationNameException;
 
 /**
  * This test will enact a choreography with two services,
@@ -82,7 +78,7 @@ public class SimpleServiceEnactmentTest {
 	}
 	
 	@Test
-	public void shouldEnactChoreography() throws InvalidOperationNameException, FrameworkException, NoSuchFieldException, XmlException, IOException {
+	public void shouldEnactChoreography() throws Exception {
 		
 		EnactmentEngine ee = new EnactEngImpl();
 		Map<String, Service> deployedServices = ee.enact(chorSpec);

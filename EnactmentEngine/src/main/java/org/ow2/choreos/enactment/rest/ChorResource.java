@@ -19,6 +19,7 @@ import javax.ws.rs.core.UriInfo;
 import org.ow2.choreos.enactment.ChorRegistry;
 import org.ow2.choreos.enactment.EnactEngImpl;
 import org.ow2.choreos.enactment.EnactmentEngine;
+import org.ow2.choreos.enactment.EnactmentException;
 import org.ow2.choreos.enactment.datamodel.ChorService;
 import org.ow2.choreos.enactment.datamodel.Choreography;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
@@ -135,7 +136,12 @@ public class ChorResource {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		
-		Collection<Service> deployedServices = ee.enact(chor).values();
+		Collection<Service> deployedServices;
+		try {
+			deployedServices = ee.enact(chor).values();
+		} catch (EnactmentException e) {
+			return Response.serverError().build(); // 500
+		}
 		reg.addDeployedServices(chorId, deployedServices);
 		
 		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();

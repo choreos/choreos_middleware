@@ -13,5 +13,5 @@ public interface EnactmentEngine {
 	 * @return a map whose keys are service names, and
 	 * values contains information about deployed services 
 	 */
-	public Map<String, Service> enact(Choreography chor);
+	public Map<String, Service> enact(Choreography chor) throws EnactmentException;
 }

@@ -20,7 +20,6 @@ import eu.choreos.vv.clientgenerator.Item;
 import eu.choreos.vv.clientgenerator.ItemImpl;
 import eu.choreos.vv.clientgenerator.WSClient;
 import eu.choreos.vv.exceptions.FrameworkException;
-import eu.choreos.vv.exceptions.InvalidOperationNameException;
 import eu.choreos.vv.exceptions.WSDLException;
 
 /**
@@ -64,7 +63,7 @@ public class SingleServiceEnactmentTest {
 	}
 	
 	@Test
-	public void shouldEnactChoreography() throws InvalidOperationNameException, FrameworkException, NoSuchFieldException {
+	public void shouldEnactChoreography() throws Exception {
 		
 		EnactmentEngine ee = new EnactEngImpl();
 		Map<String, Service> deployedServices = ee.enact(chor);
