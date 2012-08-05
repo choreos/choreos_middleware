@@ -2,6 +2,7 @@ EnactmentEngine TODO list
 
 * EnactmentEngine tests should start NPMServer and ServiceDeployerServer,
 but this step is not working. Now, we have to start the servers before run tests.
+The problem is the way like the RecipeBuilder access the resources.
 
 * Add owner attribute to ChorService class.
 For each available owner, the enactmentengine.properties must have an 
@@ -13,9 +14,8 @@ If owner is not specfied, the default Service Deployer is used, just as now.
 * If two or more services has the same "group" specification,
 they must be deployed on the same node.
 
-* The REST API
-It must be done with ApacheCXF, not with Jersey, due to license issues.
-
 * Registry should use a database instead a static map.
 
-* Finish GET /chors/{chorID}/deployed
+*** DONE ***
+
+* Finish GET /chors/{chorID}/enactment

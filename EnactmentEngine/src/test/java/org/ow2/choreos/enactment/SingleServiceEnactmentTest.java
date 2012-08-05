@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.apache.xmlbeans.XmlException;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -23,7 +22,9 @@ import eu.choreos.vv.exceptions.FrameworkException;
 import eu.choreos.vv.exceptions.WSDLException;
 
 /**
- * Before run the test, start NPMServer and ServiceDeployerServer.
+ * This test enacts a choreography of a single service.
+ * 
+ * Before the test, start the NPMServer and the ServiceDeployerServer.
  * 
  * @author leonardo
  *
@@ -37,14 +38,6 @@ public class SingleServiceEnactmentTest {
 	@BeforeClass
 	public static void startServers() {
 		LogConfigurator.configLog();
-//		NPMServer.start();
-//		ServiceDeployerServer.start();
-	}
-	
-	@AfterClass
-	public static void shutDownServers() {
-//		NPMServer.stop();
-//		ServiceDeployerServer.stop();
 	}
 	
 	@Before

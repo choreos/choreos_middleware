@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -24,6 +23,8 @@ import eu.choreos.vv.clientgenerator.WSClient;
 /**
  * This test will enact the services
  * WeatherForecast and AirlineGroundStaffMID.
+ * 
+ * Before the test, start the NPMServer and the ServiceDeployerServer
  * 
  * AirlineGroundStaffMID depends on WeatherForecast.
  * Whether these services will be deployed on the same node, or not,
@@ -43,14 +44,6 @@ public class AirportEnactmentTest {
 	@BeforeClass
 	public static void startServers() {
 		LogConfigurator.configLog();
-//		NPMServer.start();
-//		ServiceDeployerServer.start();
-	}
-	
-	@AfterClass
-	public static void shutDownServers() {
-//		NPMServer.stop();
-//		ServiceDeployerServer.stop();
 	}
 	
 	@Before
