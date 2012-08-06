@@ -80,11 +80,37 @@ public class RestEnactmentTest {
 	}
 	
 	@Test
+	public void shouldConfigureAChoreography() throws Exception {
+		
+		String host = EnactEngServer.URL;
+		EnactmentEngine ee = new EnactEngClient(host);
+		String chorId = ee.createChoreography(chorSpec);
+
+		assertEquals("1", chorId);
+	}
+	
+	@Test
+	public void shouldRetrieveChoreographySpec() throws Exception {
+		
+		String host = EnactEngServer.URL;
+		EnactmentEngine ee = new EnactEngClient(host);
+		String chorId = ee.createChoreography(chorSpec);
+		Choreography chor = ee.getChorSpec(chorId);
+		System.out.println(chor);
+		
+		ChorService travel = chor.getServiceByName(TRAVEL_AGENCY);
+		assertEquals(chorSpec.getServiceByName(TRAVEL_AGENCY), travel);
+		
+		ChorService airline = chor.getServiceByName(AIRLINE);
+		assertEquals(chorSpec.getServiceByName(AIRLINE), airline);		
+	}
+	
+	//@Test
 	public void shouldEnactChoreography() throws Exception {
 		
 		String host = EnactEngServer.URL;
 		EnactmentEngine ee = new EnactEngClient(host);
-		String chorId = ee.createChoreography(chorSpec.getServices());
+		String chorId = ee.createChoreography(chorSpec);
 		List<Service> deployedServices = ee.enact(chorId);
 		
 		Service travel = getTravelService(deployedServices);

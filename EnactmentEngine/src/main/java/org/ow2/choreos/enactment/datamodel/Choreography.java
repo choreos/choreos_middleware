@@ -3,6 +3,9 @@ package org.ow2.choreos.enactment.datamodel;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Choreography {
 
 	private String id;

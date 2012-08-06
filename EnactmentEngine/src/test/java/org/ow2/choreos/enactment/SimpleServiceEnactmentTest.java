@@ -79,7 +79,7 @@ public class SimpleServiceEnactmentTest {
 	public void shouldEnactChoreography() throws Exception {
 		
 		EnactmentEngine ee = new EnactEngImpl();
-		String chorId = ee.createChoreography(chorSpec.getServices());
+		String chorId = ee.createChoreography(chorSpec);
 		List<Service> deployedServices = ee.enact(chorId);
 
 		Service travel = getTravelService(deployedServices);

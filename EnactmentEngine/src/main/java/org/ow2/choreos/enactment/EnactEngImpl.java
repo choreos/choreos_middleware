@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.enactment.context.ContextCaster;
-import org.ow2.choreos.enactment.datamodel.ChorService;
 import org.ow2.choreos.enactment.datamodel.Choreography;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 
@@ -16,25 +15,20 @@ public class EnactEngImpl implements EnactmentEngine {
 	private ChorRegistry reg = ChorRegistry.getInstance();
 	
 	@Override
-	public String createChoreography(List<ChorService> services) {
+	public String createChoreography(Choreography chor) {
 
-		Choreography chor = reg.newChor();
-		String chorId = chor.getId();
-		for (ChorService svc: services) {
-			reg.addService(chorId, svc);
-		}
+		String chorId = reg.add(chor);
 		return chorId;
 	}
 
 	@Override
-	public List<ChorService> getChorSpec(String chorId) {
+	public Choreography getChorSpec(String chorId) {
 
 		Choreography chor = reg.get(chorId);
 		if (chor == null) {
 			return null;
 		}
-		List<ChorService> services = chor.getServices(); 
-		return services;
+		return chor;
 	}
 
 	@Override

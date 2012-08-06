@@ -55,7 +55,7 @@ public class SingleServiceEnactmentTest {
 	public void shouldEnactChoreography() throws Exception {
 		
 		EnactmentEngine ee = new EnactEngImpl();
-		String chorId = ee.createChoreography(chor.getServices());
+		String chorId = ee.createChoreography(chor);
 		List<Service> deployedServices = ee.enact(chorId);
 		
 		Service weather = getWeatherService(deployedServices);

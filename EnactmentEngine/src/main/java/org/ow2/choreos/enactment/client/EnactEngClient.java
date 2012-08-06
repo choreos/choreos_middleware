@@ -12,7 +12,7 @@ import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.ow2.choreos.enactment.EnactmentEngine;
 import org.ow2.choreos.enactment.EnactmentException;
-import org.ow2.choreos.enactment.datamodel.ChorService;
+import org.ow2.choreos.enactment.datamodel.Choreography;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 
 public class EnactEngClient implements EnactmentEngine {
@@ -51,13 +51,13 @@ public class EnactEngClient implements EnactmentEngine {
 	}
 
 	@Override
-	public String createChoreography(List<ChorService> services) {
+	public String createChoreography(Choreography chor) {
 
 		WebClient client = setupClient();
 		client.path("chors");
 		String chorId;
 		try {
-    		Response response = client.post(services);
+    		Response response = client.post(chor);
     		chorId = getId(response);
     	} catch (WebApplicationException e) {
     		return null;
@@ -67,9 +67,19 @@ public class EnactEngClient implements EnactmentEngine {
 	}
 
 	@Override
-	public List<ChorService> getChorSpec(String chorId) {
-		// TODO Auto-generated method stub
-		return null;
+	public Choreography getChorSpec(String chorId) {
+
+		WebClient client = setupClient();
+		client.path("chors");
+		client.path(chorId);
+		
+		Choreography chor;
+		try {
+			chor = client.get(Choreography.class);
+    	} catch (WebApplicationException e) {
+    		return null;
+    	}
+		return chor;
 	}
 
 	@Override
