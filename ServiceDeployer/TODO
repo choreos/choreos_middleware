@@ -28,6 +28,9 @@ Find out why. Although it seems to be server fault, could it be our client's pro
 
 * Bootstrap verification: think in a better way than checking getting-started.txt
 
+* Maybe it would be better a single server class to expose the REST operations,
+and not one class to NPM and another class to Service Deployer
+
 =============================
 
 Service Deployer ToDo list

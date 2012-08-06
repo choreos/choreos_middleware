@@ -1,7 +1,6 @@
 package org.ow2.choreos.enactment.rest;
 
 import java.net.URI;
-import java.util.Collection;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -16,12 +15,10 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import org.ow2.choreos.enactment.ChorRegistry;
 import org.ow2.choreos.enactment.EnactEngImpl;
 import org.ow2.choreos.enactment.EnactmentEngine;
 import org.ow2.choreos.enactment.EnactmentException;
 import org.ow2.choreos.enactment.datamodel.ChorService;
-import org.ow2.choreos.enactment.datamodel.Choreography;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 
 /**
@@ -38,7 +35,6 @@ import org.ow2.choreos.servicedeployer.datamodel.Service;
 public class ChorResource {
 	
 	private EnactmentEngine ee = new EnactEngImpl();
-	private ChorRegistry reg = ChorRegistry.getInstance();
 
 	/**
 	 * POST /chors
@@ -58,11 +54,7 @@ public class ChorResource {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
-		Choreography chor = reg.newChor();
-		String chorId = chor.getId();
-		for (ChorService svc: services) {
-			reg.addService(chorId, svc);
-		}
+		String chorId = ee.createChoreography(services);
 		
 		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
 		uriBuilder = uriBuilder.path(ChorResource.class).path(chorId);
@@ -94,8 +86,8 @@ public class ChorResource {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
-		Choreography chor = reg.get(chorId);
-		if (chor == null) {
+		List<ChorService> services = ee.getChorSpec(chorId);
+		if (services == null) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		
@@ -103,8 +95,7 @@ public class ChorResource {
 		uriBuilder = uriBuilder.path(ChorResource.class).path(chorId);
 		URI location = uriBuilder.build();
 
-		List<ChorService> body = chor.getServices(); 
-		return Response.ok(body).location(location).build();
+		return Response.ok(services).location(location).build();
 	}
 
 	/**
@@ -131,18 +122,15 @@ public class ChorResource {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
-		Choreography chor = reg.get(chorId);
-		if (chor == null) {
-			return Response.status(Status.NOT_FOUND).build();
-		}
-		
-		Collection<Service> deployedServices;
+		List<Service> deployedServices;
 		try {
-			deployedServices = ee.enact(chor).values();
+			deployedServices = ee.enact(chorId);
 		} catch (EnactmentException e) {
 			return Response.serverError().build(); // 500
 		}
-		reg.addDeployedServices(chorId, deployedServices);
+		if (deployedServices == null) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
 		
 		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
 		uriBuilder = uriBuilder.path(ChorResource.class).path(chorId).path("enactment");
@@ -175,7 +163,7 @@ public class ChorResource {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
-		Collection<Service> deployedServices = reg.getDeployedServices(chorId); 
+		List<Service> deployedServices = ee.getEnactedServices(chorId); 
 
 		if (deployedServices == null) {
 			return Response.status(Status.NOT_FOUND).build();

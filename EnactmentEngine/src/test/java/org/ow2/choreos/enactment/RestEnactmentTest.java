@@ -2,7 +2,7 @@ package org.ow2.choreos.enactment;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Map;
+import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -84,13 +84,22 @@ public class RestEnactmentTest {
 		
 		String host = EnactEngServer.URL;
 		EnactmentEngine ee = new EnactEngClient(host);
-		Map<String, Service> deployedServices = ee.enact(chorSpec);
+		String chorId = ee.createChoreography(chorSpec.getServices());
+		List<Service> deployedServices = ee.enact(chorId);
 		
-		Service travel = deployedServices.get(TRAVEL_AGENCY);
+		Service travel = getTravelService(deployedServices);
 		WSClient client = new WSClient(travel.getUri() + "?wsdl");
 		Item response = client.request("buyTrip");
 		String codes = response.getChild("return").getContent();
 		
 		assertEquals("33--22", codes);
+	}
+	
+	private Service getTravelService(List<Service> deployedServices) {
+		for (Service svc: deployedServices) {
+			if (TRAVEL_AGENCY.equals(svc.getName()))
+				return svc;
+		}
+		return null;
 	}
 }

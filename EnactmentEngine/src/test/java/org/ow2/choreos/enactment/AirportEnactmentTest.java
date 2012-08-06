@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -89,9 +88,10 @@ public class AirportEnactmentTest {
 	public void shouldEnactChoreography() throws Exception {
 		
 		EnactmentEngine ee = new EnactEngImpl();
-		Map<String, Service> deployedServices = ee.enact(chor);
+		String chorId = ee.createChoreography(chor.getServices());
+		List<Service> deployedServices = ee.enact(chorId);
 		
-		Service weather = deployedServices.get(WEATHER_FORECAST_SERVICE);
+		Service weather = getWeatherService(deployedServices);
 		testWeather(weather);
 		
 		//Service groundStaff = deployedServices.get(AIRLINE_GROUND_STAFF_MID);
@@ -112,5 +112,13 @@ public class AirportEnactmentTest {
 		assertEquals("50", humidity);
 		assertEquals("35", temperature);
 	}
+	
+	private Service getWeatherService(List<Service> deployedServices) {
 
+		for (Service svc: deployedServices) {
+			if (WEATHER_FORECAST_SERVICE.equals(svc.getName()))
+				return svc;
+		}
+		return null;
+	}
 }

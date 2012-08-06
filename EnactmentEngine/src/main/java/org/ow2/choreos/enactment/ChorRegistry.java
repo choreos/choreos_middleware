@@ -1,7 +1,7 @@
 package org.ow2.choreos.enactment;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -23,7 +23,7 @@ public class ChorRegistry {
 	
 	// map key is the chor id
 	private Map<String, Choreography> chors = new HashMap<String, Choreography>(); 
-	private Map<String, Collection<Service>> deployed = new HashMap<String, Collection<Service>>();
+	private Map<String, List<Service>> deployed = new HashMap<String, List<Service>>();
 	private AtomicInteger counter = new AtomicInteger();
 	
 	private ChorRegistry() {
@@ -74,12 +74,12 @@ public class ChorRegistry {
 	 * @param deployed
 	 * @param chorId
 	 */
-	public void addDeployedServices(String chorId, Collection<Service> deployedServices) {
+	public void addDeployedServices(String chorId, List<Service> deployedServices) {
 		
 		deployed.put(chorId, deployedServices);
 	}
 	
-	public Collection<Service> getDeployedServices(String chorId) {
+	public List<Service> getDeployedServices(String chorId) {
 		
 		return deployed.get(chorId);
 	}

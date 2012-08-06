@@ -2,10 +2,8 @@ package org.ow2.choreos.enactment;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 
-import org.apache.xmlbeans.XmlException;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -18,8 +16,6 @@ import org.ow2.choreos.utils.LogConfigurator;
 import eu.choreos.vv.clientgenerator.Item;
 import eu.choreos.vv.clientgenerator.ItemImpl;
 import eu.choreos.vv.clientgenerator.WSClient;
-import eu.choreos.vv.exceptions.FrameworkException;
-import eu.choreos.vv.exceptions.WSDLException;
 
 /**
  * This test enacts a choreography of a single service.
@@ -59,10 +55,11 @@ public class SingleServiceEnactmentTest {
 	public void shouldEnactChoreography() throws Exception {
 		
 		EnactmentEngine ee = new EnactEngImpl();
-		Map<String, Service> deployedServices = ee.enact(chor);
+		String chorId = ee.createChoreography(chor.getServices());
+		List<Service> deployedServices = ee.enact(chorId);
 		
-		Service weather = deployedServices.get(WEATHER_FORECAST_SERVICE);
-		WSClient client = getClient(weather.getUri());
+		Service weather = getWeatherService(deployedServices);
+		WSClient client = new WSClient(weather.getUri() + "?wsdl");
 		
 		Item request = new ItemImpl("getWeatherAt");
 		request.addChild("where").setContent("Paris");
@@ -75,26 +72,12 @@ public class SingleServiceEnactmentTest {
 		assertEquals("35", temperature);
 	}
 
-	private WSClient getClient(String endpoint) {
+	private Service getWeatherService(List<Service> deployedServices) {
 
-		WSClient client = null;
-		
-		try {
-			client = new WSClient(endpoint + "?wsdl");
-		} catch (WSDLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (XmlException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FrameworkException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		for (Service svc: deployedServices) {
+			if (WEATHER_FORECAST_SERVICE.equals(svc.getName()))
+				return svc;
 		}
-		
-		return client;
+		return null;
 	}
 }

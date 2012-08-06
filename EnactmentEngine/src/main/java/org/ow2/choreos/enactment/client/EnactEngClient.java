@@ -1,8 +1,6 @@
 package org.ow2.choreos.enactment.client;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +12,7 @@ import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.ow2.choreos.enactment.EnactmentEngine;
 import org.ow2.choreos.enactment.EnactmentException;
-import org.ow2.choreos.enactment.datamodel.Choreography;
+import org.ow2.choreos.enactment.datamodel.ChorService;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 
 public class EnactEngClient implements EnactmentEngine {
@@ -40,41 +38,6 @@ public class EnactEngClient implements EnactmentEngine {
 		return client;
 	}
 
-	@Override
-	public Map<String, Service> enact(Choreography chor) throws EnactmentException {
-
-		WebClient client = setupClient();
-
-		client.path("chors");
-		String chorId;
-		try {
-    		Response response = client.post(chor.getServices());
-    		chorId = getId(response);
-    		if (chorId == null) {
-    			throw new EnactmentException("POST /chors did not returned chor id");
-    		}
-    	} catch (WebApplicationException e) {
-    		throw new EnactmentException("Failed in POST /chors");
-    	}
-
-		client.path("chors");
-		client.path(chorId);
-		client.path("enactment");
-		Collection<Service> deployedServices;
-		try {
-			deployedServices = client.post(null, Collection.class);
-    	} catch (WebApplicationException e) {
-    		throw new EnactmentException("Failed in POST /chors/" + chorId + "enactment");
-    	}
-		
-		Map<String, Service> deployedMap = new HashMap<String, Service>();
-		for (Service svc: deployedServices) {
-			deployedMap.put(svc.getName(), svc);
-		}
-		
-        return deployedMap;
-	}
-
 	private Pattern pattern = Pattern.compile(".*/(.*)$");
 	private String getId(Response response) {
 
@@ -85,6 +48,51 @@ public class EnactEngClient implements EnactmentEngine {
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public String createChoreography(List<ChorService> services) {
+
+		WebClient client = setupClient();
+		client.path("chors");
+		String chorId;
+		try {
+    		Response response = client.post(services);
+    		chorId = getId(response);
+    	} catch (WebApplicationException e) {
+    		return null;
+    	}
+
+		return chorId; 
+	}
+
+	@Override
+	public List<ChorService> getChorSpec(String chorId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Service> enact(String chorId) throws EnactmentException {
+		
+		WebClient client = setupClient();
+		client.path("chors");
+		client.path(chorId);
+		client.path("enactment");
+		List<Service> deployedServices;
+		try {
+			deployedServices = client.post(null, List.class);
+    	} catch (WebApplicationException e) {
+    		throw new EnactmentException("Failed in POST /chors/" + chorId + "enactment");
+    	}
+		
+        return deployedServices;
+	}
+
+	@Override
+	public List<Service> getEnactedServices(String chorId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
