@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.enactment.datamodel.ChorService;
+import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
 import org.ow2.choreos.enactment.datamodel.ServiceDependence;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
@@ -38,7 +39,7 @@ public class AirportEnactmentTest {
 	private static final String WEATHER_FORECAST_SERVICE = "WeatherForecastService";
 	//private static final String AIRLINE_GROUND_STAFF_MID = "AirlineGroundStaffMID";
 	
-	private Choreography chor;
+	private ChorSpec chor;
 	
 	@BeforeClass
 	public static void startServers() {
@@ -48,7 +49,7 @@ public class AirportEnactmentTest {
 	@Before
 	public void setUp() {
 		
-		chor = new Choreography();
+		chor = new ChorSpec();
 		for (String serviceName: AirportProperties.SERVICES_NAMES) {
 			
 			ChorService service = new ChorService();
@@ -63,7 +64,7 @@ public class AirportEnactmentTest {
 			List<ServiceDependence> deps = getDependences(serviceName);
 			service.setDependences(deps);
 			
-			chor.addService(service);
+			chor.addServiceSpec(service);
 		}
 	}
 	
@@ -89,9 +90,9 @@ public class AirportEnactmentTest {
 		
 		EnactmentEngine ee = new EnactEngImpl();
 		String chorId = ee.createChoreography(chor);
-		List<Service> deployedServices = ee.enact(chorId);
+		Choreography chor = ee.enact(chorId);
 		
-		Service weather = getWeatherService(deployedServices);
+		Service weather = chor.getDeployedServiceByName(WEATHER_FORECAST_SERVICE);
 		testWeather(weather);
 		
 		//Service groundStaff = deployedServices.get(AIRLINE_GROUND_STAFF_MID);
@@ -113,12 +114,4 @@ public class AirportEnactmentTest {
 		assertEquals("35", temperature);
 	}
 	
-	private Service getWeatherService(List<Service> deployedServices) {
-
-		for (Service svc: deployedServices) {
-			if (WEATHER_FORECAST_SERVICE.equals(svc.getName()))
-				return svc;
-		}
-		return null;
-	}
 }

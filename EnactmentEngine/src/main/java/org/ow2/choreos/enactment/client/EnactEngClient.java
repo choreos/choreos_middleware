@@ -1,6 +1,5 @@
 package org.ow2.choreos.enactment.client;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,8 +11,8 @@ import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.ow2.choreos.enactment.EnactmentEngine;
 import org.ow2.choreos.enactment.EnactmentException;
+import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
-import org.ow2.choreos.servicedeployer.datamodel.Service;
 
 public class EnactEngClient implements EnactmentEngine {
 
@@ -51,7 +50,7 @@ public class EnactEngClient implements EnactmentEngine {
 	}
 
 	@Override
-	public String createChoreography(Choreography chor) {
+	public String createChoreography(ChorSpec chor) {
 
 		WebClient client = setupClient();
 		client.path("chors");
@@ -67,7 +66,7 @@ public class EnactEngClient implements EnactmentEngine {
 	}
 
 	@Override
-	public Choreography getChorSpec(String chorId) {
+	public Choreography getChoreography(String chorId) {
 
 		WebClient client = setupClient();
 		client.path("chors");
@@ -83,26 +82,20 @@ public class EnactEngClient implements EnactmentEngine {
 	}
 
 	@Override
-	public List<Service> enact(String chorId) throws EnactmentException {
+	public Choreography enact(String chorId) throws EnactmentException {
 		
 		WebClient client = setupClient();
 		client.path("chors");
 		client.path(chorId);
 		client.path("enactment");
-		List<Service> deployedServices;
+		Choreography chor;
 		try {
-			deployedServices = client.post(null, List.class);
+			chor = client.post(null, Choreography.class);
     	} catch (WebApplicationException e) {
     		throw new EnactmentException("Failed in POST /chors/" + chorId + "enactment");
     	}
 		
-        return deployedServices;
-	}
-
-	@Override
-	public List<Service> getEnactedServices(String chorId) {
-		// TODO Auto-generated method stub
-		return null;
+        return chor;
 	}
 
 }

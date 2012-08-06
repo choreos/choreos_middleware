@@ -6,7 +6,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.enactment.Configuration.Option;
 import org.ow2.choreos.enactment.datamodel.ChorService;
-import org.ow2.choreos.enactment.datamodel.Choreography;
+import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.npm.NodePoolManager;
 import org.ow2.choreos.npm.client.NPMClient;
 import org.ow2.choreos.servicedeployer.ServiceDeployer;
@@ -27,12 +27,12 @@ public class Deployer {
 		deployer = new ServiceDeployerClient(Configuration.get(Option.SERVICE_DEPLOYER_URI));
 	}
 	
-	public Map<String, Service> deployServices(Choreography chor) {
+	public Map<String, Service> deployServices(ChorSpec chor) {
 	
 		logger.info("Deploying services");
 		Map<String, Service> deployedServices = new HashMap<String, Service>(); // key is serviceName
 		
-		for (ChorService service: chor.getServices()) {
+		for (ChorService service: chor.getServiceSpecs()) {
 			ServiceSpec serviceSpec = service.getServiceSpec();
 			logger.debug("Requesting deploy of " + serviceSpec);
 			Service deployed = deployer.deploy(serviceSpec);

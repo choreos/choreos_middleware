@@ -2,13 +2,12 @@ package org.ow2.choreos.enactment;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
-
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.enactment.datamodel.ChorService;
+import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
 import org.ow2.choreos.enactment.datamodel.ServiceDependence;
 import org.ow2.choreos.npm.rest.NPMServer;
@@ -37,7 +36,7 @@ public class SimpleServiceEnactmentTest {
 	private static final int AIRLINE_PORT = 1234;
 	private static final int TRAVEL_AGENCY_PORT = 1235;	
 	
-	private Choreography chorSpec;
+	private ChorSpec chorSpec;
 	
 	@BeforeClass
 	public static void startServers() {
@@ -52,7 +51,7 @@ public class SimpleServiceEnactmentTest {
 	@Before
 	public void setUp() {
 		
-		chorSpec = new Choreography(); 
+		chorSpec = new ChorSpec(); 
 		
 		ChorService airline = new ChorService();
 		airline.setName(AIRLINE);
@@ -61,7 +60,7 @@ public class SimpleServiceEnactmentTest {
 		airline.setPort(AIRLINE_PORT);
 		airline.setType(ServiceType.JAR);
 		airline.getRoles().add(AIRLINE);
-		chorSpec.addService(airline);
+		chorSpec.addServiceSpec(airline);
 		
 		ChorService travel = new ChorService();
 		travel.setName(TRAVEL_AGENCY);
@@ -72,7 +71,7 @@ public class SimpleServiceEnactmentTest {
 		travel.getRoles().add(TRAVEL_AGENCY);
 		ServiceDependence dep = new ServiceDependence(AIRLINE, AIRLINE);
 		travel.getDependences().add(dep);
-		chorSpec.addService(travel);
+		chorSpec.addServiceSpec(travel);
 	}
 	
 	@Test
@@ -80,9 +79,9 @@ public class SimpleServiceEnactmentTest {
 		
 		EnactmentEngine ee = new EnactEngImpl();
 		String chorId = ee.createChoreography(chorSpec);
-		List<Service> deployedServices = ee.enact(chorId);
+		Choreography chor = ee.enact(chorId);
 
-		Service travel = getTravelService(deployedServices);
+		Service travel = chor.getDeployedServiceByName(TRAVEL_AGENCY);
 		WSClient client = new WSClient(travel.getUri() + "?wsdl");
 		Item response = client.request("buyTrip");
 		String codes = response.getChild("return").getContent();
@@ -90,11 +89,4 @@ public class SimpleServiceEnactmentTest {
 		assertEquals("33--22", codes);
 	}
 
-	private Service getTravelService(List<Service> deployedServices) {
-		for (Service svc: deployedServices) {
-			if (TRAVEL_AGENCY.equals(svc.getName()))
-				return svc;
-		}
-		return null;
-	}
 }

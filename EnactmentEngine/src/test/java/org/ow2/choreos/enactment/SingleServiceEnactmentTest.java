@@ -2,12 +2,11 @@ package org.ow2.choreos.enactment;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.enactment.datamodel.ChorService;
+import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
@@ -29,7 +28,7 @@ public class SingleServiceEnactmentTest {
 
 	private static final String WEATHER_FORECAST_SERVICE = "WeatherForecastService";
 	
-	private Choreography chor;
+	private ChorSpec chor;
 	
 	@BeforeClass
 	public static void startServers() {
@@ -39,7 +38,7 @@ public class SingleServiceEnactmentTest {
 	@Before
 	public void setUp() {
 		
-		chor = new Choreography();
+		chor = new ChorSpec();
 		ChorService service = new ChorService();
 		service.setName(WEATHER_FORECAST_SERVICE);
 		service.setCodeUri(AirportProperties.get(WEATHER_FORECAST_SERVICE + ".codeUri"));
@@ -48,7 +47,7 @@ public class SingleServiceEnactmentTest {
 		service.setPort(port);
 		service.getRoles().add(WEATHER_FORECAST_SERVICE);
 		service.setType(ServiceType.JAR);
-		chor.addService(service);
+		chor.addServiceSpec(service);
 	}
 	
 	@Test
@@ -56,9 +55,9 @@ public class SingleServiceEnactmentTest {
 		
 		EnactmentEngine ee = new EnactEngImpl();
 		String chorId = ee.createChoreography(chor);
-		List<Service> deployedServices = ee.enact(chorId);
+		Choreography chor = ee.enact(chorId);
 		
-		Service weather = getWeatherService(deployedServices);
+		Service weather = chor.getDeployedServiceByName(WEATHER_FORECAST_SERVICE);
 		WSClient client = new WSClient(weather.getUri() + "?wsdl");
 		
 		Item request = new ItemImpl("getWeatherAt");
@@ -72,12 +71,4 @@ public class SingleServiceEnactmentTest {
 		assertEquals("35", temperature);
 	}
 
-	private Service getWeatherService(List<Service> deployedServices) {
-
-		for (Service svc: deployedServices) {
-			if (WEATHER_FORECAST_SERVICE.equals(svc.getName()))
-				return svc;
-		}
-		return null;
-	}
 }

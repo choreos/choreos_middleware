@@ -1,9 +1,7 @@
 package org.ow2.choreos.enactment;
 
-import java.util.List;
-
+import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
-import org.ow2.choreos.servicedeployer.datamodel.Service;
 
 public interface EnactmentEngine {
 	
@@ -12,14 +10,14 @@ public interface EnactmentEngine {
 	 * @param services specification of choreography services
 	 * @return the id of the just created choreography
 	 */
-	public String createChoreography(Choreography chor);
+	public String createChoreography(ChorSpec chor);
 	
 	/**
-	 * Retrieve choreography specification.
+	 * Retrieve choreography information.
 	 * @param chorId the choreography id
 	 * @return <code>null</code> if <code>chorId</code> does not exist 
 	 */
-	public Choreography getChorSpec(String chorId);
+	public Choreography getChoreography(String chorId);
 
 	/**
 	 * Enacts a choreography
@@ -28,13 +26,6 @@ public interface EnactmentEngine {
 	 *         <code>null</code> if <code>chorId</code> does not exist
 	 * @throws EnactmentException if something goes wrong 
 	 */
-	public List<Service> enact(String chorId) throws EnactmentException;
+	public Choreography enact(String chorId) throws EnactmentException;
 	
-	/**
-	 * 
-	 * @param chorId the choreography id
-	 * @return information about deployed services.
-	 *         <code>null</code> if <code>chorId</code> does not exist 
-	 */
-	public List<Service> getEnactedServices(String chorId);
 }
