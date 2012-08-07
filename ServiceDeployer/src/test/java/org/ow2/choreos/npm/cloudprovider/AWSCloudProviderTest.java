@@ -5,9 +5,9 @@ import static org.junit.Assert.assertTrue;
 import org.jclouds.compute.RunNodesException;
 import org.junit.Before;
 import org.junit.Test;
-import org.ow2.choreos.npm.Configuration;
 import org.ow2.choreos.npm.NodeNotFoundException;
 import org.ow2.choreos.npm.datamodel.Node;
+import org.ow2.choreos.servicedeployer.Configuration;
 import org.ow2.choreos.utils.LogConfigurator;
 
 import com.jcraft.jsch.JSchException;

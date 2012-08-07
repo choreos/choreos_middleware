@@ -28,10 +28,7 @@ Find out why. Although it seems to be server fault, could it be our client's pro
 
 * Bootstrap verification: think in a better way than checking getting-started.txt
 
-* Maybe it would be better a single server class to expose the REST operations,
-and not one class to NPM and another class to Service Deployer
-
-* Before bootstrap or manage the node, we could trigger the ntpdate command on the node (though ssh)
+* Before managing the node, we could trigger the ntpdate command on the node (through ssh)
 
 =============================
 
@@ -81,6 +78,10 @@ So, the FactoryClass can just call NodeSelectorImpl.getInstance()
 
 * Controller should be singleton
 Should it? I didnot do this.
+
+* Maybe it would be better a single server class to expose the REST operations,
+and not one class to NPM and another class to Service Deployer
+
 
 
 

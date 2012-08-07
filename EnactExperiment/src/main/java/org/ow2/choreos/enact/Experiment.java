@@ -42,8 +42,8 @@ import eu.choreos.vv.exceptions.WSDLException;
  */
 public class Experiment {
 
-	public static final int CHORS_QTY = 2; // how many micro choreographies there will be 
-	public static final int SERVICES_PER_CHOR = 1;
+	public static final int CHORS_QTY = 1; // how many micro choreographies there will be 
+	public static final int SERVICES_PER_CHOR = 2;
 	
 	private static final String ENACTMENT_ENGINE_HOST = "http://localhost:9102/enactmentengine";
 	private static final String AIRLINE = "airline";

@@ -9,6 +9,7 @@ import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.chef.impl.KnifeImpl;
 import org.ow2.choreos.npm.datamodel.Node;
+import org.ow2.choreos.servicedeployer.Configuration;
 import org.ow2.choreos.utils.SshUtil;
 
 import com.jcraft.jsch.JSchException;

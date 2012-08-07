@@ -1,7 +1,7 @@
 package org.ow2.choreos.npm.selector;
 
-import org.ow2.choreos.npm.Configuration;
 import org.ow2.choreos.npm.cloudprovider.CloudProvider;
+import org.ow2.choreos.servicedeployer.Configuration;
 
 public class NodeSelectorFactory {
 

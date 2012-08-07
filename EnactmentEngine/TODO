@@ -16,6 +16,12 @@ they must be deployed on the same node.
 
 * Registry should use a database instead a static map.
 
+* If multiple Choreographies are enacted at the same time, invocations to nodepoolmanager/nodes/upgrade will overlap.
+Two possible solutions:
+#1 EE controls the right time to make a single invocation
+#2 NPM must provide /nodes/{id}/upgrade, so EE can make more selective invocations
+But, if a node receive services from different choreographies, the second options is not going to work properly.
+
 *** DONE ***
 
 * Finish GET /chors/{chorID}/enactment

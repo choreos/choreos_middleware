@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jclouds.compute.RunNodesException;
-import org.ow2.choreos.npm.Configuration;
 import org.ow2.choreos.npm.NodeNotFoundException;
 import org.ow2.choreos.npm.datamodel.Node;
+import org.ow2.choreos.servicedeployer.Configuration;
 
 
 
