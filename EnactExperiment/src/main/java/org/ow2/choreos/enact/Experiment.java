@@ -14,6 +14,7 @@ import org.ow2.choreos.enactment.datamodel.Choreography;
 import org.ow2.choreos.enactment.datamodel.ServiceDependence;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
+import org.ow2.choreos.utils.LogConfigurator;
 
 import eu.choreos.vv.clientgenerator.Item;
 import eu.choreos.vv.clientgenerator.WSClient;
@@ -41,8 +42,8 @@ import eu.choreos.vv.exceptions.WSDLException;
  */
 public class Experiment {
 
-	public static final int CHORS_QTY = 1; // how many micro choreographies there will be 
-	public static final int SERVICES_PER_CHOR = 2;
+	public static final int CHORS_QTY = 2; // how many micro choreographies there will be 
+	public static final int SERVICES_PER_CHOR = 1;
 	
 	private static final String ENACTMENT_ENGINE_HOST = "http://localhost:9102/enactmentengine";
 	private static final String AIRLINE = "airline";
@@ -94,13 +95,7 @@ public class Experiment {
 			trd.start();
 		}
 		
-		for (Thread trd: trds) {
-			try {
-				trd.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		waitThreads(trds);
 		
 		System.out.println("Enactment finished");
 
@@ -117,13 +112,7 @@ public class Experiment {
 			trd.start();
 		}
 
-		for (Thread trd: trds) {
-			try {
-				trd.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		waitThreads(trds);
 
 		System.out.println("Experiment completed");
 		
@@ -217,8 +206,19 @@ public class Experiment {
 		}
 	}
 	
+	private void waitThreads(List<Thread> trds) {
+		for (Thread t: trds) {
+			try {
+				t.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public static void main(String[] args) {
 		
+		LogConfigurator.configLog();
 		Experiment experiment = new Experiment();
 		experiment.run();
 	}

@@ -9,7 +9,7 @@ import org.ow2.choreos.npm.datamodel.Node;
 
 public class Bootstrapper {
 
-	private static final String NPM_HOST = "localhost:9100/nodepoolmanager";
+	private static final String NPM_HOST = "http://localhost:9100/nodepoolmanager";
 	
 	private int vmsQuantity; // how many VMs we will use
 	
@@ -41,7 +41,8 @@ public class Bootstrapper {
 			trds[i] = new Thread(new Runnable() {
 				@Override public void run() {
 					NodePoolManager npm = new NPMClient(NPM_HOST);
-					Node vm = npm.createNode(null);
+					Node req = new Node();
+					Node vm = npm.createNode(req);
 					vms.add(vm);
 				}
 			});
