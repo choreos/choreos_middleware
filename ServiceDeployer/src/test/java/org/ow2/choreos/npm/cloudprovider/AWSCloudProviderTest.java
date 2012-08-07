@@ -1,6 +1,5 @@
 package org.ow2.choreos.npm.cloudprovider;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.jclouds.compute.RunNodesException;
@@ -33,9 +32,6 @@ public class AWSCloudProviderTest {
         Node created = infra.createNode(node);
         System.out.println("created " + created);
         assertTrue(created != null);
-        String chefName = created.getChefName();
-        assertTrue(chefName != null);
-        assertFalse(chefName.isEmpty());
         
         infra.destroyNode(created.getId());
         
