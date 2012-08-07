@@ -8,8 +8,10 @@ About how to compile, see the INSTALL file.
 Eclipse IDE
 ===========
 
-$ mvn -Dwtpversion=2.0 eclipse:eclipse
-Then import existent project in Eclipse IDE and change compiler version to 1.6 (also search for facets in project -> properties)
+$ mvn -Declipse.workspace=/path/to/your/workspace eclipse:configure-workspace
+$ mvn -Declipse.workspace=/path/to/your/workspace eclipse:eclipse
+
+The first one only needs to be run once per workspace. Then import existent project in Eclipse IDE. If you find many compiler erros change the compiler version to 1.6 (also search for facets in project -> properties)
 
 Configuring a Local VM for Faster and Cheaper Tests
 ===================================================
