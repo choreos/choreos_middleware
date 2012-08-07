@@ -31,6 +31,8 @@ Find out why. Although it seems to be server fault, could it be our client's pro
 * Maybe it would be better a single server class to expose the REST operations,
 and not one class to NPM and another class to Service Deployer
 
+* Before bootstrap or manage the node, we could trigger the ntpdate command on the node (though ssh)
+
 =============================
 
 Service Deployer ToDo list
