@@ -12,7 +12,6 @@ import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
  * Before run the experiment:
  * Prepare the cloud environment
  * Set NODE_SELECTOR=ALWAYS_CREATE
- * Or pre-allocate the VMs and set NODE_SELECTOR=ROUND_ROBIN
  * Start NPMServer, ServiceDeployerServer, and EnactEngServer
  * 
  * The experiment will:
@@ -29,7 +28,8 @@ import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
  */
 public class Experiment {
 
-	private static final int CHORS_QTY = 1; // how many micro choreographies there will be 
+	public static final int CHORS_QTY = 1; // how many micro choreographies there will be 
+	public static final int SERVICES_PER_CHOR = 2;
 	
 	private static final String AIRLINE = "airline";
 	private static final String TRAVEL_AGENCY = "travelagency";	
@@ -38,7 +38,7 @@ public class Experiment {
 	private static final int AIRLINE_PORT = 1234;
 	private static final int TRAVEL_AGENCY_PORT = 1235;	
 	
-	public static Choreography getSpec() {
+	public Choreography getSpec() {
 		
 		Choreography chorSpec = new Choreography(); 
 		
@@ -65,7 +65,7 @@ public class Experiment {
 		return chorSpec;
 	}
 
-	public static void main(String[] args) throws InterruptedException {
+	public void run() {
 		
 		System.out.println("Starting enactment");
 		
@@ -81,7 +81,11 @@ public class Experiment {
 		}
 		
 		for (Thread trd: trds) {
-			trd.join();
+			try {
+				trd.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		System.out.println("Enactment finished");
@@ -100,7 +104,11 @@ public class Experiment {
 		}
 
 		for (Thread trd: trds) {
-			trd.join();
+			try {
+				trd.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 
 		System.out.println("Experiment completed");
@@ -143,5 +151,11 @@ public class Experiment {
 		public void run() {
 			// TODO
 		}
+	}
+	
+	public static void main(String[] args) {
+		
+		Experiment experiment = new Experiment();
+		experiment.run();
 	}
 }
