@@ -1,1 +1,0 @@
-//JSP convention folder
