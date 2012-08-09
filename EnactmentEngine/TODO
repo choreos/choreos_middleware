@@ -22,6 +22,9 @@ Two possible solutions:
 #2 NPM must provide /nodes/{id}/upgrade, so EE can make more selective invocations
 But, if a node receive services from different choreographies, the second options is not going to work properly.
 
+* Invoking npm.upgradeNodes upgrades all nodes
+It would be better invoke npm.upgradeNode(node) only to the choreography nodes
+
 *** DONE ***
 
 * Finish GET /chors/{chorID}/enactment

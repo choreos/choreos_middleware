@@ -28,8 +28,10 @@ public class ContextSender {
 		
 		try {
 
-			WSClient client = new WSClient(serviceEndpoint + "?wsdl");
-			client.request("setInvocationAddress", partnerRole, partnerEndpoint);
+			synchronized(ContextSender.class) {
+				WSClient client = new WSClient(serviceEndpoint + "?wsdl");
+				client.request("setInvocationAddress", partnerRole, partnerEndpoint);
+			}
 			
 		} catch (WSDLException e) {
 			e.printStackTrace();
