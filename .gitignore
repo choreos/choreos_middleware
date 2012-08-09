@@ -6,3 +6,7 @@
 */.settings
 */target
 *~
+/Monitoring/Anayzer/.settings/org.eclipse.jdt.core.prefs
+/Monitoring/Anayzer/.settings/org.eclipse.m2e.core.prefs
+/Monitoring/Anayzer/.project
+/Monitoring/Anayzer/.classpath
