@@ -95,10 +95,11 @@ public class NPMClient implements NodePoolManager {
 		WebClient client = setupClient();
 		client.path("nodes");   	
 		client.type(MediaType.APPLICATION_XML);
+		NodeRestRepresentation nodeRequest = new NodeRestRepresentation(node);
 		NodeRestRepresentation nodeRest = null;
 
         try {
-        	nodeRest = client.post(node, NodeRestRepresentation.class);
+        	nodeRest = client.post(nodeRequest, NodeRestRepresentation.class);
         } catch (WebApplicationException e) {
         	return null;
         }

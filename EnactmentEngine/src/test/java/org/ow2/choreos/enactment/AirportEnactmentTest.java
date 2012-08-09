@@ -4,13 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.enactment.datamodel.ChorService;
+import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
 import org.ow2.choreos.enactment.datamodel.ServiceDependence;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
@@ -25,6 +24,8 @@ import eu.choreos.vv.clientgenerator.WSClient;
  * This test will enact the services
  * WeatherForecast and AirlineGroundStaffMID.
  * 
+ * Before the test, start the NPMServer and the ServiceDeployerServer
+ * 
  * AirlineGroundStaffMID depends on WeatherForecast.
  * Whether these services will be deployed on the same node, or not,
  * depends on Node Pool Manager configurations.
@@ -38,25 +39,17 @@ public class AirportEnactmentTest {
 	private static final String WEATHER_FORECAST_SERVICE = "WeatherForecastService";
 	//private static final String AIRLINE_GROUND_STAFF_MID = "AirlineGroundStaffMID";
 	
-	private Choreography chor;
+	private ChorSpec chor;
 	
 	@BeforeClass
 	public static void startServers() {
 		LogConfigurator.configLog();
-//		NPMServer.start();
-//		ServiceDeployerServer.start();
-	}
-	
-	@AfterClass
-	public static void shutDownServers() {
-//		NPMServer.stop();
-//		ServiceDeployerServer.stop();
 	}
 	
 	@Before
 	public void setUp() {
 		
-		chor = new Choreography();
+		chor = new ChorSpec();
 		for (String serviceName: AirportProperties.SERVICES_NAMES) {
 			
 			ChorService service = new ChorService();
@@ -71,7 +64,7 @@ public class AirportEnactmentTest {
 			List<ServiceDependence> deps = getDependences(serviceName);
 			service.setDependences(deps);
 			
-			chor.addService(service);
+			chor.addServiceSpec(service);
 		}
 	}
 	
@@ -96,9 +89,10 @@ public class AirportEnactmentTest {
 	public void shouldEnactChoreography() throws Exception {
 		
 		EnactmentEngine ee = new EnactEngImpl();
-		Map<String, Service> deployedServices = ee.enact(chor);
+		String chorId = ee.createChoreography(chor);
+		Choreography chor = ee.enact(chorId);
 		
-		Service weather = deployedServices.get(WEATHER_FORECAST_SERVICE);
+		Service weather = chor.getDeployedServiceByName(WEATHER_FORECAST_SERVICE);
 		testWeather(weather);
 		
 		//Service groundStaff = deployedServices.get(AIRLINE_GROUND_STAFF_MID);
@@ -119,5 +113,5 @@ public class AirportEnactmentTest {
 		assertEquals("50", humidity);
 		assertEquals("35", temperature);
 	}
-
+	
 }

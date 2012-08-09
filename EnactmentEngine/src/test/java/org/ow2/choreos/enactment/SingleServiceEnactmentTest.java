@@ -2,15 +2,11 @@ package org.ow2.choreos.enactment;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-import java.util.Map;
-
-import org.apache.xmlbeans.XmlException;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.enactment.datamodel.ChorService;
+import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
@@ -19,12 +15,11 @@ import org.ow2.choreos.utils.LogConfigurator;
 import eu.choreos.vv.clientgenerator.Item;
 import eu.choreos.vv.clientgenerator.ItemImpl;
 import eu.choreos.vv.clientgenerator.WSClient;
-import eu.choreos.vv.exceptions.FrameworkException;
-import eu.choreos.vv.exceptions.InvalidOperationNameException;
-import eu.choreos.vv.exceptions.WSDLException;
 
 /**
- * Before run the test, start NPMServer and ServiceDeployerServer.
+ * This test enacts a choreography of a single service.
+ * 
+ * Before the test, start the NPMServer and the ServiceDeployerServer.
  * 
  * @author leonardo
  *
@@ -33,25 +28,17 @@ public class SingleServiceEnactmentTest {
 
 	private static final String WEATHER_FORECAST_SERVICE = "WeatherForecastService";
 	
-	private Choreography chor;
+	private ChorSpec chor;
 	
 	@BeforeClass
 	public static void startServers() {
 		LogConfigurator.configLog();
-//		NPMServer.start();
-//		ServiceDeployerServer.start();
-	}
-	
-	@AfterClass
-	public static void shutDownServers() {
-//		NPMServer.stop();
-//		ServiceDeployerServer.stop();
 	}
 	
 	@Before
 	public void setUp() {
 		
-		chor = new Choreography();
+		chor = new ChorSpec();
 		ChorService service = new ChorService();
 		service.setName(WEATHER_FORECAST_SERVICE);
 		service.setCodeUri(AirportProperties.get(WEATHER_FORECAST_SERVICE + ".codeUri"));
@@ -60,17 +47,18 @@ public class SingleServiceEnactmentTest {
 		service.setPort(port);
 		service.getRoles().add(WEATHER_FORECAST_SERVICE);
 		service.setType(ServiceType.JAR);
-		chor.addService(service);
+		chor.addServiceSpec(service);
 	}
 	
 	@Test
-	public void shouldEnactChoreography() throws InvalidOperationNameException, FrameworkException, NoSuchFieldException {
+	public void shouldEnactChoreography() throws Exception {
 		
 		EnactmentEngine ee = new EnactEngImpl();
-		Map<String, Service> deployedServices = ee.enact(chor);
+		String chorId = ee.createChoreography(chor);
+		Choreography chor = ee.enact(chorId);
 		
-		Service weather = deployedServices.get(WEATHER_FORECAST_SERVICE);
-		WSClient client = getClient(weather.getUri());
+		Service weather = chor.getDeployedServiceByName(WEATHER_FORECAST_SERVICE);
+		WSClient client = new WSClient(weather.getUri() + "?wsdl");
 		
 		Item request = new ItemImpl("getWeatherAt");
 		request.addChild("where").setContent("Paris");
@@ -83,26 +71,4 @@ public class SingleServiceEnactmentTest {
 		assertEquals("35", temperature);
 	}
 
-	private WSClient getClient(String endpoint) {
-
-		WSClient client = null;
-		
-		try {
-			client = new WSClient(endpoint + "?wsdl");
-		} catch (WSDLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (XmlException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FrameworkException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return client;
-	}
 }

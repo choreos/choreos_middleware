@@ -21,9 +21,9 @@ import org.jclouds.compute.domain.NodeState;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.ec2.domain.InstanceType;
-import org.ow2.choreos.npm.Configuration;
 import org.ow2.choreos.npm.NodeNotFoundException;
 import org.ow2.choreos.npm.datamodel.Node;
+import org.ow2.choreos.servicedeployer.Configuration;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;

@@ -25,6 +25,8 @@ import eu.choreos.vv.servicesimulator.WSMock;
  * Hotel service running on localhost.
  * Just the POWS is enough.
  * 
+ * Test not working!
+ * 
  * @author leonardo
  *
  */

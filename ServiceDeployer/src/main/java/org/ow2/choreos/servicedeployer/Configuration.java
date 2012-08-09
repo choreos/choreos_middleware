@@ -1,4 +1,4 @@
-package org.ow2.choreos.npm;
+package org.ow2.choreos.servicedeployer;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -23,7 +23,7 @@ public class Configuration {
 
     private Configuration() {
         try {
-            properties.load(ClassLoader.getSystemResourceAsStream("nodepoolmanager.properties"));
+            properties.load(ClassLoader.getSystemResourceAsStream("servicedeployer.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }

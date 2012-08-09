@@ -1,11 +1,11 @@
 package org.ow2.choreos.enactment;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.ow2.choreos.enactment.datamodel.ChorService;
+import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 
@@ -23,7 +23,6 @@ public class ChorRegistry {
 	
 	// map key is the chor id
 	private Map<String, Choreography> chors = new HashMap<String, Choreography>(); 
-	private Map<String, Collection<Service>> deployed = new HashMap<String, Collection<Service>>();
 	private AtomicInteger counter = new AtomicInteger();
 	
 	private ChorRegistry() {
@@ -39,29 +38,18 @@ public class ChorRegistry {
 	
 	/**
 	 * Creates a new choreography entry
-	 * @return the just created choreography
+	 * @return the just registred choreography ID
 	 */
-	public Choreography newChor() {
+	public String create(ChorSpec chorSpec) {
 		
 		String id = Integer.toString(counter.incrementAndGet());
+		
 		Choreography chor = new Choreography();
 		chor.setId(id);
+		chor.setServiceSpecs(chorSpec.getServiceSpecs());
 		chors.put(id, chor);
 		
-		return chor;
-	}
-	
-	/**
-	 * Associates a service to a choreography
-	 * @param service the service specification
-	 * @param chorId the choreography id
-	 */
-	public void addService(String chorId, ChorService service) {
-		
-		Choreography chor = chors.get(chorId);
-		if (chorId == null)
-			throw new IllegalArgumentException();
-		chor.getServices().add(service);
+		return id;
 	}
 	
 	public Choreography get(String chorId) {
@@ -74,14 +62,12 @@ public class ChorRegistry {
 	 * @param deployed
 	 * @param chorId
 	 */
-	public void addDeployedServices(String chorId, Collection<Service> deployedServices) {
+	public void addDeployedServices(String chorId, List<Service> deployedServices) {
 		
-		deployed.put(chorId, deployedServices);
-	}
-	
-	public Collection<Service> getDeployedServices(String chorId) {
-		
-		return deployed.get(chorId);
+		Choreography chor = chors.get(chorId);
+		if (chor == null)
+			throw new IllegalArgumentException("chorId " + chorId + " does not exist");
+		chor.setDeployedServices(deployedServices);
 	}
 
 }

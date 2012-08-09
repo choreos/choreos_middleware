@@ -1,9 +1,8 @@
 package org.ow2.choreos.enactment.rest;
 
 import java.net.URI;
-import java.util.Collection;
-import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -16,12 +15,11 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import org.ow2.choreos.enactment.ChorRegistry;
 import org.ow2.choreos.enactment.EnactEngImpl;
 import org.ow2.choreos.enactment.EnactmentEngine;
-import org.ow2.choreos.enactment.datamodel.ChorService;
+import org.ow2.choreos.enactment.EnactmentException;
+import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
-import org.ow2.choreos.servicedeployer.datamodel.Service;
 
 /**
  * Enactment Engine REST API.
@@ -37,12 +35,11 @@ import org.ow2.choreos.servicedeployer.datamodel.Service;
 public class ChorResource {
 	
 	private EnactmentEngine ee = new EnactEngImpl();
-	private ChorRegistry reg = ChorRegistry.getInstance();
 
 	/**
 	 * POST /chors
 	 * 
-	 * Body: a list of ChorService (specification of choreography services)
+	 * Body: a choreography specification (without id)
 	 * Creates a new choreography that still have to be enacted (POST /chor/{chorID}/enactment).
 	 * 
 	 * @param uriInfo provided by the REST framework
@@ -51,17 +48,14 @@ public class ChorResource {
 	 * 			HTTP code 400 (BAD_REQUEST) if the ChorService list is not properly provided in the request body
 	 */
 	@POST
-	public Response create(List<ChorService> services, @Context UriInfo uriInfo) {
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response create(ChorSpec chor, @Context UriInfo uriInfo) {
 
-		if (services == null || services.isEmpty()) {
+		if (chor == null || chor.getServiceSpecs() == null || chor.getServiceSpecs().isEmpty()) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
-		Choreography chor = reg.newChor();
-		String chorId = chor.getId();
-		for (ChorService svc: services) {
-			reg.addService(chorId, svc);
-		}
+		String chorId = ee.createChoreography(chor);
 		
 		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
 		uriBuilder = uriBuilder.path(ChorResource.class).path(chorId);
@@ -74,13 +68,13 @@ public class ChorResource {
 	 * GET /chors/{chorID}
 	 * 
 	 * Body: empty
-	 * Retrieve choreography specification
+	 * Retrieve the choreography specification
 	 * 
 	 * @param chorId the choreography id provided in the URI
 	 * @param uriInfo provided by the REST framework
 	 * @return HTTP code 200 (OK). 
 	 * 			Location header: the choreography URI.  
-	 *			Body response: a List of ChorService representing service specifications. 
+	 *			Body response: the Choreography specification
 	 *			HTTP code 400 (BAS_REQUEST) if chorId is not properly provided. 
 	 *			HTTP code 404 (NOT_FOUND) if there is no choreography with id == chorID.
 	 */
@@ -93,7 +87,7 @@ public class ChorResource {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
-		Choreography chor = reg.get(chorId);
+		Choreography chor = ee.getChoreography(chorId);
 		if (chor == null) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
@@ -102,8 +96,7 @@ public class ChorResource {
 		uriBuilder = uriBuilder.path(ChorResource.class).path(chorId);
 		URI location = uriBuilder.build();
 
-		List<ChorService> body = chor.getServices(); 
-		return Response.ok(body).location(location).build();
+		return Response.ok(chor).location(location).build();
 	}
 
 	/**
@@ -130,55 +123,21 @@ public class ChorResource {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
-		Choreography chor = reg.get(chorId);
+		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+		uriBuilder = uriBuilder.path(ChorResource.class).path(chorId);
+		URI location = uriBuilder.build();
+		
+		Choreography chor;
+		try {
+			chor = ee.enact(chorId);
+		} catch (EnactmentException e) {
+			return Response.serverError().build(); // 500
+		}
 		if (chor == null) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		
-		Collection<Service> deployedServices = ee.enact(chor).values();
-		reg.addDeployedServices(chorId, deployedServices);
-		
-		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-		uriBuilder = uriBuilder.path(ChorResource.class).path(chorId).path("enactment");
-		URI location = uriBuilder.build();
-
-		return Response.ok(deployedServices).location(location).build();
+		return Response.ok(chor).location(location).build();
 	}
 	
-	/**
-	 * GET /chors/{chorID}/enactment
-	 * 
-	 * Body: empty
-	 * Retrieve information about deployed services of a choreography
-	 * It is the same return of POST /chors/{chorID}/enactment
-	 * 
-	 * @param chorId the choreography id provided in the URI
-	 * @param uriInfo provided by the REST framework
-	 * @return HTTP code 200 (OK). 
-	 * 			Location header: choreography deployed services URI.  
-	 *			Body response: a Collection of Service representing deployed services.
-	 *			HTTP code 400 (BAS_REQUEST) if chorId is not properly provided. 
-	 *			HTTP code 404 (NOT_FOUND) if there is no enacted choreography with id == chorID.
-	 */
-	@GET
-	@Path("{chorID}/enactment")
-	@Produces(MediaType.APPLICATION_XML)
-	public Response getDeployed(@PathParam("chorID") String chorId, @Context UriInfo uriInfo) {
-		
-		if (chorId == null || chorId.isEmpty()) {
-			return Response.status(Status.BAD_REQUEST).build();
-		}
-		
-		Collection<Service> deployedServices = reg.getDeployedServices(chorId); 
-
-		if (deployedServices == null) {
-			return Response.status(Status.NOT_FOUND).build();
-		}
-		
-		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-		uriBuilder = uriBuilder.path(ChorResource.class).path(chorId).path("enactment");
-		URI location = uriBuilder.build();
-
-		return Response.ok(deployedServices).location(location).build();
-	}	
 }

@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.enactment.datamodel.ChorService;
-import org.ow2.choreos.enactment.datamodel.Choreography;
+import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.ServiceDependence;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 
@@ -14,10 +14,10 @@ public class ContextCaster {
 	
 	private ContextSender sender = new ContextSender();
 	
-	public void cast(Choreography chor, Map<String, Service> deployedServices) {
+	public void cast(ChorSpec chor, Map<String, Service> deployedServices) {
 		
 		logger.info("Passing context to deployed services");
-		for (ChorService service: chor.getServices()) {
+		for (ChorService service: chor.getServiceSpecs()) {
 			String serviceUri = deployedServices.get(service.getName()).getUri();
 			for (ServiceDependence dep: service.getDependences()) {
 				String partnerUri = deployedServices.get(dep.getServiceName()).getUri();

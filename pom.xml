@@ -91,7 +91,6 @@
 		<module>StorageFactory</module>
 		<module>choreos-web</module>
 -->
-    <module>REST</module>
   </modules>
 
 	<repositories>

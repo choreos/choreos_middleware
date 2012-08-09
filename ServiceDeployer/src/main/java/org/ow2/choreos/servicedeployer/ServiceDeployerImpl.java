@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.chef.impl.KnifeImpl;
-import org.ow2.choreos.npm.Configuration;
 import org.ow2.choreos.npm.NodePoolManager;
 import org.ow2.choreos.npm.datamodel.Config;
 import org.ow2.choreos.npm.datamodel.Node;

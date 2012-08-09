@@ -2,12 +2,12 @@ package org.ow2.choreos.servicedeployer.rest;
 
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.log4j.Logger;
-import org.ow2.choreos.npm.Configuration;
+import org.ow2.choreos.servicedeployer.Configuration;
 import org.ow2.choreos.utils.LogConfigurator;
 
 
 /**
- * Stand alone server that makes the REST API available to clients
+ * Stand alone server that makes the REST API available to clients.
  * 
  * @author alfonso, leonardo
  * 

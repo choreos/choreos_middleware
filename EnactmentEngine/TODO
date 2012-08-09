@@ -2,6 +2,7 @@ EnactmentEngine TODO list
 
 * EnactmentEngine tests should start NPMServer and ServiceDeployerServer,
 but this step is not working. Now, we have to start the servers before run tests.
+The problem is the way like the RecipeBuilder access the resources.
 
 * Add owner attribute to ChorService class.
 For each available owner, the enactmentengine.properties must have an 
@@ -13,9 +14,20 @@ If owner is not specfied, the default Service Deployer is used, just as now.
 * If two or more services has the same "group" specification,
 they must be deployed on the same node.
 
-* The REST API
-It must be done with ApacheCXF, not with Jersey, due to license issues.
-
 * Registry should use a database instead a static map.
 
-* Finish GET /chors/{chorID}/deployed
+* If multiple Choreographies are enacted at the same time, invocations to nodepoolmanager/nodes/upgrade will overlap.
+Two possible solutions:
+#1 EE controls the right time to make a single invocation
+#2 NPM must provide /nodes/{id}/upgrade, so EE can make more selective invocations
+But, if a node receive services from different choreographies, the second options is not going to work properly.
+
+*** DONE ***
+
+* Finish GET /chors/{chorID}/enactment
+
+* Maybe it would be better map the 4 rest operations (in ChorResource) to 4 methods in the EnactmentEngine interface
+In this way, the ChorResource class would be more concerned with REST, and know less about the deatils of operation execution
+
+* Model improvement: ChorSpec has ChorServices; Choreography extends ChorSpec and has attributes id and deployed Services.
+

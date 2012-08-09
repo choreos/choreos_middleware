@@ -1,17 +1,31 @@
 package org.ow2.choreos.enactment;
 
-import java.util.Map;
-
+import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
-import org.ow2.choreos.servicedeployer.datamodel.Service;
 
 public interface EnactmentEngine {
+	
+	/**
+	 * Creates a new choreography that still have to be enacted.
+	 * @param services specification of choreography services
+	 * @return the id of the just created choreography
+	 */
+	public String createChoreography(ChorSpec chor);
+	
+	/**
+	 * Retrieve choreography information.
+	 * @param chorId the choreography id
+	 * @return <code>null</code> if <code>chorId</code> does not exist 
+	 */
+	public Choreography getChoreography(String chorId);
 
 	/**
 	 * Enacts a choreography
-	 * @param chor the choreogrpahy specification
-	 * @return a map whose keys are service names, and
-	 * values contains information about deployed services 
+	 * @param chorId the choreography id
+	 * @return information about deployed services. 
+	 *         <code>null</code> if <code>chorId</code> does not exist
+	 * @throws EnactmentException if something goes wrong 
 	 */
-	public Map<String, Service> enact(Choreography chor);
+	public Choreography enact(String chorId) throws EnactmentException;
+	
 }

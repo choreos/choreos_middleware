@@ -1,18 +1,31 @@
 package org.ow2.choreos.enact;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.xmlbeans.XmlException;
+import org.ow2.choreos.enactment.EnactmentEngine;
+import org.ow2.choreos.enactment.EnactmentException;
+import org.ow2.choreos.enactment.client.EnactEngClient;
 import org.ow2.choreos.enactment.datamodel.ChorService;
+import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
 import org.ow2.choreos.enactment.datamodel.ServiceDependence;
+import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
+import org.ow2.choreos.utils.LogConfigurator;
+
+import eu.choreos.vv.clientgenerator.Item;
+import eu.choreos.vv.clientgenerator.WSClient;
+import eu.choreos.vv.exceptions.FrameworkException;
+import eu.choreos.vv.exceptions.InvalidOperationNameException;
+import eu.choreos.vv.exceptions.WSDLException;
 
 /**
  * Before run the experiment:
  * Prepare the cloud environment
  * Set NODE_SELECTOR=ALWAYS_CREATE
- * Or pre-allocate the VMs and set NODE_SELECTOR=ROUND_ROBIN
  * Start NPMServer, ServiceDeployerServer, and EnactEngServer
  * 
  * The experiment will:
@@ -29,8 +42,10 @@ import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
  */
 public class Experiment {
 
-	private static final int CHORS_QTY = 1; // how many micro choreographies there will be 
+	public static final int CHORS_QTY = 1; // how many micro choreographies there will be 
+	public static final int SERVICES_PER_CHOR = 2;
 	
+	private static final String ENACTMENT_ENGINE_HOST = "http://localhost:9102/enactmentengine";
 	private static final String AIRLINE = "airline";
 	private static final String TRAVEL_AGENCY = "travelagency";	
 	private static final String AIRLINE_JAR = "http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar";
@@ -38,9 +53,9 @@ public class Experiment {
 	private static final int AIRLINE_PORT = 1234;
 	private static final int TRAVEL_AGENCY_PORT = 1235;	
 	
-	public static Choreography getSpec() {
+	public ChorSpec getSpec() {
 		
-		Choreography chorSpec = new Choreography(); 
+		ChorSpec chorSpec = new ChorSpec(); 
 		
 		ChorService airline = new ChorService();
 		airline.setName(AIRLINE);
@@ -49,7 +64,7 @@ public class Experiment {
 		airline.setPort(AIRLINE_PORT);
 		airline.setType(ServiceType.JAR);
 		airline.getRoles().add(AIRLINE);
-		chorSpec.addService(airline);
+		chorSpec.addServiceSpec(airline);
 		
 		ChorService travel = new ChorService();
 		travel.setName(TRAVEL_AGENCY);
@@ -60,16 +75,16 @@ public class Experiment {
 		travel.getRoles().add(TRAVEL_AGENCY);
 		ServiceDependence dep = new ServiceDependence(AIRLINE, AIRLINE);
 		travel.getDependences().add(dep);
-		chorSpec.addService(travel);
+		chorSpec.addServiceSpec(travel);
 		
 		return chorSpec;
 	}
 
-	public static void main(String[] args) throws InterruptedException {
+	public void run() {
 		
 		System.out.println("Starting enactment");
 		
-		Choreography chorSpec = getSpec();
+		ChorSpec chorSpec = getSpec();
 		List<Enactment> enacts = new ArrayList<Enactment>();
 		List<Thread> trds = new ArrayList<Thread>();
 		for (int i=0; i<CHORS_QTY; i++) {
@@ -80,9 +95,7 @@ public class Experiment {
 			trd.start();
 		}
 		
-		for (Thread trd: trds) {
-			trd.join();
-		}
+		waitThreads(trds);
 		
 		System.out.println("Enactment finished");
 
@@ -99,9 +112,7 @@ public class Experiment {
 			trd.start();
 		}
 
-		for (Thread trd: trds) {
-			trd.join();
-		}
+		waitThreads(trds);
 
 		System.out.println("Experiment completed");
 		
@@ -115,25 +126,37 @@ public class Experiment {
 		System.out.println(ok + " of " + CHORS_QTY + " working.");
 	}
 	
-	private static class Enactment implements Runnable {
+	private class Enactment implements Runnable {
 
-		private Choreography chor;
-		private String travelWSDL; // result: deployed travel agency service WSDL 
+		private ChorSpec chorSpec;
+		private String travelWSDL = null; // result: deployed travel agency service WSDL 
 		
-		public Enactment(Choreography chor) {
-			this.chor = chor;
+		public Enactment(ChorSpec chorSpec) {
+			this.chorSpec = chorSpec;
 		}
 		
 		@Override
 		public void run() {
-			// TODO
+			
+			EnactmentEngine enacter = new EnactEngClient(ENACTMENT_ENGINE_HOST);
+			String chorId = enacter.createChoreography(chorSpec);
+			Choreography chor = null;
+			try {
+				chor = enacter.enact(chorId);
+			} catch (EnactmentException e) {
+				System.out.println("Enactment has failed");
+				return;
+			}
+			Service travelService = chor.getDeployedServiceByName(TRAVEL_AGENCY);
+			travelWSDL = travelService.getUri() + "?wsdl";
 		}
 	}
 	
-	private static class Checker implements Runnable {
+	private class Checker implements Runnable {
 
+		private static final String EXPECTED_RESULT = "33--22";
 		private String travelWSDL;
-		private boolean ok; // result: service properly accessed
+		private boolean ok = false; // result: service properly accessed
 		
 		public Checker(String travelWSDL) {
 			this.travelWSDL = travelWSDL;
@@ -141,7 +164,62 @@ public class Experiment {
 		
 		@Override
 		public void run() {
-			// TODO
+
+			WSClient client = getClient(travelWSDL);
+			if (client == null)
+				return;
+			
+			Item response;
+			try {
+				response = client.request("buyTrip");
+			} catch (InvalidOperationNameException e) {
+				return;
+			} catch (FrameworkException e) {
+				return;
+			}
+			
+			String codes;
+			try {
+				codes = response.getChild("return").getContent();
+			} catch (NoSuchFieldException e) {
+				return;
+			}
+			
+			ok = EXPECTED_RESULT.equals(codes);
 		}
+
+	}
+
+	private WSClient getClient(String travelWSDL) {
+
+		try {
+			WSClient client = new WSClient(travelWSDL);
+			return client;
+		} catch (WSDLException e) {
+			return null;
+		} catch (XmlException e) {
+			return null;
+		} catch (IOException e) {
+			return null;
+		} catch (FrameworkException e) {
+			return null;
+		}
+	}
+	
+	private void waitThreads(List<Thread> trds) {
+		for (Thread t: trds) {
+			try {
+				t.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void main(String[] args) {
+		
+		LogConfigurator.configLog();
+		Experiment experiment = new Experiment();
+		experiment.run();
 	}
 }

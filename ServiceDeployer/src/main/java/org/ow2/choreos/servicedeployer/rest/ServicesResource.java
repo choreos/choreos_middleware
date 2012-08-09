@@ -18,10 +18,10 @@ import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.JAXBElement;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.npm.Configuration;
 import org.ow2.choreos.npm.NPMImpl;
 import org.ow2.choreos.npm.NodePoolManager;
 import org.ow2.choreos.npm.cloudprovider.CloudProviderFactory;
+import org.ow2.choreos.servicedeployer.Configuration;
 import org.ow2.choreos.servicedeployer.ServiceDeployer;
 import org.ow2.choreos.servicedeployer.ServiceDeployerImpl;
 import org.ow2.choreos.servicedeployer.datamodel.Service;

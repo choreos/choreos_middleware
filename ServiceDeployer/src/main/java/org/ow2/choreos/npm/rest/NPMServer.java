@@ -2,7 +2,7 @@ package org.ow2.choreos.npm.rest;
 
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.log4j.Logger;
-import org.ow2.choreos.npm.Configuration;
+import org.ow2.choreos.servicedeployer.Configuration;
 import org.ow2.choreos.utils.LogConfigurator;
 
 /**

@@ -19,7 +19,6 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.npm.Configuration;
 import org.ow2.choreos.npm.NPMImpl;
 import org.ow2.choreos.npm.NodePoolManager;
 import org.ow2.choreos.npm.cloudprovider.AWSCloudProvider;
@@ -27,6 +26,7 @@ import org.ow2.choreos.npm.cloudprovider.CloudProvider;
 import org.ow2.choreos.npm.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.npm.datamodel.Node;
 import org.ow2.choreos.npm.datamodel.NodeRestRepresentation;
+import org.ow2.choreos.servicedeployer.Configuration;
 
 
 

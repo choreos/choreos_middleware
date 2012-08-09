@@ -5,10 +5,10 @@ import static org.junit.Assert.assertTrue;
 import org.jclouds.compute.RunNodesException;
 import org.junit.Before;
 import org.junit.Test;
-import org.ow2.choreos.npm.Configuration;
 import org.ow2.choreos.npm.NodeNotFoundException;
 import org.ow2.choreos.npm.datamodel.Node;
-import org.ow2.choreos.utils.SshUtil;
+import org.ow2.choreos.servicedeployer.Configuration;
+import org.ow2.choreos.utils.LogConfigurator;
 
 import com.jcraft.jsch.JSchException;
 
@@ -20,7 +20,8 @@ public class AWSCloudProviderTest {
     private Node node = new Node();
 
     @Before
-    public void SetUp() throws RunNodesException {
+    public void SetUp() {
+    	LogConfigurator.configLog();
         node.setImage("us-east-1/ami-ccf405a5");
         Configuration.set("DEFAULT_PROVIDER", "");
     }
@@ -28,12 +29,8 @@ public class AWSCloudProviderTest {
 	@Test
     public void shouldCreateAndDeleteNode() throws RunNodesException, JSchException {
         
-    	// Waiting ssh to start
-        SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-        while (!ssh.isAccessible())
-            ;
-
         Node created = infra.createNode(node);
+        System.out.println("created " + created);
         assertTrue(created != null);
         
         infra.destroyNode(created.getId());
