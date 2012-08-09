@@ -11,7 +11,7 @@
     <module>ThresholdEvaluationDaemon</module>
     <module>GmondConf</module>
     <module>Utils</module>
-    <module>Anayzer</module>
+    <module>Analyzer</module>
   </modules>
 
   <build>

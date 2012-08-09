@@ -6,7 +6,7 @@
 		<artifactId>ChoreosMonitoringService</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>Anayzer</artifactId>
+	<artifactId>Analyzer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<repositories>
