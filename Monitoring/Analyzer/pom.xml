@@ -6,6 +6,7 @@
 		<artifactId>ChoreosMonitoringService</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
+<<<<<<< HEAD
 	<artifactId>Analyzer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
@@ -71,3 +72,70 @@
 	</dependencies>
 
 </project>
+=======
+	<artifactId>Anayzer</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<repositories>
+
+		<repository>
+			<id>ccslrepository</id>
+			<name>ccsl</name>
+			<url>http://valinhos.ime.usp.br:54080/maven/</url>
+		</repository>
+
+		<!-- <repository> <id>Sonatype-public</id> <name>SnakeYAML repository</name> 
+			<url>http://oss.sonatype.org/content/groups/public/</url> </repository> -->
+
+	</repositories>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>glimpse</groupId>
+			<artifactId>ComplexEventRule</artifactId>
+			<version>3.3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>glimpse</groupId>
+			<artifactId>glimpse-api</artifactId>
+			<version>3.3.1</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>glimpse</groupId>
+			<artifactId>ComplexEventResponse</artifactId>
+			<version>3.3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>glimpse</groupId>
+			<artifactId>ComplexEventException</artifactId>
+			<version>3.3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-all</artifactId>
+			<version>5.3.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans</artifactId>
+			<version>2.4.0</version>
+		</dependency>
+		
+	</dependencies>
+
+</project>
+>>>>>>> branch 'master' of git@github.com:choreos/choreos_middleware.git
