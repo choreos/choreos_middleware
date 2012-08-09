@@ -14,6 +14,9 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
 
+// TODO: try to user java.util.Observer. The Source of events needs to
+//       extends Observable abstract class, but already extends
+//       GlimpseAbstractConsumer
 public class GlimpseConsumer extends GlimpseAbstractConsumer {
 	
 	// listener for message received event
@@ -24,20 +27,16 @@ public class GlimpseConsumer extends GlimpseAbstractConsumer {
 		super(settings, plainTextRule);
 	}
 	
-	// add listeners 
 	@SuppressWarnings("unchecked")
 	public synchronized void addEventListener( IListener l ) {
 		_listeners.add(l);
 	}
 	
-	// remove listeners
 	public synchronized void removeEventListener( IListener l ) {
 		_listeners.remove(l);
 	}
 	
 	private synchronized void triggerMessageEvent() {
-		
-		// creates a event
 		GlimpseMessageEvent m = new GlimpseMessageEvent(this);
 		
 		@SuppressWarnings("rawtypes")
@@ -47,7 +46,6 @@ public class GlimpseConsumer extends GlimpseAbstractConsumer {
 			((IListener) i.next()).handleEvent(m);
 		}
 	}
-
 
 	@Override
 	public void messageReceived(Message message) throws JMSException {
@@ -76,8 +74,8 @@ public class GlimpseConsumer extends GlimpseAbstractConsumer {
 		return new GlimpseConsumer(
 				Manager.createConsumerSettingsPropertiesObject(
 						"org.apache.activemq.jndi.ActiveMQInitialContextFactory",
-					//	"tcp://dsbchoreos.petalslink.org:61616",
-						"tcp://192.168.122.69:61616",
+						"tcp://dsbchoreos.petalslink.org:61616",
+					//	"tcp://192.168.122.69:61616",
 						"system",
 						"manager",
 						"TopicCF",
