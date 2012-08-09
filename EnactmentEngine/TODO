@@ -1,5 +1,13 @@
 EnactmentEngine TODO list
 
+Performance bottlenecks
+-----------------------
+* (HIGH) Update only nodes from a specific choreography.
+* (LOW) Replace WSClient (concurrency problems) by javax (as in futuremarket project).
+
+Others
+------
+
 * EnactmentEngine tests should start NPMServer and ServiceDeployerServer,
 but this step is not working. Now, we have to start the servers before run tests.
 The problem is the way like the RecipeBuilder access the resources.
