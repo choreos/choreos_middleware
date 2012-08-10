@@ -132,7 +132,7 @@ public class NodesResource {
      * @return
      */
     @POST
-    @Path("upgrade/{node_id}")
+    @Path("{node_id}/upgrade")
     public Response upgradeNode(@PathParam("node_id") String nodeId) {
 
     	logger.debug("Request to upgrade node " + nodeId);
