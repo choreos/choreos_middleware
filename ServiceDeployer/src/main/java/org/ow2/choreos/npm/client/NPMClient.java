@@ -121,4 +121,19 @@ public class NPMClient implements NodePoolManager {
         }
 	}
 
+	@Override
+	public boolean upgradeNode(String nodeId) {
+		WebClient client = setupClient();
+        client.path("nodes");
+        client.path(nodeId);
+        client.path("upgrade");
+        Response response = client.post(null);
+
+        if (response.getStatus() == 200) {
+        	return true;
+        } else {
+        	return false;
+        }
+	}
+
 }

@@ -106,7 +106,6 @@ public class NodesResource {
     
     /**
      * Runs chef-client on nodes.
-     * Concurrency problems with "knife add run_list".
      * @return
      */
     @POST
@@ -115,6 +114,29 @@ public class NodesResource {
 
     	logger.debug("Request to upgrade");
     	boolean ok = npm.upgradeNodes();
+    	
+    	Response response;
+        if (ok) {
+        	logger.info("Nodes upgraded");
+        	response = Response.status(Status.OK).build();
+        } else {
+        	logger.info("Nodes not upgraded");
+        	response = Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return response;
+    }
+    
+    /**
+     * Runs chef-client on a chosen node.
+     * @return
+     */
+    @POST
+    @Path("upgrade/{node_id}")
+    public Response upgradeNode(@PathParam("node_id") String nodeId) {
+
+    	logger.debug("Request to upgrade node " + nodeId);
+    	boolean ok = npm.upgradeNode(nodeId);
     	
     	Response response;
         if (ok) {

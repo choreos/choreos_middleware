@@ -30,6 +30,8 @@ Find out why. Although it seems to be server fault, could it be our client's pro
 
 * Before managing the node, we could trigger the ntpdate command on the node (through ssh)
 
+* Think better about exceptions in NodePoolManager, ServiceDeployer, and EnactmentEngine interface
+
 =============================
 
 Service Deployer ToDo list
@@ -46,6 +48,9 @@ and not just one service
 A possible solution would be the service deployer server running npm.upgradeNodes periodically
 
 * Describe Chef-Server setup (example: Java and Tomcat recipes must be available)
+
+* Change enumarations in ServiceType
+JAR -> COMMAND_LINE; WAR -> TOMCAT
 
 ============ DONE ============
 
@@ -81,6 +86,7 @@ Should it? I didnot do this.
 
 * Maybe it would be better a single server class to expose the REST operations,
 and not one class to NPM and another class to Service Deployer
+
 
 
 
