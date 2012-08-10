@@ -19,6 +19,7 @@ public class Service {
 	private String endpointName; 
 	private String hostname;
 	private String ip;
+	private String nodeId; 
 
 	public Service(ServiceSpec serviceSpec) {
 		
@@ -83,6 +84,22 @@ public class Service {
 
 	public void setIp(String ip) {
 		this.ip = ip;
+	}
+	
+	/**
+	 * 
+	 * @return the id of the node where the service was deployed
+	 */
+	public String getNodeId() {
+		return nodeId;
+	}
+
+	/**
+	 * 
+	 * @param nodeId the id of the node where the service was deployed
+	 */
+	public void setNodeId(String nodeId) {
+		this.nodeId = nodeId;
 	}
 
 	public String getUri() {
