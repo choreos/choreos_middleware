@@ -3,6 +3,9 @@ EnactmentEngine TODO list
 Performance bottlenecks
 -----------------------
 * (HIGH) Update only nodes from a specific choreography.
+    * Solved to Fixed Machine, but not to AWS:
+        WARNING: .No operation matching request path /us-east-1/i-7f6fd004/upgrade is found, HTTP Method : POST, ContentType : */*, Accept : application/xml,.
+        I think the problem is the slash in the node id
 * (LOW) Replace WSClient (concurrency problems) by javax (as in futuremarket project).
 
 Others
