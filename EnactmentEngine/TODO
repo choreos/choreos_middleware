@@ -2,10 +2,6 @@ EnactmentEngine TODO list
 
 Performance bottlenecks
 -----------------------
-* (HIGH) Update only nodes from a specific choreography.
-    * Solved to Fixed Machine, but not to AWS:
-        WARNING: .No operation matching request path /us-east-1/i-7f6fd004/upgrade is found, HTTP Method : POST, ContentType : */*, Accept : application/xml,.
-        I think the problem is the slash in the node id
 * (LOW) Replace WSClient (concurrency problems) by javax (as in futuremarket project).
 
 Others
@@ -37,4 +33,7 @@ they must be deployed on the same node.
 In this way, the ChorResource class would be more concerned with REST, and know less about the deatils of operation execution
 
 * Model improvement: ChorSpec has ChorServices; Choreography extends ChorSpec and has attributes id and deployed Services.
+
+* Performance bottleneck (HIGH): Update only nodes from a specific choreography.
+Now we have POST nodepoolmanager/nodes/{id}/upgrade operation
 
