@@ -4,16 +4,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlException;
 import org.ow2.choreos.enactment.EnactmentEngine;
 import org.ow2.choreos.enactment.EnactmentException;
 import org.ow2.choreos.enactment.client.EnactEngClient;
-import org.ow2.choreos.enactment.datamodel.ChorService;
 import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
-import org.ow2.choreos.enactment.datamodel.ServiceDependence;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
-import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
 import org.ow2.choreos.utils.LogConfigurator;
 
 import eu.choreos.vv.clientgenerator.Item;
@@ -42,53 +40,24 @@ import eu.choreos.vv.exceptions.WSDLException;
  */
 public class Experiment {
 
-	public static final int CHORS_QTY = 2; // how many micro choreographies there will be 
+	public static final int CHORS_QTY = 3; // how many micro choreographies there will be 
 	public static final int SERVICES_PER_CHOR = 2;
 	
-	private static final String ENACTMENT_ENGINE_HOST = "http://localhost:9102/enactmentengine";
-	private static final String AIRLINE = "airline";
-	private static final String TRAVEL_AGENCY = "travelagency";	
-	private static final String AIRLINE_JAR = "http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar";
-	private static final String TRAVEL_AGENCY_JAR = "http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar";	
-	private static final int AIRLINE_PORT = 1234;
-	private static final int TRAVEL_AGENCY_PORT = 1235;	
+	private Logger logger = Logger.getLogger(Experiment.class);
 	
-	public ChorSpec getSpec() {
-		
-		ChorSpec chorSpec = new ChorSpec(); 
-		
-		ChorService airline = new ChorService();
-		airline.setName(AIRLINE);
-		airline.setCodeUri(AIRLINE_JAR);
-		airline.setEndpointName(AIRLINE);
-		airline.setPort(AIRLINE_PORT);
-		airline.setType(ServiceType.JAR);
-		airline.getRoles().add(AIRLINE);
-		chorSpec.addServiceSpec(airline);
-		
-		ChorService travel = new ChorService();
-		travel.setName(TRAVEL_AGENCY);
-		travel.setCodeUri(TRAVEL_AGENCY_JAR);
-		travel.setEndpointName(TRAVEL_AGENCY);
-		travel.setPort(TRAVEL_AGENCY_PORT);
-		travel.setType(ServiceType.JAR);
-		travel.getRoles().add(TRAVEL_AGENCY);
-		ServiceDependence dep = new ServiceDependence(AIRLINE, AIRLINE);
-		travel.getDependences().add(dep);
-		chorSpec.addServiceSpec(travel);
-		
-		return chorSpec;
-	}
-
+	private static final String ENACTMENT_ENGINE_HOST = "http://localhost:9102/enactmentengine";
+	private static final String TRAVEL_AGENCY = "travelagency";	
+	
 	public void run() {
 		
-		System.out.println("Starting enactment");
+		logger.info("Starting enactment");
 		
-		ChorSpec chorSpec = getSpec();
+		long t0 = System.currentTimeMillis();
+		ChorSpec chorSpec = Spec.getSpec();
 		List<Enactment> enacts = new ArrayList<Enactment>();
 		List<Thread> trds = new ArrayList<Thread>();
 		for (int i=0; i<CHORS_QTY; i++) {
-			Enactment enact = new Enactment(chorSpec);
+			Enactment enact = new Enactment(chorSpec, i);
 			enacts.add(enact);
 			Thread trd = new Thread(enact);
 			trds.add(trd);
@@ -96,25 +65,30 @@ public class Experiment {
 		}
 		
 		waitThreads(trds);
+		long tf = System.currentTimeMillis();
+		long duration = tf - t0;
 		
-		System.out.println("Enactment finished");
+		logger.info("Enactment finished (" + duration + " milliseconds)");
 
-		System.out.println("Verifying enacted services");
+		logger.info("Verifying enacted services");
 
 		List<Checker> checkers= new ArrayList<Checker>();
 		trds = new ArrayList<Thread>();
 		for (int i=0; i<CHORS_QTY; i++) {
-			String travelWSDL = enacts.get(i).travelWSDL;
-			Checker checker = new Checker(travelWSDL);
-			checkers.add(checker);
-			Thread trd = new Thread(checker);
-			trds.add(trd);
-			trd.start();
+			Enactment enact = enacts.get(i);
+			if (enact.ok) {
+				String travelWSDL = enact.travelWSDL;
+				Checker checker = new Checker(travelWSDL, i);
+				checkers.add(checker);
+				Thread trd = new Thread(checker);
+				trds.add(trd);
+				trd.start();
+			}
 		}
 
 		waitThreads(trds);
 
-		System.out.println("Experiment completed");
+		logger.info("Experiment completed");
 		
 		int ok = 0;
 		for (Checker chk: checkers) {
@@ -123,32 +97,59 @@ public class Experiment {
 			}
 		}
 		
-		System.out.println(ok + " of " + CHORS_QTY + " working.");
+		logger.info("RESULT: " + ok + " of " + CHORS_QTY + " working.");
 	}
 	
 	private class Enactment implements Runnable {
 
-		private ChorSpec chorSpec;
-		private String travelWSDL = null; // result: deployed travel agency service WSDL 
+		ChorSpec chorSpec;
+		int idx;
+		String travelWSDL = null; // result: deployed travel agency service WSDL
+		long duration; // result: enactment duration in milliseconds
+		boolean ok = true;
 		
-		public Enactment(ChorSpec chorSpec) {
+		public Enactment(ChorSpec chorSpec, int idx) {
 			this.chorSpec = chorSpec;
+			this.idx = idx;
 		}
 		
 		@Override
 		public void run() {
 			
+			logger.info("Enacting choreography #" + idx);
+			
+			long t0 = System.currentTimeMillis();
 			EnactmentEngine enacter = new EnactEngClient(ENACTMENT_ENGINE_HOST);
 			String chorId = enacter.createChoreography(chorSpec);
 			Choreography chor = null;
 			try {
 				chor = enacter.enact(chorId);
 			} catch (EnactmentException e) {
-				System.out.println("Enactment has failed");
+				logger.error("Enactment #" + idx + " has failed");
+				ok = false;
 				return;
 			}
+			long tf = System.currentTimeMillis();
+			duration = tf - t0;
 			Service travelService = chor.getDeployedServiceByName(TRAVEL_AGENCY);
 			travelWSDL = travelService.getUri() + "?wsdl";
+			
+			logger.info("Choreography #" + idx + " enacted in " + duration + " miliseconds");
+			StringBuilder chorMachinesMessage = new StringBuilder("Machines used by choreography #" + idx + ":");
+			for (String mch: getMachinesFromChor(chor)) {
+				chorMachinesMessage.append(mch + "; ");
+			}
+			logger.info(chorMachinesMessage.toString());
+		}
+		
+		private List<String> getMachinesFromChor(Choreography chor) {
+			
+			List<String> machines = new ArrayList<String>();
+			for (Service svc: chor.getDeployedServices()) {
+				String machine = svc.getIp() + " (" + svc.getNodeId() + ")";
+				machines.add(machine);
+			}
+			return machines;
 		}
 	}
 	
@@ -156,36 +157,60 @@ public class Experiment {
 
 		private static final String EXPECTED_RESULT = "33--22";
 		private String travelWSDL;
+		int idx;
 		private boolean ok = false; // result: service properly accessed
 		
-		public Checker(String travelWSDL) {
+		public Checker(String travelWSDL, int idx) {
 			this.travelWSDL = travelWSDL;
+			this.idx = idx;
 		}
 		
 		@Override
 		public void run() {
 
+			logger.info("Cheking choreography #" + idx);
+
 			WSClient client = getClient(travelWSDL);
-			if (client == null)
+			if (client == null) {
+				notWorking();
 				return;
+			}
 			
+			long t0 = System.currentTimeMillis();
 			Item response;
 			try {
 				response = client.request("buyTrip");
 			} catch (InvalidOperationNameException e) {
+				notWorking();
 				return;
 			} catch (FrameworkException e) {
+				notWorking();
 				return;
 			}
+			long tf = System.currentTimeMillis();
+			long duration = tf - t0;
 			
-			String codes;
+			String answer;
 			try {
-				codes = response.getChild("return").getContent();
+				answer = response.getChild("return").getContent();
 			} catch (NoSuchFieldException e) {
+				notWorking();
 				return;
 			}
 			
-			ok = EXPECTED_RESULT.equals(codes);
+			ok = EXPECTED_RESULT.equals(answer);
+			
+			if (ok) {
+				logger.info("Choreography #" + idx
+						+ " is working (invocation took " + duration
+						+ " milliseconds)");
+			} else {
+				notWorking();
+			}
+		}
+		
+		private void notWorking() {
+			logger.info("Choreography #" + idx + " is not working");
 		}
 
 	}
@@ -213,7 +238,7 @@ public class Experiment {
 			try {
 				t.join();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				logger.error("Wait thread exception!", e);
 			}
 		}
 	}

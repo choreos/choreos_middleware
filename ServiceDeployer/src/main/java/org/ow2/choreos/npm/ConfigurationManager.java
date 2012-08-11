@@ -80,7 +80,7 @@ public class ConfigurationManager {
             ssh.disconnect();
         }
 
-        logger.debug("Connected");
+        logger.debug("Connected to " + node);
 
     	logger.info("Bootstrapping " + node.getHostname());
 		knife.bootstrap(node.getIp(), node.getUser(), node.getPrivateKeyFile());

@@ -60,6 +60,7 @@ public class AWSCloudProvider implements CloudProvider {
 
 	public Node createNode(Node node) throws RunNodesException {
 		
+		long t0 = System.currentTimeMillis(); 
 		logger.debug("Creating node...");
 
 		String imageId = node.getImage();
@@ -76,7 +77,9 @@ public class AWSCloudProvider implements CloudProvider {
 		setNodeProperties(node, cloudNode);
 		client.getContext().close();
 
-		logger.debug("Node created");
+		long tf = System.currentTimeMillis();
+		long duration = tf - t0;
+		logger.debug("Node " + node + " created in " + duration + " miliseconds");
 		return node;
 	}
 
