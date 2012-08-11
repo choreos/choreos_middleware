@@ -188,7 +188,9 @@ public class Experiment {
 			long t0 = System.currentTimeMillis();
 			Item response;
 			try {
-				response = client.request("buyTrip");
+				synchronized(Experiment.class) {
+					response = client.request("buyTrip");
+				}
 			} catch (InvalidOperationNameException e) {
 				notWorking();
 				return;
