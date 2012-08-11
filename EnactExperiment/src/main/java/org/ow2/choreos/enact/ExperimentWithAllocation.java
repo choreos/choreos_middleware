@@ -1,6 +1,5 @@
 package org.ow2.choreos.enact;
 
-import org.ow2.choreos.utils.LogConfigurator;
 
 /**
  * The same then Experiment,
@@ -14,8 +13,6 @@ public class ExperimentWithAllocation {
 
 	public static void main(String[] args) {
 	
-		LogConfigurator.configLog();
-		
 		int vmsQty = Experiment.CHORS_QTY * Experiment.SERVICES_PER_CHOR;
 		Bootstrapper booter = new Bootstrapper(vmsQty);
 		booter.boot();

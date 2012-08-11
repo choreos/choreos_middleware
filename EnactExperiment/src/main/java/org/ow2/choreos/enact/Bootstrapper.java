@@ -3,7 +3,6 @@ package org.ow2.choreos.enact;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.ow2.choreos.npm.NodePoolManager;
 import org.ow2.choreos.npm.client.NPMClient;
 import org.ow2.choreos.npm.datamodel.Node;
@@ -12,8 +11,6 @@ public class Bootstrapper {
 
 	private static final String NPM_HOST = "http://localhost:9100/nodepoolmanager";
 
-	private Logger logger = Logger.getLogger(Bootstrapper.class);
-	
 	private int vmsQuantity; // how many VMs we will use
 	
 	public Bootstrapper(int vmsQuantity) {
@@ -27,12 +24,12 @@ public class Bootstrapper {
 	 */
 	public void boot() {
 		
-		logger.info("Creating VMs...");
+		System.out.println("Creating VMs...");
 		List<Node> vms = createVMs();
-		logger.info("Created machines: ");
+		System.out.println("Created machines: ");
 		for (Node vm: vms) 
-			logger.info(vm.getIp() + "  ");
-		logger.info("\n### Bootstrap completed ###");
+			System.out.println(vm.getIp() + "  ");
+		System.out.println("\n### Bootstrap completed ###");
 	}
 
 	private List<Node> createVMs() {
@@ -52,7 +49,7 @@ public class Bootstrapper {
 					long tf = System.currentTimeMillis();
 					long duration = tf - t0;
 					vms.add(vm);
-					logger.info("VM #" + idx + " created in " + duration + " milliseconds");
+					System.out.println("VM #" + idx + " created in " + duration + " milliseconds");
 				}
 			});
 			trds[i].start();
