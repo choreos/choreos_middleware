@@ -98,6 +98,15 @@ public class Experiment {
 		}
 		
 		logger.info("RESULT: " + ok + " of " + CHORS_QTY + " working.");
+		
+		logger.info("Aditional info retrieved from ServiceDeployer:");
+		try {
+			for (String line: LogParser.getAdditionalInfo()) {
+				logger.info(line);
+			}
+		} catch (IOException e) {
+			logger.error("Could not access service_deployer.log");
+		}
 	}
 	
 	private class Enactment implements Runnable {

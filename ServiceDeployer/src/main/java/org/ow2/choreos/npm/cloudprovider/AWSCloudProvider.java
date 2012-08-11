@@ -79,7 +79,7 @@ public class AWSCloudProvider implements CloudProvider {
 
 		long tf = System.currentTimeMillis();
 		long duration = tf - t0;
-		logger.debug("Node " + node + " created in " + duration + " miliseconds");
+		logger.debug(node + " created in " + duration + " miliseconds");
 		return node;
 	}
 
