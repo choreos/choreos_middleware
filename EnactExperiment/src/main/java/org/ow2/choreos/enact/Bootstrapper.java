@@ -25,11 +25,18 @@ public class Bootstrapper {
 	public void boot() {
 		
 		System.out.println(Utils.getTimeStamp() + "Creating VMs...");
+		long t0 = System.currentTimeMillis();
 		List<Node> vms = createVMs();
 		System.out.println(Utils.getTimeStamp() + "Created machines: ");
-		for (Node vm: vms) 
-			System.out.println(Utils.getTimeStamp() + vm.getIp() + "  ");
-		System.out.println(Utils.getTimeStamp() + "\n### Bootstrap completed ###");
+		for (Node vm: vms) {
+			String timeStamp = Utils.getTimeStamp();
+			if (timeStamp != null & vm != null) {
+				System.out.println(timeStamp + vm.getIp() + "  ");
+			}
+		}
+		long tf = System.currentTimeMillis();
+		long duration = tf - t0;
+		System.out.println(Utils.getTimeStamp() + "### Bootstrap completed in " + duration + " milliseconds ###");
 	}
 
 	private List<Node> createVMs() {

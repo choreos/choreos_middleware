@@ -1,0 +1,319 @@
+[1:58:15] Creating VMs...
+log4j:WARN No appenders could be found for logger (org.apache.cxf.bus.spring.BusApplicationContext).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+[2:1:46] VM #23 created in 211229 milliseconds
+[2:1:46] VM #27 created in 211522 milliseconds
+[2:1:46] VM #7 created in 211534 milliseconds
+[2:1:47] VM #24 created in 212528 milliseconds
+[2:1:48] VM #12 created in 212766 milliseconds
+[2:1:48] VM #22 created in 212835 milliseconds
+[2:1:49] VM #1 created in 214037 milliseconds
+[2:1:49] VM #26 created in 214190 milliseconds
+[2:1:49] VM #6 created in 214359 milliseconds
+[2:2:44] VM #29 created in 269278 milliseconds
+[2:2:48] VM #3 created in 273382 milliseconds
+[2:4:46] VM #5 created in 390576 milliseconds
+[2:4:54] VM #13 created in 399487 milliseconds
+[2:4:59] VM #10 created in 404093 milliseconds
+[2:4:59] VM #15 created in 404093 milliseconds
+[2:5:1] VM #20 created in 406546 milliseconds
+[2:5:3] VM #18 created in 407774 milliseconds
+[2:5:3] VM #16 created in 407778 milliseconds
+[2:5:4] VM #9 created in 408699 milliseconds
+[2:5:6] VM #2 created in 410842 milliseconds
+[2:5:7] VM #21 created in 412383 milliseconds
+[2:5:7] VM #17 created in 412387 milliseconds
+[2:5:8] VM #11 created in 412600 milliseconds
+[2:5:8] VM #14 created in 413303 milliseconds
+[2:5:10] VM #0 created in 415153 milliseconds
+[2:5:10] VM #4 created in 415154 milliseconds
+[2:5:10] VM #8 created in 415150 milliseconds
+[2:5:11] VM #19 created in 416373 milliseconds
+[2:5:13] VM #28 created in 417911 milliseconds
+[2:5:13] VM #25 created in 418182 milliseconds
+[2:5:13] Created machines: 
+[2:5:13] 23.22.43.43  
+[2:5:13] 23.22.186.172  
+[2:5:13] 107.22.33.176  
+[2:5:13] 23.20.117.139  
+[2:5:13] 107.22.16.128  
+[2:5:13] 184.73.129.24  
+[2:5:13] 23.22.19.69  
+[2:5:13] 174.129.191.211  
+[2:5:13] 50.16.95.9  
+[2:5:13] 50.16.131.51  
+[2:5:13] 50.19.70.61  
+[2:5:13] 107.22.158.30  
+[2:5:13] 107.20.104.235  
+[2:5:13] 23.21.33.109  
+[2:5:13] 23.23.14.207  
+[2:5:13] 23.22.113.91  
+[2:5:13] 23.22.123.114  
+[2:5:13] 184.72.190.137  
+[2:5:13] 23.22.161.150  
+[2:5:13] 23.21.14.239  
+[2:5:13] 23.20.7.21  
+[2:5:13] ### Bootstrap completed in 418234 milliseconds ###
+[2:5:13] Starting enactment
+[2:5:13] Enacting choreography #0
+[2:5:13] Enacting choreography #1
+[2:5:13] Enacting choreography #2
+[2:5:13] Enacting choreography #3
+[2:5:13] Enacting choreography #4
+[2:5:13] Enacting choreography #5
+[2:5:13] Enacting choreography #6
+[2:5:13] Enacting choreography #7
+[2:5:13] Enacting choreography #8
+[2:5:13] Enacting choreography #9
+[2:5:13] Enacting choreography #10
+[2:5:13] Enacting choreography #11
+[2:5:13] Enacting choreography #12
+[2:5:13] Enacting choreography #13
+[2:5:13] Enacting choreography #14
+[2:14:25] Enactment #14 has failed
+[2:14:57] Enactment #7 has failed
+[2:17:25] Enactment #5 has failed
+[2:20:1] Choreography #1 enacted in 887991 miliseconds
+[2:20:1] Machines used by choreography #1:23.20.117.139 (us-east-1/i-fbb02580); 107.22.33.176 (us-east-1/i-1fb02564); 
+[2:20:6] Choreography #4 enacted in 893030 miliseconds
+[2:20:6] Machines used by choreography #4:23.20.7.21 (us-east-1/i-0bb32670); 23.22.43.43 (us-east-1/i-f5b0258e); 
+[2:20:8] Choreography #10 enacted in 894876 miliseconds
+[2:20:8] Machines used by choreography #10:23.21.33.109 (us-east-1/i-f3b02588); 23.22.186.172 (us-east-1/i-a3b025d8); 
+[2:20:31] Choreography #6 enacted in 918274 miliseconds
+[2:20:31] Machines used by choreography #6:107.22.16.128 (us-east-1/i-05b3267e); 50.16.95.9 (us-east-1/i-13b02568); 
+[2:20:34] Choreography #11 enacted in 921012 miliseconds
+[2:20:34] Machines used by choreography #11:50.16.95.9 (us-east-1/i-13b02568); 184.73.129.24 (us-east-1/i-0db02576); 
+[2:20:37] Choreography #2 enacted in 923607 miliseconds
+[2:20:37] Machines used by choreography #2:107.22.33.176 (us-east-1/i-1fb02564); 50.16.131.51 (us-east-1/i-19b02562); 
+[2:21:25] Choreography #0 enacted in 972093 miliseconds
+[2:21:25] Machines used by choreography #0:174.129.191.211 (us-east-1/i-0fb32674); 107.20.104.235 (us-east-1/i-2fb32654); 
+[2:22:8] Choreography #13 enacted in 1014856 miliseconds
+[2:22:8] Machines used by choreography #13:23.22.161.150 (us-east-1/i-fbb32680); 23.22.123.114 (us-east-1/i-75b3260e); 
+[2:22:30] Choreography #3 enacted in 1037122 miliseconds
+[2:22:30] Machines used by choreography #3:107.22.158.30 (us-east-1/i-0db32676); 23.23.14.207 (us-east-1/i-69b32612); 
+[2:22:32] Choreography #9 enacted in 1038728 miliseconds
+[2:22:32] Machines used by choreography #9:184.73.129.24 (us-east-1/i-0db02576); 50.19.70.61 (us-east-1/i-2db32656); 
+[2:22:42] Choreography #12 enacted in 1049232 miliseconds
+[2:22:42] Machines used by choreography #12:23.21.14.239 (us-east-1/i-25b3265e); 184.72.190.137 (us-east-1/i-f1b0258a); 
+[2:22:44] Choreography #8 enacted in 1050927 miliseconds
+[2:22:44] Machines used by choreography #8:50.16.131.51 (us-east-1/i-19b02562); 23.22.113.91 (us-east-1/i-efb02594); 
+[2:22:44] Enactment finished (1050993 milliseconds)
+[2:22:44] Verifying enacted services
+[2:22:44] Cheking choreography #8
+[2:22:44] Cheking choreography #9
+[2:22:44] Cheking choreography #6
+[2:22:44] Cheking choreography #4
+[2:22:44] Cheking choreography #3
+[2:22:44] Cheking choreography #2
+[2:22:44] Cheking choreography #10
+[2:22:44] Cheking choreography #11
+[2:22:44] Cheking choreography #1
+[2:22:44] Cheking choreography #0
+[2:22:44] Cheking choreography #12
+[2:22:44] Cheking choreography #13
+14:22:45,405 WARN  [SoapUI] Missing folder [/home/leonardo/workspace/choreos_middleware/EnactExperiment/./ext] for external libraries
+14:22:45,406 INFO  [DefaultSoapUICore] Creating new settings at [/home/leonardo/soapui-settings.xml]
+Progress: 1 - Caching Definition from url [http://50.16.131.51:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://50.16.131.51:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://50.16.131.51:1235/travelagency/?xsd=1]
+Progress: 1 - Loading Definition from url
+Retrieving document at 'http://50.16.131.51:1235/travelagency/?wsdl'.
+Retrieving schema at 'http://50.16.131.51:1235/travelagency/?xsd=1', relative to 'http://50.16.131.51:1235/travelagency/?wsdl'.
+Progress: 1 - Caching Definition from url [http://23.22.161.150:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://23.22.161.150:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://23.22.161.150:1235/travelagency/?xsd=1]
+Progress: 1 - Loading Definition from url
+Retrieving document at 'http://23.22.161.150:1235/travelagency/?wsdl'.
+Retrieving schema at 'http://23.22.161.150:1235/travelagency/?xsd=1', relative to 'http://23.22.161.150:1235/travelagency/?wsdl'.
+Progress: 1 - Caching Definition from url [http://23.21.14.239:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://23.21.14.239:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://23.21.14.239:1235/travelagency/?xsd=1]
+Progress: 1 - Loading Definition from url
+Retrieving document at 'http://23.21.14.239:1235/travelagency/?wsdl'.
+Retrieving schema at 'http://23.21.14.239:1235/travelagency/?xsd=1', relative to 'http://23.21.14.239:1235/travelagency/?wsdl'.
+Progress: 1 - Caching Definition from url [http://174.129.191.211:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://174.129.191.211:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://174.129.191.211:1235/travelagency/?xsd=1]
+Progress: 1 - Loading Definition from url
+Retrieving document at 'http://174.129.191.211:1235/travelagency/?wsdl'.
+Retrieving schema at 'http://174.129.191.211:1235/travelagency/?xsd=1', relative to 'http://174.129.191.211:1235/travelagency/?wsdl'.
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+   <S:Body>
+      <ns2:buyTripResponse xmlns:ns2="http://choreos.ow2.org/">
+         <return>33--22</return>
+      </ns2:buyTripResponse>
+   </S:Body>
+</S:Envelope>
+[2:22:57] Choreography #8 is working (invocation took 9787 milliseconds)
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+   <S:Body>
+      <ns2:buyTripResponse xmlns:ns2="http://choreos.ow2.org/">
+         <return>33--22</return>
+      </ns2:buyTripResponse>
+   </S:Body>
+</S:Envelope>
+[2:22:58] Choreography #13 is working (invocation took 9949 milliseconds)
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+   <S:Body>
+      <ns2:buyTripResponse xmlns:ns2="http://choreos.ow2.org/">
+         <return>33--22</return>
+      </ns2:buyTripResponse>
+   </S:Body>
+</S:Envelope>
+[2:23:0] Choreography #12 is working (invocation took 10044 milliseconds)
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+   <S:Body>
+      <ns2:buyTripResponse xmlns:ns2="http://choreos.ow2.org/">
+         <return>33--22</return>
+      </ns2:buyTripResponse>
+   </S:Body>
+</S:Envelope>
+[2:23:1] Choreography #0 is working (invocation took 9262 milliseconds)
+[2:27:4] Choreography #1 is not working
+Progress: 1 - Caching Definition from url [http://50.16.95.9:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://50.16.95.9:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://50.16.95.9:1235/travelagency/?xsd=1]
+Progress: 1 - Loading Definition from url
+Retrieving document at 'http://50.16.95.9:1235/travelagency/?wsdl'.
+Retrieving schema at 'http://50.16.95.9:1235/travelagency/?xsd=1', relative to 'http://50.16.95.9:1235/travelagency/?wsdl'.
+Progress: 1 - Caching Definition from url [http://23.21.33.109:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://23.21.33.109:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://23.21.33.109:1235/travelagency/?xsd=1]
+Progress: 1 - Loading Definition from url
+Retrieving document at 'http://23.21.33.109:1235/travelagency/?wsdl'.
+Retrieving schema at 'http://23.21.33.109:1235/travelagency/?xsd=1', relative to 'http://23.21.33.109:1235/travelagency/?wsdl'.
+Progress: 1 - Caching Definition from url [http://107.22.33.176:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://107.22.33.176:1235/travelagency/?wsdl]
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+   <S:Body>
+      <ns2:buyTripResponse xmlns:ns2="http://choreos.ow2.org/">
+         <return>Not possible to buy now</return>
+      </ns2:buyTripResponse>
+   </S:Body>
+</S:Envelope>
+[2:27:7] Choreography #10 is not working
+Progress: 2 - Loading [http://107.22.33.176:1235/travelagency/?xsd=1]
+Progress: 1 - Loading Definition from url
+Retrieving document at 'http://107.22.33.176:1235/travelagency/?wsdl'.
+Retrieving schema at 'http://107.22.33.176:1235/travelagency/?xsd=1', relative to 'http://107.22.33.176:1235/travelagency/?wsdl'.
+Progress: 1 - Caching Definition from url [http://107.22.158.30:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://107.22.158.30:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://107.22.158.30:1235/travelagency/?xsd=1]
+Progress: 1 - Loading Definition from url
+Retrieving document at 'http://107.22.158.30:1235/travelagency/?wsdl'.
+Retrieving schema at 'http://107.22.158.30:1235/travelagency/?xsd=1', relative to 'http://107.22.158.30:1235/travelagency/?wsdl'.
+Progress: 1 - Caching Definition from url [http://23.20.7.21:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://23.20.7.21:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://23.20.7.21:1235/travelagency/?xsd=1]
+Progress: 1 - Loading Definition from url
+Retrieving document at 'http://23.20.7.21:1235/travelagency/?wsdl'.
+Retrieving schema at 'http://23.20.7.21:1235/travelagency/?xsd=1', relative to 'http://23.20.7.21:1235/travelagency/?wsdl'.
+Progress: 1 - Caching Definition from url [http://107.22.16.128:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://107.22.16.128:1235/travelagency/?wsdl]
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+   <S:Body>
+      <ns2:buyTripResponse xmlns:ns2="http://choreos.ow2.org/">
+         <return>Not possible to buy now</return>
+      </ns2:buyTripResponse>
+   </S:Body>
+</S:Envelope>
+[2:27:11] Choreography #4 is not working
+Progress: 2 - Loading [http://107.22.16.128:1235/travelagency/?xsd=1]
+Progress: 1 - Loading Definition from url
+Retrieving document at 'http://107.22.16.128:1235/travelagency/?wsdl'.
+Retrieving schema at 'http://107.22.16.128:1235/travelagency/?xsd=1', relative to 'http://107.22.16.128:1235/travelagency/?wsdl'.
+Progress: 1 - Caching Definition from url [http://184.73.129.24:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://184.73.129.24:1235/travelagency/?wsdl]
+Progress: 2 - Loading [http://184.73.129.24:1235/travelagency/?xsd=1]
+Progress: 1 - Loading Definition from url
+Retrieving document at 'http://184.73.129.24:1235/travelagency/?wsdl'.
+Retrieving schema at 'http://184.73.129.24:1235/travelagency/?xsd=1', relative to 'http://184.73.129.24:1235/travelagency/?wsdl'.
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+   <S:Body>
+      <ns2:buyTripResponse xmlns:ns2="http://choreos.ow2.org/">
+         <return>33--22</return>
+      </ns2:buyTripResponse>
+   </S:Body>
+</S:Envelope>
+[2:27:14] Choreography #11 is working (invocation took 9182 milliseconds)
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+   <S:Body>
+      <ns2:buyTripResponse xmlns:ns2="http://choreos.ow2.org/">
+         <return>33--22</return>
+      </ns2:buyTripResponse>
+   </S:Body>
+</S:Envelope>
+[2:27:16] Choreography #2 is working (invocation took 8663 milliseconds)
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+   <S:Body>
+      <ns2:buyTripResponse xmlns:ns2="http://choreos.ow2.org/">
+         <return>33--22</return>
+      </ns2:buyTripResponse>
+   </S:Body>
+</S:Envelope>
+[2:27:19] Choreography #3 is working (invocation took 9507 milliseconds)
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+   <S:Body>
+      <ns2:buyTripResponse xmlns:ns2="http://choreos.ow2.org/">
+         <return>33--22</return>
+      </ns2:buyTripResponse>
+   </S:Body>
+</S:Envelope>
+[2:27:21] Choreography #6 is working (invocation took 9153 milliseconds)
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+   <S:Body>
+      <ns2:buyTripResponse xmlns:ns2="http://choreos.ow2.org/">
+         <return>33--22</return>
+      </ns2:buyTripResponse>
+   </S:Body>
+</S:Envelope>
+[2:27:23] Choreography #9 is working (invocation took 9354 milliseconds)
+[2:27:23] Experiment completed
+[2:27:23] RESULT: 9 of 15 working.
+[2:27:23] Aditional info retrieved from ServiceDeployer:
+[2:27:23] [DEBUG 14:08:57 AWSCloudProvider] Node [id=us-east-1/i-19b02562, ip=50.16.131.51, hostname=null, chefName=null] created in 220802 miliseconds
+[2:27:23] [DEBUG 14:08:00 AWSCloudProvider] Node [id=us-east-1/i-f5b0258e, ip=23.22.43.43, hostname=null, chefName=null] created in 223260 miliseconds
+[2:27:23] [DEBUG 14:08:01 AWSCloudProvider] Node [id=us-east-1/i-a3b025d8, ip=23.22.186.172, hostname=null, chefName=null] created in 224523 miliseconds
+[2:27:23] [DEBUG 14:08:02 AWSCloudProvider] Node [id=us-east-1/i-0db02576, ip=184.73.129.24, hostname=null, chefName=null] created in 225224 miliseconds
+[2:27:23] [DEBUG 14:08:05 AWSCloudProvider] Node [id=us-east-1/i-f1b0258a, ip=184.72.190.137, hostname=null, chefName=null] created in 228225 miliseconds
+[2:27:23] [DEBUG 14:08:05 AWSCloudProvider] Node [id=us-east-1/i-13b02568, ip=50.16.95.9, hostname=null, chefName=null] created in 228398 miliseconds
+[2:27:23] [DEBUG 14:08:05 AWSCloudProvider] Node [id=us-east-1/i-2fb32654, ip=107.20.104.235, hostname=null, chefName=null] created in 228466 miliseconds
+[2:27:23] [DEBUG 14:08:05 AWSCloudProvider] Node [id=us-east-1/i-2db32656, ip=50.19.70.61, hostname=null, chefName=null] created in 228561 miliseconds
+[2:27:23] [DEBUG 14:08:06 AWSCloudProvider] Node [id=us-east-1/i-efb02594, ip=23.22.113.91, hostname=null, chefName=null] created in 229511 miliseconds
+[2:27:23] [DEBUG 14:08:06 AWSCloudProvider] Node [id=us-east-1/i-0fb32674, ip=174.129.191.211, hostname=null, chefName=null] created in 229716 miliseconds
+[2:27:23] [DEBUG 14:08:07 AWSCloudProvider] Node [id=us-east-1/i-1fb02564, ip=107.22.33.176, hostname=null, chefName=null] created in 230607 miliseconds
+[2:27:23] [DEBUG 14:08:08 AWSCloudProvider] Node [id=us-east-1/i-e9b02592, ip=23.22.19.69, hostname=null, chefName=null] created in 231147 miliseconds
+[2:27:23] [DEBUG 14:08:08 AWSCloudProvider] Node [id=us-east-1/i-f3b02588, ip=23.21.33.109, hostname=null, chefName=null] created in 231172 miliseconds
+[2:27:23] [DEBUG 14:08:08 AWSCloudProvider] Node [id=us-east-1/i-fbb02580, ip=23.20.117.139, hostname=null, chefName=null] created in 231520 miliseconds
+[2:27:23] [DEBUG 14:08:08 AWSCloudProvider] Node [id=us-east-1/i-25b3265e, ip=23.21.14.239, hostname=null, chefName=null] created in 231686 miliseconds
+[2:27:23] [DEBUG 14:08:08 AWSCloudProvider] Node [id=us-east-1/i-69b32612, ip=23.23.14.207, hostname=null, chefName=null] created in 231753 miliseconds
+[2:27:23] [DEBUG 14:08:11 AWSCloudProvider] Node [id=us-east-1/i-0db32676, ip=107.22.158.30, hostname=null, chefName=null] created in 234224 miliseconds
+[2:27:23] [DEBUG 14:08:11 AWSCloudProvider] Node [id=us-east-1/i-0bb32670, ip=23.20.7.21, hostname=null, chefName=null] created in 234645 miliseconds
+[2:27:23] [DEBUG 14:08:12 AWSCloudProvider] Node [id=us-east-1/i-fbb32680, ip=23.22.161.150, hostname=null, chefName=null] created in 235664 miliseconds
+[2:27:23] [DEBUG 14:08:15 AWSCloudProvider] Node [id=us-east-1/i-75b3260e, ip=23.22.123.114, hostname=null, chefName=null] created in 238358 miliseconds
+[2:27:23] [DEBUG 14:08:26 AWSCloudProvider] Node [id=us-east-1/i-05b3267e, ip=107.22.16.128, hostname=null, chefName=null] created in 249283 miliseconds
+[2:27:23] [DEBUG 14:08:31 ConfigurationManager] Connected to Node [id=us-east-1/i-f5b0258e, ip=23.22.43.43, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:31 ConfigurationManager] Connected to Node [id=us-east-1/i-fbb02580, ip=23.20.117.139, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:32 ConfigurationManager] Connected to Node [id=us-east-1/i-e9b02592, ip=23.22.19.69, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:32 ConfigurationManager] Connected to Node [id=us-east-1/i-1fb02564, ip=107.22.33.176, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:33 ConfigurationManager] Connected to Node [id=us-east-1/i-19b02562, ip=50.16.131.51, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:34 ConfigurationManager] Connected to Node [id=us-east-1/i-13b02568, ip=50.16.95.9, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:35 ConfigurationManager] Connected to Node [id=us-east-1/i-2db32656, ip=50.19.70.61, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:35 ConfigurationManager] Connected to Node [id=us-east-1/i-f1b0258a, ip=184.72.190.137, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:36 ConfigurationManager] Connected to Node [id=us-east-1/i-efb02594, ip=23.22.113.91, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:36 ConfigurationManager] Connected to Node [id=us-east-1/i-a3b025d8, ip=23.22.186.172, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:37 ConfigurationManager] Connected to Node [id=us-east-1/i-25b3265e, ip=23.21.14.239, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:37 ConfigurationManager] Connected to Node [id=us-east-1/i-0bb32670, ip=23.20.7.21, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:37 ConfigurationManager] Connected to Node [id=us-east-1/i-0db02576, ip=184.73.129.24, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:38 ConfigurationManager] Connected to Node [id=us-east-1/i-75b3260e, ip=23.22.123.114, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:40 ConfigurationManager] Connected to Node [id=us-east-1/i-0fb32674, ip=174.129.191.211, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:41 ConfigurationManager] Connected to Node [id=us-east-1/i-2fb32654, ip=107.20.104.235, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:41 ConfigurationManager] Connected to Node [id=us-east-1/i-fbb32680, ip=23.22.161.150, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:42 ConfigurationManager] Connected to Node [id=us-east-1/i-0db32676, ip=107.22.158.30, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:44 ConfigurationManager] Connected to Node [id=us-east-1/i-69b32612, ip=23.23.14.207, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:45 ConfigurationManager] Connected to Node [id=us-east-1/i-f3b02588, ip=23.21.33.109, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:49 ConfigurationManager] Connected to Node [id=us-east-1/i-05b3267e, ip=107.22.16.128, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:07 ConfigurationManager] Connected to Node [id=us-east-1/i-a3b025d8, ip=23.22.186.172, hostname=null, chefName=null]
+[2:27:23] [DEBUG 14:08:08 ConfigurationManager] Connected to Node [id=us-east-1/i-f5b0258e, ip=23.22.43.43, hostname=null, chefName=null]
+
