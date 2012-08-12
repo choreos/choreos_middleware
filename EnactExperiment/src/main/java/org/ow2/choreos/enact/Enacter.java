@@ -29,7 +29,7 @@ public class Enacter implements Runnable {
 	@Override
 	public void run() {
 		
-		System.out.println("Enacting choreography #" + idx);
+		System.out.println(Utils.getTimeStamp() + "Enacting choreography #" + idx);
 		
 		long t0 = System.currentTimeMillis();
 		EnactmentEngine enacter = new EnactEngClient(ENACTMENT_ENGINE_HOST);
@@ -38,7 +38,7 @@ public class Enacter implements Runnable {
 		try {
 			chor = enacter.enact(chorId);
 		} catch (EnactmentException e) {
-			System.out.println("Enactment #" + idx + " has failed");
+			System.out.println(Utils.getTimeStamp() + "Enactment #" + idx + " has failed");
 			ok = false;
 			return;
 		}
@@ -47,12 +47,12 @@ public class Enacter implements Runnable {
 		Service travelService = chor.getDeployedServiceByName(TRAVEL_AGENCY);
 		travelWSDL = travelService.getUri() + "?wsdl";
 		
-		System.out.println("Choreography #" + idx + " enacted in " + duration + " miliseconds");
+		System.out.println(Utils.getTimeStamp() + "Choreography #" + idx + " enacted in " + duration + " miliseconds");
 		StringBuilder chorMachinesMessage = new StringBuilder("Machines used by choreography #" + idx + ":");
 		for (String mch: getMachinesFromChor(chor)) {
 			chorMachinesMessage.append(mch + "; ");
 		}
-		System.out.println(chorMachinesMessage.toString());
+		System.out.println(Utils.getTimeStamp() + chorMachinesMessage.toString());
 	}
 	
 	private List<String> getMachinesFromChor(Choreography chor) {

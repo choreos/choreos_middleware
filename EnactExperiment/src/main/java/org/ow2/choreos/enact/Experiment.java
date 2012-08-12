@@ -26,20 +26,20 @@ import org.ow2.choreos.enactment.datamodel.ChorSpec;
  */
 public class Experiment {
 
-	public static final int CHORS_QTY = 3; // how many micro choreographies there will be 
+	public static final int CHORS_QTY = 5; // how many micro choreographies there will be 
 	public static final int SERVICES_PER_CHOR = 2;
 	
 	public void run() {
 		
 		List<Enacter> enacts = enact();
 		List<TravelChecker> checkers = verify(enacts);
-		System.out.println("Experiment completed");
+		System.out.println(Utils.getTimeStamp() + "Experiment completed");
 		results(checkers);
 	}
 
 	private List<Enacter> enact() {
 		
-		System.out.println("Starting enactment");
+		System.out.println(Utils.getTimeStamp() + "Starting enactment");
 		
 		long t0 = System.currentTimeMillis();
 		ChorSpec chorSpec = Spec.getSpec();
@@ -57,13 +57,13 @@ public class Experiment {
 		long tf = System.currentTimeMillis();
 		long duration = tf - t0;
 		
-		System.out.println("Enactment finished (" + duration + " milliseconds)");
+		System.out.println(Utils.getTimeStamp() + "Enactment finished (" + duration + " milliseconds)");
 		return enacts;
 	}
 
 	private List<TravelChecker> verify(List<Enacter> enacts) {
 		
-		System.out.println("Verifying enacted services");
+		System.out.println(Utils.getTimeStamp() + "Verifying enacted services");
 	
 		List<TravelChecker> checkers= new ArrayList<TravelChecker>();
 		List<Thread> trds = new ArrayList<Thread>();
@@ -93,15 +93,15 @@ public class Experiment {
 			}
 		}
 		
-		System.out.println("RESULT: " + ok + " of " + CHORS_QTY + " working.");
+		System.out.println(Utils.getTimeStamp() + "RESULT: " + ok + " of " + CHORS_QTY + " working.");
 		
-		System.out.println("Aditional info retrieved from ServiceDeployer:");
+		System.out.println(Utils.getTimeStamp() + "Aditional info retrieved from ServiceDeployer:");
 		try {
 			for (String line: LogParser.getAdditionalInfo()) {
-				System.out.println(line);
+				System.out.println(Utils.getTimeStamp() + line);
 			}
 		} catch (IOException e) {
-			System.out.println("Could not access service_deployer.log");
+			System.out.println(Utils.getTimeStamp() + "Could not access service_deployer.log");
 		}
 	}
 
@@ -110,7 +110,7 @@ public class Experiment {
 			try {
 				t.join();
 			} catch (InterruptedException e) {
-				System.out.println("Wait thread exception!");
+				System.out.println(Utils.getTimeStamp() + "Wait thread exception!");
 			}
 		}
 	}

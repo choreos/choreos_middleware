@@ -25,7 +25,7 @@ public class TravelChecker implements Runnable {
 	@Override
 	public void run() {
 
-		System.out.println("Cheking choreography #" + idx);
+		System.out.println(Utils.getTimeStamp() + "Cheking choreography #" + idx);
 
 		WSClient client = getClient(travelWSDL);
 		if (client == null) {
@@ -58,7 +58,7 @@ public class TravelChecker implements Runnable {
 		ok = EXPECTED_RESULT.equals(result);
 		
 		if (ok) {
-			System.out.println("Choreography #" + idx
+			System.out.println(Utils.getTimeStamp() + "Choreography #" + idx
 					+ " is working (invocation took " + duration
 					+ " milliseconds)");
 		} else {
@@ -67,7 +67,7 @@ public class TravelChecker implements Runnable {
 	}
 	
 	private void notWorking() {
-		System.out.println("Choreography #" + idx + " is not working");
+		System.out.println(Utils.getTimeStamp() + "Choreography #" + idx + " is not working");
 	}
 	
 	private WSClient getClient(String travelWSDL) {

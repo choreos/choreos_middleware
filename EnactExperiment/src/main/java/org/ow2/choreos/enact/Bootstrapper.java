@@ -24,12 +24,12 @@ public class Bootstrapper {
 	 */
 	public void boot() {
 		
-		System.out.println("Creating VMs...");
+		System.out.println(Utils.getTimeStamp() + "Creating VMs...");
 		List<Node> vms = createVMs();
-		System.out.println("Created machines: ");
+		System.out.println(Utils.getTimeStamp() + "Created machines: ");
 		for (Node vm: vms) 
-			System.out.println(vm.getIp() + "  ");
-		System.out.println("\n### Bootstrap completed ###");
+			System.out.println(Utils.getTimeStamp() + vm.getIp() + "  ");
+		System.out.println(Utils.getTimeStamp() + "\n### Bootstrap completed ###");
 	}
 
 	private List<Node> createVMs() {
@@ -49,7 +49,8 @@ public class Bootstrapper {
 					long tf = System.currentTimeMillis();
 					long duration = tf - t0;
 					vms.add(vm);
-					System.out.println("VM #" + idx + " created in " + duration + " milliseconds");
+					System.out.println(Utils.getTimeStamp() + "VM #" + idx
+							+ " created in " + duration + " milliseconds");
 				}
 			});
 			trds[i].start();
