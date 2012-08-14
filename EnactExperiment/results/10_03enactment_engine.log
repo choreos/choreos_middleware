@@ -1,0 +1,584 @@
+[INFO 11:08:46 AbstractApplicationContext] Refreshing org.apache.cxf.bus.spring.BusApplicationContext@eb7859: display name [org.apache.cxf.bus.spring.BusApplicationContext@eb7859]; startup date [Tue Aug 14 11:00:46 BRT 2012]; root of context hierarchy
+[INFO 11:08:46 XmlBeanDefinitionReader] Loading XML bean definitions from class path resource [META-INF/cxf/cxf.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Loading bean definitions
+[DEBUG 11:08:47 BeanDefinitionParserDelegate] Neither XML 'id' nor 'name' specified - using generated bean name [org.apache.cxf.resource.ClasspathResolver#4f80d6]
+[DEBUG 11:08:47 BeanDefinitionParserDelegate] Neither XML 'id' nor 'name' specified - using generated bean name [org.apache.cxf.resource.ClassLoaderResolver#193722c]
+[DEBUG 11:08:47 BeanDefinitionParserDelegate] Neither XML 'id' nor 'name' specified - using generated bean name [org.apache.cxf.bus.spring.BusApplicationContextResourceResolver#12cc95d]
+[DEBUG 11:08:47 BeanDefinitionParserDelegate] Neither XML 'id' nor 'name' specified - using generated bean name [org.apache.cxf.configuration.spring.SpringBeanMap#1ea0252]
+[DEBUG 11:08:47 BeanDefinitionParserDelegate] Neither XML 'id' nor 'name' specified - using generated bean name [org.apache.cxf.configuration.spring.SpringBeanMap#3e89c3]
+[DEBUG 11:08:47 BeanDefinitionParserDelegate] Neither XML 'id' nor 'name' specified - using generated bean name [org.apache.cxf.configuration.spring.SpringBeanMap#1c695a6]
+[DEBUG 11:08:47 BeanDefinitionParserDelegate] Neither XML 'id' nor 'name' specified - using generated bean name [org.apache.cxf.transport.http.WSDLQueryHandler#8acf6e]
+[INFO 11:08:47 XmlBeanDefinitionReader] Loading XML bean definitions from class path resource [META-INF/cxf/cxf-extension-corba.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Loading bean definitions
+[DEBUG 11:08:47 BeanDefinitionParserDelegate] Neither XML 'id' nor 'name' specified - using generated bean name [org.apache.cxf.binding.corba.wsdl.WSDLExtensionRegister#0]
+[INFO 11:08:47 XmlBeanDefinitionReader] Loading XML bean definitions from class path resource [META-INF/cxf/cxf-extension-jaxws.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Loading bean definitions
+[INFO 11:08:47 XmlBeanDefinitionReader] Loading XML bean definitions from class path resource [META-INF/cxf/cxf-extension-soap.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Loading bean definitions
+[DEBUG 11:08:47 BeanDefinitionParserDelegate] Neither XML 'id' nor 'name' specified - using generated bean name [org.apache.cxf.binding.soap.spring.SoapVersionRegistrar#a1d1f4]
+[INFO 11:08:47 XmlBeanDefinitionReader] Loading XML bean definitions from class path resource [META-INF/cxf/cxf-extension-xml.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Loading bean definitions
+[INFO 11:08:47 XmlBeanDefinitionReader] Loading XML bean definitions from class path resource [META-INF/cxf/cxf-extension-addr.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Loading bean definitions
+[DEBUG 11:08:47 BeanDefinitionParserDelegate] Neither XML 'id' nor 'name' specified - using generated bean name [javax.xml.namespace.QName#13bd574]
+[DEBUG 11:08:47 BeanDefinitionParserDelegate] Neither XML 'id' nor 'name' specified - using generated bean name [javax.xml.namespace.QName#13adc56]
+[DEBUG 11:08:47 BeanDefinitionParserDelegate] Neither XML 'id' nor 'name' specified - using generated bean name [javax.xml.namespace.QName#157aa53]
+[INFO 11:08:47 XmlBeanDefinitionReader] Loading XML bean definitions from class path resource [META-INF/cxf/cxf-extension-javascript-client.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Loading bean definitions
+[INFO 11:08:47 XmlBeanDefinitionReader] Loading XML bean definitions from class path resource [META-INF/cxf/cxf-extension-local.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Loading bean definitions
+[INFO 11:08:47 XmlBeanDefinitionReader] Loading XML bean definitions from class path resource [META-INF/cxf/cxf-extension-http.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Loading bean definitions
+[INFO 11:08:47 XmlBeanDefinitionReader] Loading XML bean definitions from class path resource [META-INF/cxf/cxf-extension-management.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Loading bean definitions
+[INFO 11:08:47 XmlBeanDefinitionReader] Loading XML bean definitions from class path resource [META-INF/cxf/cxf-extension-http-jetty.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Loading bean definitions
+[INFO 11:08:47 XmlBeanDefinitionReader] Loading XML bean definitions from class path resource [META-INF/cxf/cxf-extension-http.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Loading bean definitions
+[INFO 11:08:47 DefaultListableBeanFactory] Overriding bean definition for bean 'org.apache.cxf.transport.http.policy.HTTPClientAssertionBuilder': replacing [Generic bean: class [org.apache.cxf.transport.http.policy.HTTPClientAssertionBuilder]; scope=singleton; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [META-INF/cxf/cxf-extension-http.xml]] with [Generic bean: class [org.apache.cxf.transport.http.policy.HTTPClientAssertionBuilder]; scope=singleton; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [META-INF/cxf/cxf-extension-http.xml]]
+[INFO 11:08:47 DefaultListableBeanFactory] Overriding bean definition for bean 'org.apache.cxf.transport.http.policy.HTTPServerAssertionBuilder': replacing [Generic bean: class [org.apache.cxf.transport.http.policy.HTTPServerAssertionBuilder]; scope=singleton; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [META-INF/cxf/cxf-extension-http.xml]] with [Generic bean: class [org.apache.cxf.transport.http.policy.HTTPServerAssertionBuilder]; scope=singleton; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [META-INF/cxf/cxf-extension-http.xml]]
+[INFO 11:08:47 DefaultListableBeanFactory] Overriding bean definition for bean 'org.apache.cxf.transport.http.policy.NoOpPolicyInterceptorProvider': replacing [Generic bean: class [org.apache.cxf.transport.http.policy.NoOpPolicyInterceptorProvider]; scope=singleton; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [META-INF/cxf/cxf-extension-http.xml]] with [Generic bean: class [org.apache.cxf.transport.http.policy.NoOpPolicyInterceptorProvider]; scope=singleton; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [META-INF/cxf/cxf-extension-http.xml]]
+[INFO 11:08:47 DefaultListableBeanFactory] Overriding bean definition for bean 'org.apache.cxf.transport.http.ClientOnlyHTTPTransportFactory': replacing [Generic bean: class [org.apache.cxf.transport.http.ClientOnlyHTTPTransportFactory]; scope=singleton; abstract=false; lazyInit=true; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [META-INF/cxf/cxf-extension-http.xml]] with [Generic bean: class [org.apache.cxf.transport.http.ClientOnlyHTTPTransportFactory]; scope=singleton; abstract=false; lazyInit=true; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [META-INF/cxf/cxf-extension-http.xml]]
+[DEBUG 11:08:47 AbstractBeanDefinitionReader] Loaded 0 bean definitions from location pattern [classpath:META-INF/cxf/cxf-extension-http.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Imported 0 bean definitions from URL location [classpath:META-INF/cxf/cxf-extension-http.xml]
+[INFO 11:08:47 XmlBeanDefinitionReader] Loading XML bean definitions from class path resource [META-INF/cxf/cxf-extension-jms.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Loading bean definitions
+[INFO 11:08:47 XmlBeanDefinitionReader] Loading XML bean definitions from class path resource [META-INF/cxf/cxf-extension-object-binding.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Loading bean definitions
+[INFO 11:08:47 XmlBeanDefinitionReader] Loading XML bean definitions from class path resource [META-INF/cxf/cxf-extension-http-binding.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Loading bean definitions
+[INFO 11:08:47 XmlBeanDefinitionReader] Loading XML bean definitions from class path resource [META-INF/cxf/cxf-extension-jaxrs-binding.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Loading bean definitions
+[INFO 11:08:47 XmlBeanDefinitionReader] Loading XML bean definitions from class path resource [META-INF/cxf/cxf-extension-ws-security.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Loading bean definitions
+[INFO 11:08:47 XmlBeanDefinitionReader] Loading XML bean definitions from class path resource [META-INF/cxf/cxf-extension-policy.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Loading bean definitions
+[DEBUG 11:08:47 BeanDefinitionParserDelegate] Neither XML 'id' nor 'name' specified - using generated bean name [org.apache.cxf.configuration.spring.SpringBeanQNameMap#1010058]
+[DEBUG 11:08:47 BeanDefinitionParserDelegate] Neither XML 'id' nor 'name' specified - using generated bean name [org.apache.cxf.configuration.spring.SpringBeanQNameMap#bdab91]
+[DEBUG 11:08:47 BeanDefinitionParserDelegate] Neither XML 'id' nor 'name' specified - using generated bean name [org.apache.cxf.configuration.spring.SpringBeanQNameMap#4ac00c]
+[INFO 11:08:47 XmlBeanDefinitionReader] Loading XML bean definitions from class path resource [META-INF/cxf/cxf-extension-rm.xml]
+[DEBUG 11:08:47 DefaultBeanDefinitionDocumentReader] Loading bean definitions
+[DEBUG 11:08:47 BeanDefinitionParserDelegate] Neither XML 'id' nor 'name' specified - using generated bean name [javax.xml.namespace.QName#1865b28]
+[INFO 11:08:47 AbstractApplicationContext] Bean factory for application context [org.apache.cxf.bus.spring.BusApplicationContext@eb7859]: org.springframework.beans.factory.support.DefaultListableBeanFactory@1cac6db
+[DEBUG 11:08:47 AbstractApplicationContext] 59 beans defined in org.apache.cxf.bus.spring.BusApplicationContext@eb7859: display name [org.apache.cxf.bus.spring.BusApplicationContext@eb7859]; startup date [Tue Aug 14 11:00:46 BRT 2012]; root of context hierarchy
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.binding.soap.customEditorConfigurer'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.binding.soap.customEditorConfigurer'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.binding.soap.customEditorConfigurer' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.binding.soap.spring.SoapVersionRegistrar#a1d1f4'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.binding.soap.spring.SoapVersionRegistrar#a1d1f4'
+[DEBUG 11:08:47 BeanUtils] No property editor [[Lorg.springframework.beans.PropertyEditorRegistrar;Editor] found for type [Lorg.springframework.beans.PropertyEditorRegistrar; according to 'Editor' suffix convention
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.binding.soap.customEditorConfigurer'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.bus.spring.BusWiringBeanFactoryPostProcessor'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.bus.spring.BusWiringBeanFactoryPostProcessor'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.bus.spring.BusWiringBeanFactoryPostProcessor' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.bus.spring.BusWiringBeanFactoryPostProcessor'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.bus.spring.Jsr250BeanPostProcessor'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.bus.spring.Jsr250BeanPostProcessor'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.bus.spring.Jsr250BeanPostProcessor' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.bus.spring.Jsr250BeanPostProcessor'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.bus.spring.BusExtensionPostProcessor'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.bus.spring.BusExtensionPostProcessor'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.bus.spring.BusExtensionPostProcessor' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.bus.spring.BusExtensionPostProcessor'
+[DEBUG 11:08:47 AbstractApplicationContext] Unable to locate MessageSource with name 'messageSource': using default [org.springframework.context.support.DelegatingMessageSource@b8f8eb]
+[DEBUG 11:08:47 AbstractApplicationContext] Unable to locate ApplicationEventMulticaster with name 'applicationEventMulticaster': using default [org.springframework.context.event.SimpleApplicationEventMulticaster@f47bf5]
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.bus.spring.BusApplicationListener'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.bus.spring.BusApplicationListener'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.bus.spring.BusApplicationListener' to allow for resolving potential circular references
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'cxf'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'cxf'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'cxf' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractBeanFactory] Returning eagerly cached instance of singleton bean 'cxf' that is not fully initialized yet - a consequence of a circular reference
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'cxf'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.bus.spring.BusApplicationListener'
+[INFO 11:08:47 DefaultListableBeanFactory] Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@1cac6db: defining beans [cxf,org.apache.cxf.bus.spring.BusApplicationListener,org.apache.cxf.bus.spring.BusWiringBeanFactoryPostProcessor,org.apache.cxf.bus.spring.Jsr250BeanPostProcessor,org.apache.cxf.bus.spring.BusExtensionPostProcessor,org.apache.cxf.resource.ResourceManager,org.apache.cxf.configuration.Configurer,org.apache.cxf.binding.BindingFactoryManager,org.apache.cxf.transport.DestinationFactoryManager,org.apache.cxf.transport.ConduitInitiatorManager,org.apache.cxf.wsdl.WSDLManager,org.apache.cxf.phase.PhaseManager,org.apache.cxf.workqueue.WorkQueueManager,org.apache.cxf.buslifecycle.BusLifeCycleManager,org.apache.cxf.endpoint.ServerRegistry,org.apache.cxf.endpoint.ServerLifeCycleManager,org.apache.cxf.endpoint.ClientLifeCycleManager,org.apache.cxf.transports.http.QueryHandlerRegistry,org.apache.cxf.endpoint.EndpointResolverRegistry,org.apache.cxf.headers.HeaderManager,org.apache.cxf.catalog.OASISCatalogManager,org.apache.cxf.endpoint.ServiceContractResolverRegistry,org.apache.cxf.binding.corba.CorbaBindingFactory,org.apache.cxf.binding.corba.wsdl.WSDLExtensionRegister#0,org.apache.cxf.jaxws.context.WebServiceContextResourceResolver,org.apache.cxf.jaxws.context.WebServiceContextImpl,org.apache.cxf.binding.soap.SoapBindingFactory,org.apache.cxf.binding.soap.SoapTransportFactory,org.apache.cxf.binding.soap.customEditorConfigurer,org.apache.cxf.binding.xml.XMLBindingFactory,org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder,org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider,org.apache.cxf.ws.addressing.policy.UsingAddressingAssertionBuilder,org.apache.cxf.javascript.JavascriptQueryHandlerRegistry,org.apache.cxf.transport.local.LocalTransportFactory,org.apache.cxf.transport.http.policy.HTTPClientAssertionBuilder,org.apache.cxf.transport.http.policy.HTTPServerAssertionBuilder,org.apache.cxf.transport.http.policy.NoOpPolicyInterceptorProvider,org.apache.cxf.transport.http.ClientOnlyHTTPTransportFactory,org.apache.cxf.management.InstrumentationManager,org.apache.cxf.transport.http_jetty.JettyHTTPTransportFactory,org.apache.cxf.transport.jms.JMSTransportFactory,org.apache.cxf.binding.object.ObjectBindingFactory,org.apache.cxf.binding.http.HttpBindingFactory,org.apache.cxf.jaxrs.JAXRSBindingFactory,org.apache.cxf.ws.security.policy.WSSecurityPolicyLoader,org.apache.cxf.ws.policy.AssertionBuilderRegistry,org.apache.cxf.ws.policy.PolicyInterceptorProviderRegistry,org.apache.cxf.ws.policy.attachment.external.DomainExpressionBuilderRegistry,org.apache.cxf.ws.policy.attachment.external.EndpointReferenceDomainExpressionBuilder,org.apache.cxf.ws.policy.PolicyBuilder,org.apache.cxf.ws.policy.PolicyEngine,org.apache.cxf.ws.policy.attachment.wsdl11.Wsdl11AttachmentPolicyProvider,org.apache.cxf.ws.policy.attachment.ServiceModelPolicyProvider,org.apache.cxf.ws.policy.mtom.MTOMAssertionBuilder,org.apache.cxf.ws.policy.mtom.MTOMPolicyInterceptorProvider,org.apache.cxf.ws.rm.RMManager,org.apache.cxf.ws.rm.policy.RMPolicyInterceptorProvider,org.apache.cxf.ws.rm.RMAssertionBuilder]; root of factory hierarchy
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.bus.spring.BusApplicationListener'
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.bus.spring.BusWiringBeanFactoryPostProcessor'
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.bus.spring.Jsr250BeanPostProcessor'
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.bus.spring.BusExtensionPostProcessor'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.resource.ResourceManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.resource.ResourceManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.resource.ResourceManager' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.resource.ClasspathResolver#4f80d6'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.resource.ClasspathResolver#4f80d6'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.resource.ClassLoaderResolver#193722c'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.resource.ClassLoaderResolver#193722c'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.bus.spring.BusApplicationContextResourceResolver#12cc95d'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.bus.spring.BusApplicationContextResourceResolver#12cc95d'
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.jaxws.context.WebServiceContextResourceResolver'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.jaxws.context.WebServiceContextResourceResolver'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.jaxws.context.WebServiceContextResourceResolver' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.jaxws.context.WebServiceContextResourceResolver'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.resource.ResourceManager'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.configuration.Configurer'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.configuration.Configurer'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.configuration.Configurer' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Invoking afterPropertiesSet() on bean with name 'org.apache.cxf.configuration.Configurer'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.configuration.Configurer'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.binding.BindingFactoryManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.binding.BindingFactoryManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.binding.BindingFactoryManager' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.configuration.spring.SpringBeanMap#1ea0252'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Invoking afterPropertiesSet() on bean with name 'org.apache.cxf.configuration.spring.SpringBeanMap#1ea0252'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.configuration.spring.SpringBeanMap#1ea0252'
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.binding.BindingFactoryManager'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.transport.DestinationFactoryManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.transport.DestinationFactoryManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.transport.DestinationFactoryManager' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.configuration.spring.SpringBeanMap#3e89c3'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Invoking afterPropertiesSet() on bean with name 'org.apache.cxf.configuration.spring.SpringBeanMap#3e89c3'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.configuration.spring.SpringBeanMap#3e89c3'
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.transport.DestinationFactoryManager'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.transport.ConduitInitiatorManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.transport.ConduitInitiatorManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.transport.ConduitInitiatorManager' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.configuration.spring.SpringBeanMap#1c695a6'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Invoking afterPropertiesSet() on bean with name 'org.apache.cxf.configuration.spring.SpringBeanMap#1c695a6'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.configuration.spring.SpringBeanMap#1c695a6'
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.transport.ConduitInitiatorManager'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.wsdl.WSDLManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.wsdl.WSDLManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.wsdl.WSDLManager' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.wsdl.WSDLManager'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.phase.PhaseManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.phase.PhaseManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.phase.PhaseManager' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.phase.PhaseManager'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.workqueue.WorkQueueManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.workqueue.WorkQueueManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.workqueue.WorkQueueManager' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.management.InstrumentationManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.management.InstrumentationManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.management.InstrumentationManager' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.buslifecycle.BusLifeCycleManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.buslifecycle.BusLifeCycleManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.buslifecycle.BusLifeCycleManager' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.buslifecycle.BusLifeCycleManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.management.InstrumentationManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.workqueue.WorkQueueManager'
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.buslifecycle.BusLifeCycleManager'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.endpoint.ServerRegistry'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.endpoint.ServerRegistry'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.endpoint.ServerRegistry' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.endpoint.ServerRegistry'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.endpoint.ServerLifeCycleManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.endpoint.ServerLifeCycleManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.endpoint.ServerLifeCycleManager' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.endpoint.ServerLifeCycleManager'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.endpoint.ClientLifeCycleManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.endpoint.ClientLifeCycleManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.endpoint.ClientLifeCycleManager' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.endpoint.ClientLifeCycleManager'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.transports.http.QueryHandlerRegistry'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.transports.http.QueryHandlerRegistry'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.transports.http.QueryHandlerRegistry' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.transport.http.WSDLQueryHandler#8acf6e'
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.transport.http.WSDLQueryHandler#8acf6e'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.transports.http.QueryHandlerRegistry'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.endpoint.EndpointResolverRegistry'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.endpoint.EndpointResolverRegistry'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.endpoint.EndpointResolverRegistry' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.endpoint.EndpointResolverRegistry'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.headers.HeaderManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.headers.HeaderManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.headers.HeaderManager' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.headers.HeaderManager'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.catalog.OASISCatalogManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.catalog.OASISCatalogManager'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.catalog.OASISCatalogManager' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.catalog.OASISCatalogManager'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.endpoint.ServiceContractResolverRegistry'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.endpoint.ServiceContractResolverRegistry'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.endpoint.ServiceContractResolverRegistry' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.endpoint.ServiceContractResolverRegistry'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.binding.corba.wsdl.WSDLExtensionRegister#0'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.binding.corba.wsdl.WSDLExtensionRegister#0'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.binding.corba.wsdl.WSDLExtensionRegister#0' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.binding.corba.wsdl.WSDLExtensionRegister#0'
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.jaxws.context.WebServiceContextResourceResolver'
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.binding.soap.customEditorConfigurer'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 11:08:47 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder' to allow for resolving potential circular references
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 11:08:47 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 11:08:47 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.addressing.policy.UsingAddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.addressing.policy.UsingAddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.addressing.policy.UsingAddressingAssertionBuilder' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'javax.xml.namespace.QName#13bd574'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'javax.xml.namespace.QName#13bd574'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'javax.xml.namespace.QName#13adc56'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'javax.xml.namespace.QName#13adc56'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'javax.xml.namespace.QName#157aa53'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'javax.xml.namespace.QName#157aa53'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.addressing.policy.UsingAddressingAssertionBuilder'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.javascript.JavascriptQueryHandlerRegistry'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.javascript.JavascriptQueryHandlerRegistry'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.javascript.JavascriptQueryHandlerRegistry' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Invoking init method  'register' on bean with name 'org.apache.cxf.javascript.JavascriptQueryHandlerRegistry'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.javascript.JavascriptQueryHandlerRegistry'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.transport.http.policy.HTTPClientAssertionBuilder'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.transport.http.policy.HTTPClientAssertionBuilder'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.transport.http.policy.HTTPClientAssertionBuilder' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.transport.http.policy.HTTPClientAssertionBuilder'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.transport.http.policy.HTTPServerAssertionBuilder'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.transport.http.policy.HTTPServerAssertionBuilder'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.transport.http.policy.HTTPServerAssertionBuilder' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.transport.http.policy.HTTPServerAssertionBuilder'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.transport.http.policy.NoOpPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.transport.http.policy.NoOpPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.transport.http.policy.NoOpPolicyInterceptorProvider' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.transport.http.policy.NoOpPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.management.InstrumentationManager'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.transport.http.ClientOnlyHTTPTransportFactory'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.transport.http.ClientOnlyHTTPTransportFactory'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.transport.http.ClientOnlyHTTPTransportFactory' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.transport.http.ClientOnlyHTTPTransportFactory'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.transport.http_jetty.JettyHTTPTransportFactory'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.transport.http_jetty.JettyHTTPTransportFactory'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.transport.http_jetty.JettyHTTPTransportFactory' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.transport.http_jetty.JettyHTTPTransportFactory'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.security.policy.WSSecurityPolicyLoader'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.security.policy.WSSecurityPolicyLoader'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.security.policy.WSSecurityPolicyLoader' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.AssertionBuilderRegistry'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.AssertionBuilderRegistry'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.configuration.spring.SpringBeanQNameMap#1010058'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Invoking afterPropertiesSet() on bean with name 'org.apache.cxf.configuration.spring.SpringBeanQNameMap#1010058'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.UsingAddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.transport.http.policy.HTTPClientAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.transport.http.policy.HTTPServerAssertionBuilder'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.mtom.MTOMAssertionBuilder'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.mtom.MTOMAssertionBuilder'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.mtom.MTOMAssertionBuilder' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.mtom.MTOMAssertionBuilder'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.rm.RMAssertionBuilder'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.rm.RMAssertionBuilder'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'javax.xml.namespace.QName#1865b28'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'javax.xml.namespace.QName#1865b28'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.rm.RMAssertionBuilder' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.rm.RMAssertionBuilder'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.configuration.spring.SpringBeanQNameMap#1010058'
+[DEBUG 11:08:48 BeanUtils] No property editor [java.util.MapEditor] found for type java.util.Map according to 'Editor' suffix convention
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.transport.http.policy.HTTPClientAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.transport.http.policy.HTTPClientAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.transport.http.policy.HTTPServerAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.transport.http.policy.HTTPServerAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.UsingAddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.UsingAddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.rm.RMAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.rm.RMAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.UsingAddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.UsingAddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.UsingAddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.UsingAddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.mtom.MTOMAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.mtom.MTOMAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.AssertionBuilderRegistry' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.AssertionBuilderRegistry'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.PolicyBuilder'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.PolicyBuilder'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.PolicyBuilder' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.AssertionBuilderRegistry'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.PolicyBuilder'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.PolicyInterceptorProviderRegistry'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.PolicyInterceptorProviderRegistry'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.configuration.spring.SpringBeanQNameMap#bdab91'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Invoking afterPropertiesSet() on bean with name 'org.apache.cxf.configuration.spring.SpringBeanQNameMap#bdab91'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.transport.http.policy.NoOpPolicyInterceptorProvider'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.mtom.MTOMPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.mtom.MTOMPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.mtom.MTOMPolicyInterceptorProvider' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.mtom.MTOMPolicyInterceptorProvider'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.rm.policy.RMPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.rm.policy.RMPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.rm.policy.RMPolicyInterceptorProvider' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.rm.policy.RMPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.configuration.spring.SpringBeanQNameMap#bdab91'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.transport.http.policy.NoOpPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.transport.http.policy.NoOpPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.rm.policy.RMPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.rm.policy.RMPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.mtom.MTOMPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.mtom.MTOMPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.PolicyInterceptorProviderRegistry' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.PolicyInterceptorProviderRegistry'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.security.policy.WSSecurityPolicyLoader'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.AssertionBuilderRegistry'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.PolicyInterceptorProviderRegistry'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.attachment.external.DomainExpressionBuilderRegistry'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.attachment.external.DomainExpressionBuilderRegistry'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.configuration.spring.SpringBeanQNameMap#4ac00c'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Invoking afterPropertiesSet() on bean with name 'org.apache.cxf.configuration.spring.SpringBeanQNameMap#4ac00c'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.attachment.external.EndpointReferenceDomainExpressionBuilder'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.attachment.external.EndpointReferenceDomainExpressionBuilder'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.attachment.external.EndpointReferenceDomainExpressionBuilder' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.attachment.external.EndpointReferenceDomainExpressionBuilder'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.configuration.spring.SpringBeanQNameMap#4ac00c'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.attachment.external.EndpointReferenceDomainExpressionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.attachment.external.EndpointReferenceDomainExpressionBuilder'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.attachment.external.DomainExpressionBuilderRegistry' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.attachment.external.DomainExpressionBuilderRegistry'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.attachment.external.EndpointReferenceDomainExpressionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.PolicyBuilder'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.PolicyEngine'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.PolicyEngine'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.PolicyEngine' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.PolicyEngine'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.attachment.wsdl11.Wsdl11AttachmentPolicyProvider'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.attachment.wsdl11.Wsdl11AttachmentPolicyProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.attachment.wsdl11.Wsdl11AttachmentPolicyProvider' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.attachment.wsdl11.Wsdl11AttachmentPolicyProvider'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.attachment.ServiceModelPolicyProvider'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.attachment.ServiceModelPolicyProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.attachment.ServiceModelPolicyProvider' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.attachment.ServiceModelPolicyProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.mtom.MTOMAssertionBuilder'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.mtom.MTOMPolicyInterceptorProvider'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.rm.RMManager'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.rm.RMManager'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.rm.RMManager' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.rm.RMManager'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.rm.policy.RMPolicyInterceptorProvider'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.rm.RMAssertionBuilder'
+[DEBUG 11:08:48 AbstractApplicationContext] Publishing event in context [org.apache.cxf.bus.spring.BusApplicationContext@eb7859]: org.springframework.context.event.ContextRefreshedEvent[source=org.apache.cxf.bus.spring.BusApplicationContext@eb7859: display name [org.apache.cxf.bus.spring.BusApplicationContext@eb7859]; startup date [Tue Aug 14 11:00:46 BRT 2012]; root of context hierarchy]
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.buslifecycle.BusLifeCycleManager'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:48 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.jaxrs.JAXRSBindingFactory'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.jaxrs.JAXRSBindingFactory'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.jaxrs.JAXRSBindingFactory' to allow for resolving potential circular references
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 11:08:48 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.jaxrs.JAXRSBindingFactory'
+[DEBUG 11:08:48 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.jaxrs.JAXRSBindingFactory'
+[INFO 11:08:48 EnactEngServer] Enactment Engine has started [http://localhost:9102/enactmentengine/]
+[INFO 11:08:06 EnactEngImpl] Starting enactment; chorId= 6
+[INFO 11:08:06 EnactEngImpl] Starting enactment; chorId= 5
+[INFO 11:08:06 EnactEngImpl] Starting enactment; chorId= 4
+[INFO 11:08:06 EnactEngImpl] Starting enactment; chorId= 9
+[INFO 11:08:06 EnactEngImpl] Starting enactment; chorId= 3
+[INFO 11:08:06 EnactEngImpl] Starting enactment; chorId= 10
+[INFO 11:08:06 EnactEngImpl] Starting enactment; chorId= 8
+[INFO 11:08:06 Deployer] Deploying services
+[DEBUG 11:08:06 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar, port=1234, name=airline]
+[INFO 11:08:06 Deployer] Deploying services
+[DEBUG 11:08:06 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar, port=1234, name=airline]
+[INFO 11:08:06 Deployer] Deploying services
+[DEBUG 11:08:06 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar, port=1234, name=airline]
+[INFO 11:08:06 Deployer] Deploying services
+[DEBUG 11:08:06 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar, port=1234, name=airline]
+[INFO 11:08:06 Deployer] Deploying services
+[DEBUG 11:08:06 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar, port=1234, name=airline]
+[INFO 11:08:06 Deployer] Deploying services
+[DEBUG 11:08:06 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar, port=1234, name=airline]
+[INFO 11:08:06 Deployer] Deploying services
+[DEBUG 11:08:06 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar, port=1234, name=airline]
+[INFO 11:08:06 EnactEngImpl] Starting enactment; chorId= 2
+[INFO 11:08:06 Deployer] Deploying services
+[DEBUG 11:08:06 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar, port=1234, name=airline]
+[INFO 11:08:06 EnactEngImpl] Starting enactment; chorId= 7
+[INFO 11:08:06 Deployer] Deploying services
+[DEBUG 11:08:06 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar, port=1234, name=airline]
+[INFO 11:08:06 EnactEngImpl] Starting enactment; chorId= 1
+[INFO 11:08:06 Deployer] Deploying services
+[DEBUG 11:08:06 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar, port=1234, name=airline]
+[ERROR 11:08:07 Deployer] airline deploy has failed
+[DEBUG 11:08:07 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar, port=1235, name=travelagency]
+[ERROR 11:08:07 Deployer] airline deploy has failed
+[DEBUG 11:08:07 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar, port=1235, name=travelagency]
+[DEBUG 11:08:17 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar, port=1235, name=travelagency]
+[INFO 11:08:18 Deployer] Nodes are configured to receive services
+[DEBUG 11:08:19 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar, port=1235, name=travelagency]
+[DEBUG 11:08:20 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar, port=1235, name=travelagency]
+[DEBUG 11:08:09 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar, port=1235, name=travelagency]
+[DEBUG 11:08:24 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar, port=1235, name=travelagency]
+[DEBUG 11:08:05 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar, port=1235, name=travelagency]
+[INFO 11:08:11 Deployer] Nodes are configured to receive services
+[DEBUG 11:08:17 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar, port=1235, name=travelagency]
+[DEBUG 11:08:17 Deployer] Requesting deploy of ServiceSpec [type=JAR, codeUri=http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar, port=1235, name=travelagency]
+[ERROR 11:08:26 Deployer] Bad response from /nodes/us-east-1/i-47f1943c/upgrade; maybe some service is not deployed
+[INFO 11:08:26 Deployer] Deployement finished
+[INFO 11:08:26 ContextCaster] Passing context to deployed services
+[INFO 11:08:18 Deployer] Nodes are configured to receive services
+[INFO 11:08:18 Deployer] Nodes are configured to receive services
+[INFO 11:08:19 Deployer] Nodes are configured to receive services
+[INFO 11:08:20 Deployer] Nodes are configured to receive services
+[INFO 11:08:20 Deployer] Nodes are configured to receive services
+[INFO 11:08:21 Deployer] Nodes are configured to receive services
+[INFO 11:08:22 Deployer] Nodes are configured to receive services
+[INFO 11:08:22 Deployer] Nodes are configured to receive services
+[INFO 11:08:49 Deployer] Deployement finished
+[INFO 11:08:49 ContextCaster] Passing context to deployed services
+[INFO 11:08:29 Deployer] Deployement finished
+[INFO 11:08:29 ContextCaster] Passing context to deployed services
+[DEBUG 11:08:29 HttpClient] Java version: 1.6.0_24
+[DEBUG 11:08:29 HttpClient] Java vendor: Sun Microsystems Inc.
+[DEBUG 11:08:29 HttpClient] Java class path: /home/leonardo/workspace/choreos_middleware/EnactmentEngine/target/test-classes:/home/leonardo/workspace/choreos_middleware/EnactmentEngine/target/classes:/home/leonardo/.m2/repository/javax/activation/activation/1.1/activation-1.1.jar:/home/leonardo/.m2/repository/javax/inject/javax.inject/1/javax.inject-1.jar:/home/leonardo/.m2/repository/javax/xml/bind/jaxb-api/2.1/jaxb-api-2.1.jar:/home/leonardo/.m2/repository/javax/jms/jms/1.1/jms-1.1.jar:/home/leonardo/.m2/repository/javax/annotation/jsr250-api/1.0/jsr250-api-1.0.jar:/home/leonardo/.m2/repository/javax/ws/rs/jsr311-api/1.0/jsr311-api-1.0.jar:/home/leonardo/.m2/repository/javax/mail/mail/1.4/mail-1.4.jar:/home/leonardo/.m2/repository/javax/xml/soap/saaj-api/1.3/saaj-api-1.3.jar:/home/leonardo/.m2/repository/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar:/home/leonardo/.m2/repository/org/apache/abdera/abdera-core/0.4.0-incubating/abdera-core-0.4.0-incubating.jar:/home/leonardo/.m2/repository/org/apache/abdera/abdera-extensions-json/0.4.0-incubating/abdera-extensions-json-0.4.0-incubating.jar:/home/leonardo/.m2/repository/org/apache/abdera/abdera-extensions-main/0.4.0-incubating/abdera-extensions-main-0.4.0-incubating.jar:/home/leonardo/.m2/repository/org/apache/abdera/abdera-i18n/0.4.0-incubating/abdera-i18n-0.4.0-incubating.jar:/home/leonardo/.m2/repository/org/apache/abdera/abdera-parser/0.4.0-incubating/abdera-parser-0.4.0-incubating.jar:/home/leonardo/.m2/repository/org/apache/ant/ant/1.7.0/ant-1.7.0.jar:/home/leonardo/.m2/repository/org/apache/ant/ant-apache-log4j/1.8.2/ant-apache-log4j-1.8.2.jar:/home/leonardo/.m2/repository/org/apache/ant/ant-launcher/1.7.0/ant-launcher-1.7.0.jar:/home/leonardo/.m2/repository/antlr/antlr/2.7.7/antlr-2.7.7.jar:/home/leonardo/.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0.jar:/home/leonardo/.m2/repository/asm/asm/2.2.3/asm-2.2.3.jar:/home/leonardo/.m2/repository/asm/asm-analysis/3.2/asm-analysis-3.2.jar:/home/leonardo/.m2/repository/asm/asm-commons/3.2/asm-commons-3.2.jar:/home/leonardo/.m2/repository/asm/asm-tree/3.2/asm-tree-3.2.jar:/home/leonardo/.m2/repository/asm/asm-util/3.2/asm-util-3.2.jar:/home/leonardo/.m2/repository/org/jclouds/api/atmos/1.1.1/atmos-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/common/aws-common/1.1.1/aws-common-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/aws-ec2/1.1.1/aws-ec2-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/aws-s3/1.1.1/aws-s3-1.1.1.jar:/home/leonardo/.m2/repository/org/apache/ws/commons/axiom/axiom-api/1.2.7/axiom-api-1.2.7.jar:/home/leonardo/.m2/repository/org/apache/ws/commons/axiom/axiom-impl/1.2.7/axiom-impl-1.2.7.jar:/home/leonardo/.m2/repository/org/jclouds/common/azure-common/1.1.1/azure-common-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/azureblob/1.1.1/azureblob-1.1.1.jar:/home/leonardo/.m2/repository/org/bouncycastle/bcprov-jdk15/1.44/bcprov-jdk15-1.44.jar:/home/leonardo/.m2/repository/org/jclouds/provider/bluelock-vcloud-vcenterprise/1.1.1/bluelock-vcloud-vcenterprise-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/bluelock-vcloud-zone01/1.1.1/bluelock-vcloud-zone01-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/api/byon/1.1.1/byon-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/api/cloudfiles/1.1.1/cloudfiles-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/cloudfiles-uk/1.1.1/cloudfiles-uk-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/cloudfiles-us/1.1.1/cloudfiles-us-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/cloudloadbalancers-us/1.1.1/cloudloadbalancers-us-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/cloudonestorage/1.1.1/cloudonestorage-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/api/cloudservers/1.1.1/cloudservers-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/cloudservers-uk/1.1.1/cloudservers-uk-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/cloudservers-us/1.1.1/cloudservers-us-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/cloudsigma-zrh/1.1.1/cloudsigma-zrh-1.1.1.jar:/home/leonardo/.m2/repository/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar:/home/leonardo/.m2/repository/commons-cli/commons-cli/1.2/commons-cli-1.2.jar:/home/leonardo/.m2/repository/commons-codec/commons-codec/1.4/commons-codec-1.4.jar:/home/leonardo/.m2/repository/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar:/home/leonardo/.m2/repository/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar:/home/leonardo/.m2/repository/commons-io/commons-io/2.0.1/commons-io-2.0.1.jar:/home/leonardo/.m2/repository/org/apache/commons/commons-io/1.3.2/commons-io-1.3.2.jar:/home/leonardo/.m2/repository/commons-lang/commons-lang/2.4/commons-lang-2.4.jar:/home/leonardo/.m2/repository/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar:/home/leonardo/.m2/repository/commons-pool/commons-pool/1.5.2/commons-pool-1.5.2.jar:/home/leonardo/.m2/repository/org/apache/cxf/cxf-bundle/2.2.5/cxf-bundle-2.2.5.jar:/home/leonardo/.m2/repository/org/jclouds/api/deltacloud/1.1.1/deltacloud-1.1.1.jar:/home/leonardo/.m2/repository/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar:/home/leonardo/.m2/repository/org/jclouds/api/ec2/1.1.1/ec2-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/elastichosts-lon-b/1.1.1/elastichosts-lon-b-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/elastichosts-lon-p/1.1.1/elastichosts-lon-p-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/elastichosts-sat-p/1.1.1/elastichosts-sat-p-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/api/elasticstack/1.1.1/elasticstack-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/api/eucalyptus/1.1.1/eucalyptus-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/eucalyptus-partnercloud-ec2/1.1.1/eucalyptus-partnercloud-ec2-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/eucalyptus-partnercloud-s3/1.1.1/eucalyptus-partnercloud-s3-1.1.1.jar:/home/leonardo/.m2/repository/net/sf/ezmorph/ezmorph/1.0.6/ezmorph-1.0.6.jar:/home/leonardo/.m2/repository/org/jclouds/api/filesystem/1.1.1/filesystem-1.1.1.jar:/home/leonardo/.m2/repository/org/apache/geronimo/specs/geronimo-activation_1.1_spec/1.0.2/geronimo-activation_1.1_spec-1.0.2.jar:/home/leonardo/.m2/repository/org/apache/geronimo/specs/geronimo-annotation_1.0_spec/1.1.1/geronimo-annotation_1.0_spec-1.1.1.jar:/home/leonardo/.m2/repository/org/apache/geronimo/specs/geronimo-javamail_1.4_spec/1.6/geronimo-javamail_1.4_spec-1.6.jar:/home/leonardo/.m2/repository/org/apache/geronimo/specs/geronimo-jaxws_2.1_spec/1.0/geronimo-jaxws_2.1_spec-1.0.jar:/home/leonardo/.m2/repository/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1.1/geronimo-jms_1.1_spec-1.1.1.jar:/home/leonardo/.m2/repository/org/apache/geronimo/specs/geronimo-servlet_2.5_spec/1.2/geronimo-servlet_2.5_spec-1.2.jar:/home/leonardo/.m2/repository/org/apache/geronimo/specs/geronimo-stax-api_1.0_spec/1.0.1/geronimo-stax-api_1.0_spec-1.0.1.jar:/home/leonardo/.m2/repository/org/apache/geronimo/specs/geronimo-ws-metadata_2.0_spec/1.1.2/geronimo-ws-metadata_2.0_spec-1.1.2.jar:/home/leonardo/.m2/repository/org/jclouds/provider/gogrid/1.1.1/gogrid-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/greenhousedata-element-vcloud/1.1.1/greenhousedata-element-vcloud-1.1.1.jar:/home/leonardo/.m2/repository/org/codehaus/groovy/groovy/1.7.11/groovy-1.7.11.jar:/home/leonardo/.m2/repository/groovy/groovy-all/1.1-rc-1/groovy-all-1.1-rc-1.jar:/home/leonardo/.m2/repository/com/google/code/gson/gson/1.7.1/gson-1.7.1.jar:/home/leonardo/.m2/repository/com/google/guava/guava/r09/guava-r09.jar:/home/leonardo/.m2/repository/com/google/inject/guice/3.0/guice-3.0.jar:/home/leonardo/.m2/repository/com/google/inject/extensions/guice-assistedinject/3.0/guice-assistedinject-3.0.jar:/home/leonardo/.m2/repository/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar:/home/leonardo/.m2/repository/org/hamcrest/hamcrest-library/1.1/hamcrest-library-1.1.jar:/home/leonardo/.m2/repository/org/codehaus/groovy/modules/http-builder/http-builder/0.5.1/http-builder-0.5.1.jar:/home/leonardo/.m2/repository/org/apache/httpcomponents/httpclient/4.0.3/httpclient-4.0.3.jar:/home/leonardo/.m2/repository/org/apache/httpcomponents/httpcore/4.0.1/httpcore-4.0.1.jar:/home/leonardo/.m2/repository/com/ibm/icu/icu4j/2.6.1/icu4j-2.6.1.jar:/home/leonardo/.m2/repository/com/jamesmurty/utils/java-xmlbuilder/0.3/java-xmlbuilder-0.3.jar:/home/leonardo/.m2/repository/com/sun/xml/bind/jaxb-impl/2.1.12/jaxb-impl-2.1.12.jar:/home/leonardo/.m2/repository/com/sun/xml/bind/jaxb-xjc/2.1.12/jaxb-xjc-2.1.12.jar:/home/leonardo/.m2/repository/jaxen/jaxen/1.1/jaxen-1.1.jar:/home/leonardo/.m2/repository/org/jclouds/jclouds-all/1.1.1/jclouds-all-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/jclouds-allblobstore/1.1.1/jclouds-allblobstore-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/jclouds-allcompute/1.1.1/jclouds-allcompute-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/jclouds-allloadbalancer/1.1.1/jclouds-allloadbalancer-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/jclouds-blobstore/1.1.1/jclouds-blobstore-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/jclouds-compute/1.1.1/jclouds-compute-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/jclouds-core/1.1.1/jclouds-core-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/jclouds-loadbalancer/1.1.1/jclouds-loadbalancer-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/jclouds-scriptbuilder/1.1.1/jclouds-scriptbuilder-1.1.1.jar:/home/leonardo/.m2/repository/com/sun/jersey/jersey-core/1.6/jersey-core-1.6.jar:/home/leonardo/.m2/repository/org/codehaus/jettison/jettison/1.1/jettison-1.1.jar:/home/leonardo/.m2/repository/org/mortbay/jetty/jetty/6.1.21/jetty-6.1.21.jar:/home/leonardo/.m2/repository/org/mortbay/jetty/jetty-util/6.1.21/jetty-util-6.1.21.jar:/home/leonardo/.m2/repository/jline/jline/0.9.91/jline-0.9.91.jar:/home/leonardo/.m2/repository/org/codehaus/jra/jra/1.0-alpha-4/jra-1.0-alpha-4.jar:/home/leonardo/.m2/repository/rhino/js/1.7R1/js-1.7R1.jar:/home/leonardo/.m2/repository/com/jcraft/jsch/0.1.44-1/jsch-0.1.44-1.jar:/home/leonardo/.m2/repository/net/sf/json-lib/json-lib/2.3/json-lib-2.3-jdk15.jar:/home/leonardo/.m2/repository/com/google/code/findbugs/jsr305/1.3.9/jsr305-1.3.9.jar:/home/leonardo/.m2/repository/junit/junit/4.8.2/junit-4.8.2.jar:/home/leonardo/.m2/repository/log4j/log4j/1.2.17/log4j-1.2.17.jar:/home/leonardo/.m2/repository/org/ow2/choreos/MiddlewareCommons/0.0.1-SNAPSHOT/MiddlewareCommons-0.0.1-SNAPSHOT.jar:/home/leonardo/.m2/repository/org/mockito/mockito-all/1.8.5/mockito-all-1.8.5.jar:/home/leonardo/.m2/repository/eu/choreos/vvws/musicstore/1.0-SNAPSHOT/musicstore-1.0-SNAPSHOT.jar:/home/leonardo/.m2/repository/org/apache/neethi/neethi/2.0.4/neethi-2.0.4.jar:/home/leonardo/.m2/repository/net/sourceforge/nekohtml/nekohtml/1.9.9/nekohtml-1.9.9.jar:/home/leonardo/.m2/repository/org/jclouds/provider/ninefold-storage/1.1.1/ninefold-storage-1.1.1.jar:/home/leonardo/.m2/repository/ca/juliusdavies/not-yet-commons-ssl/0.3.11/not-yet-commons-ssl-0.3.11.jar:/home/leonardo/.m2/repository/org/jclouds/api/nova/1.1.1/nova-1.1.1.jar:/home/leonardo/.m2/repository/net/oauth/core/oauth/20100527/oauth-20100527.jar:/home/leonardo/.m2/repository/org/jclouds/provider/openhosting-east1/1.1.1/openhosting-east1-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/common/openstack-common/1.1.1/openstack-common-1.1.1.jar:/home/leonardo/.m2/repository/oro/oro/2.0.8/oro-2.0.8.jar:/home/leonardo/.m2/repository/eu/choreos/rehearsal/0.13/rehearsal-0.13.jar:/home/leonardo/.m2/repository/com/jayway/restassured/rest-assured/1.2.2/rest-assured-1.2.2.jar:/home/leonardo/.m2/repository/org/jclouds/provider/rimuhosting/1.1.1/rimuhosting-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/api/s3/1.1.1/s3-1.1.1.jar:/home/leonardo/.m2/repository/com/sun/xml/messaging/saaj/saaj-impl/1.3.2/saaj-impl-1.3.2.jar:/home/leonardo/.m2/repository/org/jclouds/provider/savvis-symphonyvpdc/1.1.1/savvis-symphonyvpdc-1.1.1.jar:/home/leonardo/.m2/repository/xalan/serializer/2.7.1/serializer-2.7.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/serverlove-z1-man/1.1.1/serverlove-z1-man-1.1.1.jar:/home/leonardo/.m2/repository/org/ow2/choreos/ServiceDeployer/0.0.1-SNAPSHOT/ServiceDeployer-0.0.1-SNAPSHOT.jar:/home/leonardo/.m2/repository/org/jclouds/provider/skalicloud-sdg-my/1.1.1/skalicloud-sdg-my-1.1.1.jar:/home/leonardo/.m2/repository/org/slf4j/slf4j-api/1.5.8/slf4j-api-1.5.8.jar:/home/leonardo/.m2/repository/org/slf4j/slf4j-jdk14/1.5.8/slf4j-jdk14-1.5.8.jar:/home/leonardo/.m2/repository/org/jclouds/provider/slicehost/1.1.1/slicehost-1.1.1.jar:/home/leonardo/.m2/repository/org/yaml/snakeyaml/1.10-SNAPSHOT/snakeyaml-1.10-SNAPSHOT.jar:/home/leonardo/.m2/repository/eviware/soap-xmlbeans/1.2/soap-xmlbeans-1.2.jar:/home/leonardo/.m2/repository/eviware/soapui/4.0.1/soapui-4.0.1.jar:/home/leonardo/.m2/repository/eviware/soapui-xmlbeans/4.0.0/soapui-xmlbeans-4.0.0.jar:/home/leonardo/.m2/repository/org/springframework/spring-beans/2.5.5/spring-beans-2.5.5.jar:/home/leonardo/.m2/repository/org/springframework/spring-context/2.5.5/spring-context-2.5.5.jar:/home/leonardo/.m2/repository/org/springframework/spring-context-support/2.5.5/spring-context-support-2.5.5.jar:/home/leonardo/.m2/repository/org/springframework/spring-core/2.5.5/spring-core-2.5.5.jar:/home/leonardo/.m2/repository/org/springframework/spring-jms/2.5.5/spring-jms-2.5.5.jar:/home/leonardo/.m2/repository/org/springframework/spring-tx/2.5.5/spring-tx-2.5.5.jar:/home/leonardo/.m2/repository/org/springframework/spring-web/2.5.5/spring-web-2.5.5.jar:/home/leonardo/.m2/repository/org/jclouds/provider/stratogen-vcloud-mycloud/1.1.1/stratogen-vcloud-mycloud-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/api/swift/1.1.1/swift-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/synaptic-storage/1.1.1/synaptic-storage-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/common/trmk-common/1.1.1/trmk-common-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/trmk-ecloud/1.1.1/trmk-ecloud-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/provider/trmk-vcloudexpress/1.1.1/trmk-vcloudexpress-1.1.1.jar:/home/leonardo/.m2/repository/org/jclouds/api/vcloud/1.1.1/vcloud-1.1.1.jar:/home/leonardo/.m2/repository/org/apache/velocity/velocity/1.6.2/velocity-1.6.2.jar:/home/leonardo/.m2/repository/org/jclouds/api/walrus/1.1.1/walrus-1.1.1.jar:/home/leonardo/.m2/repository/wsdl4j/wsdl4j/1.6.2/wsdl4j-1.6.2.jar:/home/leonardo/.m2/repository/org/apache/ws/security/wss4j/1.5.8/wss4j-1.5.8.jar:/home/leonardo/.m2/repository/org/codehaus/woodstox/wstx-asl/3.2.9/wstx-asl-3.2.9.jar:/home/leonardo/.m2/repository/xalan/xalan/2.7.1/xalan-2.7.1.jar:/home/leonardo/.m2/repository/xmlbeans/xbean/fixed-2.4.0/xbean-fixed-2.4.0.jar:/home/leonardo/.m2/repository/xmlbeans/xbean_xpath/2.4.0/xbean_xpath-2.4.0.jar:/home/leonardo/.m2/repository/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar:/home/leonardo/.m2/repository/xml-apis/xml-apis/1.3.02/xml-apis-1.3.02.jar:/home/leonardo/.m2/repository/xml-resolver/xml-resolver/1.2/xml-resolver-1.2.jar:/home/leonardo/.m2/repository/org/apache/xmlbeans/xmlbeans/2.4.0/xmlbeans-2.4.0.jar:/home/leonardo/.m2/repository/xerces/xmlParserAPIs/2.6.2/xmlParserAPIs-2.6.2.jar:/home/leonardo/.m2/repository/xmlbeans/xmlpublic/2.4.0/xmlpublic-2.4.0.jar:/home/leonardo/.m2/repository/org/apache/ws/commons/schema/XmlSchema/1.4.5/XmlSchema-1.4.5.jar:/home/leonardo/.m2/repository/org/apache/santuario/xmlsec/1.4.3/xmlsec-1.4.3.jar:/home/leonardo/.m2/repository/xom/xom/1.0/xom-1.0.jar
+[DEBUG 11:08:29 HttpClient] Operating system name: Linux
+[DEBUG 11:08:29 HttpClient] Operating system architecture: i386
+[DEBUG 11:08:29 HttpClient] Operating system version: 3.2.0-29-generic-pae
+[DEBUG 11:08:29 HttpClient] SUN 1.6: SUN (DSA key/parameter generation; DSA signing; SHA-1, MD5 digests; SecureRandom; X.509 certificates; JKS keystore; PKIX CertPathValidator; PKIX CertPathBuilder; LDAP, Collection CertStores, JavaPolicy Policy; JavaLoginConfig Configuration)
+[DEBUG 11:08:29 HttpClient] SunRsaSign 1.7: Sun RSA signature provider
+[DEBUG 11:08:29 HttpClient] SunJSSE 1.6: Sun JSSE provider(PKCS12, SunX509 key/trust factories, SSLv3, TLSv1)
+[DEBUG 11:08:29 HttpClient] SunJCE 1.7: SunJCE Provider (implements RSA, DES, Triple DES, AES, Blowfish, ARCFOUR, RC2, PBE, Diffie-Hellman, HMAC)
+[DEBUG 11:08:29 HttpClient] SunJGSS 1.0: Sun (Kerberos v5, SPNEGO)
+[DEBUG 11:08:29 HttpClient] SunSASL 1.5: Sun SASL provider(implements client mechanisms for: DIGEST-MD5, GSSAPI, EXTERNAL, PLAIN, CRAM-MD5; server mechanisms for: DIGEST-MD5, GSSAPI, CRAM-MD5)
+[DEBUG 11:08:29 HttpClient] XMLDSig 1.0: XMLDSig (DOM XMLSignatureFactory; DOM KeyInfoFactory)
+[DEBUG 11:08:29 HttpClient] SunPCSC 1.6: Sun PC/SC provider
+[DEBUG 11:08:29 HttpClient] SunPKCS11-NSS 1.7: SunPKCS11-NSS using library null
+[DEBUG 11:08:29 DefaultHttpParams] Set parameter http.useragent = Jakarta Commons-HttpClient/3.1
+[DEBUG 11:08:29 DefaultHttpParams] Set parameter http.protocol.version = HTTP/1.1
+[DEBUG 11:08:29 DefaultHttpParams] Set parameter http.connection-manager.class = class org.apache.commons.httpclient.SimpleHttpConnectionManager
+[DEBUG 11:08:29 DefaultHttpParams] Set parameter http.protocol.cookie-policy = default
+[DEBUG 11:08:29 DefaultHttpParams] Set parameter http.protocol.element-charset = US-ASCII
+[DEBUG 11:08:29 DefaultHttpParams] Set parameter http.protocol.content-charset = ISO-8859-1
+[DEBUG 11:08:29 DefaultHttpParams] Set parameter http.method.retry-handler = org.apache.commons.httpclient.DefaultHttpMethodRetryHandler@1d1cdf7
+[DEBUG 11:08:29 DefaultHttpParams] Set parameter http.dateparser.patterns = [EEE, dd MMM yyyy HH:mm:ss zzz, EEEE, dd-MMM-yy HH:mm:ss zzz, EEE MMM d HH:mm:ss yyyy, EEE, dd-MMM-yyyy HH:mm:ss z, EEE, dd-MMM-yyyy HH-mm-ss z, EEE, dd MMM yy HH:mm:ss z, EEE dd-MMM-yyyy HH:mm:ss z, EEE dd MMM yyyy HH:mm:ss z, EEE dd-MMM-yyyy HH-mm-ss z, EEE dd-MMM-yy HH:mm:ss z, EEE dd MMM yy HH:mm:ss z, EEE,dd-MMM-yy HH:mm:ss z, EEE,dd-MMM-yyyy HH:mm:ss z, EEE, dd-MM-yyyy HH:mm:ss z]
+[DEBUG 11:08:29 DefaultHttpParams] Set parameter http.method.retry-handler = org.apache.commons.httpclient.DefaultHttpMethodRetryHandler@1c66ec7
+[DEBUG 11:08:29 HttpConnection] Open connection to 50.16.109.138:1235
+[DEBUG 11:08:30 Wire] >> "GET /travelagency/?wsdl HTTP/1.1[\r][\n]"
+[DEBUG 11:08:30 HttpMethodBase] Adding Host request header
+[DEBUG 11:08:30 Wire] >> "User-Agent: Jakarta Commons-HttpClient/3.1[\r][\n]"
+[DEBUG 11:08:30 Wire] >> "Host: 50.16.109.138:1235[\r][\n]"
+[DEBUG 11:08:30 Wire] >> "[\r][\n]"
+[DEBUG 11:08:30 Wire] << "HTTP/1.1 200 OK[\r][\n]"
+[DEBUG 11:08:30 Wire] << "HTTP/1.1 200 OK[\r][\n]"
+[DEBUG 11:08:30 Wire] << "Transfer-encoding: chunked[\r][\n]"
+[DEBUG 11:08:30 Wire] << "Content-type: text/xml;charset="utf-8"[\r][\n]"
+[DEBUG 11:08:30 Wire] << "Date: Tue, 14 Aug 2012 14:14:29 GMT[\r][\n]"
+[DEBUG 11:08:30 Wire] << "[\r][\n]"
+[DEBUG 11:08:30 HttpConnection] Input data available
+[DEBUG 11:08:30 Wire] << "8"
+[DEBUG 11:08:30 Wire] << "e"
+[DEBUG 11:08:30 Wire] << "d"
+[DEBUG 11:08:30 Wire] << "[\r]"
+[DEBUG 11:08:30 Wire] << "[\n]"
+[DEBUG 11:08:30 Wire] << "<?xml version="1.0" encoding="UTF-8"?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.6. --><!-- Generated by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.6. --><definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://choreos.ow2.org/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://choreos.ow2.org/" name="TravelAgencyServiceService">[\n]"
+[DEBUG 11:08:30 Wire] << "<types>[\n]"
+[DEBUG 11:08:30 Wire] << "<xsd:schema>[\n]"
+[DEBUG 11:08:30 Wire] << "<xsd:import namespace="http://choreos.ow2.org/" schemaLocation="http://50.16.109.138:1235/travelagency/?xsd=1"></xsd:import>[\n]"
+[DEBUG 11:08:30 Wire] << "</xsd:schema>[\n]"
+[DEBUG 11:08:30 Wire] << "</types>[\n]"
+[DEBUG 11:08:30 Wire] << "<message name="buyTrip">[\n]"
+[DEBUG 11:08:30 Wire] << "<part name="parameters" element="tns:buyTrip"></part>[\n]"
+[DEBUG 11:08:30 Wire] << "</message>[\n]"
+[DEBUG 11:08:30 Wire] << "<message name="buyTripResponse">[\n]"
+[DEBUG 11:08:30 Wire] << "<part name="parameters" element="tns:buyTripResponse"></part>[\n]"
+[DEBUG 11:08:30 Wire] << "</message>[\n]"
+[DEBUG 11:08:30 Wire] << "<message name="setInvocationAddress">[\n]"
+[DEBUG 11:08:30 Wire] << "<part name="parameters" element="tns:setInvocationAddress"></part>[\n]"
+[DEBUG 11:08:30 Wire] << "</message>[\n]"
+[DEBUG 11:08:30 Wire] << "<message name="setInvocationAddressResponse">[\n]"
+[DEBUG 11:08:30 Wire] << "<part "
+[DEBUG 11:08:30 Wire] << "name="parameters" element="tns:setInvocationAddressResponse"></part>[\n]"
+[DEBUG 11:08:30 Wire] << "</message>[\n]"
+[DEBUG 11:08:30 Wire] << "<portType name="TravelAgencyService">[\n]"
+[DEBUG 11:08:30 Wire] << "<operation name="buyTrip">[\n]"
+[DEBUG 11:08:30 Wire] << "<input message="tns:buyTrip"></input>[\n]"
+[DEBUG 11:08:30 Wire] << "<output message="tns:buyTripResponse"></output>[\n]"
+[DEBUG 11:08:30 Wire] << "</operation>[\n]"
+[DEBUG 11:08:30 Wire] << "<operation name="setInvocationAddress">[\n]"
+[DEBUG 11:08:30 Wire] << "<input message="tns:setInvocationAddress"></input>[\n]"
+[DEBUG 11:08:30 Wire] << "<output message="tns:setInvocationAddressResponse"></output>[\n]"
+[DEBUG 11:08:30 Wire] << "</operation>[\n]"
+[DEBUG 11:08:30 Wire] << "</portType"
+[DEBUG 11:08:30 Wire] << ">[\n]"
+[DEBUG 11:08:30 Wire] << "<binding name="TravelAgencyServicePortBinding" type="tns:TravelAgencyService">[\n]"
+[DEBUG 11:08:30 Wire] << "<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"></soap:binding>[\n]"
+[DEBUG 11:08:30 Wire] << "<operation name="buyTrip">[\n]"
+[DEBUG 11:08:30 Wire] << "<soap:operation soapAction=""></soap:operation>[\n]"
+[DEBUG 11:08:30 Wire] << "<input>[\n]"
+[DEBUG 11:08:30 Wire] << "<soap:body use="literal"></soap:body>[\n]"
+[DEBUG 11:08:30 Wire] << "</input>[\n]"
+[DEBUG 11:08:30 Wire] << "<output>[\n]"
+[DEBUG 11:08:30 Wire] << "<soap:body use="literal"></soap:body>[\n]"
+[DEBUG 11:08:30 Wire] << "</output>[\n]"
+[DEBUG 11:08:30 Wire] << "</operation>[\n]"
+[DEBUG 11:08:30 Wire] << "<operation name="setInvocationAddress">[\n]"
+[DEBUG 11:08:30 Wire] << "<soap:operation soapAction=""></soap:operation>[\n]"
+[DEBUG 11:08:30 Wire] << "<input>[\n]"
+[DEBUG 11:08:30 Wire] << "<soap:body use="literal"></soap:body>[\n]"
+[DEBUG 11:08:30 Wire] << "</input>[\n]"
+[DEBUG 11:08:30 Wire] << "<output>[\n]"
+[DEBUG 11:08:30 Wire] << "<soap:body use="literal"></soap:body>[\n]"
+[DEBUG 11:08:30 Wire] << "</output>[\n]"
+[DEBUG 11:08:30 Wire] << "</operation>[\n]"
+[DEBUG 11:08:30 Wire] << "</binding>[\n]"
+[DEBUG 11:08:30 Wire] << "<service name="TravelAgencyServiceService">[\n]"
+[DEBUG 11:08:30 Wire] << "<port name="TravelAgencyServicePort" binding="tns:TravelAgencyServicePortBinding">[\n]"
+[DEBUG 11:08:30 Wire] << "<soap:address location="http://50.16.109.138:1235/travelagency/"></soap:address>[\n]"
+[DEBUG 11:08:30 Wire] << "</port>[\n]"
+[DEBUG 11:08:30 Wire] << "</service>[\n]"
+[DEBUG 11:08:30 Wire] << "</definitions>"
+[DEBUG 11:08:30 Wire] << "[\r]"
+[DEBUG 11:08:30 Wire] << "[\n]"
+[DEBUG 11:08:30 Wire] << "0"
+[DEBUG 11:08:30 Wire] << "[\r]"
+[DEBUG 11:08:30 Wire] << "[\n]"
+[DEBUG 11:08:30 Wire] << "[\r]"
+[DEBUG 11:08:30 Wire] << "[\n]"
+[DEBUG 11:08:30 Wire] << "[\r][\n]"
+[DEBUG 11:08:30 HttpMethodBase] Resorting to protocol version default close connection policy
+[DEBUG 11:08:30 HttpMethodBase] Should NOT close connection, using HTTP/1.1
+[DEBUG 11:08:30 HttpConnection] Releasing connection back to connection manager.

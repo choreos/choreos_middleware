@@ -18,8 +18,20 @@ Enactment: 976290ms
 Fail at enactment: 1
 Working: 6
 
+10_02
+Bootstrap: 292801ms
+Enactment: 660664ms
+Fail at enactment: 2
+Working: 6
+
 15_01
 Bootstrap: 418234ms
 Enactment: 1050993ms
 Fail at enactment: 3
 Working: 9
+
+15_02
+Bootstrap: 460993ms 
+Enactment: 1693768ms
+Fail at enactment: 3
+Working: 7
