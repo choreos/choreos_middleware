@@ -44,9 +44,12 @@ public class Deployer {
 		}
 		logger.info("Nodes are configured to receive services");
 		
-		boolean ok = npm.upgradeNodes();
-		if (!ok) {
-			logger.error("Bad response from /nodes/upgrade; maybe some service is not deployed");
+		for (Service svc: deployedServices.values()) {
+			String nodeId = svc.getNodeId();
+			boolean ok = npm.upgradeNode(nodeId);
+			if (!ok) {
+				logger.error("Bad response from /nodes/" + nodeId + "/upgrade; maybe some service is not deployed");
+			}
 		}
 		logger.info("Deployement finished");
 

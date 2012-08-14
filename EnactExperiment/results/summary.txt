@@ -1,0 +1,25 @@
+SUMMARY
+
+05_01
+Bootstrap: 9:15:31 - 9:11:26 = 245s
+Enactment: 824905ms
+Fail at enactment: 1
+Working: 3
+
+10_01
+Bootstrap: 11:51:4 - 11:43:43 = 441s
+Enactment: 824905ms
+Fail at enactment: 3
+Working: 7
+
+10_02
+Bootstrap: 0:43:3 - 0:35:36 = 447s
+Enactment: 976290ms
+Fail at enactment: 1
+Working: 6
+
+15_01
+Bootstrap: 418234ms
+Enactment: 1050993ms
+Fail at enactment: 3
+Working: 9

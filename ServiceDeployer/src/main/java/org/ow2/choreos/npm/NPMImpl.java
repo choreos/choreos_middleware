@@ -132,4 +132,24 @@ public class NPMImpl implements NodePoolManager {
 			}
         }
     }
+
+	@Override
+	public boolean upgradeNode(String nodeId) {
+
+		Node node;
+		try {
+			node = cloudProvider.getNode(nodeId);
+		} catch (NodeNotFoundException e1) {
+			logger.error("Node " + nodeId + " not found");
+			return false;
+		}
+		
+		try {
+			configurationManager.updateNodeConfiguration(node);
+			return true;
+		} catch (JSchException e) {
+            logger.error("Could not connect to node " + node, e);
+            return false;
+		}
+	}
 }

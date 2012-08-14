@@ -97,7 +97,9 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 		String destPath = DEST_DIR.getAbsolutePath() + "/service" + service.getId();
 		File destFolder = new File(destPath);
 		
-		FileUtils.copyDirectory(srcFolder, destFolder);
+		synchronized(RecipeBuilderImpl.class) {
+			FileUtils.copyDirectory(srcFolder, destFolder);
+		}
 
 		return destFolder.getAbsolutePath();
 	}

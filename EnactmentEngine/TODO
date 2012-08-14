@@ -1,5 +1,12 @@
 EnactmentEngine TODO list
 
+Performance bottlenecks
+-----------------------
+* (LOW) Replace WSClient (concurrency problems) by javax (as in futuremarket project).
+
+Others
+------
+
 * EnactmentEngine tests should start NPMServer and ServiceDeployerServer,
 but this step is not working. Now, we have to start the servers before run tests.
 The problem is the way like the RecipeBuilder access the resources.
@@ -16,11 +23,7 @@ they must be deployed on the same node.
 
 * Registry should use a database instead a static map.
 
-* If multiple Choreographies are enacted at the same time, invocations to nodepoolmanager/nodes/upgrade will overlap.
-Two possible solutions:
-#1 EE controls the right time to make a single invocation
-#2 NPM must provide /nodes/{id}/upgrade, so EE can make more selective invocations
-But, if a node receive services from different choreographies, the second options is not going to work properly.
+* Choreography should contain a ChorSpec, and not TO BE a ChorSpec (inherence)
 
 *** DONE ***
 
@@ -30,4 +33,7 @@ But, if a node receive services from different choreographies, the second option
 In this way, the ChorResource class would be more concerned with REST, and know less about the deatils of operation execution
 
 * Model improvement: ChorSpec has ChorServices; Choreography extends ChorSpec and has attributes id and deployed Services.
+
+* Performance bottleneck (HIGH): Update only nodes from a specific choreography.
+Now we have POST nodepoolmanager/nodes/{id}/upgrade operation
 

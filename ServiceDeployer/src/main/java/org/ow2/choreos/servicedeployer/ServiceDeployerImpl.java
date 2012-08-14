@@ -52,6 +52,7 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 			return null;
 		service.setHost(hostname);
 		service.setIp(ip);
+		service.setNodeId(node.getId());
 		registry.addService(service.getId(), service);
 		
 		return service;

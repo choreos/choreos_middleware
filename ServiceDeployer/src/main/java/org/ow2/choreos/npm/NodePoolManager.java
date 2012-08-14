@@ -41,7 +41,7 @@ public interface NodePoolManager {
 	public Node applyConfig(Config config);
 	
 	/**
-	 * Apply the configuration on selected nodes.
+	 * Apply configurations on the cloud nodes.
 	 * 
 	 * Such configurations are the ones requested through the <code>applyConfig</code> operation
 	 * 
@@ -49,4 +49,15 @@ public interface NodePoolManager {
 	 * or <code>false</code> if something went wrong
 	 */
 	public boolean upgradeNodes();
+	
+	/**
+	 * Apply configurations on selected node.
+	 * 
+	 * Such configurations are the ones requested through the <code>applyConfig</code> operation
+	 * 
+	 * @param nodeId the id of the node to be upgraded
+	 * @return <code>true</code> if everything it seems to be OK,
+	 * or <code>false</code> if something went wrong
+	 */
+	public boolean upgradeNode(String nodeId);
 }
