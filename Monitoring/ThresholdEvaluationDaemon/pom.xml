@@ -97,24 +97,38 @@
 	</dependencies>
 
 	<build>
+
+		<resources>
+
+			<resource>
+				<directory>src/main/resources/thresholds</directory>
+			</resource>
+			<resource>
+				<directory>src/test/resources/thresholds</directory>
+			</resource>
+			<resource>
+				<directory>src/main/resources/conf</directory>
+			</resource>
+
+		</resources>
 		<plugins>
+
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
-					<!-- Set the target configuration directory to be used in the bin scripts -->
-					<configurationDirectory>conf</configurationDirectory>
-					<!-- Copy the contents from "/src/main/config" to the target configuration 
-						directory in the assembled application -->
-					<copyConfigurationDirectory>true</copyConfigurationDirectory>
-					<!-- Include the target configuration directory in the beginning of 
-						the classpath declaration in the bin scripts -->
-					<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
 
+
+					<configurationDirectory>conf</configurationDirectory>
+					<copyConfigurationDirectory>true</copyConfigurationDirectory>
+					<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
 				</configuration>
 			</plugin>
+
+
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
@@ -137,11 +151,16 @@
 					</execution>
 				</executions>
 			</plugin>
+
+
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.3.2</version>
 			</plugin>
+
+
 		</plugins>
 		<defaultGoal>install</defaultGoal>
 	</build>

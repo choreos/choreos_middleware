@@ -15,7 +15,7 @@ public class Config {
 	private static final String[] files = {"small","medium","large","extralarge"};
 	
 	/* File name to file that contains threshold definitions */
-	private static String thresholdConfigFile ;
+	private static String thresholdConfigFile = null;
 	/* A map of threshold for this host: map<name_of_config, List<threshold>> */
 	private Map<String, List<AbstractThreshold>> thresholds ;
 	

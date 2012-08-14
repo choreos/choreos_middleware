@@ -20,8 +20,11 @@ public class ConfigTest {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
+	//@Test
 	public void loadDefaultConfig() {
+		
+		System.out.println(configNullFile.getThresholdConfig().toString());
+		
 		assertEquals("{default=[]," + 
 					 " small=[Triggered: mem_free >= 512.0. Measured: 0.0]," + 
 				     " extralarge=[Triggered: mem_free >= 4096.0. Measured: 0.0]," + 
