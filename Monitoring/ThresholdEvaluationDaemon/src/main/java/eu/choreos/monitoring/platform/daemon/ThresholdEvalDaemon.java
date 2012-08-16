@@ -1,6 +1,7 @@
 package eu.choreos.monitoring.platform.daemon;
 
 import it.cnr.isti.labse.glimpse.event.GlimpseBaseEvent;
+import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventImpl;
 
 import java.util.List;
 import java.util.Map;
@@ -45,13 +46,11 @@ public class ThresholdEvalDaemon {
 		thresholdManager.addMultipleThresholds(instanceType, thresholdList);
 	}
 
-	public void continuouslyEvaluateThresholdsAndSendMessages(
-			GlimpseBaseEvent<String> message) {
+	public void continuouslyEvaluateThresholdsAndSendMessages(GlimpseBaseEvent<String> event) {
 
 		while (true) {
 			try {
-				evaluateThresholdsSendMessagesAndSleep(message,
-						NOTIFICATION_INTERVAL);
+				evaluateThresholdsSendMessagesAndSleep(event, NOTIFICATION_INTERVAL);
 			} catch (GangliaException e) {
 				e.handleException();
 				sleep(NOTIFICATION_INTERVAL);
@@ -60,8 +59,8 @@ public class ThresholdEvalDaemon {
 	}
 
 	public void evaluateThresholdsSendMessagesAndSleep(
-			GlimpseBaseEvent<String> message, int sleepingTime)
-			throws GangliaException {
+			GlimpseBaseEvent<String> message,
+			int sleepingTime) throws GangliaException {
 
 		if (thereAreSurpassedThresholds()) {
 			sendAllSurpassedThresholdMessages(message);
@@ -99,14 +98,32 @@ public class ThresholdEvalDaemon {
 	}
 
 	private void sendAllSurpassedThresholdMessages(
-			GlimpseBaseEvent<String> message) throws GangliaException {
+			GlimpseBaseEvent<String> event) throws GangliaException {
 
 		Map<String, List<AbstractThreshold>> surpassedThresholds = getSurpassedThresholds();
 
 		for (String host : surpassedThresholds.keySet()) {
+			
 			for (AbstractThreshold threshold : surpassedThresholds.get(host)) {
-				message.setData(host + ": " + threshold.toString());
-				sendMessage(message);
+								
+				event.setNetworkedSystemSource(host); 
+				event.setData(threshold.toEventRuleData());
+				event.setConsumed(false);
+				event.setIsException(false);
+				
+				String id = null;
+				String instId = null;
+				int eventId = 0;
+				int responseToId = 0;
+
+				event.setConnectorID(id);
+				event.setConnectorInstanceID(instId);
+				
+				event.setEventID(eventId);
+				event.setEventInResponseToID(responseToId);
+				
+				sendMessage(event);
+			
 			}
 		}
 	}

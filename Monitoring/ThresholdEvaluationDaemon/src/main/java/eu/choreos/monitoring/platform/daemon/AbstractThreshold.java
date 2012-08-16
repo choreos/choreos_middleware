@@ -57,4 +57,8 @@ public abstract class AbstractThreshold {
 	public String toString() {
 		return "No message defined!";
 	}
+
+	public String toEventRuleData() {
+		return null;
+	}
 }

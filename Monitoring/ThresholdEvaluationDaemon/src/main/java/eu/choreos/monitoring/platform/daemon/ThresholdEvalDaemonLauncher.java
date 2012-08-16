@@ -19,7 +19,6 @@ public class ThresholdEvalDaemonLauncher {
 		host = "localhost";
 		port = 8649;
 		javaNamingProviderUrl=null;
-		//thresholdListFileName = null;
 
 		switch (args.length) {
 
@@ -63,9 +62,18 @@ public class ThresholdEvalDaemonLauncher {
 
 	private static GlimpseBaseEventImpl<String> getBaseEvent() {
 
-		return new GlimpseBaseEventImpl<String>("thresholdAlarm",
-				"connector1", "connInstance1", "connExecution1", 1, 2,
-				System.currentTimeMillis(), "NS1", false);
+		return (new GlimpseBaseEventImpl<String>(
+				"thresholdAlarm", 				// event name
+				"connector1",     				// connector id
+				"connInstance1",  				// connector instance id
+				"connExecution1",	 			// connector instance execution id
+				1,                				// event id
+				2,                				// event in response to id
+				System.currentTimeMillis(), 	// time stamp
+				"NS1", 							// networked system source
+				false 							// is exception
+		));
+		
 
 	}
 
@@ -81,11 +89,7 @@ public class ThresholdEvalDaemonLauncher {
 			e.printStackTrace();
 		}
 		
-		/* Get configuration */
 		Config config = Config.getInstance(thresholdListFileName);
-		
-		//List<AbstractThreshold> thresholdList = YamlParser.getThresholdsFromFile(thresholdListFileName);
-		//daemon.addMultipleThreshold(thresholdList);
 		
 		daemon.setConfig(config);
 		daemon.continuouslyEvaluateThresholdsAndSendMessages(getBaseEvent());
