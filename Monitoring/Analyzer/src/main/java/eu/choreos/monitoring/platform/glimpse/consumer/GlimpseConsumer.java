@@ -85,7 +85,7 @@ public class GlimpseConsumer extends GlimpseAbstractConsumer {
 				),
 				Manager.ReadTextFromFile(
 						//System.getProperty("user.dir") + "/bin/it/cnr/isti/labse/glimpse/example/exampleRule.xml"
-						ClassLoader.getSystemResource("exampleRule.xml").getFile()
+						ClassLoader.getSystemResource("default.xml").getFile()
 				)
 		);
 	}
