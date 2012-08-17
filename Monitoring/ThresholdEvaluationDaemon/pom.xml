@@ -99,18 +99,39 @@
 	<build>
 
 		<resources>
+		
+			<resource>
+				<directory>
+					src/main/resources
+				</directory>
+			</resource>
+			
+			<resource>
+				<directory>
+					src/test/resources
+				</directory>
+			</resource>
 
 			<resource>
-				<directory>src/main/thresholds</directory>
+				<directory>src/thresholds</directory>
+				<includes>
+					<include>
+						*.yml
+					</include>
+				</includes>
 			</resource>
+			
 			<resource>
-				<directory>src/test/thresholds</directory>
-			</resource>
-			<resource>
-				<directory>src/main/conf</directory>
+				<directory>src/conf</directory>
+				<includes>
+					<include>
+						*.properties
+					</include>
+				</includes>
 			</resource>
 
 		</resources>
+
 		<plugins>
 
 
