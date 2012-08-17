@@ -76,13 +76,13 @@
 				<directory>src/main/resources</directory>
 			</resource>
 			<resource>
-				<directory>src/main/resources/rules</directory>
+				<directory>src/main/rules</directory>
 			</resource>
 			<resource>
 				<directory>src/test/resources</directory>
 			</resource>
 			<resource>
-				<directory>src/test/resources/rules</directory>
+				<directory>src/test/rules</directory>
 			</resource>
 		</resources>
 

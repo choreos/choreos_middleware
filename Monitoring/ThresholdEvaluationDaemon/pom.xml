@@ -101,13 +101,13 @@
 		<resources>
 
 			<resource>
-				<directory>src/main/resources/thresholds</directory>
+				<directory>src/main/thresholds</directory>
 			</resource>
 			<resource>
-				<directory>src/test/resources/thresholds</directory>
+				<directory>src/test/thresholds</directory>
 			</resource>
 			<resource>
-				<directory>src/main/resources/conf</directory>
+				<directory>src/main/conf</directory>
 			</resource>
 
 		</resources>
