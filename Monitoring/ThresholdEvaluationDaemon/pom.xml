@@ -122,7 +122,7 @@
 			</resource>
 			
 			<resource>
-				<directory>src/conf</directory>
+				<directory>src/main/config</directory>
 				<includes>
 					<include>
 						*.properties
