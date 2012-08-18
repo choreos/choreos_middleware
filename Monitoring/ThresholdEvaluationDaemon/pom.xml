@@ -111,21 +111,15 @@
 					src/test/resources
 				</directory>
 			</resource>
-
-			<resource>
-				<directory>src/thresholds</directory>
-				<includes>
-					<include>
-						*.yml
-					</include>
-				</includes>
-			</resource>
 			
 			<resource>
 				<directory>src/main/config</directory>
 				<includes>
 					<include>
 						*.properties
+					</include>
+					<include>
+						threshold_specs/*.yml
 					</include>
 				</includes>
 			</resource>
