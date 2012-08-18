@@ -1,5 +1,4 @@
 
-import eu.choreos.signal.sender.*;
 
 public class Main {
 	

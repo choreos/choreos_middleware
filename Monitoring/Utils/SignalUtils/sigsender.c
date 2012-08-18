@@ -7,34 +7,28 @@
 #include <signal.h>
 #include <string.h>
 #include <dirent.h>
+#include <jni.h>
 
 // to compile use: gcc -std=gnu99 sigsender.c ...
 
 pid_t pid_from_process_name(const char*);
 
 JNIEXPORT jint JNICALL 
-Java_SignalSender_sendSignalByPID(
-	JNIEnv * env, 
-	jobject jobj, 
-	jint pid, 
-	jint signal) 
+Java_SignalSender_sendSignalByPID(JNIEnv * env, jobject jobj, jint pid, jint signal) 
 {
-	return kill(pid, signal);
+	return kill((int) pid, (int) signal);
 }
 
 
 JNIEXPORT jint JNICALL 
-Java_SignalSender_sendSignalByProcessName(
-	JNIEnv *env, 
-	jobject jobj, 
-	jstring pname, 
-	jint signal) 
+Java_SignalSender_sendSignalByProcessName(JNIEnv *env, jobject jobj, jstring pname, jint signal) 
 {
 	const char *nativeString = (*env)->GetStringUTFChars(env, pname, 0);
    	int pid = pid_from_process_name(nativeString);
+	printf("Got pid %d for process %s", pid, nativeString);
    	(*env)->ReleaseStringUTFChars(env, pname, nativeString);
 	jint _pid = pid;
-	return Java_SignalSender_sendSignalByPID(env, jobj, _pid, signal);
+	return Java_SignalSender_sendSignalByPID(env, jobj, _pid, (jint) signal);
 }
 
 pid_t 
