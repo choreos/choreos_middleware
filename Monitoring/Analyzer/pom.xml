@@ -76,14 +76,21 @@
 				<directory>src/main/resources</directory>
 			</resource>
 			<resource>
-				<directory>src/main/rules</directory>
-			</resource>
-			<resource>
 				<directory>src/test/resources</directory>
 			</resource>
+			
 			<resource>
-				<directory>src/test/rules</directory>
+				<directory>src/main/config</directory>
+				<includes>
+					<include>
+						*.properties
+					</include>
+					<include>
+						rules/*.yml
+					</include>
+				</includes>
 			</resource>
+			
 		</resources>
 
 		<plugins>
