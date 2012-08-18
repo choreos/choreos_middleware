@@ -42,7 +42,7 @@
 			<!-- <scope>test</scope> -->
 			<optional>true</optional>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
@@ -51,8 +51,30 @@
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
-	
-		<build>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>
+					src/main/lib32
+				</directory>
+				<includes>
+					<include>
+						*.so
+					</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>
+					src/main/lib64
+				</directory>
+				<includes>
+					<include>
+						*.so
+					</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -83,6 +105,14 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>-Djava.library.path=src/main/lib64</argLine>
+				</configuration>
 			</plugin>
 		</plugins>
 

@@ -23,7 +23,7 @@ public class GmondReloader {
 
 	
 	public boolean reload() {
-		try {
+		/*try {
 			if (gmondIsRunning())
 				runtime.runLocalCommand(commandReloadMonitor);
 			else
@@ -32,10 +32,18 @@ public class GmondReloader {
 			return true;
 		} catch (CommandRuntimeException e) {
 			return false;
-		}
+		}*/
+		
+		SignalSender s = new SignalSender();
+		String ss = "gmond";
+		return (s.sendSignalByProcessName(ss, 1) == 0);
 	}
 
+	@SuppressWarnings("unused")
 	private boolean gmondIsRunning() throws CommandRuntimeException {
+		
+		// TODO: verify if gmond is running with JNI interface too
+		
 		String stdout = runtime.runLocalCommand("ps -ef | grep gmond");
 		return stdout.contains("/usr/sbin/gmond");
 	}
