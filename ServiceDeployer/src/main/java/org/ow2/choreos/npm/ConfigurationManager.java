@@ -64,7 +64,7 @@ public class ConfigurationManager {
     
     public void initializeNode(Node node) throws JSchException, KnifeException {
 
-    	Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO, true);
+    	Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
     	
         logger.debug("Waiting for SSH...");
         SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());

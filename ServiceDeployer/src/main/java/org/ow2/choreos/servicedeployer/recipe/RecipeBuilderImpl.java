@@ -98,7 +98,14 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 		File destFolder = new File(destPath);
 		
 		synchronized(RecipeBuilderImpl.class) {
-			FileUtils.copyDirectory(srcFolder, destFolder);
+			try {
+				FileUtils.copyDirectory(srcFolder, destFolder);
+			} catch (IOException e) {
+				logger.warn("IOException when copying recipe template; it should not happen");
+				File dest = new File(destPath);
+				if (!dest.exists())
+					throw e;
+			}
 		}
 
 		return destFolder.getAbsolutePath();

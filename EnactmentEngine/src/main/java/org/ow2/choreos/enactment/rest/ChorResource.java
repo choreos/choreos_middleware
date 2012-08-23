@@ -40,7 +40,7 @@ public class ChorResource {
 	 * POST /chors
 	 * 
 	 * Body: a choreography specification (without id)
-	 * Creates a new choreography that still have to be enacted (POST /chor/{chorID}/enactment).
+	 * Creates a new choreography that still have to be enacted (POST /chors/{chorID}/enactment).
 	 * 
 	 * @param uriInfo provided by the REST framework
 	 * @return HTTP code 201 (CREATED)
