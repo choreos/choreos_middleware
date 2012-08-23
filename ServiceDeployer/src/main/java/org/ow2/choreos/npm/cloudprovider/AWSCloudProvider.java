@@ -3,17 +3,13 @@ package org.ow2.choreos.npm.cloudprovider;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 
 import org.apache.cxf.common.util.StringUtils;
 import org.apache.log4j.Logger;
 import org.jclouds.aws.ec2.compute.AWSEC2ComputeService;
 import org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions;
-import org.jclouds.aws.ec2.reference.AWSEC2Constants;
 import org.jclouds.compute.ComputeService;
-import org.jclouds.compute.ComputeServiceContext;
-import org.jclouds.compute.ComputeServiceContextFactory;
 import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.NodeMetadata;
@@ -25,9 +21,7 @@ import org.ow2.choreos.npm.NodeNotFoundException;
 import org.ow2.choreos.npm.datamodel.Node;
 import org.ow2.choreos.servicedeployer.Configuration;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import com.google.inject.Module;
 
 
 public class AWSCloudProvider implements CloudProvider {
@@ -42,20 +36,9 @@ public class AWSCloudProvider implements CloudProvider {
 		return PROVIDER;
 	}
 
-	private ComputeService getClient(String imageId) {
-		// If we specify the image, it doesn't download info about all others
-		Properties overrides = new Properties();
-		overrides.setProperty(AWSEC2Constants.PROPERTY_EC2_AMI_QUERY,
-				"image-id=" + imageId);
+	ComputeService getClient(String image) {
 
-		// get a context with ec2 that offers the portable ComputeService api
-		ComputeServiceContext context = new ComputeServiceContextFactory()
-				.createContext(PROVIDER,
-						Configuration.get("AMAZON_ACCESS_KEY_ID"),
-						Configuration.get("AMAZON_SECRET_KEY"),
-						ImmutableSet.<Module> of(), overrides);
-
-		return context.getComputeService();
+		return ComputeServicePool.getComputeService(image);
 	}
 
 	public Node createNode(Node node) throws RunNodesException {
@@ -105,7 +88,7 @@ public class AWSCloudProvider implements CloudProvider {
 		Node node;
 
 		ComputeService client = getClient("");
-		Set<? extends ComputeMetadata> cloudNodes = client.listNodes();
+		Set<? extends ComputeMetadata> cloudNodes = client.listNodes();;
 		for (ComputeMetadata computeMetadata : cloudNodes) {
 			NodeMetadata cloudNode = client.getNodeMetadata(computeMetadata
 					.getId());

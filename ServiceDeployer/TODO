@@ -49,6 +49,12 @@ A possible solution would be the service deployer server running npm.upgradeNode
 * Change enumarations in ServiceType
 JAR -> COMMAND_LINE; WAR -> TOMCAT
 
+* Concurrent invocations to RecipeBuilderImpl.copyTemplate (to the same target) causes IOException.
+But the synchronized there should avoid this!
+
+* Don't upload a cookbook if it is already on the server
+Check by cookbook name and version
+
 ============ DONE ============
 
 * Create a Java project Utils to avoid code replication
