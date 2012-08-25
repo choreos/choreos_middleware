@@ -1,6 +1,7 @@
 package org.ow2.choreos.npm.cloudprovider;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.jclouds.compute.RunNodesException;
 import org.junit.Before;
@@ -36,10 +37,12 @@ public class AWSCloudProviderTest {
         infra.destroyNode(created.getId());
         
         try {
-			infra.getNode(created.getId());
+			node = infra.getNode(created.getId());
 		} catch (NodeNotFoundException e) {
-			; // OK
+			System.out.println(e.getMessage());
+			return; // OK
 		}
+        fail(node + " should not be retrieved"); // exception above not caught
     }
 
 }

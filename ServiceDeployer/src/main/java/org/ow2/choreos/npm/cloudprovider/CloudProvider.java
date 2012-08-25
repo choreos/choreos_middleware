@@ -8,9 +8,10 @@ import org.ow2.choreos.npm.datamodel.Node;
 
 
 /**
- * Provides access to cloud service functions to create nodes on the cloud Each
- * specific provider (e.g. AmazonWS) must have an implementing class of this
- * interface
+ * Provides access to cloud service functions to create nodes on the cloud 
+ * 
+ * Each specific provider (e.g. AmazonWS) must have an implementing class 
+ * of this interface.
  * 
  * @author leonardo, felps
  * 

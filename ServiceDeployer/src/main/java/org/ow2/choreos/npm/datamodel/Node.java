@@ -174,20 +174,10 @@ public class Node {
 		int result = 1;
 		result = prime * result
 				+ ((chefName == null) ? 0 : chefName.hashCode());
-		result = prime * result + ((cpus == null) ? 0 : cpus.hashCode());
 		result = prime * result
 				+ ((hostname == null) ? 0 : hostname.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((image == null) ? 0 : image.hashCode());
 		result = prime * result + ((ip == null) ? 0 : ip.hashCode());
-		result = prime * result
-				+ ((privateKeyFile == null) ? 0 : privateKeyFile.hashCode());
-		result = prime * result + ((ram == null) ? 0 : ram.hashCode());
-		result = prime * result + ((so == null) ? 0 : so.hashCode());
-		result = prime * result + ((state == null) ? 0 : state.hashCode());
-		result = prime * result + ((storage == null) ? 0 : storage.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
-		result = prime * result + ((zone == null) ? 0 : zone.hashCode());
 		return result;
 	}
 
@@ -205,11 +195,6 @@ public class Node {
 				return false;
 		} else if (!chefName.equals(other.chefName))
 			return false;
-		if (cpus == null) {
-			if (other.cpus != null)
-				return false;
-		} else if (!cpus.equals(other.cpus))
-			return false;
 		if (hostname == null) {
 			if (other.hostname != null)
 				return false;
@@ -220,50 +205,10 @@ public class Node {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (image == null) {
-			if (other.image != null)
-				return false;
-		} else if (!image.equals(other.image))
-			return false;
 		if (ip == null) {
 			if (other.ip != null)
 				return false;
 		} else if (!ip.equals(other.ip))
-			return false;
-		if (privateKeyFile == null) {
-			if (other.privateKeyFile != null)
-				return false;
-		} else if (!privateKeyFile.equals(other.privateKeyFile))
-			return false;
-		if (ram == null) {
-			if (other.ram != null)
-				return false;
-		} else if (!ram.equals(other.ram))
-			return false;
-		if (so == null) {
-			if (other.so != null)
-				return false;
-		} else if (!so.equals(other.so))
-			return false;
-		if (state == null) {
-			if (other.state != null)
-				return false;
-		} else if (!state.equals(other.state))
-			return false;
-		if (storage == null) {
-			if (other.storage != null)
-				return false;
-		} else if (!storage.equals(other.storage))
-			return false;
-		if (user == null) {
-			if (other.user != null)
-				return false;
-		} else if (!user.equals(other.user))
-			return false;
-		if (zone == null) {
-			if (other.zone != null)
-				return false;
-		} else if (!zone.equals(other.zone))
 			return false;
 		return true;
 	}

@@ -29,6 +29,9 @@ and not only one config
 
 * Think better about exceptions in NodePoolManager, ServiceDeployer, and EnactmentEngine interface
 
+* When NPM starts, NodeRegistry should be filled with nodes retrieved from the cloud provider.
+
+
 =============================
 
 Service Deployer ToDo list
