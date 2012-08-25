@@ -1,15 +1,17 @@
 package org.ow2.choreos.enactment.context;
 
-import java.io.IOException;
+import java.net.URL;
 
-import org.apache.xmlbeans.XmlException;
-
-import eu.choreos.vv.clientgenerator.WSClient;
-import eu.choreos.vv.exceptions.FrameworkException;
-import eu.choreos.vv.exceptions.InvalidOperationNameException;
-import eu.choreos.vv.exceptions.WSDLException;
-
-
+import javax.xml.namespace.QName;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPBodyElement;
+import javax.xml.soap.SOAPConnection;
+import javax.xml.soap.SOAPConnectionFactory;
+import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPHeader;
+import javax.xml.soap.SOAPMessage;
 
 public class ContextSender {
 	
@@ -27,29 +29,38 @@ public class ContextSender {
 			String partnerRole, String partnerEndpoint) {
 		
 		try {
-
-			synchronized(ContextSender.class) {
-				WSClient client = new WSClient(serviceEndpoint + "?wsdl");
-				client.request("setInvocationAddress", partnerRole, partnerEndpoint);
-			}
 			
-		} catch (WSDLException e) {
-			e.printStackTrace();
-			return false;
-		} catch (XmlException e) {
-			e.printStackTrace();
-			return false;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		} catch (FrameworkException e) {
-			e.printStackTrace();
-			return false;
-		} catch (InvalidOperationNameException e) {
-			e.printStackTrace();
+	        SOAPConnectionFactory sfc = SOAPConnectionFactory.newInstance();
+	        SOAPConnection connection = sfc.createConnection();
+	
+	        MessageFactory mf = MessageFactory.newInstance();
+	        SOAPMessage sm = mf.createMessage();
+	
+	        SOAPEnvelope envelope = sm.getSOAPPart().getEnvelope();
+	        envelope.addNamespaceDeclaration("chor", "http://choreos.ow2.org/");
+	        
+	        SOAPHeader sh = sm.getSOAPHeader();
+	        SOAPBody sb = sm.getSOAPBody();
+	        sh.detachNode();
+	        QName bodyName = new QName("setInvocationAddress");
+	        SOAPBodyElement bodyElement = sb.addBodyElement(bodyName);
+	        bodyElement.setPrefix("chor");
+	        
+	        QName role = new QName("arg0");
+	        SOAPElement quotation1 = bodyElement.addChildElement(role);
+	        quotation1.addTextNode(partnerRole);
+	
+	        QName address = new QName("arg1");
+	        SOAPElement quotation2 = bodyElement.addChildElement(address);
+	        quotation2.addTextNode(partnerEndpoint);
+	
+	        URL endpoint = new URL(serviceEndpoint);
+	        connection.call(sm, endpoint);
+		
+		} catch (Exception e) {
 			return false;
 		}
-		
+        
 		return true;
 	}
 
