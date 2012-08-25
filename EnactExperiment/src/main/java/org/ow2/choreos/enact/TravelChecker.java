@@ -1,24 +1,26 @@
 package org.ow2.choreos.enact;
 
-import java.io.IOException;
+import java.net.URL;
 
-import org.apache.xmlbeans.XmlException;
-
-import eu.choreos.vv.clientgenerator.Item;
-import eu.choreos.vv.clientgenerator.WSClient;
-import eu.choreos.vv.exceptions.FrameworkException;
-import eu.choreos.vv.exceptions.InvalidOperationNameException;
-import eu.choreos.vv.exceptions.WSDLException;
+import javax.xml.namespace.QName;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPBodyElement;
+import javax.xml.soap.SOAPConnection;
+import javax.xml.soap.SOAPConnectionFactory;
+import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPHeader;
+import javax.xml.soap.SOAPMessage;
 
 public class TravelChecker implements Runnable {
 	
 	private static final String EXPECTED_RESULT = "33--22";
-	private String travelWSDL;
+	private String travelEndpoint;
 	int idx;
 	boolean ok = false; // result: service properly accessed
 	
 	public TravelChecker(String travelWSDL, int idx) {
-		this.travelWSDL = travelWSDL;
+		this.travelEndpoint = travelWSDL;
 		this.idx = idx;
 	}
 	
@@ -27,33 +29,10 @@ public class TravelChecker implements Runnable {
 
 		System.out.println(Utils.getTimeStamp() + "Cheking choreography #" + idx);
 
-		WSClient client = getClient(travelWSDL);
-		if (client == null) {
-			notWorking();
-			return;
-		}
-		
 		long t0 = System.currentTimeMillis();
-		Item response;
-		try {
-			response = client.request("buyTrip");
-		} catch (InvalidOperationNameException e) {
-			notWorking();
-			return;
-		} catch (FrameworkException e) {
-			notWorking();
-			return;
-		}
+		String result = buyTrip();
 		long tf = System.currentTimeMillis();
 		long duration = tf - t0;
-		
-		String result;
-		try {
-			result = response.getChild("return").getContent();
-		} catch (NoSuchFieldException e) {
-			notWorking();
-			return;
-		}
 		
 		ok = EXPECTED_RESULT.equals(result);
 		
@@ -66,26 +45,40 @@ public class TravelChecker implements Runnable {
 		}
 	}
 	
-	private void notWorking() {
-		System.out.println(Utils.getTimeStamp() + "Choreography #" + idx + " is not working");
-	}
-	
-	private WSClient getClient(String travelWSDL) {
-
+	private String buyTrip() {
+		
 		try {
-			synchronized(Experiment.class) {
-				WSClient client = new WSClient(travelWSDL);
-				return client;
-			}
-		} catch (WSDLException e) {
-			return null;
-		} catch (XmlException e) {
-			return null;
-		} catch (IOException e) {
-			return null;
-		} catch (FrameworkException e) {
+			
+			final String OPERATION_NAME = "buyTrip";
+			
+	        SOAPConnectionFactory sfc = SOAPConnectionFactory.newInstance();
+	        SOAPConnection connection = sfc.createConnection();
+	
+	        MessageFactory mf = MessageFactory.newInstance();
+	        SOAPMessage sm = mf.createMessage();
+	
+	        SOAPEnvelope envelope = sm.getSOAPPart().getEnvelope();
+	        envelope.addNamespaceDeclaration("chor", "http://choreos.ow2.org/");
+	        
+	        SOAPHeader sh = sm.getSOAPHeader();
+	        SOAPBody sb = sm.getSOAPBody();
+	        sh.detachNode();
+	        QName bodyName = new QName(OPERATION_NAME);
+	        SOAPBodyElement bodyElement = sb.addBodyElement(bodyName);
+	        bodyElement.setPrefix("chor");
+	        
+	        URL endpoint = new URL(this.travelEndpoint);
+	        SOAPMessage response = connection.call(sm, endpoint);
+	        String result = response.getSOAPBody().getTextContent(); 
+	        return result;
+
+		} catch (Exception e) {
 			return null;
 		}
 	}
 
+	private void notWorking() {
+		System.out.println(Utils.getTimeStamp() + "Choreography #" + idx + " is not working");
+	}
+	
 }

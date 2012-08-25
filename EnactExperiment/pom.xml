@@ -36,6 +36,12 @@
 		<artifactId>EnactmentEngine</artifactId> 
 		<version>0.0.1-SNAPSHOT</version>
 		<type>jar</type>
+		<exclusions>
+			<exclusion>
+				<groupId>org.ow2.choreos</groupId>
+				<artifactId>rehearsal</artifactId>
+			</exclusion>
+		</exclusions>
 	</dependency>
 	<dependency>
 		<groupId>org.apache.cxf</groupId>
