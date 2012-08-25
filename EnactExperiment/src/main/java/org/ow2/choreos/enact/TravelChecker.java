@@ -70,6 +70,7 @@ public class TravelChecker implements Runnable {
 	        URL endpoint = new URL(this.travelEndpoint);
 	        SOAPMessage response = connection.call(sm, endpoint);
 	        String result = response.getSOAPBody().getTextContent(); 
+	        System.out.println("Result from #" + idx + ": " + result);
 	        return result;
 
 		} catch (Exception e) {
