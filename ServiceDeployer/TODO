@@ -1,12 +1,12 @@
 NodePoolManager ToDo list
 
 * Concurrent requests can trigger concurrent bootstraps on the same node!
-It's not desirable. However, often recipes are applied when node is alredy bootstrapped,
+It's not desirable. However, often recipes are applied when node is already bootstrapped,
 since 'create node' also bootstraps the node.
 
 * Improve javadoc of REST operations (ex: detail return codes)
 
-* It seems there is some overlaping between INSTALL and README files. Handle this.
+* It seems there is some overlapping between INSTALL and README files. Handle this.
 
 * After applying a configuration, use "knife node show NODE" to verify if the recipe was installed with success
 If not, return an error
@@ -36,9 +36,6 @@ and not only one config
 
 Service Deployer ToDo list
 
-* DeployedServicesRegistry: improvement needed?
-Is it possible to interact with chef to store data?
-
 * The POST /services should support receiving a list of services,
 and not just one service
 
@@ -49,14 +46,13 @@ A possible solution would be the service deployer server running npm.upgradeNode
 
 * Describe Chef-Server setup (example: Java and Tomcat recipes must be available)
 
-* Change enumarations in ServiceType
+* Change enumerations in ServiceType
 JAR -> COMMAND_LINE; WAR -> TOMCAT
 
-* Concurrent invocations to RecipeBuilderImpl.copyTemplate (to the same target) causes IOException.
-But the synchronized there should avoid this!
+* By default, don't generate a recipe if it was already generated
 
-* Don't upload a cookbook if it is already on the server
-Check by cookbook name and version
+* jar file names get very ugly
+Download the jar name with its original name
 
 ============ DONE ============
 
@@ -88,7 +84,7 @@ So, the FactoryClass can just call NodeSelectorImpl.getInstance()
 * Controller, as NPMClient, should implement the interface NodePoolManager
 
 * Controller should be singleton
-Should it? I didnot do this.
+Should it? I did not do this.
 
 * Maybe it would be better a single server class to expose the REST operations,
 and not one class to NPM and another class to Service Deployer
@@ -97,7 +93,12 @@ and not one class to NPM and another class to Service Deployer
 The problem was that to add an item to the run-list, Knife downloads the whole node description,
 chenge the run-list, and uploads the new node description. This approach does not support concurrency.
 We have handled this by synchronizing the add run-list operation.
-But if this invocation is trigegred from different JVMs, we still have problems!
+But if this invocation is triggered from different JVMs, we still have problems!
+
+* Concurrent invocations to RecipeBuilderImpl.copyTemplate (to the same target) causes IOException.
+But the synchronized there should avoid this!
+If exception is caught, we verify if target folder already exists.
+If it exists, we assume is everything OK.
 
 
 

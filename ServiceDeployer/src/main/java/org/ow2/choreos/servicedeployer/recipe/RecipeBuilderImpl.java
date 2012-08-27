@@ -30,13 +30,22 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 			recipe.setName(recipeName);
 			recipe.setCookbookName("service" + service.getId());
 			this.recipeFile = recipeName + ".rb";
+			File targetFolder = getTargetFolder(service);
 			
-			absolutePath = copyTemplate(service);
-			recipe.setCookbookFolder(absolutePath);
-
-			changeMetadataRb(service);
-			changeAttributesDefaultRb(service);
-			changeServerRecipe(service);
+			if (targetFolder.exists()) {
+				
+				logger.info("Recipe " + this.recipeFile
+						+ " already exists. NOT going to overwriting it");
+				
+			} else {
+				
+				absolutePath = copyTemplate(service);
+				recipe.setCookbookFolder(absolutePath);
+	
+				changeMetadataRb(service);
+				changeAttributesDefaultRb(service);
+				changeServerRecipe(service);
+			}
 
 			return recipe;
 		} catch (IOException e) {
@@ -59,7 +68,7 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 		return recipeName;
 	}
 	
-	// methods have "package visibility" to test purposes
+	// methods have "package visibility" to testing purposes
 
 	void changeMetadataRb(Service service) throws IOException {
 		changeFileContents(service, "/service" + service.getId()
@@ -88,6 +97,14 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 
 		FileUtils.deleteQuietly(file);
 		FileUtils.writeStringToFile(file, fileData);
+	}
+	
+	private File getTargetFolder(Service service) {
+		
+		String destPath = DEST_DIR.getAbsolutePath() + "/service" + service.getId();
+		File destFolder = new File(destPath);
+		
+		return destFolder;
 	}
 
 	String copyTemplate(Service service) throws IOException {

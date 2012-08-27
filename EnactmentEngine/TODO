@@ -1,12 +1,5 @@
 EnactmentEngine TODO list
 
-Performance bottlenecks
------------------------
-* (LOW) Replace WSClient (concurrency problems) by javax (as in futuremarket project).
-
-Others
-------
-
 * EnactmentEngine tests should start NPMServer and ServiceDeployerServer,
 but this step is not working. Now, we have to start the servers before run tests.
 The problem is the way like the RecipeBuilder access the resources.
@@ -16,14 +9,16 @@ For each available owner, the enactmentengine.properties must have an
 OWNER.NODE_POOL_MANAGER_URI and an OWNER.SERVICE_DEPLOYER_URI entries.
 So, the Enactment Engine will use this entries to deploy a service
 if the owner attributed is specified in the chor specification.
-If owner is not specfied, the default Service Deployer is used, just as now.
+If owner is not specified, the default Service Deployer is used, just as now.
 
 * If two or more services has the same "group" specification,
 they must be deployed on the same node.
 
 * Registry should use a database instead a static map.
 
-* Choreography should contain a ChorSpec, and not TO BE a ChorSpec (inherence)
+* Choreography should contain a ChorSpec, and not TO BE a ChorSpec (inheritance)
+
+* Do not pass context to not deployed services
 
 *** DONE ***
 
@@ -36,4 +31,8 @@ In this way, the ChorResource class would be more concerned with REST, and know 
 
 * Performance bottleneck (HIGH): Update only nodes from a specific choreography.
 Now we have POST nodepoolmanager/nodes/{id}/upgrade operation
+
+* Performance bottleneck: (LOW) Replace WSClient (concurrency problems) by javax (as in futuremarket project).
+It was actually not as in the futuremarket, but iw was indeed using only javax classes (manually building the soap envelope).
+
 
