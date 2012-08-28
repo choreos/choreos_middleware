@@ -1,5 +1,6 @@
 package org.ow2.choreos.npm;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -24,7 +25,6 @@ public class ConfigurationManager {
 
 	private Logger logger = Logger.getLogger(ConfigurationManager.class);
 	
-    private static String INITIAL_RECIPE = "getting-started";
     private static String CHEF_REPO = Configuration.get("CHEF_REPO");
     private static String CHEF_CONFIG_FILE = Configuration.get("CHEF_CONFIG_FILE");
 
@@ -84,23 +84,41 @@ public class ConfigurationManager {
     	}
 	}
 
-	public boolean isInitialized(Node node) throws JSchException {
+	public boolean isInitialized(Node node) {
 
-        SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-        logger.debug("Going to connect to " + node);
-
-        String createdFile = "chef-getting-started.txt";
-        String returnText = null;
-        returnText = ssh.runCommand("ls " + createdFile, true);
-        logger.debug(">>" + returnText.trim() + "<<");
-        return returnText.trim().equals(createdFile);
+		Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
+		
+		List<String> nodes;
+		try {
+			nodes = knife.node().list();
+		} catch (KnifeException e) {
+			logger.error("Knife exception when verifying if node was initialized", e);
+			return false;
+		}
+		
+		if (nodes == null) { 
+			logger.error("knife.node().list() returned null list; this should never happen.");
+			return false;
+		}
+		
+		return nodes.contains(node.getChefName());
     }
     
     public void initializeNode(Node node) throws JSchException, KnifeException {
 
     	Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
     	
-        logger.debug("Waiting for SSH...");
+        waitForSSHAccess(node);
+
+    	logger.info("Bootstrapping " + node.getHostname());
+		knife.bootstrap(node.getIp(), node.getUser(), node.getPrivateKeyFile());
+		logger.info("Bootstrap completed at" + node);
+		this.retrieveAndSetChefName(node);
+    }
+
+	private void waitForSSHAccess(Node node) {
+		
+		logger.debug("Waiting for SSH...");
         SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
 
         while (!ssh.isAccessible()) {
@@ -113,15 +131,8 @@ public class ConfigurationManager {
             }
             ssh.disconnect();
         }
-
         logger.debug("Connected to " + node);
-
-    	logger.info("Bootstrapping " + node.getHostname());
-		knife.bootstrap(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-		logger.debug("Bootstrap completed");
-		this.retrieveChefName(node);
-		this.installInitialRecipe(node);
-    }
+	}
 
     /**
     *
@@ -158,7 +169,7 @@ public class ConfigurationManager {
 		}
 
 		if (node.getChefName() == null)
-			this.retrieveChefName(node);
+			this.retrieveAndSetChefName(node);
         
         Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
 
@@ -175,11 +186,10 @@ public class ConfigurationManager {
         }
 
         // TODO we should verify if the recipe install was OK
-        // but it is very awkward make this without using the chef API!
         return true;
     }
 
-    private void retrieveChefName(Node node) {
+    private void retrieveAndSetChefName(Node node) {
         
     	ChefNodeNameRetriever nameRetriever = new ChefNodeNameRetriever();
         String chefClientName = null;
@@ -192,25 +202,4 @@ public class ConfigurationManager {
         node.setChefName(chefClientName);
     }
     
-    private boolean installInitialRecipe(Node node) {
-
-    	Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO, true);
-    	try {
-			knife.node().runListAdd(node.getChefName(), INITIAL_RECIPE, "default");
-		} catch (KnifeException e) {
-			logger.error(
-					"Could not add " + INITIAL_RECIPE + " to the run list of node "
-							+ node.getChefName(), e);
-			return false;
-		}
-
-        try {
-			this.updateNodeConfiguration(node);
-		} catch (JSchException e) {
-			logger.error("Could not update node "+ node.getChefName(), e);
-			return false;
-		}
-        
-        return true;
-    }
 }

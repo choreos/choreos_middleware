@@ -33,8 +33,9 @@ public class FixedCloudProvider implements CloudProvider {
 		node = new Node();
 		node.setIp(nodeIp);
 		node.setId(nodeId);
-		node.setCpus(1);
 		node.setHostname(nodeHostname);
+		node.setChefName(nodeHostname);
+		node.setCpus(1);
 		node.setRam(512);
 		node.setSo("Ubuntu server 10.04");
 		node.setStorage(10000);
