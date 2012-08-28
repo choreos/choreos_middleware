@@ -35,6 +35,7 @@ public class SshUtil {
         jsch.addIdentity(privateKeyFile);
         this.session = jsch.getSession(user, hostname);
         this.session.setConfig("StrictHostKeyChecking", "no");
+        this.session.setConfig("UserKnownHostsFile", "/dev/null");
 
         return this.session;
     }
@@ -61,12 +62,17 @@ public class SshUtil {
 
     public String runCommand(String command, boolean retry) throws JSchException {
         
+    	final int SLEEPING_TIME = 5000;
     	String output = null;
 
         try {
             output = runCommandOnce(command);
         } catch (JSchException e) {
             if (retry) {
+            	try {
+					Thread.sleep(SLEEPING_TIME);
+				} catch (InterruptedException e1) {
+				}
                 return runCommand(command, retry);
             } else {
                 throw e;

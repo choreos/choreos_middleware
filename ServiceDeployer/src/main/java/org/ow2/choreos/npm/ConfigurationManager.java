@@ -51,14 +51,19 @@ public class ConfigurationManager {
     }
 
     /**
-     * Try to run chef client 3 times
+     * Try to run chef client 5 times
+     * 
+     * This strategy is carried out since sometimes 
+     * we try to ssh the VM when it is not ready yet.
+     * 
      * @param ssh
      * @throws JSchException 
      */
     private void runChefClient(SshUtil ssh) throws JSchException {
     	
     	final String CHEF_CLIENT_COMMAND = "sudo chef-client >> /tmp/chef-client.log\n";
-    	final int MAX_TRIALS = 3;
+    	final int MAX_TRIALS = 5;
+    	final int SLEEPING_TIME = 5000;
     	int trials = 0;
     	boolean ok = false;
     	
@@ -70,6 +75,10 @@ public class ConfigurationManager {
 			} catch (JSchException e) {
 				if (trials >= MAX_TRIALS) {
 					throw e;
+				}
+				try {
+					Thread.sleep(SLEEPING_TIME);
+				} catch (InterruptedException e1) {
 				}
 			}
     	}
