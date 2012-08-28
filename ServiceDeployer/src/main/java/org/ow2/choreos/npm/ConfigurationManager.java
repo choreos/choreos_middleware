@@ -45,12 +45,37 @@ public class ConfigurationManager {
 
             updating.put(node, true);
             logger.debug("upgrading node " + node);
-            ssh.runCommand("sudo chef-client >> /tmp/chef-client.log\n");
+            this.runChefClient(ssh);
             updating.put(node, false);
         }
     }
 
-    public boolean isInitialized(Node node) throws JSchException {
+    /**
+     * Try to run chef client 3 times
+     * @param ssh
+     * @throws JSchException 
+     */
+    private void runChefClient(SshUtil ssh) throws JSchException {
+    	
+    	final String CHEF_CLIENT_COMMAND = "sudo chef-client >> /tmp/chef-client.log\n";
+    	final int MAX_TRIALS = 3;
+    	int trials = 0;
+    	boolean ok = false;
+    	
+    	while (!ok) {
+	    	try {
+	    		trials++;
+				ssh.runCommand(CHEF_CLIENT_COMMAND);
+				ok = true;
+			} catch (JSchException e) {
+				if (trials >= MAX_TRIALS) {
+					throw e;
+				}
+			}
+    	}
+	}
+
+	public boolean isInitialized(Node node) throws JSchException {
 
         SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
         logger.debug("Going to connect to " + node);
