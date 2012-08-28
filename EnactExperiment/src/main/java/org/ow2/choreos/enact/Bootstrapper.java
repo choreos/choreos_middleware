@@ -82,4 +82,10 @@ public class Bootstrapper {
 		
 		return vms;
 	}
+	
+	public static void main(String[] args) {
+		
+		Bootstrapper booter = new Bootstrapper(1);
+		booter.boot();
+	}
 }

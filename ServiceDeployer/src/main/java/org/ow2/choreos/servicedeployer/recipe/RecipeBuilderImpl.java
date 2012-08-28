@@ -22,7 +22,6 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 	public Recipe createRecipe(Service service) {
 		
 		Recipe recipe = new Recipe();
-		String absolutePath;
 
 		try {
 			
@@ -31,6 +30,7 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 			recipe.setCookbookName("service" + service.getId());
 			this.recipeFile = recipeName + ".rb";
 			File targetFolder = getTargetFolder(service);
+			recipe.setCookbookFolder(targetFolder.getAbsolutePath());
 			
 			if (targetFolder.exists()) {
 				
@@ -39,15 +39,14 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 				
 			} else {
 				
-				absolutePath = copyTemplate(service);
-				recipe.setCookbookFolder(absolutePath);
-	
+				copyTemplate(service);
 				changeMetadataRb(service);
 				changeAttributesDefaultRb(service);
 				changeServerRecipe(service);
 			}
 
 			return recipe;
+			
 		} catch (IOException e) {
 			logger.error("Could not create recipe", e);
 		}

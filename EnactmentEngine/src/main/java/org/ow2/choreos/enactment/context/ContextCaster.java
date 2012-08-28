@@ -17,19 +17,45 @@ public class ContextCaster {
 	public void cast(ChorSpec chor, Map<String, Service> deployedServices) {
 		
 		logger.info("Passing context to deployed services");
-		for (ChorService service: chor.getServiceSpecs()) {
-			String serviceUri = deployedServices.get(service.getName()).getUri();
-			for (ServiceDependence dep: service.getDependences()) {
-				String partnerUri = deployedServices.get(dep.getServiceName()).getUri();
+		for (ChorService spec: chor.getServiceSpecs()) {
+			
+			Service deployed = deployedServices.get(spec.getName());
+			if (deployed == null) {
+				logger.error("Service " + spec.getName()
+						+ " not deployed. Not going to pass context to it.");
+			} else {
+				
+				castContext(deployedServices, spec, deployed);
+			}
+		}
+	}
+
+	private void castContext(Map<String, Service> deployedServices,
+			ChorService spec, Service deployed) {
+		
+		String serviceUri = deployed.getUri();
+		for (ServiceDependence dep: spec.getDependences()) {
+			
+			Service deployedPartner = deployedServices.get(dep.getServiceName());
+			if (deployedPartner == null) {
+				logger.error("Service "
+						+ dep.getServiceName()
+						+ " ("
+						+ spec.getName()
+						+ "dependency) not deployed. Not goint to pass this context to "
+						+ spec.getName());
+			} else {
+				
+				String partnerUri = deployedPartner.getUri();
 				boolean ok = sender.sendContext(serviceUri, dep.getServiceRole(), partnerUri);
 				if (ok) {
-					logger.debug(service.getName() + " has received "
+					logger.debug(spec.getName() + " has received "
 							+ dep.getServiceName() + " as "
 							+ dep.getServiceRole());
 				} else {
 					logger.error("Could not set " + dep.getServiceName()
 							+ " as " + dep.getServiceRole() + " to "
-							+ service.getName());
+							+ spec.getName());
 				}
 			}
 		}
