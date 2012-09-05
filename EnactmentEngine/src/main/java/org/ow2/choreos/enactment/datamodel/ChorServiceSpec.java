@@ -14,6 +14,7 @@ import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
 public class ChorServiceSpec extends ServiceSpec {
 
 	private String name;
+	private String owner;
 	private String group;
 	private List<String> roles = new ArrayList<String>();
 	private List<ServiceDependence> dependences = new ArrayList<ServiceDependence>();
@@ -35,6 +36,12 @@ public class ChorServiceSpec extends ServiceSpec {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public String getOwner() {
+		return owner;
+	}
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
 	public String getGroup() {
 		return group;
 	}
@@ -53,15 +60,16 @@ public class ChorServiceSpec extends ServiceSpec {
 	public void setDependences(List<ServiceDependence> dependences) {
 		this.dependences = dependences;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
+		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -76,19 +84,19 @@ public class ChorServiceSpec extends ServiceSpec {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (roles == null) {
-			if (other.roles != null)
+		if (owner == null) {
+			if (other.owner != null)
 				return false;
-		} else if (!roles.equals(other.roles))
+		} else if (!owner.equals(other.owner))
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "ChorService [name=" + name + ", group=" + group + ", roles="
-				+ roles + ", dependences=" + dependences + ", type=" + type
-				+ ", codeUri=" + codeUri + ", port=" + port + ", endpointName="
-				+ endpointName + "]";
+		return "ChorServiceSpec [name=" + name + ", owner=" + owner
+				+ ", group=" + group + ", roles=" + roles + ", dependences="
+				+ dependences + "]";
 	}
+	
 }

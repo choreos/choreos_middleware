@@ -4,7 +4,7 @@ EnactmentEngine TODO list
 but this step is not working. Now, we have to start the servers before run tests.
 The problem is the way like the RecipeBuilder access the resources.
 
-* Add owner attribute to ChorService class.
+* Use the ChorServiceSpec.owner attribute.
 For each available owner, the enactmentengine.properties must have an 
 OWNER.NODE_POOL_MANAGER_URI and an OWNER.SERVICE_DEPLOYER_URI entries.
 So, the Enactment Engine will use this entries to deploy a service
