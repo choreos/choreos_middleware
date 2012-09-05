@@ -23,8 +23,6 @@ and not only one config
 
 * ALWAYS_CREATE corresponds to VerySimpleSelector, but VerySimpleSelector does not always create a new node
 
-* Bootstrap verification: think in a better way than checking getting-started.txt
-
 * Before managing the node, we could trigger the ntpdate command on the node (through ssh)
 
 * Think better about exceptions in NodePoolManager, ServiceDeployer, and EnactmentEngine interface
@@ -45,11 +43,7 @@ and not just one service
 A possible solution would be the service deployer server running npm.upgradeNodes periodically
 
 * Describe Chef-Server setup (example: Java and Tomcat recipes must be available)
-
-* Change enumerations in ServiceType
-JAR -> COMMAND_LINE; WAR -> TOMCAT
-
-* By default, don't generate a recipe if it was already generated
+Better idea: clean our cookbook folder and say to the user to install all the recipes of our cookbook folder in his server.
 
 * jar file names get very ugly
 Download the jar name with its original name
@@ -99,6 +93,15 @@ But if this invocation is triggered from different JVMs, we still have problems!
 But the synchronized there should avoid this!
 If exception is caught, we verify if target folder already exists.
 If it exists, we assume is everything OK.
+
+* Bootstrap verification: think in a better way than checking getting-started.txt
+We do not install the getting-started recipe anymore.
+We just check if the node is listed by the "knife node list" command.
+
+* By default, don't generate a recipe if it was already generated
+
+* Change enumerations in ServiceType
+JAR -> COMMAND_LINE; WAR -> TOMCAT
 
 
 

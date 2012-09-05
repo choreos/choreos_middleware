@@ -62,7 +62,7 @@ public class RestEnactmentTest {
 		airline.setCodeUri(AIRLINE_JAR);
 		airline.setEndpointName(AIRLINE);
 		airline.setPort(AIRLINE_PORT);
-		airline.setType(ServiceType.JAR);
+		airline.setType(ServiceType.COMMAND_LINE);
 		airline.getRoles().add(AIRLINE);
 		chorSpec.addServiceSpec(airline);
 		
@@ -71,7 +71,7 @@ public class RestEnactmentTest {
 		travel.setCodeUri(TRAVEL_AGENCY_JAR);
 		travel.setEndpointName(TRAVEL_AGENCY);
 		travel.setPort(TRAVEL_AGENCY_PORT);
-		travel.setType(ServiceType.JAR);
+		travel.setType(ServiceType.COMMAND_LINE);
 		travel.getRoles().add(TRAVEL_AGENCY);
 		ServiceDependence dep = new ServiceDependence(AIRLINE, AIRLINE);
 		travel.getDependences().add(dep);

@@ -60,7 +60,7 @@ public class ClientTest {
 		deployer = new ServiceDeployerClient(serviceDeployerHost);
 		
 		specWar.setCodeUri(WAR_LOCATION);
-		specWar.setType(ServiceType.WAR);
+		specWar.setType(ServiceType.TOMCAT);
 		specWar.setResourceImpact(resourceImpact);
 	}
 	

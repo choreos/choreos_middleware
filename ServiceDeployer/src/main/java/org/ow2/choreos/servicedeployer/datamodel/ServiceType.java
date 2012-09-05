@@ -2,5 +2,5 @@ package org.ow2.choreos.servicedeployer.datamodel;
 
 public enum ServiceType {
 
-	JAR, WAR, PETALS, ON_THE_WILD, OTHER;
+	COMMAND_LINE, TOMCAT, EASY_ESB, LEGACY, OTHER;
 }

@@ -46,7 +46,7 @@ public class SingleServiceEnactmentTest {
 		int port = Integer.parseInt(AirportProperties.get(WEATHER_FORECAST_SERVICE + ".port"));
 		service.setPort(port);
 		service.getRoles().add(WEATHER_FORECAST_SERVICE);
-		service.setType(ServiceType.JAR);
+		service.setType(ServiceType.COMMAND_LINE);
 		chor.addServiceSpec(service);
 	}
 	

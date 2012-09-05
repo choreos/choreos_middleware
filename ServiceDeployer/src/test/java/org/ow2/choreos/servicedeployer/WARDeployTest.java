@@ -37,7 +37,7 @@ public class WARDeployTest {
 	public void setUp() throws Exception {
 		
 		specWar.setCodeUri(WAR_LOCATION);
-		specWar.setType(ServiceType.WAR);
+		specWar.setType(ServiceType.TOMCAT);
 		specWar.setResourceImpact(resourceImpact);
 	}
 

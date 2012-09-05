@@ -43,13 +43,13 @@ public class ParallelDeployTest {
 		
 		specs[0] = new ServiceSpec();
 		specs[0].setCodeUri(JARDeployTest.JAR_LOCATION);
-		specs[0].setType(ServiceType.JAR);
+		specs[0].setType(ServiceType.COMMAND_LINE);
 		specs[0].setEndpointName("");
 		specs[0].setPort(8042);
 
 		specs[1] = new ServiceSpec();
 		specs[1].setCodeUri(WARDeployTest.WAR_LOCATION);
-		specs[1].setType(ServiceType.WAR);
+		specs[1].setType(ServiceType.TOMCAT);
 	}
 	
 	@Test

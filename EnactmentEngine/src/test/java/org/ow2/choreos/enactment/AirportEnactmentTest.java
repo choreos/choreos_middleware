@@ -59,7 +59,7 @@ public class AirportEnactmentTest {
 			int port = Integer.parseInt(AirportProperties.get(serviceName + ".port"));
 			service.setPort(port);
 			service.getRoles().add(serviceName);
-			service.setType(ServiceType.JAR);
+			service.setType(ServiceType.COMMAND_LINE);
 			
 			List<ServiceDependence> deps = getDependences(serviceName);
 			service.setDependences(deps);

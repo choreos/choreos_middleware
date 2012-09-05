@@ -7,11 +7,11 @@ public class RecipeBuilderFactory {
 	public static RecipeBuilder getRecipeBuilderInstance(ServiceType serviceType) {
 
 		switch (serviceType) {
-		case WAR:
+		case TOMCAT:
 			return new RecipeBuilderImpl();
-		case JAR:
+		case COMMAND_LINE:
 			return new RecipeBuilderImpl();
-		case PETALS:
+		case EASY_ESB:
 			return new RecipeBuilderImpl();
 		default:
 			throw new IllegalArgumentException("Service type " + serviceType

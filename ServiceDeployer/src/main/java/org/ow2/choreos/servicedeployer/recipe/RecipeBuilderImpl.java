@@ -59,9 +59,9 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 		String extension = service.getExtension();
 		String recipeName = "";
 		ServiceType type = service.getType();
-		if (type == ServiceType.JAR || type == ServiceType.WAR) {
+		if (type == ServiceType.COMMAND_LINE || type == ServiceType.TOMCAT) {
 			recipeName = extension;
-		} else if (type == ServiceType.PETALS) {
+		} else if (type == ServiceType.EASY_ESB) {
 			recipeName = PETALS_RECIPE;
 		}
 		return recipeName;

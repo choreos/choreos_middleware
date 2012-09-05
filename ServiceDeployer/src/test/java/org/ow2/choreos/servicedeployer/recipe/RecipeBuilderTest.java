@@ -39,7 +39,7 @@ public class RecipeBuilderTest {
 
 		service.setId(id);
 		service.setCodeLocationURI(codeLocationURI);
-		service.setType(ServiceType.WAR);
+		service.setType(ServiceType.TOMCAT);
 		service.setFile(warFile);
 		service.setResourceImpact(impact);
 	}

@@ -35,7 +35,7 @@ public class JARDeployTest {
 	public void setUp() throws Exception {
 		
 		spec.setCodeUri(JAR_LOCATION);
-		spec.setType(ServiceType.JAR);
+		spec.setType(ServiceType.COMMAND_LINE);
 		spec.setEndpointName("");
 		spec.setPort(8042);
 	}

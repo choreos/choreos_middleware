@@ -53,9 +53,9 @@ public class Service {
 	 */
 	public String getExtension() {
 		
-		if (type == ServiceType.JAR || type == ServiceType.WAR) {
+		if (type == ServiceType.COMMAND_LINE || type == ServiceType.TOMCAT) {
 			return type.toString().toLowerCase();
-		} else if (type == ServiceType.PETALS) {
+		} else if (type == ServiceType.EASY_ESB) {
 			return "zip";
 		} else {
 			return null;
@@ -115,13 +115,13 @@ public class Service {
 		
 		String uriContext;
 		switch (type) {
-			case WAR:
+			case TOMCAT:
 				uriContext = "service" + id + "Deploy/";
 				break;
-			case JAR:
+			case COMMAND_LINE:
 				uriContext = endpointName + "/";
 				break;
-			case PETALS:
+			case EASY_ESB:
 				uriContext = "petals/services/" + endpointName + "/";
 				break;
 			default:
@@ -167,10 +167,10 @@ public class Service {
 	public int getPort() {
 		int effectivePort = port;
 
-		if (type == ServiceType.WAR)
+		if (type == ServiceType.TOMCAT)
 			effectivePort = 8080;
 		
-		if (type == ServiceType.PETALS)
+		if (type == ServiceType.EASY_ESB)
 			effectivePort = 8084;
 		
 		return effectivePort;
