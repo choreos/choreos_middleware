@@ -41,7 +41,7 @@ public class TravelChecker implements Runnable {
 					+ " is working (invocation took " + duration
 					+ " milliseconds)");
 		} else {
-			notWorking();
+			notWorking(duration);
 		}
 	}
 	
@@ -78,8 +78,10 @@ public class TravelChecker implements Runnable {
 		}
 	}
 
-	private void notWorking() {
-		System.out.println(Utils.getTimeStamp() + "Choreography #" + idx + " is not working");
+	private void notWorking(long duration) {
+		System.out.println(Utils.getTimeStamp() + "Choreography #" + idx
+				+ " is not working (invocation took " + duration
+				+ " milliseconds)");
 	}
 	
 }

@@ -26,14 +26,17 @@ import org.ow2.choreos.enactment.datamodel.ChorSpec;
  */
 public class Experiment {
 
-	public static final int CHORS_QTY = 6; // how many micro choreographies there will be 
+	public static final int CHORS_QTY = 10; // how many micro choreographies there will be 
 	public static final int SERVICES_PER_CHOR = 2;
 	
 	public void run() {
 		
+		long t0 = System.currentTimeMillis();
 		List<Enacter> enacts = enact();
 		List<TravelChecker> checkers = verify(enacts);
-		System.out.println(Utils.getTimeStamp() + "Experiment completed");
+		long tf = System.currentTimeMillis();
+		long delta = tf - t0;
+		System.out.println(Utils.getTimeStamp() + "Experiment completed in " + delta + " miliseconds");
 		results(checkers);
 	}
 
