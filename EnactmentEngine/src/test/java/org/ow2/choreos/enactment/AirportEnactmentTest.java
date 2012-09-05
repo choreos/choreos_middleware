@@ -8,7 +8,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.ow2.choreos.enactment.datamodel.ChorService;
+import org.ow2.choreos.enactment.datamodel.ChorServiceSpec;
 import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
 import org.ow2.choreos.enactment.datamodel.ServiceDependence;
@@ -52,7 +52,7 @@ public class AirportEnactmentTest {
 		chor = new ChorSpec();
 		for (String serviceName: AirportProperties.SERVICES_NAMES) {
 			
-			ChorService service = new ChorService();
+			ChorServiceSpec service = new ChorServiceSpec();
 			service.setName(serviceName);
 			service.setCodeUri(AirportProperties.get(serviceName + ".codeUri"));
 			service.setEndpointName(serviceName.toLowerCase());

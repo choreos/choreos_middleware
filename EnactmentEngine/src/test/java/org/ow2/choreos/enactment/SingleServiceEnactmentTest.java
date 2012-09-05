@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.ow2.choreos.enactment.datamodel.ChorService;
+import org.ow2.choreos.enactment.datamodel.ChorServiceSpec;
 import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
@@ -39,7 +39,7 @@ public class SingleServiceEnactmentTest {
 	public void setUp() {
 		
 		chor = new ChorSpec();
-		ChorService service = new ChorService();
+		ChorServiceSpec service = new ChorServiceSpec();
 		service.setName(WEATHER_FORECAST_SERVICE);
 		service.setCodeUri(AirportProperties.get(WEATHER_FORECAST_SERVICE + ".codeUri"));
 		service.setEndpointName(WEATHER_FORECAST_SERVICE.toLowerCase());

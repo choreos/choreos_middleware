@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.enactment.client.EnactEngClient;
-import org.ow2.choreos.enactment.datamodel.ChorService;
+import org.ow2.choreos.enactment.datamodel.ChorServiceSpec;
 import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
 import org.ow2.choreos.enactment.datamodel.ServiceDependence;
@@ -57,7 +57,7 @@ public class RestEnactmentTest {
 		
 		chorSpec = new ChorSpec(); 
 		
-		ChorService airline = new ChorService();
+		ChorServiceSpec airline = new ChorServiceSpec();
 		airline.setName(AIRLINE);
 		airline.setCodeUri(AIRLINE_JAR);
 		airline.setEndpointName(AIRLINE);
@@ -66,7 +66,7 @@ public class RestEnactmentTest {
 		airline.getRoles().add(AIRLINE);
 		chorSpec.addServiceSpec(airline);
 		
-		ChorService travel = new ChorService();
+		ChorServiceSpec travel = new ChorServiceSpec();
 		travel.setName(TRAVEL_AGENCY);
 		travel.setCodeUri(TRAVEL_AGENCY_JAR);
 		travel.setEndpointName(TRAVEL_AGENCY);
@@ -96,10 +96,10 @@ public class RestEnactmentTest {
 		String chorId = ee.createChoreography(chorSpec);
 		Choreography chor = ee.getChoreography(chorId);
 		
-		ChorService travel = chor.getServiceSpecByName(TRAVEL_AGENCY);
+		ChorServiceSpec travel = chor.getServiceSpecByName(TRAVEL_AGENCY);
 		assertEquals(chorSpec.getServiceSpecByName(TRAVEL_AGENCY), travel);
 		
-		ChorService airline = chor.getServiceSpecByName(AIRLINE);
+		ChorServiceSpec airline = chor.getServiceSpecByName(AIRLINE);
 		assertEquals(chorSpec.getServiceSpecByName(AIRLINE), airline);		
 	}
 	

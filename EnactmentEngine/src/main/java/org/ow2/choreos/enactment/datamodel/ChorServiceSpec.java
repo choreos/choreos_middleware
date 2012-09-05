@@ -11,7 +11,7 @@ import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
  * @author leonardo
  *
  */
-public class ChorService extends ServiceSpec {
+public class ChorServiceSpec extends ServiceSpec {
 
 	private String name;
 	private String group;
@@ -70,7 +70,7 @@ public class ChorService extends ServiceSpec {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ChorService other = (ChorService) obj;
+		ChorServiceSpec other = (ChorServiceSpec) obj;
 		if (name == null) {
 			if (other.name != null)
 				return false;

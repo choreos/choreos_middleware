@@ -8,26 +8,26 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class ChorSpec {
 
-	protected List<ChorService> serviceSpecs = new ArrayList<ChorService>();
+	protected List<ChorServiceSpec> serviceSpecs = new ArrayList<ChorServiceSpec>();
 
-	public ChorService getServiceSpecByName(String serviceName) {
+	public ChorServiceSpec getServiceSpecByName(String serviceName) {
 		
-		for (ChorService svc: serviceSpecs) {
+		for (ChorServiceSpec svc: serviceSpecs) {
 			if (serviceName.equals(svc.getName()))
 				return svc;
 		}
 		return null;
 	}
 	
-	public void addServiceSpec(ChorService serviceSpec) {
+	public void addServiceSpec(ChorServiceSpec serviceSpec) {
 		this.serviceSpecs.add(serviceSpec);
 	}
 	
-	public List<ChorService> getServiceSpecs() {
+	public List<ChorServiceSpec> getServiceSpecs() {
 		return serviceSpecs;
 	}
 
-	public void setServiceSpecs(List<ChorService> serviceSpec) {
+	public void setServiceSpecs(List<ChorServiceSpec> serviceSpec) {
 		this.serviceSpecs = serviceSpec;
 	}
 
