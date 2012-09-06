@@ -2,84 +2,62 @@ package org.ow2.choreos.servicedeployer.datamodel;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.ow2.choreos.npm.datamodel.ResourceImpact;
-
 
 @XmlRootElement
 public class Service {
 
-	private String id; // Who will define the service ID?
-	private ServiceType type;
+	private String name; 
+	private ServiceSpec spec;
 	private String uri;
-	private String codeLocationURI;
-	private String file; 
-	private ResourceImpact resourceImpact;
-	// port and name are provided if serviceTye == JAR
-	private int port;
-	private String endpointName; 
 	private String hostname;
 	private String ip;
 	private String nodeId; 
+	private String file; // should it die?
 
 	public Service(ServiceSpec serviceSpec) {
 		
-		codeLocationURI = serviceSpec.getCodeUri();
-		endpointName = serviceSpec.getEndpointName();
-
-		port = serviceSpec.getPort();
+		this.spec = serviceSpec;
+		if (this.spec.getType() == null) {
+			this.spec.setType(ServiceType.OTHER);
+		}
 		
-		if (serviceSpec.getType() != null)
-			type = serviceSpec.getType();
-		else
-			type = ServiceType.OTHER;
-		
-		resourceImpact = serviceSpec.getResourceImpact();
-
 		// We assume that the codeLocationURI ends with "/fileName.[war,jar]
-		String extension = getExtension();
+		String extension = this.spec.type.getExtension();
 		String[] urlPieces = serviceSpec.getCodeUri().split("/");
 		if (urlPieces[urlPieces.length - 1].contains("." + extension)) {
 			file = urlPieces[urlPieces.length - 1];
-			id = file.substring(0, file.length()-4);
+			name = file.substring(0, file.length()-4);
 		}
 	}
 
 	public Service() {
-	}
-
-	/**
-	 * 
-	 * @return deploy file extension
-	 */
-	public String getExtension() {
 		
-		if (type == ServiceType.COMMAND_LINE) {
-			return "jar";
-		} else if (type == ServiceType.TOMCAT) {
-			return "war";
-		} else if (type == ServiceType.EASY_ESB) {
-			return "zip";
-		} else {
-			return null;
-		}
-	}
-	
-	public String getId() {
-		return id;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public ServiceSpec getSpec() {
+		return spec;
 	}
 
-	public ServiceType getType() {
-		return type;
+	public void setSpec(ServiceSpec spec) {
+		this.spec = spec;
 	}
 
-	public void setType(ServiceType serviceType) {
-		this.type = serviceType;
+	public String getFile() {
+		return file;
 	}
-	
+
+	public void setFile(String file) {
+		this.file = file;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getIp() {
 		return ip;
 	}
@@ -106,8 +84,18 @@ public class Service {
 
 	public String getUri() {
 		
-		if (uri != null && !uri.isEmpty()) // someone has set the URI
+		if (definedUri()) {
 			return uri;
+		} else {
+			return getDefaultUri();
+		}
+	}
+
+	private boolean definedUri() {
+		return uri != null && !uri.isEmpty();
+	}
+
+	private String getDefaultUri() {
 		
 		// interesting note about the ending slash
 		// http://www.searchenginejournal.com/to-slash-or-not-to-slash-thats-a-server-header-question/6763/
@@ -116,26 +104,26 @@ public class Service {
 			throw new IllegalStateException("Sorry, I don't know neither the hostname nor the IP yet");
 		
 		String uriContext;
-		switch (type) {
+		switch (this.spec.type) {
 			case TOMCAT:
-				uriContext = "service" + id + "Deploy/";
+				uriContext = "service" + name + "Deploy/";
 				break;
 			case COMMAND_LINE:
-				uriContext = endpointName + "/";
+				uriContext = this.spec.endpointName + "/";
 				break;
 			case EASY_ESB:
-				uriContext = "petals/services/" + endpointName + "/";
+				uriContext = "petals/services/" +this.spec. endpointName + "/";
 				break;
 			default:
 				throw new IllegalStateException(
 						"Sorry, I don't know how to provide an URL to a "
-								+ type + " service.");
+								+ this.spec.type + " service.");
 		}
 		
 		if (ip != null && !ip.isEmpty())
-			return "http://" + ip + ":" + getPort() + "/" + uriContext;
+			return "http://" + ip + ":" + this.spec.getPort() + "/" + uriContext;
 		else
-			return "http://" + hostname + ":" + getPort() + "/" + uriContext;
+			return "http://" + hostname + ":" + this.spec.getPort() + "/" + uriContext;
 	}
 
 	public void setUri(String uri) {
@@ -158,59 +146,12 @@ public class Service {
 		return hostname;
 	}
 
-	public String getCodeLocationURI() {
-		return codeLocationURI;
-	}
-
-	public void setCodeLocationURI(String codeLocationURI) {
-		this.codeLocationURI = codeLocationURI;
-	}
-
-	public int getPort() {
-		int effectivePort = port;
-
-		if (type == ServiceType.TOMCAT)
-			effectivePort = 8080;
-		
-		if (type == ServiceType.EASY_ESB)
-			effectivePort = 8084;
-		
-		return effectivePort;
-	}
-
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	public String getFile() {
-		return file;
-	}
-
-	public void setFile(String file) {
-		this.file = file;
-	}
-
-	public ResourceImpact getResourceImpact() {
-		return resourceImpact;
-	}
-
-	public void setResourceImpact(ResourceImpact resourceImpact) {
-		this.resourceImpact = resourceImpact;
-	}
 	
-	public String getName() {
-		return endpointName;
-	}
-
-	public void setName(String name) {
-		this.endpointName = name;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
 		return result;
 	}
@@ -224,10 +165,10 @@ public class Service {
 		if (getClass() != obj.getClass())
 			return false;
 		Service other = (Service) obj;
-		if (id == null) {
-			if (other.id != null)
+		if (name == null) {
+			if (other.name != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!name.equals(other.name))
 			return false;
 		if (uri == null) {
 			if (other.uri != null)
@@ -239,7 +180,7 @@ public class Service {
 
 	@Override
 	public String toString() {
-		return "Service [id=" + id + ", uri=" + uri + "]";
+		return "Service [name=" + name + ", uri=" + getUri() + "]";
 	}
 
 }

@@ -33,7 +33,7 @@ import eu.choreos.vv.clientgenerator.WSClient;
 public class RestEnactmentTest {
 
 	private static final String AIRLINE = "airline";
-	private static final String TRAVEL_AGENCY = "travelagency";	
+	private static final String TRAVEL_AGENCY = "travelagency";
 	private static final String AIRLINE_JAR = "http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar";
 	private static final String TRAVEL_AGENCY_JAR = "http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar";	
 	private static final int AIRLINE_PORT = 1234;
@@ -112,7 +112,8 @@ public class RestEnactmentTest {
 		Choreography chor = ee.enact(chorId);
 		
 		Service travel = chor.getDeployedServiceByName(TRAVEL_AGENCY);
-		WSClient client = new WSClient(travel.getUri() + "?wsdl");
+		String uri = travel.getUri();
+		WSClient client = new WSClient(uri + "?wsdl");
 		Item response = client.request("buyTrip");
 		String codes = response.getChild("return").getContent();
 		

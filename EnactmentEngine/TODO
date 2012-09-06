@@ -16,9 +16,7 @@ they must be deployed on the same node.
 
 * Registry should use a database instead a static map.
 
-* Service should contain a ServiceSpec. Not repeat the attributes!
-
-* Do not pass context to not deployed services
+* Should service.file attribute be removed?
 
 *** DONE ***
 
@@ -35,6 +33,11 @@ Now we have POST nodepoolmanager/nodes/{id}/upgrade operation
 * Performance bottleneck: (LOW) Replace WSClient (concurrency problems) by javax (as in futuremarket project).
 It was actually not as in the futuremarket, but iw was indeed using only javax classes (manually building the soap envelope).
 
+* Do not pass context to not deployed services
+
 * Choreography should contain a ChorSpec, and not TO BE a ChorSpec (inheritance)
+
+* Service should contain a ServiceSpec. Not repeated attributes!
+
 
 

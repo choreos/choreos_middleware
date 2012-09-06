@@ -12,6 +12,7 @@ import org.ow2.choreos.npm.datamodel.Config;
 import org.ow2.choreos.npm.datamodel.Node;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
+import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
 import org.ow2.choreos.servicedeployer.recipe.Recipe;
 import org.ow2.choreos.servicedeployer.recipe.RecipeBuilder;
 import org.ow2.choreos.servicedeployer.recipe.RecipeBuilderFactory;
@@ -53,14 +54,15 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 		service.setHost(hostname);
 		service.setIp(ip);
 		service.setNodeId(node.getId());
-		registry.addService(service.getId(), service);
+		registry.addService(service.getName(), service);
 		
 		return service;
 	}
 
 	private Recipe createRecipe(Service service) {
 		
-		RecipeBuilder builder = RecipeBuilderFactory.getRecipeBuilderInstance(service.getType());
+		ServiceType type = service.getSpec().getType();
+		RecipeBuilder builder = RecipeBuilderFactory.getRecipeBuilderInstance(type);
 		Recipe serviceRecipe = builder.createRecipe(service);
 		return serviceRecipe;
 	}

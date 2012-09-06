@@ -73,7 +73,7 @@ public class ServicesResource {
 		logger.info(service.getName() + " deployed on " + service.getHost());
 		
 		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-		uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getId());
+		uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getName());
 		URI location = uriBuilder.build();
 
 		return Response.created(location).entity(service).build();

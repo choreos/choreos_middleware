@@ -27,7 +27,7 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 			
 			String recipeName = getRecipeName(service);
 			recipe.setName(recipeName);
-			recipe.setCookbookName("service" + service.getId());
+			recipe.setCookbookName("service" + service.getName());
 			this.recipeFile = recipeName + ".rb";
 			File targetFolder = getTargetFolder(service);
 			recipe.setCookbookFolder(targetFolder.getAbsolutePath());
@@ -56,9 +56,9 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 	}
 
 	private String getRecipeName(Service service) {
-		String extension = service.getExtension();
+		ServiceType type = service.getSpec().getType();
+		String extension = type.getExtension();
 		String recipeName = "";
-		ServiceType type = service.getType();
 		if (type == ServiceType.COMMAND_LINE || type == ServiceType.TOMCAT) {
 			recipeName = extension;
 		} else if (type == ServiceType.EASY_ESB) {
@@ -70,17 +70,17 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 	// methods have "package visibility" to testing purposes
 
 	void changeMetadataRb(Service service) throws IOException {
-		changeFileContents(service, "/service" + service.getId()
+		changeFileContents(service, "/service" + service.getName()
 				+ "/metadata.rb");
 	}
 
 	private void changeServerRecipe(Service service) throws IOException {
-		changeFileContents(service, "/service" + service.getId()
+		changeFileContents(service, "/service" + service.getName()
 				+ "/recipes/"+this.recipeFile);
 	}
 
 	void changeAttributesDefaultRb(Service service) throws IOException {
-		changeFileContents(service, "/service" + service.getId()
+		changeFileContents(service, "/service" + service.getName()
 				+ "/attributes/default.rb");
 	}
 
@@ -90,8 +90,8 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 		File file = new File(DEST_DIR + fileLocation);
 		String fileData = FileUtils.readFileToString(file);
 
-		fileData = fileData.replace("$NAME", service.getId());
-		fileData = fileData.replace("$URL", service.getCodeLocationURI());
+		fileData = fileData.replace("$NAME", service.getName());
+		fileData = fileData.replace("$URL", service.getSpec().getCodeUri());
 		fileData = fileData.replace("$WARFILE", service.getFile());
 
 		FileUtils.deleteQuietly(file);
@@ -100,7 +100,7 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 	
 	private File getTargetFolder(Service service) {
 		
-		String destPath = DEST_DIR.getAbsolutePath() + "/service" + service.getId();
+		String destPath = DEST_DIR.getAbsolutePath() + "/service" + service.getName();
 		File destFolder = new File(destPath);
 		
 		return destFolder;
@@ -110,7 +110,7 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 		
 		File srcFolder = new File(TEMPLATE_DIR);
 		
-		String destPath = DEST_DIR.getAbsolutePath() + "/service" + service.getId();
+		String destPath = DEST_DIR.getAbsolutePath() + "/service" + service.getName();
 		File destFolder = new File(destPath);
 		
 		synchronized(RecipeBuilderImpl.class) {

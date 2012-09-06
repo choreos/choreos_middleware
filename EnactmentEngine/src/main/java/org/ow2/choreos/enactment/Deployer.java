@@ -32,14 +32,15 @@ public class Deployer {
 		logger.info("Deploying services");
 		Map<String, Service> deployedServices = new HashMap<String, Service>(); // key is serviceName
 		
-		for (ChorServiceSpec service: chor.getServiceSpecs()) {
-			ServiceSpec serviceSpec = service.getServiceSpec();
+		for (ChorServiceSpec chorServiceSpec: chor.getServiceSpecs()) {
+			ServiceSpec serviceSpec = chorServiceSpec.getServiceSpec();
 			logger.debug("Requesting deploy of " + serviceSpec);
 			Service deployed = deployer.deploy(serviceSpec);
 			if (deployed != null) {
-				deployedServices.put(service.getName(), deployed);
+				deployed.setName(chorServiceSpec.getName());
+				deployedServices.put(chorServiceSpec.getName(), deployed);
 			} else {
-				logger.error(service.getName() + " deploy has failed");
+				logger.error(chorServiceSpec.getName() + " deploy has failed");
 			}
 		}
 		logger.info("Nodes are configured to receive services");

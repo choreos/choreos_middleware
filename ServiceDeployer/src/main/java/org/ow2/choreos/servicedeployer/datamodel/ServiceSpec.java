@@ -46,7 +46,21 @@ public class ServiceSpec {
 	}
 
 	public int getPort() {
-		return port;
+		
+		int effectivePort = port;
+
+		if (notDefinedPort()) {
+			if (type == ServiceType.TOMCAT)
+				effectivePort = 8080;
+			if (type == ServiceType.EASY_ESB)
+				effectivePort = 8084;
+		}
+		
+		return effectivePort;
+	}
+
+	private boolean notDefinedPort() {
+		return this.port == 0;
 	}
 
 	public void setPort(int port) {

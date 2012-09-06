@@ -12,6 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.npm.datamodel.ResourceImpact;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
+import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
 import org.ow2.choreos.servicedeployer.recipe.Recipe;
 import org.ow2.choreos.servicedeployer.recipe.RecipeBuilderImpl;
@@ -37,11 +38,14 @@ public class RecipeBuilderTest {
 		impact.setMemory("low");
 		impact.setRegion("BR");
 
-		service.setId(id);
-		service.setCodeLocationURI(codeLocationURI);
-		service.setType(ServiceType.TOMCAT);
+		ServiceSpec spec = new ServiceSpec();
+		spec.setCodeUri(codeLocationURI);
+		spec.setType(ServiceType.TOMCAT);
+		spec.setResourceImpact(impact);
+
+		service.setName(id);
+		service.setSpec(spec);
 		service.setFile(warFile);
-		service.setResourceImpact(impact);
 	}
 
 	@Before

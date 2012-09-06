@@ -3,6 +3,7 @@ package org.ow2.choreos.servicedeployer;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,6 +18,8 @@ import org.ow2.choreos.utils.LogConfigurator;
 
 public class WARDeployTest {
 
+	private Logger logger = Logger.getLogger(WARDeployTest.class);
+	
 	// a known war file
 	public static String WAR_LOCATION = "https://github.com/downloads/choreos/choreos_middleware/myServletWAR.war";
 	
@@ -46,7 +49,7 @@ public class WARDeployTest {
 
 		Service service = deployer.deploy(specWar);
 		String url = service.getUri();
-		System.out.println("Service at " + url);
+		logger.info("Service at " + url);
 		npm.upgradeNodes();
 		Thread.sleep(1000);
 		client = WebClient.create(url); 
