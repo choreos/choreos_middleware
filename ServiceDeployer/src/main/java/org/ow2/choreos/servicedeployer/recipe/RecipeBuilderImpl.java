@@ -92,7 +92,7 @@ public class RecipeBuilderImpl implements RecipeBuilder {
 
 		fileData = fileData.replace("$NAME", service.getName());
 		fileData = fileData.replace("$URL", service.getSpec().getCodeUri());
-		fileData = fileData.replace("$WARFILE", service.getFile());
+		fileData = fileData.replace("$WARFILE", service.getSpec().getFileName());
 
 		FileUtils.deleteQuietly(file);
 		FileUtils.writeStringToFile(file, fileData);

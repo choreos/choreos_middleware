@@ -12,7 +12,6 @@ public class Service {
 	private String hostname;
 	private String ip;
 	private String nodeId; 
-	private String file; // should it die?
 
 	public Service(ServiceSpec serviceSpec) {
 		
@@ -21,13 +20,14 @@ public class Service {
 			this.spec.setType(ServiceType.OTHER);
 		}
 		
-		// We assume that the codeLocationURI ends with "/fileName.[war,jar]
-		String extension = this.spec.type.getExtension();
-		String[] urlPieces = serviceSpec.getCodeUri().split("/");
-		if (urlPieces[urlPieces.length - 1].contains("." + extension)) {
-			file = urlPieces[urlPieces.length - 1];
-			name = file.substring(0, file.length()-4);
-		}
+		name = getDefaultName();
+	}
+	
+	private String getDefaultName() {
+		
+		String fileName = this.spec.getFileName();
+		String defaultName = fileName.substring(0, fileName.length()-4);
+		return defaultName;
 	}
 
 	public Service() {
@@ -40,14 +40,6 @@ public class Service {
 
 	public void setSpec(ServiceSpec spec) {
 		this.spec = spec;
-	}
-
-	public String getFile() {
-		return file;
-	}
-
-	public void setFile(String file) {
-		this.file = file;
 	}
 
 	public String getName() {

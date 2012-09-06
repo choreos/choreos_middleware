@@ -45,6 +45,18 @@ public class ServiceSpec {
 		this.endpointName = name;
 	}
 
+	public String getFileName() {
+		
+		// We assume that the codeLocationURI ends with "/fileName.[war,jar]
+		String fileName = "";
+		String extension = this.type.getExtension();
+		String[] urlPieces = this.getCodeUri().split("/");
+		if (urlPieces[urlPieces.length - 1].contains("." + extension)) {
+			fileName = urlPieces[urlPieces.length - 1];
+		}
+		return fileName;
+	}
+	
 	public int getPort() {
 		
 		int effectivePort = port;

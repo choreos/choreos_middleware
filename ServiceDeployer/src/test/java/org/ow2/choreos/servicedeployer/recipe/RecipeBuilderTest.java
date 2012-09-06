@@ -25,7 +25,6 @@ public class RecipeBuilderTest {
 	private static Service service = new Service();
 	private static String id = "myServletWAR";
 	private static String codeLocationURI = "https://github.com/downloads/choreos/choreos_middleware/myServletWAR.war";
-	private static String warFile = "myServletWAR.war";
 	private static ResourceImpact impact = new ResourceImpact();
 
 	@BeforeClass
@@ -45,7 +44,6 @@ public class RecipeBuilderTest {
 
 		service.setName(id);
 		service.setSpec(spec);
-		service.setFile(warFile);
 	}
 
 	@Before
@@ -112,6 +110,7 @@ public class RecipeBuilderTest {
 		assertFalse(fileData.contains("$NAME"));
 
 		// Ensure the ocurrences of $WARFILE were replaced with war file name
+		String warFile = service.getSpec().getFileName();
 		assertTrue(fileData.contains(warFile));
 		assertFalse(fileData.contains("$WARFILE"));
 

@@ -103,6 +103,9 @@ We just check if the node is listed by the "knife node list" command.
 * Change enumerations in ServiceType
 JAR -> COMMAND_LINE; WAR -> TOMCAT
 
+* Should service.file attribute be removed?
+Now we have just the serviceSpec.getFileName() method.
+
 
 
 
