@@ -40,10 +40,10 @@ public class EnactEngImpl implements EnactmentEngine {
 		logger.info("Starting enactment; chorId= " + chorId);
 		
 		Deployer deployer = new Deployer();
-		Map<String, Service> deployedMap = deployer.deployServices(chor);
+		Map<String, Service> deployedMap = deployer.deployServices(chor.getChorSpec());
 		
 		ContextCaster caster = new ContextCaster();
-		caster.cast(chor, deployedMap);
+		caster.cast(chor.getChorSpec(), deployedMap);
 		
 		logger.info("Enactment completed; chorId=" + chorId);
 		

@@ -46,7 +46,7 @@ public class ChorRegistry {
 		
 		Choreography chor = new Choreography();
 		chor.setId(id);
-		chor.setServiceSpecs(chorSpec.getServiceSpecs());
+		chor.setChorSpec(chorSpec);
 		chors.put(id, chor);
 		
 		return id;

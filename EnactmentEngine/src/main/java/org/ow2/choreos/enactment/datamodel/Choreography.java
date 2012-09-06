@@ -1,5 +1,6 @@
 package org.ow2.choreos.enactment.datamodel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -7,10 +8,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 
 @XmlRootElement
-public class Choreography extends ChorSpec {
+public class Choreography {
 
 	private String id;
-	private List<Service> deployedServices;
+	private ChorSpec chorSpec;
+	private List<Service> deployedServices = new ArrayList<Service>();
 	
 	public Service getDeployedServiceByName(String serviceName) {
 		
@@ -26,6 +28,12 @@ public class Choreography extends ChorSpec {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public ChorSpec getChorSpec() {
+		return chorSpec;
+	}
+	public void setChorSpec(ChorSpec chorSpec) {
+		this.chorSpec = chorSpec;
 	}
 	public List<Service> getDeployedServices() {
 		return deployedServices;
@@ -61,8 +69,8 @@ public class Choreography extends ChorSpec {
 
 	@Override
 	public String toString() {
-		return "Choreography [id=" + id + ", deployedServices="
-				+ deployedServices + ", serviceSpecs=" + serviceSpecs + "]";
+		return "Choreography [id=" + id + ", chorSpec=" + chorSpec
+				+ ", deployedServices=" + deployedServices + "]";
 	}
 	
 }

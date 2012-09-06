@@ -96,10 +96,10 @@ public class RestEnactmentTest {
 		String chorId = ee.createChoreography(chorSpec);
 		Choreography chor = ee.getChoreography(chorId);
 		
-		ChorServiceSpec travel = chor.getServiceSpecByName(TRAVEL_AGENCY);
+		ChorServiceSpec travel = chor.getChorSpec().getServiceSpecByName(TRAVEL_AGENCY);
 		assertEquals(chorSpec.getServiceSpecByName(TRAVEL_AGENCY), travel);
 		
-		ChorServiceSpec airline = chor.getServiceSpecByName(AIRLINE);
+		ChorServiceSpec airline = chor.getChorSpec().getServiceSpecByName(AIRLINE);
 		assertEquals(chorSpec.getServiceSpecByName(AIRLINE), airline);		
 	}
 	

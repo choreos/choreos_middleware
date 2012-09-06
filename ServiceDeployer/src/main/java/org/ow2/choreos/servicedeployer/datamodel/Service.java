@@ -53,8 +53,10 @@ public class Service {
 	 */
 	public String getExtension() {
 		
-		if (type == ServiceType.COMMAND_LINE || type == ServiceType.TOMCAT) {
-			return type.toString().toLowerCase();
+		if (type == ServiceType.COMMAND_LINE) {
+			return "jar";
+		} else if (type == ServiceType.TOMCAT) {
+			return "war";
 		} else if (type == ServiceType.EASY_ESB) {
 			return "zip";
 		} else {
