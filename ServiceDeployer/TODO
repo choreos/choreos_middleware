@@ -1,12 +1,13 @@
 NodePoolManager ToDo list
 
-* Concurrent requests can trigger concurrent bootstraps on the same node!
-It's not desirable. However, often recipes are applied when node is already bootstrapped,
-since 'create node' also bootstraps the node.
+* Avoid null returns when exception would be more appropriate.
+Important places to change this: NodePoolManager, ServideDeployer, and EnactmentEngine interfaces.
 
 * Improve javadoc of REST operations (ex: detail return codes)
 
 * It seems there is some overlapping between INSTALL and README files. Handle this.
+
+* When NPM starts, NodeRegistry should be filled with nodes retrieved from the cloud provider.
 
 * Make FixedCloudProvider deal with several VMs
 
@@ -22,25 +23,25 @@ and not only one config
 
 * Before managing the node, we could trigger the ntpdate command on the node (through ssh)
 
-* Think better about exceptions in NodePoolManager, ServiceDeployer, and EnactmentEngine interface
-
-* When NPM starts, NodeRegistry should be filled with nodes retrieved from the cloud provider.
+* Concurrent requests can trigger concurrent bootstraps on the same node!
+It's not desirable. However, often recipes are applied when node is already bootstrapped,
+since 'create node' also bootstraps the node.
 
 
 =============================
 
 Service Deployer ToDo list
 
-* The POST /services should support receiving a list of services,
-and not just one service
+* Describe Chef-Server setup (example: Java and Tomcat recipes must be available)
+Better idea: say to the user to install all the recipes of our cookbook folder in his server.
 
 * Improve javadoc of REST operations (ex: detail return codes)
 
+* The POST /services should support receiving a list of services,
+and not just one service
+
 * It does not seem nice that the service deployer client has to call npm.upgradeNodes operation
 A possible solution would be the service deployer server running npm.upgradeNodes periodically
-
-* Describe Chef-Server setup (example: Java and Tomcat recipes must be available)
-Better idea: clean our cookbook folder and say to the user to install all the recipes of our cookbook folder in his server.
 
 * jar file names get very ugly
 Download the jar name with its original name

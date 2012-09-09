@@ -16,8 +16,6 @@ they must be deployed on the same node.
 
 * Registry should use a database instead a static map.
 
-* Generate XSD
-
 *** DONE ***
 
 * Finish GET /chors/{chorID}/enactment
@@ -38,4 +36,7 @@ It was actually not as in the futuremarket, but iw was indeed using only javax c
 * Choreography should contain a ChorSpec, and not TO BE a ChorSpec (inheritance)
 
 * Service should contain a ServiceSpec. Not repeated attributes!
+
+* Generate XSD
+see datamodel.xml package
 

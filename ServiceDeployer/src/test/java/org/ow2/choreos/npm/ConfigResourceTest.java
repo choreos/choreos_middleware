@@ -15,16 +15,16 @@ import org.ow2.choreos.utils.SshUtil;
 public class ConfigResourceTest extends BaseTest {
 	
     /**
-     * This test supposes the "getting-started2" recipe is already available on the chef server 
-     * This recipe must create the getting-started2.txt file on home directory
+     * This test supposes the "getting-started" recipe is already available on the chef server 
+     * This recipe must create the getting-started.txt file on home directory
      * 
      * @throws Exception 
      */
     @Test
     public void shouldApplyValidCookbook() throws Exception{
     	
-    	String RECIPE_NAME = "getting-started2";
-    	String CREATED_FILE = "chef-getting-started2.txt";
+    	String RECIPE_NAME = "getting-started";
+    	String CREATED_FILE = "chef-getting-started.txt";
 		CloudProvider cp = new FixedCloudProvider();
 		Node node = cp.createOrUseExistingNode(null);
     	
@@ -38,7 +38,7 @@ public class ConfigResourceTest extends BaseTest {
         boolean upgraded = npm.upgradeNodes();
         assertTrue(upgraded);
         
-        // verify if the file getting-started2 is actually there
+        // verify if the file getting-started is actually there
         SshUtil ssh = new SshUtil(returnedNode.getIp(), node.getUser(), node.getPrivateKeyFile());
     	String returnText = ssh.runCommand("ls " + CREATED_FILE, true);
     	assertTrue(returnText.trim().equals(CREATED_FILE));
