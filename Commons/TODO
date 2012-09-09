@@ -2,14 +2,6 @@ Commons ToDo list
 
 * ChefNodeNameRetriever is actually searching my_chef_name.sh on NPM resources folder
 
-* Concurrent Knife
-To avoid failures on "knife node runlist add", the execution of this command is synchronized
-However, if we have different virtual machines executing this command, the result will be not safer
-There is two possible solutions:
-  * Trying to use the REST API, instead knife commands
-  * After executing the knife command, check the runlist with "knife node show"
-    If the requested recipe is not there, execute the command "runlist add" again
-
 * Once upon a time, the ssh connection to my VM was working, but taking too long to connect.
 The connection timeout of ShhUtil it was not enough.
 When the user use the option "try again" when connecting, 
@@ -31,3 +23,11 @@ mvn clean javadoc:jar source:jar install
 
 * private key argument on bootstrap should be the last argument
 
+* Concurrent Knife
+To avoid failures on "knife node runlist add", the execution of this command is synchronized
+However, if we have different virtual machines executing this command, the result will be not safer
+There is two possible solutions:
+  * Trying to use the REST API, instead knife commands
+  * After executing the knife command, check the runlist with "knife node show"
+    If the requested recipe is not there, execute the command "runlist add" again
+We took the second approach, but at the client, since this verification causes an overhead

@@ -28,7 +28,7 @@ public class ConfigResourceTest extends BaseTest {
 		CloudProvider cp = new FixedCloudProvider();
 		Node node = cp.createOrUseExistingNode(null);
     	
-    	NodePoolManager npm = new NPMClient(nodePoolManagerHost);
+    	NodePoolManager npm = new NPMImpl(cp);
     	Config config = new Config(RECIPE_NAME);
     	Node returnedNode = npm.applyConfig(config);
     	assertTrue(returnedNode != null);

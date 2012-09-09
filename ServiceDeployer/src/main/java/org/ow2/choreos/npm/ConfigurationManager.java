@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.log4j.Logger;
+import org.ow2.choreos.chef.ChefNode;
 import org.ow2.choreos.chef.ChefNodeNameRetriever;
 import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeException;
@@ -134,26 +135,18 @@ public class ConfigurationManager {
         logger.debug("Connected to " + node);
 	}
 
-    /**
-    *
-    * @param node
-    * @param cookbook
-    * @return <code>true</code> for success, and <code>false</code> to failure
-    * @throws Exception
-    */
-    public boolean installRecipe(Node node, String cookbook)  {
-        return this.installRecipe(node, cookbook, "default");
+	/**
+	 * Uses the default recipe
+	 * @param node
+	 * @param cookbook
+	 * @return
+	 * @throws NotAppliedRecipe
+	 */
+    public void installRecipe(Node node, String cookbook) throws NotAppliedRecipe {
+        this.applyRecipe(node, cookbook, "default");
     }
 
-    /**
-     *
-     * @param node
-     * @param cookbook
-     * @param recipe
-     * @return <code>true</code> for success, and <code>false</code> to failure
-     * @throws Exception
-     */
-    public boolean installRecipe(Node node, String cookbook, String recipe)  {
+    public void applyRecipe(Node node, String cookbook, String recipe) throws NotAppliedRecipe {
 
         try {
 			if (!isInitialized(node)) {
@@ -161,15 +154,14 @@ public class ConfigurationManager {
 			    this.initializeNode(node);
 			}
 		} catch (JSchException e) {
-			logger.error(e);
-			return false;
+			throw new NotAppliedRecipe(cookbook + "::" + recipe + " not applied on " + node.getChefName());
 		} catch (KnifeException e) {
-			logger.error(e);
-			return false;
+			throw new NotAppliedRecipe(cookbook + "::" + recipe + " not applied on " + node.getChefName());
 		}
 
-		if (node.getChefName() == null)
+		if (node.getChefName() == null) {
 			this.retrieveAndSetChefName(node);
+		}
         
         Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
 
@@ -180,16 +172,28 @@ public class ConfigurationManager {
         	try {
 				knife.node().runListAdd(node.getChefName(), cookbook, recipe);
 			} catch (KnifeException e) {
-				logger.error(e);
-				return false;
+				throw new NotAppliedRecipe(cookbook + "::" + recipe + " not applied on " + node.getChefName());
 			}
         }
 
-        // TODO we should verify if the recipe install was OK
-        return true;
+        boolean ok = verifyRecipeInRunList(knife, node.getChefName(), cookbook, recipe);
+        if (!ok) {
+			throw new NotAppliedRecipe(cookbook + "::" + recipe + " not applied on " + node.getChefName());
+        }
     }
 
-    private void retrieveAndSetChefName(Node node) {
+    private boolean verifyRecipeInRunList(Knife knife, String chefName,
+			String cookbook, String recipe) {
+
+    	try {
+			ChefNode chefNode = knife.node().show(chefName);
+			return chefNode.hasRecipeOnRunlist(cookbook + "::" + recipe);
+		} catch (KnifeException e) {
+			return false;
+		}
+	}
+
+	private void retrieveAndSetChefName(Node node) {
         
     	ChefNodeNameRetriever nameRetriever = new ChefNodeNameRetriever();
         String chefClientName = null;

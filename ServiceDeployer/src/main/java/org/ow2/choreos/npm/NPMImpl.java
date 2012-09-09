@@ -73,12 +73,14 @@ public class NPMImpl implements NodePoolManager {
         String cookbook = ConfigToChef.getCookbookNameFromConfigName(config.getName());
         String recipe = ConfigToChef.getRecipeNameFromConfigName(config.getName());
 
-        boolean ok = this.configurationManager.installRecipe(node, cookbook, recipe);
+        try {
+			this.configurationManager.applyRecipe(node, cookbook, recipe);
+		} catch (NotAppliedRecipe e) {
+			logger.error(e.getMessage(), e);
+			return null;
+		}
 
-        if (ok)
-        	return node;
-        else
-        	return null;
+    	return node;
     }
     
     @Override

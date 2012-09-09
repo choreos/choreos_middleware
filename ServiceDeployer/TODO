@@ -8,9 +8,6 @@ since 'create node' also bootstraps the node.
 
 * It seems there is some overlapping between INSTALL and README files. Handle this.
 
-* After applying a configuration, use "knife node show NODE" to verify if the recipe was installed with success
-If not, return an error
-
 * Make FixedCloudProvider deal with several VMs
 
 * Is indeed useful a REST operation POST /nodes/{id}/configs
@@ -105,6 +102,10 @@ JAR -> COMMAND_LINE; WAR -> TOMCAT
 
 * Should service.file attribute be removed?
 Now we have just the serviceSpec.getFileName() method.
+
+* After applying a configuration, use "knife node show NODE" to verify if the recipe was installed with success
+If not, return an error
+
 
 
 
