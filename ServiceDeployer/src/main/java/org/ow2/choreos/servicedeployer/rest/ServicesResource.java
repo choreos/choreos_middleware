@@ -24,6 +24,9 @@ import org.ow2.choreos.npm.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.servicedeployer.Configuration;
 import org.ow2.choreos.servicedeployer.ServiceDeployer;
 import org.ow2.choreos.servicedeployer.ServiceDeployerImpl;
+import org.ow2.choreos.servicedeployer.ServiceNotDeletedException;
+import org.ow2.choreos.servicedeployer.ServiceNotDeployedException;
+import org.ow2.choreos.servicedeployer.ServiceNotFoundException;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
 
@@ -64,9 +67,10 @@ public class ServicesResource {
 		
 		logger.debug("Request to deploy " + serviceSpec.getCodeUri());
 
-		Service service = serviceDeployer.deploy(serviceSpec);
-		
-		if (service == null) {
+		Service service;
+		try {
+			service = serviceDeployer.deploy(serviceSpec);
+		} catch (ServiceNotDeployedException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		
@@ -96,9 +100,10 @@ public class ServicesResource {
 		}
 		
 		logger.debug("Request to get service " + serviceId);
-		Service service = serviceDeployer.getService(serviceId);
-		
-		if (service == null) {
+		Service service;
+		try {
+			service = serviceDeployer.getService(serviceId);
+		} catch (ServiceNotFoundException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		
@@ -120,14 +125,12 @@ public class ServicesResource {
 
 		logger.debug("Request to delete service " + serviceId);
 		
-		if (serviceDeployer.getService(serviceId) == null) {
-			return Response.status(Status.NOT_FOUND).build();
-		}
-
-		boolean ok = serviceDeployer.deleteService(serviceId);
-
-		if (!ok) {
+		try {
+			serviceDeployer.deleteService(serviceId);
+		} catch (ServiceNotDeletedException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		} catch (ServiceNotFoundException e) {
+			return Response.status(Status.NOT_FOUND).build();
 		}
 		
 		logger.info("Service " + serviceId + " deleted");

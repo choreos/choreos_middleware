@@ -7,9 +7,12 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.enactment.Configuration.Option;
 import org.ow2.choreos.enactment.datamodel.ChorServiceSpec;
 import org.ow2.choreos.enactment.datamodel.ChorSpec;
+import org.ow2.choreos.npm.NodeNotFoundException;
+import org.ow2.choreos.npm.NodeNotUpgradedException;
 import org.ow2.choreos.npm.NodePoolManager;
 import org.ow2.choreos.npm.client.NPMClient;
 import org.ow2.choreos.servicedeployer.ServiceDeployer;
+import org.ow2.choreos.servicedeployer.ServiceNotDeployedException;
 import org.ow2.choreos.servicedeployer.client.ServiceDeployerClient;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
@@ -35,20 +38,25 @@ public class Deployer {
 		for (ChorServiceSpec chorServiceSpec: chor.getServiceSpecs()) {
 			ServiceSpec serviceSpec = chorServiceSpec.getServiceSpec();
 			logger.debug("Requesting deploy of " + serviceSpec);
-			Service deployed = deployer.deploy(serviceSpec);
-			if (deployed != null) {
+			Service deployed;
+			try {
+				deployed = deployer.deploy(serviceSpec);
 				deployed.setName(chorServiceSpec.getName());
 				deployedServices.put(chorServiceSpec.getName(), deployed);
-			} else {
+			} catch (ServiceNotDeployedException e) {
 				logger.error(chorServiceSpec.getName() + " deploy has failed");
 			}
 		}
+		
 		logger.info("Nodes are configured to receive services");
 		
 		for (Service svc: deployedServices.values()) {
 			String nodeId = svc.getNodeId();
-			boolean ok = npm.upgradeNode(nodeId);
-			if (!ok) {
+			try {
+				npm.upgradeNode(nodeId);
+			} catch (NodeNotUpgradedException e) {
+				logger.error("Bad response from /nodes/" + nodeId + "/upgrade; maybe some service is not deployed");
+			} catch (NodeNotFoundException e) {
 				logger.error("Bad response from /nodes/" + nodeId + "/upgrade; maybe some service is not deployed");
 			}
 		}

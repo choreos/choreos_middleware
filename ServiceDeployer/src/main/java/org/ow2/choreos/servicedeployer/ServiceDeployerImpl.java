@@ -101,13 +101,11 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 	}
 
 	@Override
-	public boolean deleteService(String serviceId) {
+	public void deleteService(String serviceName) throws ServiceNotDeletedException {
 		
-		registry.deleteService(serviceId);
-		if (registry.getService(serviceId) == null)
-			return true;
-		else
-			return false;
+		registry.deleteService(serviceName);
+		if (registry.getService(serviceName) != null)
+			throw new ServiceNotDeletedException(serviceName);
 	}
 
 }

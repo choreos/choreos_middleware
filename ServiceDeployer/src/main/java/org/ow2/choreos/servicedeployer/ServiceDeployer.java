@@ -10,21 +10,22 @@ public interface ServiceDeployer {
 	 * 
 	 * @param service specification
 	 * @return information about how the service was deployed. 
-	 * <code>null</code> if deploy was not possible.
+	 * @throws ServiceNotDeployedException if deploy was not possible.
 	 */
-	public Service deploy(ServiceSpec serviceSpec);
+	public Service deploy(ServiceSpec serviceSpec) throws ServiceNotDeployedException;
 
 	/**
 	 * 
-	 * @param serviceId
-	 * @return the service representation or <code>null</code> if ID does not exist.
+	 * @param serviceName
+	 * @return the service representation 
+	 * @throws ServiceNotFoundException if ID does not exist
 	 */
-	public Service getService(String serviceId);
+	public Service getService(String serviceName) throws ServiceNotFoundException;
 	
 	/**
 	 * 
-	 * @param serviceId
-	 * @return <code>true</code> for success or <code>false</code> to failure
+	 * @param serviceName
+	 * @throws ServiceNotDeletedException if it fails
 	 */
-	public boolean deleteService(String serviceId);
+	public void deleteService(String serviceName) throws ServiceNotDeletedException, ServiceNotFoundException;
 }

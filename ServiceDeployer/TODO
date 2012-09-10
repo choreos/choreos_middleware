@@ -1,10 +1,5 @@
 NodePoolManager ToDo list
 
-* Avoid null returns when exception would be more appropriate.
-Important places to change this: NodePoolManager, ServideDeployer, and EnactmentEngine interfaces.
-
-* Improve javadoc of REST operations (ex: detail return codes)
-
 * It seems there is some overlapping between INSTALL and README files. Handle this.
 
 * When NPM starts, NodeRegistry should be filled with nodes retrieved from the cloud provider.
@@ -108,6 +103,10 @@ Now we have just the serviceSpec.getFileName() method.
 * After applying a configuration, use "knife node show NODE" to verify if the recipe was installed with success
 If not, return an error
 
+* Avoid null returns when exception would be more appropriate.
+Important places to change this: NodePoolManager, ServideDeployer, and EnactmentEngine interfaces.
+
+* Improve javadoc of REST operations (ex: detail return codes) // NPM
 
 
 

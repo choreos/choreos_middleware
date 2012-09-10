@@ -3,6 +3,7 @@ package org.ow2.choreos.enact;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ow2.choreos.npm.NodeNotCreatedException;
 import org.ow2.choreos.npm.NodePoolManager;
 import org.ow2.choreos.npm.client.NPMClient;
 import org.ow2.choreos.npm.datamodel.Node;
@@ -52,7 +53,13 @@ public class Bootstrapper {
 					long t0 = System.currentTimeMillis();
 					NodePoolManager npm = new NPMClient(NPM_HOST);
 					Node req = new Node();
-					Node vm = npm.createNode(req);
+					Node vm = null;
+					try {
+						vm = npm.createNode(req);
+					} catch (NodeNotCreatedException e) {
+						System.out.println(Utils.getTimeStamp() + "VM #" + idx + " not created!");
+						return;
+					}
 					long tf = System.currentTimeMillis();
 					long duration = tf - t0;
 					vms.add(vm);

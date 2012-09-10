@@ -68,7 +68,7 @@ public class ServiceDeployerClient implements ServiceDeployer {
 	}
 
 	@Override
-	public boolean deleteService(String serviceId) {
+	public void deleteService(String serviceId) {
 		
 		throw new NotImplementedException();
 	}

@@ -122,7 +122,12 @@ public class ParallelDeployTest {
 		@Override
 		public void run() {
 			System.out.println("Deploying " + spec);
-			Service service = deployer.deploy(spec);
+			Service service = null;
+			try {
+				service = deployer.deploy(spec);
+			} catch (ServiceNotDeployedException e) {
+				e.printStackTrace();
+			}
 			url = service.getUri();
 			nodeId = service.getNodeId();
 			System.out.println("Service deployed at " + url);
