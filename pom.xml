@@ -127,6 +127,10 @@
 			<name>ccsl</name>
 			<url>http://valinhos.ime.usp.br:54080/maven/</url>
 		</repository>
+    <repository>
+      <id>Extra repository</id>
+      <url>http://repo1.maven.org/maven2/</url>
+    </repository>
 	</repositories>
 
 	<pluginRepositories>

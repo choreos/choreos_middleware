@@ -22,8 +22,10 @@ public class Configuration {
     }
 
     private Configuration() {
+        final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+
         try {
-            properties.load(ClassLoader.getSystemResourceAsStream("servicedeployer.properties"));
+            properties.load(loader.getResourceAsStream("servicedeployer.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }
