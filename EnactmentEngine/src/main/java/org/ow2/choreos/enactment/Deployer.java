@@ -41,7 +41,6 @@ public class Deployer {
 			Service deployed;
 			try {
 				deployed = deployer.deploy(serviceSpec);
-				deployed.setName(chorServiceSpec.getName());
 				deployedServices.put(chorServiceSpec.getName(), deployed);
 			} catch (ServiceNotDeployedException e) {
 				logger.error(chorServiceSpec.getName() + " deploy has failed");

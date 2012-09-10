@@ -20,7 +20,11 @@ public class Service {
 			this.spec.setType(ServiceType.OTHER);
 		}
 		
-		name = getDefaultName();
+		if (serviceSpec.getName() == null || serviceSpec.getName().isEmpty()) {
+			name = getDefaultName();
+		} else {
+			name = serviceSpec.getName();
+		}
 	}
 	
 	private String getDefaultName() {

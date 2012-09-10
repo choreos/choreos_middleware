@@ -7,11 +7,20 @@ import org.ow2.choreos.npm.datamodel.ResourceImpact;
 @XmlRootElement
 public class ServiceSpec {
 
+	protected String name;
 	protected ServiceType type; 
 	protected String codeUri;
 	protected int port;
 	protected String endpointName;
 	protected ResourceImpact resourceImpact;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public ServiceType getType() {
 		return type;
@@ -107,8 +116,8 @@ public class ServiceSpec {
 
 	@Override
 	public String toString() {
-		return "ServiceSpec [type=" + type + ", codeUri=" + codeUri + ", port="
-				+ port + ", name=" + endpointName + "]";
+		return "ServiceSpec [name= + " + name + ", type=" + type + ", codeUri=" + codeUri + ", port="
+				+ port + ", endpointName=" + endpointName + "]";
 	}
 
 }

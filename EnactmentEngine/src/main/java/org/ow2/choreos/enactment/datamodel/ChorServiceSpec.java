@@ -13,7 +13,6 @@ import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
  */
 public class ChorServiceSpec extends ServiceSpec {
 
-	private String name;
 	private String owner;
 	private String group;
 	private List<String> roles = new ArrayList<String>();
@@ -22,6 +21,7 @@ public class ChorServiceSpec extends ServiceSpec {
 	public ServiceSpec getServiceSpec() {
 
 		ServiceSpec spec = new ServiceSpec();
+		spec.setName(super.name);
 		spec.setCodeUri(super.codeUri);
 		spec.setEndpointName(super.endpointName);
 		spec.setPort(super.port);
@@ -30,12 +30,6 @@ public class ChorServiceSpec extends ServiceSpec {
 		return spec;
 	}
 	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
 	public String getOwner() {
 		return owner;
 	}
