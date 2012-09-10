@@ -2,6 +2,7 @@ package org.ow2.choreos.npm;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.jclouds.compute.RunNodesException;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.npm.chef.ConfigToChef;
@@ -20,6 +21,8 @@ import com.jcraft.jsch.JSchException;
  */
 public class NPMImpl implements NodePoolManager {
 
+	private Logger logger = Logger.getLogger(NPMImpl.class);
+	
     private CloudProvider cloudProvider;
     private ConfigurationManager configurationManager = new ConfigurationManager();
 
@@ -70,7 +73,26 @@ public class NPMImpl implements NodePoolManager {
         String cookbook = ConfigToChef.getCookbookNameFromConfigName(config.getName());
         String recipe = ConfigToChef.getRecipeNameFromConfigName(config.getName());
 
-		this.configurationManager.applyRecipe(node, cookbook, recipe);
+        final int TRIALS = 3;
+        final int SLEEP_TIME = 1000;
+        int step = 0;
+        boolean ok = false;
+        
+        while (!ok) {
+        	try {
+				this.configurationManager.applyRecipe(node, cookbook, recipe);
+				ok = true;
+			} catch (ConfigNotAppliedException e) {
+				try {
+					Thread.sleep(SLEEP_TIME);
+				} catch (InterruptedException e1) {
+					logger.error("Exception at sleeping!", e1);
+				}
+				step++;
+				if (step > TRIALS)
+					throw new ConfigNotAppliedException(config.getName()); 
+			}
+        }
 
     	return node;
     }
