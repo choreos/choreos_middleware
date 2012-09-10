@@ -26,6 +26,7 @@ and not only one config
 * Concurrent requests can trigger concurrent bootstraps on the same node!
 It's not desirable. However, often recipes are applied when node is already bootstrapped,
 since 'create node' also bootstraps the node.
+This is the reason why ParallelDeployTest "works only if the node is already bootstrapped"
 
 
 =============================

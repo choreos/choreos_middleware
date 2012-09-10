@@ -140,13 +140,13 @@ public class ConfigurationManager {
 	 * @param node
 	 * @param cookbook
 	 * @return
-	 * @throws NotAppliedRecipe
+	 * @throws ConfigNotAppliedException
 	 */
-    public void installRecipe(Node node, String cookbook) throws NotAppliedRecipe {
+    public void installRecipe(Node node, String cookbook) throws ConfigNotAppliedException {
         this.applyRecipe(node, cookbook, "default");
     }
 
-    public void applyRecipe(Node node, String cookbook, String recipe) throws NotAppliedRecipe {
+    public void applyRecipe(Node node, String cookbook, String recipe) throws ConfigNotAppliedException {
 
         try {
 			if (!isInitialized(node)) {
@@ -154,9 +154,9 @@ public class ConfigurationManager {
 			    this.initializeNode(node);
 			}
 		} catch (JSchException e) {
-			throw new NotAppliedRecipe(cookbook + "::" + recipe + " not applied on " + node.getChefName());
+			throw new ConfigNotAppliedException(cookbook + "::" + recipe, node.getId());
 		} catch (KnifeException e) {
-			throw new NotAppliedRecipe(cookbook + "::" + recipe + " not applied on " + node.getChefName());
+			throw new ConfigNotAppliedException(cookbook + "::" + recipe, node.getId());
 		}
 
 		if (node.getChefName() == null) {
@@ -172,13 +172,13 @@ public class ConfigurationManager {
         	try {
 				knife.node().runListAdd(node.getChefName(), cookbook, recipe);
 			} catch (KnifeException e) {
-				throw new NotAppliedRecipe(cookbook + "::" + recipe + " not applied on " + node.getChefName());
+				throw new ConfigNotAppliedException(cookbook + "::" + recipe, node.getId());
 			}
         }
 
         boolean ok = verifyRecipeInRunList(knife, node.getChefName(), cookbook, recipe);
         if (!ok) {
-			throw new NotAppliedRecipe(cookbook + "::" + recipe + " not applied on " + node.getChefName());
+			throw new ConfigNotAppliedException(cookbook + "::" + recipe, node.getId());
         }
     }
 

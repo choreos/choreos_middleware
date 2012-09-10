@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.npm.NPMImpl;
+import org.ow2.choreos.npm.NodeNotFoundException;
+import org.ow2.choreos.npm.NodeNotUpgradedException;
 import org.ow2.choreos.npm.NodePoolManager;
 import org.ow2.choreos.npm.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
@@ -53,7 +55,7 @@ public class ParallelDeployTest {
 	}
 	
 	@Test
-	public void shouldMakeParallelDeploys() throws InterruptedException {
+	public void shouldMakeParallelDeploys() throws InterruptedException, NodeNotUpgradedException, NodeNotFoundException {
 		
 		Thread[] ts = new Thread[2];
 		TestDeployer[] tds = new TestDeployer[2];
@@ -63,13 +65,16 @@ public class ParallelDeployTest {
 			ts[i].start();
 		}
 		
-		// wait for other threads to finish
-		for (Thread t: ts) {
-			t.join();
+		waitThreads(ts);
+		
+		ts = new Thread[2];
+		for (int i=0; i<2; i++) {
+			ts[i] = new Thread(new TestUpgrader(tds[i]));
+			ts[i].start();
+			Thread.sleep(1000);
 		}
 		
-		npm.upgradeNodes();
-		Thread.sleep(1000);
+		waitThreads(ts);
 		
 		for (TestDeployer td: tds) {
 			WebClient client = WebClient.create(td.url);
@@ -78,10 +83,37 @@ public class ParallelDeployTest {
 		}
 	}
 
+	private void waitThreads(Thread[] ts) throws InterruptedException{
+		for (Thread t: ts) {
+			t.join();
+		}
+	}
+
+	private class TestUpgrader implements Runnable {
+
+		TestDeployer testDeployer;
+		
+		public TestUpgrader(TestDeployer testDeployer) {
+			this.testDeployer = testDeployer;
+		}
+		
+		@Override
+		public void run() {
+			try {
+				npm.upgradeNode(this.testDeployer.nodeId);
+			} catch (NodeNotUpgradedException e) {
+				e.printStackTrace();
+			} catch (NodeNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	private class TestDeployer implements Runnable {
 
 		ServiceSpec spec;
 		String url;
+		String nodeId;
 		
 		public TestDeployer(ServiceSpec spec) {
 			this.spec = spec;
@@ -92,6 +124,7 @@ public class ParallelDeployTest {
 			System.out.println("Deploying " + spec);
 			Service service = deployer.deploy(spec);
 			url = service.getUri();
+			nodeId = service.getNodeId();
 			System.out.println("Service deployed at " + url);
 		}
 	}

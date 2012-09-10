@@ -27,7 +27,7 @@ public class NodesResourceTest extends BaseTest {
 	}
 
 	@Test
-	public void getInvalidNode() {
+	public void getInvalidNode() throws NodeNotFoundException {
 		
 		String NO_EXISTING_NODE = "nodes/696969696969";
 		NodePoolManager npm = new NPMClient(nodePoolManagerHost);

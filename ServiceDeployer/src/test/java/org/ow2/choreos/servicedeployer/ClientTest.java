@@ -76,7 +76,7 @@ public class ClientTest {
 		Service service = deployer.deploy(specWar);
 		String url = service.getUri();
 		System.out.println("Service at " + url);
-		npm.upgradeNodes();
+		npm.upgradeNode(service.getNodeId());
 		Thread.sleep(1000);
 		client = WebClient.create(url); 
 		String body = client.get(String.class);

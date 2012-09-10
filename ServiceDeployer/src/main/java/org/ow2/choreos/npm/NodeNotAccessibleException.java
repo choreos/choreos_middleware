@@ -1,18 +1,16 @@
 package org.ow2.choreos.npm;
 
-import org.ow2.choreos.npm.datamodel.Node;
 
-public class NodeNotAccessibleException extends Exception {
+public class NodeNotAccessibleException extends NPMException {
 
-	private static final long serialVersionUID = 1L;
-	private Node node;
+	private static final long serialVersionUID = -6491291627017563771L;
 	
-	public NodeNotAccessibleException(Node node) {
-		this.node = node;
+	public NodeNotAccessibleException(String nodeId) {
+		super(nodeId);
 	}
 	
+	@Override
 	public String toString() {
-		
-		return "Cannot connect to node " + node.toString();
+		return "Cannot connect to node " + super.getNodeId();
 	}
 }

@@ -1,5 +1,9 @@
 EnactmentEngine TODO list
 
+* EE is setting the service.name.
+But this name will be different at the ServiceDeployer registry!
+How to handle this?
+
 * EnactmentEngine tests should start NPMServer and ServiceDeployerServer,
 but this step is not working. Now, we have to start the servers before run tests.
 The problem is the way like the RecipeBuilder access the resources.

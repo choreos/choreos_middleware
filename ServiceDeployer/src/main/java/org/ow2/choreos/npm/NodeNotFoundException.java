@@ -1,14 +1,17 @@
 package org.ow2.choreos.npm;
 
-@SuppressWarnings("serial")
-public class NodeNotFoundException extends Exception {
 
-	public NodeNotFoundException() {
-		super();
+public class NodeNotFoundException extends NPMException {
+
+	private static final long serialVersionUID = 826431667001507667L;
+
+	public NodeNotFoundException (String nodeId) {
+		super(nodeId);
 	}
 	
-	public NodeNotFoundException(String message) {
-		super(message);
+	@Override
+	public String toString() {
+		return "Node " + super.getNodeId() +  " not found.";
 	}
 
 }

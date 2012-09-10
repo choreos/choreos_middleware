@@ -3,6 +3,7 @@ package org.ow2.choreos.npm.cloudprovider;
 import java.util.List;
 
 import org.jclouds.compute.RunNodesException;
+import org.ow2.choreos.npm.NodeNotDestroyed;
 import org.ow2.choreos.npm.NodeNotFoundException;
 import org.ow2.choreos.npm.datamodel.Node;
 
@@ -13,7 +14,7 @@ import org.ow2.choreos.npm.datamodel.Node;
  * Each specific provider (e.g. AmazonWS) must have an implementing class 
  * of this interface.
  * 
- * @author leonardo, felps
+ * @author leonardo, felps, furtado
  * 
  */
 public interface CloudProvider {
@@ -26,7 +27,7 @@ public interface CloudProvider {
 
 	public List<Node> getNodes();
 
-	public void destroyNode(String id);
+	public void destroyNode(String id) throws NodeNotDestroyed, NodeNotFoundException;
 
 	public Node createOrUseExistingNode(Node node) throws RunNodesException;
 

@@ -1,9 +1,7 @@
 package org.ow2.choreos.npm;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.jclouds.compute.RunNodesException;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.npm.chef.ConfigToChef;
@@ -15,10 +13,13 @@ import org.ow2.choreos.npm.selector.NodeSelectorFactory;
 
 import com.jcraft.jsch.JSchException;
 
-
+/**
+ * 
+ * @author leonardo, furtado
+ *
+ */
 public class NPMImpl implements NodePoolManager {
 
-	private Logger logger = Logger.getLogger(NPMImpl.class);
     private CloudProvider cloudProvider;
     private ConfigurationManager configurationManager = new ConfigurationManager();
 
@@ -27,17 +28,20 @@ public class NPMImpl implements NodePoolManager {
     }
 
     @Override
-    public Node createNode(Node node) {
+    public Node createNode(Node node) throws NodeNotCreatedException {
 
         try {
             cloudProvider.createNode(node);
-            configurationManager.initializeNode(node);
         } catch (RunNodesException e) {
-        	logger.error("Could not create node " + node, e);
+        	throw new NodeNotCreatedException(node.getId(), "Could not create VM to node " + node);
+        }
+        
+        try {
+        	configurationManager.initializeNode(node);
         } catch (KnifeException e) {
-            logger.error("Could not initialize node " + node, e);
+        	throw new NodeNotCreatedException(node.getId(), "Could not initialize node " + node);
         } catch (JSchException e) {
-        	logger.error("Could not connect to the node " + node, e);
+        	throw new NodeNotCreatedException(node.getId(), "Could not connect to the node " + node);
         }
         
         return node;
@@ -49,109 +53,44 @@ public class NPMImpl implements NodePoolManager {
     }
     
     @Override
-    public Node getNode(String id) {
-    	
-    	List<Node> nodes = getNodes();
-    	if (nodes != null) {
-    		for (Node node: nodes) {
-    			if (node.getId().equals(id))
-    				return node;
-    		}
-    	} 
-		return null;
+    public Node getNode(String nodeId) throws NodeNotFoundException {
+    	return cloudProvider.getNode(nodeId);
     }
 
     @Override
-    public Node applyConfig(Config config) {
+    public Node applyConfig(Config config) throws ConfigNotAppliedException {
 
         NodeSelector selector = NodeSelectorFactory.getInstance(this.cloudProvider);
         Node node = selector.selectNode(config);
 
-        if (node == null)
-            return null;
+        if (node == null) {
+        	throw new ConfigNotAppliedException(config.getName());
+        }
 
         String cookbook = ConfigToChef.getCookbookNameFromConfigName(config.getName());
         String recipe = ConfigToChef.getRecipeNameFromConfigName(config.getName());
 
-        try {
-			this.configurationManager.applyRecipe(node, cookbook, recipe);
-		} catch (NotAppliedRecipe e) {
-			logger.error(e.getMessage(), e);
-			return null;
-		}
+		this.configurationManager.applyRecipe(node, cookbook, recipe);
 
     	return node;
     }
     
-    @Override
-    public boolean upgradeNodes() {
-    	
-        List<Node> nodes = cloudProvider.getNodes();
-        List<Thread> threads = new ArrayList<Thread>();
-        List<NodeUpgrader> upgraders = new ArrayList<NodeUpgrader>();
-
-        for (Node node : nodes) {
-        	NodeUpgrader upgrader = new NodeUpgrader(node);
-        	upgraders.add(upgrader);
-            Thread t = new Thread(upgrader);
-            threads.add(t);
-            t.start();
-        }
-
-        for (int i=0; i<threads.size(); i++) {
-            try {
-				threads.get(i).join();
-				if (!upgraders.get(i).isOk())
-					return false;
-			} catch (InterruptedException e) {
-				logger.error("Could not join thread", e);
-				return false;
-			}
-        }
-        return true;
-    }
-
-    private class NodeUpgrader implements Runnable {
-
-        private Node node;
-        private boolean ok = true;
-
-        public NodeUpgrader(Node node) {
-            this.node = node;
-        }
-        
-        public boolean isOk() {
-        	return ok;
-        }
-
-        @Override
-        public void run() {
-            try {
-				configurationManager.updateNodeConfiguration(node);
-			} catch (JSchException e) {
-                logger.error("Could not connect to node " + node, e);
-                ok = false;
-			}
-        }
-    }
-
 	@Override
-	public boolean upgradeNode(String nodeId) {
+	public void upgradeNode(String nodeId) throws NodeNotUpgradedException, NodeNotFoundException {
 
-		Node node;
-		try {
-			node = cloudProvider.getNode(nodeId);
-		} catch (NodeNotFoundException e1) {
-			logger.error("Node " + nodeId + " not found");
-			return false;
-		}
+		Node node = this.getNode(nodeId);
 		
 		try {
 			configurationManager.updateNodeConfiguration(node);
-			return true;
 		} catch (JSchException e) {
-            logger.error("Could not connect to node " + node, e);
-            return false;
+			throw new NodeNotUpgradedException(node.getId(), "Could not connect through ssh");
 		}
 	}
+
+	@Override
+	public void destroyNode(String nodeId) throws NodeNotDestroyed, NodeNotFoundException {
+
+		this.cloudProvider.destroyNode(nodeId);
+	}
+
 }

@@ -54,7 +54,7 @@ public class FixedCloudProvider implements CloudProvider {
 		if (nodeId.equals(nodeId))
 			return node;
 		else
-			throw new NodeNotFoundException();
+			throw new NodeNotFoundException(nodeId);
 	}
 
 	public List<Node> getNodes() {

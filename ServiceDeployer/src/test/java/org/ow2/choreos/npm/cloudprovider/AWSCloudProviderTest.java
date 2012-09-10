@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 import org.jclouds.compute.RunNodesException;
 import org.junit.Before;
 import org.junit.Test;
+import org.ow2.choreos.npm.NodeNotDestroyed;
 import org.ow2.choreos.npm.NodeNotFoundException;
 import org.ow2.choreos.npm.datamodel.Node;
 import org.ow2.choreos.servicedeployer.Configuration;
@@ -28,7 +29,7 @@ public class AWSCloudProviderTest {
     }
 
 	@Test
-    public void shouldCreateAndDeleteNode() throws RunNodesException, JSchException {
+    public void shouldCreateAndDeleteNode() throws RunNodesException, JSchException, NodeNotDestroyed, NodeNotFoundException {
         
         Node created = infra.createNode(node);
         System.out.println("created " + created);

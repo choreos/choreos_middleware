@@ -11,10 +11,10 @@ public interface NodePoolManager {
 	 * Create a node on the cloud infrastructure.
 	 * 
 	 * @param node used as node specification
-	 * @return the representation of the created node,
-	 * or <code>null<code> if it was not created
+	 * @return the representation of the created node
+	 * @throws NodeNotCreatedException if node was not created
 	 */
-	public Node createNode(Node node);
+	public Node createNode(Node node) throws NodeNotCreatedException;
 	
 	/**
 	 * Retrieve information about all the nodes managed by this Node Pool Manager
@@ -26,38 +26,37 @@ public interface NodePoolManager {
 	 * Retrieve information of a node according to a given node id.
 	 * 
 	 * @param nodeId
-	 * @return the representation of the requested node,
-	 * or <code>null<code> if the node does not exist
+	 * @return the representation of the requested node
+	 * @throws NodeNotFoundException if the node does not exist
 	 */
-	public Node getNode(String nodeId); 
+	public Node getNode(String nodeId) throws NodeNotFoundException; 
 
 	/**
-	 * Updates the configuration of a node, but not apply the configuration.
-	 * 
-	 * @param config what must be deployed
-	 * @return the representation of the node where the configuration will be applied,
-	 * or <code>null</code> if it was not possible to allocate any node
+	 * Destroys the Virtual Machine node
+	 * @param nodeId the id of the node to be destroyed
+	 * @throws NodeNotDestroyed if could not destry node
+	 * @throws NodeNotFoundException if the node does not exist
 	 */
-	public Node applyConfig(Config config);
-	
-	/**
-	 * Apply configurations on the cloud nodes.
-	 * 
-	 * Such configurations are the ones requested through the <code>applyConfig</code> operation
-	 * 
-	 * @return <code>true</code> if everything it seems to be OK,
-	 * or <code>false</code> if something went wrong
-	 */
-	public boolean upgradeNodes();
-	
+	public void destroyNode(String nodeId) throws NodeNotDestroyed, NodeNotFoundException;
+
 	/**
 	 * Apply configurations on selected node.
 	 * 
 	 * Such configurations are the ones requested through the <code>applyConfig</code> operation
 	 * 
 	 * @param nodeId the id of the node to be upgraded
-	 * @return <code>true</code> if everything it seems to be OK,
-	 * or <code>false</code> if something went wrong
+	 * @throws NodeNotUpgradedException if could not upgrade the node
+	 * @throws NodeNotFoundException if the node does not exist
 	 */
-	public boolean upgradeNode(String nodeId);
+	public void upgradeNode(String nodeId) throws NodeNotUpgradedException, NodeNotFoundException;
+	
+	/**
+	 * Updates the configuration of a node, but not apply the configuration.
+	 * 
+	 * @param config what must be deployed
+	 * @return the representation of the node where the configuration will be applied,
+	 * @throws if it was not possible to allocate any node
+	 */
+	public Node applyConfig(Config config) throws ConfigNotAppliedException;
+	
 }

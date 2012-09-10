@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.chef.impl.KnifeImpl;
+import org.ow2.choreos.npm.ConfigNotAppliedException;
 import org.ow2.choreos.npm.NodePoolManager;
 import org.ow2.choreos.npm.datamodel.Config;
 import org.ow2.choreos.npm.datamodel.Node;
@@ -82,9 +83,12 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 		
 		String configName = serviceRecipe.getCookbookName() + "::" + serviceRecipe.getName();
 		Config config = new Config(configName);
-		Node node = npm.applyConfig(config);
-		if (node == null)
+		Node node;
+		try {
+			node = npm.applyConfig(config);
+		} catch (ConfigNotAppliedException e) {
 			return null;
+		}
 		logger.debug("nodeLocation= " + node.getHostname() + "; node IP="
 				+ node.getIp());
 		return node;
