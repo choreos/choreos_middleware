@@ -1,5 +1,6 @@
 *.jar
 *.log
+*.swp
 */.classpath
 */.metadata
 */.project
