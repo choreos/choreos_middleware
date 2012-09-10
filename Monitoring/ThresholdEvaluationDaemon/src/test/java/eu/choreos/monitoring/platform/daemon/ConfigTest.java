@@ -9,21 +9,24 @@ public class ConfigTest {
 
 	private Config configNullFile;
 	private Config configWithFile;
+	private String thresholdListFileName;
 
 	@Before
 	public void setUp() throws Exception {
-		configNullFile = Config.getInstance(null);
-		configWithFile = Config.getInstance("myconfigfile.yml");
+		configNullFile = null;
+		thresholdListFileName = "myconfigfile.yml";
+		configWithFile = null;
 	}
 
 	@After
 	public void tearDown() throws Exception {
 	}
 
-	//@Test
+	@Test
 	public void loadDefaultConfig() {
 		
-		System.out.println(configNullFile.getThresholdConfig().toString());
+		configNullFile = Config.getInstance(null);
+		//System.out.println(configNullFile.getThresholdConfig().toString());
 		
 		assertEquals("{default=[]," + 
 					 " small=[Triggered: mem_free >= 512.0. Measured: 0.0]," + 
@@ -35,8 +38,9 @@ public class ConfigTest {
 	
 	@Test
 	public void loadNotDefaultConfig() {
-		
-		System.out.println(configWithFile.getThresholdConfig().toString());
+
+		configWithFile = Config.getInstance(thresholdListFileName);
+		//System.out.println(configWithFile.getThresholdConfig().toString());
 		
 		assertEquals("{default=[Triggered: load_one <= 1.0. Measured: 0.0]," +
 		             " small=[Triggered: mem_free >= 512.0. Measured: 0.0]," +

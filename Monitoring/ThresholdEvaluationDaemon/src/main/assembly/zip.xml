@@ -1,0 +1,17 @@
+<assembly>
+	<id>ResourceMonitoringDaemon</id>
+	<formats>
+		<format>zip</format>
+		<format>tar.bz2</format>
+	</formats>
+	<dependencySets>
+		<dependencySet>
+		</dependencySet>
+	</dependencySets>
+	<fileSets>
+		<fileSet>
+			<directory>src/main/bin</directory>
+			<outputDirectory>bin</outputDirectory>
+		</fileSet>
+	</fileSets>
+</assembly>

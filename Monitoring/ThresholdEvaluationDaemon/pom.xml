@@ -97,21 +97,10 @@
 	</dependencies>
 
 	<build>
+		<defaultGoal>package</defaultGoal>
 
 		<resources>
-		
-			<resource>
-				<directory>
-					src/main/resources
-				</directory>
-			</resource>
-			
-			<resource>
-				<directory>
-					src/test/resources
-				</directory>
-			</resource>
-			
+
 			<resource>
 				<directory>src/main/config</directory>
 				<includes>
@@ -126,23 +115,8 @@
 
 		</resources>
 
+
 		<plugins>
-
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-
-
-					<configurationDirectory>conf</configurationDirectory>
-					<copyConfigurationDirectory>true</copyConfigurationDirectory>
-					<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
-				</configuration>
-			</plugin>
-
 
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -167,17 +141,30 @@
 				</executions>
 			</plugin>
 
-
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.3.2</version>
-			</plugin>
-
+			<!-- <plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>bin</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>eu.choreos.monitoring.platform.daemon.ThresholdEvalDaemonLauncher</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>ResourceMonitoringDaemon</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin> -->
 
 		</plugins>
-		<defaultGoal>install</defaultGoal>
 	</build>
 
 </project>

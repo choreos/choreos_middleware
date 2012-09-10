@@ -15,6 +15,7 @@ public class ThresholdEvalDaemonLauncher {
 	private static String javaNamingProviderUrl = null;
 	private static String thresholdListFileName = null;
 
+	@SuppressWarnings("unused")
 	private static void parseArgs(String[] args) {
 		host = "localhost";
 		port = 8649;
@@ -24,10 +25,10 @@ public class ThresholdEvalDaemonLauncher {
 
 		case 4:
 			javaNamingProviderUrl = args[3];
-		
+
 		case 3:
 			port = Integer.parseInt(args[2]);
-		
+
 		case 2:
 			host = args[1];
 
@@ -37,12 +38,12 @@ public class ThresholdEvalDaemonLauncher {
 
 		default:
 			System.out
-					.println("USAGE: ThresholdEvalDaemon THRESHOLD_LIST_FILE [HOST_LOCATION] [PORT] [JAVA_NAMING_PROVIDER_URL]");
+			.println("USAGE: ThresholdEvalDaemon THRESHOLD_LIST_FILE [HOST_LOCATION] [PORT] [JAVA_NAMING_PROVIDER_URL]");
 			System.out
-					.println("Default values: hostLocation = 'http://localhost/'");
+			.println("Default values: hostLocation = 'http://localhost/'");
 			System.out.println("                port = 8649");
 			System.out
-					.println("Note: to set a port, the hostLocation must also be present");
+			.println("Note: to set a port, the hostLocation must also be present");
 			System.exit(1);
 		}
 	}
@@ -70,17 +71,20 @@ public class ThresholdEvalDaemonLauncher {
 				1,                				// event id
 				2,                				// event in response to id
 				System.currentTimeMillis(), 	// time stamp
-				"NS1", 							// networked system source
+				"unknown", 							// networked system source
 				false 							// is exception
-		));
-		
+				));
+
 
 	}
 
-	
+
 	public static void main(String[] args) throws InterruptedException, IOException {
-		parseArgs(args);
-		
+		//parseArgs(args);
+
+		if(!readConfig()) 
+			printUsage();
+
 		ThresholdEvalDaemon daemon = null;
 		try {
 			daemon = new ThresholdEvalDaemon(getProperties(),
@@ -88,11 +92,37 @@ public class ThresholdEvalDaemonLauncher {
 		} catch (GangliaException e) {
 			e.printStackTrace();
 		}
-		
+
 		Config config = Config.getInstance(thresholdListFileName);
-		
+
 		daemon.setConfig(config);
 		daemon.continuouslyEvaluateThresholdsAndSendMessages(getBaseEvent());
+	}
+
+	private static void printUsage() {
+		System.out.println("Verify your monitoring.properties file.");
+
+	}
+
+	private static boolean readConfig() {
+
+		Properties props = new Properties();
+		try {
+			props.load(ClassLoader.getSystemResourceAsStream("monitoring.properties"));
+		} catch (IOException e) {
+			System.err.println("Error while loading configuration");
+			return false;
+		}
+
+		host = props.getProperty("Monitoring.gangliaLocation", "localhost");
+		port = Integer.parseInt(props.getProperty("Monitoring.gangliaPort", "8649"));
+		javaNamingProviderUrl = props.getProperty("Monitoring.javaNamingProviderUrl", "tcp://dsbchoreos.petalslink.org:61616");
+		thresholdListFileName = props.getProperty("Monitoring.thresholdFileListName", null); // uses default
+
+		if(thresholdListFileName == null)
+			System.out.println("Loading default configuration...");
+
+		return true;
 	}
 
 }
