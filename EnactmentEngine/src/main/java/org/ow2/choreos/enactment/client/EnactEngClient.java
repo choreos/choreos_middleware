@@ -9,6 +9,7 @@ import javax.ws.rs.core.Response;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+import org.ow2.choreos.enactment.ChoreographyNotFoundException;
 import org.ow2.choreos.enactment.EnactmentEngine;
 import org.ow2.choreos.enactment.EnactmentException;
 import org.ow2.choreos.enactment.datamodel.ChorSpec;
@@ -66,7 +67,7 @@ public class EnactEngClient implements EnactmentEngine {
 	}
 
 	@Override
-	public Choreography getChoreography(String chorId) {
+	public Choreography getChoreography(String chorId) throws ChoreographyNotFoundException {
 
 		WebClient client = setupClient();
 		client.path("chors");
@@ -76,13 +77,13 @@ public class EnactEngClient implements EnactmentEngine {
 		try {
 			chor = client.get(Choreography.class);
     	} catch (WebApplicationException e) {
-    		return null;
+			throw new ChoreographyNotFoundException(chorId);
     	}
 		return chor;
 	}
 
 	@Override
-	public Choreography enact(String chorId) throws EnactmentException {
+	public Choreography enact(String chorId) throws EnactmentException, ChoreographyNotFoundException {
 		
 		WebClient client = setupClient();
 		client.path("chors");
@@ -92,7 +93,12 @@ public class EnactEngClient implements EnactmentEngine {
 		try {
 			chor = client.post(null, Choreography.class);
     	} catch (WebApplicationException e) {
-    		throw new EnactmentException("Failed in POST /chors/" + chorId + "enactment");
+    		int code = e.getResponse().getStatus();
+    		if (code == 400 || code == 404) {
+    			throw new ChoreographyNotFoundException(chorId);
+    		} else {
+    			throw new EnactmentException("POST /chors/" + chorId + "/enactment has failed");
+    		}
     	}
 		
         return chor;

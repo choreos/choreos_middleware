@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import org.ow2.choreos.enactment.ChoreographyNotFoundException;
 import org.ow2.choreos.enactment.EnactEngImpl;
 import org.ow2.choreos.enactment.EnactmentEngine;
 import org.ow2.choreos.enactment.EnactmentException;
@@ -23,10 +24,7 @@ import org.ow2.choreos.enactment.datamodel.Choreography;
 
 /**
  * Enactment Engine REST API.
- * Resource: chors (choreogrpahies).
- * 
- * We choose a "many calls" API rather than a "big single call" one,
- * since a not so complex choreography can have a big XML description 
+ * Resource: chors (choreographies).
  * 
  * @author leonardo
  *
@@ -39,13 +37,13 @@ public class ChorResource {
 	/**
 	 * POST /chors
 	 * 
-	 * Body: a choreography specification (without id)
+	 * Body: a choreography specification
 	 * Creates a new choreography that still have to be enacted (POST /chors/{chorID}/enactment).
 	 * 
 	 * @param uriInfo provided by the REST framework
 	 * @return HTTP code 201 (CREATED)
 	 * 			Location header: the just created choreography URI, containing the choreography ID.
-	 * 			HTTP code 400 (BAD_REQUEST) if the ChorService list is not properly provided in the request body
+	 * 			HTTP code 400 (BAD_REQUEST) if the chorSpec is not properly provided in the request body
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_XML)
@@ -68,27 +66,29 @@ public class ChorResource {
 	 * GET /chors/{chorID}
 	 * 
 	 * Body: empty
-	 * Retrieve the choreography specification
+	 * Retrieve the choreography information
 	 * 
 	 * @param chorId the choreography id provided in the URI
 	 * @param uriInfo provided by the REST framework
 	 * @return HTTP code 200 (OK). 
 	 * 			Location header: the choreography URI.  
-	 *			Body response: the Choreography specification
-	 *			HTTP code 400 (BAS_REQUEST) if chorId is not properly provided. 
-	 *			HTTP code 404 (NOT_FOUND) if there is no choreography with id == chorID.
+	 *			Body response: the Choreography representation
+	 *			HTTP code 400 (BAS_REQUEST) if chorId is not properly provided 
+	 *			HTTP code 404 (NOT_FOUND) if choreography does not exist
 	 */
 	@GET
 	@Path("{chorID}")
 	@Produces(MediaType.APPLICATION_XML)
-	public Response getSpec(@PathParam("chorID") String chorId, @Context UriInfo uriInfo) {
+	public Response get(@PathParam("chorID") String chorId, @Context UriInfo uriInfo) {
 		
 		if (chorId == null || chorId.isEmpty()) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
-		Choreography chor = ee.getChoreography(chorId);
-		if (chor == null) {
+		Choreography chor;
+		try {
+			chor = ee.getChoreography(chorId);
+		} catch (ChoreographyNotFoundException e) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		
@@ -131,9 +131,8 @@ public class ChorResource {
 		try {
 			chor = ee.enact(chorId);
 		} catch (EnactmentException e) {
-			return Response.serverError().build(); // 500
-		}
-		if (chor == null) {
+			return Response.serverError().build(); 
+		} catch (ChoreographyNotFoundException e) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		

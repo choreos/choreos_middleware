@@ -15,17 +15,18 @@ public interface EnactmentEngine {
 	/**
 	 * Retrieve choreography information.
 	 * @param chorId the choreography id
-	 * @return <code>null</code> if <code>chorId</code> does not exist 
+	 * @return the choreography representation
+	 * @throws ChoreographyNotFoundException if <code>chorId</code> does not exist 
 	 */
-	public Choreography getChoreography(String chorId);
+	public Choreography getChoreography(String chorId) throws ChoreographyNotFoundException;
 
 	/**
 	 * Enacts a choreography
 	 * @param chorId the choreography id
-	 * @return information about deployed services. 
-	 *         <code>null</code> if <code>chorId</code> does not exist
+	 * @return choreography representation, including information about deployed services 
+	 * @throws ChoreographyNotFoundException if <code>chorId</code> does not exist 
 	 * @throws EnactmentException if something goes wrong 
 	 */
-	public Choreography enact(String chorId) throws EnactmentException;
+	public Choreography enact(String chorId) throws EnactmentException, ChoreographyNotFoundException;
 	
 }
