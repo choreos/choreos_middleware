@@ -118,7 +118,7 @@
 
 		<plugins>
 
-			<plugin>
+			<!-- <plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<descriptorRefs>
@@ -139,30 +139,26 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
 
-			<!-- <plugin>
+			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>bin</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<manifest>
-							<mainClass>eu.choreos.monitoring.platform.daemon.ThresholdEvalDaemonLauncher</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
 				<executions>
 					<execution>
-						<id>ResourceMonitoringDaemon</id>
+						<id>user_distribution</id>
 						<phase>package</phase>
 						<goals>
 							<goal>single</goal>
 						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>src/main/assembly/zip.xml</descriptor>
+							</descriptors>
+						</configuration>
 					</execution>
 				</executions>
-			</plugin> -->
+			</plugin>
+
 
 		</plugins>
 	</build>
