@@ -3,6 +3,7 @@ package org.ow2.choreos.enact;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ow2.choreos.enactment.ChoreographyNotFoundException;
 import org.ow2.choreos.enactment.EnactmentEngine;
 import org.ow2.choreos.enactment.EnactmentException;
 import org.ow2.choreos.enactment.client.EnactEngClient;
@@ -38,6 +39,10 @@ public class Enacter implements Runnable {
 		try {
 			chor = enacter.enact(chorId);
 		} catch (EnactmentException e) {
+			System.out.println(Utils.getTimeStamp() + "Enactment #" + idx + " has failed");
+			ok = false;
+			return;
+		} catch (ChoreographyNotFoundException e) {
 			System.out.println(Utils.getTimeStamp() + "Enactment #" + idx + " has failed");
 			ok = false;
 			return;
