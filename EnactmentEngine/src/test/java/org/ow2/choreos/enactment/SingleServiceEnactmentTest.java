@@ -5,11 +5,13 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.ow2.choreos.enactment.datamodel.ChorServiceSpec;
 import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
+import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
 import eu.choreos.vv.clientgenerator.Item;
@@ -24,6 +26,7 @@ import eu.choreos.vv.clientgenerator.WSClient;
  * @author leonardo
  *
  */
+@Category(IntegrationTest.class)
 public class SingleServiceEnactmentTest {
 
 	private static final String WEATHER_FORECAST_SERVICE = "WeatherForecastService";

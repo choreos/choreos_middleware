@@ -6,6 +6,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.ow2.choreos.enactment.client.EnactEngClient;
 import org.ow2.choreos.enactment.datamodel.ChorServiceSpec;
 import org.ow2.choreos.enactment.datamodel.ChorSpec;
@@ -14,6 +15,7 @@ import org.ow2.choreos.enactment.datamodel.ServiceDependence;
 import org.ow2.choreos.enactment.rest.EnactEngServer;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
+import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
 import eu.choreos.vv.clientgenerator.Item;
@@ -30,6 +32,7 @@ import eu.choreos.vv.clientgenerator.WSClient;
  * @author leonardo
  *
  */
+@Category(IntegrationTest.class)
 public class RestEnactmentTest {
 
 	private static final String AIRLINE = "airline";

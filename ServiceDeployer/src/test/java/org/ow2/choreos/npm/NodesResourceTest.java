@@ -4,12 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.ow2.choreos.npm.client.NPMClient;
 import org.ow2.choreos.npm.cloudprovider.CloudProvider;
 import org.ow2.choreos.npm.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.npm.datamodel.Node;
+import org.ow2.choreos.tests.IntegrationTest;
 
-
+@Category(IntegrationTest.class)
 public class NodesResourceTest extends BaseTest {
 
 	@Test

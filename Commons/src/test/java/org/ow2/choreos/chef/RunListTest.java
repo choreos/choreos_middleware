@@ -1,11 +1,15 @@
 package org.ow2.choreos.chef;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.ow2.choreos.tests.IntegrationTest;
 
+@Category(IntegrationTest.class)
 public class RunListTest extends BaseKnifeTest {
 
 	String nodeName = "VirtualTestNode";

@@ -6,16 +6,18 @@ import static org.junit.Assert.fail;
 import org.jclouds.compute.RunNodesException;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.ow2.choreos.npm.NodeNotDestroyed;
 import org.ow2.choreos.npm.NodeNotFoundException;
 import org.ow2.choreos.npm.datamodel.Node;
 import org.ow2.choreos.servicedeployer.Configuration;
+import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
 import com.jcraft.jsch.JSchException;
 
 
-
+@Category(IntegrationTest.class)
 public class AWSCloudProviderTest {
 	
 	private final CloudProvider infra = new AWSCloudProvider();

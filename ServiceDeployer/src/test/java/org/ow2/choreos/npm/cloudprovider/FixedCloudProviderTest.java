@@ -8,7 +8,9 @@ import java.util.regex.Pattern;
 import org.jclouds.compute.RunNodesException;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.ow2.choreos.npm.datamodel.Node;
+import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 import org.ow2.choreos.utils.SshUtil;
 
@@ -18,6 +20,7 @@ import org.ow2.choreos.utils.SshUtil;
  * 
  * @author leonardo
  */
+@Category(IntegrationTest.class)
 public class FixedCloudProviderTest {
 
 	@Before

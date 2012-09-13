@@ -8,6 +8,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.ow2.choreos.npm.NPMImpl;
 import org.ow2.choreos.npm.NodeNotFoundException;
 import org.ow2.choreos.npm.NodeNotUpgradedException;
@@ -16,6 +17,7 @@ import org.ow2.choreos.npm.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
+import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
 /**
@@ -27,6 +29,7 @@ import org.ow2.choreos.utils.LogConfigurator;
  * @author leonardo
  *
  */
+@Category(IntegrationTest.class)
 public class ParallelDeployTest {
 	
 	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
