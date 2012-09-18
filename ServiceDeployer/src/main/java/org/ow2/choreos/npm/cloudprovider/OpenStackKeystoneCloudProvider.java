@@ -19,6 +19,7 @@ import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.ow2.choreos.npm.NodeNotFoundException;
 import org.ow2.choreos.npm.datamodel.Node;
+import org.ow2.choreos.servicedeployer.Configuration;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -30,10 +31,10 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
         return "";
     }
 
-    private static String OP_AUTHURL = "http://198.55.33.14:5000/v2.0";
-    private static String OP_TENANT = "Choreos";
-    private static String OP_USER = "daniel";
-    private static String OP_PASS = "danielpass";
+    private static String OP_AUTHURL = Configuration.get("OPENSTACK_IP");
+    private static String OP_TENANT = Configuration.get("OPENSTACK_TENANT");
+    private static String OP_USER = Configuration.get("OPENSTACK_USER");
+    private static String OP_PASS = Configuration.get("OPENSTACK_PASSWORD");
 
     private ComputeService getClient(String imageId) {
         System.out.println(">OpenStack: Obtain Client.");
