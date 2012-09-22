@@ -42,6 +42,8 @@ A possible solution would be the service deployer server running npm.upgradeNode
 * jar file names get very ugly
 Download the jar name with its original name
 
+* DELETE /services/{id} should really remove service from deployment
+
 ============ DONE ============
 
 * Create a Java project Utils to avoid code replication
