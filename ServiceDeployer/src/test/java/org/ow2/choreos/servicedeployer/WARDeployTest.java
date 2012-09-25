@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.ow2.choreos.npm.NPMImpl;
 import org.ow2.choreos.npm.NodePoolManager;
 import org.ow2.choreos.npm.cloudprovider.CloudProviderFactory;
@@ -14,8 +15,10 @@ import org.ow2.choreos.npm.datamodel.ResourceImpact;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
+import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
+@Category(IntegrationTest.class)
 public class WARDeployTest {
 
 	private Logger logger = Logger.getLogger(WARDeployTest.class);

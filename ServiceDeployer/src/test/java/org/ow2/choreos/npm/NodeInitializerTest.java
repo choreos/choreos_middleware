@@ -4,9 +4,11 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.ow2.choreos.npm.cloudprovider.CloudProvider;
 import org.ow2.choreos.npm.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.npm.datamodel.Node;
+import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
 
@@ -19,6 +21,7 @@ import org.ow2.choreos.utils.LogConfigurator;
  * @author leonardo
  *
  */
+@Category(IntegrationTest.class)
 public class NodeInitializerTest {
     
 	@Before

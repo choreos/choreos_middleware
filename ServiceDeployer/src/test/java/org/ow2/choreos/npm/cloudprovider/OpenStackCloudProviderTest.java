@@ -7,9 +7,12 @@ import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Image;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.ow2.choreos.npm.BaseTest;
 import org.ow2.choreos.npm.datamodel.Node;
+import org.ow2.choreos.tests.IntegrationTest;
 
+@Category(IntegrationTest.class)
 public class OpenStackCloudProviderTest extends BaseTest {
 
     private final static OpenStackKeystoneCloudProvider infra = new OpenStackKeystoneCloudProvider();

@@ -1,2 +1,2 @@
-mvn clean javadoc:jar source:jar install -Dmaven.test.skip=true
+mvn clean javadoc:jar source:jar install
 mvn eclipse:clean eclipse:eclipse

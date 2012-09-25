@@ -7,9 +7,12 @@ import java.util.Properties;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chef.impl.KnifeImpl;
+import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
+@Category(IntegrationTest.class)
 public class BaseKnifeTest {
 
 	protected Knife knife;

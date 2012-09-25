@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.ow2.choreos.tests.IntegrationTest;
 
 /**
  * Requirement: fill the CHEF_CONFIG_FILE in the test/resources/chef.properties file 
@@ -13,6 +15,7 @@ import org.junit.Test;
  * @author leonardo
  *
  */
+@Category(IntegrationTest.class)
 public class KnifeNodeTest extends BaseKnifeTest {
 	
 	@Test

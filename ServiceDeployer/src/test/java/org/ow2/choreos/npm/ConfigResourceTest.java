@@ -6,16 +6,18 @@ import static org.junit.Assert.fail;
 
 import org.jclouds.compute.RunNodesException;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.ow2.choreos.npm.client.NPMClient;
 import org.ow2.choreos.npm.cloudprovider.CloudProvider;
 import org.ow2.choreos.npm.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.npm.datamodel.Config;
 import org.ow2.choreos.npm.datamodel.Node;
+import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.SshUtil;
 
 import com.jcraft.jsch.JSchException;
 
-
+@Category(IntegrationTest.class)
 public class ConfigResourceTest extends BaseTest {
 	
     /**

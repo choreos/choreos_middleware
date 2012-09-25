@@ -9,10 +9,13 @@ import javax.ws.rs.core.Response;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.experimental.categories.Category;
 import org.ow2.choreos.npm.datamodel.NodeRestRepresentation;
 import org.ow2.choreos.npm.rest.NPMServer;
+import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
+@Category(IntegrationTest.class)
 public class BaseTest {
 	
 	protected static String nodePoolManagerHost;

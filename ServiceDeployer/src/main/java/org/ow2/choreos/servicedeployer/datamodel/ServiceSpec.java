@@ -116,7 +116,7 @@ public class ServiceSpec {
 
 	@Override
 	public String toString() {
-		return "ServiceSpec [name= + " + name + ", type=" + type + ", codeUri=" + codeUri + ", port="
+		return "ServiceSpec [name=" + name + ", type=" + type + ", codeUri=" + codeUri + ", port="
 				+ port + ", endpointName=" + endpointName + "]";
 	}
 

@@ -6,10 +6,12 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
 import org.ow2.choreos.npm.rest.NPMServer;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
+import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
 import eu.choreos.vv.clientgenerator.Item;
@@ -24,6 +26,7 @@ import eu.choreos.vv.clientgenerator.WSClient;
  * @author leonardo
  *
  */
+@Category(IntegrationTest.class)
 public class SimpleChorEnactmentTest {
 
 	private ChorSpec chorSpec;

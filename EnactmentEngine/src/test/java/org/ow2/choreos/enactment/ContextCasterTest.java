@@ -10,11 +10,13 @@ import org.apache.xmlbeans.XmlException;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.ow2.choreos.enactment.context.ContextCaster;
 import org.ow2.choreos.enactment.datamodel.ChorServiceSpec;
 import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.ServiceDependence;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
+import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
 import eu.choreos.vv.clientgenerator.Item;
@@ -36,6 +38,7 @@ import eu.choreos.vv.exceptions.WSDLException;
  * @author leonardo
  *
  */
+@Category(IntegrationTest.class)
 public class ContextCasterTest {
 
 	private static final String AIRLINE = "airline";
