@@ -44,3 +44,5 @@ It was actually not as in the futuremarket, but iw was indeed using only javax c
 * Generate XSD
 see datamodel.xml package
 
+* Inovocations to /nodepoolmanager/nodes/{id}/upgrade must be concurrent
+
