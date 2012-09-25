@@ -24,4 +24,35 @@
 		<optional>true</optional>
 	</dependency>
   </dependencies>
+
+  <build>
+    <finalName>airline-service</finalName> 
+    <!-- <finalName>travel-agency-service</finalName> -->
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <shadedArtifactId>airline-service</shadedArtifactId>
+              <shadeSourcesContent>true</shadeSourcesContent>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>org.ow2.choreos.AirlineStarter</mainClass>
+                  <!-- <mainClass>org.ow2.choreos.TravelAgencyStarter</mainClass>  -->
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>
