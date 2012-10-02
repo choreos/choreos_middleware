@@ -13,9 +13,11 @@ public class Bootstrapper {
 	private static final String NPM_HOST = "http://localhost:9100/nodepoolmanager";
 
 	private int vmsQuantity; // how many VMs we will use
+	private Report report;
 	
-	public Bootstrapper(int vmsQuantity) {
+	public Bootstrapper(int vmsQuantity, Report report) {
 		this.vmsQuantity = vmsQuantity;
+		this.report = report;
 	}
 	
 	private List<Node> vms;
@@ -38,6 +40,7 @@ public class Bootstrapper {
 		long tf = System.currentTimeMillis();
 		long duration = tf - t0;
 		System.out.println(Utils.getTimeStamp() + "### Bootstrap completed in " + duration + " milliseconds ###");
+		report.setVmsCreationTotalTime(duration);
 	}
 
 	private List<Node> createVMs() {
@@ -65,6 +68,7 @@ public class Bootstrapper {
 					vms.add(vm);
 					System.out.println(Utils.getTimeStamp() + "VM #" + idx
 							+ " created in " + duration + " milliseconds");
+					report.addVmCreationTime(duration);
 				}
 			});
 			trds[i].start();
@@ -92,7 +96,7 @@ public class Bootstrapper {
 	
 	public static void main(String[] args) {
 		
-		Bootstrapper booter = new Bootstrapper(1);
+		Bootstrapper booter = new Bootstrapper(1, new Report());
 		booter.boot();
 	}
 }

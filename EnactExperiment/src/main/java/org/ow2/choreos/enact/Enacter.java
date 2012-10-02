@@ -21,10 +21,12 @@ public class Enacter implements Runnable {
 	String travelWSDL = null; // result: deployed travel agency service WSDL
 	long duration; // result: enactment duration in milliseconds
 	boolean ok = true;
+	Report report;
 	
-	public Enacter(ChorSpec chorSpec, int idx) {
+	public Enacter(ChorSpec chorSpec, int idx, Report report) {
 		this.chorSpec = chorSpec;
 		this.idx = idx;
+		this.report = report;
 	}
 	
 	@Override
@@ -53,6 +55,7 @@ public class Enacter implements Runnable {
 		travelWSDL = travelService.getUri() + "?wsdl";
 		
 		System.out.println(Utils.getTimeStamp() + "Choreography #" + idx + " enacted in " + duration + " miliseconds");
+		report.addChorEnactmentTime(duration);
 		StringBuilder chorMachinesMessage = new StringBuilder("Machines used by choreography #" + idx + ":");
 		for (String mch: getMachinesFromChor(chor)) {
 			chorMachinesMessage.append(mch + "; ");
