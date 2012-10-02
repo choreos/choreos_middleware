@@ -1,7 +1,5 @@
 NodePoolManager ToDo list
 
-* It seems there is some overlapping between INSTALL and README files. Handle this.
-
 * When NPM starts, NodeRegistry should be filled with nodes retrieved from the cloud provider.
 
 * Make FixedCloudProvider deal with several VMs
@@ -109,6 +107,8 @@ If not, return an error
 Important places to change this: NodePoolManager, ServideDeployer, and EnactmentEngine interfaces.
 
 * Improve javadoc of REST operations (ex: detail return codes) // NPM
+
+* It seems there is some overlapping between INSTALL and README files. Handle this.
 
 
 
