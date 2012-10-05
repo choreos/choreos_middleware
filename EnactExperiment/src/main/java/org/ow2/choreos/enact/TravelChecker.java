@@ -18,10 +18,12 @@ public class TravelChecker implements Runnable {
 	private String travelEndpoint;
 	int idx;
 	boolean ok = false; // result: service properly accessed
+	Report report;
 	
-	public TravelChecker(String travelWSDL, int idx) {
+	public TravelChecker(String travelWSDL, int idx, Report report) {
 		this.travelEndpoint = travelWSDL;
 		this.idx = idx;
+		this.report = report;
 	}
 	
 	@Override
@@ -40,6 +42,7 @@ public class TravelChecker implements Runnable {
 			System.out.println(Utils.getTimeStamp() + "Choreography #" + idx
 					+ " is working (invocation took " + duration
 					+ " milliseconds)");
+			report.addCheckTime(duration);
 		} else {
 			notWorking(duration);
 		}

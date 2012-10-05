@@ -1,9 +1,5 @@
 EnactmentEngine TODO list
 
-* EE is setting the service.name.
-But this name will be different at the ServiceDeployer registry!
-How to handle this?
-
 * EnactmentEngine tests should start NPMServer and ServiceDeployerServer,
 but this step is not working. Now, we have to start the servers before run tests.
 The problem is the way like the RecipeBuilder access the resources.
@@ -43,4 +39,12 @@ It was actually not as in the futuremarket, but iw was indeed using only javax c
 
 * Generate XSD
 see datamodel.xml package
+
+* EE is setting the service.name.
+But this name will be different at the ServiceDeployer registry!
+How to handle this?
+We solved this issue by changing the data model
+Now, serviceSpec has a name attribute as well
+
+* Inovocations to /nodepoolmanager/nodes/{id}/upgrade must be concurrent
 

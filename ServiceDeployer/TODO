@@ -1,7 +1,5 @@
 NodePoolManager ToDo list
 
-* It seems there is some overlapping between INSTALL and README files. Handle this.
-
 * When NPM starts, NodeRegistry should be filled with nodes retrieved from the cloud provider.
 
 * Make FixedCloudProvider deal with several VMs
@@ -41,6 +39,8 @@ A possible solution would be the service deployer server running npm.upgradeNode
 
 * jar file names get very ugly
 Download the jar name with its original name
+
+* DELETE /services/{id} should really remove service from deployment
 
 ============ DONE ============
 
@@ -107,6 +107,8 @@ If not, return an error
 Important places to change this: NodePoolManager, ServideDeployer, and EnactmentEngine interfaces.
 
 * Improve javadoc of REST operations (ex: detail return codes) // NPM
+
+* It seems there is some overlapping between INSTALL and README files. Handle this.
 
 
 

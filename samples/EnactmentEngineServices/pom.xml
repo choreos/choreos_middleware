@@ -14,25 +14,45 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-    <repositories>
-	    <repository>
-		    <id>ccslrepository</id>
-		    <name>ccsl</name>
-		    <url>http://valinhos.ime.usp.br:54080/maven/</url>
-	    </repository>
-    </repositories>
-
   <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
 	<dependency>
-		<groupId>eu.choreos</groupId>
-		<artifactId>rehearsal</artifactId>
-		<version>0.13</version>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.8.2</version>
+		<type>jar</type>
+		<scope>test</scope>
+		<optional>true</optional>
 	</dependency>
   </dependencies>
+
+  <build>
+    <finalName>airline-service</finalName> 
+    <!-- <finalName>travel-agency-service</finalName> -->
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <shadedArtifactId>airline-service</shadedArtifactId>
+              <shadeSourcesContent>true</shadeSourcesContent>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>org.ow2.choreos.AirlineStarter</mainClass>
+                  <!-- <mainClass>org.ow2.choreos.TravelAgencyStarter</mainClass>  -->
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>

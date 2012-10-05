@@ -12,12 +12,15 @@ package org.ow2.choreos.enact;
 public class ExperimentWithAllocation {
 
 	public static void main(String[] args) {
+		
+		Report report = new Report();
 	
 		int vmsQty = Experiment.CHORS_QTY * Experiment.SERVICES_PER_CHOR;
-		Bootstrapper booter = new Bootstrapper(vmsQty);
+		report.setVmsQuantity(vmsQty);
+		Bootstrapper booter = new Bootstrapper(vmsQty, report);
 		booter.boot();
 		
-		Experiment experiment = new Experiment();
+		Experiment experiment = new Experiment(report);
 		experiment.run();
 	}
 }
