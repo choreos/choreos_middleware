@@ -30,7 +30,7 @@ public class OpenStackCloudProviderTest extends BaseTest {
     public void shouldCreateNodeFromPool() throws Exception {
         System.out.println(">>>> Starting Openstack Tests.");
 
-        boolean bTestNewNode = true;
+        boolean bTestNewNode = false;
         boolean bTestNodesList = true;
         boolean bTestImagesList = true;
         boolean bTestHWList = true;

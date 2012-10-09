@@ -28,7 +28,7 @@ import com.google.inject.Module;
 public class OpenStackKeystoneCloudProvider implements CloudProvider {
 
     public String getproviderName() {
-        return "";
+        return "OpenStack Keystone Provider";
     }
 
     private static String OP_AUTHURL = Configuration.get("OPENSTACK_IP");
