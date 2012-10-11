@@ -1,14 +1,6 @@
 case node[:platform]
 when "ubuntu", "debian"
   package "gmetad"
-when "redhat", "centos", "fedora"
-  include_recipe "ganglia::source"
-  execute "copy gmetad init script" do
-    command "cp " +
-      "/usr/src/ganglia-#{node[:ganglia][:version]}/gmetad/gmetad.init " +
-      "/etc/init.d/gmetad"
-    not_if "test -f /etc/init.d/gmetad"
-  end
 end
 
 directory "/var/lib/ganglia/rrds" do
@@ -29,6 +21,10 @@ when true
   end
 when false
   ips = search(:node, "*:*").map {|node| node.ipaddress}
+  if ips.empty?
+  	# This should not happen, at least this node should be listed
+  	ips = "localhost"
+  end
   template "/etc/ganglia/gmetad.conf" do
     source "gmetad.conf.erb"
     variables( :hosts => ips.join(" "),

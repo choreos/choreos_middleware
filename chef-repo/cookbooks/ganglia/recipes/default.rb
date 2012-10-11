@@ -3,6 +3,7 @@
 # Recipe:: default
 #
 # Copyright 2011, Heavy Water Software Inc.
+# Modified for CHOReOS by <lago@ime.usp.br> , Sept 2012
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,48 +18,61 @@
 # limitations under the License.
 #
 
+execute "apt-get-update" do
+    command "apt-get --allow-unauthenticated update"
+    action :nothing
+end
+
+cookbook_file "/etc/apt/sources.list.d/ganglia.list" do
+      source "ganglia.list"
+      owner "root"
+      group "root"
+      mode 0644
+      notifies :run, "execute[apt-get-update]", :immediately
+end
+
+
 service "ganglia-monitor" do
   pattern "gmond"
   supports :restart => true
   action :nothing
 end
 
-case node[:platform]
-when "ubuntu", "debian"
-  package "ganglia-monitor" do
-    notifies :create, "template[/etc/ganglia/gmond.conf]"
-  end
-when "redhat", "centos", "fedora"
-  include_recipe "ganglia::source"
-
-  execute "copy ganglia-monitor init script" do
-    command "cp " +
-      "/usr/src/ganglia-#{node[:ganglia][:version]}/gmond/gmond.init " +
-      "/etc/init.d/ganglia-monitor"
-    not_if "test -f /etc/init.d/ganglia-monitor"
-  end
-
-  user "ganglia"
+package "ganglia-monitor" do
+	notifies :create, "template[/etc/ganglia/gmond.conf]"
+    options "--allow-unauthenticated"
 end
 
+user "ganglia"
 directory "/etc/ganglia"
 
 case node[:ganglia][:unicast]
 when true
-  host = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node.ipaddress}
-  if host.empty? 
-     host = "127.0.0.1"
-  end
   template "/etc/ganglia/gmond.conf" do
     source "gmond_unicast.conf.erb"
+    iplist = search(:node, "*:*").map {|node| node.ipaddress}
+	if iplist.empty? 
+		# This should not happen, at least this node should be found
+    	iplist = ["127.0.0.1"]
+    end
     variables( :cluster_name => node[:ganglia][:cluster_name],
-               :host => host )
+               :iplist => iplist,
+               :owner => node[:ganglia][:owner],
+               :latlong => node[:ganglia][:latlong],
+               :url => node[:ganglia][:url],
+               :location => node[:ganglia][:location]
+               )
     notifies :restart, "service[ganglia-monitor]"
   end
 when false
   template "/etc/ganglia/gmond.conf" do
     source "gmond.conf.erb"
-    variables( :cluster_name => node[:ganglia][:cluster_name] )
+    variables(  :cluster_name => node[:ganglia][:cluster_name],
+    			:owner => node[:ganglia][:owner],
+				:latlong => node[:ganglia][:latlong],
+    			:url => node[:ganglia][:url],
+				:location => node[:ganglia][:location]
+    			)
     notifies :restart, "service[ganglia-monitor]"
   end
 end

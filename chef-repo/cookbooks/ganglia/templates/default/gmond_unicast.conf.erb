@@ -19,23 +19,25 @@ globals {
  * NOT be wrapped inside of a <CLUSTER> tag. */ 
 cluster { 
   name = "<%= @cluster_name %>"
-  owner = "unspecified" 
-  latlong = "unspecified" 
-  url = "unspecified" 
+  owner = "<%= @owner %>" 
+  latlong = "<%= @latlong %>" 
+  url = "<%= @url %>" 
 } 
 
 /* The host section describes attributes of the host, like the location */ 
 host { 
-  location = "unspecified" 
+  location = "<%= @location %>" 
 } 
 
 /* Feel free to specify as many udp_send_channels as you like.  Gmond 
-   used to only support having a single channel */ 
+   used to only support having a single channel */
+<% @iplist.each do |theIP| -%> 
 udp_send_channel { 
-  host = <%= @host %>
+  host = <%= theIP %>
   port = 8649
   ttl = 1
 }
+<% end -%>
 
 /* You can specify as many udp_recv_channels as you like as well. */ 
 udp_recv_channel { 
@@ -61,7 +63,8 @@ modules {
     path = "/usr/lib/ganglia/modcpu.so" 
   } 
 /* ARGH! There is a bug in ganglia that prevents this from working with
-   machines where there is an NFS mount. Gmond crashes!
+   machines where there is an NFS mount. Gmond crashes! This is fixed
+   in ganglia version 3.2.0.
    https://bugs.launchpad.net/ubuntu/+source/ganglia/+bug/910678 */
 #  module { 
 #    name = "disk_module" 
