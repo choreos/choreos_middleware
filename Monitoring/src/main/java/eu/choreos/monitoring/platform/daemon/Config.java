@@ -12,7 +12,7 @@ import eu.choreos.monitoring.platform.utils.YamlParser;
 
 public class Config {
 	
-	private static final String THRESHOLD_SPECS_FOLDER = "conf/threshold_specs/";
+	private static final String THRESHOLD_SPECS_FOLDER = "threshold_specs/";
 
 	/* types of instances based on EC2 instances. 
 	 * A default file is needed to start daemon

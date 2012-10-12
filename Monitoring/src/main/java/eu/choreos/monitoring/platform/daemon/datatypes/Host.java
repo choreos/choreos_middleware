@@ -68,7 +68,7 @@ public class Host {
 		Properties myProps = new Properties();
 		
         try {
-            myProps.load(ClassLoader.getSystemResourceAsStream("conf/monitoring.properties"));
+            myProps.load(ClassLoader.getSystemResourceAsStream("monitoring.properties"));
         } catch (IOException e) {
             System.err.println("Error while loading configuration");
             return;
