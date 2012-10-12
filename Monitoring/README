@@ -40,9 +40,7 @@ are bundled into the final packaged jar file.
 
 == COMPILING IT ==
 ThresholdEvalDaemon uses Maven 3; after installing maven, "mvn package" should
-be enough to create a complete jar with all dependencies. However, for some yet
-unknown reason, the tests fail to run with maven, but run fine within Eclipse.
-So, to compile, please use "mvn -Dmaven.test.skip=true package" .
+be enough to create a complete jar with all dependencies.
 
 == RUNNING IT ==
 After installing and running Ganglia, the daemon may be run by invoking
