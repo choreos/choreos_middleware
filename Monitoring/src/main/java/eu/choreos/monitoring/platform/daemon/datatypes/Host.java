@@ -1,5 +1,6 @@
 package eu.choreos.monitoring.platform.daemon.datatypes;
 
+import java.lang.System;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -66,27 +67,21 @@ public class Host {
 		// set values		
 		Properties myProps = new Properties();
 		
-		FileInputStream MyInputStream = null;
-		try {
-			MyInputStream = new FileInputStream(
-					ClassLoader.getSystemResource("monitoring.properties").getFile() );
-			myProps.load(MyInputStream);
+        try {
+            myProps.load(ClassLoader.getSystemResourceAsStream("conf/monitoring.properties"));
+        } catch (IOException e) {
+            System.err.println("Error while loading configuration");
+            return;
+        }
 
-			String sm = myProps.getProperty("SmallInstance.memory");
-			String me = myProps.getProperty("MediumInstance.memory");
-			String lr = myProps.getProperty("LargeInstance.memory");
-			//String xl = myProps.getProperty("ExtraLargeInstance.memory");
-			
-			SMALL = Integer.parseInt(sm);
-			MEDIUM = Integer.parseInt(me);
-			LARGE = Integer.parseInt(lr);
-					
-			MyInputStream.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
+        String sm = myProps.getProperty("SmallInstance.memory");
+        String me = myProps.getProperty("MediumInstance.memory");
+        String lr = myProps.getProperty("LargeInstance.memory");
+        //String xl = myProps.getProperty("ExtraLargeInstance.memory");
+        
+        SMALL = Integer.parseInt(sm);
+        MEDIUM = Integer.parseInt(me);
+        LARGE = Integer.parseInt(lr);
 	}
 
 	private String verifyMyInstanceType() {

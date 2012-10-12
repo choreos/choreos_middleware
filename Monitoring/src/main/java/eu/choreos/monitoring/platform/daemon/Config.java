@@ -1,16 +1,18 @@
 package eu.choreos.monitoring.platform.daemon;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.lang.System;
 
 import eu.choreos.monitoring.platform.utils.YamlParser;
 
 public class Config {
 	
-	private static final String THRESHOLD_SPECS_FOLDER = "threshold_specs/";
+	private static final String THRESHOLD_SPECS_FOLDER = "conf/threshold_specs/";
 
 	/* types of instances based on EC2 instances. 
 	 * A default file is needed to start daemon
@@ -41,42 +43,33 @@ public class Config {
 
 	private void setConfig() {
 
-		String fileName = null;
+        InputStream data;
 
 		/* Set the name of file that have threshold declarations. If file name
 		 * is null or empty a default file is used. It is important that have a default
 		 * file in resources directory */
 		if(thresholdConfigFile != null)
-		fileName = ClassLoader.getSystemResource(THRESHOLD_SPECS_FOLDER+thresholdConfigFile).getFile();
+            data = this.getClass().getClassLoader().getResourceAsStream(THRESHOLD_SPECS_FOLDER+thresholdConfigFile);
+        else
+            data = this.getClass().getClassLoader().getResourceAsStream(THRESHOLD_SPECS_FOLDER+"default.yml");
 
-		if(fileName == null) 
-			fileName = ClassLoader.getSystemResource(THRESHOLD_SPECS_FOLDER+"default.yml").getFile();
-		
-		
-		//System.out.println(fileName);
-		
-		try {
-			/* Default thresholds */
-			List<AbstractThreshold> defaultThresholds = new ArrayList<AbstractThreshold>();
+        /* Default thresholds */
+        List<AbstractThreshold> defaultThresholds = new ArrayList<AbstractThreshold>();
 
-			defaultThresholds = YamlParser.getThresholdsFromFile(fileName);
-			this.thresholds.put("default", defaultThresholds);
+        defaultThresholds = YamlParser.getThresholdsFromStream(data);
+        this.thresholds.put("default", defaultThresholds);
 
-			/* Per instance type thresholds */
-			for (String it : instanceTypedSpecsFiles) {
-				//System.out.println(ClassLoader.getSystemResource(THRESHOLD_SPECS_FOLDER+it + ".yml").getFile());
+        /* Per instance type thresholds */
+        for (String it : instanceTypedSpecsFiles) {
+            //System.out.println(ClassLoader.getSystemResource(THRESHOLD_SPECS_FOLDER+it + ".yml").getFile());
 
-				List<AbstractThreshold> thresholds = YamlParser.getThresholdsFromFile(
-						ClassLoader.getSystemResource(THRESHOLD_SPECS_FOLDER+it + ".yml").getFile()) ;
+            List<AbstractThreshold> thresholds = YamlParser.getThresholdsFromStream(
+                    this.getClass().getClassLoader().getResourceAsStream(THRESHOLD_SPECS_FOLDER+it + ".yml")) ;
 
-				if(thresholds.isEmpty() || thresholds == null) continue;
+            if(thresholds.isEmpty() || thresholds == null) continue;
 
-				this.thresholds.put(it, thresholds);
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}		
+            this.thresholds.put(it, thresholds);
+        }
 	}
 
 	private static volatile Config instance = null;

@@ -90,8 +90,8 @@
 		<resources>
 
 			<resource>
-				<directory>src/main/conf</directory>
- 				<targetPath>../conf</targetPath>
+                <directory>${basedir}/src/main/conf</directory>
+ 				<targetPath>conf</targetPath>
 				<includes>
 					<include>
 						*.properties

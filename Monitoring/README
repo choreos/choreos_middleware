@@ -1,34 +1,73 @@
-=== MODULES DESCRIPTION ===
+ThresholdEvalDaemon - Platform Monitoring - INSTALLATION GUIDE - 08/10/2012
+Written by Nelson Lago (USP)
+<lago@ime.usp.br>
 
-== GmondConf ==
+== WHAT IS IT? ==
+The platform monitor is the component responsible for gathering low-level data,
+such as disk usage, CPU load etc., and forward this information to the Complex
+Event Processor component, where it will be further processed to identify
+eventual problems. This component is comprised of the Ganglia monitoring system
+(a third-party project) and a daemon (ThresholdEvalDaemon) that collects data
+from Ganglia and directs it to the Glimpse Complex Event Processor.
 
-GmondConf is a tool for reconfiguring Ganglia in the local machine. It enables users to create, edit and/or remove UDP send channels from the ganglia configuration file in an automated fashion.
+== REQUIREMENTS ==
+Since this component gathers data from Ganglia and directs it to the Glimpse
+CEP, Ganglia has to be installed on the local machine and a running instance of
+the Glimpse Complex Event Processor must be accessible. As the
+ThresholdEvalDaemon is written in Java, a JRE or JDK environment is necessary.
+We tested only with OpenJDK6, but it should work with any Java 6 or later
+environment.
 
-It automatically creates the updated configuration and sends a signal for gmond (ganglia's monitor daemon) to load the new configuration without necessarily restarting the monitor process.
+Since Ganglia is an external project, its code is not bundled here; it should
+be installed separately. It should be noted that, in CHOReOS, the Chef
+configuration management system is used (within the
+EnactmentEngine/NodePoolManager components); accordingly, we do provide a
+cookbook for it that automates this installation. The NodePoolManager may be
+configured to always deploy ganglia to the nodes it creates if necessary.
 
-To use it one should issue the following command:
-java -jar gmondconf [--add host port] [--update-port host port] [--update-host currentHost newHost] [--update-channel currentHost newHost newPort] [--remove host] [--config-file configFile]
+There may be issues with older versions of Ganglia; at least version 3.2.0 is
+recommended, and we tested only version 3.3.5. The provided chef cookbook makes
+use of an unofficial, temporary repository created to support the project.
 
-As can be seen, all of the parameters are optional. These options are described below:
+== CONFIGURING IT ==
+For the ThresholdEvalDaemon to work, you need to define, at least, the
+address for the Glimpse CEP on the file src/main/conf/monitoring.properties .
+Other parameters may also be tweaked, but the defaults usually suffice. It is
+also possible to refine the parameters for what should be considered
+"suspicious" by modifying the files in src/main/conf/threshold_specs .
+These files currently need to be modified prior to compilation, as they
+are bundled into the final packaged jar file.
 
---add :
-	creates a new UDP send channel, with the provided host and port combination.
+== COMPILING IT ==
+ThresholdEvalDaemon uses Maven 3; after installing maven, "mvn package" should
+be enough to create a complete jar with all dependencies. However, for some yet
+unknown reason, the tests fail to run with maven, but run fine within Eclipse.
+So, to compile, please use "mvn -Dmaven.test.skip=true package" .
 
---update-port :
-	updates the UDP send channel for the provided host to use the newly appointed port.
+== RUNNING IT ==
+After installing and running Ganglia, the daemon may be run by invoking
+"java -jar ChoreosMonitoringService-0.0.1-SNAPSHOT-jar-with-dependencies.jar"
+on the command line.
 
---update-host :
-	updates the UDP send channel for the provided currentHost, replacing it with newHost.
+== VERIFYING IF IT WORKS ==
+A simple test to verify the system is working correctly is to start the
+daemon (after Ganglia is already running), artificially induce the load
+average on the machine to go above one and check whether the Glimpse
+CEP receives a corresponding message (this may take up to a couple of
+minutes depending on a few parameters).
 
---update-channel :
-	removes the UDP send channel for the provided currentHost, replacing it with a new one for newHost at the provided port.
+A simple way to increase load average is this script (CTRL-C stops it):
 
---remove :
-	removes the UDP send channel for the provided host. 
+----
+#!/bin/bash
 
---config-file :
-	indicates the configuration file location. If not provided, "/etc/ganglia/gmond.conf" location is presumed.
+trap "kill -TERM -$$" INT
 
-== ThresholdEvalDaemon ==
+over() { while true; do :; done }
 
+( over )&
+( over )&
+( over )&
 
+wait
+----

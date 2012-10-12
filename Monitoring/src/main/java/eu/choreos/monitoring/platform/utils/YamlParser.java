@@ -1,9 +1,12 @@
 package eu.choreos.monitoring.platform.utils;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.util.NoSuchElementException;
 
 import org.apache.commons.io.FileUtils;
 import org.yaml.snakeyaml.Yaml;
@@ -48,6 +51,18 @@ public class YamlParser {
 		List<AbstractThreshold> returnValue = getThresholdsFromString(fileContents);
 
 		return returnValue;
+	}
+
+	public static List<AbstractThreshold> getThresholdsFromStream(InputStream data) {
+
+        String s;
+            try {
+            s = new java.util.Scanner(data).useDelimiter("\\A").next();
+            } catch (java.util.NoSuchElementException e) {
+                        s = "";
+            }
+
+		return getThresholdsFromString(s);
 	}
 
 }
