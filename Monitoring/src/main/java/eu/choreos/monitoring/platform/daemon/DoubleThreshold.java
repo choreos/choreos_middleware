@@ -39,4 +39,9 @@ public class DoubleThreshold extends AbstractThreshold {
 		return "Triggered: " + name + " " + getComparisonAsString() + " "
 				+ lowerBound + " and " + upperBound + ". Measured: " + lastMeasurement ;
 	}
+	
+	@Override
+	public String toEventRuleData() {
+		return this.toString();
+	}
 }

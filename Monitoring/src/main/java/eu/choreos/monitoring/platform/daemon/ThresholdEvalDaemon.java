@@ -110,7 +110,7 @@ public class ThresholdEvalDaemon {
 				event.setConsumed(false);
 				event.setIsException(false);
 				
-				String id = null;
+				/*String id = null;
 				String instId = null;
 				int eventId = 0;
 				int responseToId = 0;
@@ -119,7 +119,7 @@ public class ThresholdEvalDaemon {
 				event.setConnectorInstanceID(instId);
 				
 				event.setEventID(eventId);
-				event.setEventInResponseToID(responseToId);
+				event.setEventInResponseToID(responseToId);*/
 				
 				sendMessage(event);
 			
