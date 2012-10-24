@@ -1,5 +1,6 @@
 package org.ow2.choreos.npm;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -113,6 +114,67 @@ public class NPMImpl implements NodePoolManager {
 	public void destroyNode(String nodeId) throws NodeNotDestroyed, NodeNotFoundException {
 
 		this.cloudProvider.destroyNode(nodeId);
+	}
+
+	@Override
+	public void destroyNodes() throws NodeNotDestroyed {
+		
+		List<Thread> trds = new ArrayList<Thread>();
+		List<NodeDestroyer> destroyers = new ArrayList<NodeDestroyer>();
+
+		for (Node node: this.getNodes()) {
+			NodeDestroyer destroyer = new NodeDestroyer(node); 
+			Thread trd = new Thread(destroyer);
+			destroyers.add(destroyer);
+			trds.add(trd);
+			trd.start();
+		}		
+		
+		waitThreads(trds);
+		
+		for (NodeDestroyer destroyer: destroyers) {
+			if (!destroyer.ok) {
+				throw new NodeNotDestroyed(destroyer.node.getId());
+			}
+		}
+	}
+	
+	private void waitThreads(List<Thread> trds) {
+
+		for (Thread t: trds) {
+			try {
+				t.join();
+			} catch (InterruptedException e) {
+				logger.error("Error while waiting thread", e);
+			}
+		}
+	}
+
+	private class NodeDestroyer implements Runnable {
+
+		Node node;
+		boolean ok;
+		
+		public NodeDestroyer(Node node) {
+			this.node = node;
+		}
+		
+		@Override
+		public void run() {
+			try {
+				destroyNode(node.getId());
+			} catch (NodeNotDestroyed e) {
+				ok = false;
+				logger.error("Node not destroyed", e);
+			} catch (NodeNotFoundException e) {
+				ok = false;
+				logger.error("Impossible!", e);
+			}
+			logger.info("Node " + node.getId() + " destroyed");
+			ok = true;
+		}
+
+		
 	}
 
 }

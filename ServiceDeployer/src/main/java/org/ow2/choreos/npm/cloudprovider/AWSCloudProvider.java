@@ -1,5 +1,6 @@
 package org.ow2.choreos.npm.cloudprovider;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -14,6 +15,7 @@ import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.ComputeServiceContextFactory;
 import org.jclouds.compute.RunNodesException;
+import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeState;
 import org.jclouds.compute.domain.Template;
@@ -88,15 +90,58 @@ public class AWSCloudProvider implements CloudProvider {
 	public Node getNode(String nodeId) throws NodeNotFoundException {
 
 		Node node = this.registry.getNode(nodeId);
-		if (node == null)
+		if (node == null) {
 			throw new NodeNotFoundException("Node " + nodeId + " not found");
+		}
 		return node;
 	}
 
 	public List<Node> getNodes() {
 
-		return this.registry.getNodes();
+		List<Node> nodes= this.registry.getNodes();
+		if (nodes.isEmpty()) {
+			nodes = fillRegistry();
+		}
+		return nodes; 
 	}
+	
+	/**
+	 * Maybe NPM has just started and the registry is empty,
+	 * although may be there VMs on Amazon
+	 * @return
+	 */
+	private List<Node> fillRegistry() {
+		
+		List<Node> nodes = new ArrayList<Node>();
+		for (Node node: getNodesWithoutCache()) {
+			this.registry.putNode(node);
+			nodes.add(node);
+		}
+		return nodes;
+	}
+	
+	public List<Node> getNodesWithoutCache() {
+		List<Node> nodeList = new ArrayList<Node>();
+		Node node;
+
+		ComputeService client = getClient("");
+		Set<? extends ComputeMetadata> cloudNodes = client.listNodes();
+		for (ComputeMetadata computeMetadata : cloudNodes) {
+			NodeMetadata cloudNode = client.getNodeMetadata(computeMetadata
+					.getId());
+			node = new Node();
+
+			setNodeProperties(node, cloudNode);
+			if (node.getState() != 1) {
+				nodeList.add(node);
+			}
+		}
+
+		client.getContext().close();
+
+		return nodeList;
+	}
+
 
 	public void destroyNode(String id) {
 

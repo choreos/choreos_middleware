@@ -40,6 +40,12 @@ public interface NodePoolManager {
 	public void destroyNode(String nodeId) throws NodeNotDestroyed, NodeNotFoundException;
 
 	/**
+	 * Destroys all the Virtual Machine nodes
+	 * @throws NodeNotDestroyed if could not destry some node
+	 */
+	public void destroyNodes() throws NodeNotDestroyed;
+
+	/**
 	 * Apply configurations on selected node.
 	 * 
 	 * Such configurations are the ones requested through the <code>applyConfig</code> operation

@@ -136,4 +136,10 @@ public class NPMClient implements NodePoolManager {
         return new Node(nodeRest);
 	}
 
+	@Override
+	public void destroyNodes() throws NodeNotDestroyed {
+		
+		throw new NotImplementedException();
+	}
+
 }
