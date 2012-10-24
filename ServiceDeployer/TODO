@@ -21,6 +21,10 @@ It's not desirable. However, often recipes are applied when node is already boot
 since 'create node' also bootstraps the node.
 This is the reason why ParallelDeployTest "works only if the node is already bootstrapped"
 
+* Move properties file to conf folder
+
+* Create external_links file
+So, if we lost valinhos, for example, it will be easier to change the links
 
 =============================
 
