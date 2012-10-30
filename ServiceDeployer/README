@@ -17,7 +17,7 @@ Configuring a Local VM for Faster and Cheaper Tests
 ===================================================
 
 There are some useful links in the end. Below there are instructions on how to configure a VM, bootstrap it and revert it to a previous state (including chef run list). You must have a chef knife configured first (chef-repo/README).
-
+knife node list -c /home/leonardo/workspaces/choreos/chef-repo/.chef/knife.rb
 VM Creation
 -----------
 Be sure you can:
