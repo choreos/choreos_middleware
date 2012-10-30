@@ -25,6 +25,10 @@ This is the reason why ParallelDeployTest "works only if the node is already boo
 Cannot run program "knife" (in directory "/home/leonardo/workspaces/choreos/chef-repo")
 Bootstrap completed at Node ... // this second message should be a failures message
 
+* Move properties file to conf folder
+
+* Create external_links file
+So, if we lost valinhos, for example, it will be easier to change the links
 
 =============================
 

@@ -158,6 +158,23 @@ public class NodesResource {
         return response;
     }
     
+    @DELETE
+    public Response deleteNodes() {
+    	
+    	logger.debug("Request to delete all the nodes");
+
+    	Response response;
+    	try {
+    		this.npm.destroyNodes();
+    		response = Response.status(Status.OK).build();
+		} catch (NodeNotDestroyed e) {
+			logger.error("Nodes not destroyed", e);
+			response = Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+        
+        return response;
+    }
+    
 	/**
 	 * POST /nodes/{nodeId}/upgrade
 	 * 

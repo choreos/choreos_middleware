@@ -48,4 +48,9 @@ public class SingleThreshold extends AbstractThreshold {
 		return "Triggered: " + name + " " + getComparisonAsString() + " "
 				+ limitValue + ". Measured: " + lastMeasurement ;
 	}
+	
+	@Override
+	public String toEventRuleData() {
+		return this.toString();
+	}
 }
