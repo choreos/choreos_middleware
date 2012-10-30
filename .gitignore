@@ -11,3 +11,4 @@
 /Monitoring/Anayzer/.settings/org.eclipse.m2e.core.prefs
 /Monitoring/Anayzer/.project
 /Monitoring/Anayzer/.classpath
+*.properties

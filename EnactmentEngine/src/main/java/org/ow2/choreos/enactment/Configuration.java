@@ -1,6 +1,7 @@
 package org.ow2.choreos.enactment;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class Configuration {
@@ -35,7 +36,10 @@ public class Configuration {
 
     private Configuration() {
         try {
-            properties.load(ClassLoader.getSystemResourceAsStream(PROPERTIES_FILE));
+            final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            final InputStream propFile = loader.getResourceAsStream(PROPERTIES_FILE);
+            properties.load(propFile);
+            propFile.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
