@@ -2,6 +2,8 @@
 # Cookbook Name:: easyesb
 # Recipe:: default
 #
+# Downloads and starts EasyESB
+#
 # Copyright 2011, USP
 #
 # LGPL 2.0 or, at your option, any later version
