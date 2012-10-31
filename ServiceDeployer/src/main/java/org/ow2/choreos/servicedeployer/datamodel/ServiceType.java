@@ -4,7 +4,7 @@ public enum ServiceType {
 
 	COMMAND_LINE("jar"), 
 	TOMCAT("war"), 
-	EASY_ESB("zip"), 
+	EASY_ESB("tar.gz"), 
 	LEGACY(null), 
 	OTHER(null);
 	

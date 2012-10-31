@@ -34,6 +34,8 @@ So, if we lost valinhos, for example, it will be easier to change the links
 
 Service Deployer ToDo list
 
+* In CD deploy recipe: execute client just after server is properly running
+
 * Describe Chef-Server setup (example: Java and Tomcat recipes must be available)
 Better idea: say to the user to install all the recipes of our cookbook folder in his server.
 
@@ -49,6 +51,8 @@ A possible solution would be the service deployer server running npm.upgradeNode
 Download the jar name with its original name
 
 * DELETE /services/{id} should really remove service from deployment
+
+* Separete JAR and WAR recipes in different cookbooks
 
 ============ DONE ============
 

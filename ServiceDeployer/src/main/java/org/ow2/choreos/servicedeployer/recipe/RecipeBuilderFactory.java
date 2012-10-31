@@ -12,7 +12,7 @@ public class RecipeBuilderFactory {
 		case COMMAND_LINE:
 			return new RecipeBuilderImpl();
 		case EASY_ESB:
-			return new RecipeBuilderImpl();
+			return new CDRecipeBuilder();
 		default:
 			throw new IllegalArgumentException("Service type " + serviceType
 					+ " not supported");
