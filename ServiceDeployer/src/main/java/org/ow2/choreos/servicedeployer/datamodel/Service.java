@@ -105,7 +105,7 @@ public class Service {
 				if (this.spec.getEndpointName() != null && !this.spec.getEndpointName().isEmpty())
 					uriContext = this.spec.endpointName + "/";
 				else
-					uriContext = "service" + name + "Deploy/";
+				        uriContext = name + "/";
 				break;
 			case COMMAND_LINE:
 				uriContext = this.spec.endpointName + "/";
