@@ -7,7 +7,7 @@
 # Copyright 2012, USP
 #
 # LGPL 2.0 or, at your option, any later version
-# Leonardo Leite, Eduardo Hideo
+# Leonardo Leite, Eduardo Hideo, Carlos Eduardo M. Santos
 
 include_recipe "tomcat::default"
 
@@ -23,3 +23,7 @@ execute 'extract_libs' do
   action :run
 end
 
+execute 'set_permissions' do
+  command "chmod o+r #{node['tomcat']['lib_dir']}/*.jar"
+  action :run
+end
