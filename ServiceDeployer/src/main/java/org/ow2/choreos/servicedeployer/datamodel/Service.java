@@ -102,7 +102,10 @@ public class Service {
 		String uriContext;
 		switch (this.spec.type) {
 			case TOMCAT:
-				uriContext = "service" + name + "Deploy/";
+				if (this.spec.getEndpointName() != null && !this.spec.getEndpointName().isEmpty())
+					uriContext = this.spec.endpointName + "/";
+				else
+					uriContext = "service" + name + "Deploy/";
 				break;
 			case COMMAND_LINE:
 				uriContext = this.spec.endpointName + "/";
