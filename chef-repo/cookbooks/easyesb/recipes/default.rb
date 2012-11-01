@@ -25,6 +25,22 @@ execute 'extract_easyesb' do
 end
 
 service "start_easyesb" do
-  start_command "cd #{node['easyesb']['bin_folder']} ; java -jar #{node['easyesb']['jar_name']} &"
+  start_command "cd #{node['easyesb']['bin_folder']} ; java -jar #{node['easyesb']['jar_name']} > #{node['easyesb']['log_file']} &"
   action [ :start ]
 end
+
+script "wait_easyesb_start" do
+  interpreter "bash"
+  code <<-EOH
+  echo "Waiting for EasyESB start by monitoring its log: #{node['easyesb']['log_file']}"
+  message='EasyESB Node distribution successfully started'
+  while ! cat #{node['easyesb']['log_file']} | grep -q "$message"
+  do
+    sleep 1
+  done
+  echo 'EasyESB has started'
+  EOH
+  action :run
+end
+
+

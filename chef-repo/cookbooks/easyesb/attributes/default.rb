@@ -6,6 +6,7 @@ default['easyesb']['executable_jar'] = "#{ENV['HOME']}/esb-choreos-distribution-
 default['easyesb']['bin_folder'] = "#{ENV['HOME']}/esb-choreos-distribution-1.0-SNAPSHOT/bin"
 default['easyesb']['jar_name'] = "server.jar"
 default['easyesb']['admin_endpoint'] = "http://localhost:8180/services/adminExternalEndpoint"
+default['easyesb']['log_file'] = "#{ENV['HOME']}/esb-choreos-distribution-1.0-SNAPSHOT/easyesb.log"
 
 # Easy ESB client
 default['easyesb']['cli']['url'] = "http://valinhos.ime.usp.br:54080/easyesb/easyesb-choreos-cli1.0.tar.gz"
