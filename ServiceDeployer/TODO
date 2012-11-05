@@ -34,7 +34,8 @@ So, if we lost valinhos, for example, it will be easier to change the links
 
 Service Deployer ToDo list
 
-* In CD deploy recipe: execute client just after server is properly running
+* easyesb output appends the "esb@localhost:/>" prompt to the log over and over again.
+We have to avoid this.
 
 * Describe Chef-Server setup (example: Java and Tomcat recipes must be available)
 Better idea: say to the user to install all the recipes of our cookbook folder in his server.
@@ -122,6 +123,7 @@ Important places to change this: NodePoolManager, ServideDeployer, and Enactment
 
 * It seems there is some overlapping between INSTALL and README files. Handle this.
 
+* In CD deploy recipe: execute client just after server is properly running
 
 
 
