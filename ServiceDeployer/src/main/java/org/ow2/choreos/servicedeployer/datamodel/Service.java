@@ -25,6 +25,13 @@ public class Service {
 		} else {
 			name = serviceSpec.getName();
 		}
+		
+		if (serviceSpec.type == ServiceType.LEGACY) {
+			URIInfoRetriever info = new URIInfoRetriever(serviceSpec.getCodeUri());
+			this.hostname = info.getHostname();
+			this.ip = info.getIp();
+			this.uri = serviceSpec.getCodeUri();
+		}
 	}
 	
 	private String getDefaultName() {

@@ -37,6 +37,19 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 	public Service deploy(ServiceSpec serviceSpec) {
 		
 		Service service = new Service(serviceSpec);
+		if (serviceSpec.getType() != ServiceType.LEGACY) {
+			service = deployNoLegacyService(service);
+		} 
+		
+		if (service != null) {
+			registry.addService(service.getName(), service);
+		}
+		
+		return service;
+	}
+
+	private Service deployNoLegacyService(Service service) {
+		
 		Recipe serviceRecipe = this.createRecipe(service);
 
 		try {
@@ -49,17 +62,17 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 		Node node = deployService(serviceRecipe);
 		String hostname = node.getHostname();
 		String ip = node.getIp();
+		
 		if ((hostname == null || hostname.isEmpty())
 				&& (ip == null || ip.isEmpty()))
 			return null;
 		service.setHost(hostname);
 		service.setIp(ip);
 		service.setNodeId(node.getId());
-		registry.addService(service.getName(), service);
 		
 		return service;
 	}
-
+	
 	private Recipe createRecipe(Service service) {
 		
 		ServiceType type = service.getSpec().getType();
