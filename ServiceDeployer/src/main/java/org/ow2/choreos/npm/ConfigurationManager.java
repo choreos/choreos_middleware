@@ -62,8 +62,11 @@ public class ConfigurationManager {
      */
     private void runChefClient(SshUtil ssh) throws JSchException {
     	
-    	final String CHEF_CLIENT_LOG = Configuration.get("CHEF_CLIENT_LOG");
-    	final String CHEF_CLIENT_COMMAND = "sudo chef-client --logfile " + CHEF_CLIENT_LOG;
+    	String logFile = Configuration.get("CHEF_CLIENT_LOG");
+    	if (logFile == null || logFile.isEmpty()) {
+    		logFile = "/tmp/chef-client.log";
+    	}
+    	final String CHEF_CLIENT_COMMAND = "sudo chef-client --logfile " + logFile;
     	final int MAX_TRIALS = 5;
     	final int SLEEPING_TIME = 5000;
     	int trials = 0;
