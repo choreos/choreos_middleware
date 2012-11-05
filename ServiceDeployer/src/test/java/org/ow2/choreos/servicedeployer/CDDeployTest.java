@@ -53,8 +53,10 @@ public class CDDeployTest {
 		String url = service.getUri();
 		System.out.println("Service at " + url);
 		npm.upgradeNode(service.getNodeId());
-		Thread.sleep(1000);
-		client = WebClient.create(url + "?wsdl");
+		Thread.sleep(5000);
+		String wsdl = url.substring(0, url.length()-1) + "?wsdl";
+		System.out.println("Checking " + wsdl);
+		client = WebClient.create(wsdl);
 		Response response = client.get();
 		assertEquals(200, response.getStatus());
 	}

@@ -26,7 +26,7 @@ execute 'extract_cd' do
 end
 
 execute "deploy_cd" do
-  command "java -jar #{node['easyesb']['cli']['jar_name']} -c #{node['easyesb']['admin_endpoint']} -s #{node['cd']['$NAME']['xml']}"
+  command "java -jar #{node['easyesb']['cli']['jar_name']} -c #{node['easyesb']['admin_endpoint']} -s #{node['cd']['$NAME']['xml']} > #{node['cd']['$NAME']['log']}"
   cwd "#{node['easyesb']['cli']['bin_folder']}"
   action :run
 end

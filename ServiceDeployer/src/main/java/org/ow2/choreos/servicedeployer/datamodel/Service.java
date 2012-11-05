@@ -111,7 +111,7 @@ public class Service {
 				uriContext = this.spec.endpointName + "/";
 				break;
 			case EASY_ESB:
-				uriContext = "petals/services/" +this.spec. endpointName + "/";
+				uriContext = "services/" + this.spec.endpointName + "ClientProxyEndpoint/";
 				break;
 			default:
 				throw new IllegalStateException(
