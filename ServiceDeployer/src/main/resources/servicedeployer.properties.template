@@ -28,3 +28,5 @@ OPENSTACK_PASSWORD=secret
 CHEF_CONFIG_FILE=/home/leonardo/chef/chef-repo/.chef/knife.rb
 # CHEF_REPO is .chef parent folder
 CHEF_REPO=/home/alfonso777/chef-repo
+
+CHEF_CLIENT_LOG=/tmp/chef-client.log # log written on chef nodes
