@@ -5,7 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventImpl;
+import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventChoreos;
 import it.cnr.isti.labse.glimpse.utils.Manager;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import eu.choreos.monitoring.platform.exception.MessageHandlingFault;
 public class ThresholdEvalDaemonTest {
 
 	private ThresholdEvalDaemon daemon;
-	private GlimpseBaseEventImpl<String> message;
+	private GlimpseBaseEventChoreos<String> message;
 	private GlimpseMessageHandler msgHandler;
 	private String javaNamingProviderUrl;
 	
@@ -63,14 +63,19 @@ public class ThresholdEvalDaemonTest {
 		daemon.evaluateThresholdsSendMessagesAndSleep(message, 0);
 		
 		verify(msgHandler, times(2)).sendMessage(
-				any(GlimpseBaseEventImpl.class));
+				any(GlimpseBaseEventChoreos.class));
 	}
 
 	
-	private GlimpseBaseEventImpl<String> getDefaultMessage() {
-		return new GlimpseBaseEventImpl<String>("thresholdAlarm", "connector1",
-				"connInstance1", "connExecution1", 1, 2,
-				System.currentTimeMillis(), "NS1", false);
+	private GlimpseBaseEventChoreos<String> getDefaultMessage() {
+		return new GlimpseBaseEventChoreos<String>(
+				"thresholdAlarm", 
+				System.currentTimeMillis(), 
+				"", 
+				false, 
+				"chor", 
+				"service", 
+				"10.10.10.101");
 	}
 	
 	private Properties getProperties() {

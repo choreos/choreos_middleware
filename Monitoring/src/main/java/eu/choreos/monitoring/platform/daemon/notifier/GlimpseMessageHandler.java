@@ -1,6 +1,7 @@
 package eu.choreos.monitoring.platform.daemon.notifier;
 
 import it.cnr.isti.labse.glimpse.event.GlimpseBaseEvent;
+import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventChoreos;
 import it.cnr.isti.labse.glimpse.probe.GlimpseAbstractProbe;
 
 import java.util.Properties;
@@ -16,7 +17,7 @@ public class GlimpseMessageHandler extends GlimpseAbstractProbe {
 		super(settings);
 	}
 
-	public GlimpseBaseEvent<String> sendMessage(GlimpseBaseEvent<String> event) throws MessageHandlingFault {
+	public GlimpseBaseEventChoreos<String> sendMessage(GlimpseBaseEventChoreos<String> event) throws MessageHandlingFault {
 		try {
 			this.sendEventMessage(event, false);
 		} catch (JMSException e) {

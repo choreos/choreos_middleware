@@ -1,6 +1,6 @@
 package eu.choreos.monitoring.platform.daemon;
 
-import it.cnr.isti.labse.glimpse.event.GlimpseBaseEvent;
+import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventChoreos;
 
 import java.util.List;
 import java.util.Map;
@@ -45,7 +45,7 @@ public class ThresholdEvalDaemon {
 		thresholdManager.addMultipleThresholds(instanceType, thresholdList);
 	}
 
-	public void continuouslyEvaluateThresholdsAndSendMessages(GlimpseBaseEvent<String> event) {
+	public void continuouslyEvaluateThresholdsAndSendMessages(GlimpseBaseEventChoreos<String> event) {
 
 		while (true) {
 			try {
@@ -58,7 +58,7 @@ public class ThresholdEvalDaemon {
 	}
 
 	public void evaluateThresholdsSendMessagesAndSleep(
-			GlimpseBaseEvent<String> message,
+			GlimpseBaseEventChoreos<String> message,
 			int sleepingTime) throws GangliaException {
 
 		if (thereAreSurpassedThresholds()) {
@@ -80,7 +80,7 @@ public class ThresholdEvalDaemon {
 		return evaluateAllThresholds;
 	}
 
-	private void sendMessage(GlimpseBaseEvent<String> message) {
+	private void sendMessage(GlimpseBaseEventChoreos<String> message) {
 		try {
 			messageHandler.sendMessage(message);
 		} catch (MessageHandlingFault e) {
@@ -97,7 +97,7 @@ public class ThresholdEvalDaemon {
 	}
 
 	private void sendAllSurpassedThresholdMessages(
-			GlimpseBaseEvent<String> event) throws GangliaException {
+			GlimpseBaseEventChoreos<String> event) throws GangliaException {
 
 		Map<String, List<AbstractThreshold>> surpassedThresholds = getSurpassedThresholds();
 
@@ -105,24 +105,16 @@ public class ThresholdEvalDaemon {
 			
 			for (AbstractThreshold threshold : surpassedThresholds.get(host)) {
 								
-				event.setNetworkedSystemSource(host); 
-				event.setData(threshold.toEventRuleData());
+				event.setEventData(threshold.toEventRuleData());
+				event.setTimeStamp(threshold.timestampOccur);
+				event.setEventName(threshold.getName());
+				event.setChoreographySource("chor");
+				event.setServiceSource("");
+				event.setMachineIP(host);
 				event.setConsumed(false);
-				event.setIsException(false);
 				
-				/*String id = null;
-				String instId = null;
-				int eventId = 0;
-				int responseToId = 0;
-
-				event.setConnectorID(id);
-				event.setConnectorInstanceID(instId);
-				
-				event.setEventID(eventId);
-				event.setEventInResponseToID(responseToId);*/
 				
 				sendMessage(event);
-			
 			}
 		}
 	}

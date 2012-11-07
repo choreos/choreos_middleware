@@ -1,6 +1,6 @@
 package eu.choreos.monitoring.platform.daemon;
 
-import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventImpl;
+import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventChoreos;
 import it.cnr.isti.labse.glimpse.utils.Manager;
 
 import java.io.IOException;
@@ -56,27 +56,22 @@ public class ThresholdEvalDaemonLauncher {
 				.createProbeSettingsPropertiesObject(
 						"org.apache.activemq.jndi.ActiveMQInitialContextFactory",
 						javaNamingProviderUrl, "system", "manager",
-						"GangliaFactory", "jms.probeTopic", true, "probeName",
+						"GangliaFactory", "jms.probeTopic", false, "probeName",
 						"probeTopic");
 		return probeSettingsProperties;
 
 	}
 
-	private static GlimpseBaseEventImpl<String> getBaseEvent() {
-
-		return (new GlimpseBaseEventImpl<String>(
-				"thresholdAlarm", 				// event name
-				"connector1",     				// connector id
-				"connInstance1",  				// connector instance id
-				"connExecution1",	 			// connector instance execution id
-				1,                				// event id
-				2,                				// event in response to id
-				System.currentTimeMillis(), 	// time stamp
-				"unknown", 						// networked system source
-				false 							// is exception
-				));
-
-
+	private static GlimpseBaseEventChoreos<String> getBaseEvent() {
+		return (new GlimpseBaseEventChoreos<String>(
+				"", // event data
+				System.currentTimeMillis(), // timestamp of event 
+			    "", // the event name 
+				false, // is exception? 
+				"", // choreography source (of event) 
+				"", // service source (of event) 
+				"" // host address
+				));						
 	}
 
 

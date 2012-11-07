@@ -67,6 +67,7 @@ public class ThresholdManager {
 		
 		if(host.isDown()) {
 			SingleThreshold t = new SingleThreshold("host_down", SingleThreshold.DOWN, 0);
+			t.setTimestampOccur(host.getLastMeasurementTimestamp());
 			tempSurpassedThresholds.add(t); 
 			
 			/* remove this return statement to continue send last measured threshold. Can be used to
@@ -74,22 +75,21 @@ public class ThresholdManager {
 			return tempSurpassedThresholds;
 		}
 		
-		if(host.getInstanceType().equalsIgnoreCase("small")) {
+		if(host.getInstanceType().compareToIgnoreCase("small") == 0) {
 			
-			tempSurpassedThresholds.addAll(this.getSurpassedThresholdByInstanceType("default", host));
+			tempSurpassedThresholds.addAll(this.getSurpassedThresholdByInstanceType("small", host));
 			
-		} else if(host.getInstanceType() == "medium") {
+		} else if(host.getInstanceType().compareToIgnoreCase("medium") == 0) {
 			
-			tempSurpassedThresholds.addAll(this.getSurpassedThresholdByInstanceType("default", host));
+			tempSurpassedThresholds.addAll(this.getSurpassedThresholdByInstanceType("medium", host));
 		
-		} else if(host.getInstanceType() == "large") {
+		} else if(host.getInstanceType().compareToIgnoreCase("large") == 0) {
 			
-			tempSurpassedThresholds.addAll(this.getSurpassedThresholdByInstanceType("default", host));
+			tempSurpassedThresholds.addAll(this.getSurpassedThresholdByInstanceType("large", host));
 		
-		} else if(host.getInstanceType() == "extralarge") {
+		} else if(host.getInstanceType().compareToIgnoreCase("extralarge") == 0) {
 		
-			tempSurpassedThresholds.addAll(this.getSurpassedThresholdByInstanceType("default", host));
-		
+			tempSurpassedThresholds.addAll(this.getSurpassedThresholdByInstanceType("extralarge", host));
 		}
 		
 		/* apply default thresholds. */
@@ -108,8 +108,10 @@ public class ThresholdManager {
 			String thresholdName = threshold.getName();
 			Double metricValue = getMetricNumericalValue(thresholdName, host);
 
-			if (threshold.wasSurpassed(metricValue))
+			if (threshold.wasSurpassed(metricValue)) {
+				threshold.setTimestampOccur(host.getLastMeasurementTimestamp());
 				surpassed.add(threshold);
+			}
 		}
 		
 		return surpassed;

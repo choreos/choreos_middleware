@@ -48,12 +48,22 @@ public class GmondDataReader {
 		for (int i = 0; i < clusterNodeList.getLength(); i++) {
 			
 			Element newClusterNode = (Element) clusterNodeList.item(i);
+			String timestamp  = newClusterNode.getAttribute("LOCALTIME");
 			NodeList newHostNodeList = newClusterNode.getElementsByTagName("HOST");
 			String clusterName = newClusterNode.getAttribute("NAME");
 			
 			for (int j = 0; j < newHostNodeList.getLength(); j++) {
 				Element element = (Element) newHostNodeList.item(j);
 				Host host = createHostFromElement(element, clusterName);
+				long ts;
+				
+				try{
+					ts = Long.parseLong(timestamp);
+				} catch (NumberFormatException e) {
+					ts = System.currentTimeMillis();
+				}
+				
+				host.setLastMeasurementTimestamp(ts);
 				lastKnownHosts.add(host);				
 			}
 		}
