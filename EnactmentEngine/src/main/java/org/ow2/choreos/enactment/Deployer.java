@@ -18,6 +18,7 @@ import org.ow2.choreos.servicedeployer.ServiceNotDeployedException;
 import org.ow2.choreos.servicedeployer.client.ServiceDeployerClient;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
+import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
 
 public class Deployer {
 
@@ -50,11 +51,13 @@ public class Deployer {
 			Service deployed = invoker.deployed;
 			deployedServices.put(deployed.getName(), deployed);
 			
-			String nodeId = deployed.getNodeId();
-			NodeUpgrader upgrader = new NodeUpgrader(nodeId);
-			Thread trd = new Thread(upgrader);
-			trds.add(trd);
-			trd.start();
+			if (deployed.getSpec().getType() != ServiceType.LEGACY) {
+				String nodeId = deployed.getNodeId();
+				NodeUpgrader upgrader = new NodeUpgrader(nodeId);
+				Thread trd = new Thread(upgrader);
+				trds.add(trd);
+				trd.start();
+			}
 		}
 		
 		waitThreads(trds);

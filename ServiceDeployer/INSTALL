@@ -76,7 +76,7 @@ cache_type               'BasicFile'
 cache_options( :path => "#{ENV['HOME']}/.chef/checksums" ) 
 cookbook_path            ["#{current_dir}/../cookbooks"] 
 
-Here, "lleite" is also my Opscode user name, and “choreos-verao” is the organization name configured on Hosted Chef. And don't forget the “cookbook_path” property.
+Here, "lleite" is also my Opscode user name, and "choreos-verao" is the organization name configured on Hosted Chef. And don't forget the "cookbook_path" property.
 
 You will also need to upload to your Chef Server all the cookbooks from our cookbook folder: https://github.com/choreos/choreos_middleware/tree/master/chef-repo/cookbooks.
 

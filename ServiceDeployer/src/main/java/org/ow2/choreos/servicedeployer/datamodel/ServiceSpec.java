@@ -74,7 +74,7 @@ public class ServiceSpec {
 			if (type == ServiceType.TOMCAT)
 				effectivePort = 8080;
 			if (type == ServiceType.EASY_ESB)
-				effectivePort = 8084;
+				effectivePort = 8180;
 		}
 		
 		return effectivePort;

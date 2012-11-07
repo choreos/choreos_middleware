@@ -25,6 +25,13 @@ public class Service {
 		} else {
 			name = serviceSpec.getName();
 		}
+		
+		if (serviceSpec.type == ServiceType.LEGACY) {
+			URIInfoRetriever info = new URIInfoRetriever(serviceSpec.getCodeUri());
+			this.hostname = info.getHostname();
+			this.ip = info.getIp();
+			this.uri = serviceSpec.getCodeUri();
+		}
 	}
 	
 	private String getDefaultName() {
@@ -102,13 +109,16 @@ public class Service {
 		String uriContext;
 		switch (this.spec.type) {
 			case TOMCAT:
-				uriContext = "service" + name + "Deploy/";
+				if (this.spec.getEndpointName() != null && !this.spec.getEndpointName().isEmpty())
+					uriContext = this.spec.endpointName + "/";
+				else
+				        uriContext = name + "/";
 				break;
 			case COMMAND_LINE:
 				uriContext = this.spec.endpointName + "/";
 				break;
 			case EASY_ESB:
-				uriContext = "petals/services/" +this.spec. endpointName + "/";
+				uriContext = "services/" + this.spec.endpointName + "ClientProxyEndpoint/";
 				break;
 			default:
 				throw new IllegalStateException(

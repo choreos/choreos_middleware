@@ -19,8 +19,8 @@ public class ModelsForTest {
 	
 	public static final String AIRLINE = "airline";
 	public static final String TRAVEL_AGENCY = "travelagency";	
-	public static final String AIRLINE_JAR = "http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar";
-	public static final String TRAVEL_AGENCY_JAR = "http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar";	
+	public static final String AIRLINE_JAR = Locations.get("AIRLINE_JAR");
+	public static final String TRAVEL_AGENCY_JAR = Locations.get("TRAVEL_AGENCY_JAR");	
 	public static final int AIRLINE_PORT = 1234;
 	public static final int TRAVEL_AGENCY_PORT = 1235;	
 	

@@ -13,9 +13,10 @@ public class LogConfigurator {
 	
 	public static void configLog() {
 	    	
+		final ClassLoader loader = Thread.currentThread().getContextClassLoader();
     	Properties logProperties = new Properties();
     	try {
-    		InputStream is = ClassLoader.getSystemResourceAsStream(LOG_CONFIG_FILE);
+    		InputStream is = loader.getResourceAsStream(LOG_CONFIG_FILE);
 			if (is != null) {
 	    		logProperties.load(is);
 				PropertyConfigurator.configure(logProperties);
