@@ -6,6 +6,16 @@ public abstract class AbstractThreshold {
 	protected double lastMeasurement;
 	protected int comparison;
 	
+	protected long timestampOccur;
+	
+	public long getTimestampOccur() {
+		return timestampOccur;
+	}
+
+	public void setTimestampOccur(long timestampOccur) {
+		this.timestampOccur = timestampOccur;
+	}
+
 	public AbstractThreshold(String name, int comparison) {
 			this.name = name;
 			this.comparison = comparison;

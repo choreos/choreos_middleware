@@ -1,8 +1,5 @@
 package eu.choreos.monitoring.platform.daemon.datatypes;
 
-import java.lang.System;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
@@ -23,6 +20,7 @@ public class Host {
 	private String ip;
 	private int tn;
 	private int tmax;
+	private long measurementTimestamp;
 	
 	public String getInstanceType () {
 		return instanceType;
@@ -122,4 +120,11 @@ public class Host {
 		return metrics.get(metric).getValue();
 	}
 
+	public void setLastMeasurementTimestamp(long timestamp) {
+		this.measurementTimestamp = timestamp;
+	}
+
+	public long getLastMeasurementTimestamp() {
+		return measurementTimestamp;
+	}
 }
