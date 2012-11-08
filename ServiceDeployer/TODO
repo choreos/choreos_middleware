@@ -21,6 +21,11 @@ It's not desirable. However, often recipes are applied when node is already boot
 since 'create node' also bootstraps the node.
 This is the reason why ParallelDeployTest "works only if the node is already bootstrapped"
 
+* Giving up from unavailable VM
+Sometimes a requested VM does not get ready to use.
+The consequence is that the SSH keeps failing on.
+When SSH failures take so long, we should give up the VM and request another VM.
+
 * BUG:
 Cannot run program "knife" (in directory "/home/leonardo/workspaces/choreos/chef-repo")
 Bootstrap completed at Node ... // this second message should be a failures message
