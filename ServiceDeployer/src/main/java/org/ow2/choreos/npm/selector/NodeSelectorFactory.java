@@ -32,7 +32,7 @@ public class NodeSelectorFactory {
 		switch (nodeSelectorType) {
 
 		case ALWAYS_CREATE:
-			return new VerySimpleSelector(cloudProvider);
+			return new AlwaysCreateSelector(cloudProvider);
 
 		case ROUND_ROBIN:
 			if (roundRobinSelector == null)

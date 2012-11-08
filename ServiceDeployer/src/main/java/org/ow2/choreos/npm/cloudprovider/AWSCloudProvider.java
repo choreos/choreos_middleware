@@ -17,7 +17,6 @@ import org.jclouds.compute.ComputeServiceContextFactory;
 import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.compute.domain.NodeState;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.ec2.domain.InstanceType;
@@ -187,13 +186,12 @@ public class AWSCloudProvider implements CloudProvider {
 	}
 
 	public Node createOrUseExistingNode(Node node) throws RunNodesException {
-		for (Node n : getNodes()) {
-			if (n.getImage().equals(node.getImage())
-					&& NodeState.RUNNING.ordinal() == n.getState()) {
-				return n;
-			}
-		}
-		return createNode(node);
+		
+		List<Node> nodes = this.getNodes();
+		if (nodes.size() > 0)
+			return nodes.get(0);
+		else
+			return createNode(node);
 	}
 
 }
