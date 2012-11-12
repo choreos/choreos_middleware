@@ -16,39 +16,6 @@ public class ThresholdEvalDaemonLauncher {
 	private static String thresholdListFileName = null;
 	private static ThresholdEvalDaemon daemon;
 
-	@SuppressWarnings("unused")
-	private static void parseArgs(String[] args) {
-		host = "localhost";
-		port = 8649;
-		javaNamingProviderUrl=null;
-
-		switch (args.length) {
-
-		case 4:
-			javaNamingProviderUrl = args[3];
-
-		case 3:
-			port = Integer.parseInt(args[2]);
-
-		case 2:
-			host = args[1];
-
-		case 1:
-			thresholdListFileName = args[0];
-			break;
-
-		default:
-			System.out
-			.println("USAGE: ThresholdEvalDaemon THRESHOLD_LIST_FILE [HOST_LOCATION] [PORT] [JAVA_NAMING_PROVIDER_URL]");
-			System.out
-			.println("Default values: hostLocation = 'http://localhost/'");
-			System.out.println("                port = 8649");
-			System.out
-			.println("Note: to set a port, the hostLocation must also be present");
-			System.exit(1);
-		}
-	}
-
 	public static Properties getProperties() {
 		if (javaNamingProviderUrl == null)
 			javaNamingProviderUrl = "tcp://dsbchoreos.petalslink.org:61616";
@@ -117,7 +84,7 @@ public class ThresholdEvalDaemonLauncher {
 		host = props.getProperty("Monitoring.gangliaLocation", "localhost");
 		port = Integer.parseInt(props.getProperty("Monitoring.gangliaPort", "8649"));
 		javaNamingProviderUrl = props.getProperty("Monitoring.javaNamingProviderUrl", "tcp://dsbchoreos.petalslink.org:61616");
-		thresholdListFileName = props.getProperty("Monitoring.thresholdFileListName", null); // uses default
+		thresholdListFileName = props.getProperty("Monitoring.thresholdFileListName", null); 
 
 		if(thresholdListFileName == null)
 			System.out.println("Loading default configuration...");
