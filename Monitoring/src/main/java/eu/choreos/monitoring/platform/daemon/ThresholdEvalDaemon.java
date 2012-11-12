@@ -20,20 +20,20 @@ public class ThresholdEvalDaemon {
 
 	public ThresholdEvalDaemon(Properties settings, String host, int port)
 			throws GangliaException {
+		
 		this(settings, host, port, (new GlimpseMessageHandler(settings)),
 				(new ThresholdManager(new HostManager(new GmondDataReader(host,
 						port)))));
 	}
 
-	public ThresholdEvalDaemon(Properties settings, String host, int port,
-			GlimpseMessageHandler msgHandler, ThresholdManager tshdManager)
+	public ThresholdEvalDaemon(Properties settings, String host, int port, GlimpseMessageHandler msgHandler, ThresholdManager tshdManager)
 			throws GangliaException {
 		messageHandler = msgHandler;
 		thresholdManager = tshdManager;
 		
-		if(config == null) config = Config.getInstance(null);
+		if(config == null) 
+			config = Config.getInstance(null);
 		
-		/* set threshold map */
 		thresholdManager.addAllThreshold(config.getThresholdsConfig());
 	}
 
@@ -57,19 +57,21 @@ public class ThresholdEvalDaemon {
 		}
 	}
 
-	public void evaluateThresholdsSendMessagesAndSleep(
-			GlimpseBaseEventChoreos<String> message,
-			int sleepingTime) throws GangliaException {
+	public void evaluateThresholdsSendMessagesAndSleep(GlimpseBaseEventChoreos<String> message, int sleepingTime) 
+			throws GangliaException {
 
 		if (thereAreSurpassedThresholds()) {
 			sendAllSurpassedThresholdMessages(message);
 		}
 
 		sleep(sleepingTime);
+		
 	}
 
 	public boolean thereAreSurpassedThresholds() throws GangliaException {
+		
 		return thresholdManager.thereAreSurpassedThresholds();
+	
 	}
 
 	public Map<String, List<AbstractThreshold>> getSurpassedThresholds()
@@ -113,6 +115,7 @@ public class ThresholdEvalDaemon {
 				event.setMachineIP(host);
 				event.setConsumed(false);
 				
+				System.out.println(event.getEventData());
 				
 				sendMessage(event);
 			}

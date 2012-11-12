@@ -17,14 +17,14 @@ public class ThresholdEvalDaemonLauncher {
 	private static ThresholdEvalDaemon daemon;
 
 	public static Properties getProperties() {
-		if (javaNamingProviderUrl == null)
-			javaNamingProviderUrl = "tcp://dsbchoreos.petalslink.org:61616";
+				
 		Properties probeSettingsProperties = Manager
 				.createProbeSettingsPropertiesObject(
 						"org.apache.activemq.jndi.ActiveMQInitialContextFactory",
 						javaNamingProviderUrl, "system", "manager",
 						"GangliaFactory", "jms.probeTopic", false, "probeName",
 						"probeTopic");
+		
 		return probeSettingsProperties;
 
 	}
@@ -40,40 +40,11 @@ public class ThresholdEvalDaemonLauncher {
 				"" // host address
 				));						
 	}
-
-
-	public static void main(String[] args) throws InterruptedException, IOException {
-		//parseArgs(args);
 		
-		
-		// testing open conf dir.
-		
-
-		if(!readConfig()) 
-			printUsage();
-
-		daemon = null;
-		try {
-			daemon = new ThresholdEvalDaemon(getProperties(),
-					host, port);
-		} catch (GangliaException e) {
-			e.printStackTrace();
-		}
-
-		Config config = Config.getInstance(thresholdListFileName);
-
-		daemon.setConfig(config);
-		daemon.continuouslyEvaluateThresholdsAndSendMessages(getBaseEvent());
-	}
-
-	private static void printUsage() {
-		System.out.println("Verify your monitoring.properties file.");
-
-	}
-
 	private static boolean readConfig() {
 
 		Properties props = new Properties();
+		
 		try {
 			props.load(ClassLoader.getSystemResourceAsStream("monitoring.properties"));
 		} catch (IOException e) {
@@ -83,7 +54,7 @@ public class ThresholdEvalDaemonLauncher {
 
 		host = props.getProperty("Monitoring.gangliaLocation", "localhost");
 		port = Integer.parseInt(props.getProperty("Monitoring.gangliaPort", "8649"));
-		javaNamingProviderUrl = props.getProperty("Monitoring.javaNamingProviderUrl", "tcp://dsbchoreos.petalslink.org:61616");
+		javaNamingProviderUrl = props.getProperty("Monitoring.javaNamingProviderUrl", "tcp://eclipse.ime.usp.br:61616");
 		thresholdListFileName = props.getProperty("Monitoring.thresholdFileListName", null); 
 
 		if(thresholdListFileName == null)
@@ -91,5 +62,33 @@ public class ThresholdEvalDaemonLauncher {
 
 		return true;
 	}
+	
+	private static void printUsage() {
+		
+		System.out.println("Verify your monitoring.properties file.");
+		
+	}
 
+	public static void main(String[] args) throws InterruptedException, IOException {
+		
+		if(!readConfig()) {
+			printUsage();
+			System.exit(1);
+		}
+		
+		daemon = null;
+		
+		try {
+			daemon = new ThresholdEvalDaemon(getProperties(), host, port);
+		} catch (GangliaException e) {
+			e.printStackTrace();
+		}
+		
+		Config config = Config.getInstance(thresholdListFileName);
+		
+		daemon.setConfig(config);
+		
+		daemon.continuouslyEvaluateThresholdsAndSendMessages(getBaseEvent());
+	
+	}
 }

@@ -12,6 +12,7 @@ public class SingleThreshold extends AbstractThreshold {
 	public SingleThreshold(String name, int comparison, double value) {
 		super(name, comparison);
 		this.limitValue = value;
+		this.lastMeasurement = 0;
 	}
 	
 	@Override

@@ -46,8 +46,11 @@ public class ThresholdManager {
 	}
 	
 	public boolean thereAreSurpassedThresholds() throws GangliaException {
+		
 		updateThresholdsInfo();
+		
 		return !surpassedThresholds.isEmpty();
+	
 	}
 	
 	public Map<String, List<AbstractThreshold>> getSurpassedThresholds() throws GangliaException {
@@ -60,18 +63,16 @@ public class ThresholdManager {
 		return Double.parseDouble(value);
 	}
 
-	/* Could return a List cause here all surpassed threshold differs only host name */
 	private List<AbstractThreshold> getAllSurpassedThresholds(Host host) throws GangliaException {
 
 		List<AbstractThreshold> tempSurpassedThresholds = new ArrayList<AbstractThreshold>();
 		
 		if(host.isDown()) {
+
 			SingleThreshold t = new SingleThreshold("host_down", SingleThreshold.DOWN, 0);
 			t.setTimestampOccur(host.getLastMeasurementTimestamp());
 			tempSurpassedThresholds.add(t); 
 			
-			/* remove this return statement to continue send last measured threshold. Can be used to
-			 * get information about cause of host is down */
 			return tempSurpassedThresholds;
 		}
 		
@@ -102,15 +103,27 @@ public class ThresholdManager {
 
 		List<AbstractThreshold> surpassed = new ArrayList<AbstractThreshold>();
 
-		if(!expectedThresholdsSpecs.keySet().contains(instancetype)) return surpassed;
+		if(!expectedThresholdsSpecs.keySet().contains(instancetype)) 
+			return surpassed;
 			
 		for (AbstractThreshold threshold : expectedThresholdsSpecs.get(instancetype)) {
+			
 			String thresholdName = threshold.getName();
 			Double metricValue = getMetricNumericalValue(thresholdName, host);
 
 			if (threshold.wasSurpassed(metricValue)) {
-				threshold.setTimestampOccur(host.getLastMeasurementTimestamp());
-				surpassed.add(threshold);
+				
+				AbstractThreshold at = null;
+				try {
+					at = (AbstractThreshold) threshold.clone();
+				} catch (CloneNotSupportedException e) {
+					e.printStackTrace();
+				}
+				
+				at.setTimestampOccur(host.getLastMeasurementTimestamp());
+				at.setlastMeasurement(metricValue);
+				
+				surpassed.add(at);
 			}
 		}
 		
@@ -118,6 +131,7 @@ public class ThresholdManager {
 	}
 	
 	private Map<String, List<AbstractThreshold>> getSurpassedThresholdsForAllHosts() throws GangliaException {
+		
 		Map<String, List<AbstractThreshold>> surpassedThresholds = new HashMap<String, List<AbstractThreshold>>();
 
 		for(Host host : hostManager.getHosts()){

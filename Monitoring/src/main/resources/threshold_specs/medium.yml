@@ -1,4 +1,4 @@
 --- !!eu.choreos.monitoring.platform.daemon.datatypes.SingleThresholdSpec
 attribute:    mem_free
 comparison:   MIN
-limit_value:  1024
+limit_value:  1024000
