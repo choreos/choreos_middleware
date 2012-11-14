@@ -15,6 +15,7 @@ import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.NodeState;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.ow2.choreos.npm.NodeNotFoundException;
@@ -173,8 +174,13 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
 
     @Override
     public Node createOrUseExistingNode(Node node) throws RunNodesException {
-        // TODO Auto-generated method stub
-        return null;
+    	for (Node n : getNodes()) {
+			if (n.getImage().equals(node.getImage())
+					&& NodeState.RUNNING.ordinal() == n.getState()) {
+				return n;
+			}
+		}
+		return createNode(node);
     }
 
     private Template getTemplate(ComputeService client, String imageId) {
