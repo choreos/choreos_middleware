@@ -24,6 +24,8 @@ OPENSTACK_IP=http://198.55.33.14:5000/v2.0
 OPENSTACK_TENANT=Choreos
 OPENSTACK_USER=secret
 OPENSTACK_PASSWORD=secret
+OPENSTACK_KEY_PAIR=keyname
+OPENSTACK_PRIVATE_SSH_KEY=/path/to/keyname.pem
 
 CHEF_CONFIG_FILE=/home/leonardo/chef/chef-repo/.chef/knife.rb
 # CHEF_REPO is .chef parent folder
