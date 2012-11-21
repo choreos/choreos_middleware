@@ -1,6 +1,6 @@
 package eu.choreos.monitoring.platform.daemon;
 
-public abstract class AbstractThreshold {
+public abstract class AbstractThreshold implements Cloneable {
 	
 	protected String name;
 	protected double lastMeasurement;
@@ -70,5 +70,14 @@ public abstract class AbstractThreshold {
 
 	public String toEventRuleData() {
 		return null;
+	}
+
+	public void setlastMeasurement(Double metricValue) {
+		this.lastMeasurement = metricValue;
+	}
+	
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 }

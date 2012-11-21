@@ -8,6 +8,8 @@ import java.util.Set;
 
 import org.jclouds.Constants;
 import org.jclouds.ContextBuilder;
+import org.jclouds.aws.ec2.compute.AWSEC2ComputeService;
+import org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.RunNodesException;
@@ -15,8 +17,11 @@ import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.NodeState;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
+import org.jclouds.ec2.domain.InstanceType;
+import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.ow2.choreos.npm.NodeNotFoundException;
 import org.ow2.choreos.npm.datamodel.Node;
 import org.ow2.choreos.servicedeployer.Configuration;
@@ -173,8 +178,13 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
 
     @Override
     public Node createOrUseExistingNode(Node node) throws RunNodesException {
-        // TODO Auto-generated method stub
-        return null;
+    	for (Node n : getNodes()) {
+			if (n.getImage().equals(node.getImage())
+					&& NodeState.RUNNING.ordinal() == n.getState()) {
+				return n;
+			}
+		}
+		return createNode(node);
     }
 
     private Template getTemplate(ComputeService client, String imageId) {
@@ -193,6 +203,8 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
         builder.hardwareId(hardwareId);
         System.out.println("	Building Template...");
         Template template = builder.build();
+        NovaTemplateOptions options = template.getOptions().as(NovaTemplateOptions.class);
+        options.keyPairName(Configuration.get("OPENSTACK_KEY_PAIR"));
         System.out.println("	Template built successfully!");
         // TemplateOptions options = template.getOptions();
         return template;
@@ -206,6 +218,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
         node.setImage(cloudNode.getImageId());
         node.setState(cloudNode.getState().ordinal());
         node.setUser("ubuntu");
+        node.setPrivateKeyFile(Configuration.get("OPENSTACK_PRIVATE_SSH_KEY"));
     }
 
     private void setNodeIp(Node node, NodeMetadata cloudNode) {

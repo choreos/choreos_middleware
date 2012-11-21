@@ -43,28 +43,23 @@ public class Config {
 
         InputStream data;
 
-		/* Set the name of file that have threshold declarations. If file name
-		 * is null or empty a default file is used. It is important that have a default
-		 * file in resources directory */
 		if(thresholdConfigFile != null)
             data = this.getClass().getClassLoader().getResourceAsStream(THRESHOLD_SPECS_FOLDER+thresholdConfigFile);
         else
             data = this.getClass().getClassLoader().getResourceAsStream(THRESHOLD_SPECS_FOLDER+"default.yml");
 
-        /* Default thresholds */
         List<AbstractThreshold> defaultThresholds = new ArrayList<AbstractThreshold>();
 
         defaultThresholds = YamlParser.getThresholdsFromStream(data);
         this.thresholds.put("default", defaultThresholds);
 
-        /* Per instance type thresholds */
         for (String it : instanceTypedSpecsFiles) {
-            //System.out.println(ClassLoader.getSystemResource(THRESHOLD_SPECS_FOLDER+it + ".yml").getFile());
 
             List<AbstractThreshold> thresholds = YamlParser.getThresholdsFromStream(
                     this.getClass().getClassLoader().getResourceAsStream(THRESHOLD_SPECS_FOLDER+it + ".yml")) ;
 
-            if(thresholds.isEmpty() || thresholds == null) continue;
+            if(thresholds.isEmpty() || thresholds == null) 
+            	continue;
 
             this.thresholds.put(it, thresholds);
         }

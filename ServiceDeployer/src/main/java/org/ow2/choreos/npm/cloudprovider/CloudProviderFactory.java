@@ -28,7 +28,7 @@ public class CloudProviderFactory {
 		case FIXED:
 			return new FixedCloudProvider();
 		case OPEN_STACK:
-			throw new IllegalArgumentException("OpenStack not implemented yet");
+			return new OpenStackKeystoneCloudProvider();
 		default:
 			throw new IllegalArgumentException("Invalid cloud provider type");
 		}

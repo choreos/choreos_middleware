@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,47 +22,44 @@ public class ThresholdManagerTest {
 
 	private ThresholdManager notifier;
 	private HostManager hostManager;
-	private Map<String, Metric> metricsMap1;
-	private Map<String, Metric> metricsMap2;
+	private Map<String, Metric> metricsMapForMedium;
+	private Map<String, Metric> metricsMapForLarge;
+	private Map<String, Metric> metricsMapForExtraLarge;
 	private ArrayList<Host> hostList;
-	private Host host1;
-	private Host host2;
-	private Host host3;
+	private Host extraLargeHost;
+	private Host mediumHost;
+	private Host largeHostDown;
 
 	@Before
 	public void setUp() throws Exception {
-		metricsMap1 = new HashMap<String, Metric>();
-		metricsMap2 = new HashMap<String, Metric>();
-		
-		metricsMap1.put("load_one", new Metric("load_one", "1.0", 10, 30, 0));
-		metricsMap1.put("mem_total", new Metric("mem_total", "9876543", 10, 30, 0));
-		
-		metricsMap2.put("load_one", new Metric("load_one", "2.0", 10, 30, 0));
-		metricsMap2.put("mem_total", new Metric("mem_total", "4000", 10, 30, 0));
-
+		metricsMapForMedium = new HashMap<String, Metric>();
+		metricsMapForLarge = new HashMap<String, Metric>();
+		metricsMapForExtraLarge = new HashMap<String, Metric>();
 		hostManager = mock(HostManager.class);
 		
-		host1 = new Host("test1", "hostname1", "ip1", metricsMap1, 20,20);
-		host2 = new Host("test1", "hostname2", "ip2", metricsMap2, 20,20);
+		metricsMapForExtraLarge.put("load_one", new Metric("load_one", "1.1", 10, 30, 0));
+		metricsMapForExtraLarge.put("mem_total", new Metric("mem_total", "9876543", 10, 30, 0));
 		
-		HashMap<String, Metric> m = new HashMap<String, Metric>();
-		m.put("load_one"	, new Metric("load_one", "value", 90, 20, 0));
-		m.put("mem_total", new Metric("mem_total", "7550000", 10, 30, 0));
-		host3 = new Host("test1", "hostname3", "ip3", m, 40,20); 
+		metricsMapForMedium.put("load_one", new Metric("load_one", "2.1", 10, 30, 0));
+		metricsMapForMedium.put("mem_total", new Metric("mem_total", "3500000", 10, 30, 0));
+
+		metricsMapForLarge.put("mem_total", new Metric("mem_total", "7550000", 10, 30, 0));
+		metricsMapForLarge.put("load_one"	, new Metric("load_one", "0.4", 90, 20, 0));
+		
+		extraLargeHost = new Host("test1", "hostname1", "ip1", metricsMapForExtraLarge, 20,20);
+		mediumHost = new Host("test1", "hostname2", "ip2", metricsMapForMedium, 20,20);		
+		largeHostDown = new Host("test1", "hostname3", "ip3", metricsMapForLarge, 40,20); 
 
 		hostList = new ArrayList<Host>();
-		hostList.add(host1);
-		hostList.add(host2);
+		hostList.add(extraLargeHost);
+		hostList.add(mediumHost);
+		//hostList.add(largeHostDown);
 
 		when(hostManager.getHosts()).thenReturn(hostList);
 
 		notifier = new ThresholdManager(hostManager);
 
 
-	}
-
-	@After
-	public void tearDown() throws Exception {
 	}
 
 	@Test
@@ -104,12 +100,12 @@ public class ThresholdManagerTest {
 		notifier.updateThresholdsInfo();
 
 		Map<String, List<AbstractThreshold>> list1 = notifier.getSurpassedThresholds();
-		
-		assertEquals(1, list1.size());
+				
+		assertEquals("surpassed thresholds", 1, list1.size());
 
-		List<AbstractThreshold> list = list1.get(host1.getHostName());
+		List<AbstractThreshold> list = list1.get(extraLargeHost.getHostName());
 		
-		assertEquals(1, list.size());
+		assertEquals("hosts with surpassed thresholds", 1, list.size());
 		
 	}
 
@@ -122,15 +118,16 @@ public class ThresholdManagerTest {
 		notifier.updateThresholdsInfo();
 
 		Map<String, List<AbstractThreshold>> list1 = notifier.getSurpassedThresholds();
+		System.out.println(list1);
 		
 		assertEquals(2, list1.size());
 		
 		List<AbstractThreshold> list;
 
-		list = list1.get(host1.getHostName());
+		list = list1.get(extraLargeHost.getHostName());
 		assertTrue(list.contains(threshold));
 
-		list = list1.get(host2.getHostName());
+		list = list1.get(mediumHost.getHostName());
 		assertTrue(list.contains(threshold));
 
 	}
@@ -157,11 +154,11 @@ public class ThresholdManagerTest {
 
 	@Test
 	public void thereIsAHostDown() throws GangliaException {
-		hostList.add(host3);
+		hostList.add(largeHostDown);
 		notifier.updateThresholdsInfo();
 		Map<String, List<AbstractThreshold>> t = notifier.getSurpassedThresholds();
-		assertTrue(t.containsKey(host3.getHostName()));
-		assertEquals("host_down", t.get(host3.getHostName()).get(0).getName());
+		assertTrue(t.containsKey(largeHostDown.getHostName()));
+		assertEquals("host_down", t.get(largeHostDown.getHostName()).get(0).getName());
 	}
 
 }
