@@ -1,6 +1,6 @@
 NodePoolManager ToDo list
 
-* When NPM starts, NodeRegistry should be filled with nodes retrieved from the cloud provider.
+* When NPM starts, NodeRegistry should be filled with nodes retrieved from the cloud provider. (I think it is done)
 
 * Make FixedCloudProvider deal with several VMs
 
@@ -30,10 +30,12 @@ When SSH failures take so long, we should give up the VM and request another VM.
 Cannot run program "knife" (in directory "/home/leonardo/workspaces/choreos/chef-repo")
 Bootstrap completed at Node ... // this second message should be a failures message
 
-* Move properties file to conf folder
-
 * Create external_links file
 So, if we lost valinhos, for example, it will be easier to change the links
+
+* ConfigurationManager is a too big class, let's break it!
+A first step is creating a class responsible by invoking the chef-client in a node.
+The refactoring will be OK if all the new classes could be easily unit-tested.
 
 =============================
 
@@ -50,15 +52,25 @@ Better idea: say to the user to install all the recipes of our cookbook folder i
 * The POST /services should support receiving a list of services,
 and not just one service
 
-* It does not seem nice that the service deployer client has to call npm.upgradeNodes operation
-A possible solution would be the service deployer server running npm.upgradeNodes periodically
-
 * jar file names get very ugly
 Download the jar name with its original name
 
 * DELETE /services/{id} should really remove service from deployment
 
 * Separete JAR and WAR recipes in different cookbooks
+
+* Current ServiceType is not actually the type of the service,
+but the type of the deployable artifact.
+Maybe we should rename ServiceType and use ServiceType to know if
+service is SOAP, REST, JMS etc.
+This new information will be useful to make ContextSender an extensible point.
+
+* Rename ServiceDependence to ServiceDependency
+
+* Make COMMNAD_LINE support tar.gz packages.
+
+* ServiceSpec should have an attribute 'version'
+It will be important later to upgrade choreographies.
 
 ============ DONE ============
 
@@ -130,5 +142,7 @@ Important places to change this: NodePoolManager, ServideDeployer, and Enactment
 
 * In CD deploy recipe: execute client just after server is properly running
 
+* Move properties file to conf folder
+After some research, it does not sound a good idea anymore.
 
 
