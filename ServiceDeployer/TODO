@@ -72,6 +72,15 @@ This new information will be useful to make ContextSender an extensible point.
 * ServiceSpec should have an attribute 'version'
 It will be important later to upgrade choreographies.
 
+* Since ServiceType and ArtifactType are intended to be extended, 
+they cannot be simple enums.
+Solution (by C Moraes): to use the type safe enum pattern.
+Create a class ServiceType, that has a private constructor 
+and initializes a set of instances based on a config file.
+Default values can have constants pointing to them (e.g. SOAP = new ServiceType('SOAP')),
+but to access non-defualt values it is necessary something like
+ServiceType.getInstanceByName("JMS").
+
 ============ DONE ============
 
 * Create a Java project Utils to avoid code replication
