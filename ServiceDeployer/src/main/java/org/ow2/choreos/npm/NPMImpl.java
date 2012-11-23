@@ -8,6 +8,9 @@ import org.jclouds.compute.RunNodesException;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.npm.chef.ConfigToChef;
 import org.ow2.choreos.npm.cloudprovider.CloudProvider;
+import org.ow2.choreos.npm.cm.RecipeApplier;
+import org.ow2.choreos.npm.cm.NodeBootstrapper;
+import org.ow2.choreos.npm.cm.NodeUpgrader;
 import org.ow2.choreos.npm.datamodel.Config;
 import org.ow2.choreos.npm.datamodel.Node;
 import org.ow2.choreos.npm.selector.NodeSelector;
@@ -25,7 +28,6 @@ public class NPMImpl implements NodePoolManager {
 	private Logger logger = Logger.getLogger(NPMImpl.class);
 	
     private CloudProvider cloudProvider;
-    private ConfigurationManager configurationManager = new ConfigurationManager();
 
     public NPMImpl(CloudProvider provider) {
         cloudProvider = provider;
@@ -41,7 +43,8 @@ public class NPMImpl implements NodePoolManager {
         }
         
         try {
-        	configurationManager.initializeNode(node);
+        	NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
+        	bootstrapper.bootstrapNode();
         } catch (KnifeException e) {
         	throw new NodeNotCreatedException(node.getId(), "Could not initialize node " + node);
         } catch (JSchException e) {
@@ -81,7 +84,8 @@ public class NPMImpl implements NodePoolManager {
         
         while (!ok) {
         	try {
-				this.configurationManager.applyRecipe(node, cookbook, recipe);
+        	    RecipeApplier recipeApplyer = new RecipeApplier();
+				recipeApplyer.applyRecipe(node, cookbook, recipe);
 				ok = true;
 			} catch (ConfigNotAppliedException e) {
 				try {
@@ -102,9 +106,10 @@ public class NPMImpl implements NodePoolManager {
 	public void upgradeNode(String nodeId) throws NodeNotUpgradedException, NodeNotFoundException {
 
 		Node node = this.getNode(nodeId);
+		NodeUpgrader upgrader = new NodeUpgrader();
 		
 		try {
-			configurationManager.updateNodeConfiguration(node);
+			upgrader.upgradeNodeConfiguration(node);
 		} catch (JSchException e) {
 			throw new NodeNotUpgradedException(node.getId(), "Could not connect through ssh");
 		}

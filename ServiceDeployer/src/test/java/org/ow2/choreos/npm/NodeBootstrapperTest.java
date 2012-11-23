@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.npm.cloudprovider.CloudProvider;
 import org.ow2.choreos.npm.cloudprovider.FixedCloudProvider;
+import org.ow2.choreos.npm.cm.NodeBootstrapper;
 import org.ow2.choreos.npm.datamodel.Node;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -22,7 +23,7 @@ import org.ow2.choreos.utils.LogConfigurator;
  *
  */
 @Category(IntegrationTest.class)
-public class NodeInitializerTest {
+public class NodeBootstrapperTest {
     
 	@Before
 	public void setUp() {
@@ -41,12 +42,12 @@ public class NodeInitializerTest {
 		Node node = cp.createOrUseExistingNode(new Node());
 		System.out.println(node);
 
-		ConfigurationManager configurationManager = new ConfigurationManager();
-		if (!configurationManager.isInitialized(node)) {
+		NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
+		if (!bootstrapper.isNodeAlreadyBootstrapped()) {
 			System.out.println("Going to bootstrap the node");
-			configurationManager.initializeNode(node);
+			bootstrapper.bootstrapNode();
 			System.out.println("Checking if bootstrap was OK");
-			assertTrue(configurationManager.isInitialized(node));
+			assertTrue(bootstrapper.isNodeAlreadyBootstrapped());
 		} else {
 			System.out.println("Node was already bootstrapped");
 		}
