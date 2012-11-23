@@ -77,7 +77,7 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 		
 		ServiceType type = service.getSpec().getType();
 		RecipeBuilder builder = RecipeBuilderFactory.getRecipeBuilderInstance(type);
-		Recipe serviceRecipe = builder.createRecipe(service);
+		Recipe serviceRecipe = builder.createRecipe(service.getSpec());
 		return serviceRecipe;
 	}
 	

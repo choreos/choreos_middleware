@@ -20,8 +20,8 @@ import org.ow2.choreos.utils.LogConfigurator;
 public class JARDeployTest {
 
 	// a known jar file
-	public static String JAR_LOCATION = "https://github.com/downloads/choreos/choreos_middleware/simplews.jar";
-
+	public static final String JAR_LOCATION = "https://github.com/downloads/choreos/choreos_middleware/simplews.jar";
+	
 	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
 	private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
 	private ServiceDeployer deployer = new ServiceDeployerImpl(npm);
@@ -37,6 +37,7 @@ public class JARDeployTest {
 	@Before
 	public void setUp() throws Exception {
 		
+		spec.setName("simplews");
 		spec.setCodeUri(JAR_LOCATION);
 		spec.setType(ServiceType.COMMAND_LINE);
 		spec.setEndpointName("");

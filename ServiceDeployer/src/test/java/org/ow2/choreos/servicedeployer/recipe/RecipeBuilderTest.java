@@ -11,18 +11,15 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.npm.datamodel.ResourceImpact;
-import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
-import org.ow2.choreos.servicedeployer.recipe.Recipe;
-import org.ow2.choreos.servicedeployer.recipe.RecipeBuilderImpl;
 
 public class RecipeBuilderTest {
 
 	private static String RECIPES_FOLDER = "chef/recipes";
 	
 	private RecipeBuilderImpl recipeBuilder;
-	private static Service service = new Service();
+	private static ServiceSpec service;
 	private static String id = "myServletWAR";
 	private static String codeLocationURI = "https://github.com/downloads/choreos/choreos_middleware/myServletWAR.war";
 	private static ResourceImpact impact = new ResourceImpact();
@@ -37,13 +34,11 @@ public class RecipeBuilderTest {
 		impact.setMemory("low");
 		impact.setRegion("BR");
 
-		ServiceSpec spec = new ServiceSpec();
-		spec.setCodeUri(codeLocationURI);
-		spec.setType(ServiceType.TOMCAT);
-		spec.setResourceImpact(impact);
-
+		service = new ServiceSpec();
+		service.setCodeUri(codeLocationURI);
+		service.setType(ServiceType.TOMCAT);
+		service.setResourceImpact(impact);
 		service.setName(id);
-		service.setSpec(spec);
 	}
 
 	@Before
@@ -110,7 +105,7 @@ public class RecipeBuilderTest {
 		assertFalse(fileData.contains("$NAME"));
 
 		// Ensure the ocurrences of $WARFILE were replaced with war file name
-		String warFile = service.getSpec().getFileName();
+		String warFile = service.getFileName();
 		assertTrue(fileData.contains(warFile));
 		assertFalse(fileData.contains("$WARFILE"));
 

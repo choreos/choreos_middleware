@@ -1,6 +1,6 @@
 package org.ow2.choreos.servicedeployer.recipe;
 
-import org.ow2.choreos.servicedeployer.datamodel.Service;
+import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
 
 public interface RecipeBuilder {
 	
@@ -11,5 +11,5 @@ public interface RecipeBuilder {
 	 * @param service
 	 * @return
 	 */
-	public Recipe createRecipe(Service service);
+	public Recipe createRecipe(ServiceSpec serviceSpec);
 }
