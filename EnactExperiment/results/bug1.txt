@@ -1,0 +1,38 @@
+Choreography #3 is not working (invocation took 280 milliseconds)
+
+[Service [name=travelagency, uri=http://107.22.144.95:1235/travelagency/], Service [name=airline, uri=http://50.17.142.141:1234/airline/]]
+[5:49:14] Choreography #3 enacted in 152447 miliseconds
+[5:49:14] Machines used by choreography #3:107.22.144.95 (us-east-1/i-7bafdf04); 50.17.142.141 (us-east-1/i-67afdf18); 
+
+[DEBUG 17:11:05 ConfigurationManager] upgrading node Node [id=us-east-1/i-7bafdf04, ip=107.22.144.95, hostname=default-7bafdf04, chefName=ip-10-12-110-176.ec2.internal]
+
+[leonardo@ARCHLEO chef-repo]$ knife node show ip-10-12-110-176.ec2.internal
+Node Name:   ip-10-12-110-176.ec2.internal
+Environment: _default
+FQDN:        ip-10-12-110-176.ec2.internal
+IP:          107.22.144.95
+Run List:    recipe[serviceairline::jar], recipe[servicetravelagency::jar]
+Roles:       
+Recipes:     serviceairline::jar
+Platform:    ubuntu 10.10
+Tags:        
+
+ubuntu@ip-10-12-110-176:~$ cat /tmp/chef-client.log 
+# Logfile created on 2012-11-23 19:47:18 +0000 by logger.rb/31641
+[2012-11-23T19:47:18+00:00] INFO: *** Chef 10.16.2 ***
+[2012-11-23T19:47:20+00:00] INFO: Client key /etc/chef/client.pem is not present - registering
+[2012-11-23T19:47:20+00:00] INFO: HTTP Request Returned 409 Conflict: Client already exists
+[2012-11-23T19:47:20+00:00] INFO: HTTP Request Returned 403 Forbidden: You are not allowed to take this action.
+[2012-11-23T19:47:20+00:00] FATAL: Stacktrace dumped to /var/chef/cache/chef-stacktrace.out
+[2012-11-23T19:47:20+00:00] FATAL: Net::HTTPServerException: 403 "Forbidden"
+
+Diagnóstico
+
+Recipes:     serviceairline::jar // strange... there were no files on the machine!
+It seems an attempt of concurrent bootstraps!
+How avoid this?
+Why round robin selector allowed this? Do we need synchronized it?
+
+
+
+

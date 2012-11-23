@@ -3,6 +3,7 @@ package org.ow2.choreos.npm.selector;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.log4j.Logger;
 import org.ow2.choreos.npm.cloudprovider.CloudProvider;
 import org.ow2.choreos.npm.datamodel.Config;
 import org.ow2.choreos.npm.datamodel.Node;
@@ -20,6 +21,8 @@ import org.ow2.choreos.npm.datamodel.Node;
  */
 public class RoundRobinSelector implements NodeSelector {
 
+	private Logger logger = Logger.getLogger(RoundRobinSelector.class);
+	
 	private AtomicInteger counter = new AtomicInteger();
 	private CloudProvider cloudProvider;
 	
@@ -33,7 +36,7 @@ public class RoundRobinSelector implements NodeSelector {
 		int idx = counter.getAndIncrement();
 		idx = idx % nodes.size();
 		Node selected = nodes.get(idx);
-		System.out.println("Selector has chosen " + selected);
+		logger.debug("Selector has chosen " + selected);
 		return selected;
 	}
 
