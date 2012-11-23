@@ -57,12 +57,17 @@ public class Bootstrapper {
 					NodePoolManager npm = new NPMClient(NPM_HOST);
 					Node req = new Node();
 					Node vm = null;
-					try {
-						vm = npm.createNode(req);
-					} catch (NodeNotCreatedException e) {
-						System.out.println(Utils.getTimeStamp() + "VM #" + idx + " not created!");
-						return;
+					boolean created = false;
+					
+					while (!created) {
+						try {
+							vm = npm.createNode(req);
+							created = true;
+						} catch (NodeNotCreatedException e) {
+							System.out.println(Utils.getTimeStamp() + "VM #" + idx + " not created!");
+						}
 					}
+					
 					long tf = System.currentTimeMillis();
 					long duration = tf - t0;
 					vms.add(vm);
