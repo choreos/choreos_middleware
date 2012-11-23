@@ -1,37 +1,67 @@
 SUMMARY
 
-05_01
-Bootstrap: 9:15:31 - 9:11:26 = 245s
-Enactment: 824905ms
-Fail at enactment: 1
-Working: 3
+ // tuples are (mean, std dev)
+ // times in seconds
 
-10_01
-Bootstrap: 11:51:4 - 11:43:43 = 441s
-Enactment: 824905ms
-Fail at enactment: 3
-Working: 7
+ # 01_01
+ How many VMs were ordered = 2
+ How many VMs were created = 2
+ Time to create a VM = (104.108, 180.35727049031763)
+ Total time to create VMs = 115.448
+ How many choreographies to enact = 1
+ How many choreographies enacted = 1
+ Time to enact a choreography = (141.408, 0.0)
+ Total time to enact choreographies = 141.42
+ Time to check a choreography = (0.818, 0.0)
+ Total time to check choreographies = 0.819
+ How many choreographies working = 1
+ Total time without checking choreographies = 256.868
+ Total time = 257.687
 
-10_02
-Bootstrap: 0:43:3 - 0:35:36 = 447s
-Enactment: 976290ms
-Fail at enactment: 1
-Working: 6
+ # 02_01
+ How many VMs were ordered = 4
+ How many VMs were created = 4
+ Time to create a VM = (140.014, 8447.881783)
+ Total time to create VMs = 252.627
+ How many choreographies to enact = 2
+ How many choreographies enacted = 2
+ Time to enact a choreography = (143.941, 0.36928085962041873)
+ Total time to enact choreographies = 144.463
+ Time to check a choreography = (0.806, 0.0)
+ Total time to check choreographies = 0.807
+ How many choreographies working = 2
+ Total time without checking choreographies = 397.09000000000003
+ Total time = 397.89700000000005
 
-10_02
-Bootstrap: 292801ms
-Enactment: 660664ms
-Fail at enactment: 2
-Working: 6
+ # 03_01
+ How many VMs were ordered = 6
+ How many VMs were created = 6
+ Time to create a VM = (114.87616666666668, 223.82971900522256)
+ Total time to create VMs = 122.079
+ How many choreographies to enact = 3
+ How many choreographies enacted = 3
+ Time to enact a choreography = (150.28833333333333, 56.565361846506185)
+ Total time to enact choreographies = 158.066
+ Time to check a choreography = (0.834, 3.464101615137761E-6)
+ Total time to check choreographies = 0.837
+ How many choreographies working = 3
+ Total time without checking choreographies = 280.145
+ Total time = 280.98199999999997
 
-15_01
-Bootstrap: 418234ms
-Enactment: 1050993ms
-Fail at enactment: 3
-Working: 9
+ # 04_01
+ How many VMs were ordered = 8
+ How many VMs were created = 8
+ Time to create a VM = (121.27387499999999, 5.637925310319255)
+ Total time to create VMs = 122.722
+ How many choreographies to enact = 4
+ How many choreographies enacted = 4
+ Time to enact a choreography = (149.3795, 57.583798500000036)
+ Total time to enact choreographies = 154.105
+ Time to check a choreography = (0.80625, 0.0038013749999999988)
+ Total time to check choreographies = 0.88
+ How many choreographies working = 4
+ Total time without checking choreographies = 276.827
+ Total time = 277.70799999999997
 
-15_02
-Bootstrap: 460993ms 
-Enactment: 1693768ms
-Fail at enactment: 3
-Working: 7
+
+
