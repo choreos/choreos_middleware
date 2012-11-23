@@ -14,7 +14,7 @@ public class Configuration {
     }
 
     public static String get(String key) {
-        return INSTANCE.getProperties().getProperty(key);
+        return INSTANCE.getProperties().getProperty(key).trim();
     }
 
     public static void set(String key, String value) {

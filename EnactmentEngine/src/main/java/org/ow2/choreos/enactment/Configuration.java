@@ -25,7 +25,7 @@ public class Configuration {
     public static String get(Option key) {
     	if (key == null)
     		throw new IllegalArgumentException();
-        return INSTANCE.getProperties().getProperty(key.toString());
+        return INSTANCE.getProperties().getProperty(key.toString()).trim();
     }
 
     public static void set(Option key, String value) {
