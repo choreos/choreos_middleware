@@ -26,7 +26,7 @@ import org.ow2.choreos.enactment.datamodel.ChorSpec;
  */
 public class Experiment {
 
-	public static final int CHORS_QTY = 1; // how many micro choreographies there will be 
+	public static final int CHORS_QTY = 8; // how many micro choreographies there will be 
 	public static final int SERVICES_PER_CHOR = 2;
 	
 	private Report report;

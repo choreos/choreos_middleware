@@ -56,18 +56,7 @@ Download the jar name with its original name
 
 * Separete JAR and WAR recipes in different cookbooks
 
-* Current ServiceType is not actually the type of the service,
-but the type of the deployable artifact.
-Maybe we should rename ServiceType and use ServiceType to know if
-service is SOAP, REST, JMS etc.
-This new information will be useful to make ContextSender an extensible point.
-
-* Rename ServiceDependence to ServiceDependency
-
 * Make COMMNAD_LINE support tar.gz packages.
-
-* ServiceSpec should have an attribute 'version'
-It will be important later to upgrade choreographies.
 
 * Since ServiceType and ArtifactType are intended to be extended, 
 they cannot be simple enums.
@@ -78,6 +67,7 @@ Default values can have constants pointing to them (e.g. SOAP = new ServiceType(
 but to access non-defualt values it is necessary something like
 ServiceType.getInstanceByName("JMS").
 
+==============================
 ============ DONE ============
 
 * Create a Java project Utils to avoid code replication
@@ -157,5 +147,17 @@ The refactoring will be OK if all the new classes could be easily unit-tested.
 
 * Create external_links file
 So, if we lost valinhos, for example, it will be easier to change the links
+
+* ServiceSpec should have an attribute 'version'
+It will be important later to upgrade choreographies.
+
+* Rename ServiceDependence to ServiceDependency
+
+* Current ServiceType is not actually the type of the service,
+but the type of the deployable artifact.
+Maybe we should rename ServiceType and use ServiceType to know if
+service is SOAP, REST, JMS etc.
+This new information will be useful to make ContextSender an extensible point.
+
 
 

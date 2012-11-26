@@ -1,10 +1,10 @@
 package org.ow2.choreos.servicedeployer.recipe;
 
-import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
+import org.ow2.choreos.servicedeployer.datamodel.ArtifactType;
 
 public class RecipeBuilderFactory {
 
-	public static RecipeBuilder getRecipeBuilderInstance(ServiceType serviceType) {
+	public static RecipeBuilder getRecipeBuilderInstance(ArtifactType serviceType) {
 
 		switch (serviceType) {
 		case TOMCAT:

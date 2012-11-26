@@ -5,7 +5,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.enactment.datamodel.ChorServiceSpec;
 import org.ow2.choreos.enactment.datamodel.ChorSpec;
-import org.ow2.choreos.enactment.datamodel.ServiceDependence;
+import org.ow2.choreos.enactment.datamodel.ServiceDependency;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 
 public class ContextCaster {
@@ -34,7 +34,7 @@ public class ContextCaster {
 			ChorServiceSpec spec, Service deployed) {
 		
 		String serviceUri = deployed.getUri();
-		for (ServiceDependence dep: spec.getDependences()) {
+		for (ServiceDependency dep: spec.getDependences()) {
 			
 			Service deployedPartner = deployedServices.get(dep.getServiceName());
 			if (deployedPartner == null) {

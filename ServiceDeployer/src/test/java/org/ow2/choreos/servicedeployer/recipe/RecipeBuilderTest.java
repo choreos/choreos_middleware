@@ -12,7 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.npm.datamodel.ResourceImpact;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
-import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
+import org.ow2.choreos.servicedeployer.datamodel.ArtifactType;
 
 public class RecipeBuilderTest {
 
@@ -36,7 +36,7 @@ public class RecipeBuilderTest {
 
 		service = new ServiceSpec();
 		service.setCodeUri(codeLocationURI);
-		service.setType(ServiceType.TOMCAT);
+		service.setArtifactType(ArtifactType.TOMCAT);
 		service.setResourceImpact(impact);
 		service.setName(id);
 	}

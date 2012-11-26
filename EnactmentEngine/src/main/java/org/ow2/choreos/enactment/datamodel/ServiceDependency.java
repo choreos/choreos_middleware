@@ -6,16 +6,16 @@ package org.ow2.choreos.enactment.datamodel;
  * @author leonardo
  *
  */
-public class ServiceDependence {
+public class ServiceDependency {
 	
 	private String serviceName;
 	private String serviceRole;
 
-	public ServiceDependence() {
+	public ServiceDependency() {
 
 	}
 
-	public ServiceDependence(String serviceName, String serviceRole) {
+	public ServiceDependency(String serviceName, String serviceRole) {
 		this.serviceName = serviceName;
 		this.serviceRole = serviceRole;
 	}
@@ -55,7 +55,7 @@ public class ServiceDependence {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ServiceDependence other = (ServiceDependence) obj;
+		ServiceDependency other = (ServiceDependency) obj;
 		if (serviceName == null) {
 			if (other.serviceName != null)
 				return false;

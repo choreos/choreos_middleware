@@ -16,7 +16,7 @@ public class ChorServiceSpec extends ServiceSpec {
 	private String owner;
 	private String group;
 	private List<String> roles = new ArrayList<String>();
-	private List<ServiceDependence> dependences = new ArrayList<ServiceDependence>();
+	private List<ServiceDependency> dependences = new ArrayList<ServiceDependency>();
 	
 	public ServiceSpec getServiceSpec() {
 
@@ -48,10 +48,10 @@ public class ChorServiceSpec extends ServiceSpec {
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
 	}
-	public List<ServiceDependence> getDependences() {
+	public List<ServiceDependency> getDependences() {
 		return dependences;
 	}
-	public void setDependences(List<ServiceDependence> dependences) {
+	public void setDependences(List<ServiceDependency> dependences) {
 		this.dependences = dependences;
 	}
 

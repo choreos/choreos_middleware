@@ -15,7 +15,7 @@ import org.ow2.choreos.npm.NodePoolManager;
 import org.ow2.choreos.npm.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
-import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
+import org.ow2.choreos.servicedeployer.datamodel.ArtifactType;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -42,7 +42,7 @@ public class CDDeployTest {
 		
 		spec.setName("CDWeather");
 		spec.setCodeUri(CD_LOCATION);
-		spec.setType(ServiceType.EASY_ESB);
+		spec.setArtifactType(ArtifactType.EASY_ESB);
 		spec.setEndpointName("CDWeatherForecastServicePort"); // configured in the config.xml
 	}
 

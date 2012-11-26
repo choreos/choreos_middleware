@@ -8,10 +8,12 @@ import org.ow2.choreos.npm.datamodel.ResourceImpact;
 public class ServiceSpec {
 
 	protected String name;
-	protected ServiceType type; 
+	protected ServiceType type;
+	protected ArtifactType artifactType;
 	protected String codeUri;
 	protected int port;
 	protected String endpointName;
+	protected String version;
 	protected ResourceImpact resourceImpact;
 
 	public String getName() {
@@ -21,13 +23,21 @@ public class ServiceSpec {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
 	public ServiceType getType() {
 		return type;
 	}
 
 	public void setType(ServiceType type) {
 		this.type = type;
+	}
+
+	public ArtifactType getArtifactType() {
+		return artifactType;
+	}
+
+	public void setArtifactType(ArtifactType artifactType) {
+		this.artifactType = artifactType;
 	}
 
 	public String getCodeUri() {
@@ -53,12 +63,20 @@ public class ServiceSpec {
 	public void setEndpointName(String name) {
 		this.endpointName = name;
 	}
+	
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
 
 	public String getFileName() {
 		
 		// We assume that the codeLocationURI ends with "/fileName.[war,jar]
 		String fileName = "";
-		String extension = this.type.getExtension();
+		String extension = this.artifactType.getExtension();
 		String[] urlPieces = this.getCodeUri().split("/");
 		if (urlPieces[urlPieces.length - 1].contains("." + extension)) {
 			fileName = urlPieces[urlPieces.length - 1];
@@ -71,9 +89,9 @@ public class ServiceSpec {
 		int effectivePort = port;
 
 		if (notDefinedPort()) {
-			if (type == ServiceType.TOMCAT)
+			if (artifactType == ArtifactType.TOMCAT)
 				effectivePort = 8080;
-			if (type == ServiceType.EASY_ESB)
+			if (artifactType == ArtifactType.EASY_ESB)
 				effectivePort = 8180;
 		}
 		
@@ -116,8 +134,10 @@ public class ServiceSpec {
 
 	@Override
 	public String toString() {
-		return "ServiceSpec [name=" + name + ", type=" + type + ", codeUri=" + codeUri + ", port="
-				+ port + ", endpointName=" + endpointName + "]";
+		return "ServiceSpec [name=" + name + ", type = " + type
+				+ ", artifactType=" + artifactType + ", codeUri=" + codeUri
+				+ ", port=" + port + ", endpointName=" + endpointName
+				+ ", version=" + version + "]";
 	}
 
 }

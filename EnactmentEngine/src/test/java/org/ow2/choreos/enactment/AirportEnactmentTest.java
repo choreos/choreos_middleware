@@ -12,9 +12,9 @@ import org.junit.experimental.categories.Category;
 import org.ow2.choreos.enactment.datamodel.ChorServiceSpec;
 import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
-import org.ow2.choreos.enactment.datamodel.ServiceDependence;
+import org.ow2.choreos.enactment.datamodel.ServiceDependency;
+import org.ow2.choreos.servicedeployer.datamodel.ArtifactType;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
-import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -62,18 +62,18 @@ public class AirportEnactmentTest {
 			int port = Integer.parseInt(AirportProperties.get(serviceName + ".port"));
 			service.setPort(port);
 			service.getRoles().add(serviceName);
-			service.setType(ServiceType.COMMAND_LINE);
+			service.setArtifactType(ArtifactType.COMMAND_LINE);
 			
-			List<ServiceDependence> deps = getDependences(serviceName);
+			List<ServiceDependency> deps = getDependences(serviceName);
 			service.setDependences(deps);
 			
 			chor.addServiceSpec(service);
 		}
 	}
 	
-	private List<ServiceDependence> getDependences(String serviceName) {
+	private List<ServiceDependency> getDependences(String serviceName) {
 
-		List<ServiceDependence> deps = new ArrayList<ServiceDependence>();
+		List<ServiceDependency> deps = new ArrayList<ServiceDependency>();
 		
 		String line = AirportProperties.get(serviceName + ".dependences");
 		if (line == null)
@@ -81,7 +81,7 @@ public class AirportEnactmentTest {
 		
 		String[] names = line.split(",");
 		for (String name: names) {
-			ServiceDependence dep = new ServiceDependence(name, name);
+			ServiceDependency dep = new ServiceDependency(name, name);
 			deps.add(dep);
 		}
 		

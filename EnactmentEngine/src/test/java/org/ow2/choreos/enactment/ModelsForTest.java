@@ -8,10 +8,10 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.enactment.datamodel.ChorServiceSpec;
 import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
-import org.ow2.choreos.enactment.datamodel.ServiceDependence;
+import org.ow2.choreos.enactment.datamodel.ServiceDependency;
 import org.ow2.choreos.enactment.datamodel.xml.ChorXmlWriter;
+import org.ow2.choreos.servicedeployer.datamodel.ArtifactType;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
-import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
 
 public class ModelsForTest {
 	
@@ -43,7 +43,7 @@ public class ModelsForTest {
 		this.airlineSpec.setCodeUri(AIRLINE_JAR);
 		this.airlineSpec.setEndpointName(AIRLINE);
 		this.airlineSpec.setPort(AIRLINE_PORT);
-		this.airlineSpec.setType(ServiceType.COMMAND_LINE);
+		this.airlineSpec.setArtifactType(ArtifactType.COMMAND_LINE);
 		this.airlineSpec.getRoles().add(AIRLINE);
 		this.chorSpec.addServiceSpec(this.airlineSpec);
 		
@@ -52,9 +52,9 @@ public class ModelsForTest {
 		this.travelSpec.setCodeUri(TRAVEL_AGENCY_JAR);
 		this.travelSpec.setEndpointName(TRAVEL_AGENCY);
 		this.travelSpec.setPort(TRAVEL_AGENCY_PORT);
-		this.travelSpec.setType(ServiceType.COMMAND_LINE);
+		this.travelSpec.setArtifactType(ArtifactType.COMMAND_LINE);
 		this.travelSpec.getRoles().add(TRAVEL_AGENCY);
-		ServiceDependence dep = new ServiceDependence(AIRLINE, AIRLINE);
+		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
 		this.travelSpec.getDependences().add(dep);
 		this.chorSpec.addServiceSpec(this.travelSpec);
 	}

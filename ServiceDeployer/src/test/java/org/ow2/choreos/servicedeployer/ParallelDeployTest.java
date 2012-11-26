@@ -16,7 +16,7 @@ import org.ow2.choreos.npm.NodePoolManager;
 import org.ow2.choreos.npm.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
-import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
+import org.ow2.choreos.servicedeployer.datamodel.ArtifactType;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -48,13 +48,13 @@ public class ParallelDeployTest {
 		
 		specs[0] = new ServiceSpec();
 		specs[0].setCodeUri(JARDeployTest.JAR_LOCATION);
-		specs[0].setType(ServiceType.COMMAND_LINE);
+		specs[0].setArtifactType(ArtifactType.COMMAND_LINE);
 		specs[0].setEndpointName("");
 		specs[0].setPort(8042);
 
 		specs[1] = new ServiceSpec();
 		specs[1].setCodeUri(WARDeployTest.WAR_LOCATION);
-		specs[1].setType(ServiceType.TOMCAT);
+		specs[1].setArtifactType(ArtifactType.TOMCAT);
 	}
 	
 	@Test

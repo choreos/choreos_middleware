@@ -2,8 +2,8 @@ package org.ow2.choreos.enact;
 
 import org.ow2.choreos.enactment.datamodel.ChorServiceSpec;
 import org.ow2.choreos.enactment.datamodel.ChorSpec;
-import org.ow2.choreos.enactment.datamodel.ServiceDependence;
-import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
+import org.ow2.choreos.enactment.datamodel.ServiceDependency;
+import org.ow2.choreos.servicedeployer.datamodel.ArtifactType;
 
 public class Spec {
 
@@ -23,7 +23,7 @@ public class Spec {
 		airline.setCodeUri(AIRLINE_JAR);
 		airline.setEndpointName(AIRLINE);
 		airline.setPort(AIRLINE_PORT);
-		airline.setType(ServiceType.COMMAND_LINE);
+		airline.setArtifactType(ArtifactType.COMMAND_LINE);
 		airline.getRoles().add(AIRLINE);
 		chorSpec.addServiceSpec(airline);
 		
@@ -32,9 +32,9 @@ public class Spec {
 		travel.setCodeUri(TRAVEL_AGENCY_JAR);
 		travel.setEndpointName(TRAVEL_AGENCY);
 		travel.setPort(TRAVEL_AGENCY_PORT);
-		travel.setType(ServiceType.COMMAND_LINE);
+		travel.setArtifactType(ArtifactType.COMMAND_LINE);
 		travel.getRoles().add(TRAVEL_AGENCY);
-		ServiceDependence dep = new ServiceDependence(AIRLINE, AIRLINE);
+		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
 		travel.getDependences().add(dep);
 		chorSpec.addServiceSpec(travel);
 		

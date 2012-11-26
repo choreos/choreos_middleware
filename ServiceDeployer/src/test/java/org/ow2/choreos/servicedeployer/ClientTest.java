@@ -15,7 +15,7 @@ import org.ow2.choreos.npm.rest.NPMServer;
 import org.ow2.choreos.servicedeployer.client.ServiceDeployerClient;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
-import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
+import org.ow2.choreos.servicedeployer.datamodel.ArtifactType;
 import org.ow2.choreos.servicedeployer.rest.ServiceDeployerServer;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -63,7 +63,7 @@ public class ClientTest {
 		deployer = new ServiceDeployerClient(serviceDeployerHost);
 		
 		specWar.setCodeUri(WAR_LOCATION);
-		specWar.setType(ServiceType.TOMCAT);
+		specWar.setArtifactType(ArtifactType.TOMCAT);
 		specWar.setResourceImpact(resourceImpact);
 	}
 	

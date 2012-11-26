@@ -17,7 +17,7 @@ import org.ow2.choreos.servicedeployer.ServiceDeployerImpl;
 import org.ow2.choreos.servicedeployer.ServiceNotDeployedException;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
-import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
+import org.ow2.choreos.servicedeployer.datamodel.ArtifactType;
 
 public class ServiceDeployerImplTest {
 
@@ -49,7 +49,7 @@ public class ServiceDeployerImplTest {
 		
 		serviceSpec = new ServiceSpec();
 		serviceSpec.setCodeUri("http://choreos.eu/services/airline.jar");
-		serviceSpec.setType(ServiceType.COMMAND_LINE);
+		serviceSpec.setArtifactType(ArtifactType.COMMAND_LINE);
 		serviceSpec.setEndpointName("airline");
 		serviceSpec.setPort(8042);
 		

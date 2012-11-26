@@ -13,7 +13,7 @@ import org.ow2.choreos.npm.datamodel.Config;
 import org.ow2.choreos.npm.datamodel.Node;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
-import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
+import org.ow2.choreos.servicedeployer.datamodel.ArtifactType;
 import org.ow2.choreos.servicedeployer.recipe.Recipe;
 import org.ow2.choreos.servicedeployer.recipe.RecipeBuilder;
 import org.ow2.choreos.servicedeployer.recipe.RecipeBuilderFactory;
@@ -37,7 +37,7 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 	public Service deploy(ServiceSpec serviceSpec) {
 		
 		Service service = new Service(serviceSpec);
-		if (serviceSpec.getType() != ServiceType.LEGACY) {
+		if (serviceSpec.getArtifactType() != ArtifactType.LEGACY) {
 			service = deployNoLegacyService(service);
 		} 
 		
@@ -75,7 +75,7 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 	
 	private Recipe createRecipe(Service service) {
 		
-		ServiceType type = service.getSpec().getType();
+		ArtifactType type = service.getSpec().getArtifactType();
 		RecipeBuilder builder = RecipeBuilderFactory.getRecipeBuilderInstance(type);
 		Recipe serviceRecipe = builder.createRecipe(service.getSpec());
 		return serviceRecipe;

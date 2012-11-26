@@ -62,7 +62,7 @@ public class ServicesResource {
 
 		ServiceSpec serviceSpec = serviceSpecXML.getValue();
 		if (serviceSpec.getCodeUri() == null || serviceSpec.getCodeUri().isEmpty() 
-				|| serviceSpec.getType() == null)
+				|| serviceSpec.getArtifactType() == null)
 			return Response.status(Status.BAD_REQUEST).build();
 		
 		logger.debug("Request to deploy " + serviceSpec.getCodeUri());

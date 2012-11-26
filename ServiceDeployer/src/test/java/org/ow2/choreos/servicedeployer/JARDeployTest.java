@@ -12,7 +12,7 @@ import org.ow2.choreos.npm.NodePoolManager;
 import org.ow2.choreos.npm.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
-import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
+import org.ow2.choreos.servicedeployer.datamodel.ArtifactType;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -39,7 +39,7 @@ public class JARDeployTest {
 		
 		spec.setName("simplews");
 		spec.setCodeUri(JAR_LOCATION);
-		spec.setType(ServiceType.COMMAND_LINE);
+		spec.setArtifactType(ArtifactType.COMMAND_LINE);
 		spec.setEndpointName("");
 		spec.setPort(8042);
 	}

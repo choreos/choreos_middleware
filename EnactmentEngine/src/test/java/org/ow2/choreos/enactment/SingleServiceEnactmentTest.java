@@ -9,8 +9,8 @@ import org.junit.experimental.categories.Category;
 import org.ow2.choreos.enactment.datamodel.ChorServiceSpec;
 import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
+import org.ow2.choreos.servicedeployer.datamodel.ArtifactType;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
-import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -49,7 +49,7 @@ public class SingleServiceEnactmentTest {
 		int port = Integer.parseInt(AirportProperties.get(WEATHER_FORECAST_SERVICE + ".port"));
 		service.setPort(port);
 		service.getRoles().add(WEATHER_FORECAST_SERVICE);
-		service.setType(ServiceType.COMMAND_LINE);
+		service.setArtifactType(ArtifactType.COMMAND_LINE);
 		chor.addServiceSpec(service);
 	}
 	

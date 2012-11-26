@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
-import org.ow2.choreos.servicedeployer.datamodel.ServiceType;
+import org.ow2.choreos.servicedeployer.datamodel.ArtifactType;
 
 
 public abstract class BaseRecipeBuilder implements RecipeBuilder {
@@ -65,12 +65,12 @@ public abstract class BaseRecipeBuilder implements RecipeBuilder {
 
 	private String getRecipeName(ServiceSpec serviceSpec) {
 		
-		ServiceType type = serviceSpec.getType();
+		ArtifactType type = serviceSpec.getArtifactType();
 		String extension = type.getExtension();
 		String recipeName = "";
-		if (type == ServiceType.COMMAND_LINE || type == ServiceType.TOMCAT) {
+		if (type == ArtifactType.COMMAND_LINE || type == ArtifactType.TOMCAT) {
 			recipeName = extension;
-		} else if (type == ServiceType.EASY_ESB) {
+		} else if (type == ArtifactType.EASY_ESB) {
 			recipeName = PETALS_RECIPE;
 		}
 		return recipeName;

@@ -16,8 +16,8 @@ public class Service {
 	public Service(ServiceSpec serviceSpec) {
 		
 		this.spec = serviceSpec;
-		if (this.spec.getType() == null) {
-			this.spec.setType(ServiceType.OTHER);
+		if (this.spec.getArtifactType() == null) {
+			this.spec.setArtifactType(ArtifactType.OTHER);
 		}
 		
 		if (serviceSpec.getName() == null || serviceSpec.getName().isEmpty()) {
@@ -26,7 +26,7 @@ public class Service {
 			name = serviceSpec.getName();
 		}
 		
-		if (serviceSpec.type == ServiceType.LEGACY) {
+		if (serviceSpec.artifactType == ArtifactType.LEGACY) {
 			URIInfoRetriever info = new URIInfoRetriever(serviceSpec.getCodeUri());
 			this.hostname = info.getHostname();
 			this.ip = info.getIp();
@@ -107,7 +107,7 @@ public class Service {
 			throw new IllegalStateException("Sorry, I don't know neither the hostname nor the IP yet");
 		
 		String uriContext;
-		switch (this.spec.type) {
+		switch (this.spec.artifactType) {
 			case TOMCAT:
 				if (this.spec.getEndpointName() != null && !this.spec.getEndpointName().isEmpty())
 					uriContext = this.spec.endpointName + "/";
@@ -123,7 +123,7 @@ public class Service {
 			default:
 				throw new IllegalStateException(
 						"Sorry, I don't know how to provide an URL to a "
-								+ this.spec.type + " service.");
+								+ this.spec.artifactType + " service.");
 		}
 		
 		if (ip != null && !ip.isEmpty())
