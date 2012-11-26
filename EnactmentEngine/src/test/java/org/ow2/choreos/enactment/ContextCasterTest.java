@@ -69,7 +69,7 @@ public class ContextCasterTest {
 		travel.setName(TRAVEL_AGENCY);
 		travel.getRoles().add(TRAVEL_AGENCY);
 		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
-		travel.getDependences().add(dep);
+		travel.getDependencies().add(dep);
 		chorSpec.addServiceSpec(travel);
 		
 		Service airlineServ = new Service();

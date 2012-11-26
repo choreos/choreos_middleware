@@ -11,8 +11,10 @@ import org.ow2.choreos.servicedeployer.datamodel.Service;
 public class ContextCaster {
 
 	private Logger logger = Logger.getLogger(ContextCaster.class);
+	private static final int MAX_TRIALS = 3;
+	private static final int DELAY_BETWEEN_TRIALS = 30000;
 	
-	private ContextSender sender = new ContextSender();
+	private ContextSender sender = new SoapContextSender();
 	
 	public void cast(ChorSpec chor, Map<String, Service> deployedServices) {
 		
@@ -34,7 +36,7 @@ public class ContextCaster {
 			ChorServiceSpec spec, Service deployed) {
 		
 		String serviceUri = deployed.getUri();
-		for (ServiceDependency dep: spec.getDependences()) {
+		for (ServiceDependency dep: spec.getDependencies()) {
 			
 			Service deployedPartner = deployedServices.get(dep.getServiceName());
 			if (deployedPartner == null) {
@@ -47,16 +49,29 @@ public class ContextCaster {
 			} else {
 				
 				String partnerUri = deployedPartner.getUri();
-				boolean ok = sender.sendContext(serviceUri, dep.getServiceRole(), partnerUri);
-				if (ok) {
-					logger.debug(spec.getName() + " has received "
-							+ dep.getServiceName() + " as "
-							+ dep.getServiceRole());
-				} else {
-					logger.error("Could not set " + dep.getServiceName()
-							+ " as " + dep.getServiceRole() + " to "
-							+ spec.getName());
-				}
+				int trial = 0;
+				boolean ok = false;
+				
+				while (!ok && trial < MAX_TRIALS)
+					try {
+						sender.sendContext(serviceUri, dep.getServiceRole(), partnerUri);
+						logger.debug(spec.getName() + " has received "
+								+ dep.getServiceName() + " as "
+								+ dep.getServiceRole());
+						ok = true;
+					} catch (ContextNotSentException e) {
+						trial++;
+						if (trial == MAX_TRIALS) {
+							logger.error("Could not set " + dep.getServiceName()
+									+ " as " + dep.getServiceRole() + " to "
+									+ spec.getName());
+						}
+						try {
+							Thread.sleep(DELAY_BETWEEN_TRIALS);
+						} catch (InterruptedException e1) {
+							logger.error("Exception at sleeping. This should not happen.");
+						}
+					}
 			}
 		}
 	}

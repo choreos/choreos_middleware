@@ -65,7 +65,7 @@ public class AirportEnactmentTest {
 			service.setArtifactType(ArtifactType.COMMAND_LINE);
 			
 			List<ServiceDependency> deps = getDependences(serviceName);
-			service.setDependences(deps);
+			service.setDependencies(deps);
 			
 			chor.addServiceSpec(service);
 		}

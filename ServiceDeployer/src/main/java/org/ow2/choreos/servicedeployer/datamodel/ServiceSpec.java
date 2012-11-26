@@ -134,7 +134,7 @@ public class ServiceSpec {
 
 	@Override
 	public String toString() {
-		return "ServiceSpec [name=" + name + ", type = " + type
+		return "ServiceSpec [name=" + name + ", type=" + type
 				+ ", artifactType=" + artifactType + ", codeUri=" + codeUri
 				+ ", port=" + port + ", endpointName=" + endpointName
 				+ ", version=" + version + "]";

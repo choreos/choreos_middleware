@@ -71,7 +71,7 @@ public class ServiceDependency {
 
 	@Override
 	public String toString() {
-		return "ServiceDependence [serviceName=" + serviceName
+		return "ServiceDependency [serviceName=" + serviceName
 				+ ", serviceRole=" + serviceRole + "]";
 	}
 

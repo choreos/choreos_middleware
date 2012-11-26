@@ -77,7 +77,7 @@ public class RestEnactmentTest {
 		travel.setArtifactType(ArtifactType.COMMAND_LINE);
 		travel.getRoles().add(TRAVEL_AGENCY);
 		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
-		travel.getDependences().add(dep);
+		travel.getDependencies().add(dep);
 		chorSpec.addServiceSpec(travel);
 	}
 	

@@ -16,10 +16,14 @@ public class ChorServiceSpec extends ServiceSpec {
 	private String owner;
 	private String group;
 	private List<String> roles = new ArrayList<String>();
-	private List<ServiceDependency> dependences = new ArrayList<ServiceDependency>();
+	private List<ServiceDependency> dependencies = new ArrayList<ServiceDependency>();
 	
 	public ServiceSpec getServiceSpec() {
 
+		// this method seems to be stupid, but it is necessary
+		// since CXF WebClient will not handle an 
+		// ChorServiceSpec instance like a ServiceSpec instance
+		
 		ServiceSpec spec = new ServiceSpec();
 		spec.setName(super.name);
 		spec.setCodeUri(super.codeUri);
@@ -27,6 +31,8 @@ public class ChorServiceSpec extends ServiceSpec {
 		spec.setPort(super.port);
 		spec.setResourceImpact(super.resourceImpact);
 		spec.setType(super.type);
+		spec.setArtifactType(super.artifactType);
+		spec.setVersion(super.getVersion());
 		return spec;
 	}
 	
@@ -48,11 +54,11 @@ public class ChorServiceSpec extends ServiceSpec {
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
 	}
-	public List<ServiceDependency> getDependences() {
-		return dependences;
+	public List<ServiceDependency> getDependencies() {
+		return dependencies;
 	}
-	public void setDependences(List<ServiceDependency> dependences) {
-		this.dependences = dependences;
+	public void setDependencies(List<ServiceDependency> dependencies) {
+		this.dependencies = dependencies;
 	}
 
 	@Override
@@ -88,9 +94,12 @@ public class ChorServiceSpec extends ServiceSpec {
 
 	@Override
 	public String toString() {
-		return "ChorServiceSpec [name=" + name + ", owner=" + owner
-				+ ", group=" + group + ", roles=" + roles + ", dependences="
-				+ dependences + "]";
+		return "ChorServiceSpec [owner=" + owner + ", group=" + group
+				+ ", roles=" + roles + ", dependencies=" + dependencies
+				+ ", name=" + name + ", type=" + type + ", artifactType="
+				+ artifactType + ", codeUri=" + codeUri + ", port=" + port
+				+ ", endpointName=" + endpointName + ", version=" + version
+				+ "]";
 	}
 	
 }

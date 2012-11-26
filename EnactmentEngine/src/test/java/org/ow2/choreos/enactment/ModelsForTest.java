@@ -55,7 +55,7 @@ public class ModelsForTest {
 		this.travelSpec.setArtifactType(ArtifactType.COMMAND_LINE);
 		this.travelSpec.getRoles().add(TRAVEL_AGENCY);
 		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
-		this.travelSpec.getDependences().add(dep);
+		this.travelSpec.getDependencies().add(dep);
 		this.chorSpec.addServiceSpec(this.travelSpec);
 	}
 	

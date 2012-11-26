@@ -13,20 +13,11 @@ import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
 
-public class SoapContextSender {
+public class SoapContextSender implements ContextSender {
 	
-	/**
-	 * Calls setInvokationAddress operation on service in the <code>serviceEndpoint</code>.
-	 * So, the service in <code>endpoint</code> will know that its
-	 * partner with <code>partnerRole</code> is realized by <code>partnerEndpoint</code>.
-	 * A context is transferred by successive calls of this operation.
-	 * 
-	 * @param endpoint
-	 * @param context
-	 * @return true if context was successfully set, false otherwise
-	 */
-	public boolean sendContext(String serviceEndpoint, 
-			String partnerRole, String partnerEndpoint) {
+	@Override
+	public void sendContext(String serviceEndpoint, 
+			String partnerRole, String partnerEndpoint) throws ContextNotSentException {
 		
 		try {
 			
@@ -58,10 +49,8 @@ public class SoapContextSender {
 	        connection.call(sm, endpoint);
 		
 		} catch (Exception e) {
-			return false;
+			throw new ContextNotSentException(serviceEndpoint, partnerRole, partnerEndpoint);
 		}
-        
-		return true;
 	}
 
 }
