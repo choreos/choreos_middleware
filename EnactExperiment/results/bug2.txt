@@ -1,0 +1,42 @@
+While enacting 15 choreograpgies 
+Just 9 worked, and we got 5 errors like the below exception.
+
+at org.ow2.choreos.enactment.client.EnactEngClient.enact(EnactEngClient.java:94)
+=> 			chor = client.post(null, Choreography.class);
+at org.ow2.choreos.enact.Enacter.run(Enacter.java:42)
+=> 			chor = enacter.enact(chorId);
+
+26/11/2012 16:25:23 org.apache.cxf.jaxrs.provider.AbstractJAXBProvider handleJAXBException
+WARNING: javax.xml.bind.UnmarshalException
+ - with linked exception:
+[org.xml.sax.SAXParseException; Premature end of file.]
+	at javax.xml.bind.helpers.AbstractUnmarshallerImpl.createUnmarshalException(AbstractUnmarshallerImpl.java:335)
+	at com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallerImpl.createUnmarshalException(UnmarshallerImpl.java:514)
+	at com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallerImpl.unmarshal0(UnmarshallerImpl.java:215)
+	at com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallerImpl.unmarshal(UnmarshallerImpl.java:184)
+	at javax.xml.bind.helpers.AbstractUnmarshallerImpl.unmarshal(AbstractUnmarshallerImpl.java:157)
+	at javax.xml.bind.helpers.AbstractUnmarshallerImpl.unmarshal(AbstractUnmarshallerImpl.java:204)
+	at org.apache.cxf.jaxrs.provider.JAXBElementProvider.unmarshalFromInputStream(JAXBElementProvider.java:200)
+	at org.apache.cxf.jaxrs.provider.JAXBElementProvider.doUnmarshal(JAXBElementProvider.java:183)
+	at org.apache.cxf.jaxrs.provider.JAXBElementProvider.readFrom(JAXBElementProvider.java:154)
+	at org.apache.cxf.jaxrs.client.AbstractClient.readBody(AbstractClient.java:399)
+	at org.apache.cxf.jaxrs.client.WebClient.handleResponse(WebClient.java:589)
+	at org.apache.cxf.jaxrs.client.WebClient.doChainedInvocation(WebClient.java:580)
+	at org.apache.cxf.jaxrs.client.WebClient.doInvoke(WebClient.java:552)
+	at org.apache.cxf.jaxrs.client.WebClient.invoke(WebClient.java:289)
+	at org.apache.cxf.jaxrs.client.WebClient.post(WebClient.java:325)
+	at org.ow2.choreos.enactment.client.EnactEngClient.enact(EnactEngClient.java:94)
+	at org.ow2.choreos.enact.Enacter.run(Enacter.java:42)
+	at java.lang.Thread.run(Thread.java:679)
+Caused by: org.xml.sax.SAXParseException; Premature end of file.
+	at org.apache.xerces.util.ErrorHandlerWrapper.createSAXParseException(Unknown Source)
+	at org.apache.xerces.util.ErrorHandlerWrapper.fatalError(Unknown Source)
+	at org.apache.xerces.impl.XMLErrorReporter.reportError(Unknown Source)
+	at org.apache.xerces.impl.XMLErrorReporter.reportError(Unknown Source)
+	at org.apache.xerces.impl.XMLVersionDetector.determineDocVersion(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+	at org.apache.xerces.parsers.AbstractSAXParser.parse(Unknown Source)
+	at com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallerImpl.unmarshal0(UnmarshallerImpl.java:211)
+	... 15 more
