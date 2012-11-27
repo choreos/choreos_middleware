@@ -20,8 +20,8 @@ public class RecipeApplier {
 
 	private Logger logger = Logger.getLogger(RecipeApplier.class);
 	
-    private static String CHEF_REPO = Configuration.get("CHEF_REPO");
-    private static String CHEF_CONFIG_FILE = Configuration.get("CHEF_CONFIG_FILE");
+    private static final String CHEF_REPO = Configuration.get("CHEF_REPO");
+    private static final String CHEF_CONFIG_FILE = Configuration.get("CHEF_CONFIG_FILE");
 
 
 	/**
