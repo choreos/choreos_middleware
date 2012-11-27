@@ -25,7 +25,7 @@ public class NodeBootstrapper {
 	
     private static final String CHEF_REPO = Configuration.get("CHEF_REPO");
     private static final String CHEF_CONFIG_FILE = Configuration.get("CHEF_CONFIG_FILE");
-    private static final int MAX_TIME_TO_CONNECT = 400000;
+    private static final int MAX_TIME_TO_CONNECT = 300000;
     
     private Node node;
     

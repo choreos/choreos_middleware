@@ -1,0 +1,60 @@
+Choreography #0 is not working (invocation took 3378 milliseconds)
+Choreography #9 is not working (invocation took 388 milliseconds)
+Choreography #11 is not working (invocation took 1012 milliseconds)
+
+Result from #11: Not possible to buy now
+
+[Service [name=travelagency, uri=http://50.19.185.0:1235/travelagency/], Service [name=airline, uri=http://23.20.9.186:1234/airline/]]
+[1:35:15] Choreography #0 enacted in 338258 miliseconds
+[1:35:15] Machines used by choreography #0:50.19.185.0 (us-east-1/i-41520c3e); 23.20.9.186 (us-east-1/i-45520c3a); 
+
+[Service [name=travelagency, uri=http://54.242.54.8:1235/travelagency/], Service [name=airline, uri=http://204.236.246.44:1234/airline/]]
+[1:35:23] Choreography #9 enacted in 346498 miliseconds
+[1:35:23] Machines used by choreography #9:54.242.54.8 (us-east-1/i-47520c38); 204.236.246.44 (us-east-1/i-43520c3c); 
+
+[Service [name=travelagency, uri=http://50.19.159.249:1235/travelagency/], Service [name=airline, uri=http://50.19.159.249:1234/airline/]]
+[1:31:50] Choreography #11 enacted in 132829 miliseconds
+[1:31:50] Machines used by choreography #11:50.19.159.249 (us-east-1/i-19520c66); 50.19.159.249 (us-east-1/i-19520c66); 
+
+#11 - provavelmente demorou pro travelagency subir
+
+#0 - travelagency não está de pé
+     receita foi para o run_list do nó
+     mas não está na lista de receitas aplicadas ***
+     JAR não se encontra no home
+
+# Logfile created on 2012-11-27 15:30:51 +0000 by logger.rb/31641
+[2012-11-27T15:30:51+00:00] INFO: *** Chef 10.16.2 ***
+[2012-11-27T15:30:58+00:00] INFO: Run List is [recipe[servicetravelagency::jar]]
+[2012-11-27T15:30:58+00:00] INFO: Run List expands to [servicetravelagency::jar]
+[2012-11-27T15:31:29+00:00] ERROR: Running exception handlers
+[2012-11-27T15:31:29+00:00] FATAL: Saving node information to /var/chef/cache/failed-run-data.json
+[2012-11-27T15:31:29+00:00] ERROR: Exception handlers complete
+[2012-11-27T15:31:29+00:00] INFO: Sending resource update report (run-id: )
+[2012-11-27T15:31:29+00:00] INFO: run_data_summary: {"action"=>"end", "resources"=>[], "status"=>"failure", "run_list"=>"[\"recipe[servicetravelagency::jar]\"]", "total_res_count"=>"0", "data"=>{"exception"=>{"class"=>"#<NoMethodError: undefined method `response' for #<EOFError: end of file reached>>", "message"=>"undefined method `response' for #<EOFError: end of file reached>", "backtrace"=>"[\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/resource_reporter.rb:119:in `rescue in node_load_completed'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/resource_reporter.rb:111:in `node_load_completed'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/event_dispatch/dispatcher.rb:29:in `block in node_load_completed'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/event_dispatch/dispatcher.rb:29:in `each'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/event_dispatch/dispatcher.rb:29:in `node_load_completed'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/client.rb:280:in `build_node'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/client.rb:412:in `do_run'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/client.rb:176:in `run'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/application.rb:140:in `run_chef_client'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/application/client.rb:274:in `block in run_application'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/application/client.rb:267:in `loop'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/application/client.rb:267:in `run_application'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/application.rb:72:in `run'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/bin/chef-client:26:in `<top (required)>'\",\"/usr/bin/chef-client:23:in `load'\",\"/usr/bin/chef-client:23:in `<main>'\"]", "description"=>{}}}, "updated_res_count"=>"0", "post_size"=>"489"}
+[2012-11-27T15:31:30+00:00] INFO: HTTP Request Returned 404 Not Found: No routes match the request: /reports/nodes/ip-10-194-75-7.ec2.internal/runs/
+[2012-11-27T15:31:30+00:00] ERROR: Failed to post reporting data to server (HTTP 404)
+[2012-11-27T15:31:30+00:00] FATAL: Stacktrace dumped to /var/chef/cache/chef-stacktrace.out
+[2012-11-27T15:31:30+00:00] FATAL: NoMethodError: undefined method `response' for #<EOFError: end of file reached>
+
+# 9 - travelagency não está de pé
+     receita foi para o run_list do nó
+     mas não está na lista de receitas aplicadas ***
+     JAR não se encontra no home
+
+# Logfile created on 2012-11-27 15:30:45 +0000 by logger.rb/31641
+[2012-11-27T15:30:45+00:00] INFO: *** Chef 10.16.2 ***
+[2012-11-27T15:30:47+00:00] INFO: Run List is [recipe[servicetravelagency::jar]]
+[2012-11-27T15:30:47+00:00] INFO: Run List expands to [servicetravelagency::jar]
+[2012-11-27T15:31:18+00:00] ERROR: Running exception handlers
+[2012-11-27T15:31:18+00:00] FATAL: Saving node information to /var/chef/cache/failed-run-data.json
+[2012-11-27T15:31:18+00:00] ERROR: Exception handlers complete
+[2012-11-27T15:31:18+00:00] INFO: Sending resource update report (run-id: )
+[2012-11-27T15:31:18+00:00] INFO: run_data_summary: {"action"=>"end", "resources"=>[], "status"=>"failure", "run_list"=>"[\"recipe[servicetravelagency::jar]\"]", "total_res_count"=>"0", "data"=>{"exception"=>{"class"=>"#<NoMethodError: undefined method `response' for #<EOFError: end of file reached>>", "message"=>"undefined method `response' for #<EOFError: end of file reached>", "backtrace"=>"[\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/resource_reporter.rb:119:in `rescue in node_load_completed'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/resource_reporter.rb:111:in `node_load_completed'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/event_dispatch/dispatcher.rb:29:in `block in node_load_completed'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/event_dispatch/dispatcher.rb:29:in `each'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/event_dispatch/dispatcher.rb:29:in `node_load_completed'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/client.rb:280:in `build_node'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/client.rb:412:in `do_run'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/client.rb:176:in `run'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/application.rb:140:in `run_chef_client'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/application/client.rb:274:in `block in run_application'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/application/client.rb:267:in `loop'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/application/client.rb:267:in `run_application'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/lib/chef/application.rb:72:in `run'\",\"/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-10.16.2/bin/chef-client:26:in `<top (required)>'\",\"/usr/bin/chef-client:23:in `load'\",\"/usr/bin/chef-client:23:in `<main>'\"]", "description"=>{}}}, "updated_res_count"=>"0", "post_size"=>"489"}
+[2012-11-27T15:31:19+00:00] INFO: HTTP Request Returned 404 Not Found: No routes match the request: /reports/nodes/ip-10-12-107-166.ec2.internal/runs/
+[2012-11-27T15:31:19+00:00] ERROR: Failed to post reporting data to server (HTTP 404)
+[2012-11-27T15:31:19+00:00] FATAL: Stacktrace dumped to /var/chef/cache/chef-stacktrace.out
+[2012-11-27T15:31:19+00:00] FATAL: NoMethodError: undefined method `response' for #<EOFError: end of file reached>
+
+
+

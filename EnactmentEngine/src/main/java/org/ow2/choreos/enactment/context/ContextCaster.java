@@ -11,7 +11,7 @@ import org.ow2.choreos.servicedeployer.datamodel.Service;
 public class ContextCaster {
 
 	private Logger logger = Logger.getLogger(ContextCaster.class);
-	private static final int MAX_TRIALS = 3;
+	private static final int MAX_TRIALS = 5;
 	private static final int DELAY_BETWEEN_TRIALS = 30000;
 	
 	private ContextSender sender = new SoapContextSender();
