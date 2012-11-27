@@ -7,3 +7,8 @@ if [ ! -z "$AMAZON_INSTANCES" ]; then
     echo "Terminating $AMAZON_INSTANCES"
     ec2-terminate-instances $AMAZON_INSTANCES
 fi
+
+# To configure EC2 Tools on Arch Linux:
+# 1. Install the AUR package ec2-api-tools (https://aur.archlinux.org/packages/ec2-api-tools/)
+# 2. Set the variables AWS_ACCESS_KEY and AWS_SECRET_KEY on your .bashrc
+# Obs: even "outdated", the package works fine.
