@@ -1,9 +1,12 @@
 package org.ow2.choreos.chef;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ChefNode {
-
+	
 	private String name;
 	private String environment;
 	private String fqdn;
@@ -110,6 +113,28 @@ public class ChefNode {
 	public String toString() {
 		return "ChefNode [name=" + name + ", ip=" + ip + ", runList=" + runList
 				+ ", roles=" + roles + ", recipes=" + recipes + "]";
+	}
+	
+	/**
+	 * Returns the run list without the "recipe" keyword and without the brackets "[]".
+	 * 
+	 * Example, if knife return "Run List:    recipe[java]", this method will return 
+	 * a list of size == 1, whose value of its single element is "java"
+	 * @return
+	 */
+	public List<String> getSimpleRunList() {
+		
+		Pattern RUNLIST_ITEM = Pattern.compile("[a-z]+\\[(.+?(::.+?)?)\\]");
+		
+		List<String> simpleRunList = new ArrayList<String>();
+		for (String item: this.runList) {
+
+			Matcher matcher = RUNLIST_ITEM.matcher(item);
+			if (matcher.matches()) {
+				simpleRunList.add(matcher.group(1));
+			}
+		}
+		return simpleRunList;
 	}
 	
 	

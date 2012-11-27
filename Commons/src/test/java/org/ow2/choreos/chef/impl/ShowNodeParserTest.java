@@ -45,6 +45,12 @@ public class ShowNodeParserTest {
 		assertEquals("servicetravelagency::jar", recipes.get(0));
 		assertEquals("serviceairline::jar", recipes.get(1));
 		assertEquals("java", recipes.get(2));
+		
+		List<String> simpleRunList = node.getSimpleRunList();
+		assertEquals(3, simpleRunList.size());
+		assertEquals("servicetravelagency::jar", simpleRunList.get(0));
+		assertEquals("serviceairline::jar", simpleRunList.get(1));
+		assertEquals("java", simpleRunList.get(2));
 	}
 	
 	@Test
@@ -75,6 +81,9 @@ public class ShowNodeParserTest {
 		
 		List<String> recipes = node.getRecipes();
 		assertTrue(recipes.isEmpty());
+		
+		List<String> simpleRunList = node.getSimpleRunList();
+		assertTrue(simpleRunList.isEmpty());
 	}
 
 }
