@@ -45,10 +45,10 @@ public class NPMImpl implements NodePoolManager {
             cloudProvider.createNode(node);
         } catch (RunNodesException e) {
         	if (retry) {
-        		logger.warn("Could not create VM to node " + node + ". Going to try again!");
+        		logger.warn("Could not create VM. Going to try again!");
         		this.createNode(node, false);        		
         	} else {
-        		throw new NodeNotCreatedException(node.getId(), "Could not create VM to node " + node);
+        		throw new NodeNotCreatedException(node.getId(), "Could not create VM");
         	}
         }
         
