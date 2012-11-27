@@ -34,6 +34,9 @@ Bootstrap completed at Node ... // this second message should be a failures mess
 
 * Verify somehow if node upgrade was indeed successful (NodeUpgrader class)
 
+* It would better try to ssh into the node only after the node status is ready.
+This "ready status" should be verified by using the jclouds api.
+
 =============================
 
 Service Deployer ToDo list

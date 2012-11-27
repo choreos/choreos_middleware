@@ -13,7 +13,8 @@ import org.ow2.choreos.chef.ChefNode;
 public class ShowNodeParser {
 
 	private Pattern SIMPLE = Pattern.compile("[a-zA-Z ]+: +(.*)");
-	private Pattern RUNLIST_ITEM = Pattern.compile("[a-z]+\\[.+?::.+?\\]");
+	private Pattern RUNLIST_ITEM = Pattern.compile("[a-z]+\\[.+?(::.+?)?\\]");
+	private Pattern RECIPES_ITEM = Pattern.compile("[:,] +([^,]+(::[^,]+?)?)");
 
 	/**
 	 * Parses the output of the "knife node show" command  
@@ -61,11 +62,14 @@ public class ShowNodeParser {
 		}
 		
 		String runlistLine = reader.readLine();
-		node.setRunList(parseRunlist(runlistLine));
+		node.setRunList(parseRunlistLine(runlistLine));
 		
 		reader.readLine(); // roles
-		reader.readLine(); // recipes
 		
+		String recipesLine = reader.readLine();
+		node.setRecipes(parseRecipesLine(recipesLine));
+		
+		line = reader.readLine();
 		matcher = SIMPLE.matcher(line);
 		if (matcher.matches()) {
 			node.setPlatform(matcher.group(1));
@@ -77,12 +81,25 @@ public class ShowNodeParser {
 	}
 
 	
-	private List<String> parseRunlist(String runlistLine) {
+	private List<String> parseRunlistLine(String runlistLine) {
 
 		List<String> runlist = new ArrayList<String>();
 		Matcher matcher = RUNLIST_ITEM.matcher(runlistLine);
 		while (matcher.find()) {
 			runlist.add(matcher.group());
+		}
+		return runlist;
+	}
+	
+	private List<String> parseRecipesLine(String recipesLine) {
+
+		List<String> runlist = new ArrayList<String>();
+		Matcher matcher = RECIPES_ITEM.matcher(recipesLine);
+		while (matcher.find()) {
+			String item = matcher.group(1).trim();
+			if (!item.isEmpty()) {
+				runlist.add(item);
+			}
 		}
 		return runlist;
 	}
