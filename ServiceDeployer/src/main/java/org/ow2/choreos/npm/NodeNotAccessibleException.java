@@ -1,6 +1,11 @@
 package org.ow2.choreos.npm;
 
-
+/**
+ * Used if it is not possible to connect in a node using SSH
+ * 
+ * @author leonardo
+ *
+ */
 public class NodeNotAccessibleException extends NPMException {
 
 	private static final long serialVersionUID = -6491291627017563771L;

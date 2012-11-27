@@ -6,10 +6,9 @@ import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.chef.impl.KnifeImpl;
 import org.ow2.choreos.npm.ConfigNotAppliedException;
+import org.ow2.choreos.npm.NodeNotAccessibleException;
 import org.ow2.choreos.npm.datamodel.Node;
 import org.ow2.choreos.servicedeployer.Configuration;
-
-import com.jcraft.jsch.JSchException;
 
 /**
  * Uses knife commands (from chef) to manage cloud nodes
@@ -45,7 +44,7 @@ public class RecipeApplier {
 				logger.debug("Node not initialized yet. Going to initialize it.");
 				bootstrapper.bootstrapNode();
 			}
-		} catch (JSchException e) {
+		} catch (NodeNotAccessibleException e) {
 			throw new ConfigNotAppliedException(cookbook + "::" + recipe, node.getId());
 		} catch (KnifeException e) {
 			throw new ConfigNotAppliedException(cookbook + "::" + recipe, node.getId());

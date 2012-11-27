@@ -7,6 +7,7 @@ import org.ow2.choreos.chef.ChefNodeNameRetriever;
 import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.chef.impl.KnifeImpl;
+import org.ow2.choreos.npm.NodeNotAccessibleException;
 import org.ow2.choreos.npm.datamodel.Node;
 import org.ow2.choreos.servicedeployer.Configuration;
 import org.ow2.choreos.utils.SshUtil;
@@ -22,8 +23,9 @@ public class NodeBootstrapper {
 	
 	private Logger logger = Logger.getLogger(NodeBootstrapper.class);
 	
-    private static String CHEF_REPO = Configuration.get("CHEF_REPO");
-    private static String CHEF_CONFIG_FILE = Configuration.get("CHEF_CONFIG_FILE");
+    private static final String CHEF_REPO = Configuration.get("CHEF_REPO");
+    private static final String CHEF_CONFIG_FILE = Configuration.get("CHEF_CONFIG_FILE");
+    private static final int MAX_TIME_TO_CONNECT = 400000;
     
     private Node node;
     
@@ -51,7 +53,7 @@ public class NodeBootstrapper {
 		return nodes.contains(this.node.getChefName());
     }
 	
-    public void bootstrapNode() throws JSchException, KnifeException {
+    public void bootstrapNode() throws NodeNotAccessibleException, KnifeException {
 
     	Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
     	
@@ -63,15 +65,23 @@ public class NodeBootstrapper {
 		this.retrieveAndSetChefName();
     }
 
-	private void waitForSSHAccess() {
+	private void waitForSSHAccess() throws NodeNotAccessibleException {
 		
 		logger.debug("Waiting for SSH...");
         SshUtil ssh = new SshUtil(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile());
-
+        
+        final int DELAY = 5000;
+        Timer timer = new Timer(MAX_TIME_TO_CONNECT, DELAY);
+        Thread t = new Thread(timer);
+        t.start();
+        
         while (!ssh.isAccessible()) {
-            logger.debug("Could not connect to " + this.node.getUser() + "@" + this.node.getIp()
-                    + " with key " + this.node.getPrivateKeyFile() + " yet");
-            logger.debug("Trying again in 5 seconds");
+
+            if (timer.timeouted()) {
+            	throw new NodeNotAccessibleException(this.node.getId());
+            }
+            
+            logger.debug("Trying SSH into " + this.node.getIp() + " again in 5 seconds");
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
@@ -94,6 +104,34 @@ public class NodeBootstrapper {
 
 		this.node.setChefName(chefClientName);
     }
+	
+	private class Timer implements Runnable {
+
+		int time, maxTime, delay;
+
+		public Timer(int maxTime, int delay) {
+			this.maxTime = maxTime;
+			this.delay = delay;
+			this.time = 0;
+		}
+		
+		@Override
+		public void run() {
+
+			while (this.time < this.maxTime) {
+				try {
+					Thread.sleep(this.delay);
+					this.time += this.delay;
+				} catch (InterruptedException e) {
+					logger.error("Error at sleeping. Should not happen.");
+				}
+			}
+		}
+		
+		public boolean timeouted() {
+			return this.time >= this.maxTime;
+		}
+	}
 
 
 

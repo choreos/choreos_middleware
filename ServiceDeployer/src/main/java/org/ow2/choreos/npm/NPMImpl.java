@@ -8,9 +8,9 @@ import org.jclouds.compute.RunNodesException;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.npm.chef.ConfigToChef;
 import org.ow2.choreos.npm.cloudprovider.CloudProvider;
-import org.ow2.choreos.npm.cm.RecipeApplier;
 import org.ow2.choreos.npm.cm.NodeBootstrapper;
 import org.ow2.choreos.npm.cm.NodeUpgrader;
+import org.ow2.choreos.npm.cm.RecipeApplier;
 import org.ow2.choreos.npm.datamodel.Config;
 import org.ow2.choreos.npm.datamodel.Node;
 import org.ow2.choreos.npm.selector.NodeSelector;
@@ -36,10 +36,20 @@ public class NPMImpl implements NodePoolManager {
     @Override
     public Node createNode(Node node) throws NodeNotCreatedException {
 
+    	return this.createNode(node, true);
+    }
+    
+    private Node createNode(Node node, boolean retry) throws NodeNotCreatedException {
+    	
         try {
             cloudProvider.createNode(node);
         } catch (RunNodesException e) {
-        	throw new NodeNotCreatedException(node.getId(), "Could not create VM to node " + node);
+        	if (retry) {
+        		logger.warn("Could not create VM to node " + node + ". Going to try again!");
+        		this.createNode(node, false);        		
+        	} else {
+        		throw new NodeNotCreatedException(node.getId(), "Could not create VM to node " + node);
+        	}
         }
         
         try {
@@ -47,8 +57,13 @@ public class NPMImpl implements NodePoolManager {
         	bootstrapper.bootstrapNode();
         } catch (KnifeException e) {
         	throw new NodeNotCreatedException(node.getId(), "Could not initialize node " + node);
-        } catch (JSchException e) {
-        	throw new NodeNotCreatedException(node.getId(), "Could not connect to the node " + node);
+        } catch (NodeNotAccessibleException e) {
+        	if (retry) {
+        		logger.warn("Could not connect to the node " + node +  ". We will forget this node and try a new one.");
+        		this.createNode(node, false);
+        	} else {
+        		throw new NodeNotCreatedException(node.getId(), "Could not connect to the node " + node);
+        	}
         }
         
         return node;

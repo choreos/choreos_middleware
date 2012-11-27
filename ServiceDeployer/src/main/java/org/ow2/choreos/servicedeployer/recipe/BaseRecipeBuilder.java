@@ -34,7 +34,7 @@ public abstract class BaseRecipeBuilder implements RecipeBuilder {
 			
 			if (targetFolder.exists()) {
 				
-				logger.info("Recipe " + this.recipeFile
+				logger.warn("Recipe " + this.recipeFile
 						+ " already exists. NOT going to overwriting it");
 				
 			} else {
