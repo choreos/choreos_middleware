@@ -41,11 +41,11 @@ public class Enacter implements Runnable {
 		try {
 			chor = enacter.enact(chorId);
 		} catch (EnactmentException e) {
-			System.out.println(Utils.getTimeStamp() + "Enactment #" + idx + " has failed");
+			System.out.println(Utils.getTimeStamp() + "Enactment #" + idx + " has failed (chorId=" + chorId +")");
 			ok = false;
 			return;
 		} catch (ChoreographyNotFoundException e) {
-			System.out.println(Utils.getTimeStamp() + "Enactment #" + idx + " has failed");
+			System.out.println(Utils.getTimeStamp() + "Enactment #" + idx + " has failed (chorId=" + chorId +")");
 			ok = false;
 			return;
 		}
@@ -56,7 +56,7 @@ public class Enacter implements Runnable {
 		
 		System.out.println(Utils.getTimeStamp() + "Choreography #" + idx + " enacted in " + duration + " miliseconds");
 		report.addChorEnactmentTime(duration);
-		StringBuilder chorMachinesMessage = new StringBuilder("Machines used by choreography #" + idx + ":");
+		StringBuilder chorMachinesMessage = new StringBuilder("Machines used by choreography  #" + idx + " (chorId=" + chorId +"):");
 		for (String mch: getMachinesFromChor(chor)) {
 			chorMachinesMessage.append(mch + "; ");
 		}

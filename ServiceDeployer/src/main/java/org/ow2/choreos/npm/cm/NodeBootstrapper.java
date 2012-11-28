@@ -86,8 +86,8 @@ public class NodeBootstrapper {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
             }
-            ssh.disconnect();
         }
+        ssh.disconnect();
         logger.debug("Connected to " + this.node);
 	}
 	

@@ -19,6 +19,8 @@ public class EnactEngImpl implements EnactmentEngine {
 	public String createChoreography(ChorSpec chor) {
 
 		String chorId = reg.create(chor);
+		logger.info("Choreography " + chorId + " created.");
+		
 		return chorId;
 	}
 
@@ -30,11 +32,11 @@ public class EnactEngImpl implements EnactmentEngine {
 	}
 
 	@Override
-	public Choreography enact(String chorId) throws EnactmentException {
+	public Choreography enact(String chorId) throws EnactmentException, ChoreographyNotFoundException {
 
 		Choreography chor = reg.get(chorId);
 		if (chor == null) {
-			return null;
+			throw new ChoreographyNotFoundException(chorId);
 		}
 		
 		logger.info("Starting enactment; chorId= " + chorId);

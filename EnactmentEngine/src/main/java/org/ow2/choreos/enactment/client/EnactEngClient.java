@@ -97,7 +97,7 @@ public class EnactEngClient implements EnactmentEngine {
     		if (code == 400 || code == 404) {
     			throw new ChoreographyNotFoundException(chorId);
     		} else {
-    			throw new EnactmentException("POST /chors/" + chorId + "/enactment has failed");
+    			throw new EnactmentException("POST /chors/" + chorId + "/enactment has failed (Error " + code + ")");
     		}
     	}
 		

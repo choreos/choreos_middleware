@@ -1,13 +1,14 @@
 package org.ow2.choreos.enactment;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.ow2.choreos.enactment.datamodel.ChorSpec;
 import org.ow2.choreos.enactment.datamodel.Choreography;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
+
 
 /**
  * Stores choreography descriptions.
@@ -19,10 +20,10 @@ import org.ow2.choreos.servicedeployer.datamodel.Service;
  */
 public class ChorRegistry {
 	
-	private static ChorRegistry instance;
-	
+	private static ChorRegistry instance = new ChorRegistry();;
+
 	// map key is the chor id
-	private Map<String, Choreography> chors = new HashMap<String, Choreography>(); 
+	private Map<String, Choreography> chors = new ConcurrentHashMap<String, Choreography>(); 
 	private AtomicInteger counter = new AtomicInteger();
 	
 	private ChorRegistry() {
@@ -31,8 +32,6 @@ public class ChorRegistry {
 	
 	public static ChorRegistry getInstance() {
 		
-		if (instance == null)
-			instance = new ChorRegistry();
 		return instance;
 	}
 	
