@@ -1,157 +1,129 @@
 SUMMARY
 
+Chors   VMs     Mean VM creation time   Total time
+1       2       101.994                 263.685
+5       10      114.391                 293.949
+10      20      142.913                 390.466
+15      30      133.384                 419.151
+20      40      151.812                 469.935
+25      50      166.526                 529.259
+
  // tuples are (mean, std dev)
  // times in seconds
 
- # 01_01
+ # 01_01 @LCPD 29/11/12
  How many VMs were ordered = 2
  How many VMs were created = 2
- Time to create a VM = (104.108, 180.35727049031763)
- Total time to create VMs = 115.448
+ Time to create a VM = (101.994, 10.044062918025302)
+ Total time to create VMs = 106.704
  How many choreographies to enact = 1
  How many choreographies enacted = 1
- Time to enact a choreography = (141.408, 0.0)
- Total time to enact choreographies = 141.42
- Time to check a choreography = (0.818, 0.0)
- Total time to check choreographies = 0.819
+ Time to enact a choreography = (156.235, 0.0)
+ Total time to enact choreographies = 156.24
+ Time to check a choreography = (0.739, 0.0)
+ Total time to check choreographies = 0.741
  How many choreographies working = 1
- Total time without checking choreographies = 256.868
- Total time = 257.687
+ Total time without checking choreographies = 262.944
+ Total time = 263.685
 
- # 02_01
- How many VMs were ordered = 4
- How many VMs were created = 4
- Time to create a VM = (140.014, 8447.881783)
- Total time to create VMs = 252.627
- How many choreographies to enact = 2
- How many choreographies enacted = 2
- Time to enact a choreography = (143.941, 0.36928085962041873)
- Total time to enact choreographies = 144.463
- Time to check a choreography = (0.806, 0.0)
- Total time to check choreographies = 0.807
- How many choreographies working = 2
- Total time without checking choreographies = 397.09000000000003
- Total time = 397.89700000000005
+ # 01_02 @LCPD 29/11/12
 
- # 03_01
- How many VMs were ordered = 6
- How many VMs were created = 6
- Time to create a VM = (114.87616666666668, 223.82971900522256)
- Total time to create VMs = 122.079
- How many choreographies to enact = 3
- How many choreographies enacted = 3
- Time to enact a choreography = (150.28833333333333, 56.565361846506185)
- Total time to enact choreographies = 158.066
- Time to check a choreography = (0.834, 3.464101615137761E-6)
- Total time to check choreographies = 0.837
- How many choreographies working = 3
- Total time without checking choreographies = 280.145
- Total time = 280.98199999999997
+ # 01_03 @LCPD 29/11/12
 
- # 04_01
- How many VMs were ordered = 8
- How many VMs were created = 8
- Time to create a VM = (121.27387499999999, 5.637925310319255)
- Total time to create VMs = 122.722
- How many choreographies to enact = 4
- How many choreographies enacted = 4
- Time to enact a choreography = (149.3795, 57.583798500000036)
- Total time to enact choreographies = 154.105
- Time to check a choreography = (0.80625, 0.0038013749999999988)
- Total time to check choreographies = 0.88
- How many choreographies working = 4
- Total time without checking choreographies = 276.827
- Total time = 277.70799999999997
-
- # 05_01
+ # 05_01 @LCPD 29/11/12
  How many VMs were ordered = 10
  How many VMs were created = 10
- Time to create a VM = (127.63059999999999, 5.052203543426149)
- Total time to create VMs = 129.457
+ Time to create a VM = (114.3913, 250.5807298584297)
+ Total time to create VMs = 127.387
  How many choreographies to enact = 5
  How many choreographies enacted = 5
- Time to enact a choreography = (149.323, 147.7023057095458)
- Total time to enact choreographies = 161.622
- Time to check a choreography = (0.8826, 0.012983147333678368)
- Total time to check choreographies = 0.986
+ Time to enact a choreography = (155.0964, 199.33237526095843)
+ Total time to enact choreographies = 165.628
+ Time to check a choreography = (0.8502000000000001, 0.0053087831494608995)
+ Total time to check choreographies = 0.933
  How many choreographies working = 5
- Total time without checking choreographies = 291.079
- Total time = 292.06600000000003
+ Total time without checking choreographies = 293.01599999999996
+ Total time = 293.949
 
- # 06_01
- How many VMs were ordered = 12
- How many VMs were created = 12
- Time to create a VM = (118.40183333333334, 166.57387160501068)
- Total time to create VMs = 125.61
- How many choreographies to enact = 6
- How many choreographies enacted = 6
- Time to enact a choreography = (167.75283333333337, 203.8666054040856)
- Total time to enact choreographies = 186.85
- Time to check a choreography = (0.8551666666666665, 0.005682339913584768)
- Total time to check choreographies = 0.948
- How many choreographies working = 6
- Total time without checking choreographies = 312.46
- Total time = 313.408
+ # 05_02 @LCPD 29/11/12
 
- # 07_01
- How many VMs were ordered = 14
- How many VMs were created = 14
- Time to create a VM = (141.16092857142857, 34.3779174927281)
- Total time to create VMs = 151.76
- How many choreographies to enact = 7
- How many choreographies enacted = 7
- Time to enact a choreography = (167.55314285714286, 135.11745467615336)
- Total time to enact choreographies = 175.238
- Time to check a choreography = (0.7932857142857143, 0.014701846091414054)
- Total time to check choreographies = 0.949
- How many choreographies working = 7
- Total time without checking choreographies = 326.999
- Total time = 327.948
+ # 05_03 @LCPD 29/11/12
 
- # 08_01 
- How many VMs were ordered = 16
- How many VMs were created = 16
- Time to create a VM = (160.443, 25067.386497999993)
- Total time to create VMs = 467.01
- How many choreographies to enact = 8
- How many choreographies enacted = 8
- Time to enact a choreography = (177.912375, 551.3326032803244)
- Total time to enact choreographies = 201.296
- Time to check a choreography = (0.859875, 0.0035747341381147674)
- Total time to check choreographies = 0.9
- How many choreographies working = 8
- Total time without checking choreographies = 668.306
- Total time = 669.206
-
- # 09_01
- How many VMs were ordered = 18
- How many VMs were created = 18
- Time to create a VM = (141.9947222222222, 27.836657949768707)
- Total time to create VMs = 144.846
- How many choreographies to enact = 9
- How many choreographies enacted = 9
- Time to enact a choreography = (189.282, 470.81724466666634)
- Total time to enact choreographies = 223.656
- Time to check a choreography = (0.8993333333333333, 0.013566666666666663)
- Total time to check choreographies = 1.024
- How many choreographies working = 9
- Total time without checking choreographies = 368.502
- Total time = 369.526
-
- # 10_01
+ # 10_01 @LCPD 29/11/12
  How many VMs were ordered = 20
  How many VMs were created = 20
- Time to create a VM = (150.49435000000003, 782.9328678247505)
- Total time to create VMs = 156.334
+ Time to create a VM = (142.91265, 421.3460506368209)
+ Total time to create VMs = 165.783
  How many choreographies to enact = 10
  How many choreographies enacted = 10
- Time to enact a choreography = (181.9016, 135.12947385437602)
- Total time to enact choreographies = 194.223
- Time to check a choreography = (0.8757999999999999, 0.02266771223251259)
- Total time to check choreographies = 1.115
+ Time to enact a choreography = (207.72290000000004, 195.8892714269169)
+ Total time to enact choreographies = 223.684
+ Time to check a choreography = (0.8728000000000001, 0.006651408339291766)
+ Total time to check choreographies = 0.998
  How many choreographies working = 10
- Total time without checking choreographies = 350.558
- Total time = 351.673
+ Total time without checking choreographies = 389.467
+ Total time = 390.466
 
+ # 10_02 @LCPD 29/11/12
+
+ # 10_03 @LCPD 29/11/12
+
+ # 15_01 @LCPD 29/11/12
+ How many VMs were ordered = 30
+ How many VMs were created = 30
+ Time to create a VM = (133.38413333333332, 1611.756267931945)
+ Total time to create VMs = 170.604
+ How many choreographies to enact = 15
+ How many choreographies enacted = 15
+ Time to enact a choreography = (213.61540000000002, 795.2339621124344)
+ Total time to enact choreographies = 247.578
+ Time to check a choreography = (0.8682000000000001, 0.008932752069248685)
+ Total time to check choreographies = 0.969
+ How many choreographies working = 15
+ Total time without checking choreographies = 418.182
+ Total time = 419.151
+
+ # 15_02 @LCPD 29/11/12
+
+ # 15_03 @LCPD 29/11/12
+
+ 
+ # 20_01 @LCPD 29/11/12
+ How many VMs were ordered = 40
+ How many VMs were created = 40
+ Time to create a VM = (151.8126, 3917.8660279756427)
+ Total time to create VMs = 205.326
+ How many choreographies to enact = 20
+ How many choreographies enacted = 20
+ Time to enact a choreography = (237.76145000000002, 705.8360820674769)
+ Total time to enact choreographies = 263.605
+ Time to check a choreography = (0.8942500000000001, 0.005420172875760053)
+ Total time to check choreographies = 1.004
+ How many choreographies working = 20
+ Total time without checking choreographies = 468.93100000000004
+ Total time = 469.93499999999995
+
+ # 20_02 @LCPD 29/11/12
+
+ # 20_03 @LCPD 29/11/12
+
+ # 25_01 @LCPD 29/11/12
+ How many VMs were ordered = 50
+ How many VMs were created = 50
+ Time to create a VM = (166.52593999999993, 3862.1494302449987)
+ Total time to create VMs = 225.776
+ How many choreographies to enact = 25
+ How many choreographies enacted = 25
+ Time to enact a choreography = (266.91576000000003, 1662.0475465120005)
+ Total time to enact choreographies = 302.242
+ Time to check a choreography = (0.89416, 0.039201472000000015)
+ Total time to check choreographies = 1.241
+ How many choreographies working = 25
+ Total time without checking choreographies = 528.018
+ Total time = 529.259
+
+ # 25_02 @LCPD 29/11/12
+
+ # 25_03 @LCPD 29/11/12
 
 
