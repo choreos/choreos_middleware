@@ -37,6 +37,13 @@ Bootstrap completed at Node ... // this second message should be a failures mess
 * It would better try to ssh into the node only after the node status is ready.
 This "ready status" should be verified by using the jclouds api.
 
+* AWSCloudProvider should respect the "one request per second rule"
+http://www.a2sdeveloper.com/page-working-with-the-one-second-rule.html
+We are still relying on the client to respect the limit
+
+* NPM must work even if people create and destroy nodes directly in the cloud gateway
+e.g..: using our clean_aws script
+
 =============================
 
 Service Deployer ToDo list

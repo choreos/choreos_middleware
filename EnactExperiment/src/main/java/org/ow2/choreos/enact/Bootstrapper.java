@@ -11,6 +11,7 @@ import org.ow2.choreos.npm.datamodel.Node;
 public class Bootstrapper {
 
 	private static final String NPM_HOST = "http://localhost:9100/nodepoolmanager";
+	private static final int DELAY_BETWEEN_REQUESTS = 2000; // to cope with the amazon "one request per second" rule 
 
 	private int vmsQuantity; // how many VMs we will use
 	private Report report;
@@ -77,6 +78,13 @@ public class Bootstrapper {
 				}
 			});
 			trds[i].start();
+			
+			// a pause before trigger a new thread
+			try {
+				Thread.sleep(DELAY_BETWEEN_REQUESTS);
+			} catch (InterruptedException e) {
+				System.out.println("Exception while sleeping! Should not happen.");
+			}
 		}
 		
 		waitThreads(trds);
