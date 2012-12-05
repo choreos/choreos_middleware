@@ -26,14 +26,17 @@ import org.ow2.choreos.enactment.datamodel.ChorSpec;
  */
 public class Experiment {
 
-	public static final int CHORS_QTY = 8; // how many micro choreographies there will be 
+	public static final int CHORS_QTY = 10;  
+	public static final int RUN = 1; // sequence ordinal
 	public static final int SERVICES_PER_CHOR = 2;
 	
 	private Report report;
+	private int chorsQty; // how many micro choreographies there will be
 	
-	public Experiment(Report report) {
+	public Experiment(Report report, int chorsQty) {
 		this.report = report;
-		this.report.chorsQuantity = CHORS_QTY;
+		this.report.chorsQuantity = chorsQty;
+		this.chorsQty = chorsQty;
 	}
 	
 	public void run() {
@@ -53,6 +56,12 @@ public class Experiment {
 		results(checkers);
 		System.out.println("");
 		System.out.println(report);
+		try {
+			report.toFile();
+		} catch (IOException e) {
+			System.out.println("Report not saved!");
+			e.printStackTrace();
+		}
 	}
 
 	private List<Enacter> enact() {
@@ -63,7 +72,7 @@ public class Experiment {
 		ChorSpec chorSpec = Spec.getSpec();
 		List<Enacter> enacts = new ArrayList<Enacter>();
 		List<Thread> trds = new ArrayList<Thread>();
-		for (int i=0; i<CHORS_QTY; i++) {
+		for (int i=0; i<this.chorsQty; i++) {
 			Enacter enact = new Enacter(chorSpec, i, this.report);
 			enacts.add(enact);
 			Thread trd = new Thread(enact);
@@ -87,7 +96,7 @@ public class Experiment {
 		long t0 = System.currentTimeMillis();
 		List<TravelChecker> checkers= new ArrayList<TravelChecker>();
 		List<Thread> trds = new ArrayList<Thread>();
-		for (int i=0; i<CHORS_QTY; i++) {
+		for (int i=0; i<this.chorsQty; i++) {
 			Enacter enact = enacts.get(i);
 			if (enact.ok) {
 				String travelWSDL = enact.travelWSDL;
@@ -116,7 +125,7 @@ public class Experiment {
 			}
 		}
 		
-		System.out.println(Utils.getTimeStamp() + "RESULT: " + ok + " of " + CHORS_QTY + " working.");
+		System.out.println(Utils.getTimeStamp() + "RESULT: " + ok + " of " + this.chorsQty + " working.");
 		report.setChorsWorking(ok);
 
 		boolean showExtra = false;
@@ -144,7 +153,7 @@ public class Experiment {
 	
 	public static void main(String[] args) {
 		
-		Experiment experiment = new Experiment(new Report());
+		Experiment experiment = new Experiment(new Report(RUN), CHORS_QTY);
 		experiment.run();
 	}
 }

@@ -109,7 +109,7 @@ public class Bootstrapper {
 	
 	public static void main(String[] args) {
 		
-		Bootstrapper booter = new Bootstrapper(1, new Report());
+		Bootstrapper booter = new Bootstrapper(1, new Report(1));
 		booter.boot();
 	}
 }

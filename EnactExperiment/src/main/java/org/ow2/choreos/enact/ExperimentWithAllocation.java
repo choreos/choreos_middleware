@@ -2,7 +2,7 @@ package org.ow2.choreos.enact;
 
 
 /**
- * The same then Experiment,
+ * The same than Experiment,
  * but pre-allocates the VMs; 
  * So, it is necessary to set NODE_SELECTOR=ROUND_ROBIN
  * 
@@ -10,17 +10,20 @@ package org.ow2.choreos.enact;
  *
  */
 public class ExperimentWithAllocation {
+	
+	public static final int CHORS_QTY = 20; // how many micro choreographies there will be
+	public static final int RUN = 6; // sequence ordinal
 
 	public static void main(String[] args) {
-		
-		Report report = new Report();
 	
-		int vmsQty = Experiment.CHORS_QTY * Experiment.SERVICES_PER_CHOR;
+		Report report = new Report(RUN);
+	
+		int vmsQty = CHORS_QTY * Experiment.SERVICES_PER_CHOR;
 		report.setVmsQuantity(vmsQty);
 		Bootstrapper booter = new Bootstrapper(vmsQty, report);
 		booter.boot();
 		
-		Experiment experiment = new Experiment(report);
+		Experiment experiment = new Experiment(report, CHORS_QTY);
 		experiment.run();
 	}
 }

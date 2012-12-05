@@ -1,10 +1,18 @@
 package org.ow2.choreos.enact;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Report {
 
+	int run;
+	private boolean calculated = false;
+	
 	int vmsQuantity;
 	List<Double> vmsCreationTimes = new ArrayList<Double>();
 	double vmsCreatoinMeanTime;
@@ -25,6 +33,10 @@ public class Report {
 	
 	double totalTimeWithoutCheck;
 	double totalTime;
+	
+	public Report(int run) {
+		this.run = run;
+	}
 	
 	public void setVmsQuantity(int vmsQuantity) {
 		this.vmsQuantity = vmsQuantity;
@@ -89,16 +101,30 @@ public class Report {
 	}
 	
 	private void calculate() {
+
+		if (!this.calculated) {
+			
+			this.calculated = true;
+			
+			this.vmsCreatoinMeanTime = this.mean(this.vmsCreationTimes);
+			this.vmsCreationStdDev = this.stdDev(this.vmsCreationTimes, this.vmsCreatoinMeanTime);
+			this.chorsEnactmentMeanTime = this.mean(this.chorsEnactmentTimes);
+			this.chorsEnactmentStdDev = this.stdDev(this.chorsEnactmentTimes, this.chorsEnactmentMeanTime);
+			this.checkMeanTime = this.mean(this.checkTimes);
+			this.checkStdDev = this.stdDev(this.checkTimes, this.checkMeanTime);
+			
+			this.totalTimeWithoutCheck += this.vmsCreationTotalTime;
+			this.totalTime += this.vmsCreationTotalTime;
+		}
+	}
+	
+	public void toFile() throws IOException {
 		
-		this.vmsCreatoinMeanTime = this.mean(this.vmsCreationTimes);
-		this.vmsCreationStdDev = this.stdDev(this.vmsCreationTimes, this.vmsCreatoinMeanTime);
-		this.chorsEnactmentMeanTime = this.mean(this.chorsEnactmentTimes);
-		this.chorsEnactmentStdDev = this.stdDev(this.chorsEnactmentTimes, this.chorsEnactmentMeanTime);
-		this.checkMeanTime = this.mean(this.checkTimes);
-		this.checkStdDev = this.stdDev(this.checkTimes, this.checkMeanTime);
-		
-		this.totalTimeWithoutCheck += this.vmsCreationTotalTime;
-		this.totalTime += this.vmsCreationTotalTime;
+		String report = this.toString();
+		File file = new File("results/" + chorsQuantity + "chors_" + run + "run.txt");
+		Writer w = new FileWriter(file);
+		w.append(report + "\n");
+		w.close();
 	}
 
 	@Override
@@ -107,6 +133,7 @@ public class Report {
 		return "########Report:########## "
 				+ "\n // tuples are (mean, std dev)"
 				+ "\n // times in seconds"
+				+ "\n " + run + "/10 with " + chorsQuantity + " chors; @LCPD " + (new Date()).toString()
 				+ "\n How many VMs were ordered = " + vmsQuantity
 				+ "\n How many VMs were created = " + vmsCreationTimes.size()
 				+ "\n Time to create a VM = (" + vmsCreatoinMeanTime + ", " + vmsCreationStdDev + ")"
@@ -119,6 +146,6 @@ public class Report {
 				+ "\n Total time to check choreographies = " + checkTotalTime
 				+ "\n How many choreographies working = " + chorsWorking
 				+ "\n Total time without checking choreographies = " + totalTimeWithoutCheck 
-				+ "\n Total time = " + totalTime;
+				+ "\n Total time = " + totalTime + "\n";
 	}
 }
