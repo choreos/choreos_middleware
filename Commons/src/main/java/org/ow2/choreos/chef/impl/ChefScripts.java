@@ -8,7 +8,7 @@ package org.ow2.choreos.chef.impl;
  */
 public class ChefScripts {
 	
-	private static final String KNIFE_BOOTSTRAP = "knife bootstrap $ip -x $user -i $privateKeyFile --sudo -c $knifeFile";
+	private static final String KNIFE_BOOTSTRAP = "knife bootstrap $ip -x $user -i $privateKeyFile --no-host-key-verify --sudo -c $knifeFile";
 	private static final String KNIFE_RUN_LIST_ADD = "knife node run_list add $nodeName $cookbook::$recipe -c $knifeFile";
 	private static final String KNIFE_NODE_LIST = "knife node list -c $knifeFile";
 	private static final String KNIFE_NODE_SHOW = "knife node show $nodeName -c $knifeFile";
