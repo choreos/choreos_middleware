@@ -1,0 +1,18 @@
+########Report:########## 
+ // tuples are (mean, std dev)
+ // times in seconds
+ 8/10 with 10 chors; @LCPD Tue Dec 04 13:25:48 BRST 2012
+ How many VMs were ordered = 20
+ How many VMs were created = 20
+ Time to create a VM = (124.52224999999999, 274.91439261267163)
+ Total time to create VMs = 157.113
+ How many choreographies to enact = 10
+ How many choreographies enacted = 10
+ Time to enact a choreography = (192.9853, 242.55954806294838)
+ Total time to enact choreographies = 205.814
+ Time to check a choreography = (0.9710000000000001, 0.004257690641650705)
+ Total time to check choreographies = 1.086
+ How many choreographies working = 10
+ Total time without checking choreographies = 362.928
+ Total time = 364.014
+

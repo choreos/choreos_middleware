@@ -1,0 +1,801 @@
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.transport.http.policy.HTTPClientAssertionBuilder'
+[DEBUG 20:12:08 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.transport.http.policy.HTTPServerAssertionBuilder'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.transport.http.policy.HTTPServerAssertionBuilder'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.transport.http.policy.HTTPServerAssertionBuilder' to allow for resolving potential circular references
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.transport.http.policy.HTTPServerAssertionBuilder'
+[DEBUG 20:12:08 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.transport.http.policy.NoOpPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.transport.http.policy.NoOpPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.transport.http.policy.NoOpPolicyInterceptorProvider' to allow for resolving potential circular references
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.transport.http.policy.NoOpPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.management.InstrumentationManager'
+[DEBUG 20:12:08 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.transport.http.ClientOnlyHTTPTransportFactory'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.transport.http.ClientOnlyHTTPTransportFactory'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.transport.http.ClientOnlyHTTPTransportFactory' to allow for resolving potential circular references
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.transport.http.ClientOnlyHTTPTransportFactory'
+[DEBUG 20:12:08 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.transport.http_jetty.JettyHTTPTransportFactory'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.transport.http_jetty.JettyHTTPTransportFactory'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.transport.http_jetty.JettyHTTPTransportFactory' to allow for resolving potential circular references
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.transport.http_jetty.JettyHTTPTransportFactory'
+[DEBUG 20:12:08 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.security.policy.WSSecurityPolicyLoader'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.security.policy.WSSecurityPolicyLoader'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.security.policy.WSSecurityPolicyLoader' to allow for resolving potential circular references
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 20:12:08 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.AssertionBuilderRegistry'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.AssertionBuilderRegistry'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.configuration.spring.SpringBeanQNameMap#2d7cec96'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Invoking afterPropertiesSet() on bean with name 'org.apache.cxf.configuration.spring.SpringBeanQNameMap#2d7cec96'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.UsingAddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.transport.http.policy.HTTPClientAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.transport.http.policy.HTTPServerAssertionBuilder'
+[DEBUG 20:12:08 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.mtom.MTOMAssertionBuilder'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.mtom.MTOMAssertionBuilder'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.mtom.MTOMAssertionBuilder' to allow for resolving potential circular references
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.mtom.MTOMAssertionBuilder'
+[DEBUG 20:12:08 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.rm.RMAssertionBuilder'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.rm.RMAssertionBuilder'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'javax.xml.namespace.QName#7f724a9d'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'javax.xml.namespace.QName#7f724a9d'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.rm.RMAssertionBuilder' to allow for resolving potential circular references
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.rm.RMAssertionBuilder'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.configuration.spring.SpringBeanQNameMap#2d7cec96'
+[DEBUG 20:12:08 BeanUtils] No property editor [java.util.MapEditor] found for type java.util.Map according to 'Editor' suffix convention
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.transport.http.policy.HTTPClientAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.transport.http.policy.HTTPClientAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.transport.http.policy.HTTPServerAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.transport.http.policy.HTTPServerAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.UsingAddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.UsingAddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.rm.RMAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.rm.RMAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.UsingAddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.UsingAddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.UsingAddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.UsingAddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.mtom.MTOMAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.mtom.MTOMAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingAssertionBuilder'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.AssertionBuilderRegistry' to allow for resolving potential circular references
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.AssertionBuilderRegistry'
+[DEBUG 20:12:08 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.PolicyBuilder'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.PolicyBuilder'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.PolicyBuilder' to allow for resolving potential circular references
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.AssertionBuilderRegistry'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.PolicyBuilder'
+[DEBUG 20:12:08 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.PolicyInterceptorProviderRegistry'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.PolicyInterceptorProviderRegistry'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.configuration.spring.SpringBeanQNameMap#6490832e'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Invoking afterPropertiesSet() on bean with name 'org.apache.cxf.configuration.spring.SpringBeanQNameMap#6490832e'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.transport.http.policy.NoOpPolicyInterceptorProvider'
+[DEBUG 20:12:08 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.mtom.MTOMPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.mtom.MTOMPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.mtom.MTOMPolicyInterceptorProvider' to allow for resolving potential circular references
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.mtom.MTOMPolicyInterceptorProvider'
+[DEBUG 20:12:08 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.rm.policy.RMPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.rm.policy.RMPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.rm.policy.RMPolicyInterceptorProvider' to allow for resolving potential circular references
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.rm.policy.RMPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.configuration.spring.SpringBeanQNameMap#6490832e'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.transport.http.policy.NoOpPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.transport.http.policy.NoOpPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.rm.policy.RMPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.rm.policy.RMPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.mtom.MTOMPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.mtom.MTOMPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.addressing.policy.AddressingPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.PolicyInterceptorProviderRegistry' to allow for resolving potential circular references
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.PolicyInterceptorProviderRegistry'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.security.policy.WSSecurityPolicyLoader'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.AssertionBuilderRegistry'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.PolicyInterceptorProviderRegistry'
+[DEBUG 20:12:08 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.attachment.external.DomainExpressionBuilderRegistry'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.attachment.external.DomainExpressionBuilderRegistry'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.configuration.spring.SpringBeanQNameMap#4b947496'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Invoking afterPropertiesSet() on bean with name 'org.apache.cxf.configuration.spring.SpringBeanQNameMap#4b947496'
+[DEBUG 20:12:08 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.attachment.external.EndpointReferenceDomainExpressionBuilder'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.attachment.external.EndpointReferenceDomainExpressionBuilder'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.attachment.external.EndpointReferenceDomainExpressionBuilder' to allow for resolving potential circular references
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.attachment.external.EndpointReferenceDomainExpressionBuilder'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.configuration.spring.SpringBeanQNameMap#4b947496'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.attachment.external.EndpointReferenceDomainExpressionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.attachment.external.EndpointReferenceDomainExpressionBuilder'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.attachment.external.DomainExpressionBuilderRegistry' to allow for resolving potential circular references
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.attachment.external.DomainExpressionBuilderRegistry'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.attachment.external.EndpointReferenceDomainExpressionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.PolicyBuilder'
+[DEBUG 20:12:08 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.PolicyEngine'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.PolicyEngine'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.PolicyEngine' to allow for resolving potential circular references
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.PolicyEngine'
+[DEBUG 20:12:08 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.attachment.wsdl11.Wsdl11AttachmentPolicyProvider'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.attachment.wsdl11.Wsdl11AttachmentPolicyProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.attachment.wsdl11.Wsdl11AttachmentPolicyProvider' to allow for resolving potential circular references
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.attachment.wsdl11.Wsdl11AttachmentPolicyProvider'
+[DEBUG 20:12:08 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.policy.attachment.ServiceModelPolicyProvider'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.policy.attachment.ServiceModelPolicyProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.policy.attachment.ServiceModelPolicyProvider' to allow for resolving potential circular references
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.policy.attachment.ServiceModelPolicyProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.mtom.MTOMAssertionBuilder'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.policy.mtom.MTOMPolicyInterceptorProvider'
+[DEBUG 20:12:08 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.ws.rm.RMManager'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.ws.rm.RMManager'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.ws.rm.RMManager' to allow for resolving potential circular references
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.ws.rm.RMManager'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.rm.policy.RMPolicyInterceptorProvider'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.ws.rm.RMAssertionBuilder'
+[DEBUG 20:12:08 AbstractApplicationContext] Publishing event in context [org.apache.cxf.bus.spring.BusApplicationContext@72e6f7d2]: org.springframework.context.event.ContextRefreshedEvent[source=org.apache.cxf.bus.spring.BusApplicationContext@72e6f7d2: display name [org.apache.cxf.bus.spring.BusApplicationContext@72e6f7d2]; startup date [Tue Dec 04 20:02:07 BRST 2012]; root of context hierarchy]
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.buslifecycle.BusLifeCycleManager'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 20:12:08 DefaultSingletonBeanRegistry] Creating shared instance of singleton bean 'org.apache.cxf.jaxrs.JAXRSBindingFactory'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Creating instance of bean 'org.apache.cxf.jaxrs.JAXRSBindingFactory'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory] Eagerly caching bean 'org.apache.cxf.jaxrs.JAXRSBindingFactory' to allow for resolving potential circular references
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'cxf'
+[DEBUG 20:12:08 AbstractAutowireCapableBeanFactory$1] Finished creating instance of bean 'org.apache.cxf.jaxrs.JAXRSBindingFactory'
+[DEBUG 20:12:08 AbstractBeanFactory] Returning cached instance of singleton bean 'org.apache.cxf.jaxrs.JAXRSBindingFactory'
+04/12/2012 20:02:08 org.apache.cxf.endpoint.ServerImpl initDestination
+INFO: Setting the server's publish address to be http://localhost:9100/nodepoolmanager/
+04/12/2012 20:02:08 org.mortbay.log.Slf4jLog info
+INFO: Logging to org.slf4j.impl.JDK14LoggerAdapter(org.mortbay.log) via org.mortbay.log.Slf4jLog
+04/12/2012 20:02:08 org.mortbay.log.Slf4jLog info
+INFO: jetty-6.1.21
+04/12/2012 20:02:08 org.mortbay.log.Slf4jLog info
+INFO: Started SelectChannelConnector@localhost:9100
+[INFO 20:12:08 NPMServer] Node Pool Manager has started [http://localhost:9100/nodepoolmanager/]
+04/12/2012 20:02:08 org.apache.cxf.endpoint.ServerImpl initDestination
+INFO: Setting the server's publish address to be http://localhost:9101/servicedeployer/
+04/12/2012 20:02:08 org.mortbay.log.Slf4jLog info
+INFO: jetty-6.1.21
+04/12/2012 20:02:08 org.mortbay.log.Slf4jLog info
+INFO: Started SelectChannelConnector@localhost:9101
+[INFO 20:12:08 ServiceDeployerServer] Service Deployer has started [http://localhost:9101/servicedeployer/]
+[DEBUG 20:12:38 NodesResource] Request to create node
+[DEBUG 20:12:38 AWSCloudProvider] Creating node...
+[DEBUG 20:12:38 NodesResource] Request to create node
+[DEBUG 20:12:38 AWSCloudProvider] Creating node...
+[DEBUG 20:12:40 NodesResource] Request to create node
+[DEBUG 20:12:40 AWSCloudProvider] Creating node...
+[DEBUG 20:12:42 NodesResource] Request to create node
+[DEBUG 20:12:42 AWSCloudProvider] Creating node...
+[DEBUG 20:12:44 NodesResource] Request to create node
+[DEBUG 20:12:44 AWSCloudProvider] Creating node...
+[DEBUG 20:12:46 NodesResource] Request to create node
+[DEBUG 20:12:46 AWSCloudProvider] Creating node...
+[DEBUG 20:12:48 NodesResource] Request to create node
+[DEBUG 20:12:48 AWSCloudProvider] Creating node...
+[DEBUG 20:12:50 NodesResource] Request to create node
+[DEBUG 20:12:50 AWSCloudProvider] Creating node...
+[DEBUG 20:12:52 NodesResource] Request to create node
+[DEBUG 20:12:52 AWSCloudProvider] Creating node...
+[DEBUG 20:12:54 NodesResource] Request to create node
+[DEBUG 20:12:54 AWSCloudProvider] Creating node...
+[DEBUG 20:12:56 NodesResource] Request to create node
+[DEBUG 20:12:56 AWSCloudProvider] Creating node...
+[DEBUG 20:12:58 NodesResource] Request to create node
+[DEBUG 20:12:58 AWSCloudProvider] Creating node...
+[DEBUG 20:12:00 NodesResource] Request to create node
+[DEBUG 20:12:00 AWSCloudProvider] Creating node...
+[DEBUG 20:12:02 NodesResource] Request to create node
+[DEBUG 20:12:02 AWSCloudProvider] Creating node...
+[DEBUG 20:12:04 NodesResource] Request to create node
+[DEBUG 20:12:04 AWSCloudProvider] Creating node...
+[DEBUG 20:12:06 NodesResource] Request to create node
+[DEBUG 20:12:06 AWSCloudProvider] Creating node...
+[DEBUG 20:12:08 NodesResource] Request to create node
+[DEBUG 20:12:08 AWSCloudProvider] Creating node...
+[DEBUG 20:12:10 NodesResource] Request to create node
+[DEBUG 20:12:10 AWSCloudProvider] Creating node...
+[DEBUG 20:12:11 AWSCloudProvider] Node [id=us-east-1/i-3c4cb842, ip=174.129.140.234, hostname=default-3c4cb842, chefName=null] created in 32555 miliseconds
+[DEBUG 20:12:11 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:12 AWSCloudProvider] Node [id=us-east-1/i-3a4cb844, ip=50.17.99.72, hostname=default-3a4cb844, chefName=null] created in 27809 miliseconds
+[DEBUG 20:12:12 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:12 NodesResource] Request to create node
+[DEBUG 20:12:12 AWSCloudProvider] Creating node...
+[DEBUG 20:12:13 AWSCloudProvider] Node [id=us-east-1/i-3e4cb840, ip=23.21.29.130, hostname=default-3e4cb840, chefName=null] created in 33081 miliseconds
+[DEBUG 20:12:13 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:14 NodesResource] Request to create node
+[DEBUG 20:12:14 AWSCloudProvider] Creating node...
+[DEBUG 20:12:16 NodeBootstrapper] Trying SSH into 174.129.140.234 again in 5 seconds
+[DEBUG 20:12:16 NodesResource] Request to create node
+[DEBUG 20:12:16 AWSCloudProvider] Creating node...
+[DEBUG 20:12:17 NodeBootstrapper] Trying SSH into 50.17.99.72 again in 5 seconds
+[DEBUG 20:12:18 NodesResource] Request to create node
+[DEBUG 20:12:18 AWSCloudProvider] Creating node...
+[DEBUG 20:12:18 NodeBootstrapper] Trying SSH into 23.21.29.130 again in 5 seconds
+[DEBUG 20:12:19 AWSCloudProvider] Node [id=us-east-1/i-384cb846, ip=184.73.89.52, hostname=default-384cb846, chefName=null] created in 41081 miliseconds
+[DEBUG 20:12:19 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:20 AWSCloudProvider] Node [id=us-east-1/i-324cb84c, ip=54.234.18.215, hostname=default-324cb84c, chefName=null] created in 37483 miliseconds
+[DEBUG 20:12:20 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:20 NodesResource] Request to create node
+[DEBUG 20:12:20 AWSCloudProvider] Creating node...
+[DEBUG 20:12:21 AWSCloudProvider] Node [id=us-east-1/i-8e4cb8f0, ip=23.23.38.116, hostname=default-8e4cb8f0, chefName=null] created in 30914 miliseconds
+[DEBUG 20:12:21 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:22 AWSCloudProvider] Node [id=us-east-1/i-364db948, ip=107.21.168.64, hostname=default-364db948, chefName=null] created in 29160 miliseconds
+[DEBUG 20:12:22 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:22 NodesResource] Request to create node
+[DEBUG 20:12:22 AWSCloudProvider] Creating node...
+[DEBUG 20:12:24 NodeBootstrapper] Trying SSH into 184.73.89.52 again in 5 seconds
+[DEBUG 20:12:24 NodesResource] Request to create node
+[DEBUG 20:12:24 AWSCloudProvider] Creating node...
+[DEBUG 20:12:25 NodeBootstrapper] Trying SSH into 54.234.18.215 again in 5 seconds
+[DEBUG 20:12:25 AWSCloudProvider] Node [id=us-east-1/i-f04cb88e, ip=23.23.37.54, hostname=default-f04cb88e, chefName=null] created in 38708 miliseconds
+[DEBUG 20:12:25 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:26 NodeBootstrapper] Trying SSH into 174.129.140.234 again in 5 seconds
+[DEBUG 20:12:26 AWSCloudProvider] Node [id=us-east-1/i-e04db99e, ip=23.20.125.59, hostname=null, chefName=null] created in 27797 miliseconds
+[DEBUG 20:12:26 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:26 NodeBootstrapper] Trying SSH into 23.23.38.116 again in 5 seconds
+[DEBUG 20:12:26 NodesResource] Request to create node
+[DEBUG 20:12:26 AWSCloudProvider] Creating node...
+[DEBUG 20:12:27 NodeBootstrapper] Trying SSH into 107.21.168.64 again in 5 seconds
+[DEBUG 20:12:27 AWSCloudProvider] Node [id=us-east-1/i-064db978, ip=184.72.161.119, hostname=default-064db978, chefName=null] created in 32226 miliseconds
+[DEBUG 20:12:27 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:27 NodeBootstrapper] Trying SSH into 50.17.99.72 again in 5 seconds
+[DEBUG 20:12:28 NodesResource] Request to create node
+[DEBUG 20:12:28 AWSCloudProvider] Creating node...
+[DEBUG 20:12:28 NodeBootstrapper] Trying SSH into 23.21.29.130 again in 5 seconds
+[DEBUG 20:12:30 NodeBootstrapper] Trying SSH into 23.23.37.54 again in 5 seconds
+[DEBUG 20:12:30 NodeBootstrapper] Trying SSH into 184.73.89.52 again in 5 seconds
+[DEBUG 20:12:30 NodesResource] Request to create node
+[DEBUG 20:12:30 AWSCloudProvider] Creating node...
+[DEBUG 20:12:31 NodeBootstrapper] Trying SSH into 54.234.18.215 again in 5 seconds
+[DEBUG 20:12:31 NodeBootstrapper] Trying SSH into 174.129.140.234 again in 5 seconds
+[DEBUG 20:12:31 NodeBootstrapper] Trying SSH into 23.20.125.59 again in 5 seconds
+[DEBUG 20:12:31 NodeBootstrapper] Trying SSH into 23.23.38.116 again in 5 seconds
+[DEBUG 20:12:32 NodeBootstrapper] Trying SSH into 184.72.161.119 again in 5 seconds
+[DEBUG 20:12:32 NodeBootstrapper] Trying SSH into 107.21.168.64 again in 5 seconds
+[DEBUG 20:12:32 NodeBootstrapper] Trying SSH into 50.17.99.72 again in 5 seconds
+[DEBUG 20:12:32 NodesResource] Request to create node
+[DEBUG 20:12:32 AWSCloudProvider] Creating node...
+[DEBUG 20:12:34 NodeBootstrapper] Trying SSH into 23.21.29.130 again in 5 seconds
+[DEBUG 20:12:34 NodesResource] Request to create node
+[DEBUG 20:12:34 AWSCloudProvider] Creating node...
+[DEBUG 20:12:35 AWSCloudProvider] Node [id=us-east-1/i-9c4db9e2, ip=54.242.3.79, hostname=default-9c4db9e2, chefName=null] created in 32209 miliseconds
+[DEBUG 20:12:35 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:35 NodeBootstrapper] Trying SSH into 184.73.89.52 again in 5 seconds
+[DEBUG 20:12:35 AWSCloudProvider] Node [id=us-east-1/i-b24db9cc, ip=107.21.66.158, hostname=default-b24db9cc, chefName=null] created in 35048 miliseconds
+[DEBUG 20:12:35 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:35 AWSCloudProvider] Node [id=us-east-1/i-fc4db982, ip=50.19.160.23, hostname=default-fc4db982, chefName=null] created in 39062 miliseconds
+[DEBUG 20:12:35 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:35 AWSCloudProvider] Node [id=us-east-1/i-764eba08, ip=23.20.140.47, hostname=default-764eba08, chefName=null] created in 29067 miliseconds
+[DEBUG 20:12:35 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:36 NodeBootstrapper] Trying SSH into 54.234.18.215 again in 5 seconds
+[DEBUG 20:12:36 NodeBootstrapper] Trying SSH into 23.23.37.54 again in 5 seconds
+[DEBUG 20:12:36 NodeBootstrapper] Trying SSH into 23.20.125.59 again in 5 seconds
+[DEBUG 20:12:36 NodesResource] Request to create node
+[DEBUG 20:12:36 AWSCloudProvider] Creating node...
+[DEBUG 20:12:36 NodeBootstrapper] Trying SSH into 174.129.140.234 again in 5 seconds
+[DEBUG 20:12:37 NodeBootstrapper] Trying SSH into 23.23.38.116 again in 5 seconds
+[DEBUG 20:12:37 NodeBootstrapper] Trying SSH into 184.72.161.119 again in 5 seconds
+[DEBUG 20:12:37 AWSCloudProvider] Node [id=us-east-1/i-d84cb8a6, ip=23.20.234.160, hostname=default-d84cb8a6, chefName=null] created in 48394 miliseconds
+[DEBUG 20:12:37 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:37 NodeBootstrapper] Trying SSH into 107.21.168.64 again in 5 seconds
+[DEBUG 20:12:37 AWSCloudProvider] Node [id=us-east-1/i-884db9f6, ip=23.22.182.212, hostname=default-884db9f6, chefName=null] created in 32711 miliseconds
+[DEBUG 20:12:37 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:38 NodeBootstrapper] Trying SSH into 50.17.99.72 again in 5 seconds
+[DEBUG 20:12:38 NodesResource] Request to create node
+[DEBUG 20:12:38 AWSCloudProvider] Creating node...
+[DEBUG 20:12:39 NodeBootstrapper] Trying SSH into 54.242.3.79 again in 5 seconds
+[DEBUG 20:12:39 NodeBootstrapper] Trying SSH into 23.21.29.130 again in 5 seconds
+[DEBUG 20:12:40 NodesResource] Request to create node
+[DEBUG 20:12:40 AWSCloudProvider] Creating node...
+[DEBUG 20:12:40 NodeBootstrapper] Trying SSH into 184.73.89.52 again in 5 seconds
+[DEBUG 20:12:40 NodeBootstrapper] Trying SSH into 107.21.66.158 again in 5 seconds
+[DEBUG 20:12:40 NodeBootstrapper] Trying SSH into 50.19.160.23 again in 5 seconds
+[DEBUG 20:12:40 NodeBootstrapper] Trying SSH into 23.20.140.47 again in 5 seconds
+[DEBUG 20:12:41 NodeBootstrapper] Trying SSH into 23.23.37.54 again in 5 seconds
+[DEBUG 20:12:41 NodeBootstrapper] Trying SSH into 23.20.125.59 again in 5 seconds
+[DEBUG 20:12:42 NodeBootstrapper] Trying SSH into 54.234.18.215 again in 5 seconds
+[DEBUG 20:12:42 NodeBootstrapper] Trying SSH into 23.20.234.160 again in 5 seconds
+[DEBUG 20:12:42 NodeBootstrapper] Trying SSH into 23.23.38.116 again in 5 seconds
+[DEBUG 20:12:42 NodeBootstrapper] Trying SSH into 23.22.182.212 again in 5 seconds
+[DEBUG 20:12:42 NodeBootstrapper] Trying SSH into 184.72.161.119 again in 5 seconds
+[DEBUG 20:12:42 NodesResource] Request to create node
+[DEBUG 20:12:42 AWSCloudProvider] Creating node...
+[DEBUG 20:12:43 NodeBootstrapper] Connected to Node [id=us-east-1/i-3c4cb842, ip=174.129.140.234, hostname=default-3c4cb842, chefName=null]
+[INFO 20:12:43 NodeBootstrapper] Bootstrapping default-3c4cb842
+[DEBUG 20:12:43 NodeBootstrapper] Trying SSH into 107.21.168.64 again in 5 seconds
+[DEBUG 20:12:44 AWSCloudProvider] Node [id=us-east-1/i-324eba4c, ip=54.242.65.110, hostname=default-324eba4c, chefName=null] created in 31400 miliseconds
+[DEBUG 20:12:44 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:44 NodeBootstrapper] Trying SSH into 54.242.3.79 again in 5 seconds
+[DEBUG 20:12:44 NodeBootstrapper] Connected to Node [id=us-east-1/i-3a4cb844, ip=50.17.99.72, hostname=default-3a4cb844, chefName=null]
+[INFO 20:12:44 NodeBootstrapper] Bootstrapping default-3a4cb844
+[DEBUG 20:12:44 NodeBootstrapper] Trying SSH into 23.21.29.130 again in 5 seconds
+[DEBUG 20:12:44 NodesResource] Request to create node
+[DEBUG 20:12:44 AWSCloudProvider] Creating node...
+[DEBUG 20:12:44 AWSCloudProvider] Node [id=us-east-1/i-624eba1c, ip=23.22.77.21, hostname=default-624eba1c, chefName=null] created in 36026 miliseconds
+[DEBUG 20:12:44 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:46 NodeBootstrapper] Trying SSH into 107.21.66.158 again in 5 seconds
+[DEBUG 20:12:46 NodeBootstrapper] Trying SSH into 50.19.160.23 again in 5 seconds
+[DEBUG 20:12:46 NodesResource] Request to create node
+[DEBUG 20:12:46 AWSCloudProvider] Creating node...
+[DEBUG 20:12:47 NodeBootstrapper] Trying SSH into 23.20.140.47 again in 5 seconds
+[DEBUG 20:12:47 NodeBootstrapper] Trying SSH into 184.73.89.52 again in 5 seconds
+[DEBUG 20:12:47 NodeBootstrapper] Trying SSH into 23.23.37.54 again in 5 seconds
+[DEBUG 20:12:47 NodeBootstrapper] Trying SSH into 54.234.18.215 again in 5 seconds
+[DEBUG 20:12:47 NodeBootstrapper] Trying SSH into 23.20.125.59 again in 5 seconds
+[DEBUG 20:12:47 NodeBootstrapper] Trying SSH into 23.23.38.116 again in 5 seconds
+[DEBUG 20:12:48 NodeBootstrapper] Trying SSH into 23.22.182.212 again in 5 seconds
+[DEBUG 20:12:48 NodesResource] Request to create node
+[DEBUG 20:12:48 AWSCloudProvider] Creating node...
+[DEBUG 20:12:48 NodeBootstrapper] Connected to Node [id=us-east-1/i-064db978, ip=184.72.161.119, hostname=default-064db978, chefName=null]
+[INFO 20:12:48 NodeBootstrapper] Bootstrapping default-064db978
+[DEBUG 20:12:49 AWSCloudProvider] Node [id=us-east-1/i-4a4eba34, ip=107.21.169.42, hostname=default-4a4eba34, chefName=null] created in 38190 miliseconds
+[DEBUG 20:12:49 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:49 NodeBootstrapper] Trying SSH into 54.242.65.110 again in 5 seconds
+[DEBUG 20:12:49 NodeBootstrapper] Trying SSH into 54.242.3.79 again in 5 seconds
+[DEBUG 20:12:49 NodeBootstrapper] Trying SSH into 23.22.77.21 again in 5 seconds
+[DEBUG 20:12:50 NodeBootstrapper] Connected to Node [id=us-east-1/i-364db948, ip=107.21.168.64, hostname=default-364db948, chefName=null]
+[INFO 20:12:50 NodeBootstrapper] Bootstrapping default-364db948
+[DEBUG 20:12:50 NodeBootstrapper] Trying SSH into 23.20.234.160 again in 5 seconds
+[DEBUG 20:12:50 NodesResource] Request to create node
+[DEBUG 20:12:50 AWSCloudProvider] Creating node...
+[DEBUG 20:12:51 NodeBootstrapper] Connected to Node [id=us-east-1/i-3e4cb840, ip=23.21.29.130, hostname=default-3e4cb840, chefName=null]
+[INFO 20:12:51 NodeBootstrapper] Bootstrapping default-3e4cb840
+[DEBUG 20:12:51 NodeBootstrapper] Trying SSH into 107.21.66.158 again in 5 seconds
+[DEBUG 20:12:51 NodeBootstrapper] Trying SSH into 50.19.160.23 again in 5 seconds
+[DEBUG 20:12:52 NodeBootstrapper] Trying SSH into 107.21.169.42 again in 5 seconds
+[DEBUG 20:12:52 NodeBootstrapper] Trying SSH into 23.20.140.47 again in 5 seconds
+[DEBUG 20:12:52 NodesResource] Request to create node
+[DEBUG 20:12:52 AWSCloudProvider] Creating node...
+[DEBUG 20:12:53 NodeBootstrapper] Connected to Node [id=us-east-1/i-384cb846, ip=184.73.89.52, hostname=default-384cb846, chefName=null]
+[INFO 20:12:53 NodeBootstrapper] Bootstrapping default-384cb846
+[DEBUG 20:12:53 NodeBootstrapper] Trying SSH into 23.23.37.54 again in 5 seconds
+[DEBUG 20:12:53 NodeBootstrapper] Trying SSH into 23.22.182.212 again in 5 seconds
+[DEBUG 20:12:53 NodeBootstrapper] Trying SSH into 54.234.18.215 again in 5 seconds
+[DEBUG 20:12:54 NodeBootstrapper] Trying SSH into 23.20.125.59 again in 5 seconds
+[DEBUG 20:12:54 NodeBootstrapper] Connected to Node [id=us-east-1/i-8e4cb8f0, ip=23.23.38.116, hostname=default-8e4cb8f0, chefName=null]
+[INFO 20:12:54 NodeBootstrapper] Bootstrapping default-8e4cb8f0
+[DEBUG 20:12:54 NodeBootstrapper] Trying SSH into 54.242.65.110 again in 5 seconds
+[DEBUG 20:12:54 AWSCloudProvider] Node [id=us-east-1/i-cc4ebab2, ip=184.72.205.115, hostname=default-cc4ebab2, chefName=null] created in 33973 miliseconds
+[DEBUG 20:12:54 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:54 NodesResource] Request to create node
+[DEBUG 20:12:54 AWSCloudProvider] Creating node...
+[DEBUG 20:12:55 NodeBootstrapper] Trying SSH into 23.22.77.21 again in 5 seconds
+[DEBUG 20:12:55 NodeBootstrapper] Trying SSH into 23.20.234.160 again in 5 seconds
+[DEBUG 20:12:55 AWSCloudProvider] Node [id=us-east-1/i-644fbb1a, ip=54.234.49.118, hostname=default-644fbb1a, chefName=null] created in 26812 miliseconds
+[DEBUG 20:12:55 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:56 AWSCloudProvider] Node [id=us-east-1/i-704fbb0e, ip=54.242.107.165, hostname=default-704fbb0e, chefName=null] created in 29157 miliseconds
+[DEBUG 20:12:56 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:56 NodeBootstrapper] Trying SSH into 54.242.3.79 again in 5 seconds
+[DEBUG 20:12:56 AWSCloudProvider] Node [id=us-east-1/i-ba4ebac4, ip=50.17.156.5, hostname=default-ba4ebac4, chefName=null] created in 33365 miliseconds
+[DEBUG 20:12:56 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:56 NodeBootstrapper] Trying SSH into 107.21.66.158 again in 5 seconds
+[DEBUG 20:12:56 NodeBootstrapper] Trying SSH into 50.19.160.23 again in 5 seconds
+[DEBUG 20:12:56 NodesResource] Request to create node
+[DEBUG 20:12:56 AWSCloudProvider] Creating node...
+[DEBUG 20:12:56 AWSCloudProvider] Node [id=us-east-1/i-824ebafc, ip=174.129.88.130, hostname=default-824ebafc, chefName=null] created in 32066 miliseconds
+[DEBUG 20:12:56 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:57 NodeBootstrapper] Trying SSH into 107.21.169.42 again in 5 seconds
+[DEBUG 20:12:57 NodeBootstrapper] Trying SSH into 23.20.140.47 again in 5 seconds
+[DEBUG 20:12:58 NodesResource] Request to create node
+[DEBUG 20:12:58 AWSCloudProvider] Creating node...
+[DEBUG 20:12:59 NodeBootstrapper] Trying SSH into 23.22.182.212 again in 5 seconds
+[DEBUG 20:12:59 NodeBootstrapper] Trying SSH into 54.242.65.110 again in 5 seconds
+[DEBUG 20:12:59 NodeBootstrapper] Connected to Node [id=us-east-1/i-f04cb88e, ip=23.23.37.54, hostname=default-f04cb88e, chefName=null]
+[INFO 20:12:59 NodeBootstrapper] Bootstrapping default-f04cb88e
+[DEBUG 20:12:59 NodeBootstrapper] Trying SSH into 54.234.49.118 again in 5 seconds
+[DEBUG 20:12:59 NodeBootstrapper] Trying SSH into 184.72.205.115 again in 5 seconds
+[DEBUG 20:12:00 NodeBootstrapper] Connected to Node [id=us-east-1/i-324cb84c, ip=54.234.18.215, hostname=default-324cb84c, chefName=null]
+[INFO 20:12:00 NodeBootstrapper] Bootstrapping default-324cb84c
+[DEBUG 20:12:00 NodeBootstrapper] Trying SSH into 23.22.77.21 again in 5 seconds
+[DEBUG 20:12:00 NodeBootstrapper] Connected to Node [id=us-east-1/i-e04db99e, ip=23.20.125.59, hostname=null, chefName=null]
+[INFO 20:12:00 NodeBootstrapper] Bootstrapping null
+[DEBUG 20:12:00 NodeBootstrapper] Trying SSH into 50.17.156.5 again in 5 seconds
+[DEBUG 20:12:00 AWSCloudProvider] Node [id=us-east-1/i-204eba5e, ip=23.22.213.51, hostname=default-204eba5e, chefName=null] created in 45758 miliseconds
+[DEBUG 20:12:00 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:00 NodesResource] Request to create node
+[DEBUG 20:12:00 AWSCloudProvider] Creating node...
+[DEBUG 20:12:01 NodeBootstrapper] Trying SSH into 54.242.107.165 again in 5 seconds
+[DEBUG 20:12:01 NodeBootstrapper] Trying SSH into 174.129.88.130 again in 5 seconds
+[DEBUG 20:12:02 NodeBootstrapper] Trying SSH into 23.20.234.160 again in 5 seconds
+[DEBUG 20:12:02 AWSCloudProvider] Node [id=us-east-1/i-544fbb2a, ip=23.23.53.158, hostname=default-544fbb2a, chefName=null] created in 31578 miliseconds
+[DEBUG 20:12:02 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:02 NodeBootstrapper] Connected to Node [id=us-east-1/i-9c4db9e2, ip=54.242.3.79, hostname=default-9c4db9e2, chefName=null]
+[INFO 20:12:02 NodeBootstrapper] Bootstrapping default-9c4db9e2
+[DEBUG 20:12:02 NodeBootstrapper] Trying SSH into 107.21.169.42 again in 5 seconds
+[DEBUG 20:12:02 NodeBootstrapper] Connected to Node [id=us-east-1/i-b24db9cc, ip=107.21.66.158, hostname=default-b24db9cc, chefName=null]
+[INFO 20:12:02 NodeBootstrapper] Bootstrapping default-b24db9cc
+[DEBUG 20:12:02 NodesResource] Request to create node
+[DEBUG 20:12:02 AWSCloudProvider] Creating node...
+[DEBUG 20:12:02 NodeBootstrapper] Connected to Node [id=us-east-1/i-fc4db982, ip=50.19.160.23, hostname=default-fc4db982, chefName=null]
+[INFO 20:12:02 NodeBootstrapper] Bootstrapping default-fc4db982
+[DEBUG 20:12:03 NodeBootstrapper] Connected to Node [id=us-east-1/i-764eba08, ip=23.20.140.47, hostname=default-764eba08, chefName=null]
+[INFO 20:12:03 NodeBootstrapper] Bootstrapping default-764eba08
+[DEBUG 20:12:04 NodesResource] Request to create node
+[DEBUG 20:12:04 AWSCloudProvider] Creating node...
+[DEBUG 20:12:04 NodeBootstrapper] Trying SSH into 54.242.65.110 again in 5 seconds
+[DEBUG 20:12:04 NodeBootstrapper] Trying SSH into 54.234.49.118 again in 5 seconds
+[DEBUG 20:12:05 NodeBootstrapper] Trying SSH into 50.17.156.5 again in 5 seconds
+[DEBUG 20:12:05 NodeBootstrapper] Trying SSH into 23.22.213.51 again in 5 seconds
+[DEBUG 20:12:05 NodeBootstrapper] Connected to Node [id=us-east-1/i-884db9f6, ip=23.22.182.212, hostname=default-884db9f6, chefName=null]
+[INFO 20:12:05 NodeBootstrapper] Bootstrapping default-884db9f6
+[DEBUG 20:12:05 NodeBootstrapper] Trying SSH into 184.72.205.115 again in 5 seconds
+[DEBUG 20:12:06 NodeBootstrapper] Trying SSH into 23.22.77.21 again in 5 seconds
+[DEBUG 20:12:06 AWSCloudProvider] Node [id=us-east-1/i-f44eba8a, ip=204.236.210.190, hostname=default-f44eba8a, chefName=null] created in 47968 miliseconds
+[DEBUG 20:12:06 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:06 NodesResource] Request to create node
+[DEBUG 20:12:06 AWSCloudProvider] Creating node...
+[DEBUG 20:12:06 AWSCloudProvider] Node [id=us-east-1/i-1e4fbb60, ip=174.129.131.31, hostname=default-1e4fbb60, chefName=null] created in 32109 miliseconds
+[DEBUG 20:12:06 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:07 NodeBootstrapper] Trying SSH into 54.242.107.165 again in 5 seconds
+[DEBUG 20:12:07 NodeBootstrapper] Trying SSH into 23.23.53.158 again in 5 seconds
+[DEBUG 20:12:08 NodeBootstrapper] Connected to Node [id=us-east-1/i-d84cb8a6, ip=23.20.234.160, hostname=default-d84cb8a6, chefName=null]
+[INFO 20:12:08 NodeBootstrapper] Bootstrapping default-d84cb8a6
+[DEBUG 20:12:08 NodesResource] Request to create node
+[DEBUG 20:12:08 AWSCloudProvider] Creating node...
+[DEBUG 20:12:09 NodeBootstrapper] Trying SSH into 107.21.169.42 again in 5 seconds
+[DEBUG 20:12:10 AWSCloudProvider] Node [id=us-east-1/i-0a4fbb74, ip=174.129.155.108, hostname=default-0a4fbb74, chefName=null] created in 33298 miliseconds
+[DEBUG 20:12:10 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:10 NodeBootstrapper] Trying SSH into 54.234.49.118 again in 5 seconds
+[DEBUG 20:12:10 NodeBootstrapper] Trying SSH into 50.17.156.5 again in 5 seconds
+[DEBUG 20:12:10 NodesResource] Request to create node
+[DEBUG 20:12:10 AWSCloudProvider] Creating node...
+[DEBUG 20:12:11 NodeBootstrapper] Connected to Node [id=us-east-1/i-324eba4c, ip=54.242.65.110, hostname=default-324eba4c, chefName=null]
+[INFO 20:12:11 NodeBootstrapper] Bootstrapping default-324eba4c
+[DEBUG 20:12:11 NodeBootstrapper] Trying SSH into 184.72.205.115 again in 5 seconds
+[DEBUG 20:12:11 NodeBootstrapper] Trying SSH into 23.22.213.51 again in 5 seconds
+[DEBUG 20:12:11 NodeBootstrapper] Trying SSH into 204.236.210.190 again in 5 seconds
+[DEBUG 20:12:11 NodeBootstrapper] Trying SSH into 174.129.88.130 again in 5 seconds
+[DEBUG 20:12:11 NodeBootstrapper] Trying SSH into 174.129.131.31 again in 5 seconds
+[DEBUG 20:12:12 AWSCloudProvider] Node [id=us-east-1/i-ba4fbbc4, ip=23.22.127.95, hostname=default-ba4fbbc4, chefName=null] created in 29379 miliseconds
+[DEBUG 20:12:12 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:12 NodeBootstrapper] Trying SSH into 54.242.107.165 again in 5 seconds
+[DEBUG 20:12:12 NodeBootstrapper] Trying SSH into 23.23.53.158 again in 5 seconds
+[DEBUG 20:12:12 NodeBootstrapper] Connected to Node [id=us-east-1/i-624eba1c, ip=23.22.77.21, hostname=default-624eba1c, chefName=null]
+[INFO 20:12:12 NodeBootstrapper] Bootstrapping default-624eba1c
+[DEBUG 20:12:12 NodesResource] Request to create node
+[DEBUG 20:12:12 AWSCloudProvider] Creating node...
+[DEBUG 20:12:13 AWSCloudProvider] Node [id=us-east-1/i-2c4fbb52, ip=50.16.154.204, hostname=default-2c4fbb52, chefName=null] created in 40593 miliseconds
+[DEBUG 20:12:13 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:13 AWSCloudProvider] Node [id=us-east-1/i-984fbbe6, ip=23.20.112.16, hostname=default-984fbbe6, chefName=null] created in 26611 miliseconds
+[DEBUG 20:12:13 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:14 AWSCloudProvider] Node [id=us-east-1/i-aa4fbbd4, ip=204.236.240.29, hostname=default-aa4fbbd4, chefName=null] created in 29355 miliseconds
+[DEBUG 20:12:14 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:14 NodesResource] Request to create node
+[DEBUG 20:12:14 AWSCloudProvider] Creating node...
+[INFO 20:12:14 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-3c4cb842, ip=174.129.140.234, hostname=default-3c4cb842, chefName=null]
+[INFO 20:12:14 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-3a4cb844, ip=50.17.99.72, hostname=default-3a4cb844, chefName=null]
+[DEBUG 20:12:15 NodeBootstrapper] Trying SSH into 174.129.155.108 again in 5 seconds
+[DEBUG 20:12:15 AWSCloudProvider] Node [id=us-east-1/i-804fbbfe, ip=184.72.189.137, hostname=default-804fbbfe, chefName=null] created in 26629 miliseconds
+[DEBUG 20:12:15 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:15 NodeBootstrapper] Connected to Node [id=us-east-1/i-4a4eba34, ip=107.21.169.42, hostname=default-4a4eba34, chefName=null]
+[INFO 20:12:15 NodeBootstrapper] Bootstrapping default-4a4eba34
+[DEBUG 20:12:16 NodeBootstrapper] Trying SSH into 184.72.205.115 again in 5 seconds
+[INFO 20:12:16 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-364db948, ip=107.21.168.64, hostname=default-364db948, chefName=null]
+[DEBUG 20:12:16 NodeBootstrapper] Connected to Node [id=us-east-1/i-644fbb1a, ip=54.234.49.118, hostname=default-644fbb1a, chefName=null]
+[INFO 20:12:16 NodeBootstrapper] Bootstrapping default-644fbb1a
+[DEBUG 20:12:16 NodeBootstrapper] Trying SSH into 23.22.213.51 again in 5 seconds
+[DEBUG 20:12:17 NodeBootstrapper] Trying SSH into 174.129.88.130 again in 5 seconds
+[INFO 20:12:17 NodesResource] Node [id=us-east-1/i-3c4cb842, ip=174.129.140.234, hostname=default-3c4cb842, chefName=ip-10-242-198-84.ec2.internal] created
+[INFO 20:12:17 NodesResource] Node [id=us-east-1/i-3a4cb844, ip=50.17.99.72, hostname=default-3a4cb844, chefName=ip-10-84-247-184.ec2.internal] created
+[DEBUG 20:12:17 NodeBootstrapper] Trying SSH into 174.129.131.31 again in 5 seconds
+[DEBUG 20:12:17 NodeBootstrapper] Trying SSH into 23.22.127.95 again in 5 seconds
+[DEBUG 20:12:17 NodeBootstrapper] Connected to Node [id=us-east-1/i-ba4ebac4, ip=50.17.156.5, hostname=default-ba4ebac4, chefName=null]
+[INFO 20:12:17 NodeBootstrapper] Bootstrapping default-ba4ebac4
+[DEBUG 20:12:17 NodeBootstrapper] Trying SSH into 54.242.107.165 again in 5 seconds
+[DEBUG 20:12:17 NodeBootstrapper] Trying SSH into 23.23.53.158 again in 5 seconds
+[DEBUG 20:12:17 NodeBootstrapper] Trying SSH into 204.236.210.190 again in 5 seconds
+[DEBUG 20:12:18 NodeBootstrapper] Trying SSH into 50.16.154.204 again in 5 seconds
+[DEBUG 20:12:18 NodeBootstrapper] Trying SSH into 23.20.112.16 again in 5 seconds
+[INFO 20:12:18 NodesResource] Node [id=us-east-1/i-364db948, ip=107.21.168.64, hostname=default-364db948, chefName=ip-10-212-65-126.ec2.internal] created
+[DEBUG 20:12:19 NodeBootstrapper] Trying SSH into 204.236.240.29 again in 5 seconds
+[INFO 20:12:19 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-384cb846, ip=184.73.89.52, hostname=default-384cb846, chefName=null]
+[DEBUG 20:12:19 AWSCloudProvider] Node [id=us-east-1/i-e64fbb98, ip=54.234.60.110, hostname=default-e64fbb98, chefName=null] created in 40869 miliseconds
+[DEBUG 20:12:19 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:19 AWSCloudProvider] Node [id=us-east-1/i-c64fbbb8, ip=50.17.120.236, hostname=default-c64fbbb8, chefName=null] created in 39096 miliseconds
+[DEBUG 20:12:19 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:20 NodeBootstrapper] Trying SSH into 184.72.189.137 again in 5 seconds
+[DEBUG 20:12:20 AWSCloudProvider] Node [id=us-east-1/i-4048bc3e, ip=54.242.94.168, hostname=default-4048bc3e, chefName=null] created in 29854 miliseconds
+[DEBUG 20:12:20 NodeBootstrapper] Waiting for SSH...
+[INFO 20:12:20 NodesResource] Node [id=us-east-1/i-384cb846, ip=184.73.89.52, hostname=default-384cb846, chefName=ip-10-12-103-26.ec2.internal] created
+[DEBUG 20:12:21 NodeBootstrapper] Trying SSH into 174.129.155.108 again in 5 seconds
+[DEBUG 20:12:22 NodeBootstrapper] Trying SSH into 174.129.88.130 again in 5 seconds
+[DEBUG 20:12:22 NodeBootstrapper] Trying SSH into 174.129.131.31 again in 5 seconds
+[DEBUG 20:12:22 NodeBootstrapper] Trying SSH into 23.22.127.95 again in 5 seconds
+[DEBUG 20:12:22 NodeBootstrapper] Trying SSH into 23.22.213.51 again in 5 seconds
+[DEBUG 20:12:23 NodeBootstrapper] Trying SSH into 54.242.107.165 again in 5 seconds
+[DEBUG 20:12:23 NodeBootstrapper] Trying SSH into 23.23.53.158 again in 5 seconds
+[DEBUG 20:12:23 NodeBootstrapper] Trying SSH into 204.236.210.190 again in 5 seconds
+[DEBUG 20:12:23 NodeBootstrapper] Trying SSH into 184.72.205.115 again in 5 seconds
+[DEBUG 20:12:23 NodeBootstrapper] Trying SSH into 50.16.154.204 again in 5 seconds
+[DEBUG 20:12:24 NodeBootstrapper] Trying SSH into 204.236.240.29 again in 5 seconds
+[DEBUG 20:12:24 NodeBootstrapper] Trying SSH into 23.20.112.16 again in 5 seconds
+[DEBUG 20:12:24 NodeBootstrapper] Trying SSH into 54.234.60.110 again in 5 seconds
+[DEBUG 20:12:24 NodeBootstrapper] Trying SSH into 50.17.120.236 again in 5 seconds
+[DEBUG 20:12:25 NodeBootstrapper] Trying SSH into 184.72.189.137 again in 5 seconds
+[DEBUG 20:12:25 NodeBootstrapper] Trying SSH into 54.242.94.168 again in 5 seconds
+[DEBUG 20:12:25 AWSCloudProvider] Node [id=us-east-1/i-0a48bc74, ip=50.19.164.187, hostname=default-0a48bc74, chefName=null] created in 30909 miliseconds
+[DEBUG 20:12:25 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:26 AWSCloudProvider] Node [id=us-east-1/i-e848bc96, ip=54.242.235.224, hostname=default-e848bc96, chefName=null] created in 29228 miliseconds
+[DEBUG 20:12:26 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:26 NodeBootstrapper] Trying SSH into 174.129.155.108 again in 5 seconds
+[DEBUG 20:12:27 NodeBootstrapper] Trying SSH into 23.22.127.95 again in 5 seconds
+[DEBUG 20:12:27 NodeBootstrapper] Trying SSH into 174.129.131.31 again in 5 seconds
+[DEBUG 20:12:28 NodeBootstrapper] Trying SSH into 174.129.88.130 again in 5 seconds
+[DEBUG 20:12:28 NodeBootstrapper] Trying SSH into 204.236.210.190 again in 5 seconds
+[DEBUG 20:12:28 NodeBootstrapper] Connected to Node [id=us-east-1/i-204eba5e, ip=23.22.213.51, hostname=default-204eba5e, chefName=null]
+[INFO 20:12:28 NodeBootstrapper] Bootstrapping default-204eba5e
+[DEBUG 20:12:29 NodeBootstrapper] Trying SSH into 50.16.154.204 again in 5 seconds
+[DEBUG 20:12:29 NodeBootstrapper] Connected to Node [id=us-east-1/i-704fbb0e, ip=54.242.107.165, hostname=default-704fbb0e, chefName=null]
+[INFO 20:12:29 NodeBootstrapper] Bootstrapping default-704fbb0e
+[DEBUG 20:12:29 NodeBootstrapper] Trying SSH into 23.23.53.158 again in 5 seconds
+[DEBUG 20:12:29 NodeBootstrapper] Connected to Node [id=us-east-1/i-cc4ebab2, ip=184.72.205.115, hostname=default-cc4ebab2, chefName=null]
+[INFO 20:12:29 NodeBootstrapper] Bootstrapping default-cc4ebab2
+[DEBUG 20:12:29 NodeBootstrapper] Trying SSH into 204.236.240.29 again in 5 seconds
+[DEBUG 20:12:29 NodeBootstrapper] Trying SSH into 23.20.112.16 again in 5 seconds
+[DEBUG 20:12:29 AWSCloudProvider] Node [id=us-east-1/i-1a48bc64, ip=23.20.144.151, hostname=default-1a48bc64, chefName=null] created in 36978 miliseconds
+[DEBUG 20:12:29 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:29 NodeBootstrapper] Trying SSH into 54.234.60.110 again in 5 seconds
+[DEBUG 20:12:30 NodeBootstrapper] Trying SSH into 50.17.120.236 again in 5 seconds
+[DEBUG 20:12:30 NodeBootstrapper] Trying SSH into 50.19.164.187 again in 5 seconds
+[DEBUG 20:12:30 NodeBootstrapper] Trying SSH into 54.242.94.168 again in 5 seconds
+[DEBUG 20:12:30 NodeBootstrapper] Trying SSH into 184.72.189.137 again in 5 seconds
+[DEBUG 20:12:31 NodeBootstrapper] Trying SSH into 54.242.235.224 again in 5 seconds
+[DEBUG 20:12:31 AWSCloudProvider] Node [id=us-east-1/i-d648bca8, ip=54.234.37.187, hostname=default-d648bca8, chefName=null] created in 32642 miliseconds
+[DEBUG 20:12:31 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:31 NodeBootstrapper] Trying SSH into 174.129.155.108 again in 5 seconds
+[DEBUG 20:12:32 AWSCloudProvider] Node [id=us-east-1/i-cc48bcb2, ip=23.20.202.123, hostname=default-cc48bcb2, chefName=null] created in 31378 miliseconds
+[DEBUG 20:12:32 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:33 NodeBootstrapper] Trying SSH into 23.22.127.95 again in 5 seconds
+[DEBUG 20:12:33 NodeBootstrapper] Connected to Node [id=us-east-1/i-1e4fbb60, ip=174.129.131.31, hostname=default-1e4fbb60, chefName=null]
+[INFO 20:12:33 NodeBootstrapper] Bootstrapping default-1e4fbb60
+[DEBUG 20:12:33 NodeBootstrapper] Trying SSH into 23.20.144.151 again in 5 seconds
+[DEBUG 20:12:34 AWSCloudProvider] Node [id=us-east-1/i-8248bcfc, ip=50.16.182.151, hostname=default-8248bcfc, chefName=null] created in 29182 miliseconds
+[DEBUG 20:12:34 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:34 AWSCloudProvider] Node [id=us-east-1/i-8c48bcf2, ip=54.234.22.115, hostname=default-8c48bcf2, chefName=null] created in 31779 miliseconds
+[DEBUG 20:12:34 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:34 AWSCloudProvider] Node [id=us-east-1/i-004eba7e, ip=184.73.74.12, hostname=default-004eba7e, chefName=null] created in 77796 miliseconds
+[DEBUG 20:12:34 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:34 NodeBootstrapper] Connected to Node [id=us-east-1/i-824ebafc, ip=174.129.88.130, hostname=default-824ebafc, chefName=null]
+[INFO 20:12:34 NodeBootstrapper] Bootstrapping default-824ebafc
+[DEBUG 20:12:34 NodeBootstrapper] Trying SSH into 204.236.210.190 again in 5 seconds
+[DEBUG 20:12:35 NodeBootstrapper] Trying SSH into 54.234.60.110 again in 5 seconds
+[DEBUG 20:12:35 NodeBootstrapper] Trying SSH into 23.20.112.16 again in 5 seconds
+[DEBUG 20:12:35 NodeBootstrapper] Trying SSH into 50.17.120.236 again in 5 seconds
+[DEBUG 20:12:35 NodeBootstrapper] Trying SSH into 50.16.154.204 again in 5 seconds
+[DEBUG 20:12:35 NodeBootstrapper] Connected to Node [id=us-east-1/i-544fbb2a, ip=23.23.53.158, hostname=default-544fbb2a, chefName=null]
+[INFO 20:12:35 NodeBootstrapper] Bootstrapping default-544fbb2a
+[DEBUG 20:12:35 NodeBootstrapper] Trying SSH into 54.234.37.187 again in 5 seconds
+[DEBUG 20:12:35 NodeBootstrapper] Trying SSH into 50.19.164.187 again in 5 seconds
+[DEBUG 20:12:35 NodeBootstrapper] Trying SSH into 204.236.240.29 again in 5 seconds
+[DEBUG 20:12:36 NodeBootstrapper] Trying SSH into 54.242.94.168 again in 5 seconds
+[DEBUG 20:12:36 NodeBootstrapper] Trying SSH into 54.242.235.224 again in 5 seconds
+[DEBUG 20:12:37 NodeBootstrapper] Connected to Node [id=us-east-1/i-804fbbfe, ip=184.72.189.137, hostname=default-804fbbfe, chefName=null]
+[INFO 20:12:37 NodeBootstrapper] Bootstrapping default-804fbbfe
+[DEBUG 20:12:37 NodeBootstrapper] Trying SSH into 23.20.202.123 again in 5 seconds
+[DEBUG 20:12:37 AWSCloudProvider] Node [id=us-east-1/i-6e49bd10, ip=23.20.80.146, hostname=default-6e49bd10, chefName=null] created in 30552 miliseconds
+[DEBUG 20:12:37 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:37 AWSCloudProvider] Node [id=us-east-1/i-5e49bd20, ip=107.22.9.199, hostname=default-5e49bd20, chefName=null] created in 29064 miliseconds
+[DEBUG 20:12:37 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:38 NodeBootstrapper] Trying SSH into 23.22.127.95 again in 5 seconds
+[DEBUG 20:12:38 NodeBootstrapper] Trying SSH into 174.129.155.108 again in 5 seconds
+[DEBUG 20:12:39 NodeBootstrapper] Trying SSH into 50.16.182.151 again in 5 seconds
+[DEBUG 20:12:39 NodeBootstrapper] Trying SSH into 23.20.144.151 again in 5 seconds
+[DEBUG 20:12:39 NodeBootstrapper] Trying SSH into 54.234.22.115 again in 5 seconds
+[DEBUG 20:12:39 NodeBootstrapper] Trying SSH into 184.73.74.12 again in 5 seconds
+[DEBUG 20:12:40 NodeBootstrapper] Trying SSH into 54.234.60.110 again in 5 seconds
+[DEBUG 20:12:40 NodeBootstrapper] Trying SSH into 23.20.112.16 again in 5 seconds
+[DEBUG 20:12:40 NodeBootstrapper] Trying SSH into 54.234.37.187 again in 5 seconds
+[DEBUG 20:12:41 NodeBootstrapper] Connected to Node [id=us-east-1/i-f44eba8a, ip=204.236.210.190, hostname=default-f44eba8a, chefName=null]
+[INFO 20:12:41 NodeBootstrapper] Bootstrapping default-f44eba8a
+[DEBUG 20:12:41 NodeBootstrapper] Trying SSH into 50.19.164.187 again in 5 seconds
+[DEBUG 20:12:41 NodeBootstrapper] Trying SSH into 54.242.94.168 again in 5 seconds
+[DEBUG 20:12:41 NodeBootstrapper] Connected to Node [id=us-east-1/i-2c4fbb52, ip=50.16.154.204, hostname=default-2c4fbb52, chefName=null]
+[INFO 20:12:41 NodeBootstrapper] Bootstrapping default-2c4fbb52
+[DEBUG 20:12:41 NodeBootstrapper] Trying SSH into 54.242.235.224 again in 5 seconds
+[DEBUG 20:12:41 NodeBootstrapper] Trying SSH into 50.17.120.236 again in 5 seconds
+[DEBUG 20:12:42 NodeBootstrapper] Connected to Node [id=us-east-1/i-aa4fbbd4, ip=204.236.240.29, hostname=default-aa4fbbd4, chefName=null]
+[INFO 20:12:42 NodeBootstrapper] Bootstrapping default-aa4fbbd4
+[DEBUG 20:12:42 NodeBootstrapper] Trying SSH into 23.20.202.123 again in 5 seconds
+[DEBUG 20:12:42 NodeBootstrapper] Trying SSH into 23.20.80.146 again in 5 seconds
+[DEBUG 20:12:42 NodeBootstrapper] Trying SSH into 107.22.9.199 again in 5 seconds
+[DEBUG 20:12:43 AWSCloudProvider] Node [id=us-east-1/i-3649bd48, ip=107.22.84.122, hostname=default-3649bd48, chefName=null] created in 31071 miliseconds
+[DEBUG 20:12:43 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:44 AWSCloudProvider] Node [id=us-east-1/i-3049bd4e, ip=54.234.16.102, hostname=default-3049bd4e, chefName=null] created in 29577 miliseconds
+[DEBUG 20:12:44 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:44 NodeBootstrapper] Trying SSH into 23.20.144.151 again in 5 seconds
+[DEBUG 20:12:44 NodeBootstrapper] Trying SSH into 184.73.74.12 again in 5 seconds
+[DEBUG 20:12:44 NodeBootstrapper] Trying SSH into 54.234.22.115 again in 5 seconds
+[DEBUG 20:12:44 NodeBootstrapper] Trying SSH into 23.22.127.95 again in 5 seconds
+[DEBUG 20:12:44 NodeBootstrapper] Connected to Node [id=us-east-1/i-0a4fbb74, ip=174.129.155.108, hostname=default-0a4fbb74, chefName=null]
+[INFO 20:12:44 NodeBootstrapper] Bootstrapping default-0a4fbb74
+[DEBUG 20:12:45 NodeBootstrapper] Trying SSH into 50.16.182.151 again in 5 seconds
+[DEBUG 20:12:45 NodeBootstrapper] Trying SSH into 54.234.60.110 again in 5 seconds
+[DEBUG 20:12:46 NodeBootstrapper] Trying SSH into 54.234.37.187 again in 5 seconds
+[DEBUG 20:12:46 NodeBootstrapper] Trying SSH into 50.19.164.187 again in 5 seconds
+[DEBUG 20:12:46 AWSCloudProvider] Node [id=us-east-1/i-4a49bd34, ip=50.16.146.67, hostname=default-4a49bd34, chefName=null] created in 35766 miliseconds
+[DEBUG 20:12:46 NodeBootstrapper] Waiting for SSH...
+[DEBUG 20:12:46 NodeBootstrapper] Connected to Node [id=us-east-1/i-984fbbe6, ip=23.20.112.16, hostname=default-984fbbe6, chefName=null]
+[INFO 20:12:46 NodeBootstrapper] Bootstrapping default-984fbbe6
+[DEBUG 20:12:47 NodeBootstrapper] Trying SSH into 54.242.235.224 again in 5 seconds
+[DEBUG 20:12:47 NodeBootstrapper] Trying SSH into 23.20.202.123 again in 5 seconds
+[DEBUG 20:12:47 NodeBootstrapper] Connected to Node [id=us-east-1/i-4048bc3e, ip=54.242.94.168, hostname=default-4048bc3e, chefName=null]
+[INFO 20:12:47 NodeBootstrapper] Bootstrapping default-4048bc3e
+[DEBUG 20:12:47 NodeBootstrapper] Connected to Node [id=us-east-1/i-c64fbbb8, ip=50.17.120.236, hostname=default-c64fbbb8, chefName=null]
+[INFO 20:12:47 NodeBootstrapper] Bootstrapping default-c64fbbb8
+[DEBUG 20:12:48 NodeBootstrapper] Trying SSH into 107.22.9.199 again in 5 seconds
+[DEBUG 20:12:48 NodeBootstrapper] Trying SSH into 107.22.84.122 again in 5 seconds
+[DEBUG 20:12:49 NodeBootstrapper] Trying SSH into 54.234.16.102 again in 5 seconds
+[DEBUG 20:12:49 NodeBootstrapper] Trying SSH into 23.20.80.146 again in 5 seconds
+[DEBUG 20:12:49 NodeBootstrapper] Trying SSH into 184.73.74.12 again in 5 seconds
+[DEBUG 20:12:49 NodeBootstrapper] Trying SSH into 54.234.22.115 again in 5 seconds
+[DEBUG 20:12:50 NodeBootstrapper] Trying SSH into 50.16.182.151 again in 5 seconds
+[DEBUG 20:12:51 NodeBootstrapper] Connected to Node [id=us-east-1/i-ba4fbbc4, ip=23.22.127.95, hostname=default-ba4fbbc4, chefName=null]
+[INFO 20:12:51 NodeBootstrapper] Bootstrapping default-ba4fbbc4
+[DEBUG 20:12:51 NodeBootstrapper] Connected to Node [id=us-east-1/i-1a48bc64, ip=23.20.144.151, hostname=default-1a48bc64, chefName=null]
+[INFO 20:12:51 NodeBootstrapper] Bootstrapping default-1a48bc64
+[DEBUG 20:12:51 NodeBootstrapper] Trying SSH into 50.16.146.67 again in 5 seconds
+[DEBUG 20:12:51 NodeBootstrapper] Connected to Node [id=us-east-1/i-e64fbb98, ip=54.234.60.110, hostname=default-e64fbb98, chefName=null]
+[INFO 20:12:51 NodeBootstrapper] Bootstrapping default-e64fbb98
+[DEBUG 20:12:52 NodeBootstrapper] Connected to Node [id=us-east-1/i-0a48bc74, ip=50.19.164.187, hostname=default-0a48bc74, chefName=null]
+[INFO 20:12:52 NodeBootstrapper] Bootstrapping default-0a48bc74
+[DEBUG 20:12:52 NodeBootstrapper] Trying SSH into 54.234.37.187 again in 5 seconds
+[DEBUG 20:12:53 NodeBootstrapper] Trying SSH into 107.22.9.199 again in 5 seconds
+[DEBUG 20:12:53 NodeBootstrapper] Connected to Node [id=us-east-1/i-e848bc96, ip=54.242.235.224, hostname=default-e848bc96, chefName=null]
+[INFO 20:12:53 NodeBootstrapper] Bootstrapping default-e848bc96
+[DEBUG 20:12:54 NodeBootstrapper] Trying SSH into 23.20.202.123 again in 5 seconds
+[DEBUG 20:12:54 NodeBootstrapper] Trying SSH into 23.20.80.146 again in 5 seconds
+[DEBUG 20:12:55 NodeBootstrapper] Trying SSH into 107.22.84.122 again in 5 seconds
+[DEBUG 20:12:55 NodeBootstrapper] Trying SSH into 54.234.22.115 again in 5 seconds
+[DEBUG 20:12:55 NodeBootstrapper] Trying SSH into 54.234.16.102 again in 5 seconds
+[DEBUG 20:12:55 NodeBootstrapper] Trying SSH into 50.16.182.151 again in 5 seconds
+[DEBUG 20:12:56 NodeBootstrapper] Trying SSH into 184.73.74.12 again in 5 seconds
+[DEBUG 20:12:58 NodeBootstrapper] Trying SSH into 107.22.9.199 again in 5 seconds
+[DEBUG 20:12:58 NodeBootstrapper] Trying SSH into 50.16.146.67 again in 5 seconds
+[DEBUG 20:12:58 NodeBootstrapper] Connected to Node [id=us-east-1/i-d648bca8, ip=54.234.37.187, hostname=default-d648bca8, chefName=null]
+[INFO 20:12:58 NodeBootstrapper] Bootstrapping default-d648bca8
+[DEBUG 20:12:59 NodeBootstrapper] Trying SSH into 23.20.80.146 again in 5 seconds
+[DEBUG 20:12:00 NodeBootstrapper] Trying SSH into 107.22.84.122 again in 5 seconds
+[DEBUG 20:12:00 NodeBootstrapper] Connected to Node [id=us-east-1/i-cc48bcb2, ip=23.20.202.123, hostname=default-cc48bcb2, chefName=null]
+[INFO 20:12:00 NodeBootstrapper] Bootstrapping default-cc48bcb2
+[DEBUG 20:12:00 NodeBootstrapper] Trying SSH into 54.234.16.102 again in 5 seconds
+[DEBUG 20:12:01 NodeBootstrapper] Trying SSH into 54.234.22.115 again in 5 seconds
+[DEBUG 20:12:02 NodeBootstrapper] Connected to Node [id=us-east-1/i-8248bcfc, ip=50.16.182.151, hostname=default-8248bcfc, chefName=null]
+[INFO 20:12:02 NodeBootstrapper] Bootstrapping default-8248bcfc
+[DEBUG 20:12:02 NodeBootstrapper] Connected to Node [id=us-east-1/i-004eba7e, ip=184.73.74.12, hostname=default-004eba7e, chefName=null]
+[INFO 20:12:02 NodeBootstrapper] Bootstrapping default-004eba7e
+[DEBUG 20:12:03 NodeBootstrapper] Trying SSH into 50.16.146.67 again in 5 seconds
+[DEBUG 20:12:05 NodeBootstrapper] Trying SSH into 107.22.9.199 again in 5 seconds
+[DEBUG 20:12:05 NodeBootstrapper] Trying SSH into 23.20.80.146 again in 5 seconds
+[DEBUG 20:12:05 NodeBootstrapper] Trying SSH into 107.22.84.122 again in 5 seconds
+[DEBUG 20:12:06 NodeBootstrapper] Trying SSH into 54.234.16.102 again in 5 seconds
+[DEBUG 20:12:07 NodeBootstrapper] Connected to Node [id=us-east-1/i-8c48bcf2, ip=54.234.22.115, hostname=default-8c48bcf2, chefName=null]
+[INFO 20:12:07 NodeBootstrapper] Bootstrapping default-8c48bcf2
+[DEBUG 20:12:10 NodeBootstrapper] Trying SSH into 50.16.146.67 again in 5 seconds
+[DEBUG 20:12:11 NodeBootstrapper] Connected to Node [id=us-east-1/i-5e49bd20, ip=107.22.9.199, hostname=default-5e49bd20, chefName=null]
+[INFO 20:12:11 NodeBootstrapper] Bootstrapping default-5e49bd20
+[DEBUG 20:12:11 NodeBootstrapper] Trying SSH into 54.234.16.102 again in 5 seconds
+[DEBUG 20:12:11 NodeBootstrapper] Connected to Node [id=us-east-1/i-6e49bd10, ip=23.20.80.146, hostname=default-6e49bd10, chefName=null]
+[INFO 20:12:11 NodeBootstrapper] Bootstrapping default-6e49bd10
+[DEBUG 20:12:11 NodeBootstrapper] Connected to Node [id=us-east-1/i-3649bd48, ip=107.22.84.122, hostname=default-3649bd48, chefName=null]
+[INFO 20:12:11 NodeBootstrapper] Bootstrapping default-3649bd48
+[DEBUG 20:12:16 NodeBootstrapper] Connected to Node [id=us-east-1/i-4a49bd34, ip=50.16.146.67, hostname=default-4a49bd34, chefName=null]
+[INFO 20:12:16 NodeBootstrapper] Bootstrapping default-4a49bd34
+[DEBUG 20:12:17 NodeBootstrapper] Connected to Node [id=us-east-1/i-3049bd4e, ip=54.234.16.102, hostname=default-3049bd4e, chefName=null]
+[INFO 20:12:17 NodeBootstrapper] Bootstrapping default-3049bd4e
+[INFO 20:12:03 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-064db978, ip=184.72.161.119, hostname=default-064db978, chefName=null]
+[INFO 20:12:04 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-3e4cb840, ip=23.21.29.130, hostname=default-3e4cb840, chefName=null]
+[INFO 20:12:05 NodesResource] Node [id=us-east-1/i-064db978, ip=184.72.161.119, hostname=default-064db978, chefName=ip-10-116-117-81.ec2.internal] created
+[INFO 20:12:06 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-8e4cb8f0, ip=23.23.38.116, hostname=default-8e4cb8f0, chefName=null]
+[INFO 20:12:06 NodesResource] Node [id=us-east-1/i-3e4cb840, ip=23.21.29.130, hostname=default-3e4cb840, chefName=ip-10-32-106-201.ec2.internal] created
+[INFO 20:12:08 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-e04db99e, ip=23.20.125.59, hostname=null, chefName=null]
+[INFO 20:12:08 NodesResource] Node [id=us-east-1/i-8e4cb8f0, ip=23.23.38.116, hostname=default-8e4cb8f0, chefName=ip-10-101-55-216.ec2.internal] created
+[INFO 20:12:09 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-324cb84c, ip=54.234.18.215, hostname=default-324cb84c, chefName=null]
+[INFO 20:12:09 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-f04cb88e, ip=23.23.37.54, hostname=default-f04cb88e, chefName=null]
+[INFO 20:12:10 NodesResource] Node [id=us-east-1/i-e04db99e, ip=23.20.125.59, hostname=null, chefName=ip-10-243-41-159.ec2.internal] created
+[INFO 20:12:11 NodesResource] Node [id=us-east-1/i-324cb84c, ip=54.234.18.215, hostname=default-324cb84c, chefName=ip-10-113-21-227.ec2.internal] created
+[INFO 20:12:11 NodesResource] Node [id=us-east-1/i-f04cb88e, ip=23.23.37.54, hostname=default-f04cb88e, chefName=ip-10-32-146-202.ec2.internal] created
+[INFO 20:12:11 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-764eba08, ip=23.20.140.47, hostname=default-764eba08, chefName=null]
+[INFO 20:12:11 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-9c4db9e2, ip=54.242.3.79, hostname=default-9c4db9e2, chefName=null]
+[INFO 20:12:11 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-fc4db982, ip=50.19.160.23, hostname=default-fc4db982, chefName=null]
+[INFO 20:12:12 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-644fbb1a, ip=54.234.49.118, hostname=default-644fbb1a, chefName=null]
+[INFO 20:12:12 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-b24db9cc, ip=107.21.66.158, hostname=default-b24db9cc, chefName=null]
+[INFO 20:12:12 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-ba4ebac4, ip=50.17.156.5, hostname=default-ba4ebac4, chefName=null]
+[INFO 20:12:12 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-884db9f6, ip=23.22.182.212, hostname=default-884db9f6, chefName=null]
+[INFO 20:12:13 NodesResource] Node [id=us-east-1/i-fc4db982, ip=50.19.160.23, hostname=default-fc4db982, chefName=ip-10-144-147-200.ec2.internal] created
+[INFO 20:12:13 NodesResource] Node [id=us-east-1/i-9c4db9e2, ip=54.242.3.79, hostname=default-9c4db9e2, chefName=ip-10-10-215-3.ec2.internal] created
+[INFO 20:12:13 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-d84cb8a6, ip=23.20.234.160, hostname=default-d84cb8a6, chefName=null]
+[INFO 20:12:13 NodesResource] Node [id=us-east-1/i-764eba08, ip=23.20.140.47, hostname=default-764eba08, chefName=ip-10-12-131-193.ec2.internal] created
+[INFO 20:12:13 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-624eba1c, ip=23.22.77.21, hostname=default-624eba1c, chefName=null]
+[INFO 20:12:13 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-324eba4c, ip=54.242.65.110, hostname=default-324eba4c, chefName=null]
+[INFO 20:12:14 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-704fbb0e, ip=54.242.107.165, hostname=default-704fbb0e, chefName=null]
+[INFO 20:12:14 NodesResource] Node [id=us-east-1/i-644fbb1a, ip=54.234.49.118, hostname=default-644fbb1a, chefName=ip-10-242-83-198.ec2.internal] created
+[INFO 20:12:14 NodesResource] Node [id=us-east-1/i-b24db9cc, ip=107.21.66.158, hostname=default-b24db9cc, chefName=ip-10-40-103-111.ec2.internal] created
+[INFO 20:12:15 NodesResource] Node [id=us-east-1/i-884db9f6, ip=23.22.182.212, hostname=default-884db9f6, chefName=ip-10-62-87-20.ec2.internal] created
+[INFO 20:12:15 NodesResource] Node [id=us-east-1/i-ba4ebac4, ip=50.17.156.5, hostname=default-ba4ebac4, chefName=ip-10-84-207-140.ec2.internal] created
+[INFO 20:12:15 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-544fbb2a, ip=23.23.53.158, hostname=default-544fbb2a, chefName=null]
+[INFO 20:12:15 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-204eba5e, ip=23.22.213.51, hostname=default-204eba5e, chefName=null]
+[INFO 20:12:15 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-4a4eba34, ip=107.21.169.42, hostname=default-4a4eba34, chefName=null]
+[INFO 20:12:15 NodesResource] Node [id=us-east-1/i-d84cb8a6, ip=23.20.234.160, hostname=default-d84cb8a6, chefName=ip-10-39-87-39.ec2.internal] created
+[INFO 20:12:15 NodesResource] Node [id=us-east-1/i-324eba4c, ip=54.242.65.110, hostname=default-324eba4c, chefName=ip-10-82-207-227.ec2.internal] created
+[INFO 20:12:15 NodesResource] Node [id=us-east-1/i-624eba1c, ip=23.22.77.21, hostname=default-624eba1c, chefName=ip-10-12-9-123.ec2.internal] created
+[INFO 20:12:16 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-804fbbfe, ip=184.72.189.137, hostname=default-804fbbfe, chefName=null]
+[INFO 20:12:16 NodesResource] Node [id=us-east-1/i-704fbb0e, ip=54.242.107.165, hostname=default-704fbb0e, chefName=ip-10-116-226-37.ec2.internal] created
+[INFO 20:12:17 NodesResource] Node [id=us-east-1/i-544fbb2a, ip=23.23.53.158, hostname=default-544fbb2a, chefName=ip-10-62-67-164.ec2.internal] created
+[INFO 20:12:17 NodesResource] Node [id=us-east-1/i-4a4eba34, ip=107.21.169.42, hostname=default-4a4eba34, chefName=ip-10-12-107-15.ec2.internal] created
+[INFO 20:12:17 NodesResource] Node [id=us-east-1/i-204eba5e, ip=23.22.213.51, hostname=default-204eba5e, chefName=ip-10-62-66-114.ec2.internal] created
+[INFO 20:12:18 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-c64fbbb8, ip=50.17.120.236, hostname=default-c64fbbb8, chefName=null]
+[INFO 20:12:18 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-824ebafc, ip=174.129.88.130, hostname=default-824ebafc, chefName=null]
+[INFO 20:12:18 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-aa4fbbd4, ip=204.236.240.29, hostname=default-aa4fbbd4, chefName=null]
+[INFO 20:12:18 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-1e4fbb60, ip=174.129.131.31, hostname=default-1e4fbb60, chefName=null]
+[INFO 20:12:18 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-0a4fbb74, ip=174.129.155.108, hostname=default-0a4fbb74, chefName=null]
+[INFO 20:12:19 NodesResource] Node [id=us-east-1/i-804fbbfe, ip=184.72.189.137, hostname=default-804fbbfe, chefName=ip-10-242-234-5.ec2.internal] created
+[INFO 20:12:19 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-cc4ebab2, ip=184.72.205.115, hostname=default-cc4ebab2, chefName=null]
+[INFO 20:12:19 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-f44eba8a, ip=204.236.210.190, hostname=default-f44eba8a, chefName=null]
+[INFO 20:12:19 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-2c4fbb52, ip=50.16.154.204, hostname=default-2c4fbb52, chefName=null]
+[INFO 20:12:19 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-4048bc3e, ip=54.242.94.168, hostname=default-4048bc3e, chefName=null]
+[INFO 20:12:20 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-ba4fbbc4, ip=23.22.127.95, hostname=default-ba4fbbc4, chefName=null]
+[INFO 20:12:20 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-d648bca8, ip=54.234.37.187, hostname=default-d648bca8, chefName=null]
+[INFO 20:12:20 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-0a48bc74, ip=50.19.164.187, hostname=default-0a48bc74, chefName=null]
+[INFO 20:12:20 NodesResource] Node [id=us-east-1/i-c64fbbb8, ip=50.17.120.236, hostname=default-c64fbbb8, chefName=ip-10-62-121-133.ec2.internal] created
+[INFO 20:12:20 NodesResource] Node [id=us-east-1/i-824ebafc, ip=174.129.88.130, hostname=default-824ebafc, chefName=ip-10-60-5-200.ec2.internal] created
+[INFO 20:12:20 NodesResource] Node [id=us-east-1/i-1e4fbb60, ip=174.129.131.31, hostname=default-1e4fbb60, chefName=ip-10-80-171-118.ec2.internal] created
+[INFO 20:12:20 NodesResource] Node [id=us-east-1/i-0a4fbb74, ip=174.129.155.108, hostname=default-0a4fbb74, chefName=ip-10-77-14-220.ec2.internal] created
+[INFO 20:12:20 NodesResource] Node [id=us-east-1/i-aa4fbbd4, ip=204.236.240.29, hostname=default-aa4fbbd4, chefName=ip-10-35-85-218.ec2.internal] created
+[INFO 20:12:20 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-004eba7e, ip=184.73.74.12, hostname=default-004eba7e, chefName=null]
+[INFO 20:12:20 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-8248bcfc, ip=50.16.182.151, hostname=default-8248bcfc, chefName=null]
+[INFO 20:12:20 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-1a48bc64, ip=23.20.144.151, hostname=default-1a48bc64, chefName=null]
+[INFO 20:12:20 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-e64fbb98, ip=54.234.60.110, hostname=default-e64fbb98, chefName=null]
+[INFO 20:12:21 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-e848bc96, ip=54.242.235.224, hostname=default-e848bc96, chefName=null]
+[INFO 20:12:21 NodesResource] Node [id=us-east-1/i-cc4ebab2, ip=184.72.205.115, hostname=default-cc4ebab2, chefName=ip-10-144-11-234.ec2.internal] created
+[INFO 20:12:21 NodesResource] Node [id=us-east-1/i-f44eba8a, ip=204.236.210.190, hostname=default-f44eba8a, chefName=ip-10-40-103-43.ec2.internal] created
+[INFO 20:12:21 NodesResource] Node [id=us-east-1/i-2c4fbb52, ip=50.16.154.204, hostname=default-2c4fbb52, chefName=ip-10-40-25-134.ec2.internal] created
+[INFO 20:12:21 NodesResource] Node [id=us-east-1/i-4048bc3e, ip=54.242.94.168, hostname=default-4048bc3e, chefName=ip-10-10-213-7.ec2.internal] created
+[INFO 20:12:21 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-cc48bcb2, ip=23.20.202.123, hostname=default-cc48bcb2, chefName=null]
+[INFO 20:12:21 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-5e49bd20, ip=107.22.9.199, hostname=default-5e49bd20, chefName=null]
+[INFO 20:12:22 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-6e49bd10, ip=23.20.80.146, hostname=default-6e49bd10, chefName=null]
+[INFO 20:12:22 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-4a49bd34, ip=50.16.146.67, hostname=default-4a49bd34, chefName=null]
+[INFO 20:12:22 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-8c48bcf2, ip=54.234.22.115, hostname=default-8c48bcf2, chefName=null]
+[INFO 20:12:22 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-3049bd4e, ip=54.234.16.102, hostname=default-3049bd4e, chefName=null]
+[INFO 20:12:22 NodeBootstrapper] Bootstrap completed atNode [id=us-east-1/i-3649bd48, ip=107.22.84.122, hostname=default-3649bd48, chefName=null]
+[INFO 20:12:22 NodesResource] Node [id=us-east-1/i-d648bca8, ip=54.234.37.187, hostname=default-d648bca8, chefName=ip-10-118-122-178.ec2.internal] created
+[INFO 20:12:22 NodesResource] Node [id=us-east-1/i-ba4fbbc4, ip=23.22.127.95, hostname=default-ba4fbbc4, chefName=ip-10-32-14-38.ec2.internal] created
+[INFO 20:12:22 NodesResource] Node [id=us-east-1/i-0a48bc74, ip=50.19.164.187, hostname=default-0a48bc74, chefName=ip-10-114-126-114.ec2.internal] created
+[INFO 20:12:22 NodesResource] Node [id=us-east-1/i-1a48bc64, ip=23.20.144.151, hostname=default-1a48bc64, chefName=ip-10-12-13-87.ec2.internal] created
+[INFO 20:12:23 NodesResource] Node [id=us-east-1/i-8248bcfc, ip=50.16.182.151, hostname=default-8248bcfc, chefName=ip-10-10-222-117.ec2.internal] created
+[INFO 20:12:23 NodesResource] Node [id=us-east-1/i-004eba7e, ip=184.73.74.12, hostname=default-004eba7e, chefName=ip-10-10-189-22.ec2.internal] created
+[INFO 20:12:23 NodesResource] Node [id=us-east-1/i-e64fbb98, ip=54.234.60.110, hostname=default-e64fbb98, chefName=ip-10-144-14-245.ec2.internal] created
+[INFO 20:12:23 NodesResource] Node [id=us-east-1/i-e848bc96, ip=54.242.235.224, hostname=default-e848bc96, chefName=ip-10-212-94-111.ec2.internal] created
+[INFO 20:12:23 NodesResource] Node [id=us-east-1/i-cc48bcb2, ip=23.20.202.123, hostname=default-cc48bcb2, chefName=ip-10-60-55-40.ec2.internal] created
+[INFO 20:12:24 NodesResource] Node [id=us-east-1/i-5e49bd20, ip=107.22.9.199, hostname=default-5e49bd20, chefName=ip-10-242-234-150.ec2.internal] created
+[INFO 20:12:24 NodesResource] Node [id=us-east-1/i-6e49bd10, ip=23.20.80.146, hostname=default-6e49bd10, chefName=ip-10-62-62-236.ec2.internal] created
+[INFO 20:12:24 NodesResource] Node [id=us-east-1/i-8c48bcf2, ip=54.234.22.115, hostname=default-8c48bcf2, chefName=ip-10-36-81-66.ec2.internal] created
+[INFO 20:12:24 NodesResource] Node [id=us-east-1/i-3049bd4e, ip=54.234.16.102, hostname=default-3049bd4e, chefName=ip-10-80-251-173.ec2.internal] created
+[INFO 20:12:24 NodesResource] Node [id=us-east-1/i-4a49bd34, ip=50.16.146.67, hostname=default-4a49bd34, chefName=ip-10-83-94-33.ec2.internal] created
+[INFO 20:12:24 NodesResource] Node [id=us-east-1/i-3649bd48, ip=107.22.84.122, hostname=default-3649bd48, chefName=ip-10-116-78-200.ec2.internal] created
+this.session.isConnected
