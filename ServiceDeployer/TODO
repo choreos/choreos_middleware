@@ -44,6 +44,8 @@ We are still relying on the client to respect the limit
 * NPM must work even if people create and destroy nodes directly in the cloud gateway
 e.g..: using our clean_aws script
 
+* If it is not possible to create the node, log with the trouble cause
+
 =============================
 
 Service Deployer ToDo list

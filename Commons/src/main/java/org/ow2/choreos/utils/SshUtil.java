@@ -47,13 +47,16 @@ public class SshUtil {
             // Once upon a time, an old session caused a lot of trouble...
             session = getSession();
             session.connect(CONNECTION_TIMEOUT);
+            
+            // TODO executar um comando simples, tipo ls, pra ver se conectou de verdade MESMO
+            
         } catch (JSchException e) {
             return false;
         }
 
         // We can keep a successful session
         this.session = session;
-        return true;
+        return this.session.isConnected();
     }
 
     public String runCommand(String command) throws JSchException {
@@ -96,7 +99,8 @@ public class SshUtil {
             channel.setOutputStream(new StringBufferOutputStream(sb));
 
             channel.connect();
-
+            // channel.connect(CONNECTION_TIMEOUT * 100); // TODO depois do experimento, pensar oq fazer aqui
+            
             while (!channel.isClosed()) {
                 try {
 					Thread.sleep(10);

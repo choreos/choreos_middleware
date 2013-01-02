@@ -66,7 +66,7 @@ public class NodeUpgrader {
     	if (logFile == null || logFile.isEmpty()) {
     		logFile = "/tmp/chef-client.log";
     	}
-    	final String CHEF_CLIENT_COMMAND = "sudo chef-client --logfile " + logFile + "; sudo -s 'echo *******exit status:****** $? >>" + logFile + "'";
+    	final String CHEF_CLIENT_COMMAND = "sudo -s 'chef-client --logfile " + logFile + "; echo *******exit status:****** $? >>" + logFile + "'";
     	final int MAX_TRIALS = 5;
     	final int SLEEPING_TIME = 5000;
     	int trials = 0;

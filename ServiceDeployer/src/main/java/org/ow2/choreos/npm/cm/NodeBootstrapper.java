@@ -25,7 +25,7 @@ public class NodeBootstrapper {
 	
     private static final String CHEF_REPO = Configuration.get("CHEF_REPO");
     private static final String CHEF_CONFIG_FILE = Configuration.get("CHEF_CONFIG_FILE");
-    private static final int MAX_TIME_TO_CONNECT = 300000;
+    private static final int MAX_TIME_TO_CONNECT = 250000;
     
     private Node node;
     
@@ -66,18 +66,18 @@ public class NodeBootstrapper {
     }
 
 	private void waitForSSHAccess() throws NodeNotAccessibleException {
-		
-		logger.debug("Waiting for SSH...");
-        SshUtil ssh = new SshUtil(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile());
         
         final int DELAY = 5000;
         Timer timer = new Timer(MAX_TIME_TO_CONNECT, DELAY);
         Thread t = new Thread(timer);
         t.start();
         
+        logger.debug("Waiting for SSH...");
+        SshUtil ssh = new SshUtil(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile());
         while (!ssh.isAccessible()) {
 
             if (timer.timeouted()) {
+            	logger.warn("VM not accessible!");
             	throw new NodeNotAccessibleException(this.node.getId());
             }
             
@@ -85,6 +85,7 @@ public class NodeBootstrapper {
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
+            	logger.error("Exception at sleeping!", e);
             }
         }
         ssh.disconnect();
