@@ -21,7 +21,7 @@ public class ChefScriptsTest {
     	ChefScripts cs = new ChefScripts(config);
     	
         String command = cs.getKnifeBootstrap(key, ip, user);
-        String expected = "knife bootstrap 127.0.0.1 -x myUser -i " + key + " --sudo -c " + config;
+        String expected = "knife bootstrap 127.0.0.1 -x myUser -i " + key + " --no-host-key-verify --sudo -c " + config;
         assertEquals(expected.trim(), command.trim());
 
         command = cs.getKnifeRunListAdd(hostname, cookbook, recipe);
