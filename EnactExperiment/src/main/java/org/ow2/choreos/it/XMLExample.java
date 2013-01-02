@@ -61,6 +61,7 @@ public class XMLExample {
 		*/
 	};
 
+	@SuppressWarnings("unused")
 	private static ChorServiceSpec wsSpec(String name, int port) {
 		
 		ChorServiceSpec spec = new ChorServiceSpec();
@@ -127,7 +128,7 @@ public class XMLExample {
 			serviceDependency.setServiceName(supplier);
 			serviceDependency.setServiceRole(supplier);			
 			ChorServiceSpec clientSpec = specsMap.get(client);
-			clientSpec.getDependences().add(serviceDependency);
+			clientSpec.getDependencies().add(serviceDependency);
 		}
 	}
 	
@@ -143,7 +144,7 @@ public class XMLExample {
 		System.out.println(chorSpec);
 		
 		EnactmentEngine ee = new EnactEngClient("http://localhost:9102/enactmentengine");
-		ee.createChoreography(chorSpec);
+		ee.createChoreography(chorSpec); // here we invoke, and after we get the XML with WireShark
 	}
 
 }
