@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ow2.choreos.enactment.datamodel.ChorSpec;
+import org.ow2.choreos.chors.datamodel.ChorSpec;
 
 /**
  * Before run the experiment:

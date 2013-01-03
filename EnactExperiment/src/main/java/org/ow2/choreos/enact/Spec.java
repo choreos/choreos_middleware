@@ -1,8 +1,8 @@
 package org.ow2.choreos.enact;
 
-import org.ow2.choreos.enactment.datamodel.ChorServiceSpec;
-import org.ow2.choreos.enactment.datamodel.ChorSpec;
-import org.ow2.choreos.enactment.datamodel.ServiceDependency;
+import org.ow2.choreos.chors.datamodel.ChorServiceSpec;
+import org.ow2.choreos.chors.datamodel.ChorSpec;
+import org.ow2.choreos.chors.datamodel.ServiceDependency;
 import org.ow2.choreos.servicedeployer.datamodel.ArtifactType;
 
 public class Spec {

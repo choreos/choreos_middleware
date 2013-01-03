@@ -3,12 +3,12 @@ package org.ow2.choreos.enact;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ow2.choreos.enactment.ChoreographyNotFoundException;
-import org.ow2.choreos.enactment.EnactmentEngine;
-import org.ow2.choreos.enactment.EnactmentException;
-import org.ow2.choreos.enactment.client.EnactEngClient;
-import org.ow2.choreos.enactment.datamodel.ChorSpec;
-import org.ow2.choreos.enactment.datamodel.Choreography;
+import org.ow2.choreos.chors.ChoreographyDeployer;
+import org.ow2.choreos.chors.ChoreographyNotFoundException;
+import org.ow2.choreos.chors.EnactmentException;
+import org.ow2.choreos.chors.client.ChorDeployerClient;
+import org.ow2.choreos.chors.datamodel.ChorSpec;
+import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.servicedeployer.datamodel.Service;
 
 public class Enacter implements Runnable {
@@ -35,7 +35,7 @@ public class Enacter implements Runnable {
 		System.out.println(Utils.getTimeStamp() + "Enacting choreography #" + idx);
 		
 		long t0 = System.currentTimeMillis();
-		EnactmentEngine enacter = new EnactEngClient(ENACTMENT_ENGINE_HOST);
+		ChoreographyDeployer enacter = new ChorDeployerClient(ENACTMENT_ENGINE_HOST);
 		String chorId = enacter.createChoreography(chorSpec);
 		Choreography chor = null;
 		try {

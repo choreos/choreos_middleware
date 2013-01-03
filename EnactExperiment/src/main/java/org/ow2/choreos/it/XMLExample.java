@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ow2.choreos.enactment.EnactmentEngine;
-import org.ow2.choreos.enactment.client.EnactEngClient;
-import org.ow2.choreos.enactment.datamodel.ChorServiceSpec;
-import org.ow2.choreos.enactment.datamodel.ChorSpec;
-import org.ow2.choreos.enactment.datamodel.ServiceDependency;
+import org.ow2.choreos.chors.ChoreographyDeployer;
+import org.ow2.choreos.chors.client.ChorDeployerClient;
+import org.ow2.choreos.chors.datamodel.ChorServiceSpec;
+import org.ow2.choreos.chors.datamodel.ChorSpec;
+import org.ow2.choreos.chors.datamodel.ServiceDependency;
 import org.ow2.choreos.servicedeployer.datamodel.ArtifactType;
 
 public class XMLExample {
@@ -143,7 +143,7 @@ public class XMLExample {
 
 		System.out.println(chorSpec);
 		
-		EnactmentEngine ee = new EnactEngClient("http://localhost:9102/enactmentengine");
+		ChoreographyDeployer ee = new ChorDeployerClient("http://localhost:9102/enactmentengine");
 		ee.createChoreography(chorSpec); // here we invoke, and after we get the XML with WireShark
 	}
 
