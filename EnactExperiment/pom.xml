@@ -33,7 +33,7 @@
     </dependency>
 	<dependency>
 		<groupId>org.ow2.choreos</groupId>
-		<artifactId>EnactmentEngine</artifactId> 
+		<artifactId>ChoreographyDeployer</artifactId> 
 		<version>0.0.1-SNAPSHOT</version>
 		<type>jar</type>
 		<exclusions>

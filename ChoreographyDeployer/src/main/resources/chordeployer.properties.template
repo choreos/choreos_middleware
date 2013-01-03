@@ -1,0 +1,3 @@
+CHOR_DEPLOYER_PORT=9102
+NODE_POOL_MANAGER_URI=http://localhost:9100/nodepoolmanager
+SERVICE_DEPLOYER_URI=http://localhost:9101/servicedeployer

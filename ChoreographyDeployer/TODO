@@ -1,0 +1,50 @@
+ChoreographyDeployer TODO list
+
+* EnactmentEngine tests should start NPMServer and ServiceDeployerServer,
+but this step is not working. Now, we have to start the servers before run tests.
+The problem is the way like the RecipeBuilder access the resources.
+
+* Use the ChorServiceSpec.owner attribute.
+For each available owner, the chordeployer.properties must have an 
+OWNER.NODE_POOL_MANAGER_URI and an OWNER.SERVICE_DEPLOYER_URI entries.
+So, the Enactment Engine will use this entries to deploy a service
+if the owner attributed is specified in the chor specification.
+If owner is not specified, the default Service Deployer is used, just as now.
+
+* If two or more services has the same "group" specification,
+they must be deployed on the same node.
+
+* Registry should use a database instead a static map.
+
+*** DONE ***
+
+* Finish GET /chors/{chorID}/enactment
+
+* Maybe it would be better map the 4 rest operations (in ChorResource) to 4 methods in the EnactmentEngine interface
+In this way, the ChorResource class would be more concerned with REST, and know less about the deatils of operation execution
+
+* Model improvement: ChorSpec has ChorServices; Choreography extends ChorSpec and has attributes id and deployed Services.
+
+* Performance bottleneck (HIGH): Update only nodes from a specific choreography.
+Now we have POST nodepoolmanager/nodes/{id}/upgrade operation
+
+* Performance bottleneck: (LOW) Replace WSClient (concurrency problems) by javax (as in futuremarket project).
+It was actually not as in the futuremarket, but iw was indeed using only javax classes (manually building the soap envelope).
+
+* Do not pass context to not deployed services
+
+* Choreography should contain a ChorSpec, and not TO BE a ChorSpec (inheritance)
+
+* Service should contain a ServiceSpec. Not repeated attributes!
+
+* Generate XSD
+see datamodel.xml package
+
+* EE is setting the service.name.
+But this name will be different at the ServiceDeployer registry!
+How to handle this?
+We solved this issue by changing the data model
+Now, serviceSpec has a name attribute as well
+
+* Inovocations to /nodepoolmanager/nodes/{id}/upgrade must be concurrent
+
