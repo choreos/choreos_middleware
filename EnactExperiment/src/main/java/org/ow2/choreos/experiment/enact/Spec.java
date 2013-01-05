@@ -1,4 +1,4 @@
-package org.ow2.choreos.enact;
+package org.ow2.choreos.experiment.enact;
 
 import org.ow2.choreos.chors.datamodel.ChorServiceSpec;
 import org.ow2.choreos.chors.datamodel.ChorSpec;

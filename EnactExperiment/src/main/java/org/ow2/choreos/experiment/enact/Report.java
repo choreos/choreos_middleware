@@ -1,4 +1,4 @@
-package org.ow2.choreos.enact;
+package org.ow2.choreos.experiment.enact;
 
 import java.io.File;
 import java.io.FileWriter;

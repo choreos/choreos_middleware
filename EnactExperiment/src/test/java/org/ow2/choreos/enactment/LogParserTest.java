@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.ow2.choreos.enact.LogParser;
+import org.ow2.choreos.experiment.enact.LogParser;
 
 public class LogParserTest {
 
