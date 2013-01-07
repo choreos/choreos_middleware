@@ -9,11 +9,11 @@ import org.ow2.choreos.chors.EnactmentException;
 import org.ow2.choreos.chors.client.ChorDeployerClient;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.servicedeployer.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.Service;
 
 public class Enacter implements Runnable {
 	
-	private static final String ENACTMENT_ENGINE_HOST = "http://localhost:9102/enactmentengine";
+	private static final String ENACTMENT_ENGINE_HOST = "http://localhost:9102/choreographydeployer";
 	private static final String TRAVEL_AGENCY = "travelagency";	
 
 	ChorSpec chorSpec; // input

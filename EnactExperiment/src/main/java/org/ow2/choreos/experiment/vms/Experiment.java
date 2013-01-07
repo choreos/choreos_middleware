@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.npm.cloudprovider.CloudProviderFactory.CloudProviderType;
+import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory.CloudProviderType;
 import org.ow2.choreos.utils.LogConfigurator;
 
 public class Experiment {

@@ -3,7 +3,7 @@ package org.ow2.choreos.chors.datamodel;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 
 /**
  * The specification of a service to be deployed within a choreography.

@@ -13,10 +13,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.npm.cloudprovider.CloudProvider;
-import org.ow2.choreos.npm.cloudprovider.CloudProviderFactory;
-import org.ow2.choreos.npm.cloudprovider.CloudProviderFactory.CloudProviderType;
-import org.ow2.choreos.npm.datamodel.Node;
+import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
+import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
+import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory.CloudProviderType;
+import org.ow2.choreos.deployment.nodes.datamodel.Node;
 
 public class VMsCreator { 
 

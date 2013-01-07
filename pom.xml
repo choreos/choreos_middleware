@@ -85,7 +85,7 @@
 
 	<modules>
 		<module>Commons</module>
-		<module>ServiceDeployer</module>
+		<module>DeploymentManager</module>
         <module>ChoreographyDeployer</module>
 <!--
 		<module>StorageFactory</module>

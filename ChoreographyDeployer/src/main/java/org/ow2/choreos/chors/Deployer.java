@@ -9,16 +9,16 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.Configuration.Option;
 import org.ow2.choreos.chors.datamodel.ChorServiceSpec;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
-import org.ow2.choreos.npm.NodeNotFoundException;
-import org.ow2.choreos.npm.NodeNotUpgradedException;
-import org.ow2.choreos.npm.NodePoolManager;
-import org.ow2.choreos.npm.client.NPMClient;
-import org.ow2.choreos.servicedeployer.ServiceDeployer;
-import org.ow2.choreos.servicedeployer.ServiceNotDeployedException;
-import org.ow2.choreos.servicedeployer.client.ServiceDeployerClient;
-import org.ow2.choreos.servicedeployer.datamodel.ArtifactType;
-import org.ow2.choreos.servicedeployer.datamodel.Service;
-import org.ow2.choreos.servicedeployer.datamodel.ServiceSpec;
+import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
+import org.ow2.choreos.deployment.nodes.NodeNotUpgradedException;
+import org.ow2.choreos.deployment.nodes.NodePoolManager;
+import org.ow2.choreos.deployment.nodes.rest.NodesClient;
+import org.ow2.choreos.deployment.services.ServiceDeployer;
+import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
+import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
+import org.ow2.choreos.deployment.services.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
+import org.ow2.choreos.deployment.services.rest.ServicesClient;
 
 public class Deployer {
 
@@ -80,7 +80,7 @@ public class Deployer {
 
 	private class ServiceDeployerInvoker implements Runnable {
 
-		ServiceDeployer deployer = new ServiceDeployerClient(Configuration.get(Option.SERVICE_DEPLOYER_URI));
+		ServiceDeployer deployer = new ServicesClient(Configuration.get(Option.DEPLOYMENT_MANAGER_URI));
 		ServiceSpec serviceSpec; // input
 		Service deployed; // output
 		
@@ -101,7 +101,7 @@ public class Deployer {
 	
 	private class NodeUpgrader implements Runnable {
 
-		NodePoolManager npm = new NPMClient(Configuration.get(Option.NODE_POOL_MANAGER_URI));
+		NodePoolManager npm = new NodesClient(Configuration.get(Option.DEPLOYMENT_MANAGER_URI));
 		String nodeId;
 		
 		public NodeUpgrader(String nodeId) {

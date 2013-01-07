@@ -10,8 +10,7 @@ public class Configuration {
 	
 	public enum Option {
 		CHOR_DEPLOYER_PORT, 
-		NODE_POOL_MANAGER_URI, 
-		SERVICE_DEPLOYER_URI
+		DEPLOYMENT_MANAGER_URI
 	};
 	
 	private static Configuration INSTANCE = new Configuration();

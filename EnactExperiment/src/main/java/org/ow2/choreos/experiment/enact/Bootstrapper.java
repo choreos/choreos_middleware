@@ -3,14 +3,14 @@ package org.ow2.choreos.experiment.enact;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ow2.choreos.npm.NodeNotCreatedException;
-import org.ow2.choreos.npm.NodePoolManager;
-import org.ow2.choreos.npm.client.NPMClient;
-import org.ow2.choreos.npm.datamodel.Node;
+import org.ow2.choreos.deployment.nodes.NodeNotCreatedException;
+import org.ow2.choreos.deployment.nodes.NodePoolManager;
+import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.deployment.nodes.rest.NodesClient;
 
 public class Bootstrapper {
 
-	private static final String NPM_HOST = "http://localhost:9100/nodepoolmanager";
+	private static final String NPM_HOST = "http://localhost:9100/deploymentmanager";
 	private static final int DELAY_BETWEEN_REQUESTS = 2000; // to cope with the amazon "one request per second" rule 
 
 	private int vmsQuantity; // how many VMs we will use
@@ -55,7 +55,7 @@ public class Bootstrapper {
 				@Override public void run() {
 
 					long t0 = System.currentTimeMillis();
-					NodePoolManager npm = new NPMClient(NPM_HOST);
+					NodePoolManager npm = new NodesClient(NPM_HOST);
 					Node req = new Node();
 					Node vm = null;
 					boolean created = false;

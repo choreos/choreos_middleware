@@ -3,7 +3,7 @@ package org.ow2.choreos.experiment.enact;
 import org.ow2.choreos.chors.datamodel.ChorServiceSpec;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.chors.datamodel.ServiceDependency;
-import org.ow2.choreos.servicedeployer.datamodel.ArtifactType;
+import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
 
 public class Spec {
 

@@ -26,7 +26,7 @@ import org.ow2.choreos.chors.datamodel.ChorSpec;
  */
 public class Experiment {
 
-	public static final int CHORS_QTY = 10;  
+	public static final int CHORS_QTY = 1;  
 	public static final int RUN = 1; // sequence ordinal
 	public static final int SERVICES_PER_CHOR = 2;
 	

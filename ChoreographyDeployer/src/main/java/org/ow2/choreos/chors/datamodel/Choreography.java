@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.ow2.choreos.servicedeployer.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.Service;
 
 @XmlRootElement
 public class Choreography {

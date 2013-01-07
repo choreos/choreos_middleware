@@ -15,7 +15,7 @@ import org.ow2.choreos.chors.context.ContextCaster;
 import org.ow2.choreos.chors.datamodel.ChorServiceSpec;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.chors.datamodel.ServiceDependency;
-import org.ow2.choreos.servicedeployer.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 

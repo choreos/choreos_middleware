@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.context.ContextCaster;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.servicedeployer.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.Service;
 
 public class ChorDeployerImpl implements ChoreographyDeployer {
 

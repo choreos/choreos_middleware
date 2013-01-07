@@ -7,12 +7,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.chors.ChorDeployerImpl;
-import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.npm.rest.NPMServer;
-import org.ow2.choreos.servicedeployer.datamodel.Service;
+import org.ow2.choreos.deployment.rest.DeploymentManagerServer;
+import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -40,7 +38,7 @@ public class SimpleChorEnactmentTest {
 	
 	@AfterClass
 	public static void shutDownServers() {
-		NPMServer.stop();
+		DeploymentManagerServer.stop();
 	}
 	
 	@Before
