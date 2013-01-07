@@ -55,7 +55,7 @@ public class NodeBootstrapper {
 	
     public void bootstrapNode() throws NodeNotAccessibleException, KnifeException {
 
-    	Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO, true);
+    	Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
     	
         waitForSSHAccess();
 
