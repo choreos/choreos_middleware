@@ -34,7 +34,8 @@ public class AWSCloudProvider implements CloudProvider {
 
 	private static String DEFAULT_USER = "ubuntu";
 	private static String PROVIDER="aws-ec2";
-	private static String DEFAULT_IMAGE= "us-east-1/ami-ccf405a5";
+	private static String DEFAULT_IMAGE= "us-east-1/ami-3b4ff252";
+//	private static String DEFAULT_IMAGE= "us-east-1/ami-ccf405a5";
 	
 	private NodeRegistry registry = NodeRegistry.getInstance();
 	
