@@ -4,6 +4,7 @@ Written by Leonardo Leite (USP)
 
 == WHAT IS IT? ==
 
+
 *Node Pool Manager* enables you to create virtual machines as nodes in a cloud infra-structure and retrieve nodes with specific configuration requirements by using a REST API. At the moment, Amazon Web Services (AWS EC2) and OpenStack are supported as cloud infra-structure.
 
 *Service Deployer* enables you to easily deploy web services into cloud nodes. At the moment there are two deploy options supported: TOMCAT and COMMAN_DLINE services. TOMCAT services are WAR files intended to run in Tomcat. COMMAN_DLINE services are executed by runnable jar files that must contain the services themselves AND the main method to start the services.
@@ -115,7 +116,7 @@ Open Firefox and install the Poster plugin, which enables you to send HTTP requi
 With Poster, send the following requisition:
 
 HTTP method: POST
-URI: http://localhost:9100/nodepoolmanager/nodes/configs
+URI: http://localhost:9100/deploymentmanager/nodes/configs
 Content-Type: application/xml
 Body: <config><name>getting-started2</name></config>
 
@@ -130,7 +131,7 @@ Obs: if you have configure NODE_SELECTOR=ROUND_ROBIN, you must be sure there is 
 With Poster, the Firefox plugin, send the following request:
 
 HTTP method: POST
-URI: http://localhost:9101/servicedeployer/services
+URI: http://localhost:9100/deploymentmanager/services
 Content-Type: application/xml
 Body: 
 <serviceSpec>
@@ -147,7 +148,7 @@ Such URL will be informed in the HTTP response body, and the host will be chosen
 If you prefer to deploy a JAR, requests the following:
 
 HTTP method: POST
-URI: http://localhost:9101/servicedeployer/services
+URI: http://localhost:9100/deploymentmanager/services
 Content-Type: application/xml
 Body: 
 <serviceSpec> 
