@@ -44,6 +44,9 @@ public class SoapContextSender implements ContextSender {
 	        QName address = new QName("arg1");
 	        SOAPElement quotation2 = bodyElement.addChildElement(address);
 	        quotation2.addTextNode(partnerEndpoint);
+	        
+	        if (serviceEndpoint.trim().endsWith("/"))
+	        	serviceEndpoint = serviceEndpoint.substring(0, serviceEndpoint.length() - 1);
 	
 	        URL endpoint = new URL(serviceEndpoint);
 	        connection.call(sm, endpoint);
