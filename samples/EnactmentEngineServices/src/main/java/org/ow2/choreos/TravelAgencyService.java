@@ -18,7 +18,7 @@ public class TravelAgencyService implements TravelAgency {
 
     private static URL endpoint;
 
-    private final SimpleLogger logger = new SimpleLoggerImpl("travel_agency.log");
+    private final SimpleLogger logger = new SimpleLoggerImpl("/tmp/travel_agency.log");
 
     @WebMethod
     @Override

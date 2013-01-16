@@ -9,7 +9,7 @@ import org.ow2.choreos.log.SimpleLoggerImpl;
 @WebService
 public class AirlineService implements Airline {
 
-	private final SimpleLogger logger = new SimpleLoggerImpl("airline.log");
+	private final SimpleLogger logger = new SimpleLoggerImpl("/tmp/airline.log");
 
 	@WebMethod
 	@Override
