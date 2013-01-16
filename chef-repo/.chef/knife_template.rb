@@ -9,3 +9,4 @@ validation_key           "#{current_dir}/validation_aguia.pem"
 chef_server_url          'http://aguia1.ime.usp.br:4000'
 cache_type               'BasicFile'
 cache_options( :path => "#{current_dir}/checksums" )
+cookbook_path            ["#{current_dir}/../cookbooks"]
