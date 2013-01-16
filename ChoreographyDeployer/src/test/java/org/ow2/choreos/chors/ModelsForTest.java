@@ -21,20 +21,35 @@ public class ModelsForTest {
 	public static final String TRAVEL_AGENCY = "travelagency";	
 	public static final String AIRLINE_JAR = Locations.get("AIRLINE_JAR");
 	public static final String TRAVEL_AGENCY_JAR = Locations.get("TRAVEL_AGENCY_JAR");	
+	public static final String AIRLINE_WAR = Locations.get("AIRLINE_WAR");
+	public static final String TRAVEL_AGENCY_WAR = Locations.get("TRAVEL_AGENCY_WAR");	
 	public static final int AIRLINE_PORT = 1234;
 	public static final int TRAVEL_AGENCY_PORT = 1235;	
 	
 	private ChorSpec chorSpec;
 	private Choreography chor;
+	private ArtifactType type;
 	
 	private ChorServiceSpec airlineSpec, travelSpec;
 	
-	public ModelsForTest() {
+	public ModelsForTest(ArtifactType type) {
+		this.type = type;
 		createChorSpec();
 		creteChoreography();
 	}
-	
+
 	private void createChorSpec() {
+		switch (type) {
+			case COMMAND_LINE: 
+				createJarChorSpec();
+				break;
+			case TOMCAT:
+				createWarChorSpec();
+				break;
+		}
+	}
+	
+	private void createJarChorSpec() {
 
 		this.chorSpec = new ChorSpec(); 
 		
@@ -53,6 +68,29 @@ public class ModelsForTest {
 		this.travelSpec.setEndpointName(TRAVEL_AGENCY);
 		this.travelSpec.setPort(TRAVEL_AGENCY_PORT);
 		this.travelSpec.setArtifactType(ArtifactType.COMMAND_LINE);
+		this.travelSpec.getRoles().add(TRAVEL_AGENCY);
+		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
+		this.travelSpec.getDependencies().add(dep);
+		this.chorSpec.addServiceSpec(this.travelSpec);
+	}
+	
+	private void createWarChorSpec() {
+
+		this.chorSpec = new ChorSpec(); 
+		
+		this.airlineSpec = new ChorServiceSpec();
+		this.airlineSpec.setName(AIRLINE);
+		this.airlineSpec.setCodeUri(AIRLINE_WAR);
+		this.airlineSpec.setEndpointName(AIRLINE);
+		this.airlineSpec.setArtifactType(ArtifactType.TOMCAT);
+		this.airlineSpec.getRoles().add(AIRLINE);
+		this.chorSpec.addServiceSpec(this.airlineSpec);
+		
+		this.travelSpec = new ChorServiceSpec();
+		this.travelSpec.setName(TRAVEL_AGENCY);
+		this.travelSpec.setCodeUri(TRAVEL_AGENCY_WAR);
+		this.travelSpec.setEndpointName(TRAVEL_AGENCY);
+		this.travelSpec.setArtifactType(ArtifactType.TOMCAT);
 		this.travelSpec.getRoles().add(TRAVEL_AGENCY);
 		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
 		this.travelSpec.getDependencies().add(dep);
@@ -119,7 +157,7 @@ public class ModelsForTest {
 	
 	public static void main(String[] args) throws JAXBException, IOException {
 		
-		ModelsForTest models = new ModelsForTest();
+		ModelsForTest models = new ModelsForTest(ArtifactType.COMMAND_LINE);
 		System.out.println("ChorSpec XML representation:");
 		System.out.println(models.getChorSpecXML());
 		System.out.println("\nChoreography XML representation:");

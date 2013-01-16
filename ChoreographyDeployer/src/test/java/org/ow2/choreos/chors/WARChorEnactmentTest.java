@@ -26,7 +26,7 @@ import eu.choreos.vv.clientgenerator.WSClient;
  *
  */
 @Category(IntegrationTest.class)
-public class SimpleChorEnactmentTest {
+public class WARChorEnactmentTest {
 
 	private ChorSpec chorSpec;
 	
@@ -38,7 +38,7 @@ public class SimpleChorEnactmentTest {
 	@Before
 	public void setUp() {
 		
-		ModelsForTest models = new ModelsForTest(ArtifactType.COMMAND_LINE);
+		ModelsForTest models = new ModelsForTest(ArtifactType.TOMCAT);
 		chorSpec = models.getChorSpec(); 
 	}
 	
@@ -50,7 +50,10 @@ public class SimpleChorEnactmentTest {
 		Choreography chor = ee.enact(chorId);
 
 		Service travel = chor.getDeployedServiceByName(ModelsForTest.TRAVEL_AGENCY);
-		WSClient client = new WSClient(travel.getUri() + "?wsdl");
+		String uri = travel.getUri();
+		if (uri.endsWith("/"))
+			uri = uri.substring(0, uri.length()-1);
+		WSClient client = new WSClient(uri + "?wsdl");
 		Item response = client.request("buyTrip");
 		String codes = response.getChild("return").getContent();
 		
