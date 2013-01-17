@@ -3,21 +3,22 @@ package org.ow2.choreos.deployment.services;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.ow2.choreos.chef.Knife;
+import org.ow2.choreos.chef.KnifeCookbook;
+import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.deployment.nodes.ConfigNotAppliedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.deployment.services.ServiceDeployer;
-import org.ow2.choreos.deployment.services.ServiceDeployerImpl;
-import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
 import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
+import org.ow2.choreos.utils.LogConfigurator;
 
 public class ServiceDeployerImplTest {
 
@@ -28,8 +29,9 @@ public class ServiceDeployerImplTest {
 	private ServiceSpec serviceSpec;
 	
 	@Before
-	public void setUp() throws ConfigNotAppliedException {
+	public void setUp() throws ConfigNotAppliedException, KnifeException {
 	
+		LogConfigurator.configLog();
 		setUpNPM();
 		setUpServiceDeployer();
 	}
@@ -45,7 +47,7 @@ public class ServiceDeployerImplTest {
 		when(npm.applyConfig(any(Config.class))).thenReturn(selectedNode);
 	}
 	
-	private void setUpServiceDeployer() {
+	private void setUpServiceDeployer() throws KnifeException {
 		
 		serviceSpec = new ServiceSpec();
 		serviceSpec.setName("Airline");
@@ -54,7 +56,13 @@ public class ServiceDeployerImplTest {
 		serviceSpec.setEndpointName("airline");
 		serviceSpec.setPort(8042);
 		
-		serviceDeployer = new ServiceDeployerImpl(npm);
+		Knife knife = mock(Knife.class);
+		KnifeCookbook knifeCookbbok = mock(KnifeCookbook.class);
+		when(knife.cookbook()).thenReturn(knifeCookbbok);
+		String cookbookUploadResult = "Cookbook 'uploaded' by mock";
+		when(knifeCookbbok.upload(any(String.class), any(String.class))).thenReturn(cookbookUploadResult);
+		
+		serviceDeployer = new ServiceDeployerImpl(npm, knife);
 	}
 	
 	@Test

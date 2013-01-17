@@ -24,14 +24,21 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 
 	private Logger logger = Logger.getLogger(ServiceDeployerImpl.class);
 	
-    private static String CHEF_REPO = Configuration.get("CHEF_REPO");
-    private static String CHEF_CONFIG_FILE = Configuration.get("CHEF_CONFIG_FILE");
-    
 	private DeployedServicesRegistry registry = new DeployedServicesRegistry();
 	private NodePoolManager npm;
+	private Knife knife;
 	
 	public ServiceDeployerImpl(NodePoolManager npm) {
+		final String CHEF_REPO = Configuration.get("CHEF_REPO");
+		final String CHEF_CONFIG_FILE = Configuration.get("CHEF_CONFIG_FILE");
 		this.npm = npm;
+		this.knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO); 
+	}
+	
+	// protected constructor: to test purposes
+	ServiceDeployerImpl(NodePoolManager npm, Knife knife) {
+		this.npm = npm;
+		this.knife = knife; 
 	}
 
 	@Override
@@ -84,11 +91,10 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 	
 	private void uploadRecipe(Recipe serviceRecipe) throws KnifeException {
 		
-		Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO); 
 		File folder = new File(serviceRecipe.getCookbookFolder());
 		String parent = folder.getParent();
 		logger.debug("Uploading recipe " + serviceRecipe.getName());
-		String result = knife.cookbook().upload(serviceRecipe.getCookbookName(),
+		String result = this.knife.cookbook().upload(serviceRecipe.getCookbookName(),
 				parent);
 		logger.debug(result);
 	}
