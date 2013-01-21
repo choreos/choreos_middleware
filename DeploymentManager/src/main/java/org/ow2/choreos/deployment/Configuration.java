@@ -14,7 +14,12 @@ public class Configuration {
     }
 
     public static String get(String key) {
-        return INSTANCE.getProperties().getProperty(key).trim();
+    	if (key == null)
+    		throw new IllegalArgumentException();
+    	String value = INSTANCE.getProperties().getProperty(key);
+    	if (value != null)
+    		value.trim();
+        return value;
     }
 
     public static void set(String key, String value) {
@@ -27,7 +32,7 @@ public class Configuration {
         try {
             properties.load(loader.getResourceAsStream("deployment.properties"));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Configuration class did not found deployment.properties resource.");
         }
     }
 
