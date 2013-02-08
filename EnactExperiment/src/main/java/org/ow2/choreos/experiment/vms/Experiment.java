@@ -9,7 +9,8 @@ import org.ow2.choreos.utils.LogConfigurator;
 
 public class Experiment {
 
-	private static final int N = 50;
+	private static final int N = 40;
+	private static final CloudProviderType CLOUD_PROVIDER_TYPE = CloudProviderType.AWS;
 
 	public static void main(String[] args) {
 
@@ -21,7 +22,7 @@ public class Experiment {
 		logger.info("Creating " + N + " VMs...");
 		
 		VMsCreator creator = new VMsCreator();
-		List<Long> times = creator.createVMs(N, CloudProviderType.AWS);
+		List<Long> times = creator.createVMs(N, CLOUD_PROVIDER_TYPE);
 
 		logger.info("Times (s):");
 		for (Long time: times) {

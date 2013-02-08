@@ -114,7 +114,7 @@ public class VMsCreator {
 			VMChecker ssh = new VMChecker();
 			ssh.check(node.getIp());
 			long tf = System.currentTimeMillis();					
-			VMsCreator.this.logger.info(counter.incrementAndGet() + " VMs ready");
+			System.out.print(counter.incrementAndGet() + " ");
 			return tf - t0;
 		}
 		
