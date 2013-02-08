@@ -8,8 +8,6 @@ import java.util.Set;
 
 import org.jclouds.Constants;
 import org.jclouds.ContextBuilder;
-import org.jclouds.aws.ec2.compute.AWSEC2ComputeService;
-import org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.RunNodesException;
@@ -20,7 +18,6 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeState;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
-import org.jclouds.ec2.domain.InstanceType;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
@@ -32,7 +29,7 @@ import com.google.inject.Module;
 
 public class OpenStackKeystoneCloudProvider implements CloudProvider {
 
-    public String getproviderName() {
+    public String getProviderName() {
         return "OpenStack Keystone Provider";
     }
 

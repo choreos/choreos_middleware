@@ -1,6 +1,7 @@
 package org.ow2.choreos.deployment.nodes.cloudprovider;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.jclouds.compute.RunNodesException;
@@ -11,37 +12,46 @@ import org.ow2.choreos.deployment.nodes.datamodel.Node;
 
 
 /**
- * Returns always the same node
+ * Handles a fixed pool of machines
  * 
  * FixedCloudProvider does not create new nodes
- * TODO: Make FixedCloudProvider deal with several VMs 
+ * It uses the VMs listed in the FIXED_VM_IPS property 
  * 
  * @author leonardo, felps
  *
  */
 public class FixedCloudProvider implements CloudProvider {
 
-	private final String nodeIp = Configuration.get("FIXED_VM_IP");
 	private final String nodeHostname = Configuration.get("FIXED_VM_HOSTNAME");
 	private final String nodeUser = Configuration.get("FIXED_VM_USER");
 	private final String nodePkey = Configuration.get("FIXED_VM_PRIVATE_SSH_KEY");
-	private final String nodeId = "1";
-	private Node node;
+	private List<Node> nodes = new ArrayList<Node>();
 	
 	public FixedCloudProvider() {
+
+		this.fillIpsList();
+	}
+	
+	private void fillIpsList() {
 		
-		node = new Node();
-		node.setIp(nodeIp);
-		node.setId(nodeId);
-		node.setHostname(nodeHostname);
-		node.setChefName(nodeHostname);
-		node.setCpus(1);
-		node.setRam(512);
-		node.setSo("Ubuntu server 10.04");
-		node.setStorage(10000);
-		node.setZone("BR");
-		node.setUser(nodeUser);
-		node.setPrivateKey(nodePkey);
+		this.nodes = new ArrayList<Node>();
+		FixedIPsRetriever retriever = new FixedIPsRetriever();
+		int nodeId = 1;
+		for (String ip: retriever.retrieveIPs()) {
+			Node node = new Node();
+			node.setIp(ip);
+			node.setId(Integer.toString(nodeId++));
+			node.setHostname(nodeHostname);
+			node.setChefName(nodeHostname);
+			node.setCpus(1);
+			node.setRam(512);
+			node.setSo("Ubuntu server 10.04");
+			node.setStorage(10000);
+			node.setZone("BR");
+			node.setUser(nodeUser);
+			node.setPrivateKey(nodePkey);
+			nodes.add(node);
+		}
 	}
 	
 	public Node createNode(Node node) throws RunNodesException {
@@ -51,17 +61,21 @@ public class FixedCloudProvider implements CloudProvider {
 
 	public Node getNode(String nodeId) throws NodeNotFoundException {
 		
-		if (nodeId.equals(nodeId))
-			return node;
-		else
+		try {
+			int id = Integer.parseInt(nodeId);
+			return this.nodes.get(id);
+		}
+		catch (NumberFormatException e) {
 			throw new NodeNotFoundException(nodeId);
+		}
+		catch (IndexOutOfBoundsException e) {
+			throw new NodeNotFoundException(nodeId);
+		}
 	}
 
 	public List<Node> getNodes() {
 
-		List<Node> nodes = new ArrayList<Node>();
-		nodes.add(node);
-		return nodes;
+		return Collections.unmodifiableList(this.nodes);
 	}
 
 	public void destroyNode(String id) {
@@ -71,10 +85,13 @@ public class FixedCloudProvider implements CloudProvider {
 
 	public Node createOrUseExistingNode(Node node) throws RunNodesException {
 
-		return this.node;
+		if (this.nodes != null && !this.nodes.isEmpty())
+			return this.nodes.get(0);
+		else
+			throw new IllegalStateException("Sorry, I do not have any VM available in the moment");
 	}
 
-	public String getproviderName() {
+	public String getProviderName() {
 		return "Fixed Provider";
 	}
 

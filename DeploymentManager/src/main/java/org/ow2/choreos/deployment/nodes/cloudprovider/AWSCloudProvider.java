@@ -39,7 +39,7 @@ public class AWSCloudProvider implements CloudProvider {
 	
 	private NodeRegistry registry = NodeRegistry.getInstance();
 	
-	public String getproviderName() {
+	public String getProviderName() {
 		return PROVIDER;
 	}
 

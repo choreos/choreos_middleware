@@ -19,7 +19,7 @@ import org.ow2.choreos.deployment.nodes.datamodel.Node;
  */
 public interface CloudProvider {
 
-	public String getproviderName();
+	public String getProviderName();
 	
 	public Node createNode(Node node) throws RunNodesException;
 

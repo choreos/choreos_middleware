@@ -1,28 +1,22 @@
 package org.ow2.choreos.deployment.nodes.cloudprovider;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jclouds.compute.RunNodesException;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
-import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
+import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
-import org.ow2.choreos.utils.SshUtil;
 
 
-/**
- * Please, before running these tests, read the README file
- * 
- * @author leonardo
- */
-@Category(IntegrationTest.class)
+
 public class FixedCloudProviderTest {
 
 	@Before
@@ -33,6 +27,7 @@ public class FixedCloudProviderTest {
 	@Test
 	public void shouldReturnNodeInfo() throws RunNodesException {
 
+		Configuration.set("FIXED_VM_IPS", "192.168.56.101");
 		CloudProvider cp = new FixedCloudProvider();
 		Node node = cp.createOrUseExistingNode(new Node());
 
@@ -42,17 +37,27 @@ public class FixedCloudProviderTest {
 		Matcher matcher = pat.matcher(node.getIp());
 		assertTrue(matcher.matches());
 	}
-
+	
 	@Test
-	public void shouldConnectToTheNode() throws RunNodesException {
-
+	public void shouldReturnAvalableVMs() {
+		
+		Configuration.set("FIXED_VM_IPS", "192.168.56.101; 192.168.56.102 ");
 		CloudProvider cp = new FixedCloudProvider();
-		Node node = cp.createOrUseExistingNode(new Node());
-
-		SshUtil ssh = null;
-		ssh = new SshUtil(node.getIp(), node.getUser(),
-				node.getPrivateKeyFile());
-		assertTrue(ssh.isAccessible());
-		ssh.disconnect();
+		List<Node> nodes = cp.getNodes();
+		assertEquals(2, nodes.size());
+		assertEquals("1", nodes.get(0).getId());
+		assertEquals("192.168.56.101", nodes.get(0).getIp());
+		assertEquals("2", nodes.get(1).getId());
+		assertEquals("192.168.56.102", nodes.get(1).getIp());
 	}
+	
+	@Test(expected=NodeNotFoundException.class)
+	public void shouldNotFindVMs() throws NodeNotFoundException {
+		
+		Configuration.set("FIXED_VM_IPS", "192.168.56.101; 192.168.56.102 ");
+		CloudProvider cp = new FixedCloudProvider();
+		cp.getNode("3");
+	}
+
+
 }

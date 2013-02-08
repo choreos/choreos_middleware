@@ -10,13 +10,13 @@ import org.ow2.choreos.deployment.Configuration;
 class FixedIPsRetriever {
 	
 	private static final String IP_REGEX = "[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}";
-	private static final String IPS_REGEX = "(" + IP_REGEX + "; )*" + IP_REGEX;
+	private static final String IPS_REGEX = "(" + IP_REGEX + "; )*" + IP_REGEX + " *";
 	
 	public List<String> retrieveIPs() throws IllegalStateException {
 		
 		String ipsConfig = Configuration.get("FIXED_VM_IPS");
 		if (!validate(ipsConfig)) {
-			throw new IllegalStateException();
+			throw new IllegalStateException("FIXED_VM_IPS property not properly set");
 		}
 		
 		Pattern pat = Pattern.compile(IP_REGEX);
