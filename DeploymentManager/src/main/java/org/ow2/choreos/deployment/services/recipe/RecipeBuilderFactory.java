@@ -8,9 +8,9 @@ public class RecipeBuilderFactory {
 
 		switch (serviceType) {
 		case TOMCAT:
-			return new RecipeBuilderImpl();
+			return new RecipeBuilderImpl("war");
 		case COMMAND_LINE:
-			return new RecipeBuilderImpl();
+			return new RecipeBuilderImpl("jar");
 		case EASY_ESB:
 			return new CDRecipeBuilder();
 		default:

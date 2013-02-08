@@ -45,7 +45,7 @@ public class RecipeBuilderTest {
 
 	@Before
 	public void setUp() {
-		recipeBuilder = new RecipeBuilderImpl();
+		recipeBuilder = new RecipeBuilderImpl("war");
 	}
 	
 	private static File getResource(String resource) {
