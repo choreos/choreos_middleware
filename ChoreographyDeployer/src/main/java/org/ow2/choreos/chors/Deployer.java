@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.Configuration.Option;
@@ -24,79 +31,137 @@ public class Deployer {
 
 	private Logger logger = Logger.getLogger(Deployer.class);
 	
-	public Map<String, Service> deployServices(ChorSpec chor) {
+	/** 
+	 * 
+	 * @param chorSpec
+	 * @return
+	 * @throws EnactmentException if DeploymentManager is not accessible
+	 */
+	public Map<String, Service> deployServices(ChorSpec chorSpec) throws EnactmentException {
 	
 		logger.info("Deploying services");
 
-		List<Thread> trds = new ArrayList<Thread>();
-		List<ServiceDeployerInvoker> invokers = new ArrayList<ServiceDeployerInvoker>();
-		for (ChorServiceSpec chorServiceSpec: chor.getServiceSpecs()) {
-			ServiceSpec serviceSpec = chorServiceSpec.getServiceSpec();
-			logger.debug("Requesting deploy of " + serviceSpec);
-			ServiceDeployerInvoker invoker = new ServiceDeployerInvoker(serviceSpec);
-			Thread trd = new Thread(invoker);
-			trds.add(trd);
-			invokers.add(invoker);
-			trd.start();
+		List<Service> services = configureNodes(chorSpec);
+		if (services == null || services.isEmpty()) {
+			throw new EnactmentException("Probably DeploymentManager is off");
 		}
-		
-		waitThreads(trds);
 		
 		logger.info("Nodes are configured to receive services");
 		
-		trds = new ArrayList<Thread>();
-		Map<String, Service> deployedServices = new HashMap<String, Service>(); // key is serviceName
-		for (ServiceDeployerInvoker invoker: invokers) {
-			
-			Service deployed = invoker.deployed;
-			deployedServices.put(deployed.getName(), deployed);
-			
-			if (deployed.getSpec().getArtifactType() != ArtifactType.LEGACY) {
-				String nodeId = deployed.getNodeId();
-				NodeUpgrader upgrader = new NodeUpgrader(nodeId);
-				Thread trd = new Thread(upgrader);
-				trds.add(trd);
-				trd.start();
-			}
-		}
-		
-		waitThreads(trds);
+		Map<String, Service> deployedServices = upgradeNodes(services);
 		
 		logger.info("Deployement finished");
 
 		return deployedServices;
 	}
 	
-	private void waitThreads(List<Thread> trds) {
-
-		for (Thread trd: trds) {
+	// knife node list add ...
+	private List<Service> configureNodes(ChorSpec chorSpec) {
+ 
+		final int TIMEOUT = 1; // communication between chorDeployer and DeploymentManager should be fast
+		final int N = chorSpec.getServiceSpecs().size();
+		ExecutorService executor = Executors.newFixedThreadPool(N);
+		List<Future<Service>> futures = new ArrayList<Future<Service>>();
+		
+		for (ChorServiceSpec chorServiceSpec: chorSpec.getServiceSpecs()) {
+			
+			ServiceSpec serviceSpec = chorServiceSpec.getServiceSpec();
+			logger.debug("Requesting deploy of " + serviceSpec);
+			ServiceDeployerInvoker invoker = new ServiceDeployerInvoker(serviceSpec);
+			Future<Service> future = executor.submit(invoker);
+			futures.add(future);
+		}
+		
+		waitExecutor(executor, TIMEOUT);
+		
+		List<Service> services = new ArrayList<Service>();
+		for (Future<Service> f: futures) {
 			try {
-				trd.join();
-			} catch (InterruptedException e) {
-				logger.error("Error at thread join!", e);
+				Service service = this.checkFuture(f);
+				if (service != null) {
+					services.add(service);
+				}
+			} catch (Exception e) {
+				logger.error("Could not get service from future", e);
 			}
 		}
+		return services;
+	}
+	
+	private <T> T checkFuture(Future<T> f)  throws Exception {
+		T result = null;
+		try {
+			if (f.isDone()) {
+				result = f.get();
+			} else {
+				throw new Exception(); 
+			}
+		} catch (InterruptedException e) {
+			throw e;
+		} catch (ExecutionException e) {
+			throw e;
+		} catch (CancellationException e) {
+			throw e;
+		}
+		return result;
 	}
 
-	private class ServiceDeployerInvoker implements Runnable {
+	// chef-client
+	private Map<String, Service> upgradeNodes(List<Service> services) {
+
+		final int TIMEOUT = 10; // chef-client may take a long time
+		final int N = services.size();
+		ExecutorService executor = Executors.newFixedThreadPool(N);
+		Map<String, Service> deployedServices = new HashMap<String, Service>(); // key is serviceName
+
+		for (Service deployed: services) {
+			
+			deployedServices.put(deployed.getName(), deployed);
+			if (deployed.getSpec().getArtifactType() != ArtifactType.LEGACY) {
+
+				String nodeId = deployed.getNodeId();
+				NodeUpgrader upgrader = new NodeUpgrader(nodeId);
+				executor.submit(upgrader);
+			}
+		}
+
+		waitExecutor(executor, TIMEOUT);
+		return deployedServices;
+	}
+
+	private void waitExecutor(ExecutorService executor, int timeoutMinutes) {
+
+		executor.shutdown();
+		boolean status = false;
+		try {
+			status = executor.awaitTermination(timeoutMinutes, TimeUnit.MINUTES);
+		} catch (InterruptedException e) {
+			logger.error("Interrupted thread! Should not happen!", e);
+		}
+		if (!status) {
+			logger.info("Executor status is False. Probably there is some problem!.");
+		}
+		executor.shutdownNow();
+	}
+
+	private class ServiceDeployerInvoker implements Callable<Service> {
 
 		ServiceDeployer deployer = new ServicesClient(Configuration.get(Option.DEPLOYMENT_MANAGER_URI));
 		ServiceSpec serviceSpec; // input
-		Service deployed; // output
 		
 		public ServiceDeployerInvoker(ServiceSpec serviceSpec) {
 			this.serviceSpec = serviceSpec;
 		}
 		
 		@Override
-		public void run() {
+		public Service call() throws Exception {
 			try {
-				deployed = deployer.deploy(serviceSpec);
+				Service deployed = deployer.deploy(serviceSpec);
+				return deployed;
 			} catch (ServiceNotDeployedException e) {
-				logger.error(serviceSpec.getName() + " deploy has failed");
-			}			
+				throw e;
+			}
 		}
-		
 	}
 	
 	private class NodeUpgrader implements Runnable {
@@ -118,6 +183,5 @@ public class Deployer {
 				logger.error("Bad response from /nodes/" + nodeId + "/upgrade; maybe some service is not deployed");
 			}
 		}
-		
 	}
 }
