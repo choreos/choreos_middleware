@@ -45,9 +45,9 @@ public class FixedCloudProviderTest {
 		CloudProvider cp = new FixedCloudProvider();
 		List<Node> nodes = cp.getNodes();
 		assertEquals(2, nodes.size());
-		assertEquals("1", nodes.get(0).getId());
+		assertEquals("0", nodes.get(0).getId());
 		assertEquals("192.168.56.101", nodes.get(0).getIp());
-		assertEquals("2", nodes.get(1).getId());
+		assertEquals("1", nodes.get(1).getId());
 		assertEquals("192.168.56.102", nodes.get(1).getIp());
 	}
 	
@@ -56,7 +56,7 @@ public class FixedCloudProviderTest {
 		
 		Configuration.set("FIXED_VM_IPS", "192.168.56.101; 192.168.56.102 ");
 		CloudProvider cp = new FixedCloudProvider();
-		cp.getNode("3");
+		cp.getNode("2");
 	}
 
 

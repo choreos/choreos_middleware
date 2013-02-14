@@ -36,7 +36,7 @@ public class FixedCloudProvider implements CloudProvider {
 		
 		this.nodes = new ArrayList<Node>();
 		FixedIPsRetriever retriever = new FixedIPsRetriever();
-		int nodeId = 1;
+		int nodeId = 0;
 		for (String ip: retriever.retrieveIPs()) {
 			Node node = new Node();
 			node.setIp(ip);
