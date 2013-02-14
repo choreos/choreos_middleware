@@ -30,6 +30,8 @@ import eu.choreos.vv.clientgenerator.WSClient;
 public class SingleServiceEnactmentTest {
 
 	private static final String WEATHER_FORECAST_SERVICE = "WeatherForecastService";
+	private static final String WEATHER_FORECAST_CODE_URI = "http://valinhos.ime.usp.br:54080/demo2/jars/choreos-usecase-1.0-SNAPSHOT-WeatherForecast.jar";
+	private static final int WEATHER_FORECAST_PORT = 8192;
 	
 	private ChorSpec chor;
 	
@@ -44,9 +46,9 @@ public class SingleServiceEnactmentTest {
 		chor = new ChorSpec();
 		ChorServiceSpec service = new ChorServiceSpec();
 		service.setName(WEATHER_FORECAST_SERVICE);
-		service.setCodeUri(AirportProperties.get(WEATHER_FORECAST_SERVICE + ".codeUri"));
+		service.setCodeUri(WEATHER_FORECAST_CODE_URI);
 		service.setEndpointName(WEATHER_FORECAST_SERVICE.toLowerCase());
-		int port = Integer.parseInt(AirportProperties.get(WEATHER_FORECAST_SERVICE + ".port"));
+		int port = WEATHER_FORECAST_PORT;
 		service.setPort(port);
 		service.getRoles().add(WEATHER_FORECAST_SERVICE);
 		service.setArtifactType(ArtifactType.COMMAND_LINE);

@@ -46,6 +46,8 @@ public class ModelsForTest {
 			case TOMCAT:
 				createWarChorSpec();
 				break;
+			default:
+				throw new IllegalStateException("Type shold be COMMAND_LINE or TOMCAT, not " + type);
 		}
 	}
 	
