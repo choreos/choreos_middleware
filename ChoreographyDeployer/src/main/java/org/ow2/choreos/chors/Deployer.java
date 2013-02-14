@@ -82,7 +82,7 @@ public class Deployer {
 					services.add(service);
 				}
 			} catch (Exception e) {
-				logger.error("Could not get service from future", e);
+				logger.error("Could not get service from future: " + e.getMessage());
 			}
 		}
 		return services;
@@ -160,7 +160,7 @@ public class Deployer {
 				return deployed;
 			} catch (ServiceNotDeployedException e) {
 				throw e;
-			}
+			} 
 		}
 	}
 	
@@ -181,6 +181,8 @@ public class Deployer {
 				logger.error("Bad response from /nodes/" + nodeId + "/upgrade; maybe some service is not deployed");
 			} catch (NodeNotFoundException e) {
 				logger.error("Bad response from /nodes/" + nodeId + "/upgrade; maybe some service is not deployed");
+			} catch (org.apache.cxf.interceptor.Fault e) {
+				throw e;
 			}
 		}
 	}

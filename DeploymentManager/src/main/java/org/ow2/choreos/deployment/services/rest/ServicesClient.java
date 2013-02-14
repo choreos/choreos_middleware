@@ -7,6 +7,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.ow2.choreos.deployment.services.ServiceDeployer;
+import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 
@@ -47,7 +48,7 @@ public class ServicesClient implements ServiceDeployer {
 	}
 	
 	@Override
-	public Service deploy(ServiceSpec serviceSpec) {
+	public Service deploy(ServiceSpec serviceSpec) throws ServiceNotDeployedException {
 		
 		WebClient client = setupClient();
 		client.path("services");   	
@@ -55,7 +56,7 @@ public class ServicesClient implements ServiceDeployer {
     	try {
     		service = client.post(serviceSpec, Service.class);
     	} catch (WebApplicationException e) {
-    		return null;
+    		throw new ServiceNotDeployedException(serviceSpec.getName());
     	}
 
         return service;
