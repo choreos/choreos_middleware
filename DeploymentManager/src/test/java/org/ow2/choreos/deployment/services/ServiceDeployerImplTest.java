@@ -77,7 +77,7 @@ public class ServiceDeployerImplTest {
 		assertEquals(selectedNode.getHostname(), service.getHost());
 		assertEquals(selectedNode.getIp(), service.getIp());
 		assertEquals(selectedNode.getId(), service.getNodeId());
-		assertEquals(EXPECTED_URI, service.getUri());
+		assertEquals(EXPECTED_URI, service.getNativeUri());
 		
 		verify(npm).applyConfig(any(Config.class));
 	}

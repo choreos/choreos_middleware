@@ -53,7 +53,7 @@ public class CDDeployTest {
 	public void shouldDeployCDInEasyESBNode() throws Exception {
 
 		Service service = deployer.deploy(spec);
-		String url = service.getUri();
+		String url = service.getNativeUri();
 		System.out.println("Service at " + url);
 		npm.upgradeNode(service.getNodeId());
 		Thread.sleep(5000);

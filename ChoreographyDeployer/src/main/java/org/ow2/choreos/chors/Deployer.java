@@ -159,6 +159,7 @@ public class Deployer {
 				Service deployed = deployer.deploy(serviceSpec);
 				return deployed;
 			} catch (ServiceNotDeployedException e) {
+				logger.error("Probably DeploymentManager is off");
 				throw e;
 			} 
 		}

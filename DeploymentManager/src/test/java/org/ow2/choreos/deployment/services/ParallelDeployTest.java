@@ -135,7 +135,7 @@ public class ParallelDeployTest {
 			} catch (ServiceNotDeployedException e) {
 				e.printStackTrace();
 			}
-			url = service.getUri();
+			url = service.getNativeUri();
 			nodeId = service.getNodeId();
 			System.out.println("Service deployed at " + url);
 		}

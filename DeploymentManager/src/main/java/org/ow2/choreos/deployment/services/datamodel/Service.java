@@ -1,5 +1,8 @@
 package org.ow2.choreos.deployment.services.datamodel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 
@@ -8,7 +11,8 @@ public class Service {
 
 	private String name; 
 	private ServiceSpec spec;
-	private String uri;
+	private String nativeUri;
+	private Map<ServiceType, String> busUris = new HashMap<ServiceType, String>();
 	private String hostname;
 	private String ip;
 	private String nodeId; 
@@ -30,7 +34,7 @@ public class Service {
 			URIInfoRetriever info = new URIInfoRetriever(serviceSpec.getCodeUri());
 			this.hostname = info.getHostname();
 			this.ip = info.getIp();
-			this.uri = serviceSpec.getCodeUri();
+			this.nativeUri = serviceSpec.getCodeUri();
 		}
 	}
 	
@@ -85,17 +89,17 @@ public class Service {
 		this.nodeId = nodeId;
 	}
 
-	public String getUri() {
+	public String getNativeUri() {
 		
 		if (definedUri()) {
-			return uri;
+			return nativeUri;
 		} else {
 			return getDefaultUri();
 		}
 	}
 
 	private boolean definedUri() {
-		return uri != null && !uri.isEmpty();
+		return nativeUri != null && !nativeUri.isEmpty();
 	}
 
 	private String getDefaultUri() {
@@ -129,8 +133,16 @@ public class Service {
 			return "http://" + hostname + ":" + this.spec.getPort() + "/" + uriContext;
 	}
 
-	public void setUri(String uri) {
-		this.uri = uri;
+	public void setNativeUri(String uri) {
+		this.nativeUri = uri;
+	}
+	
+	public String getBusUri(ServiceType type) {
+		return this.busUris.get(type);
+	}
+	
+	public void setBusUri(ServiceType type, String uri) {
+		this.busUris.put(type, uri);
 	}
 	
 	/**
@@ -155,7 +167,7 @@ public class Service {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
+		result = prime * result + ((nativeUri == null) ? 0 : nativeUri.hashCode());
 		return result;
 	}
 
@@ -173,17 +185,17 @@ public class Service {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (uri == null) {
-			if (other.uri != null)
+		if (nativeUri == null) {
+			if (other.nativeUri != null)
 				return false;
-		} else if (!uri.equals(other.uri))
+		} else if (!nativeUri.equals(other.nativeUri))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Service [name=" + name + ", uri=" + getUri() + "]";
+		return "Service [name=" + name + ", uri=" + getNativeUri() + "]";
 	}
 
 }

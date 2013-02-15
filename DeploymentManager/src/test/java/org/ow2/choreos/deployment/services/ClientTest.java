@@ -73,7 +73,7 @@ public class ClientTest {
 	public void shouldDeployAWarServiceInANode() throws Exception {
 
 		Service service = deployer.deploy(specWar);
-		String url = service.getUri();
+		String url = service.getNativeUri();
 		System.out.println("Service at " + url);
 		npm.upgradeNode(service.getNodeId());
 		Thread.sleep(1000);

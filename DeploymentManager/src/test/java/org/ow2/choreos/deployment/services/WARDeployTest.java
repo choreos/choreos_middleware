@@ -58,7 +58,7 @@ public class WARDeployTest {
 	public void shouldDeployAWarServiceInANode() throws Exception {
 
 		Service service = deployer.deploy(specWar);
-		String url = service.getUri();
+		String url = service.getNativeUri();
 		logger.info("Service at " + url);
 		npm.upgradeNode(service.getNodeId());
 		Thread.sleep(1000);

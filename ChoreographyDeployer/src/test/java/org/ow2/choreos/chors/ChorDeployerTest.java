@@ -6,6 +6,11 @@ import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
 import org.ow2.choreos.utils.LogConfigurator;
 
+/**
+ * To run this test, the DeploymentManager must be off
+ * @author leonardo
+ *
+ */
 public class ChorDeployerTest {
 
 	@BeforeClass
