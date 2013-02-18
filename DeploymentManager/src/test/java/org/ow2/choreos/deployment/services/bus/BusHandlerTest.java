@@ -28,7 +28,7 @@ public class BusHandlerTest {
 		
 		String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
 		NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-		BusHandler busHandler = new BusHandler(npm);
+		BusHandler busHandler = new SimpleBusHandler(npm);
 		
 		String endpoint = busHandler.retrieveBusEndpoint();
 		String url = endpoint + "?wsdl";
