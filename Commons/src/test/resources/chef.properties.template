@@ -1,0 +1,3 @@
+# Use this file to create the chef.properties file
+CHEF_CONFIG_FILE=/the/path/to/the/knife.rb
+CHEF_REPO=/the/path/to/the/chef-repo/which/contains/the/cookbooks/folder

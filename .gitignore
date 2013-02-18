@@ -3,6 +3,7 @@
 *.swp
 */.classpath
 */.metadata
+.metadata/*
 */.project
 */.settings
 */target
