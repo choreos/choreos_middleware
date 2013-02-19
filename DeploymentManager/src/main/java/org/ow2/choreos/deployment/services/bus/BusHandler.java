@@ -8,5 +8,5 @@ package org.ow2.choreos.deployment.services.bus;
  */
 public interface BusHandler {
 
-	public String retrieveBusEndpoint() throws NoBusAvailableException;
+	public EasyESBNode retrieveBusNode() throws NoBusAvailableException;
 }

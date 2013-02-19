@@ -30,7 +30,7 @@ public class BusHandlerTest {
 		NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
 		BusHandler busHandler = new SimpleBusHandler(npm);
 		
-		String endpoint = busHandler.retrieveBusEndpoint();
+		String endpoint = busHandler.retrieveBusNode().getAdminEndpoint();
 		String url = endpoint + "?wsdl";
 		System.out.println("Acessando " + url);
 		WebClient client = WebClient.create(url);

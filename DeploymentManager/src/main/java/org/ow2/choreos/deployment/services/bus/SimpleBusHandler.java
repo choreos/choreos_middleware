@@ -27,7 +27,7 @@ public class SimpleBusHandler implements BusHandler {
 	}
 	
 	@Override
-	public String retrieveBusEndpoint() throws NoBusAvailableException {
+	public EasyESBNode retrieveBusNode() throws NoBusAvailableException {
 		
 		if (endpoints.isEmpty()) {
 			try {
@@ -43,7 +43,7 @@ public class SimpleBusHandler implements BusHandler {
 				throw new NoBusAvailableException();
 			}
 		}
-		return endpoints.get(0);
+		return new EasyESBNodeImpl(endpoints.get(0));
 	}
 
 	private String getEndpoint(String nodeIp) {
