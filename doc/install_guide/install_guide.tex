@@ -22,14 +22,29 @@
 
 The CHOReOS \ee\ provides a Platform as a Service (PaaS) that automates the distributed deployment of service choreographies in cloud environments. This document provides instructions about how to install, configure, and run the \ee.
 
-The \ee\ is composed by the components pictured on Figure~\ref{img:ee_components}, from which \cd\ and \dm\ are provided by the \ee, whereas the Chef components and the Cloud Gateway are third-party used by the \ee.
+We will describe now each one of the \ee\ components, that are pictured in the Fig.~\ref{fig:ee_components}. The \cd\ and the \dm\ are components provided by the \ee, whereas the Chef components and the Cloud Gateway are third-party software used by the \ee.
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.7]{img/components.pdf}
 \caption{\ee\ architecture}
-\label{img:ee_components}
+\label{fig:ee_components}
 \end{figure}
+
+\begin{description}
+
+\item [Cloud Gateway] creates and destroys virtual machines (also called \emph{nodes}) in a cloud computing environment. This component is used by the \dm, that decides when create or destroy the nodes. Currently, only Amazon EC2 and OpenStack are supported as Cloud Gateways, but the \dm\ may be extended to support other virtualization technologies.
+
+\item [Chef Server:] in an environment managed by Chef, nodes software configuration are specified by ``recipes'', that are scripts written in a Ruby-like Domain Specific Language. In the \ee, recipes implement the process of configuring operational system, installing required middleware, and finally deploying the services. The recipes and the association between recipes and nodes are stored on Chef Server.
+
+\item[Chef Client] is installed by the \ee\ in each managed node. It uses the Chef Server REST API to retrieve the recipes that are associated to the local node and update the node software configuration by executing the recipes. 
+
+\item [\dm] deploys services in a cloud environment. Through its REST API, the \dm\ receives a declarative service specification and selects the node where the service will be deployed, possibly considering the service non-functional requirements. The \dm\ converts the received specification into a Chef recipe that implements the service installation process. After generating the recipe, the \dm\ stores on the Chef Server the generated recipe and the association between the recipe and the selected node. Using other \dm\ REST operation, one can request the upgrade of a node, which consists in running the Chef Client on that node.
+
+\item [\cd] exposes the REST API to web service choreography automated deployment. The \cd\ client must provide a choreography declarative specification, that contains the choreography architectural description and the locations of service packages. Based on this specification, the \cd\ coordinates invocations to the multiple \dm{s} belonging to the different participant organizations. After services deployment, the \cd\ provides the provider services locations to their respective consumer services.
+
+\end{description} 
+
 
 In this guide we assume that both \cd\ and \dm\ components will be executed on the deployer machine. Deployer is the human operator responsible by the deployment process. For while, a \cd\ instance is limited to use only one \dm.
 
@@ -45,14 +60,40 @@ Before you run \ee, you will need:
 \item a Chef account, as detailed in Section~\ref{sec:chef}.
 \end{itemize}
 
-\section{Cloud Gateway}
+\section{Cloud Provider}
 \label{sec:cloud}
+
+A \textsf{CloudProvider} is an \ee\ interface that specifies methods to CRUD virtual machines. It is expected that a \textsf{Cloud Provider} implementations will act just as a client of some Cloud Gateway. In this section we describe the currently available \textsf{CloudProvider} implementations and how to use them. New \textsf{CloudProvider}s may be implemented to support other virtualization tools. One example would be creating a \textsf{VirtualBoxCloudProvider} to create VMs using VirtualBox.
 
 \subsection{Amazon EC2}
 
+\dots
+
 \subsection{OpenStack}
 
+\dots
+
 \subsection{Fixed cloud provider}
+
+If you are learning how to use the \ee\ and want just to experiment it, the \textsf{FixedCloudProvider} may be best possible to you. With it you are responsible to manually crating and setting virtual machines and telling to \ee\ which machines must be used by it. This avoids the overhead of dealing with a cloud environment. 
+
+When creating a virtual machine to be used by the \ee, be sure:
+\begin{itemize}
+\item to use the Ubuntu 12.04 as operating system;
+\item it is possible to SSH into the node without typing a password: \url{http://www.integrade.org.br/ssh-without-password}\footnote{Obs: do not use a key with password.};
+\item use sudo in the machine without typing a password: type \texttt{\$sudo visudo} and add the line \texttt{<user> ALL = NOPASSWD: ALL} at the end (change \texttt{<user>} by the actual user);
+\item to synchronize the machine clock: \texttt{\#ntpdate ccsl.ime.usp.br};
+\end{itemize}
+
+Configure the \texttt{deployment.properties} file settings according to the template.
+
+To verify if your VM was properly set, you may run the \\ \textsf{org.ow2.choreos.deployment.nodes.cloudprovider.FixedConnectionTest} test.
+
+When you use the \ee\ to install a service in your VM, the \ee\ will take care of bootstrapping (installing Chef) on your VM. The bootstrap process may take a few minutes. Therefore, saving a VM snapshot just after the bootstrap may save you a lot of time, since you can quickly restore your VM to a clear state. You may also bootstrap your VM by running the \textsf{ow2.choreos.deployment.nodes.NodeBootstrapperTest} test.
+
+After testing and installing some recipes in the VM, you can restore the bootstrapped snapshot (as well as any other you have) by manually doing it in your preferred virtualization software (e.g. VirtualBox) and resetting the chef node run list. The last step can be easily done using the script \texttt{chef-repo/run\_list\_reset.sh}. You must create the \texttt{chef-repo/run\_list\_reset.conf} script according to the template (\texttt{run\_list\_reset.conf.template}).
+
+Depending on how you create your VMs, some network configuration may be needed. In case of using VirtualBox, you can refer to \url{http://ccsl.ime.usp.br/foswiki/bin/view/Choreos/VMs}.
 
 \section{Chef}
 \label{sec:chef}
