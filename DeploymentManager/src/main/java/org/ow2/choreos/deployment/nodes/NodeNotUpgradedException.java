@@ -12,7 +12,7 @@ public class NodeNotUpgradedException extends NPMException {
 	public NodeNotUpgradedException(String nodeId, String message) {
 		super(nodeId, message);
 	}
-	
+
 	public String toString() {
 		String result = "Could not upgrade node " + super.getNodeId();
 		if (super.getMessage() != null)

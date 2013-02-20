@@ -6,6 +6,7 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.ow2.choreos.utils.SshCommandFailed;
 import org.ow2.choreos.utils.SshUtil;
 
 import com.jcraft.jsch.JSchException;
@@ -36,7 +37,7 @@ public class ChefNodeNameRetriever {
      * @return chef node name, to be used on chef commands to handle the node on <code>host</code>
      * @throws JSchException if it is not possible to connect on <code>host</code>
      */
-    public String getChefNodeName(String host, String user, String pKeyPath) throws JSchException {
+    public String getChefNodeName(String host, String user, String pKeyPath) throws JSchException, SshCommandFailed {
     	
     	String script = getScript();
         SshUtil ssh = new SshUtil(host, user, pKeyPath);
@@ -49,7 +50,7 @@ public class ChefNodeNameRetriever {
         return chefNodeName;
     }
 
-	private String getHostname(SshUtil ssh) throws JSchException {
+	private String getHostname(SshUtil ssh) throws JSchException, SshCommandFailed {
 
 		return ssh.runCommand("hostname");
 	}

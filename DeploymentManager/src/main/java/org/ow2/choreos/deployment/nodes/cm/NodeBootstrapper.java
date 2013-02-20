@@ -10,6 +10,7 @@ import org.ow2.choreos.chef.impl.KnifeImpl;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.utils.SshCommandFailed;
 import org.ow2.choreos.utils.SshUtil;
 
 import com.jcraft.jsch.JSchException;
@@ -100,6 +101,8 @@ public class NodeBootstrapper {
 			chefClientName = nameRetriever.getChefNodeName(this.node.getIp(), 
 					this.node.getUser(), this.node.getPrivateKeyFile());
 		} catch (JSchException e) {
+			chefClientName = this.node.getHostname();
+		} catch (SshCommandFailed e) {
 			chefClientName = this.node.getHostname();
 		}
 

@@ -59,11 +59,11 @@ public class SshUtil {
         return this.session.isConnected();
     }
 
-    public String runCommand(String command) throws JSchException {
+    public String runCommand(String command) throws JSchException, SshCommandFailed {
         return runCommand(command, false);
     }
 
-    public String runCommand(String command, boolean retry) throws JSchException {
+    public String runCommand(String command, boolean retry) throws JSchException, SshCommandFailed {
         
     	final int SLEEPING_TIME = 5000;
     	String output = null;
@@ -85,7 +85,7 @@ public class SshUtil {
         return output;
     }
 
-    public String runCommandOnce(String command) throws JSchException {
+    public String runCommandOnce(String command) throws JSchException, SshCommandFailed {
         
     	String output = null;
         Session session = getSession();
@@ -108,6 +108,10 @@ public class SshUtil {
 					logger.error("Sleep exception \"u.u", e);
 				}
             }
+            
+            if (channel.getExitStatus() > 0) {
+            	throw new SshCommandFailed(command);
+            }
 
             channel.disconnect();
             session.disconnect();
@@ -128,7 +132,7 @@ public class SshUtil {
         }
     }
 
-    @Override
+	@Override
     protected void finalize() throws Throwable {
         disconnect();
         super.finalize();

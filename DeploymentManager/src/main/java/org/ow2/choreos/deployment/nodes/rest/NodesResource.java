@@ -195,13 +195,13 @@ public class NodesResource {
     	Response response;
     	try {
 			npm.upgradeNode(nodeId);
-			logger.info("Nodes upgraded");
+			logger.info("Node " + nodeId + " upgraded");
 			response = Response.status(Status.OK).build();
 		} catch (NodeNotUpgradedException e) {
-			logger.error("Nodes not upgraded", e);
+			logger.error("Node " + nodeId + " not upgraded", e);
 			response = Response.status(Status.NOT_FOUND).build();
 		} catch (NodeNotFoundException e) {
-			logger.error("Nodes not upgraded", e);
+			logger.error("Node " + nodeId + " not upgraded", e);
 			response = Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
     	

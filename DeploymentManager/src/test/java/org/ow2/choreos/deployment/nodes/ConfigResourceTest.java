@@ -18,6 +18,7 @@ import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.deployment.nodes.rest.NodesClient;
 import org.ow2.choreos.tests.IntegrationTest;
+import org.ow2.choreos.utils.SshCommandFailed;
 import org.ow2.choreos.utils.SshUtil;
 
 import com.jcraft.jsch.JSchException;
@@ -31,11 +32,12 @@ public class ConfigResourceTest extends BaseTest {
      * @throws RunNodesException 
      * @throws ConfigNotAppliedException 
      * @throws JSchException 
+     * @throws SshCommandFailed 
      * 
      * @throws Exception 
      */
     @Test
-    public void shouldApplyValidCookbook() throws RunNodesException, ConfigNotAppliedException, JSchException {
+    public void shouldApplyValidCookbook() throws RunNodesException, ConfigNotAppliedException, JSchException, SshCommandFailed {
     	
     	String RECIPE_NAME = "getting-started";
     	String CREATED_FILE = "chef-getting-started.txt";
