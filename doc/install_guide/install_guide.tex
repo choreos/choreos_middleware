@@ -102,26 +102,27 @@ Depending on how you create your VMs, some network configuration may be needed. 
 
 You can setup your own Chef server, or create an Hosted Chef server account. Hosted Chef is offered by Opscode\footnote{\url{http://www.opscode.com/}}. Although Hosted Chef frees you from setting the Chef Server in the infrastructure of your organization, it allows only a limited number of nodes to be managed by Chef.
 
-Make sure your \texttt{knife.rb} file be something like the example on Listing~\ref{lst:kniferb}.
+Make sure your \texttt{knife.rb} file be something like the example on Listing~\ref{lst:kniferb}. You can use the template in \texttt{chef-repo/.chef/knife\_template.rb} to create your \texttt{knife.rb}, that should stay in the \texttt{.chef} directory.
 
 {\footnotesize
 \begin{lstlisting}[caption=knife.rb example,label=lst:kniferb] 
-%log_level                :info 
-%log_location             STDOUT 
-%node_name                "lleite" 
-%client_key               "#{current_dir}/lleite.pem" 
-%validation_client_name   "choreos-verao-validator" 
-%validation_key           "#{current_dir}/choreos-verao-validator.pem" 
-%chef_server_url          "https://api.opscode.com/organizations/choreos-verao" 
-%cache_type               'BasicFile' 
-%cache_options( :path => "#{ENV['HOME']}/.chef/checksums" ) 
-%cookbook_path            ["#{current_dir}/../cookbooks"] 
+log_level                :info 
+log_location             STDOUT 
+node_name                "lleite" 
+client_key               "#{current_dir}/lleite.pem" 
+validation_client_name   "choreos-verao-validator" 
+validation_key           "#{current_dir}/choreos-verao-validator.pem" 
+chef_server_url          "https://api.opscode.com/organizations/choreos-verao" 
+cache_type               'BasicFile' 
+cache_options( :path => "#{ENV['HOME']}/.chef/checksums" ) 
+cookbook_path            ["#{current_dir}/../cookbooks"] 
 \end{lstlisting}
 }
 
-Here, "lleite" is also my Opscode user name, and "choreos-verao" is the organization name configured on Hosted Chef. And don't forget the "cookbook\_path" property.
+Here, ``lleite" is also my Chef user. I advise to change ``lleite'' by your Chef user name.
+The  ``choreos-verao" is the organization name configured on the Chef Server.
 
-You will also need to upload to your Chef Server all the cookbooks from our cookbook folder: https://github.com/choreos/choreos\_middleware/tree/master/chef-repo/cookbooks.
+You will also need to upload to your Chef Server all the cookbooks from our cookbook folder: \texttt{chef-repo/cookbooks}.
 
 
 \section{Checkout and Compilation}
