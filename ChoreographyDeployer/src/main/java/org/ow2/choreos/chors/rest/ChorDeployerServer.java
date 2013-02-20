@@ -41,7 +41,7 @@ public class ChorDeployerServer implements Runnable {
 		sf.setResourceClasses(ChorResource.class);
 		sf.setAddress(URL);
 		sf.create();
-		logger.info("Enactment Engine has started [" + URL + "]");
+		logger.info("Choreography Deployer has started [" + URL + "]");
 		running = true;
 
 		while (running) {
@@ -51,7 +51,7 @@ public class ChorDeployerServer implements Runnable {
 				e.printStackTrace();
 			}
 		}
-		logger.info("Enactment Engine has stopped");
+		logger.info("Choreography Deployer has stopped");
 
 	}
 
