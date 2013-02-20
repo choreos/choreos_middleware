@@ -115,7 +115,7 @@ public class RestEnactmentTest {
 		Choreography chor = ee.enact(chorId);
 		
 		Service travel = chor.getDeployedServiceByName(TRAVEL_AGENCY);
-		String uri = travel.getUri();
+		String uri = travel.getNativeUri();
 		WSClient client = new WSClient(uri + "?wsdl");
 		Item response = client.request("buyTrip");
 		String codes = response.getChild("return").getContent();

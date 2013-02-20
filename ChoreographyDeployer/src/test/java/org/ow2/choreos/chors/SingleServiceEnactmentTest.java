@@ -63,7 +63,7 @@ public class SingleServiceEnactmentTest {
 		Choreography chor = ee.enact(chorId);
 		
 		Service weather = chor.getDeployedServiceByName(WEATHER_FORECAST_SERVICE);
-		WSClient client = new WSClient(weather.getUri() + "?wsdl");
+		WSClient client = new WSClient(weather.getNativeUri() + "?wsdl");
 		
 		Item request = new ItemImpl("getWeatherAt");
 		request.addChild("where").setContent("Paris");

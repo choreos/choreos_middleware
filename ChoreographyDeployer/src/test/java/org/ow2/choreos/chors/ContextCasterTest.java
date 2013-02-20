@@ -74,12 +74,12 @@ public class ContextCasterTest {
 		
 		Service airlineServ = new Service();
 		airlineServ.setName(AIRLINE);
-		airlineServ.setUri(AIRLINE_URI);
+		airlineServ.setNativeUri(AIRLINE_URI);
 		deployedServices.put(AIRLINE, airlineServ);
 
 		Service travelServ = new Service();
 		travelServ.setName(TRAVEL_AGENCY);
-		travelServ.setUri(TRAVEL_AGENCY_URI);
+		travelServ.setNativeUri(TRAVEL_AGENCY_URI);
 		deployedServices.put(TRAVEL_AGENCY, travelServ);
 	}
 	

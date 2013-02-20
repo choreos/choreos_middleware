@@ -52,7 +52,7 @@ public class Enacter implements Runnable {
 		long tf = System.currentTimeMillis();
 		duration = tf - t0;
 		Service travelService = chor.getDeployedServiceByName(TRAVEL_AGENCY);
-		travelWSDL = travelService.getUri() + "?wsdl";
+		travelWSDL = travelService.getNativeUri() + "?wsdl";
 		
 		System.out.println(Utils.getTimeStamp() + "Choreography #" + idx + " enacted in " + duration + " miliseconds");
 		report.addChorEnactmentTime(duration);

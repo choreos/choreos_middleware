@@ -35,7 +35,7 @@ public class ContextCaster {
 	private void castContext(Map<String, Service> deployedServices,
 			ChorServiceSpec spec, Service deployed) {
 		
-		String serviceUri = deployed.getUri();
+		String serviceUri = deployed.getNativeUri();
 		for (ServiceDependency dep: spec.getDependencies()) {
 			
 			Service deployedPartner = deployedServices.get(dep.getServiceName());
@@ -48,7 +48,7 @@ public class ContextCaster {
 						+ spec.getName());
 			} else {
 				
-				String partnerUri = deployedPartner.getUri();
+				String partnerUri = deployedPartner.getNativeUri();
 				int trial = 0;
 				boolean ok = false;
 				

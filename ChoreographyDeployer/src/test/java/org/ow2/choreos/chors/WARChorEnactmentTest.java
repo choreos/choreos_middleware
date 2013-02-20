@@ -50,7 +50,7 @@ public class WARChorEnactmentTest {
 		Choreography chor = ee.enact(chorId);
 
 		Service travel = chor.getDeployedServiceByName(ModelsForTest.TRAVEL_AGENCY);
-		String uri = travel.getUri();
+		String uri = travel.getNativeUri();
 		if (uri.endsWith("/"))
 			uri = uri.substring(0, uri.length()-1);
 		WSClient client = new WSClient(uri + "?wsdl");

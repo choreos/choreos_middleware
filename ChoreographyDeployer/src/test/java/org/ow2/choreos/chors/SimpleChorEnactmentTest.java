@@ -50,7 +50,7 @@ public class SimpleChorEnactmentTest {
 		Choreography chor = ee.enact(chorId);
 
 		Service travel = chor.getDeployedServiceByName(ModelsForTest.TRAVEL_AGENCY);
-		WSClient client = new WSClient(travel.getUri() + "?wsdl");
+		WSClient client = new WSClient(travel.getNativeUri() + "?wsdl");
 		Item response = client.request("buyTrip");
 		String codes = response.getChild("return").getContent();
 		
