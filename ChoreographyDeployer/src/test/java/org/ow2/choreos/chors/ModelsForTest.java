@@ -12,6 +12,7 @@ import org.ow2.choreos.chors.datamodel.ServiceDependency;
 import org.ow2.choreos.chors.datamodel.xml.ChorXmlWriter;
 import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 
 public class ModelsForTest {
 	
@@ -57,7 +58,7 @@ public class ModelsForTest {
 		
 		this.airlineSpec = new ChorServiceSpec();
 		this.airlineSpec.setName(AIRLINE);
-		this.airlineSpec.setCodeUri(AIRLINE_JAR);
+		this.airlineSpec.setDeployableUri(AIRLINE_JAR);
 		this.airlineSpec.setEndpointName(AIRLINE);
 		this.airlineSpec.setPort(AIRLINE_PORT);
 		this.airlineSpec.setArtifactType(ArtifactType.COMMAND_LINE);
@@ -66,7 +67,7 @@ public class ModelsForTest {
 		
 		this.travelSpec = new ChorServiceSpec();
 		this.travelSpec.setName(TRAVEL_AGENCY);
-		this.travelSpec.setCodeUri(TRAVEL_AGENCY_JAR);
+		this.travelSpec.setDeployableUri(TRAVEL_AGENCY_JAR);
 		this.travelSpec.setEndpointName(TRAVEL_AGENCY);
 		this.travelSpec.setPort(TRAVEL_AGENCY_PORT);
 		this.travelSpec.setArtifactType(ArtifactType.COMMAND_LINE);
@@ -82,7 +83,7 @@ public class ModelsForTest {
 		
 		this.airlineSpec = new ChorServiceSpec();
 		this.airlineSpec.setName(AIRLINE);
-		this.airlineSpec.setCodeUri(AIRLINE_WAR);
+		this.airlineSpec.setDeployableUri(AIRLINE_WAR);
 		this.airlineSpec.setEndpointName(AIRLINE);
 		this.airlineSpec.setArtifactType(ArtifactType.TOMCAT);
 		this.airlineSpec.getRoles().add(AIRLINE);
@@ -90,7 +91,7 @@ public class ModelsForTest {
 		
 		this.travelSpec = new ChorServiceSpec();
 		this.travelSpec.setName(TRAVEL_AGENCY);
-		this.travelSpec.setCodeUri(TRAVEL_AGENCY_WAR);
+		this.travelSpec.setDeployableUri(TRAVEL_AGENCY_WAR);
 		this.travelSpec.setEndpointName(TRAVEL_AGENCY);
 		this.travelSpec.setArtifactType(ArtifactType.TOMCAT);
 		this.travelSpec.getRoles().add(TRAVEL_AGENCY);
@@ -108,20 +109,35 @@ public class ModelsForTest {
 		this.chor.setId("1");
 		this.chor.setChorSpec(this.chorSpec);
 		
+		// create service
 		Service airlineService = new Service();
-		airlineService.setHost("choreos-node1");
-		airlineService.setIp("192.168.56.101");
 		airlineService.setName(AIRLINE);
-		airlineService.setNodeId("choreos-node1");
 		airlineService.setSpec(this.airlineSpec);
+		
+		// create instance
+		ServiceInstance airline = new ServiceInstance();
+		airline.setHost("debian32");
+		airline.setIp("192.168.122.160");
+		airline.setNodeId("2");
+		airline.setMyParentServiceSpec(airlineService.getSpec());
+		
+		// add instance to service
+		airlineService.addInstance(airline);
+		// add service to choreography
 		this.chor.getDeployedServices().add(airlineService);
 		
 		Service travelService = new Service();
-		travelService.setHost("choreos-node2");
-		travelService.setIp("192.168.56.102");
 		travelService.setName(TRAVEL_AGENCY);
-		travelService.setNodeId("choreos-node2");
 		travelService.setSpec(this.travelSpec);
+		
+		ServiceInstance travel = new ServiceInstance();
+		travel.setHost("debian64");
+		travel.setIp("192.168.122.14");
+		travel.setNodeId("1");
+		travel.setMyParentServiceSpec(travelService.getSpec());
+
+
+		travelService.addInstance(travel);
 		this.chor.getDeployedServices().add(travelService);
 	}
 	

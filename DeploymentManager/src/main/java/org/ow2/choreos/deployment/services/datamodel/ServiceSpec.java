@@ -1,5 +1,8 @@
 package org.ow2.choreos.deployment.services.datamodel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
@@ -10,11 +13,51 @@ public class ServiceSpec {
 	protected String name;
 	protected ServiceType type;
 	protected ArtifactType artifactType;
-	protected String codeUri;
+	protected ResourceImpact resourceImpact;
+	protected String version;
+	protected int numberOfInstances = 1; // for default value, at least one
+	
+	// Deployable service attribs
+	protected String deployableUri; 
 	protected int port;
 	protected String endpointName;
-	protected String version;
-	protected ResourceImpact resourceImpact;
+
+	// Legacy service attribs
+	protected List<String> serviceUris;
+	
+	
+	public void addServiceUri(String uri) {
+		if(serviceUris == null)
+			serviceUris = new ArrayList<String>();
+		serviceUris.add(uri);
+	}
+	
+	public void addServiceUris(List<String> uris) {
+		if(serviceUris == null)
+			serviceUris = new ArrayList<String>();
+		serviceUris.addAll(uris);
+	}
+	
+	public void resetServiceUris() {
+		if(serviceUris == null)
+			serviceUris = new ArrayList<String>();
+		else
+			serviceUris.clear();
+	}
+	
+	public int getNumberOfInstances() {
+		if(artifactType == ArtifactType.LEGACY)
+			return serviceUris.size();
+		else
+			return numberOfInstances;
+	}
+	
+	public void setNumberOfInstances(int number) throws IllegalArgumentException {
+		if(artifactType == ArtifactType.LEGACY)
+			throw new IllegalArgumentException("Trying to set number of instances of a legacy service.");
+		
+		this.numberOfInstances = (number > 0) ? number : 1;
+	}
 
 	public String getName() {
 		return name;
@@ -40,12 +83,12 @@ public class ServiceSpec {
 		this.artifactType = artifactType;
 	}
 
-	public String getCodeUri() {
-		return codeUri;
+	public String getDeployableUri() {
+		return deployableUri;
 	}
 
-	public void setCodeUri(String codeUri) {
-		this.codeUri = codeUri;
+	public void setDeployableUri(String uri) {
+		this.deployableUri = uri;
 	}
 
 	public ResourceImpact getResourceImpact() {
@@ -77,7 +120,7 @@ public class ServiceSpec {
 		// We assume that the codeLocationURI ends with "/fileName.[war,jar]
 		String fileName = "";
 		String extension = this.artifactType.getExtension();
-		String[] urlPieces = this.getCodeUri().split("/");
+		String[] urlPieces = this.getDeployableUri().split("/");
 		if (urlPieces[urlPieces.length - 1].contains("." + extension)) {
 			fileName = urlPieces[urlPieces.length - 1];
 		}
@@ -111,7 +154,7 @@ public class ServiceSpec {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((codeUri == null) ? 0 : codeUri.hashCode());
+		result = prime * result + ((deployableUri == null) ? 0 : deployableUri.hashCode());
 		return result;
 	}
 
@@ -124,10 +167,10 @@ public class ServiceSpec {
 		if (getClass() != obj.getClass())
 			return false;
 		ServiceSpec other = (ServiceSpec) obj;
-		if (codeUri == null) {
-			if (other.codeUri != null)
+		if (deployableUri == null) {
+			if (other.deployableUri != null)
 				return false;
-		} else if (!codeUri.equals(other.codeUri))
+		} else if (!deployableUri.equals(other.deployableUri))
 			return false;
 		return true;
 	}
@@ -135,9 +178,14 @@ public class ServiceSpec {
 	@Override
 	public String toString() {
 		return "ServiceSpec [name=" + name + ", type=" + type
-				+ ", artifactType=" + artifactType + ", codeUri=" + codeUri
+				+ ", artifactType=" + artifactType + ", codeUri=" + deployableUri
 				+ ", port=" + port + ", endpointName=" + endpointName
+				+ ", # instances=" + numberOfInstances
 				+ ", version=" + version + "]";
+	}
+
+	public List<String> getLegacyServicesUris() {
+		return this.serviceUris;
 	}
 
 }

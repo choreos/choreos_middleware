@@ -73,7 +73,7 @@ public class ChorResource {
 	 * @return HTTP code 200 (OK). 
 	 * 			Location header: the choreography URI.  
 	 *			Body response: the Choreography representation
-	 *			HTTP code 400 (BAS_REQUEST) if chorId is not properly provided 
+	 *			HTTP code 400 (BAD_REQUEST) if chorId is not properly provided 
 	 *			HTTP code 404 (NOT_FOUND) if choreography does not exist
 	 */
 	@GET

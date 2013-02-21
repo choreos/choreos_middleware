@@ -3,6 +3,7 @@ package org.ow2.choreos.deployment.rest;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.nodes.rest.ConfigsResource;
 import org.ow2.choreos.deployment.nodes.rest.NodesResource;
 import org.ow2.choreos.deployment.services.rest.ServicesResource;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -24,6 +25,7 @@ public class DeploymentManagerServer implements Runnable {
     static {
     	String port = Configuration.get("DEPLOYMENT_MANAGER_PORT");
     	URL = "http://localhost:" + port + "/deploymentmanager/";
+    	System.out.println(URL);
     }
     
 	public static void start() {
@@ -49,6 +51,7 @@ public class DeploymentManagerServer implements Runnable {
 		JAXRSServerFactoryBean sf = new JAXRSServerFactoryBean();
 		sf.setResourceClasses(NodesResource.class);
 		sf.setResourceClasses(ServicesResource.class);
+		sf.setResourceClasses(ConfigsResource.class);
 		sf.setAddress(URL);
 		sf.create();
 		logger.info("Deployment Manager has started [" + URL + "]");

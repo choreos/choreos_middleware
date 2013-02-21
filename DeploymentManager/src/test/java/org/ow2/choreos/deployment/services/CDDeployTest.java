@@ -1,6 +1,7 @@
 package org.ow2.choreos.deployment.services;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import javax.ws.rs.core.Response;
 
@@ -14,10 +15,9 @@ import org.ow2.choreos.deployment.Locations;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
-import org.ow2.choreos.deployment.services.ServiceDeployer;
-import org.ow2.choreos.deployment.services.ServiceDeployerImpl;
 import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -44,18 +44,25 @@ public class CDDeployTest {
 	public void setUp() throws Exception {
 		
 		spec.setName("CDWeather");
-		spec.setCodeUri(CD_LOCATION);
+		spec.setDeployableUri(CD_LOCATION);
 		spec.setArtifactType(ArtifactType.EASY_ESB);
 		spec.setEndpointName("CDWeatherForecastServicePort"); // configured in the config.xml
 	}
 
+	// should display each instance of the service
 	@Test
 	public void shouldDeployCDInEasyESBNode() throws Exception {
 
 		Service service = deployer.deploy(spec);
-		String url = service.getNativeUri();
-		System.out.println("Service at " + url);
-		npm.upgradeNode(service.getNodeId());
+		
+		assertNotNull(service);
+		System.out.println(">>>> " + service.toString());
+		
+		ServiceInstance instance = service.getInstances().get(0);
+		
+		String url = instance.getUri();
+		System.out.println("Instance at " + url);
+		npm.upgradeNode(instance.getNodeId());
 		Thread.sleep(5000);
 		String wsdl = url.substring(0, url.length()-1) + "?wsdl";
 		System.out.println("Checking " + wsdl);

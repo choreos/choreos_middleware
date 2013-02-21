@@ -1,5 +1,8 @@
 package org.ow2.choreos.deployment.nodes.selector;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
@@ -25,28 +28,31 @@ public class DemoSelector implements NodeSelector {
 	 * Before select a node, the cloud provider must contains two clean VMs
 	 * @param cloudProvider
 	 */
-	DemoSelector(CloudProvider cloudProvider) {
+	public DemoSelector(CloudProvider cloudProvider) {
 		
 		this.node1 = cloudProvider.getNodes().get(0);
 		this.node2 = cloudProvider.getNodes().get(1);		
 	}
 
-	public Node selectNode(Config config) {
+	public List<Node> selectNodes(Config config, int numberOfInstances) {
 
+		List<Node> list = new ArrayList<Node>();
+		
 		for (String svc: VM1) {
 			if (config.getName().toLowerCase().contains(svc.toLowerCase())) {
-				return node1;
+				list.add(node1);
 			}
 		}
 		
 		for (String svc: VM2) {
 			if (config.getName().toLowerCase().contains(svc.toLowerCase())) {
-				return node2;
+				list.add(node2);
 			}
 		}
 		
-		// default
-		return node1;
+		if(list.isEmpty())
+			list.add(node1);
+		return list;
 	}
 
 }

@@ -31,9 +31,9 @@ public class SimpleBusHandler implements BusHandler {
 		
 		if (endpoints.isEmpty()) {
 			try {
-				Node node = this.npm.applyConfig(new Config(EASY_ESB_RECIPE));
-				this.npm.upgradeNode(node.getId());
-				String endpoint = this.getEndpoint(node.getIp());
+				List<Node> nodes = this.npm.applyConfig(new Config(EASY_ESB_RECIPE), 1);
+				this.npm.upgradeNode(nodes.get(0).getId());
+				String endpoint = this.getEndpoint(nodes.get(0).getIp());
 				endpoints.add(endpoint);
 			} catch (ConfigNotAppliedException e) {
 				throw new NoBusAvailableException();

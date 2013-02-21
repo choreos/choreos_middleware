@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.List;
+
 import org.jclouds.compute.RunNodesException;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -46,10 +48,13 @@ public class ConfigResourceTest extends BaseTest {
     	
     	NodePoolManager npm = new NPMImpl(cp);
     	Config config = new Config(RECIPE_NAME);
-    	Node returnedNode = npm.applyConfig(config);
-    	assertTrue(returnedNode != null);
-        assertTrue(returnedNode.hasIp());
-        assertEquals(node.getIp(), returnedNode.getIp());
+    	
+    	int num_replicas = 1;
+    	
+    	List<Node> returnedNodes = npm.applyConfig(config, num_replicas);
+    	assertTrue(returnedNodes != null);
+        assertTrue(returnedNodes.get(0).hasIp());
+        assertEquals(node.getIp(), returnedNodes.get(0).getIp());
 
         try {
 			npm.upgradeNode(node.getId());
@@ -60,7 +65,7 @@ public class ConfigResourceTest extends BaseTest {
 		}
         
         // verify if the file getting-started is actually there
-        SshUtil ssh = new SshUtil(returnedNode.getIp(), node.getUser(), node.getPrivateKeyFile());
+        SshUtil ssh = new SshUtil(returnedNodes.get(0).getIp(), node.getUser(), node.getPrivateKeyFile());
     	String returnText = ssh.runCommand("ls " + CREATED_FILE, true);
     	assertTrue(returnText.trim().equals(CREATED_FILE));
     }
@@ -77,10 +82,13 @@ public class ConfigResourceTest extends BaseTest {
     	String INVALID_RECIPE = "xyz";
     	
     	NodePoolManager npm = new NodesClient(nodePoolManagerHost);
-    	Node node1 = npm.applyConfig(null);
-    	Node node2 = npm.applyConfig(new Config(INVALID_RECIPE));
     	
-        assertTrue(node1 == null);
-        assertTrue(node2 == null);
+    	int num_replicas = 1;
+    	
+    	List<Node> nodes1 = npm.applyConfig(null, num_replicas);
+    	List<Node> nodes2 = npm.applyConfig(new Config(INVALID_RECIPE), num_replicas);
+    	
+        assertTrue(nodes1 == null);
+        assertTrue(nodes2 == null);
     }
 }

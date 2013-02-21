@@ -1,8 +1,9 @@
 package org.ow2.choreos.deployment.nodes.cloudprovider;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jclouds.compute.RunNodesException;
 import org.ow2.choreos.deployment.Configuration;
@@ -17,41 +18,57 @@ import org.ow2.choreos.deployment.nodes.datamodel.Node;
  * FixedCloudProvider does not create new nodes
  * It uses the VMs listed in the FIXED_VM_IPS property 
  * 
- * @author leonardo, felps
+ * 
+ * @author leonardo, felps, tfmend
  *
  */
 public class FixedCloudProvider implements CloudProvider {
 
-	private final String nodeHostname = Configuration.get("FIXED_VM_HOSTNAME");
-	private final String nodeUser = Configuration.get("FIXED_VM_USER");
-	private final String nodePkey = Configuration.get("FIXED_VM_PRIVATE_SSH_KEY");
-	private List<Node> nodes = new ArrayList<Node>();
-	
-	public FixedCloudProvider() {
+	private Map<String, Node> nodes = null;
 
-		this.fillIpsList();
-	}
-	
-	private void fillIpsList() {
+	public FixedCloudProvider() {
 		
-		this.nodes = new ArrayList<Node>();
-		FixedIPsRetriever retriever = new FixedIPsRetriever();
-		int nodeId = 0;
-		for (String ip: retriever.retrieveIPs()) {
-			Node node = new Node();
-			node.setIp(ip);
-			node.setId(Integer.toString(nodeId++));
-			node.setHostname(nodeHostname);
-			node.setChefName(nodeHostname);
-			node.setCpus(1);
-			node.setRam(512);
-			node.setSo("Ubuntu server 10.04");
-			node.setStorage(10000);
-			node.setZone("BR");
-			node.setUser(nodeUser);
-			node.setPrivateKey(nodePkey);
-			nodes.add(node);
+		// TODO: resolve enactment of two replicas creates two cloud provider object
+		
+		nodes = new HashMap<String, Node>();
+		
+		String[] ips = Configuration.getMultiple("FIXED_VM_IPS");
+		String[] hosts = Configuration.getMultiple("FIXED_VM_HOSTNAMES");
+		String[] users = Configuration.getMultiple("FIXED_VM_USERS");
+		String[] keys = Configuration.getMultiple("FIXED_VM_PRIVATE_SSH_KEYS");
+		
+		if( (ips.length == hosts.length) && (ips.length == users.length) && (ips.length == keys.length ) ) {
+			int node_id = 0;
+			for(int i = 0; i < ips.length; i++, node_id++) {
+				Node node = new Node();
+				String id = setNode(ips, hosts, users, keys, i, node, node_id);
+				addNode(node, id);
+			}
 		}
+	}
+
+	private void addNode(Node node, String id) {
+		nodes.put(id, node);
+	}
+
+	private String setNode(String[] ips, 
+			String[] hosts, String[] users, String[] keys, int i, Node node, int id) {
+		node.setIp(ips[i]);
+		node.setHostname(hosts[i]);
+		node.setChefName(hosts[i]);
+		node.setUser(users[i]);
+		node.setPrivateKey(keys[i]);
+
+		//String id = UUID.randomUUID().toString();
+		node.setId(Integer.toString(id));
+		
+		
+		node.setCpus(1);
+		node.setRam(512);
+		node.setSo("Ubuntu server 10.04");
+		node.setStorage(10000);
+		node.setZone("BR");
+		return node.getId();
 	}
 	
 	public Node createNode(Node node) throws RunNodesException {
@@ -60,22 +77,15 @@ public class FixedCloudProvider implements CloudProvider {
 	}
 
 	public Node getNode(String nodeId) throws NodeNotFoundException {
-		
-		try {
-			int id = Integer.parseInt(nodeId);
-			return this.nodes.get(id);
-		}
-		catch (NumberFormatException e) {
-			throw new NodeNotFoundException(nodeId);
-		}
-		catch (IndexOutOfBoundsException e) {
-			throw new NodeNotFoundException(nodeId);
-		}
+		if (nodes.containsKey(nodeId))
+			return nodes.get(nodeId);
+		throw new NodeNotFoundException(nodeId);
 	}
 
 	public List<Node> getNodes() {
-
-		return Collections.unmodifiableList(this.nodes);
+		List<Node> theList = new ArrayList<Node>();
+		theList.addAll(nodes.values());
+		return theList;
 	}
 
 	public void destroyNode(String id) {
@@ -84,11 +94,7 @@ public class FixedCloudProvider implements CloudProvider {
 	}
 
 	public Node createOrUseExistingNode(Node node) throws RunNodesException {
-
-		if (this.nodes != null && !this.nodes.isEmpty())
-			return this.nodes.get(0);
-		else
-			throw new IllegalStateException("Sorry, I do not have any VM available in the moment");
+		return (nodes.containsKey(node.getId())) ? nodes.get(node.getId()) : createNode(node);
 	}
 
 	public String getProviderName() {

@@ -61,11 +61,11 @@ public class ServicesResource {
 			@Context UriInfo uriInfo) {
 
 		ServiceSpec serviceSpec = serviceSpecXML.getValue();
-		if (serviceSpec.getCodeUri() == null || serviceSpec.getCodeUri().isEmpty() 
+		if (serviceSpec.getDeployableUri() == null || serviceSpec.getDeployableUri().isEmpty() 
 				|| serviceSpec.getArtifactType() == null)
 			return Response.status(Status.BAD_REQUEST).build();
 		
-		logger.debug("Request to deploy " + serviceSpec.getCodeUri());
+		logger.debug("Request to deploy " + serviceSpec.getDeployableUri());
 
 		Service service;
 		try {
@@ -74,7 +74,8 @@ public class ServicesResource {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		
-		logger.info(service.getName() + " deployed on " + service.getHost());
+		//TODO: AVISA QUE NÃO TEM NÓ MEU CARO!!!
+		logger.info(service.getName() + " deployed on " + service.getUris());
 		
 		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
 		uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getName());

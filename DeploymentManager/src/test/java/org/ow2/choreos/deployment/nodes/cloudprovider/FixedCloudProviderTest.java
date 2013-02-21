@@ -12,6 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
+import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
+import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -24,7 +26,7 @@ public class FixedCloudProviderTest {
 		LogConfigurator.configLog();
 	}
 
-	@Test
+	//@Test
 	public void shouldReturnNodeInfo() throws RunNodesException {
 
 		Configuration.set("FIXED_VM_IPS", "192.168.56.101");
@@ -38,7 +40,7 @@ public class FixedCloudProviderTest {
 		assertTrue(matcher.matches());
 	}
 	
-	@Test
+	//@Test
 	public void shouldReturnAvalableVMs() {
 		
 		Configuration.set("FIXED_VM_IPS", "192.168.56.101; 192.168.56.102 ");
@@ -51,7 +53,7 @@ public class FixedCloudProviderTest {
 		assertEquals("192.168.56.102", nodes.get(1).getIp());
 	}
 	
-	@Test(expected=NodeNotFoundException.class)
+	//@Test(expected=NodeNotFoundException.class)
 	public void shouldNotFindVMs() throws NodeNotFoundException {
 		
 		Configuration.set("FIXED_VM_IPS", "192.168.56.101; 192.168.56.102 ");

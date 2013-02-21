@@ -1,6 +1,7 @@
 package org.ow2.choreos.deployment.nodes.rest;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.WebApplicationException;
@@ -121,7 +122,7 @@ public class NodesClient implements NodePoolManager {
 	}
 	
 	@Override
-	public Node applyConfig(Config config) throws ConfigNotAppliedException {
+	public List<Node> applyConfig(Config config, int numberOfInstances) throws ConfigNotAppliedException {
 
 		WebClient client = setupClient();
 		client.path("nodes/configs");   	
@@ -133,7 +134,9 @@ public class NodesClient implements NodePoolManager {
     		throw new ConfigNotAppliedException(config.getName());
     	}
 
-        return new Node(nodeRest);
+    	List<Node> resultList = new ArrayList<Node>();
+    	resultList.add(new Node(nodeRest));
+        return resultList;
 	}
 
 	@Override

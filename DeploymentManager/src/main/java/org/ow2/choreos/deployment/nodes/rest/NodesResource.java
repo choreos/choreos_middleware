@@ -131,7 +131,7 @@ public class NodesResource {
 	 * 
 	 * Destroys the Virtual Machine node.
 	 * 
-	 * @param nodeId the node id provided in the URI
+	 * @param nodes.getNodeId() the node id provided in the URI
 	 * @return HTTP code 200 (OK).
 	 *          HTTP code 404 (NOT_FOUND) if nodeId is not properly provided. 
 	 *          HTTP code 500 (INTERNAL_SERVER_ERROR) if node is not destroyed.
