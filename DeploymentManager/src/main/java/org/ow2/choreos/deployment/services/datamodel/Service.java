@@ -13,7 +13,7 @@ public class Service {
 	private String name;
 	private ServiceSpec spec;
 	private String id;
-	private List<ServiceInstance> serviceInstances = new ArrayList<ServiceInstance>(); 
+	private List<ServiceInstance> serviceInstances;// = new ArrayList<ServiceInstance>(); 
 
 	
 	public Service(ServiceSpec serviceSpec) throws Exception {

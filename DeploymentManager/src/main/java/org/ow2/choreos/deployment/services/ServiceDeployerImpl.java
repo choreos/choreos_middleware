@@ -116,6 +116,7 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
+		
 		for(Node node:nodes) {
 			if (!((node.getHostname() == null || node.getHostname().isEmpty()) 
 					&& (node.getIp() == null || node.getIp().isEmpty()))) {

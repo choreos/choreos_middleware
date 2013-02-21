@@ -53,6 +53,10 @@ public class Deployer {
 		
 		logger.info("Deployement finished");
 
+		
+		logger.debug(">>> " + deployedServices.toString());
+		
+		logger.debug(">>> service and its instances <<< : " + deployedServices.values().toArray()[0].toString());
 		return deployedServices;
 	}
 	
@@ -84,6 +88,7 @@ public class Deployer {
 				}
 			} catch (Exception e) {
 				logger.error("Could not get service from future: " + e.getMessage());
+				e.printStackTrace();
 			}
 		}
 		return services;
@@ -121,6 +126,7 @@ public class Deployer {
 			
 			if (deployed.getSpec().getArtifactType() != ArtifactType.LEGACY) {
 				
+				logger.debug(">>>> instances <<<< : " + deployed.getInstances().toString());
 				for(ServiceInstance instance: deployed.getInstances()) {
 					String nodeId = instance.getNodeId();
 					NodeUpgrader upgrader = new NodeUpgrader(nodeId);

@@ -183,10 +183,6 @@ public class ServiceInstance {
 		this.myParentServiceSpec = myParentServiceSpec;
 	}
 
-	public void setNativeUri(String uri) {
-		this.uri = uri;
-	}
-	
 	public String getBusUri(ServiceType type) {
 		return this.busUris.get(type);
 	}

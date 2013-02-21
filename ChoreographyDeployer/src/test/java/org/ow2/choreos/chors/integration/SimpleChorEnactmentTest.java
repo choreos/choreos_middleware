@@ -49,6 +49,7 @@ public class SimpleChorEnactmentTest {
 	public void shouldEnactChoreography() throws Exception {
 		
 		ChoreographyDeployer ee = new ChorDeployerImpl();
+		
 		String chorId = ee.createChoreography(chorSpec);
 		Choreography chor = ee.enact(chorId);
 
