@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mockito;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
@@ -37,7 +38,7 @@ public class DemoSelectorTest {
 		when(cloudProvider.getNodes()).thenReturn(nodes);
 	}
 	
-	//@Test
+	@Test
 	public void test() {
 		
 		NodeSelector selector = new DemoSelector(this.cloudProvider);

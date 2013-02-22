@@ -53,7 +53,7 @@ public class FixedCloudProviderTest {
 		assertEquals("192.168.56.102", nodes.get(1).getIp());
 	}
 	
-	//@Test(expected=NodeNotFoundException.class)
+	@Test(expected=NodeNotFoundException.class)
 	public void shouldNotFindVMs() throws NodeNotFoundException {
 		
 		Configuration.set("FIXED_VM_IPS", "192.168.56.101; 192.168.56.102 ");

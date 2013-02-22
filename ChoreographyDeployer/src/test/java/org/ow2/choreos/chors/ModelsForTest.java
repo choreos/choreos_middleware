@@ -15,9 +15,9 @@ import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 
 public class ModelsForTest {
-	
+
 	private Logger logger = Logger.getLogger(ModelsForTest.class);
-	
+
 	public static final String AIRLINE = "airline";
 	public static final String TRAVEL_AGENCY = "travelagency";	
 	public static final String AIRLINE_JAR = Locations.get("AIRLINE_JAR");
@@ -26,13 +26,13 @@ public class ModelsForTest {
 	public static final String TRAVEL_AGENCY_WAR = Locations.get("TRAVEL_AGENCY_WAR");	
 	public static final int AIRLINE_PORT = 1234;
 	public static final int TRAVEL_AGENCY_PORT = 1235;	
-	
+
 	private ChorSpec chorSpec;
 	private Choreography chor;
 	private ArtifactType type;
-	
+
 	private ChorServiceSpec airlineSpec, travelSpec;
-	
+
 	public ModelsForTest(ArtifactType type) {
 		this.type = type;
 		createChorSpec();
@@ -41,21 +41,21 @@ public class ModelsForTest {
 
 	private void createChorSpec() {
 		switch (type) {
-			case COMMAND_LINE: 
-				createJarChorSpec();
-				break;
-			case TOMCAT:
-				createWarChorSpec();
-				break;
-			default:
-				throw new IllegalStateException("Type shold be COMMAND_LINE or TOMCAT, not " + type);
+		case COMMAND_LINE: 
+			createJarChorSpec();
+			break;
+		case TOMCAT:
+			createWarChorSpec();
+			break;
+		default:
+			throw new IllegalStateException("Type shold be COMMAND_LINE or TOMCAT, not " + type);
 		}
 	}
-	
+
 	private void createJarChorSpec() {
 
 		this.chorSpec = new ChorSpec(); 
-		
+
 		this.airlineSpec = new ChorServiceSpec();
 		this.airlineSpec.setName(AIRLINE);
 		this.airlineSpec.setDeployableUri(AIRLINE_JAR);
@@ -64,7 +64,7 @@ public class ModelsForTest {
 		this.airlineSpec.setArtifactType(ArtifactType.COMMAND_LINE);
 		this.airlineSpec.getRoles().add(AIRLINE);
 		this.chorSpec.addServiceSpec(this.airlineSpec);
-		
+
 		this.travelSpec = new ChorServiceSpec();
 		this.travelSpec.setName(TRAVEL_AGENCY);
 		this.travelSpec.setDeployableUri(TRAVEL_AGENCY_JAR);
@@ -76,11 +76,11 @@ public class ModelsForTest {
 		this.travelSpec.getDependencies().add(dep);
 		this.chorSpec.addServiceSpec(this.travelSpec);
 	}
-	
+
 	private void createWarChorSpec() {
 
 		this.chorSpec = new ChorSpec(); 
-		
+
 		this.airlineSpec = new ChorServiceSpec();
 		this.airlineSpec.setName(AIRLINE);
 		this.airlineSpec.setDeployableUri(AIRLINE_WAR);
@@ -88,7 +88,7 @@ public class ModelsForTest {
 		this.airlineSpec.setArtifactType(ArtifactType.TOMCAT);
 		this.airlineSpec.getRoles().add(AIRLINE);
 		this.chorSpec.addServiceSpec(this.airlineSpec);
-		
+
 		this.travelSpec = new ChorServiceSpec();
 		this.travelSpec.setName(TRAVEL_AGENCY);
 		this.travelSpec.setDeployableUri(TRAVEL_AGENCY_WAR);
@@ -99,37 +99,37 @@ public class ModelsForTest {
 		this.travelSpec.getDependencies().add(dep);
 		this.chorSpec.addServiceSpec(this.travelSpec);
 	}
-	
+
 	private void creteChoreography() {
 
 		if (chorSpec == null)
 			createChorSpec();
-		
+
 		this.chor = new Choreography();
 		this.chor.setId("1");
 		this.chor.setChorSpec(this.chorSpec);
-		
+
 		// create service
 		Service airlineService = new Service();
 		airlineService.setName(AIRLINE);
 		airlineService.setSpec(this.airlineSpec);
-		
+
 		// create instance
 		ServiceInstance airline = new ServiceInstance();
 		airline.setHost("debian32");
 		airline.setIp("192.168.122.160");
 		airline.setNodeId("2");
 		airline.setMyParentServiceSpec(airlineService.getSpec());
-		
+
 		// add instance to service
 		airlineService.addInstance(airline);
 		// add service to choreography
 		this.chor.getDeployedServices().add(airlineService);
-		
+
 		Service travelService = new Service();
 		travelService.setName(TRAVEL_AGENCY);
 		travelService.setSpec(this.travelSpec);
-		
+
 		ServiceInstance travel = new ServiceInstance();
 		travel.setHost("debian64");
 		travel.setIp("192.168.122.14");
@@ -140,17 +140,17 @@ public class ModelsForTest {
 		travelService.addInstance(travel);
 		this.chor.getDeployedServices().add(travelService);
 	}
-	
+
 	public ChorSpec getChorSpec() {
-		
+
 		return this.chorSpec;
 	}
-	
+
 	public Choreography getChoreography() {
-		
+
 		return this.chor;
 	}
-	
+
 	private String getChorSpecXML() {
 
 		ChorXmlWriter writer = new ChorXmlWriter();
@@ -163,7 +163,7 @@ public class ModelsForTest {
 	}
 
 	private String getChoreographyXML() {
-		
+
 		ChorXmlWriter writer = new ChorXmlWriter();
 		try {
 			return writer.getChoreographyXML(this.chor);
@@ -172,14 +172,44 @@ public class ModelsForTest {
 			return null;
 		}
 	}
-	
+
 	public static void main(String[] args) throws JAXBException, IOException {
-		
+
 		ModelsForTest models = new ModelsForTest(ArtifactType.COMMAND_LINE);
 		System.out.println("ChorSpec XML representation:");
 		System.out.println(models.getChorSpecXML());
 		System.out.println("\nChoreography XML representation:");
 		System.out.println(models.getChoreographyXML());
+	}
+
+	public ChorSpec getChorSpecWithReplicas(int numberOfAirlineServices) {
+		
+		ChorSpec spec = new ChorSpec(); 
+
+		ChorServiceSpec airlineServiceSpec = new ChorServiceSpec();
+		
+		airlineServiceSpec.setName(AIRLINE);
+		airlineServiceSpec.setDeployableUri(AIRLINE_JAR);
+		airlineServiceSpec.setEndpointName(AIRLINE);
+		airlineServiceSpec.setPort(AIRLINE_PORT);
+		airlineServiceSpec.setArtifactType(ArtifactType.COMMAND_LINE);
+		airlineServiceSpec.getRoles().add(AIRLINE);
+		airlineServiceSpec.setNumberOfInstances(numberOfAirlineServices);
+		spec.addServiceSpec(airlineServiceSpec);
+
+		ChorServiceSpec travelServiceSpec = new ChorServiceSpec();
+		
+		travelServiceSpec.setName(TRAVEL_AGENCY);
+		travelServiceSpec.setDeployableUri(TRAVEL_AGENCY_JAR);
+		travelServiceSpec.setEndpointName(TRAVEL_AGENCY);
+		travelServiceSpec.setPort(TRAVEL_AGENCY_PORT);
+		travelServiceSpec.setArtifactType(ArtifactType.COMMAND_LINE);
+		travelServiceSpec.getRoles().add(TRAVEL_AGENCY);
+		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
+		travelServiceSpec.getDependencies().add(dep);
+		spec.addServiceSpec(travelServiceSpec);
+		
+		return spec;
 	}
 
 }

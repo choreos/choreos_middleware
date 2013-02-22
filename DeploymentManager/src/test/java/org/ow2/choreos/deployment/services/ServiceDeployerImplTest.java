@@ -2,6 +2,7 @@ package org.ow2.choreos.deployment.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeCookbook;
 import org.ow2.choreos.chef.KnifeException;
@@ -50,7 +52,12 @@ public class ServiceDeployerImplTest {
 		selectedNodes .add(selectedNode);
 		
 		npm = mock(NodePoolManager.class);
-		when(npm.applyConfig(any(Config.class), any(Integer.class))).thenReturn(selectedNodes);
+		
+		when(
+				npm.applyConfig(
+						any(Config.class), anyInt()
+						)
+			).thenReturn(selectedNodes);
 	}
 	
 	private void setUpServiceDeployer() throws KnifeException {
@@ -71,7 +78,7 @@ public class ServiceDeployerImplTest {
 		serviceDeployer = new ServiceDeployerImpl(npm, knife);
 	}
 	
-	//@Test
+	@Test
 	public void shouldReturnAValidService() throws ConfigNotAppliedException, ServiceNotDeployedException {
 
 		final String EXPECTED_URI = "http://" + selectedNode.getIp() + ":"
@@ -87,6 +94,6 @@ public class ServiceDeployerImplTest {
 		assertEquals(selectedNode.getId(), instance.getNodeId());
 		assertEquals(EXPECTED_URI, instance.getUri());
 		
-		verify(npm).applyConfig(any(Config.class), any(Integer.class));
+		verify(npm).applyConfig(any(Config.class), anyInt());
 	}
 }
