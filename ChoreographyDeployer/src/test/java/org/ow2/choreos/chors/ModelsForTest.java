@@ -116,9 +116,6 @@ public class ModelsForTest {
 
 		// create instance
 		ServiceInstance airline = new ServiceInstance();
-		airline.setHost("debian32");
-		airline.setIp("192.168.122.160");
-		airline.setNodeId("2");
 		airline.setMyParentServiceSpec(airlineService.getSpec());
 
 		// add instance to service
@@ -131,9 +128,6 @@ public class ModelsForTest {
 		travelService.setSpec(this.travelSpec);
 
 		ServiceInstance travel = new ServiceInstance();
-		travel.setHost("debian64");
-		travel.setIp("192.168.122.14");
-		travel.setNodeId("1");
 		travel.setMyParentServiceSpec(travelService.getSpec());
 
 
