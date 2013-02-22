@@ -79,9 +79,9 @@ public class ClientTest {
 		// now get the first instance
 		ServiceInstance instance = service.getInstances().get(0);
 		
-		String url = instance.getUri();
+		String url = instance.getNativeUri();
 		System.out.println("Service at " + url);
-		npm.upgradeNode(instance.getNodeId());
+		npm.upgradeNode(instance.getNode().getId());
 		Thread.sleep(1000);
 		client = WebClient.create(url); 
 		String body = client.get(String.class);

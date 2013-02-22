@@ -137,8 +137,8 @@ public class ParallelDeployTest {
 				e.printStackTrace();
 			}
 			ServiceInstance instance = service.getInstances().get(0);
-			url = instance.getUri();
-			nodeId = instance.getNodeId();
+			url = instance.getNativeUri();
+			nodeId = instance.getNode().getId();
 			System.out.println("Service deployed at " + url);
 		}
 	}

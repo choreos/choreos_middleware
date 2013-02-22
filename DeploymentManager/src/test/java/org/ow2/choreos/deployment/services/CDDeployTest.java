@@ -60,9 +60,9 @@ public class CDDeployTest {
 		
 		ServiceInstance instance = service.getInstances().get(0);
 		
-		String url = instance.getUri();
+		String url = instance.getNativeUri();
 		System.out.println("Instance at " + url);
-		npm.upgradeNode(instance.getNodeId());
+		npm.upgradeNode(instance.getNode().getId());
 		Thread.sleep(5000);
 		String wsdl = url.substring(0, url.length()-1) + "?wsdl";
 		System.out.println("Checking " + wsdl);

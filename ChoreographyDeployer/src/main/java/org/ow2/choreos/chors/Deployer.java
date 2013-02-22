@@ -128,7 +128,7 @@ public class Deployer {
 				
 				logger.debug(">>>> instances <<<< : " + deployed.getInstances().toString());
 				for(ServiceInstance instance: deployed.getInstances()) {
-					String nodeId = instance.getNodeId();
+					String nodeId = instance.getNode().getId();
 					NodeUpgrader upgrader = new NodeUpgrader(nodeId);
 					executor.submit(upgrader);
 				

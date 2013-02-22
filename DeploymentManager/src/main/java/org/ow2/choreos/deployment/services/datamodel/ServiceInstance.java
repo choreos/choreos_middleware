@@ -2,34 +2,68 @@ package org.ow2.choreos.deployment.services.datamodel;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 
 public class ServiceInstance {
 	
-	private String uri;
-	private String hostname;
-	private String ip;
-	private String nodeId;
+	/**
+	 * Host name of node that hosts the legacy instance
+	 */
+	private String legacyHostname;
+	
+	/**
+	 * Ip address of node that hosts the legacy instance
+	 */
+	private String legacyIp;
+	
+	/**
+	 * The hosting node of a non-legacy instance
+	 */
 	private Node node;
-	
-	private Map<ServiceType, String> busUris = new HashMap<ServiceType, String>();	
 
-	//private String myParentServiceId;
+	/**
+	 * URI for access instance directly
+	 */
+	private String nativeUri;
 	
+	/**
+	 * Map containing all URIs for access instance through the bus
+	 */
+	private Map<ServiceType, String> busUris = new HashMap<ServiceType, String>();	
+	
+	/**
+	 * The effective service instance ID
+	 */
+	private String instanceId;
+	
+	/**
+	 * Id of its service
+	 */
+	private String serviceId;
+	
+	
+	// must have not this property
 	private ServiceSpec myParentServiceSpec;
 	
-//	private DeployedServicesRegistry registry = new DeployedServicesRegistry();
+	
+	
+	
+	
+	/*
+	 * Default constructor used by Java XML Bindings
+	 */
+	public ServiceInstance() {
+		
+	}
 	
 	public ServiceInstance(Node node, Service service) {
 		this.setNode(node);
-//		this.setParentServiceId(service.getId());
 		this.setMyParentServiceSpec(service.getSpec());
+		this.setInstanceId(UUID.randomUUID().toString());
+		this.setServiceId(service.getId());
 		service.addInstance(this);
-	}
-	
-	public ServiceInstance() {
-		
 	}
 	
 	public Node getNode() {
@@ -38,69 +72,100 @@ public class ServiceInstance {
 
 	public void setNode(Node node) {
 		this.node = node;
-		
-		this.setHost(node.getHostname());
-		this.setIp(node.getIp());
-		this.setNodeId(node.getId());
-	}
-
-/*	public String getParentServiceId() {
-		return myParentServiceId;
-	}
-
-	public void setParentServiceId(String parentServiceId) {
-		this.myParentServiceId = parentServiceId;
-	}*/
-
-	public String getIp() {
-		return ip;
-	}
-
-	public void setIp(String ip) {
-		this.ip = ip;
+		//this.setLegacyHostname(node.getHostname());
+		//this.setLegacyIp(node.getIp());
 	}
 	
 	/**
 	 * 
-	 * @return the id of the node where the service was deployed
+	 * @param host It can be the IP or the host name where the service was deployed
 	 */
-	public String getNodeId() {
-		return nodeId;
+	public void setLegacyHostname(String host) {
+		this.legacyHostname = host;
 	}
-
+	
 	/**
 	 * 
-	 * @param nodeId the id of the node where the service was deployed
+	 * @return It can be the IP or the host name where the service was deployed
 	 */
-	public void setNodeId(String nodeId) {
-		this.nodeId = nodeId;
+	public String getLegacyHostname() {
+		return legacyHostname;
+	}
+
+	public String getLegacyIp() {
+		return legacyIp;
+	}
+
+	public void setLegacyIp(String ip) {
+		this.legacyIp = ip;
 	}
 	
-	
+	public ServiceSpec getMyParentServiceSpec() {
+		return myParentServiceSpec;
+	}
 
-	public String getUri() {	
-		if (definedUri()) {
-			return uri;
+	public void setMyParentServiceSpec(ServiceSpec myParentServiceSpec) {
+		this.myParentServiceSpec = myParentServiceSpec;
+	}
+
+	public String getBusUri(ServiceType type) {
+		return this.busUris.get(type);
+	}
+	
+	public void setBusUri(ServiceType type, String uri) {
+		this.busUris.put(type, uri);
+	}
+
+	public String getInstanceId() {
+		return instanceId;
+	}
+
+	public void setInstanceId(String instanceId) {
+		this.instanceId = instanceId;
+	}
+
+	public String getServiceId() {
+		return serviceId;
+	}
+
+	public void setServiceId(String serviceId) {
+		this.serviceId = serviceId;
+	}
+
+	public void setNativeUri(String uri) {
+		this.nativeUri = uri;
+	}
+
+	public String getNativeUri() {	
+		if (definedNativeUri()) {
+			return nativeUri;
 		} else {
-			return getDefaultUri();
+			return getDefaultnativeUri();
 		}
 	}
 
-	private boolean definedUri() {
-		return uri != null && !uri.isEmpty();
+	private boolean definedNativeUri() {
+		return nativeUri != null && !nativeUri.isEmpty();
 	}
 
-	private String getDefaultUri() {
+	private String getDefaultnativeUri() {
 		
 		// interesting note about the ending slash
 		// http://www.searchenginejournal.com/to-slash-or-not-to-slash-thats-a-server-header-question/6763/
 		
-		if (hostname == null && ip == null)
+		String _hostname, _ip;
+		if(this.getMyParentServiceSpec().getArtifactType() == ArtifactType.LEGACY) {
+			_hostname = legacyHostname;
+			_ip = legacyIp;
+		} else {
+			_hostname = node.getHostname();
+			_ip = node.getIp();
+		}
+		
+		if(_hostname == null && _ip == null)
 			throw new IllegalStateException("Sorry, I don't know neither the hostname nor the IP yet");
 		
 		String uriContext;
-		
-		//Service myService = registry.getService(myParentServiceId);
 		
 		switch (getMyParentServiceSpec().getArtifactType()) {
 			case TOMCAT:
@@ -118,38 +183,21 @@ public class ServiceInstance {
 								+ getMyParentServiceSpec().artifactType + " service.");
 		}
 		
-		if (ip != null && !ip.isEmpty())
-			return "http://" + ip + ":" + getMyParentServiceSpec().getPort() + "/" + uriContext;
+		if (_ip != null && !_ip.isEmpty())
+			return "http://" + _ip + ":" + getMyParentServiceSpec().getPort() + "/" + uriContext;
 		else
-			return "http://" + hostname + ":" + getMyParentServiceSpec().getPort() + "/" + uriContext;
-	}
-
-	public void setUri(String uri) {
-		this.uri = uri;
-	}
-	
-	/**
-	 * 
-	 * @param host It can be the IP or the host name where the service was deployed
-	 */
-	public void setHost(String host) {
-		this.hostname = host;
-	}
-	
-	/**
-	 * 
-	 * @return It can be the IP or the host name where the service was deployed
-	 */
-	public String getHost() {
-		return hostname;
+			return "http://" + _hostname + ":" + getMyParentServiceSpec().getPort() + "/" + uriContext;
 	}
 	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
-		result = prime * result + ((getMyParentServiceSpec() == null) ? 0 : getMyParentServiceSpec().hashCode());
+		ServiceSpec spec = getMyParentServiceSpec();
+		result = prime * result + ((nativeUri == null) ? 0 : nativeUri.hashCode());
+		result = prime * result + ((spec == null) ? 0 : spec.hashCode());
+		result = prime * result + ((instanceId == null) ? 0 : instanceId.hashCode());
+		result = prime * result + ((serviceId == null) ? 0 : serviceId.hashCode());
 		return result;
 	}
 
@@ -161,34 +209,40 @@ public class ServiceInstance {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
+		
 		ServiceInstance other = (ServiceInstance) obj;
-		if (uri == null) {
-			if (other.uri != null)
+		
+		if (nativeUri == null) {
+			if (other.nativeUri != null)
 				return false;
-		} else if (!uri.equals(other.uri))
+		} else if (!nativeUri.equals(other.nativeUri))
 			return false;
+		
 		if (getMyParentServiceSpec() == null) {
 			if (other.getMyParentServiceSpec() != null)
 				return false;
 		} else if (!getMyParentServiceSpec().equals(other.getMyParentServiceSpec()))
 			return false;
+		
+		boolean equalsInstance = true;
+		if(instanceId == null)  {
+			if(other.instanceId != null)
+				equalsInstance = false;
+		} else if(!instanceId.equals(other.instanceId))
+			equalsInstance = false;
+		
+		boolean equalsService = true;
+		if(serviceId == null)  {
+			if(other.serviceId != null)
+				equalsService = false;
+		} else if(!serviceId.equals(other.serviceId))
+			equalsService = false;
+		
+		/*
+		 * same instance of the same service
+		 */
+		if(!(equalsInstance && equalsService)) return false;
+		
 		return true;
 	}
-
-	public ServiceSpec getMyParentServiceSpec() {
-		return myParentServiceSpec;
-	}
-
-	public void setMyParentServiceSpec(ServiceSpec myParentServiceSpec) {
-		this.myParentServiceSpec = myParentServiceSpec;
-	}
-
-	public String getBusUri(ServiceType type) {
-		return this.busUris.get(type);
-	}
-	
-	public void setBusUri(ServiceType type, String uri) {
-		this.busUris.put(type, uri);
-	}
-
 }

@@ -89,10 +89,10 @@ public class ServiceDeployerImplTest {
 		
 		ServiceInstance instance = service.getInstances().get(0);
 		
-		assertEquals(selectedNode.getHostname(), instance.getHost());
-		assertEquals(selectedNode.getIp(), instance.getIp());
-		assertEquals(selectedNode.getId(), instance.getNodeId());
-		assertEquals(EXPECTED_URI, instance.getUri());
+		assertEquals(selectedNode.getHostname(), instance.getNode().getHostname());
+		assertEquals(selectedNode.getIp(), instance.getNode().getIp());
+		assertEquals(selectedNode.getId(), instance.getNode().getId());
+		assertEquals(EXPECTED_URI, instance.getNativeUri());
 		
 		verify(npm).applyConfig(any(Config.class), anyInt());
 	}
