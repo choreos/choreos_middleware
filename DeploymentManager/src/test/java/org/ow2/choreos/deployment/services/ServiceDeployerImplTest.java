@@ -2,9 +2,13 @@ package org.ow2.choreos.deployment.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +21,7 @@ import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -43,15 +48,23 @@ public class ServiceDeployerImplTest {
 		selectedNode.setIp("192.168.56.102");
 		selectedNode.setHostname("CHOREOS-NODE");
 		
+		List<Node> selectedNodes = new ArrayList<Node>();
+		selectedNodes .add(selectedNode);
+		
 		npm = mock(NodePoolManager.class);
-		when(npm.applyConfig(any(Config.class))).thenReturn(selectedNode);
+		
+		when(
+				npm.applyConfig(
+						any(Config.class), anyInt()
+						)
+			).thenReturn(selectedNodes);
 	}
 	
 	private void setUpServiceDeployer() throws KnifeException {
 		
 		serviceSpec = new ServiceSpec();
 		serviceSpec.setName("Airline");
-		serviceSpec.setCodeUri("http://choreos.eu/services/airline.jar");
+		serviceSpec.setDeployableUri("http://choreos.eu/services/airline.jar");
 		serviceSpec.setArtifactType(ArtifactType.COMMAND_LINE);
 		serviceSpec.setEndpointName("airline");
 		serviceSpec.setPort(8042);
@@ -74,11 +87,13 @@ public class ServiceDeployerImplTest {
 		
 		Service service = serviceDeployer.deploy(serviceSpec);
 		
-		assertEquals(selectedNode.getHostname(), service.getHost());
-		assertEquals(selectedNode.getIp(), service.getIp());
-		assertEquals(selectedNode.getId(), service.getNodeId());
-		assertEquals(EXPECTED_URI, service.getNativeUri());
+		ServiceInstance instance = service.getInstances().get(0);
 		
-		verify(npm).applyConfig(any(Config.class));
+		assertEquals(selectedNode.getHostname(), instance.getNode().getHostname());
+		assertEquals(selectedNode.getIp(), instance.getNode().getIp());
+		assertEquals(selectedNode.getId(), instance.getNode().getId());
+		assertEquals(EXPECTED_URI, instance.getNativeUri());
+		
+		verify(npm).applyConfig(any(Config.class), anyInt());
 	}
 }

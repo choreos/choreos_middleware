@@ -1,3 +1,4 @@
+*/bin/*
 *.jar
 *.log
 *.swp
@@ -6,9 +7,10 @@
 .metadata/*
 */.project
 */.settings
-*/target
+*/target/*
+*/target/**
 *~
-/Monitoring/Anayzer/.settings/org.eclipse.jdt.core.prefs
-/Monitoring/Anayzer/.settings/org.eclipse.m2e.core.prefs
-/Monitoring/Anayzer/.project
-/Monitoring/Anayzer/.classpath
+.metadata/*
+chef-repo/delete-cookbooks.sh
+.project
+.settings/*

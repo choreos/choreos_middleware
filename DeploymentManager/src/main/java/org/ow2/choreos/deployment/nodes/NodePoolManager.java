@@ -60,9 +60,20 @@ public interface NodePoolManager {
 	 * Updates the configuration of a node, but not apply the configuration.
 	 * 
 	 * @param config what must be deployed
+	 * @param numberOfInstances The number of instances to be deployed
 	 * @return the representation of the node where the configuration will be applied,
 	 * @throws if it was not possible to allocate any node
 	 */
-	public Node applyConfig(Config config) throws ConfigNotAppliedException;
+	public List<Node> applyConfig(Config config, int numberOfInstances) throws ConfigNotAppliedException;
 	
+	
+	/**
+	 * Updates the configuration of a node, but not apply the configuration.
+	 * 
+	 * @param config what must be deployed
+	 * @return the representation of the node where the configuration will be applied,
+	 * @throws if it was not possible to allocate any node
+	 */
+	// TODO: uncomment
+	//public Node applyConfig(Config config) throws ConfigNotAppliedException;
 }

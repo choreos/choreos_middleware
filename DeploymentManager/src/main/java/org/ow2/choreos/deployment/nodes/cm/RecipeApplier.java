@@ -1,5 +1,7 @@
 package org.ow2.choreos.deployment.nodes.cm;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chef.ChefNode;
 import org.ow2.choreos.chef.Knife;
@@ -83,6 +85,8 @@ public class RecipeApplier {
 			return false;
 		}
 	}
+
+
 
     
 }

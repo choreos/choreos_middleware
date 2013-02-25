@@ -20,6 +20,7 @@ import org.ow2.choreos.deployment.services.ServiceDeployerImpl;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
 import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -51,13 +52,13 @@ public class ParallelDeployTest {
 	public void setUp() throws Exception {
 		
 		specs[0] = new ServiceSpec();
-		specs[0].setCodeUri(JARDeployTest.JAR_LOCATION);
+		specs[0].setDeployableUri(JARDeployTest.JAR_LOCATION);
 		specs[0].setArtifactType(ArtifactType.COMMAND_LINE);
 		specs[0].setEndpointName("");
 		specs[0].setPort(8042);
 
 		specs[1] = new ServiceSpec();
-		specs[1].setCodeUri(WARDeployTest.WAR_LOCATION);
+		specs[1].setDeployableUri(WARDeployTest.WAR_LOCATION);
 		specs[1].setArtifactType(ArtifactType.TOMCAT);
 	}
 	
@@ -135,8 +136,9 @@ public class ParallelDeployTest {
 			} catch (ServiceNotDeployedException e) {
 				e.printStackTrace();
 			}
-			url = service.getNativeUri();
-			nodeId = service.getNodeId();
+			ServiceInstance instance = service.getInstances().get(0);
+			url = instance.getNativeUri();
+			nodeId = instance.getNode().getId();
 			System.out.println("Service deployed at " + url);
 		}
 	}

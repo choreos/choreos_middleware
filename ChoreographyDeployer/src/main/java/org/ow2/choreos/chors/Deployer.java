@@ -24,6 +24,7 @@ import org.ow2.choreos.deployment.services.ServiceDeployer;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
 import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.deployment.services.rest.ServicesClient;
 
@@ -52,6 +53,10 @@ public class Deployer {
 		
 		logger.info("Deployement finished");
 
+		
+		logger.debug(">>> " + deployedServices.toString());
+		
+		logger.debug(">>> service and its instances <<< : " + deployedServices.values().toArray()[0].toString());
 		return deployedServices;
 	}
 	
@@ -83,6 +88,7 @@ public class Deployer {
 				}
 			} catch (Exception e) {
 				logger.error("Could not get service from future: " + e.getMessage());
+				e.printStackTrace();
 			}
 		}
 		return services;
@@ -117,13 +123,19 @@ public class Deployer {
 		for (Service deployed: services) {
 			
 			deployedServices.put(deployed.getName(), deployed);
+			
 			if (deployed.getSpec().getArtifactType() != ArtifactType.LEGACY) {
-
-				String nodeId = deployed.getNodeId();
-				NodeUpgrader upgrader = new NodeUpgrader(nodeId);
-				executor.submit(upgrader);
+				
+				logger.debug(">>>> instances <<<< : " + deployed.getInstances().toString());
+				for(ServiceInstance instance: deployed.getInstances()) {
+					String nodeId = instance.getNode().getId();
+					NodeUpgrader upgrader = new NodeUpgrader(nodeId);
+					executor.submit(upgrader);
+				
+				}
 			}
 		}
+
 
 		waitExecutor(executor, TIMEOUT);
 		return deployedServices;
@@ -163,6 +175,7 @@ public class Deployer {
 				throw e;
 			} 
 		}
+		
 	}
 	
 	private class NodeUpgrader implements Runnable {
@@ -186,5 +199,6 @@ public class Deployer {
 				throw e;
 			}
 		}
+		
 	}
 }

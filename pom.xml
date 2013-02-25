@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.ow2.choreos</groupId>
@@ -8,21 +9,21 @@
 	<packaging>pom</packaging>
 
 	<name>CHOReOS Middleware</name>
-    <description>The CHOReOS cloud moddielware</description>
-    <url>http://www.choreos.eu</url>
-    <inceptionYear>2011</inceptionYear>
+	<description>The CHOReOS cloud moddielware</description>
+	<url>http://www.choreos.eu</url>
+	<inceptionYear>2011</inceptionYear>
 
-    <licenses>
-      <license>
-        <name>GNU LESSER GENERAL PUBLIC LICENSE</name>
-        <url>http://www.gnu.org/licenses/lgpl.html</url>
-      </license>
-    </licenses>
+	<licenses>
+		<license>
+			<name>GNU LESSER GENERAL PUBLIC LICENSE</name>
+			<url>http://www.gnu.org/licenses/lgpl.html</url>
+		</license>
+	</licenses>
 
-    <organization>
-        <name>USP FLOSS Competence Center (CCSL-USP)</name>
-        <url>http://ccsl.ime.usp.br/en</url>
-    </organization>
+	<organization>
+		<name>USP FLOSS Competence Center (CCSL-USP)</name>
+		<url>http://ccsl.ime.usp.br/en</url>
+	</organization>
 
 	<scm>
 		<connection>scm:git@github.com:choreos/choreos_middleware.git</connection>
@@ -57,41 +58,20 @@
 		</developer>
 	</developers>
 
-<!-- not used at the moment
-	<ciManagement>
-		<system>Hudson</system>
-		<notifiers>
-			<notifier>
-				<configuration>
-					<address>baile-xp-middleware@googlegroups.com</address>
-				</configuration>
-			</notifier>
-		</notifiers>
-	</ciManagement>
-
-
-	<issueManagement>
-		<system>Xplanner</system>
-		<url>http://eclipse.ime.usp.br/xplanner/do/view/project?oid=7214</url>
-	</issueManagement>
-
-	<distributionManagement>
-		<site>
-			<id>PabxManagement</id>
-			<url>scp://danicuki@valinhos.ime.usp.br:54022/var/www/choreos/</url>
-		</site>
-	</distributionManagement>
--->
+	<!-- not used at the moment <ciManagement> <system>Hudson</system> <notifiers> 
+		<notifier> <configuration> <address>baile-xp-middleware@googlegroups.com</address> 
+		</configuration> </notifier> </notifiers> </ciManagement> <issueManagement> 
+		<system>Xplanner</system> <url>http://eclipse.ime.usp.br/xplanner/do/view/project?oid=7214</url> 
+		</issueManagement> <distributionManagement> <site> <id>PabxManagement</id> 
+		<url>scp://danicuki@valinhos.ime.usp.br:54022/var/www/choreos/</url> </site> 
+		</distributionManagement> -->
 
 	<modules>
 		<module>Commons</module>
 		<module>DeploymentManager</module>
-        <module>ChoreographyDeployer</module>
-<!--
-		<module>StorageFactory</module>
-		<module>choreos-web</module>
--->
-  </modules>
+		<module>ChoreographyDeployer</module>
+		<!-- <module>StorageFactory</module> <module>choreos-web</module> -->
+	</modules>
 
 	<repositories>
 		<repository>
@@ -127,10 +107,10 @@
 			<name>ccsl</name>
 			<url>http://valinhos.ime.usp.br:54080/maven/</url>
 		</repository>
-    <repository>
-      <id>Extra repository</id>
-      <url>http://repo1.maven.org/maven2/</url>
-    </repository>
+		<repository>
+			<id>Extra repository</id>
+			<url>http://repo1.maven.org/maven2/</url>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -169,12 +149,12 @@
 			<scope>test</scope>
 		</dependency>
 
-        <dependency>
-         <groupId>log4j</groupId>
-         <artifactId>log4j</artifactId>
-         <version>1.2.17</version>
-         <type>jar</type>
-        </dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+			<type>jar</type>
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
@@ -182,11 +162,11 @@
 			<version>2.2.5</version>
 		</dependency>
 
-        <dependency>
-	        <groupId>commons-io</groupId>
-	        <artifactId>commons-io</artifactId>
-	        <version>2.4</version>
-        </dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -282,24 +262,24 @@
 							<version>2.4.1</version>
 						</plugin>
 
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-surefire-plugin</artifactId>
-                            <version>2.11</version>
-                            <dependencies>
-                                 <dependency>
-                                      <groupId>org.apache.maven.surefire</groupId>
-                                      <artifactId>surefire-junit47</artifactId>
-                                      <version>2.12</version>
-                                 </dependency>
-                            </dependencies>
-                            <configuration>
-                                 <includes>
-                                      <include>**/*.class</include>
-                                 </includes>
-                             <excludedGroups>org.ow2.choreos.tests.IntegrationTest</excludedGroups>
-                            </configuration>
-                        </plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-surefire-plugin</artifactId>
+							<version>2.11</version>
+							<dependencies>
+								<dependency>
+									<groupId>org.apache.maven.surefire</groupId>
+									<artifactId>surefire-junit47</artifactId>
+									<version>2.12</version>
+								</dependency>
+							</dependencies>
+							<configuration>
+								<includes>
+									<include>**/*.class</include>
+								</includes>
+								<excludedGroups>org.ow2.choreos.tests.IntegrationTest</excludedGroups>
+							</configuration>
+						</plugin>
 
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
@@ -340,7 +320,7 @@
 								<dialect>org.hibernate.dialect.MySQLDialect</dialect>
 								<driverClass>com.mysql.jdbc.Driver</driverClass>
 								<username>root</username>
-								<password/>
+								<password />
 								<connectionUrl>
 									jdbc:mysql://localhost:3306/choreos
 								</connectionUrl>
@@ -380,6 +360,42 @@
 
 
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-eclipse-plugin
+										</artifactId>
+										<versionRange>
+											[2.8,)
+										</versionRange>
+										<goals>
+											<goal>eclipse</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 	<properties>

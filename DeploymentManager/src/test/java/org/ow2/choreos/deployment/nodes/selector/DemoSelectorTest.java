@@ -12,8 +12,6 @@ import org.mockito.Mockito;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.deployment.nodes.selector.DemoSelector;
-import org.ow2.choreos.deployment.nodes.selector.NodeSelector;
 
 
 public class DemoSelectorTest {
@@ -48,17 +46,17 @@ public class DemoSelectorTest {
 		for (String svc: VM1) {
 			Config config = new Config();
 			config.setName(svc);
-			assertEquals(node1, selector.selectNode(config));
+			assertEquals(node1, selector.selectNodes(config,1).get(0));
 		}
 
 		for (String svc: VM2) {
 			Config config = new Config();
 			config.setName(svc);
-			assertEquals(node2, selector.selectNode(config));
+			assertEquals(node2, selector.selectNodes(config,1).get(0));
 		}
 		
 		Config config = new Config();
 		config.setName("other");
-		assertEquals(node1, selector.selectNode(config));
+		assertEquals(node1, selector.selectNodes(config,1).get(0));
 	}
 }

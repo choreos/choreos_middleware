@@ -1,5 +1,7 @@
 package org.ow2.choreos.deployment.nodes.selector;
 
+import java.util.List;
+
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 
@@ -15,5 +17,5 @@ import org.ow2.choreos.deployment.nodes.datamodel.Node;
  */
 public interface NodeSelector {
 
-	public Node selectNode(Config config);
+	public List<Node> selectNodes(Config config, int numberOfInstances);
 }

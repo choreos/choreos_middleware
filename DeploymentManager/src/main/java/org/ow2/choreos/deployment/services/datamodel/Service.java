@@ -1,52 +1,107 @@
 package org.ow2.choreos.deployment.services.datamodel;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.ow2.choreos.deployment.services.ServiceInstanceNotFoundException;
 
 
 @XmlRootElement
 public class Service {
 
-	private String name; 
-	private ServiceSpec spec;
-	private String nativeUri;
-	private Map<ServiceType, String> busUris = new HashMap<ServiceType, String>();
-	private String hostname;
-	private String ip;
-	private String nodeId; 
+	/**
+	 * The service name
+	 */
+	private String name;
 
-	public Service(ServiceSpec serviceSpec) {
-		
+	/**
+	 * The service specification
+	 */
+	private ServiceSpec spec;
+
+	/**
+	 * A Unique Id for the service
+	 */
+	private String id;
+
+	/**
+	 * The list of all instances of the service
+	 */
+	private List<ServiceInstance> serviceInstances;
+
+	
+	
+	
+	/**
+	 * Default constructor for Java XML Bindings
+	 */
+	public Service() {
+
+	}
+
+	public Service(ServiceSpec serviceSpec) throws Exception {
+
+		this.id = UUID.randomUUID().toString();
+
 		this.spec = serviceSpec;
 		if (this.spec.getArtifactType() == null) {
 			this.spec.setArtifactType(ArtifactType.OTHER);
 		}
-		
+
 		if (serviceSpec.getName() == null || serviceSpec.getName().isEmpty()) {
-			name = getDefaultName();
+			throw new Exception();
 		} else {
 			name = serviceSpec.getName();
 		}
-		
+
 		if (serviceSpec.artifactType == ArtifactType.LEGACY) {
-			URIInfoRetriever info = new URIInfoRetriever(serviceSpec.getCodeUri());
-			this.hostname = info.getHostname();
-			this.ip = info.getIp();
-			this.nativeUri = serviceSpec.getCodeUri();
+			setLegacyServiceInstances(serviceSpec);
 		}
 	}
-	
-	private String getDefaultName() {
-		
-		String fileName = this.spec.getFileName();
-		String defaultName = fileName.substring(0, fileName.length()-4);
-		return defaultName;
+
+	private void setLegacyServiceInstances(ServiceSpec serviceSpec) {
+		List<String> uris = serviceSpec.getLegacyServicesUris();
+
+		if(uris.size() > 0) {
+
+			for(String uri: uris) {
+				URIInfoRetriever info = new URIInfoRetriever(uri);
+
+				ServiceInstance si = new ServiceInstance(null, this);
+
+				si.setLegacyHostname(info.getHostname());
+				si.setLegacyIp(info.getIp());
+				si.setNativeUri(serviceSpec.getDeployableUri());
+
+				serviceInstances.add(si);
+			}
+		}
 	}
 
-	public Service() {
-		
+	public List<ServiceInstance> getInstances() {
+		return serviceInstances;
+	}
+
+	public void setInstances(List<ServiceInstance> instances) {
+		if(serviceInstances == null)
+			serviceInstances = new ArrayList<ServiceInstance>();
+		serviceInstances.clear();
+		serviceInstances.addAll(instances);
+	}
+
+	public void addAllInstances(List<ServiceInstance> instances) {
+		if(serviceInstances == null)
+			serviceInstances = new ArrayList<ServiceInstance>();
+		serviceInstances.addAll(instances);
+	}
+
+	public void addInstance(ServiceInstance instance) {
+		if(serviceInstances == null)
+			serviceInstances = new ArrayList<ServiceInstance>();
+		serviceInstances.add(instance);
 	}
 
 	public ServiceSpec getSpec() {
@@ -65,109 +120,36 @@ public class Service {
 		this.name = name;
 	}
 
-	public String getIp() {
-		return ip;
+	public String getId() {
+		return id;
 	}
 
-	public void setIp(String ip) {
-		this.ip = ip;
-	}
-	
-	/**
-	 * 
-	 * @return the id of the node where the service was deployed
-	 */
-	public String getNodeId() {
-		return nodeId;
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	/**
-	 * 
-	 * @param nodeId the id of the node where the service was deployed
-	 */
-	public void setNodeId(String nodeId) {
-		this.nodeId = nodeId;
+	public List<String> getUris() {
+		List<String> result = new ArrayList<String>();
+		for(ServiceInstance inst: serviceInstances)
+			result.add(inst.getNativeUri());
+		return result;
 	}
 
-	public String getNativeUri() {
-		
-		if (definedUri()) {
-			return nativeUri;
-		} else {
-			return getDefaultUri();
-		}
-	}
-
-	private boolean definedUri() {
-		return nativeUri != null && !nativeUri.isEmpty();
-	}
-
-	private String getDefaultUri() {
-		
-		// interesting note about the ending slash
-		// http://www.searchenginejournal.com/to-slash-or-not-to-slash-thats-a-server-header-question/6763/
-		
-		if (hostname == null && ip == null)
-			throw new IllegalStateException("Sorry, I don't know neither the hostname nor the IP yet");
-		
-		String uriContext;
-		switch (this.spec.artifactType) {
-			case TOMCAT:
-				uriContext = name + "/" + this.spec.endpointName;
-				break;
-			case COMMAND_LINE:
-				uriContext = this.spec.endpointName + "/";
-				break;
-			case EASY_ESB:
-				uriContext = "services/" + this.spec.endpointName + "ClientProxyEndpoint/";
-				break;
-			default:
-				throw new IllegalStateException(
-						"Sorry, I don't know how to provide an URL to a "
-								+ this.spec.artifactType + " service.");
+	public ServiceInstance getInstance(String instanceId) throws ServiceInstanceNotFoundException{
+		for(ServiceInstance instance: serviceInstances) {
+			if(instance.getInstanceId().equals(instanceId))
+				return instance;
 		}
 		
-		if (ip != null && !ip.isEmpty())
-			return "http://" + ip + ":" + this.spec.getPort() + "/" + uriContext;
-		else
-			return "http://" + hostname + ":" + this.spec.getPort() + "/" + uriContext;
+		throw new ServiceInstanceNotFoundException(this.name, instanceId);
 	}
 
-	public void setNativeUri(String uri) {
-		this.nativeUri = uri;
-	}
-	
-	public String getBusUri(ServiceType type) {
-		return this.busUris.get(type);
-	}
-	
-	public void setBusUri(ServiceType type, String uri) {
-		this.busUris.put(type, uri);
-	}
-	
-	/**
-	 * 
-	 * @param host It can be the IP or the host name where the service was deployed
-	 */
-	public void setHost(String host) {
-		this.hostname = host;
-	}
-	
-	/**
-	 * 
-	 * @return It can be the IP or the host name where the service was deployed
-	 */
-	public String getHost() {
-		return hostname;
-	}
-
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((nativeUri == null) ? 0 : nativeUri.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -179,23 +161,28 @@ public class Service {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
+		
 		Service other = (Service) obj;
+		
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (nativeUri == null) {
-			if (other.nativeUri != null)
+		
+		if (id == null) {
+			if(other.id != null) 
 				return false;
-		} else if (!nativeUri.equals(other.nativeUri))
+		} else if (!id.equals(other.id))
 			return false;
+		
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Service [name=" + name + ", uri=" + getNativeUri() + "]";
+		String repr = "Service [name=" + name;
+		repr += (getUris() != null) ? repr +=	", uri=" + getUris().toString() + "]" : "]";
+		return repr;
 	}
-
 }

@@ -37,7 +37,7 @@ public class RecipeBuilderTest {
 		impact.setRegion("BR");
 
 		service = new ServiceSpec();
-		service.setCodeUri(codeLocationURI);
+		service.setDeployableUri(codeLocationURI);
 		service.setArtifactType(ArtifactType.TOMCAT);
 		service.setResourceImpact(impact);
 		service.setName(id);

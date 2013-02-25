@@ -12,8 +12,7 @@ public class NodeSelectorFactory {
 	// singleton
 	private static NodeSelector roundRobinSelector, demoSelector;
 	
-	public static NodeSelector getInstance(
-			CloudProvider cloudProvider) {
+	public static NodeSelector getInstance(CloudProvider cloudProvider) {
 
 		String selector = Configuration.get("NODE_SELECTOR");
 		NodeSelectorType type = null;

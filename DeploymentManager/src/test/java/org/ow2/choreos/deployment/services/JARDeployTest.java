@@ -15,6 +15,7 @@ import org.ow2.choreos.deployment.services.ServiceDeployer;
 import org.ow2.choreos.deployment.services.ServiceDeployerImpl;
 import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -41,7 +42,7 @@ public class JARDeployTest {
 	public void setUp() throws Exception {
 		
 		spec.setName("simplews");
-		spec.setCodeUri(JAR_LOCATION);
+		spec.setDeployableUri(JAR_LOCATION);
 		spec.setArtifactType(ArtifactType.COMMAND_LINE);
 		spec.setEndpointName("");
 		spec.setPort(8042);
@@ -51,9 +52,12 @@ public class JARDeployTest {
 	public void shouldDeployAJarServiceInANode() throws Exception {
 
 		Service service = deployer.deploy(spec);
-		String url = service.getNativeUri();
+		
+		ServiceInstance instance = service.getInstances().get(0);
+		
+		String url = instance.getNativeUri();
 		System.out.println("Service at " + url);
-		npm.upgradeNode(service.getNodeId());
+		npm.upgradeNode(instance.getNode().getId());
 		Thread.sleep(1000);
 		client = WebClient.create(url);
 		String body = client.get(String.class);

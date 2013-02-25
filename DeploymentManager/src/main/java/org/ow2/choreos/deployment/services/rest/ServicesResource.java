@@ -24,10 +24,12 @@ import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.services.ServiceDeployer;
 import org.ow2.choreos.deployment.services.ServiceDeployerImpl;
+import org.ow2.choreos.deployment.services.ServiceInstanceNotFoundException;
 import org.ow2.choreos.deployment.services.ServiceNotDeletedException;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
 import org.ow2.choreos.deployment.services.ServiceNotFoundException;
 import org.ow2.choreos.deployment.services.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 
 /**
@@ -61,11 +63,11 @@ public class ServicesResource {
 			@Context UriInfo uriInfo) {
 
 		ServiceSpec serviceSpec = serviceSpecXML.getValue();
-		if (serviceSpec.getCodeUri() == null || serviceSpec.getCodeUri().isEmpty() 
+		if (serviceSpec.getDeployableUri() == null || serviceSpec.getDeployableUri().isEmpty() 
 				|| serviceSpec.getArtifactType() == null)
 			return Response.status(Status.BAD_REQUEST).build();
 		
-		logger.debug("Request to deploy " + serviceSpec.getCodeUri());
+		logger.debug("Request to deploy " + serviceSpec.getDeployableUri());
 
 		Service service;
 		try {
@@ -74,7 +76,8 @@ public class ServicesResource {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		
-		logger.info(service.getName() + " deployed on " + service.getHost());
+		//TODO: AVISA QUE NÃO TEM NÓ MEU CARO!!!
+		logger.info(service.getName() + " deployed on " + service.getUris());
 		
 		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
 		uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getName());
@@ -108,6 +111,64 @@ public class ServicesResource {
 		}
 		
 		return Response.ok(service).build();
+	}
+	
+	/**
+	 * Client requests a service instances by ID
+	 * 
+	 * @param serviceID of service of required instances
+	 * @return a service found
+	 */
+	@GET
+	@Path("{serviceID}/instances")
+	@Produces(MediaType.APPLICATION_XML)
+	public Response getServiceInstances(@PathParam("serviceId") String serviceId) {
+		
+		if (serviceId == null || serviceId.isEmpty()) {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+		
+		logger.debug("Request to get instance " + serviceId + " of service "+ serviceId);
+		Service service;
+		try {
+			service = serviceDeployer.getService(serviceId);
+		} catch (ServiceNotFoundException e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();			
+		}
+		
+		return Response.ok(service.getInstances()).build();
+	}
+	
+	/**
+	 * Client requests a service instance by ID
+	 * 
+	 * @param serviceID of service of required instance
+	 * @param instanceID of required instance
+	 * @return a service found
+	 */
+	@GET
+	@Path("{serviceID}/instances/{instanceID}")
+	@Produces(MediaType.APPLICATION_XML)
+	public Response getServiceInstance(@PathParam("serviceId") String serviceId,
+			@PathParam("instanceId") String instanceId) {
+		
+		if (serviceId == null || serviceId.isEmpty()) {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+		
+		logger.debug("Request to get instance " + serviceId + " of service "+ serviceId);
+		Service service;
+		ServiceInstance instance;
+		try {
+			service = serviceDeployer.getService(serviceId);
+			instance = service.getInstance(instanceId);
+		} catch (ServiceNotFoundException e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();			
+		} catch (ServiceInstanceNotFoundException e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		
+		return Response.ok(instance).build();
 	}
 
 	/**

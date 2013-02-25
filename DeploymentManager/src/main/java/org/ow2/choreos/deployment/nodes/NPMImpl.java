@@ -80,19 +80,27 @@ public class NPMImpl implements NodePoolManager {
     }
 
     @Override
-    public Node applyConfig(Config config) throws ConfigNotAppliedException {
+    public List<Node> applyConfig(Config config, int numberOfInstances) throws ConfigNotAppliedException {
 
         NodeSelector selector = NodeSelectorFactory.getInstance(this.cloudProvider);
-        Node node = selector.selectNode(config);
+        List<Node> nodes = selector.selectNodes(config, numberOfInstances);
 
-        if (node == null) {
+        if (nodes == null) {
         	throw new ConfigNotAppliedException(config.getName());
         }
 
         String cookbook = ConfigToChef.getCookbookNameFromConfigName(config.getName());
         String recipe = ConfigToChef.getRecipeNameFromConfigName(config.getName());
 
-        final int TRIALS = 3;
+        for(Node node : nodes)
+        	applyConfig(config, node, cookbook, recipe);
+
+    	return nodes;
+    }
+
+	private void applyConfig(Config config, Node node, String cookbook,
+			String recipe) throws ConfigNotAppliedException {
+		final int TRIALS = 3;
         final int SLEEP_TIME = 1000;
         int step = 0;
         boolean ok = false;
@@ -100,7 +108,7 @@ public class NPMImpl implements NodePoolManager {
         while (!ok) {
         	try {
         	    RecipeApplier recipeApplyer = new RecipeApplier();
-				recipeApplyer.applyRecipe(node, cookbook, recipe);
+       	    	recipeApplyer.applyRecipe(node, cookbook, recipe);
 				ok = true;
 			} catch (ConfigNotAppliedException e) {
 				try {
@@ -113,9 +121,7 @@ public class NPMImpl implements NodePoolManager {
 					throw new ConfigNotAppliedException(config.getName()); 
 			}
         }
-
-    	return node;
-    }
+	}
     
 	@Override
 	public void upgradeNode(String nodeId) throws NodeNotUpgradedException, NodeNotFoundException {

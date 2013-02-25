@@ -47,11 +47,12 @@ public class ServicesClient implements ServiceDeployer {
 		return client;
 	}
 	
+	// TODO: review this methods for new client path
 	@Override
 	public Service deploy(ServiceSpec serviceSpec) throws ServiceNotDeployedException {
 		
 		WebClient client = setupClient();
-		client.path("services");   	
+		client.path("services");
     	Service service = null;
     	try {
     		service = client.post(serviceSpec, Service.class);

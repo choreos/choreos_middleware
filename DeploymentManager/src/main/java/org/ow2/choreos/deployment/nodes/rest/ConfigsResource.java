@@ -2,6 +2,7 @@ package org.ow2.choreos.deployment.nodes.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -51,27 +52,28 @@ public class ConfigsResource {
 	 */
     @POST
     @Consumes(MediaType.APPLICATION_XML)
-    public Response applyConfig(Config config, @Context UriInfo uriInfo) throws URISyntaxException {
+    public Response applyConfig(Config config, int numberOfInstances, @Context UriInfo uriInfo) throws URISyntaxException {
         
     	logger.debug("Request to apply " + config.getName());
     	
 		if (config == null || config.getName() == null || config.getName().isEmpty())
 			return Response.status(Status.BAD_REQUEST).build();
 		
-    	Node node;
+    	List<Node> nodes;
 		try {
-			node = npm.applyConfig(config);
+			nodes = npm.applyConfig(config, numberOfInstances);
 		} catch (ConfigNotAppliedException e) {
 			logger.error("Config not applied", e);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
     	
-		logger.info(config.getName() + " applied on " + node.getIp());
+		//logger.info(config.getName() + " applied on " + node.getIp());
 
 		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-		uriBuilder = uriBuilder.path(NodesResource.class).path(node.getId());
+		//uriBuilder = uriBuilder.path(NodesResource.class).path(node.getId());
 		URI uri = uriBuilder.build();
-		NodeRestRepresentation nodeRest = new NodeRestRepresentation(node);
+		NodeRestRepresentation nodeRest = new NodeRestRepresentation(nodes.get(0));
+		//NodeRestRepresentation nodeRest = new NodeRestRepresentation(node);
     	return Response.created(uri).entity(nodeRest).build();
     }
 }

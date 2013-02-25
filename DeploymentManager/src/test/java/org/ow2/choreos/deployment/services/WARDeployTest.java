@@ -18,6 +18,7 @@ import org.ow2.choreos.deployment.services.ServiceDeployer;
 import org.ow2.choreos.deployment.services.ServiceDeployerImpl;
 import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -48,7 +49,7 @@ public class WARDeployTest {
 	public void setUp() throws Exception {
 		
 		specWar.setName("airline");
-		specWar.setCodeUri(WAR_LOCATION);
+		specWar.setDeployableUri(WAR_LOCATION);
 		specWar.setEndpointName(ENDPOINT_NAME);
 		specWar.setArtifactType(ArtifactType.TOMCAT);
 		specWar.setResourceImpact(resourceImpact);
@@ -58,9 +59,12 @@ public class WARDeployTest {
 	public void shouldDeployAWarServiceInANode() throws Exception {
 
 		Service service = deployer.deploy(specWar);
-		String url = service.getNativeUri();
+		
+		ServiceInstance instance = service.getInstances().get(0);
+		
+		String url = instance.getNativeUri();
 		logger.info("Service at " + url);
-		npm.upgradeNode(service.getNodeId());
+		npm.upgradeNode(instance.getNode().getId());
 		Thread.sleep(1000);
 		
 		if (url.trim().endsWith("/"))

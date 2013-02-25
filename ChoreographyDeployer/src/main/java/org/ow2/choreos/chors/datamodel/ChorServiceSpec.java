@@ -3,6 +3,7 @@ package org.ow2.choreos.chors.datamodel;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 
 /**
@@ -26,13 +27,19 @@ public class ChorServiceSpec extends ServiceSpec {
 		
 		ServiceSpec spec = new ServiceSpec();
 		spec.setName(super.name);
-		spec.setCodeUri(super.codeUri);
+		
+		if(spec.getArtifactType() != ArtifactType.LEGACY)
+			spec.setDeployableUri(super.deployableUri);
+		else
+			spec.addServiceUris(super.serviceUris);
+		
 		spec.setEndpointName(super.endpointName);
 		spec.setPort(super.port);
 		spec.setResourceImpact(super.resourceImpact);
 		spec.setType(super.type);
 		spec.setArtifactType(super.artifactType);
 		spec.setVersion(super.getVersion());
+		spec.setNumberOfInstances(super.numberOfInstances);
 		return spec;
 	}
 	
@@ -94,12 +101,29 @@ public class ChorServiceSpec extends ServiceSpec {
 
 	@Override
 	public String toString() {
-		return "ChorServiceSpec [owner=" + owner + ", group=" + group
+		
+		String repr = "";
+		
+		repr +=  "ChorServiceSpec [owner=" + owner + ", group=" + group
 				+ ", roles=" + roles + ", dependencies=" + dependencies
 				+ ", name=" + name + ", type=" + type + ", artifactType="
-				+ artifactType + ", codeUri=" + codeUri + ", port=" + port
+				+ artifactType; 
+				
+				if(this.getArtifactType() != ArtifactType.LEGACY)
+					repr += ", deployableUri=" + deployableUri;
+				else
+					repr += ", serviceUris=";
+					for(int i = 0; i < serviceUris.size(); i++)
+						if(i == serviceUris.size()-1)
+							repr += serviceUris.get(i);
+						else
+							repr += serviceUris.get(i) + ";";
+				
+				repr += ", port=" + port
 				+ ", endpointName=" + endpointName + ", version=" + version
 				+ "]";
+		
+		return repr;
 	}
 	
 }
