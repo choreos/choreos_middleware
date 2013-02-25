@@ -16,7 +16,7 @@ import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.deployment.services.ServiceDeployer;
 import org.ow2.choreos.deployment.services.ServiceDeployerImpl;
-import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
+import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
@@ -49,9 +49,9 @@ public class WARDeployTest {
 	public void setUp() throws Exception {
 		
 		specWar.setName("airline");
-		specWar.setDeployableUri(WAR_LOCATION);
+		specWar.setPackageUri(WAR_LOCATION);
 		specWar.setEndpointName(ENDPOINT_NAME);
-		specWar.setArtifactType(ArtifactType.TOMCAT);
+		specWar.setPackageType(PackageType.TOMCAT);
 		specWar.setResourceImpact(resourceImpact);
 	}
 

@@ -10,7 +10,7 @@ import org.ow2.choreos.chors.client.ChorDeployerClient;
 import org.ow2.choreos.chors.datamodel.ChorServiceSpec;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.chors.datamodel.ServiceDependency;
-import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
+import org.ow2.choreos.deployment.services.datamodel.PackageType;
 
 public class XMLExample {
 	
@@ -66,10 +66,10 @@ public class XMLExample {
 		
 		ChorServiceSpec spec = new ChorServiceSpec();
 		spec.setName(name);
-		spec.setCodeUri("http://choreos.eu/registry/" + name + ".jar");
+		spec.setPackageUri("http://choreos.eu/registry/" + name + ".jar");
 		spec.setPort(port);
 		spec.setEndpointName(name);
-		spec.setArtifactType(ArtifactType.COMMAND_LINE);
+		spec.setPackageType(PackageType.COMMAND_LINE);
 		spec.getRoles().add(name);
 		return spec;
 	}
@@ -78,10 +78,10 @@ public class XMLExample {
 		
 		ChorServiceSpec spec = new ChorServiceSpec();
 		spec.setName(name);
-		spec.setCodeUri("http://" + ip + ":" + port + "/" + name + "/");
+		spec.setPackageUri("http://" + ip + ":" + port + "/" + name + "/");
 		spec.setPort(port);
 		spec.setEndpointName(name);
-		spec.setArtifactType(ArtifactType.LEGACY);
+		spec.setPackageType(PackageType.LEGACY);
 		spec.getRoles().add(name);
 		return spec;
 	}
@@ -90,9 +90,9 @@ public class XMLExample {
 		
 		ChorServiceSpec spec = new ChorServiceSpec();
 		spec.setName(name);
-		spec.setCodeUri("http://choreos.eu/registry/" + name + ".tar.gz");
+		spec.setPackageUri("http://choreos.eu/registry/" + name + ".tar.gz");
 		spec.setEndpointName(name);
-		spec.setArtifactType(ArtifactType.EASY_ESB);
+		spec.setPackageType(PackageType.EASY_ESB);
 		spec.getRoles().add(name);
 		return spec;
 	}

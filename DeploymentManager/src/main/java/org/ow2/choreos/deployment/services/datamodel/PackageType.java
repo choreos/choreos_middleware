@@ -7,7 +7,7 @@ package org.ow2.choreos.deployment.services.datamodel;
  * @author leonardo
  *
  */
-public enum ArtifactType {
+public enum PackageType {
 
 	COMMAND_LINE("jar"), 
 	TOMCAT("war"), 
@@ -17,7 +17,7 @@ public enum ArtifactType {
 	
     private final String extension;
     
-    private ArtifactType(String extension) {
+    private PackageType(String extension) {
             this.extension = extension;
     }
     

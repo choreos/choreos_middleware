@@ -11,7 +11,7 @@ import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.datamodel.ChorServiceSpec;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
+import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -53,7 +53,7 @@ public class SingleServiceEnactmentTest {
 		int port = WEATHER_FORECAST_PORT;
 		service.setPort(port);
 		service.getRoles().add(WEATHER_FORECAST_SERVICE);
-		service.setArtifactType(ArtifactType.COMMAND_LINE);
+		service.setPackageType(PackageType.COMMAND_LINE);
 		chor.addServiceSpec(service);
 	}
 	

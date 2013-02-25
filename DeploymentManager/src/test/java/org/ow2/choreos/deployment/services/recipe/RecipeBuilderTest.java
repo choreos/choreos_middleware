@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
-import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
+import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.deployment.services.recipe.Recipe;
 import org.ow2.choreos.deployment.services.recipe.RecipeBuilderImpl;
@@ -37,8 +37,8 @@ public class RecipeBuilderTest {
 		impact.setRegion("BR");
 
 		service = new ServiceSpec();
-		service.setDeployableUri(codeLocationURI);
-		service.setArtifactType(ArtifactType.TOMCAT);
+		service.setPackageUri(codeLocationURI);
+		service.setPackageType(PackageType.TOMCAT);
 		service.setResourceImpact(impact);
 		service.setName(id);
 	}

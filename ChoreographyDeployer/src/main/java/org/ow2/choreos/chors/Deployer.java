@@ -22,7 +22,7 @@ import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.rest.NodesClient;
 import org.ow2.choreos.deployment.services.ServiceDeployer;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
-import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
+import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
@@ -124,7 +124,7 @@ public class Deployer {
 			
 			deployedServices.put(deployed.getName(), deployed);
 			
-			if (deployed.getSpec().getArtifactType() != ArtifactType.LEGACY) {
+			if (deployed.getSpec().getArtifactType() != PackageType.LEGACY) {
 				
 				logger.debug(">>>> instances <<<< : " + deployed.getInstances().toString());
 				for(ServiceInstance instance: deployed.getInstances()) {

@@ -3,7 +3,7 @@ package org.ow2.choreos.chors.datamodel;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
+import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 
 /**
@@ -28,8 +28,8 @@ public class ChorServiceSpec extends ServiceSpec {
 		ServiceSpec spec = new ServiceSpec();
 		spec.setName(super.name);
 		
-		if(spec.getArtifactType() != ArtifactType.LEGACY)
-			spec.setDeployableUri(super.deployableUri);
+		if(spec.getArtifactType() != PackageType.LEGACY)
+			spec.setPackageUri(super.packageUri);
 		else
 			spec.addServiceUris(super.serviceUris);
 		
@@ -37,7 +37,7 @@ public class ChorServiceSpec extends ServiceSpec {
 		spec.setPort(super.port);
 		spec.setResourceImpact(super.resourceImpact);
 		spec.setType(super.type);
-		spec.setArtifactType(super.artifactType);
+		spec.setPackageType(super.packageType);
 		spec.setVersion(super.getVersion());
 		spec.setNumberOfInstances(super.numberOfInstances);
 		return spec;
@@ -107,10 +107,10 @@ public class ChorServiceSpec extends ServiceSpec {
 		repr +=  "ChorServiceSpec [owner=" + owner + ", group=" + group
 				+ ", roles=" + roles + ", dependencies=" + dependencies
 				+ ", name=" + name + ", type=" + type + ", artifactType="
-				+ artifactType; 
+				+ packageType; 
 				
-				if(this.getArtifactType() != ArtifactType.LEGACY)
-					repr += ", deployableUri=" + deployableUri;
+				if(this.getArtifactType() != PackageType.LEGACY)
+					repr += ", deployableUri=" + packageUri;
 				else
 					repr += ", serviceUris=";
 					for(int i = 0; i < serviceUris.size(); i++)

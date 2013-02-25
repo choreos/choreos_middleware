@@ -19,7 +19,7 @@ import org.ow2.choreos.deployment.nodes.ConfigNotAppliedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
+import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
@@ -64,8 +64,8 @@ public class ServiceDeployerImplTest {
 		
 		serviceSpec = new ServiceSpec();
 		serviceSpec.setName("Airline");
-		serviceSpec.setDeployableUri("http://choreos.eu/services/airline.jar");
-		serviceSpec.setArtifactType(ArtifactType.COMMAND_LINE);
+		serviceSpec.setPackageUri("http://choreos.eu/services/airline.jar");
+		serviceSpec.setPackageType(PackageType.COMMAND_LINE);
 		serviceSpec.setEndpointName("airline");
 		serviceSpec.setPort(8042);
 		

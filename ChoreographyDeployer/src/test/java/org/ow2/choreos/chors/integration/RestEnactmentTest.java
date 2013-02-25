@@ -14,7 +14,7 @@ import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ServiceDependency;
 import org.ow2.choreos.chors.rest.ChorDeployerServer;
-import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
+import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -66,7 +66,7 @@ public class RestEnactmentTest {
 	//	airline.setCodeUri(AIRLINE_JAR);
 		airline.setEndpointName(AIRLINE);
 		airline.setPort(AIRLINE_PORT);
-		airline.setArtifactType(ArtifactType.COMMAND_LINE);
+		airline.setPackageType(PackageType.COMMAND_LINE);
 		airline.getRoles().add(AIRLINE);
 		chorSpec.addServiceSpec(airline);
 		
@@ -75,7 +75,7 @@ public class RestEnactmentTest {
 	//	travel.setCodeUri(TRAVEL_AGENCY_JAR);
 		travel.setEndpointName(TRAVEL_AGENCY);
 		travel.setPort(TRAVEL_AGENCY_PORT);
-		travel.setArtifactType(ArtifactType.COMMAND_LINE);
+		travel.setPackageType(PackageType.COMMAND_LINE);
 		travel.getRoles().add(TRAVEL_AGENCY);
 		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
 		travel.getDependencies().add(dep);

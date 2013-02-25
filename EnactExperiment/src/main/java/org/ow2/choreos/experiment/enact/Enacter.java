@@ -52,7 +52,7 @@ public class Enacter implements Runnable {
 		long tf = System.currentTimeMillis();
 		duration = tf - t0;
 		Service travelService = chor.getDeployedServiceByName(TRAVEL_AGENCY);
-		travelWSDL = travelService.getNativeUri() + "?wsdl";
+		travelWSDL = travelService.getInstances().get(0).getNativeUri() + "?wsdl";
 		
 		System.out.println(Utils.getTimeStamp() + "Choreography #" + idx + " enacted in " + duration + " miliseconds");
 		report.addChorEnactmentTime(duration);
@@ -67,7 +67,9 @@ public class Enacter implements Runnable {
 		
 		List<String> machines = new ArrayList<String>();
 		for (Service svc: chor.getDeployedServices()) {
-			String machine = svc.getIp() + " (" + svc.getNodeId() + ")";
+			String nodeId = svc.getInstances().get(0).getNode().getId();
+			String nodeIp = svc.getInstances().get(0).getNode().getIp();
+			String machine = nodeIp + " (" + nodeId + ")";
 			machines.add(machine);
 		}
 		return machines;

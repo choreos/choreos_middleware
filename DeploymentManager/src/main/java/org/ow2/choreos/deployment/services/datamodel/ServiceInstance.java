@@ -154,7 +154,7 @@ public class ServiceInstance {
 		// http://www.searchenginejournal.com/to-slash-or-not-to-slash-thats-a-server-header-question/6763/
 		
 		String _hostname, _ip;
-		if(this.getMyParentServiceSpec().getArtifactType() == ArtifactType.LEGACY) {
+		if(this.getMyParentServiceSpec().getArtifactType() == PackageType.LEGACY) {
 			_hostname = legacyHostname;
 			_ip = legacyIp;
 		} else {
@@ -180,7 +180,7 @@ public class ServiceInstance {
 			default:
 				throw new IllegalStateException(
 						"Sorry, I don't know how to provide an URL to a "
-								+ getMyParentServiceSpec().artifactType + " service.");
+								+ getMyParentServiceSpec().packageType + " service.");
 		}
 		
 		if (_ip != null && !_ip.isEmpty())

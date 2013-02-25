@@ -63,11 +63,11 @@ public class ServicesResource {
 			@Context UriInfo uriInfo) {
 
 		ServiceSpec serviceSpec = serviceSpecXML.getValue();
-		if (serviceSpec.getDeployableUri() == null || serviceSpec.getDeployableUri().isEmpty() 
+		if (serviceSpec.getPackageUri() == null || serviceSpec.getPackageUri().isEmpty() 
 				|| serviceSpec.getArtifactType() == null)
 			return Response.status(Status.BAD_REQUEST).build();
 		
-		logger.debug("Request to deploy " + serviceSpec.getDeployableUri());
+		logger.debug("Request to deploy " + serviceSpec.getPackageUri());
 
 		Service service;
 		try {

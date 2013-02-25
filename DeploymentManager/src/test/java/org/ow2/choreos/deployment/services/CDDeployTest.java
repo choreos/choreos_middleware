@@ -15,7 +15,7 @@ import org.ow2.choreos.deployment.Locations;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
-import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
+import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
@@ -44,8 +44,8 @@ public class CDDeployTest {
 	public void setUp() throws Exception {
 		
 		spec.setName("CDWeather");
-		spec.setDeployableUri(CD_LOCATION);
-		spec.setArtifactType(ArtifactType.EASY_ESB);
+		spec.setPackageUri(CD_LOCATION);
+		spec.setPackageType(PackageType.EASY_ESB);
 		spec.setEndpointName("CDWeatherForecastServicePort"); // configured in the config.xml
 	}
 

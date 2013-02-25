@@ -12,13 +12,13 @@ public class ServiceSpec {
 
 	protected String name;
 	protected ServiceType type;
-	protected ArtifactType artifactType;
+	protected PackageType packageType;
 	protected ResourceImpact resourceImpact;
 	protected String version;
 	protected int numberOfInstances = 1; // for default value, at least one
 	
 	// Deployable service attribs
-	protected String deployableUri; 
+	protected String packageUri; 
 	protected int port;
 	protected String endpointName;
 
@@ -46,14 +46,14 @@ public class ServiceSpec {
 	}
 	
 	public int getNumberOfInstances() {
-		if(artifactType == ArtifactType.LEGACY)
+		if(packageType == PackageType.LEGACY)
 			return serviceUris.size();
 		else
 			return numberOfInstances;
 	}
 	
 	public void setNumberOfInstances(int number) throws IllegalArgumentException {
-		if(artifactType == ArtifactType.LEGACY)
+		if(packageType == PackageType.LEGACY)
 			throw new IllegalArgumentException("Trying to set number of instances of a legacy service.");
 		
 		this.numberOfInstances = (number > 0) ? number : 1;
@@ -75,20 +75,20 @@ public class ServiceSpec {
 		this.type = type;
 	}
 
-	public ArtifactType getArtifactType() {
-		return artifactType;
+	public PackageType getArtifactType() {
+		return packageType;
 	}
 
-	public void setArtifactType(ArtifactType artifactType) {
-		this.artifactType = artifactType;
+	public void setPackageType(PackageType packageType) {
+		this.packageType = packageType;
 	}
 
-	public String getDeployableUri() {
-		return deployableUri;
+	public String getPackageUri() {
+		return packageUri;
 	}
 
-	public void setDeployableUri(String uri) {
-		this.deployableUri = uri;
+	public void setPackageUri(String uri) {
+		this.packageUri = uri;
 	}
 
 	public ResourceImpact getResourceImpact() {
@@ -119,8 +119,8 @@ public class ServiceSpec {
 		
 		// We assume that the codeLocationURI ends with "/fileName.[war,jar]
 		String fileName = "";
-		String extension = this.artifactType.getExtension();
-		String[] urlPieces = this.getDeployableUri().split("/");
+		String extension = this.packageType.getExtension();
+		String[] urlPieces = this.getPackageUri().split("/");
 		if (urlPieces[urlPieces.length - 1].contains("." + extension)) {
 			fileName = urlPieces[urlPieces.length - 1];
 		}
@@ -132,9 +132,9 @@ public class ServiceSpec {
 		int effectivePort = port;
 
 		if (notDefinedPort()) {
-			if (artifactType == ArtifactType.TOMCAT)
+			if (packageType == PackageType.TOMCAT)
 				effectivePort = 8080;
-			if (artifactType == ArtifactType.EASY_ESB)
+			if (packageType == PackageType.EASY_ESB)
 				effectivePort = 8180;
 		}
 		
@@ -154,7 +154,7 @@ public class ServiceSpec {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((deployableUri == null) ? 0 : deployableUri.hashCode());
+		result = prime * result + ((packageUri == null) ? 0 : packageUri.hashCode());
 		return result;
 	}
 
@@ -167,10 +167,10 @@ public class ServiceSpec {
 		if (getClass() != obj.getClass())
 			return false;
 		ServiceSpec other = (ServiceSpec) obj;
-		if (deployableUri == null) {
-			if (other.deployableUri != null)
+		if (packageUri == null) {
+			if (other.packageUri != null)
 				return false;
-		} else if (!deployableUri.equals(other.deployableUri))
+		} else if (!packageUri.equals(other.packageUri))
 			return false;
 		return true;
 	}
@@ -178,7 +178,7 @@ public class ServiceSpec {
 	@Override
 	public String toString() {
 		return "ServiceSpec [name=" + name + ", type=" + type
-				+ ", artifactType=" + artifactType + ", codeUri=" + deployableUri
+				+ ", artifactType=" + packageType + ", codeUri=" + packageUri
 				+ ", port=" + port + ", endpointName=" + endpointName
 				+ ", # instances=" + numberOfInstances
 				+ ", version=" + version + "]";

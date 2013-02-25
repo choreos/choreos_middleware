@@ -13,7 +13,7 @@ import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.services.ServiceDeployer;
 import org.ow2.choreos.deployment.services.ServiceDeployerImpl;
-import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
+import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
@@ -42,8 +42,8 @@ public class JARDeployTest {
 	public void setUp() throws Exception {
 		
 		spec.setName("simplews");
-		spec.setDeployableUri(JAR_LOCATION);
-		spec.setArtifactType(ArtifactType.COMMAND_LINE);
+		spec.setPackageUri(JAR_LOCATION);
+		spec.setPackageType(PackageType.COMMAND_LINE);
 		spec.setEndpointName("");
 		spec.setPort(8042);
 	}

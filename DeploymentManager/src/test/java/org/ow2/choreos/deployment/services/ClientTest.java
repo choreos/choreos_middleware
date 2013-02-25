@@ -13,7 +13,7 @@ import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.deployment.nodes.rest.NodesClient;
 import org.ow2.choreos.deployment.rest.DeploymentManagerServer;
 import org.ow2.choreos.deployment.services.ServiceDeployer;
-import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
+import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
@@ -61,8 +61,8 @@ public class ClientTest {
 		deployer = new ServicesClient(deploymentManagerHost);
 		
 		specWar.setName("myServletWAR");
-		specWar.setDeployableUri(WAR_LOCATION);
-		specWar.setArtifactType(ArtifactType.TOMCAT);
+		specWar.setPackageUri(WAR_LOCATION);
+		specWar.setPackageType(PackageType.TOMCAT);
 		specWar.setResourceImpact(resourceImpact);
 	}
 	

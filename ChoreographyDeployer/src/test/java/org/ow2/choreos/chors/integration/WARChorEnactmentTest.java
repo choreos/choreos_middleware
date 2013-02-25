@@ -11,7 +11,7 @@ import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
+import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -41,7 +41,7 @@ public class WARChorEnactmentTest {
 	@Before
 	public void setUp() {
 		
-		ModelsForTest models = new ModelsForTest(ArtifactType.TOMCAT);
+		ModelsForTest models = new ModelsForTest(PackageType.TOMCAT);
 		chorSpec = models.getChorSpec(); 
 	}
 	

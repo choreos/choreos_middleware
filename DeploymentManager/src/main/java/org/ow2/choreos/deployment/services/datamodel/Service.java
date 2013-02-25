@@ -48,7 +48,7 @@ public class Service {
 
 		this.spec = serviceSpec;
 		if (this.spec.getArtifactType() == null) {
-			this.spec.setArtifactType(ArtifactType.OTHER);
+			this.spec.setPackageType(PackageType.OTHER);
 		}
 
 		if (serviceSpec.getName() == null || serviceSpec.getName().isEmpty()) {
@@ -57,7 +57,7 @@ public class Service {
 			name = serviceSpec.getName();
 		}
 
-		if (serviceSpec.artifactType == ArtifactType.LEGACY) {
+		if (serviceSpec.packageType == PackageType.LEGACY) {
 			setLegacyServiceInstances(serviceSpec);
 		}
 	}
@@ -74,7 +74,7 @@ public class Service {
 
 				si.setLegacyHostname(info.getHostname());
 				si.setLegacyIp(info.getIp());
-				si.setNativeUri(serviceSpec.getDeployableUri());
+				si.setNativeUri(serviceSpec.getPackageUri());
 
 				serviceInstances.add(si);
 			}

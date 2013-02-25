@@ -14,7 +14,7 @@ import org.ow2.choreos.deployment.nodes.ConfigNotAppliedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.deployment.services.datamodel.ArtifactType;
+import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
@@ -50,7 +50,7 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 		Service service = null;
 		try {
 			service = new Service(serviceSpec);
-			if (serviceSpec.getArtifactType() != ArtifactType.LEGACY) {
+			if (serviceSpec.getArtifactType() != PackageType.LEGACY) {
 				service = deployNoLegacyService(service);
 			} 
 			
@@ -88,7 +88,7 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 	
 	private Recipe createRecipe(Service service) {
 		
-		ArtifactType type = service.getSpec().getArtifactType();
+		PackageType type = service.getSpec().getArtifactType();
 		RecipeBuilder builder = RecipeBuilderFactory.getRecipeBuilderInstance(type);
 		Recipe serviceRecipe = builder.createRecipe(service.getSpec());
 		return serviceRecipe;
