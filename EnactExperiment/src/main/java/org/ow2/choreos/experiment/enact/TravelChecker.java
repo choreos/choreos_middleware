@@ -14,7 +14,6 @@ import javax.xml.soap.SOAPMessage;
 
 public class TravelChecker implements Runnable {
 	
-	private static final String EXPECTED_RESULT = "33--22";
 	private String travelEndpoint;
 	int idx;
 	boolean ok = false; // result: service properly accessed
@@ -36,7 +35,7 @@ public class TravelChecker implements Runnable {
 		long tf = System.currentTimeMillis();
 		long duration = tf - t0;
 		
-		ok = EXPECTED_RESULT.equals(result);
+		ok = this.isTravelResponseOK(result);
 		
 		if (ok) {
 			System.out.println(Utils.getTimeStamp() + "Choreography #" + idx
@@ -46,6 +45,11 @@ public class TravelChecker implements Runnable {
 		} else {
 			notWorking(duration);
 		}
+	}
+	
+	private boolean isTravelResponseOK(String travelResponse) {
+		
+		return (travelResponse.startsWith("33") && travelResponse.endsWith("22"));
 	}
 	
 	private String buyTrip() {

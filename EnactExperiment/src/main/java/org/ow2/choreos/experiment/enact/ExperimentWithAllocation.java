@@ -12,7 +12,7 @@ package org.ow2.choreos.experiment.enact;
 public class ExperimentWithAllocation {
 	
 	public static final int CHORS_QTY = 2; // how many micro choreographies there will be
-	public static final int RUN = 6; // sequence ordinal
+	public static final int RUN = 1; // sequence ordinal
 
 	public static void main(String[] args) {
 	

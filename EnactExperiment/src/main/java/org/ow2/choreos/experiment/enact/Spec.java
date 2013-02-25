@@ -9,8 +9,8 @@ public class Spec {
 
 	private static final String AIRLINE = "airline";
 	private static final String TRAVEL_AGENCY = "travelagency";	
-	private static final String AIRLINE_JAR = "http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar";
-	private static final String TRAVEL_AGENCY_JAR = "http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar";	
+	private static final String AIRLINE_JAR = "http://valinhos.ime.usp.br:54080/chordeployer/samples/v1-2/airline-service.jar";
+	private static final String TRAVEL_AGENCY_JAR = "http://valinhos.ime.usp.br:54080/chordeployer/samples/v1-2/travel-agency-service.jar";	
 	private static final int AIRLINE_PORT = 1234;
 	private static final int TRAVEL_AGENCY_PORT = 1235;	
 	
