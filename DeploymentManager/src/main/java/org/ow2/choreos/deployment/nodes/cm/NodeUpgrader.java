@@ -83,8 +83,7 @@ public class NodeUpgrader {
     	while (!ok) {
 	    	try {
 	    		trials++;
-				String result = ssh.runCommand(CHEF_CLIENT_COMMAND);
-				logger.info("*** " + result);
+				ssh.runCommand(CHEF_CLIENT_COMMAND);
 				ok = true;
 			} catch (JSchException e) {
 				if (trials >= MAX_TRIALS) {

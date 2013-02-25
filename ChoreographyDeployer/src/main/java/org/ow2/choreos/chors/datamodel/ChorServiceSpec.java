@@ -113,12 +113,14 @@ public class ChorServiceSpec extends ServiceSpec {
 					repr += ", deployableUri=" + packageUri;
 				else
 					repr += ", serviceUris=";
-					for(int i = 0; i < serviceUris.size(); i++)
-						if(i == serviceUris.size()-1)
-							repr += serviceUris.get(i);
-						else
-							repr += serviceUris.get(i) + ";";
-				
+					if (serviceUris != null) {
+						for(int i = 0; i < serviceUris.size(); i++) {
+							if(i == serviceUris.size()-1)
+								repr += serviceUris.get(i);
+							else
+								repr += serviceUris.get(i) + ";";
+						}
+					}
 				repr += ", port=" + port
 				+ ", endpointName=" + endpointName + ", version=" + version
 				+ "]";
