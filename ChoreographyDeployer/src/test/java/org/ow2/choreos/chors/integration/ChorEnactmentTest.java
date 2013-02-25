@@ -44,7 +44,7 @@ public class ChorEnactmentTest {
 	public void setUp() {
 		
 		ModelsForTest models = new ModelsForTest(PackageType.COMMAND_LINE);
-		spec = models.getChorSpecWithReplicas(2);
+		spec = models.getChorSpecWithReplicas(3);
 	}
 	
 	@Test
@@ -68,6 +68,11 @@ public class ChorEnactmentTest {
 		Item response2 = client2.request("buyTrip");
 		String codes2 = response2.getChild("return").getContent();
 		assertTrue(codes2.startsWith("33") && codes2.endsWith("--22"));
+		
+		WSClient client3 = new WSClient(travel.getUris().get(0) + "?wsdl");
+		Item response3 = client3.request("buyTrip");
+		String codes3 = response3.getChild("return").getContent();
+		assertTrue(codes3.startsWith("33") && codes3.endsWith("--22"));
 		
 		assertFalse(codes.equals(codes2));
 		
