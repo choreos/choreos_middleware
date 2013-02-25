@@ -20,7 +20,7 @@ public class ContextCaster {
 	public void cast(ChorSpec chor, Map<String, Service> deployedServices) {
 
 		logger.info("Passing context to deployed services");
-		for (ChorServiceSpec spec: chor.getServiceSpecs()) {
+		for (ChorServiceSpec spec: chor.getChorServiceSpecs()) {
 
 			Service deployed = deployedServices.get(spec.getName());
 			if (deployed == null) {

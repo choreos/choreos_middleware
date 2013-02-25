@@ -54,7 +54,7 @@ public class SingleServiceEnactmentTest {
 		service.setPort(port);
 		service.getRoles().add(WEATHER_FORECAST_SERVICE);
 		service.setPackageType(PackageType.COMMAND_LINE);
-		chor.addServiceSpec(service);
+		chor.addChorServiceSpec(service);
 	}
 	
 	@Test

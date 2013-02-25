@@ -5,6 +5,7 @@ import java.net.URI;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -49,7 +50,7 @@ public class ChorResource {
 	@Consumes(MediaType.APPLICATION_XML)
 	public Response create(ChorSpec chor, @Context UriInfo uriInfo) {
 
-		if (chor == null || chor.getServiceSpecs() == null || chor.getServiceSpecs().isEmpty()) {
+		if (chor == null || chor.getChorServiceSpecs() == null || chor.getChorServiceSpecs().isEmpty()) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
@@ -132,6 +133,33 @@ public class ChorResource {
 			chor = ee.enact(chorId);
 		} catch (EnactmentException e) {
 			return Response.serverError().build(); 
+		} catch (ChoreographyNotFoundException e) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		
+		return Response.ok(chor).location(location).build();
+	}
+	
+	@PUT
+	@Path("{chorID}/update")
+	@Produces(MediaType.APPLICATION_XML)
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response update(@PathParam("chorID") String chorId, ChorSpec spec, @Context UriInfo uriInfo) {
+		
+		if (chorId == null || chorId.isEmpty()) {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+		
+		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+		uriBuilder = uriBuilder.path(ChorResource.class).path(chorId);
+		URI location = uriBuilder.build();
+		
+		Choreography chor;
+		try {
+			ee.update(chorId, spec);
+			chor = ee.getChoreography(chorId);
+		} catch (EnactmentException e) {
+			return Response.serverError().build();
 		} catch (ChoreographyNotFoundException e) {
 			return Response.status(Status.NOT_FOUND).build();
 		}

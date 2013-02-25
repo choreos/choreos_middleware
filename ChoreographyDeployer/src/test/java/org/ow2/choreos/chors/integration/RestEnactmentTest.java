@@ -68,7 +68,7 @@ public class RestEnactmentTest {
 		airline.setPort(AIRLINE_PORT);
 		airline.setPackageType(PackageType.COMMAND_LINE);
 		airline.getRoles().add(AIRLINE);
-		chorSpec.addServiceSpec(airline);
+		chorSpec.addChorServiceSpec(airline);
 		
 		ChorServiceSpec travel = new ChorServiceSpec();
 		travel.setName(TRAVEL_AGENCY);
@@ -79,7 +79,7 @@ public class RestEnactmentTest {
 		travel.getRoles().add(TRAVEL_AGENCY);
 		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
 		travel.getDependencies().add(dep);
-		chorSpec.addServiceSpec(travel);
+		chorSpec.addChorServiceSpec(travel);
 	}
 	
 	@Test
@@ -100,10 +100,10 @@ public class RestEnactmentTest {
 		String chorId = ee.createChoreography(chorSpec);
 		Choreography chor = ee.getChoreography(chorId);
 		
-		ChorServiceSpec travel = chor.getChorSpec().getServiceSpecByName(TRAVEL_AGENCY);
+		ChorServiceSpec travel = chor.getCurrentChorSpec().getServiceSpecByName(TRAVEL_AGENCY);
 		assertEquals(chorSpec.getServiceSpecByName(TRAVEL_AGENCY), travel);
 		
-		ChorServiceSpec airline = chor.getChorSpec().getServiceSpecByName(AIRLINE);
+		ChorServiceSpec airline = chor.getCurrentChorSpec().getServiceSpecByName(AIRLINE);
 		assertEquals(chorSpec.getServiceSpecByName(AIRLINE), airline);		
 	}
 	

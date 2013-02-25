@@ -42,16 +42,33 @@ public class ChorDeployerImpl implements ChoreographyDeployer {
 		logger.info("Starting enactment; chorId= " + chorId);
 		
 		Deployer deployer = new Deployer();
-		Map<String, Service> deployedMap = deployer.deployServices(chor.getChorSpec());
+		Map<String, Service> deployedMap = deployer.deployServices(chor);
 		
 		ContextCaster caster = new ContextCaster();
-		caster.cast(chor.getChorSpec(), deployedMap);
+		caster.cast(chor.getCurrentChorSpec(), deployedMap);
 		
 		logger.info("Enactment completed; chorId=" + chorId);
-		
+
 		List<Service> deployedList = new ArrayList<Service>(deployedMap.values());
 		reg.addDeployedServices(chorId, deployedList);
 		return chor;
+	}
+
+	@Override
+	public void update(String chorId, ChorSpec spec) throws ChoreographyNotFoundException {
+
+		Choreography chor = reg.get(chorId);
+		if(chor == null) {
+			throw new ChoreographyNotFoundException(chorId);
+		}
+		
+		logger.info("Starting update on choreography with ID " + chorId);
+		
+		chor.setRequestedChorSpec(spec);
+		
+		logger.info("Updated choreography with ID " + chorId);
+		
+		return;
 	}
 
 }

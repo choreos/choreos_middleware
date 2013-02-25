@@ -8,27 +8,27 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class ChorSpec {
 
-	protected List<ChorServiceSpec> serviceSpecs = new ArrayList<ChorServiceSpec>();
+	protected List<ChorServiceSpec> chorServiceSpecs = new ArrayList<ChorServiceSpec>();
 
 	public ChorServiceSpec getServiceSpecByName(String serviceName) {
 		
-		for (ChorServiceSpec svc: serviceSpecs) {
+		for (ChorServiceSpec svc: chorServiceSpecs) {
 			if (serviceName.equals(svc.getName()))
 				return svc;
 		}
 		return null;
 	}
 	
-	public void addServiceSpec(ChorServiceSpec serviceSpec) {
-		this.serviceSpecs.add(serviceSpec);
+	public void addChorServiceSpec(ChorServiceSpec spec) {
+		this.chorServiceSpecs.add(spec);
 	}
 	
-	public List<ChorServiceSpec> getServiceSpecs() {
-		return serviceSpecs;
+	public List<ChorServiceSpec> getChorServiceSpecs() {
+		return chorServiceSpecs;
 	}
 
-	public void setServiceSpecs(List<ChorServiceSpec> serviceSpec) {
-		this.serviceSpecs = serviceSpec;
+	public void setChorServiceSpecs(List<ChorServiceSpec> spec) {
+		this.chorServiceSpecs = spec;
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class ChorSpec {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((serviceSpecs == null) ? 0 : serviceSpecs.hashCode());
+				+ ((chorServiceSpecs == null) ? 0 : chorServiceSpecs.hashCode());
 		return result;
 	}
 
@@ -49,17 +49,17 @@ public class ChorSpec {
 		if (getClass() != obj.getClass())
 			return false;
 		ChorSpec other = (ChorSpec) obj;
-		if (serviceSpecs == null) {
-			if (other.serviceSpecs != null)
+		if (chorServiceSpecs == null) {
+			if (other.chorServiceSpecs != null)
 				return false;
-		} else if (!serviceSpecs.equals(other.serviceSpecs))
+		} else if (!chorServiceSpecs.equals(other.chorServiceSpecs))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "ChorSpec [serviceSpecs=" + serviceSpecs + "]";
+		return "ChorSpec [chorServiceSpecs=" + chorServiceSpecs + "]";
 	}
 	
 }

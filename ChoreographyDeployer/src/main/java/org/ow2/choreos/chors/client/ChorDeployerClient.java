@@ -31,8 +31,8 @@ public class ChorDeployerClient implements ChoreographyDeployer {
 		// not proud of it!
 		HTTPConduit http = (HTTPConduit)WebClient.getConfig(client).getConduit();
 		HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
-		httpClientPolicy.setConnectionTimeout(0);//indefined
-		httpClientPolicy.setReceiveTimeout(0);//indefined
+		httpClientPolicy.setConnectionTimeout(0); //undefined
+		httpClientPolicy.setReceiveTimeout(0); //undefined
 		http.setClient(httpClientPolicy);
 		
 		return client;
@@ -102,6 +102,27 @@ public class ChorDeployerClient implements ChoreographyDeployer {
     	}
 		
         return chor;
+	}
+
+	@Override
+	public void update(String chorId, ChorSpec spec) throws ChoreographyNotFoundException, EnactmentException {
+	
+		WebClient client = setupClient();
+		client.path("chors");
+		client.path(chorId);
+		client.path("update");
+		
+		try {
+			client.put(spec);
+    	} catch (WebApplicationException e) {
+    		int code = e.getResponse().getStatus();
+    		if (code == 400 || code == 404) {
+    			throw new ChoreographyNotFoundException(chorId);
+    		} else {
+    			throw new EnactmentException("PUT /chors/" + chorId + "/update has failed (Error " + code + ")");
+    		}
+    	}
+		
 	}
 
 }

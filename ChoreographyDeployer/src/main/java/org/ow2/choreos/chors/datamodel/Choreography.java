@@ -11,7 +11,8 @@ import org.ow2.choreos.deployment.services.datamodel.Service;
 public class Choreography {
 
 	private String id;
-	private ChorSpec chorSpec;
+	private ChorSpec currentChorSpec = null;
+	private ChorSpec requestedChorSpec = null;
 	private List<Service> deployedServices = new ArrayList<Service>();
 	
 	public Service getDeployedServiceByName(String serviceName) {
@@ -27,18 +28,31 @@ public class Choreography {
 	public String getId() {
 		return id;
 	}
+	
 	public void setId(String id) {
 		this.id = id;
 	}
-	public ChorSpec getChorSpec() {
-		return chorSpec;
+	
+	public ChorSpec getCurrentChorSpec() {
+		return currentChorSpec;
 	}
-	public void setChorSpec(ChorSpec chorSpec) {
-		this.chorSpec = chorSpec;
+	
+	public void setCurrentChorSpec(ChorSpec chorSpec) {
+		this.currentChorSpec = chorSpec;
 	}
+	
+	public ChorSpec getRequestedChorSpec() {
+		return requestedChorSpec;
+	}
+
+	public void setRequestedChorSpec(ChorSpec requestedChorSpec) {
+		this.requestedChorSpec = requestedChorSpec;
+	}
+	
 	public List<Service> getDeployedServices() {
 		return deployedServices;
 	}
+	
 	public void setDeployedServices(List<Service> deployedServices) {
 		this.deployedServices = deployedServices;
 	}
@@ -70,8 +84,7 @@ public class Choreography {
 
 	@Override
 	public String toString() {
-		return "Choreography [id=" + id + ", chorSpec=" + chorSpec
+		return "Choreography [id=" + id + ", chorSpec=" + currentChorSpec
 				+ ", deployedServices=" + deployedServices + "]";
-	}
-	
+	}	
 }

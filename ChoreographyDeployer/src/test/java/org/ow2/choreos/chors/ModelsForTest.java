@@ -63,7 +63,7 @@ public class ModelsForTest {
 		this.airlineSpec.setPort(AIRLINE_PORT);
 		this.airlineSpec.setPackageType(PackageType.COMMAND_LINE);
 		this.airlineSpec.getRoles().add(AIRLINE);
-		this.chorSpec.addServiceSpec(this.airlineSpec);
+		this.chorSpec.addChorServiceSpec(this.airlineSpec);
 
 		this.travelSpec = new ChorServiceSpec();
 		this.travelSpec.setName(TRAVEL_AGENCY);
@@ -74,7 +74,7 @@ public class ModelsForTest {
 		this.travelSpec.getRoles().add(TRAVEL_AGENCY);
 		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
 		this.travelSpec.getDependencies().add(dep);
-		this.chorSpec.addServiceSpec(this.travelSpec);
+		this.chorSpec.addChorServiceSpec(this.travelSpec);
 	}
 
 	private void createWarChorSpec() {
@@ -87,7 +87,7 @@ public class ModelsForTest {
 		this.airlineSpec.setEndpointName(AIRLINE);
 		this.airlineSpec.setPackageType(PackageType.TOMCAT);
 		this.airlineSpec.getRoles().add(AIRLINE);
-		this.chorSpec.addServiceSpec(this.airlineSpec);
+		this.chorSpec.addChorServiceSpec(this.airlineSpec);
 
 		this.travelSpec = new ChorServiceSpec();
 		this.travelSpec.setName(TRAVEL_AGENCY);
@@ -97,7 +97,7 @@ public class ModelsForTest {
 		this.travelSpec.getRoles().add(TRAVEL_AGENCY);
 		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
 		this.travelSpec.getDependencies().add(dep);
-		this.chorSpec.addServiceSpec(this.travelSpec);
+		this.chorSpec.addChorServiceSpec(this.travelSpec);
 	}
 
 	private void creteChoreography() {
@@ -107,7 +107,7 @@ public class ModelsForTest {
 
 		this.chor = new Choreography();
 		this.chor.setId("1");
-		this.chor.setChorSpec(this.chorSpec);
+		this.chor.setCurrentChorSpec(this.chorSpec);
 
 		// create service
 		Service airlineService = new Service();
@@ -189,7 +189,7 @@ public class ModelsForTest {
 		airlineServiceSpec.setPackageType(PackageType.COMMAND_LINE);
 		airlineServiceSpec.getRoles().add(AIRLINE);
 		airlineServiceSpec.setNumberOfInstances(numberOfAirlineServices);
-		spec.addServiceSpec(airlineServiceSpec);
+		spec.addChorServiceSpec(airlineServiceSpec);
 
 		ChorServiceSpec travelServiceSpec = new ChorServiceSpec();
 		
@@ -201,7 +201,7 @@ public class ModelsForTest {
 		travelServiceSpec.getRoles().add(TRAVEL_AGENCY);
 		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
 		travelServiceSpec.getDependencies().add(dep);
-		spec.addServiceSpec(travelServiceSpec);
+		spec.addChorServiceSpec(travelServiceSpec);
 		
 		return spec;
 	}
