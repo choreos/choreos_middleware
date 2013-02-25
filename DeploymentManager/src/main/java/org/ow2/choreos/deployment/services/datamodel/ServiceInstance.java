@@ -154,7 +154,7 @@ public class ServiceInstance {
 		// http://www.searchenginejournal.com/to-slash-or-not-to-slash-thats-a-server-header-question/6763/
 		
 		String _hostname, _ip;
-		if(this.getMyParentServiceSpec().getArtifactType() == PackageType.LEGACY) {
+		if(this.getMyParentServiceSpec().getPackageType() == PackageType.LEGACY) {
 			_hostname = legacyHostname;
 			_ip = legacyIp;
 		} else {
@@ -167,7 +167,7 @@ public class ServiceInstance {
 		
 		String uriContext;
 		
-		switch (getMyParentServiceSpec().getArtifactType()) {
+		switch (getMyParentServiceSpec().getPackageType()) {
 			case TOMCAT:
 				uriContext = getMyParentServiceSpec().getName() + "/" + getMyParentServiceSpec().getEndpointName();
 				break;

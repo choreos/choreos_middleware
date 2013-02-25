@@ -43,6 +43,7 @@ public class SimpleChorEnactmentTest {
 		
 		ModelsForTest models = new ModelsForTest(PackageType.COMMAND_LINE);
 		chorSpec = models.getChorSpec(); 
+//		System.out.println(chorSpec);
 	}
 	
 	@Test

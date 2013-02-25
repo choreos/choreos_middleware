@@ -28,7 +28,7 @@ public class ChorServiceSpec extends ServiceSpec {
 		ServiceSpec spec = new ServiceSpec();
 		spec.setName(super.name);
 		
-		if(spec.getArtifactType() != PackageType.LEGACY)
+		if(spec.getPackageType() != PackageType.LEGACY)
 			spec.setPackageUri(super.packageUri);
 		else
 			spec.addServiceUris(super.serviceUris);
@@ -109,7 +109,7 @@ public class ChorServiceSpec extends ServiceSpec {
 				+ ", name=" + name + ", type=" + type + ", artifactType="
 				+ packageType; 
 				
-				if(this.getArtifactType() != PackageType.LEGACY)
+				if(this.getPackageType() != PackageType.LEGACY)
 					repr += ", deployableUri=" + packageUri;
 				else
 					repr += ", serviceUris=";

@@ -47,7 +47,7 @@ public class Service {
 		this.id = UUID.randomUUID().toString();
 
 		this.spec = serviceSpec;
-		if (this.spec.getArtifactType() == null) {
+		if (this.spec.getPackageType() == null) {
 			this.spec.setPackageType(PackageType.OTHER);
 		}
 

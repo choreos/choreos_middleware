@@ -50,7 +50,7 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 		Service service = null;
 		try {
 			service = new Service(serviceSpec);
-			if (serviceSpec.getArtifactType() != PackageType.LEGACY) {
+			if (serviceSpec.getPackageType() != PackageType.LEGACY) {
 				service = deployNoLegacyService(service);
 			} 
 			
@@ -88,7 +88,7 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 	
 	private Recipe createRecipe(Service service) {
 		
-		PackageType type = service.getSpec().getArtifactType();
+		PackageType type = service.getSpec().getPackageType();
 		RecipeBuilder builder = RecipeBuilderFactory.getRecipeBuilderInstance(type);
 		Recipe serviceRecipe = builder.createRecipe(service.getSpec());
 		return serviceRecipe;

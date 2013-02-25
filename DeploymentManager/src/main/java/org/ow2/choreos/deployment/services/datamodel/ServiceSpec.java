@@ -75,7 +75,7 @@ public class ServiceSpec {
 		this.type = type;
 	}
 
-	public PackageType getArtifactType() {
+	public PackageType getPackageType() {
 		return packageType;
 	}
 

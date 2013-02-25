@@ -124,7 +124,7 @@ public class Deployer {
 			
 			deployedServices.put(deployed.getName(), deployed);
 			
-			if (deployed.getSpec().getArtifactType() != PackageType.LEGACY) {
+			if (deployed.getSpec().getPackageType() != PackageType.LEGACY) {
 				
 				logger.debug(">>>> instances <<<< : " + deployed.getInstances().toString());
 				for(ServiceInstance instance: deployed.getInstances()) {
