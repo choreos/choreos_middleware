@@ -1,7 +1,5 @@
 package org.ow2.choreos.chors;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -45,12 +43,10 @@ public class ChorDeployerImpl implements ChoreographyDeployer {
 		Map<String, Service> deployedMap = deployer.deployServices(chor);
 		
 		ContextCaster caster = new ContextCaster();
-		caster.cast(chor.getCurrentChorSpec(), deployedMap);
+		caster.cast(chor.getRequestedSpec(), deployedMap);
 		
 		logger.info("Enactment completed; chorId=" + chorId);
 
-		List<Service> deployedList = new ArrayList<Service>(deployedMap.values());
-		reg.addDeployedServices(chorId, deployedList);
 		return chor;
 	}
 
@@ -64,7 +60,7 @@ public class ChorDeployerImpl implements ChoreographyDeployer {
 		
 		logger.info("Starting update on choreography with ID " + chorId);
 		
-		chor.setRequestedChorSpec(spec);
+		chor.setSpec(spec);
 		
 		logger.info("Updated choreography with ID " + chorId);
 		

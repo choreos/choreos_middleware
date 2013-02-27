@@ -33,7 +33,7 @@ import org.ow2.choreos.chors.datamodel.Choreography;
 @Path("chors")
 public class ChorResource {
 	
-	private ChoreographyDeployer ee = new ChorDeployerImpl();
+	private ChoreographyDeployer chorDeployer = new ChorDeployerImpl();
 
 	/**
 	 * POST /chors
@@ -54,7 +54,7 @@ public class ChorResource {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
-		String chorId = ee.createChoreography(chor);
+		String chorId = chorDeployer.createChoreography(chor);
 		
 		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
 		uriBuilder = uriBuilder.path(ChorResource.class).path(chorId);
@@ -88,7 +88,7 @@ public class ChorResource {
 		
 		Choreography chor;
 		try {
-			chor = ee.getChoreography(chorId);
+			chor = chorDeployer.getChoreography(chorId);
 		} catch (ChoreographyNotFoundException e) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
@@ -130,7 +130,7 @@ public class ChorResource {
 		
 		Choreography chor;
 		try {
-			chor = ee.enact(chorId);
+			chor = chorDeployer.enact(chorId);
 		} catch (EnactmentException e) {
 			return Response.serverError().build(); 
 		} catch (ChoreographyNotFoundException e) {
@@ -156,8 +156,8 @@ public class ChorResource {
 		
 		Choreography chor;
 		try {
-			ee.update(chorId, spec);
-			chor = ee.getChoreography(chorId);
+			chorDeployer.update(chorId, spec);
+			chor = chorDeployer.getChoreography(chorId);
 		} catch (EnactmentException e) {
 			return Response.serverError().build();
 		} catch (ChoreographyNotFoundException e) {

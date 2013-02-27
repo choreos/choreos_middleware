@@ -1,13 +1,11 @@
 package org.ow2.choreos.chors;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.deployment.services.datamodel.Service;
 
 
 /**
@@ -45,8 +43,7 @@ public class ChorRegistry {
 		
 		Choreography chor = new Choreography();
 		chor.setId(id);
-		chor.setRequestedChorSpec(chorSpec);
-		chor.setCurrentChorSpec(null);
+		chor.setSpec(chorSpec);
 		chors.put(id, chor);
 		
 		return id;
@@ -56,18 +53,4 @@ public class ChorRegistry {
 		
 		return chors.get(chorId);
 	}
-	
-	/**
-	 * Associates deployed services with a choreography
-	 * @param deployed
-	 * @param chorId
-	 */
-	public void addDeployedServices(String chorId, List<Service> deployedServices) {
-		
-		Choreography chor = chors.get(chorId);
-		if (chor == null)
-			throw new IllegalArgumentException("chorId " + chorId + " does not exist");
-		chor.setDeployedServices(deployedServices);
-	}
-
 }

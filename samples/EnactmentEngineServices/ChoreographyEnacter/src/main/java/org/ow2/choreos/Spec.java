@@ -30,7 +30,7 @@ public class Spec {
 		airline.getRoles().add(AIRLINE);
 		airline.setNumberOfInstances(2);
 		
-		chorSpec.addServiceSpec(airline);
+		chorSpec.addChorServiceSpec(airline);
 		
 		ChorServiceSpec travel = new ChorServiceSpec();
 		travel.setName(TRAVEL_AGENCY);
@@ -41,7 +41,7 @@ public class Spec {
 		travel.getRoles().add(TRAVEL_AGENCY);
 		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
 		travel.getDependencies().add(dep);
-		chorSpec.addServiceSpec(travel); 
+		chorSpec.addChorServiceSpec(travel); 
 		
 		return chorSpec;
 	}

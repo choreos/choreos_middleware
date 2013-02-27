@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
@@ -16,6 +17,7 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.Configuration.Option;
 import org.ow2.choreos.chors.datamodel.ChorServiceSpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
+import org.ow2.choreos.chors.datamodel.SpecAndService;
 import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
 import org.ow2.choreos.deployment.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
@@ -30,6 +32,10 @@ import org.ow2.choreos.deployment.services.rest.ServicesClient;
 
 public class Deployer {
 
+	private static final String REMOVING = "removing";
+	private static final String UPDATING = "updating";
+	private static final String CREATING = "creating";
+	private static final String NOCHANGE = "nochange";
 	private Logger logger = Logger.getLogger(Deployer.class);
 
 	/** 
@@ -58,92 +64,63 @@ public class Deployer {
 
 	private List<Service> configureNodes(Choreography chor) {
 		List<Service> services = new ArrayList<Service>();
-		if(chor.getCurrentChorSpec() == null) {
-			services = doFirstDeployment(chor);
+		
+		if(chor.getSpecsAndServices().isEmpty() ) {
+			services = doDeployment(chor);
 		} else {
-			if(!chor.getCurrentChorSpec().equals(chor.getRequestedChorSpec())) {
-				services = doUpdatedDeployment(chor);
+			if(!chor.getRequestedSpec().equals(chor.getSpec())) {
+				services = doUpdatedDiff(chor);
 			}
 		}
 		return services;
 	}
 
-	private List<Service> doFirstDeployment(Choreography chor) {
+	private List<Service> doDeployment(Choreography chor) {
+		
 		final int TIMEOUT = 1; // communication between chorDeployer and DeploymentManager should be fast
-		final int N = chor.getRequestedChorSpec().getChorServiceSpecs().size();
+		final int N = chor.getRequestedSpec().getChorServiceSpecs().size();
+		
 		ExecutorService executor = Executors.newFixedThreadPool(N);
-		List<Future<Service>> futures = new ArrayList<Future<Service>>();
-		List<Service> services = new ArrayList<Service>();
+		
+		Map<ChorServiceSpec, Future<Service>> futures = new HashMap<ChorServiceSpec, Future<Service>>();
+		
+		List<SpecAndService> specsAndServices = new ArrayList<SpecAndService>();
 
-		for (ChorServiceSpec chorServiceSpec: chor.getRequestedChorSpec().getChorServiceSpecs()) {
+		for (ChorServiceSpec chorServiceSpec: chor.getRequestedSpec().getChorServiceSpecs()) {
 
 			ServiceSpec serviceSpec = chorServiceSpec.getServiceSpec();
 			logger.debug("Requesting deploy of " + serviceSpec);
 			ServiceDeployerInvoker invoker = new ServiceDeployerInvoker(serviceSpec);
 			Future<Service> future = executor.submit(invoker);
-			futures.add(future);
-		
+			futures.put(chorServiceSpec, future);
+			
 		}
-		chor.setCurrentChorSpec(chor.getRequestedChorSpec());
 		
 		waitExecutor(executor, TIMEOUT);
-
-		for (Future<Service> f: futures) {
+		
+		for (Entry<ChorServiceSpec, Future<Service>> f : futures.entrySet())
+		{
 			try {
-				Service service = this.checkFuture(f);
+				Service service = this.checkFuture(f.getValue());
 				if (service != null) {
-					services.add(service);
+					specsAndServices.add(new SpecAndService(f.getKey(), service));
 				}
 			} catch (Exception e) {
 				logger.error("Could not get service from future: " + e.getMessage());
 				e.printStackTrace();
 			}
 		}
+		
+		chor.setSpecsAndServices(specsAndServices);
+		List<Service> services = new ArrayList<Service>();
+		for (SpecAndService s : specsAndServices) {
+			services.add(s.getService());
+			
+		}
+		
 		return services;
 	}
 	
-	private Map<String, ChorServiceSpec> makeMapFromServiceList (List<ChorServiceSpec> l) {
-		Map<String, ChorServiceSpec> result = new HashMap<String, ChorServiceSpec>();
-		for(ChorServiceSpec spec:l)
-			result.put(spec.getName(), spec);
-		return result;
-	}
-
-	private List<Service> doUpdatedDeployment(Choreography chor) {
-		
-		Map<String, ChorServiceSpec> currentSpecMap = makeMapFromServiceList(chor.getCurrentChorSpec().getChorServiceSpecs());		
-		Map<String, ChorServiceSpec> requestedSpecMap = makeMapFromServiceList(chor.getRequestedChorSpec().getChorServiceSpecs());
-		List<Service> services = new ArrayList<Service>();
-		
-		
-		for (Map.Entry<String, ChorServiceSpec> currentSpecEntry : currentSpecMap.entrySet()) {	
-			if(requestedSpecMap.containsKey(currentSpecEntry.getKey())) {
-				
-				ChorServiceSpec requestedSpec = requestedSpecMap.get(currentSpecEntry.getKey());
-				if(!requestedSpec.equals(currentSpecEntry.getValue()))
-					modifyService(currentSpecEntry.getValue(), requestedSpec);
-				requestedSpecMap.remove(currentSpecEntry.getKey());
-			
-			}
-			else
-				deleteService(currentSpecEntry.getValue());
-		}
-		
-		//createServices();
-		return services;
-	}
-
-	private void modifyService(ChorServiceSpec value,
-			ChorServiceSpec chorServiceSpec) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void deleteService(ChorServiceSpec value) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	private <T> T checkFuture(Future<T> f)  throws Exception {
 		T result = null;
 		try {
@@ -175,8 +152,6 @@ public class Deployer {
 			deployedServices.put(deployed.getName(), deployed);
 
 			if (deployed.getSpec().getPackageType() != PackageType.LEGACY) {
-
-				logger.debug(">>>> instances <<<< : " + deployed.getInstances().toString());
 				for(ServiceInstance instance: deployed.getInstances()) {
 					String nodeId = instance.getNode().getId();
 					NodeUpgrader upgrader = new NodeUpgrader(nodeId);
@@ -185,8 +160,6 @@ public class Deployer {
 				}
 			}
 		}
-
-
 		waitExecutor(executor, TIMEOUT);
 		return deployedServices;
 	}
@@ -205,6 +178,82 @@ public class Deployer {
 		}
 		executor.shutdownNow();
 	}
+	
+	
+	
+	
+	private Map<String, ChorServiceSpec> makeMapFromServiceList (List<ChorServiceSpec> l) {
+		Map<String, ChorServiceSpec> result = new HashMap<String, ChorServiceSpec>();
+		for(ChorServiceSpec spec:l)
+			result.put(spec.getName(), spec);
+		return result;
+	}
+
+	private List<Service> doUpdatedDiff(Choreography chor) {
+		
+		Map<String, ChorServiceSpec> requestedSpecMap = makeMapFromServiceList(chor.getRequestedSpec().getChorServiceSpecs());		
+		Map<String, ChorServiceSpec> specMap = makeMapFromServiceList(chor.getSpec().getChorServiceSpecs());
+		Map<String, List<ChorServiceSpec>> changes = getApplyingChanges();
+			
+		for (Map.Entry<String, ChorServiceSpec> specEntry : specMap.entrySet()) {	
+			
+			ChorServiceSpec spec = requestedSpecMap.get(specEntry.getKey());
+
+			if(requestedSpecMap.containsKey(specEntry.getKey())) {
+				
+				if(!spec.equals(specEntry.getValue())) {
+					changes.get(UPDATING).add(spec); // same service, different specs
+				}
+				changes.get(NOCHANGE).add(spec);
+			}
+			else {
+				changes.get(REMOVING).add(spec); // there is no more this service in choreography
+			}
+		}
+		
+		return doUpdate(chor, changes);
+	}
+
+	private Map<String, List<ChorServiceSpec>> getApplyingChanges() {
+		Map<String, List<ChorServiceSpec>> changes = new HashMap<String, List<ChorServiceSpec>>();
+		changes.put(CREATING, new ArrayList<ChorServiceSpec>());
+		changes.put(UPDATING, new ArrayList<ChorServiceSpec>());
+		changes.put(REMOVING, new ArrayList<ChorServiceSpec>());
+		changes.put(NOCHANGE, new ArrayList<ChorServiceSpec>());
+		return changes;
+	}
+	
+	
+
+	private List<Service> doUpdate(Choreography chor, Map<String, List<ChorServiceSpec>> changes) {
+
+		updateServices(changes);
+		
+		deleteServices(changes);
+		
+		return null;
+	}
+
+	private void deleteServices(Map<String, List<ChorServiceSpec>> changes) {
+		// still not removing services
+		for(ChorServiceSpec spec : changes.get(REMOVING)) {
+			
+		}
+	}
+
+	private void updateServices(Map<String, List<ChorServiceSpec>> changes) {
+		
+		for(List<ChorServiceSpec> spec : changes.values()) {
+			
+		}
+	}
+	
+	
+	
+	
+	//===================================================================================================================
+	//								Inner Classes
+	//===================================================================================================================
 
 	private class ServiceDeployerInvoker implements Callable<Service> {
 
@@ -225,7 +274,6 @@ public class Deployer {
 				throw e;
 			} 
 		}
-
 	}
 
 	private class NodeUpgrader implements Runnable {

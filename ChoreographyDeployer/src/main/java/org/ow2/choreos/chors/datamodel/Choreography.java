@@ -4,19 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.ow2.choreos.deployment.services.datamodel.Service;
 
 @XmlRootElement
 public class Choreography {
-
-	private String id;
-	private ChorSpec currentChorSpec = null;
-	private ChorSpec requestedChorSpec = null;
-	private List<Service> deployedServices = new ArrayList<Service>();
 	
+	private String id;
+	private ChorSpec spec = null;
+	
+	@XmlTransient
+	private ChorSpec requestedSpec = null;
+	@XmlTransient
+	private List<SpecAndService> specsAndServices = new ArrayList<SpecAndService>();
+	
+	public List<SpecAndService> getSpecsAndServices() {
+		return specsAndServices;
+	}
+
 	public Service getDeployedServiceByName(String serviceName) {
 		
+		List<Service> deployedServices = this.getDeployedServices();
 		System.out.println(deployedServices);
 		for (Service svc: deployedServices) {
 			if (serviceName.equals(svc.getName()))
@@ -33,28 +42,27 @@ public class Choreography {
 		this.id = id;
 	}
 	
-	public ChorSpec getCurrentChorSpec() {
-		return currentChorSpec;
-	}
-	
-	public void setCurrentChorSpec(ChorSpec chorSpec) {
-		this.currentChorSpec = chorSpec;
-	}
-	
-	public ChorSpec getRequestedChorSpec() {
-		return requestedChorSpec;
+	public ChorSpec getSpec() {
+		return spec;
 	}
 
-	public void setRequestedChorSpec(ChorSpec requestedChorSpec) {
-		this.requestedChorSpec = requestedChorSpec;
+	public ChorSpec getRequestedSpec() {
+		return requestedSpec;
+	}
+
+	public void setSpec(ChorSpec spec) {
+		if(spec == null) {
+			this.spec = spec;
+		}
+		this.requestedSpec = spec;		
 	}
 	
 	public List<Service> getDeployedServices() {
-		return deployedServices;
-	}
-	
-	public void setDeployedServices(List<Service> deployedServices) {
-		this.deployedServices = deployedServices;
+		List<Service> res = new ArrayList<Service>();
+		for(SpecAndService b : specsAndServices) {
+			res.add(b.getService());
+		}
+		return res;
 	}
 
 	@Override
@@ -84,7 +92,11 @@ public class Choreography {
 
 	@Override
 	public String toString() {
-		return "Choreography [id=" + id + ", chorSpec=" + currentChorSpec
-				+ ", deployedServices=" + deployedServices + "]";
+		return "Choreography [id=" + id + ", chorSpec=" + requestedSpec
+				+ ", deployedServices=" + getDeployedServices() + "]";
+	}
+
+	public void setSpecsAndServices(List<SpecAndService> specsAndServices) {
+		this.specsAndServices = specsAndServices;
 	}	
 }

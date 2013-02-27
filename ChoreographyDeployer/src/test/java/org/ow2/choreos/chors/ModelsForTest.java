@@ -107,7 +107,7 @@ public class ModelsForTest {
 
 		this.chor = new Choreography();
 		this.chor.setId("1");
-		this.chor.setCurrentChorSpec(this.chorSpec);
+		this.chor.setSpec(this.chorSpec);
 
 		// create service
 		Service airlineService = new Service();
