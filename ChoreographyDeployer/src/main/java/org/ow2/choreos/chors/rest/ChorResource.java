@@ -167,4 +167,10 @@ public class ChorResource {
 		return Response.ok(chor).location(location).build();
 	}
 	
+	@PUT
+	@Path("cleanup")
+	@Produces(MediaType.APPLICATION_XML)
+	public Response cleanUp(@Context UriInfo uriInfo) {	
+		return null;
+	}
 }

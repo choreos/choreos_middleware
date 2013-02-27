@@ -45,6 +45,8 @@ public class ChorDeployerImpl implements ChoreographyDeployer {
 		ContextCaster caster = new ContextCaster();
 		caster.cast(chor.getRequestedSpec(), deployedMap);
 		
+		chor.choreographyEnacted();
+		
 		logger.info("Enactment completed; chorId=" + chorId);
 
 		return chor;

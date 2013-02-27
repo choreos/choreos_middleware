@@ -10,12 +10,12 @@ import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 @XmlRootElement
 public class ServiceSpec {
 
-	protected String name;
-	protected ServiceType type;
-	protected PackageType packageType;
-	protected ResourceImpact resourceImpact;
-	protected String version;
-	protected int numberOfInstances = 1; // for default value, at least one
+	protected String name; 
+	protected ServiceType type; 
+	protected PackageType packageType; 
+	protected ResourceImpact resourceImpact; 
+	protected String version; 
+	protected int numberOfInstances = 1; // for default value, at least one 
 	
 	// Deployable service attribs
 	protected String packageUri; 
@@ -154,7 +154,16 @@ public class ServiceSpec {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((resourceImpact == null) ? 0 : resourceImpact.hashCode());
+		result = prime * result + ((version == null) ? 0 : version.hashCode());
 		result = prime * result + ((packageUri == null) ? 0 : packageUri.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((packageType == null) ? 0 : packageType.hashCode());
+		result = prime * result + (numberOfInstances);
+		result = prime * result + ((endpointName == null) ? 0 : endpointName.hashCode());
+		result = prime * result + ((serviceUris == null) ? 0 : serviceUris.hashCode());
+		result = prime * result + (port);
 		return result;
 	}
 
@@ -167,11 +176,61 @@ public class ServiceSpec {
 		if (getClass() != obj.getClass())
 			return false;
 		ServiceSpec other = (ServiceSpec) obj;
+		
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		
+		if (resourceImpact == null) {
+			if (other.resourceImpact != null)
+				return false;
+		} else if (!resourceImpact.equals(other.resourceImpact))
+			return false;
+		
+		if (version == null) {
+			if (other.version != null)
+				return false;
+		} else if (!version.equals(other.version))
+			return false;
+		
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		
+		if (packageType == null) {
+			if (other.packageType != null)
+				return false;
+		} else if (!packageType.equals(other.packageType))
+			return false;
+		
 		if (packageUri == null) {
 			if (other.packageUri != null)
 				return false;
 		} else if (!packageUri.equals(other.packageUri))
 			return false;
+		
+		if (endpointName == null) {
+			if (other.endpointName != null)
+				return false;
+		} else if (!endpointName.equals(other.endpointName))
+			return false;
+		
+		if (serviceUris == null) {
+			if (other.serviceUris != null)
+				return false;
+		} else if (!serviceUris.equals(other.serviceUris))
+			return false;
+		
+		if (! (numberOfInstances == other.numberOfInstances) )
+			return false;
+		
+		if (! (port == other.port) )
+			return false;
+		
 		return true;
 	}
 

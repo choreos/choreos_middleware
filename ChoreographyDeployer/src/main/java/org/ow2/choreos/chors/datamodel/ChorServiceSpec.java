@@ -74,6 +74,8 @@ public class ChorServiceSpec extends ServiceSpec {
 		int result = super.hashCode();
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
+		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
+		result = prime * result + ((dependencies == null) ? 0 : dependencies.hashCode());
 		return result;
 	}
 
@@ -90,6 +92,16 @@ public class ChorServiceSpec extends ServiceSpec {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
+			return false;
+		if (roles == null) {
+			if (other.roles != null)
+				return false;
+		} else if (!roles.equals(other.roles))
+			return false;
+		if (dependencies == null) {
+			if (other.dependencies != null)
+				return false;
+		} else if (!dependencies.equals(other.dependencies))
 			return false;
 		if (owner == null) {
 			if (other.owner != null)

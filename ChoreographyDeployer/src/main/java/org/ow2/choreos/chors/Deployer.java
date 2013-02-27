@@ -32,10 +32,6 @@ import org.ow2.choreos.deployment.services.rest.ServicesClient;
 
 public class Deployer {
 
-	private static final String REMOVING = "removing";
-	private static final String UPDATING = "updating";
-	private static final String CREATING = "creating";
-	private static final String NOCHANGE = "nochange";
 	private Logger logger = Logger.getLogger(Deployer.class);
 
 	/** 
@@ -47,8 +43,9 @@ public class Deployer {
 	public Map<String, Service> deployServices(Choreography chor) throws EnactmentException {
 
 		logger.info("Deploying services");
-
+		
 		List<Service> services = configureNodes(chor);
+		
 		if (services == null || services.isEmpty()) {
 			throw new EnactmentException("Probably DeploymentManager is off");
 		}
@@ -66,7 +63,9 @@ public class Deployer {
 		List<Service> services = new ArrayList<Service>();
 		
 		if(chor.getSpecsAndServices().isEmpty() ) {
-			services = doDeployment(chor);
+			for (ChorServiceSpec spec : chor.getRequestedSpec().getChorServiceSpecs())
+				chor.addScheduledServiceCreation(spec);
+			services = deployNewServices(chor);
 		} else {
 			if(!chor.getRequestedSpec().equals(chor.getSpec())) {
 				services = doUpdatedDiff(chor);
@@ -75,47 +74,37 @@ public class Deployer {
 		return services;
 	}
 
-	private List<Service> doDeployment(Choreography chor) {
+	private List<Service> deployNewServices(Choreography chor) {
 		
 		final int TIMEOUT = 1; // communication between chorDeployer and DeploymentManager should be fast
 		final int N = chor.getRequestedSpec().getChorServiceSpecs().size();
 		
 		ExecutorService executor = Executors.newFixedThreadPool(N);
-		
 		Map<ChorServiceSpec, Future<Service>> futures = new HashMap<ChorServiceSpec, Future<Service>>();
-		
-		List<SpecAndService> specsAndServices = new ArrayList<SpecAndService>();
 
-		for (ChorServiceSpec chorServiceSpec: chor.getRequestedSpec().getChorServiceSpecs()) {
-
+		for (ChorServiceSpec chorServiceSpec: chor.getScheduledServiceCreation()) {
 			ServiceSpec serviceSpec = chorServiceSpec.getServiceSpec();
 			logger.debug("Requesting deploy of " + serviceSpec);
 			ServiceDeployerInvoker invoker = new ServiceDeployerInvoker(serviceSpec);
 			Future<Service> future = executor.submit(invoker);
-			futures.put(chorServiceSpec, future);
-			
+			futures.put(chorServiceSpec, future);	
 		}
 		
 		waitExecutor(executor, TIMEOUT);
 		
+		List<Service> services = new ArrayList<Service>();
 		for (Entry<ChorServiceSpec, Future<Service>> f : futures.entrySet())
 		{
 			try {
 				Service service = this.checkFuture(f.getValue());
 				if (service != null) {
-					specsAndServices.add(new SpecAndService(f.getKey(), service));
+					chor.addSpecAndService(new SpecAndService(f.getKey(), service));
+					services.add(service);
 				}
 			} catch (Exception e) {
 				logger.error("Could not get service from future: " + e.getMessage());
 				e.printStackTrace();
 			}
-		}
-		
-		chor.setSpecsAndServices(specsAndServices);
-		List<Service> services = new ArrayList<Service>();
-		for (SpecAndService s : specsAndServices) {
-			services.add(s.getService());
-			
 		}
 		
 		return services;
@@ -182,6 +171,10 @@ public class Deployer {
 	
 	
 	
+	//=================================================================================================
+	// 			Updating stuffs
+	//=================================================================================================
+	
 	private Map<String, ChorServiceSpec> makeMapFromServiceList (List<ChorServiceSpec> l) {
 		Map<String, ChorServiceSpec> result = new HashMap<String, ChorServiceSpec>();
 		for(ChorServiceSpec spec:l)
@@ -191,61 +184,56 @@ public class Deployer {
 
 	private List<Service> doUpdatedDiff(Choreography chor) {
 		
-		Map<String, ChorServiceSpec> requestedSpecMap = makeMapFromServiceList(chor.getRequestedSpec().getChorServiceSpecs());		
-		Map<String, ChorServiceSpec> specMap = makeMapFromServiceList(chor.getSpec().getChorServiceSpecs());
-		Map<String, List<ChorServiceSpec>> changes = getApplyingChanges();
+		Map<String, ChorServiceSpec> requestedSpecMap = 
+				makeMapFromServiceList(chor.getRequestedSpec().getChorServiceSpecs());
+		Map<String, ChorServiceSpec> specMap = 
+				makeMapFromServiceList(chor.getSpec().getChorServiceSpecs());
 			
 		for (Map.Entry<String, ChorServiceSpec> specEntry : specMap.entrySet()) {	
-			
 			ChorServiceSpec spec = requestedSpecMap.get(specEntry.getKey());
-
 			if(requestedSpecMap.containsKey(specEntry.getKey())) {
-				
 				if(!spec.equals(specEntry.getValue())) {
-					changes.get(UPDATING).add(spec); // same service, different specs
+					chor.addScheduledServiceUpdate(spec); // same service, different specs
 				}
-				changes.get(NOCHANGE).add(spec);
+				chor.addScheduledServiceNoChange(spec);
 			}
 			else {
-				changes.get(REMOVING).add(spec); // there is no more this service in choreography
+				chor.addScheduledServiceRemoval(spec); // there is no more this service in choreography
 			}
 		}
 		
-		return doUpdate(chor, changes);
-	}
-
-	private Map<String, List<ChorServiceSpec>> getApplyingChanges() {
-		Map<String, List<ChorServiceSpec>> changes = new HashMap<String, List<ChorServiceSpec>>();
-		changes.put(CREATING, new ArrayList<ChorServiceSpec>());
-		changes.put(UPDATING, new ArrayList<ChorServiceSpec>());
-		changes.put(REMOVING, new ArrayList<ChorServiceSpec>());
-		changes.put(NOCHANGE, new ArrayList<ChorServiceSpec>());
-		return changes;
-	}
-	
-	
-
-	private List<Service> doUpdate(Choreography chor, Map<String, List<ChorServiceSpec>> changes) {
-
-		updateServices(changes);
-		
-		deleteServices(changes);
-		
-		return null;
-	}
-
-	private void deleteServices(Map<String, List<ChorServiceSpec>> changes) {
-		// still not removing services
-		for(ChorServiceSpec spec : changes.get(REMOVING)) {
-			
+		for (Map.Entry<String, ChorServiceSpec> specEntry : requestedSpecMap.entrySet()) {
+			if(!specMap.containsKey(specEntry.getKey())) {
+				chor.addScheduledServiceCreation(specEntry.getValue());
+			}
 		}
+				
+		return doUpdate(chor);
 	}
 
-	private void updateServices(Map<String, List<ChorServiceSpec>> changes) {
+	private List<Service> doUpdate(Choreography chor) {
 		
-		for(List<ChorServiceSpec> spec : changes.values()) {
-			
-		}
+		logger.info("Trying to deploy new services.");
+		
+		createNewServicesWithInstances(chor);
+		
+		logger.info("New services deployed. ");
+		
+		logger.info("Trying to create new instances for currently running services. ");
+		
+		createNewServiceInstancesForExistingServices(chor);
+		
+		logger.info("New instances created successfully");
+		
+		return chor.getDeployedServices();
+	}
+
+	private void createNewServicesWithInstances(Choreography chor) {
+		this.deployNewServices(chor);
+	}
+
+	private void createNewServiceInstancesForExistingServices(Choreography chor) {
+		
 	}
 	
 	
