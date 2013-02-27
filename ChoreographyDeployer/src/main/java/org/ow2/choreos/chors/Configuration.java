@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * 
+ * @author leonardo, alessio
+ *
+ */
 public class Configuration {
 
 	private static String PROPERTIES_FILE = "chordeployer.properties";
@@ -39,7 +44,7 @@ public class Configuration {
 
     private Configuration() {
         try {
-            final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            final ClassLoader loader = this.getClass().getClassLoader();
             final InputStream propFile = loader.getResourceAsStream(PROPERTIES_FILE);
             properties.load(propFile);
             propFile.close();

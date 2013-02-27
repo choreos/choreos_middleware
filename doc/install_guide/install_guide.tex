@@ -177,6 +177,12 @@ After compiling the project, to run both \cd\ and \dm\ you have just to run the 
 
 This task can be easier accomplished if you import the \ee\ projects in the Eclipse IDE. After importing the project, open the menu \texttt{Window>>Preferences>>Java>>Build Path>>Classpath} variables, and set the \texttt{M2\_REPO} variable pointing to your Maven repository folder, usually the \texttt{.m2/repository} folder within your home folder. Obs: we have used the Eclipse Indigo version.
 
+Another way is using maven:
+
+\texttt{DeploymentManager\$ mvn exec:java}
+
+\texttt{ChoreographyDeployer\$ mvn exec:java}
+
 If you successfully start the \cd\ and the \dm\, you must see the following messages on their respective consoles: 
 
 \texttt{\cd\ has started [http://localhost:9100/choreographydeployer/]}
@@ -184,6 +190,7 @@ If you successfully start the \cd\ and the \dm\, you must see the following mess
 \texttt{\dm\ has started [http://localhost:9101/deploymentmanager/]}
 
 To verify if it is everything OK, run the \textsf{org.ow2.choreos.chors.SimpleChorEnactmentTest}. This test will deploy a simple choreography composed of two services and try to invoke it.
+
 
 
 

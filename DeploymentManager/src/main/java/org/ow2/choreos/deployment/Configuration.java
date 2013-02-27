@@ -5,6 +5,11 @@ import java.io.File;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
+/**
+ * 
+ * @author leonardo, thiago, alessio
+ *
+ */
 public class Configuration {
 
 	private final PropertiesConfiguration properties;
@@ -42,11 +47,13 @@ public class Configuration {
 	}
 
 	private Configuration() {
-		//final ClassLoader loader = Thread.currentThread().getContextClassLoader();
 		
 		PropertiesConfiguration tmp = null;
 		try {
-			tmp = new PropertiesConfiguration(new File(ClassLoader.getSystemResource("deployment.properties").getFile()));
+			File propertiesFile = new File(this.getClass()
+					.getClassLoader().getResource("deployment.properties")
+					.getFile());
+			tmp = new PropertiesConfiguration(propertiesFile);
 		} catch (ConfigurationException e) {
 			tmp = null;
 			e.printStackTrace();
