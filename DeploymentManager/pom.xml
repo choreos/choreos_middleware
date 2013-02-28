@@ -64,15 +64,16 @@
 	</pluginRepositories>
 
 	<build>
-        <plugins> 
+        <plugins><!-- 
             <plugin>
+                What? Why java version 1.5 (tfmend)
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <source>1.5</source>
                     <target>1.5</target>
-                </configuration>
-            </plugin>
+                </configuration> 
+            </plugin> -->
 			<plugin> <!-- this was supposed to be inherited from parent pom -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
