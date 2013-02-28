@@ -62,7 +62,6 @@ public class ServiceInstance {
 		this.setNode(node);
 		this.setMyParentServiceSpec(service.getSpec());
 		this.setInstanceId(UUID.randomUUID().toString());
-		this.setServiceId(service.getId());
 		service.addInstance(this);
 	}
 	
