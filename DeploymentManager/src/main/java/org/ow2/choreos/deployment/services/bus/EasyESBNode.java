@@ -2,11 +2,20 @@ package org.ow2.choreos.deployment.services.bus;
 
 import java.io.IOException;
 
+import esstar.petalslink.com.service.management._1_0.ManagementException;
+
 public interface EasyESBNode {
 
 	public String getAdminEndpoint();
 	
-	public void bindService(String serviceUrl, String serviceWsdl) throws IOException;
+	/**
+	 * Binds and exposes a service into the EasyESB node.
+	 * 
+	 * @param serviceUrl
+	 * @param serviceWsdl
+	 * @return the URI to access the service exposed by the bus
+	 * @throws IOException if could not complete the operation
+	 */
+	public String proxifyService(String serviceUrl, String serviceWsdl) throws ManagementException;
 	
-	public void exposeService(String serviceNamespace, String serviceName, String endpointName) throws IOException;
 }
