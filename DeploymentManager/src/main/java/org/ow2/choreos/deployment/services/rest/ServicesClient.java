@@ -8,6 +8,8 @@ import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.ow2.choreos.deployment.services.ServiceDeployer;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
+import org.ow2.choreos.deployment.services.ServiceNotFoundException;
+import org.ow2.choreos.deployment.services.ServiceNotModifiedException;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 
@@ -71,6 +73,21 @@ public class ServicesClient implements ServiceDeployer {
 
 	@Override
 	public void deleteService(String serviceId) {
+		
+		throw new NotImplementedException();
+	}
+
+	@Override
+	public void addServiceInstances(String serviceId, int amount)
+			throws ServiceNotFoundException, ServiceNotModifiedException {
+		/*WebClient client = setupClient();
+		client.path("services");
+    	Service service = null;
+    	try {
+    		service = client.post(serviceSpec, Service.class);
+    	} catch (WebApplicationException e) {
+    		throw new ServiceNotDeployedException(serviceSpec.getName());
+    	}*/
 		
 		throw new NotImplementedException();
 	}

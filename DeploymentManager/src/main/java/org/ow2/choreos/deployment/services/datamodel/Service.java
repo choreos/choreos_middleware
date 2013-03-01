@@ -2,11 +2,12 @@ package org.ow2.choreos.deployment.services.datamodel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.ow2.choreos.deployment.services.ServiceInstanceNotFoundException;
+import org.ow2.choreos.deployment.services.recipe.Recipe;
 
 
 @XmlRootElement
@@ -23,14 +24,12 @@ public class Service {
 	private ServiceSpec spec;
 
 	/**
-	 * A Unique Id for the service
-	 */
-	private String id;
-
-	/**
 	 * The list of all instances of the service
 	 */
 	private List<ServiceInstance> serviceInstances;
+
+	@XmlTransient
+	private Recipe recipe;
 
 	
 	
@@ -44,7 +43,6 @@ public class Service {
 
 	public Service(ServiceSpec serviceSpec) throws Exception {
 
-		this.id = UUID.randomUUID().toString();
 
 		this.spec = serviceSpec;
 		if (this.spec.getPackageType() == null) {
@@ -120,14 +118,6 @@ public class Service {
 		this.name = name;
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
 	public List<String> getUris() {
 		List<String> result = new ArrayList<String>();
 		for(ServiceInstance inst: serviceInstances)
@@ -149,7 +139,6 @@ public class Service {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -170,12 +159,6 @@ public class Service {
 		} else if (!name.equals(other.name))
 			return false;
 		
-		if (id == null) {
-			if(other.id != null) 
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		
 		return true;
 	}
 
@@ -184,5 +167,13 @@ public class Service {
 		String repr = "Service [name=" + name;
 		repr += (getUris() != null) ? repr +=	", uri=" + getUris().toString() + "]" : "]";
 		return repr;
+	}
+
+	public void setRecipe(Recipe serviceRecipe) {
+		this.recipe = serviceRecipe;
+	}
+
+	public Recipe getRecipe() {
+		return recipe;
 	}
 }

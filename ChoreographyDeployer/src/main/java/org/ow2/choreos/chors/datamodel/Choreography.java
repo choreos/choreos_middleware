@@ -59,7 +59,7 @@ public class Choreography {
 	
 	public void choreographyEnacted() {
 		this.spec = this.runningStatus.requestedSpec;
-		runningStatus.cleanUpScheduledChanges();
+	    runningStatus.cleanUpScheduledChanges(); // this should be called after all enactment (deploy or update)
 	}
 
 	public List<Service> getDeployedServices() {
@@ -106,51 +106,56 @@ public class Choreography {
 	}
 
 	public void addScheduledServiceCreation(ChorServiceSpec spec) {
-		runningStatus.addScheduledServiceChange("create", spec);
+		runningStatus.addScheduledServiceChange("create", new ScheduledServiceModification(spec, null));
 	}
 
-	public void addScheduledServiceRemoval(ChorServiceSpec spec) {
-		runningStatus.addScheduledServiceChange("remove", spec);
+	public void addScheduledServiceRemoval(SpecAndService specAndService) {
+		runningStatus.addScheduledServiceChange("remove", new ScheduledServiceModification(null, specAndService));
 	}
 
-	public void addScheduledServiceUpdate(ChorServiceSpec spec) {
-		runningStatus.addScheduledServiceChange("update", spec);
+	public void addScheduledServiceUpdate(ChorServiceSpec spec, SpecAndService specAndService) {
+		runningStatus.addScheduledServiceChange("update", new ScheduledServiceModification(spec, specAndService));
 	}
 
-	public void addScheduledServiceNoChange(ChorServiceSpec spec) {
-		runningStatus.addScheduledServiceChange("nochange", spec);
+	public void addScheduledServiceNoChange(SpecAndService specAndService) {
+		runningStatus.addScheduledServiceChange("nochange", new ScheduledServiceModification(specAndService.getSpec(), specAndService));
 	}
 
 	public void cleanUp() {
 		// TODO: remove unnecessary services
 	}
 	
-	public List<ChorServiceSpec> getScheduledServiceCreation() {
+	public List<ScheduledServiceModification> getScheduledServiceCreation() {
 		return this.runningStatus.scheduledChanges.get("create");
+	}
+
+	public List<ScheduledServiceModification> getScheduledServiceUpdate() {
+		return this.runningStatus.scheduledChanges.get("update");
 	}
 
 	private class ChoreographyRunningStatus {
 
 		public ChorSpec requestedSpec;
 		public List<SpecAndService> specsAndServices;
-		public Map<String, List<ChorServiceSpec>> scheduledChanges;
+		public Map<String, List<ScheduledServiceModification>> scheduledChanges;
 
 		public ChoreographyRunningStatus() {
 			this.requestedSpec = null;
 			this.specsAndServices = new ArrayList<SpecAndService>();
-			this.scheduledChanges = new HashMap<String, List<ChorServiceSpec>>();
+			this.scheduledChanges = new HashMap<String, List<ScheduledServiceModification>>();
 			cleanUpScheduledChanges();
 		}
 		
 		private void cleanUpScheduledChanges() {
-			this.scheduledChanges.put("create", new ArrayList<ChorServiceSpec>());
-			this.scheduledChanges.put("update", new ArrayList<ChorServiceSpec>());
-			this.scheduledChanges.put("remove", new ArrayList<ChorServiceSpec>());
-			this.scheduledChanges.put("nochange", new ArrayList<ChorServiceSpec>());
+			this.scheduledChanges.put("create", new ArrayList<ScheduledServiceModification>());
+			this.scheduledChanges.put("update", new ArrayList<ScheduledServiceModification>());
+			this.scheduledChanges.put("remove", new ArrayList<ScheduledServiceModification>());
+			this.scheduledChanges.put("nochange", new ArrayList<ScheduledServiceModification>());
 		}
 
-		private void addScheduledServiceChange(String changeType, ChorServiceSpec spec) {
-			scheduledChanges.get(changeType).add(spec);
+		private void addScheduledServiceChange(String changeType, ScheduledServiceModification scheduledServiceModification) {
+			scheduledChanges.get(changeType).add(scheduledServiceModification);
 		}
 	}
+
 }

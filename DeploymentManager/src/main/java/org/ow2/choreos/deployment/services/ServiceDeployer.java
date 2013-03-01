@@ -28,4 +28,12 @@ public interface ServiceDeployer {
 	 * @throws ServiceNotDeletedException if it fails
 	 */
 	public void deleteService(String serviceName) throws ServiceNotDeletedException, ServiceNotFoundException;
+
+	/**
+	 * 
+	 * @param serviceName
+	 * @param amount of new service instances
+	 * @throws ServiceNotFoundException if it fails
+	 */
+	public void addServiceInstances(String serviceId, int amount) throws ServiceNotFoundException, ServiceNotModifiedException;
 }

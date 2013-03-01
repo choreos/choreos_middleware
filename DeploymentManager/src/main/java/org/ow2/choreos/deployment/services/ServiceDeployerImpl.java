@@ -66,24 +66,23 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 
 	private Service deployNoLegacyService(Service service) {
 		
-		Recipe serviceRecipe = prepareDeployment(service);
+		prepareDeployment(service);
 		logger.debug("prepare deployment complete");
-		executeDeployment(serviceRecipe, service);
+		executeDeployment(service, service.getSpec().getNumberOfInstances());
 		logger.debug("execute deployment complete");
 		
 		return service;
 	}
 
-	private Recipe prepareDeployment(Service service) {
+	private void prepareDeployment(Service service) {
 		Recipe serviceRecipe = this.createRecipe(service);
 
 		try {
 			this.uploadRecipe(serviceRecipe);
 		} catch (KnifeException e) {
 			logger.error("Could not upload recipe", e);
-			return null;
+			return;
 		}
-		return serviceRecipe;
 	}
 	
 	private Recipe createRecipe(Service service) {
@@ -91,6 +90,7 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 		PackageType type = service.getSpec().getPackageType();
 		RecipeBuilder builder = RecipeBuilderFactory.getRecipeBuilderInstance(type);
 		Recipe serviceRecipe = builder.createRecipe(service.getSpec());
+		service.setRecipe(serviceRecipe);
 		return serviceRecipe;
 	}
 	
@@ -103,13 +103,15 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 		logger.debug(result);
 	}
 
-	private void executeDeployment(Recipe serviceRecipe, Service service) {
+	private void executeDeployment(Service service, int numberOfNewInstances) {
 		
+		Recipe serviceRecipe = service.getRecipe();
 		String configName = serviceRecipe.getCookbookName() + "::" + serviceRecipe.getName();
 		Config config = new Config(configName);
+		
 		List<Node> nodes = new ArrayList<Node>();
 		try {
-			nodes = npm.applyConfig(config, service.getSpec().getNumberOfInstances());
+			nodes = npm.applyConfig(config, numberOfNewInstances);
 		} catch (ConfigNotAppliedException e) {
 			logger.error(e.getMessage());
 
@@ -134,7 +136,7 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 	public Service getService(String serviceId) {
 		
 		return registry.getService(serviceId);
-	}		Service service;
+	}
 
 
 	@Override
@@ -143,6 +145,15 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 		registry.deleteService(serviceName);
 		if (registry.getService(serviceName) != null)
 			throw new ServiceNotDeletedException(serviceName);
+	}
+
+	@Override
+	public void addServiceInstances(String serviceId, int amount)
+			throws ServiceNotFoundException, ServiceNotModifiedException {
+		
+		Service service = getService(serviceId);
+		
+		executeDeployment(service, amount);
 	}
 
 }

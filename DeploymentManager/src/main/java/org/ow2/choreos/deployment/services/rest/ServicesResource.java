@@ -6,6 +6,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -28,6 +29,7 @@ import org.ow2.choreos.deployment.services.ServiceInstanceNotFoundException;
 import org.ow2.choreos.deployment.services.ServiceNotDeletedException;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
 import org.ow2.choreos.deployment.services.ServiceNotFoundException;
+import org.ow2.choreos.deployment.services.ServiceNotModifiedException;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
@@ -192,6 +194,38 @@ public class ServicesResource {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		} catch (ServiceNotFoundException e) {
 			return Response.status(Status.NOT_FOUND).build();
+		}
+		
+		logger.info("Service " + serviceId + " deleted");
+
+		return Response.ok().build();
+	}
+
+	/**
+	 * Client requests more instances for a service by ID
+	 * 
+	 * @param serviceID
+	 */
+	@PUT
+	@Path("{serviceID}")
+	public Response addServiceInstances(@PathParam("serviceId") String serviceId, int amount) {
+
+		if (serviceId == null || serviceId.isEmpty()) {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+
+		if (amount < 1) {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+
+		logger.debug("Request to increase number of instances for service " + serviceId);
+		
+		try {
+			serviceDeployer.addServiceInstances(serviceId, amount);
+		} catch (ServiceNotFoundException e) {
+			return Response.status(Status.NOT_FOUND).build();
+		} catch (ServiceNotModifiedException e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		
 		logger.info("Service " + serviceId + " deleted");
