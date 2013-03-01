@@ -23,7 +23,6 @@ import org.ow2.choreos.utils.LogConfigurator;
 @Category(IntegrationTest.class)
 public class JARDeployTest {
 
-	// a known jar file
 	public static final String JAR_LOCATION = "https://github.com/downloads/choreos/choreos_middleware/simplews.jar";
 	
 	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");

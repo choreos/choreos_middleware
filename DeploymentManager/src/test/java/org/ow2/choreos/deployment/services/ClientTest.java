@@ -9,10 +9,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
-import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.deployment.nodes.rest.NodesClient;
 import org.ow2.choreos.deployment.rest.DeploymentManagerServer;
-import org.ow2.choreos.deployment.services.ServiceDeployer;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
@@ -22,11 +20,8 @@ import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
 /**
- * This is the same that WARDeployTest,
- * but now we are testing the integration between
- * ServiceDeployer client and the Service Deployer REST API.
- * 
- * Condition: node must not have already the WAR recipe installed
+ * This is the same that JARDeployTest,
+ * but now we using the REST API.
  * 
  * @author leonardo
  *
@@ -34,8 +29,7 @@ import org.ow2.choreos.utils.LogConfigurator;
 @Category(IntegrationTest.class)
 public class ClientTest {
 
-	// a known war file
-	public static String WAR_LOCATION = "https://github.com/downloads/choreos/choreos_middleware/myServletWAR.war";
+	public static final String JAR_LOCATION = "https://github.com/downloads/choreos/choreos_middleware/simplews.jar";
 	
 	private static String deploymentManagerHost;
 	
@@ -43,8 +37,7 @@ public class ClientTest {
 	private ServiceDeployer deployer;
 
 	private WebClient client;
-	private ServiceSpec specWar = new ServiceSpec();
-	private ResourceImpact resourceImpact = new ResourceImpact();
+	private ServiceSpec spec = new ServiceSpec();
 
 	@BeforeClass
 	public static void configureLog() throws InterruptedException {
@@ -60,10 +53,11 @@ public class ClientTest {
 		npm = new NodesClient(deploymentManagerHost);
 		deployer = new ServicesClient(deploymentManagerHost);
 		
-		specWar.setName("myServletWAR");
-		specWar.setPackageUri(WAR_LOCATION);
-		specWar.setPackageType(PackageType.TOMCAT);
-		specWar.setResourceImpact(resourceImpact);
+		spec.setName("simplews");
+		spec.setPackageUri(JAR_LOCATION);
+		spec.setPackageType(PackageType.COMMAND_LINE);
+		spec.setEndpointName("");
+		spec.setPort(8042);
 	}
 	
 	@AfterClass
@@ -74,7 +68,7 @@ public class ClientTest {
 	@Test
 	public void shouldDeployAWarServiceInANode() throws Exception {
 
-		Service service = deployer.deploy(specWar);
+		Service service = deployer.deploy(spec);
 		
 		// now get the first instance
 		ServiceInstance instance = service.getInstances().get(0);
@@ -83,9 +77,9 @@ public class ClientTest {
 		System.out.println("Service at " + url);
 		npm.upgradeNode(instance.getNode().getId());
 		Thread.sleep(1000);
-		client = WebClient.create(url); 
+		client = WebClient.create(url);
 		String body = client.get(String.class);
-		String excerpt = "myServletWAR Web Application";
+		String excerpt = "hello, world";
 		assertTrue(body.contains(excerpt));
 	}
 
