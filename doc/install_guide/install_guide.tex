@@ -122,7 +122,7 @@ Some hints:
 
 \subsection{OpenStack}
 
-OpenStack is an open source private cloud platform that provides services to retrieve VMs as you need, in the same way that Amazon EC2. However, you must install OpenStack in your own infrastructure, which means you must own at least a little cluster to host the created VMs. Moreover, the OpenStack installation and configuration is not a simple task.
+OpenStack is an open source private cloud platform that provides services to retrieve VMs as you need, in the same way that Amazon EC2. However, you must install OpenStack in your own infrastructure, which means you must own at least a little cluster (or a very powerful machine) to host the created VMs. Moreover, the OpenStack installation and configuration is not a simple task.
 
 Some hints:
 
@@ -178,14 +178,15 @@ cookbook_path            ["#{current_dir}/../cookbooks"]
 }
 
 Here, ``lleite" is also my Chef user. I advise to change ``lleite'' by your Chef user name.
-The  ``choreos-verao" is the organization name configured on the Chef Server. \Leo{essa parte tá meio ruizinha... alguém ajuda?}
+The  ``choreos-verao" is the organization name configured on the Chef Server. 
+% \Leo{essa parte tá meio ruizinha... alguém ajuda?}
 
 You will also need to upload to your Chef Server all the cookbooks from our cookbook folder: \texttt{chef-repo/cookbooks}.
 
 
 \section{Checkout and Compilation}
 
-To checkout the code: \texttt{svn checkout svn://svn.forge.objectweb.org/svnroot/choreos cloud}. \Leo{isso na verdade baixa todo o repositório; alguém sabe a forma certa?}
+To checkout the code: \texttt{svn checkout svn://svn.forge.objectweb.org/svnroot/choreos/trunk/cloud cloud}. 
 
 After installing Maven 3, open the terminal at the \texttt{choreos\_middleware} folder, and run the \texttt{build.sh} script. It can take several minutes. Internet access is necessary during compilation.
 
