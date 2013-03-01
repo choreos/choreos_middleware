@@ -34,3 +34,9 @@ CHEF_CONFIG_FILE=/home/leonardo/chef/chef-repo/.chef/knife.rb
 CHEF_REPO=/home/alfonso777/chef-repo
 
 CHEF_CLIENT_LOG=/tmp/chef-client.log # log written on chef nodes
+
+# If RECIPES_CACHE=True recipes are not overwritten in DeploymentManager/src/main/resources/chef/recipes/
+# It is recommended if you are going to deploy the same recipe several times,
+# but be aware it can prevent you for properly updating a recipe!
+# RecipeBuilder implementors should observe this variable
+RECIPES_CACHE=False

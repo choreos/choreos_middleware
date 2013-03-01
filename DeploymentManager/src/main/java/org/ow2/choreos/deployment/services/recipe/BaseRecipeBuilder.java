@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 
 
@@ -35,10 +36,13 @@ public abstract class BaseRecipeBuilder implements RecipeBuilder {
 			File targetFolder = getTargetFolder(serviceSpec);
 			recipe.setCookbookFolder(targetFolder.getAbsolutePath());
 			
-			if (targetFolder.exists()) {
+			boolean cache = Boolean.parseBoolean(Configuration.get("RECIPES_CACHE"));
+			
+			if (targetFolder.exists() && cache) {
 				
-				logger.warn("Recipe " + this.recipeFile
-						+ " already exists. NOT going to overwriting it");
+				logger.warn("Recipe "
+						+ this.recipeFile
+						+ " already exists and recipe cache is True. NOT going to overwriting it");
 				
 			} else {
 				
