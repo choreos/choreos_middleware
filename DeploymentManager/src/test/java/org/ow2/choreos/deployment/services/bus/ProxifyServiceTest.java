@@ -1,6 +1,7 @@
 package org.ow2.choreos.deployment.services.bus;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import javax.ws.rs.core.Response;
 
@@ -56,7 +57,7 @@ public class ProxifyServiceTest {
 	}
 
 	@Test
-	public void shouldProxifyAService() throws ServiceNotDeployedException, NodeNotUpgradedException, NodeNotFoundException, NoBusAvailableException, ManagementException {
+	public void shouldProxifyAService() throws ServiceNotDeployedException, NodeNotUpgradedException, NodeNotFoundException, NoBusAvailableException {
 		
 		String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
 		NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
@@ -71,10 +72,16 @@ public class ProxifyServiceTest {
 		EasyESBNode esbNode = busHandler.retrieveBusNode();
 
 		ServiceProxifier proxifier = new ServiceProxifier();
-		String url = proxifier.proxify(service, esbNode);
+		String url = null;
+		try {
+			url = proxifier.proxify(service, esbNode);
+		} catch (ManagementException e) {
+			System.out.println(e);
+			fail();
+		}
 		
 		String wsdl = url + "?wsdl";
-		System.out.println("Acessando " + wsdl);
+		System.out.println("Accessing " + wsdl);
 		WebClient client = WebClient.create(wsdl);
 		Response response = client.get();
 		assertEquals(200, response.getStatus());

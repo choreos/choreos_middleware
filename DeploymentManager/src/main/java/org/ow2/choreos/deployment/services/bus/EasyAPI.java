@@ -15,9 +15,9 @@ import esstar.petalslink.com.service.management._1_0.ManagementException;
  */
 public class EasyAPI {
 	
-	public static final String ADMIN_ENDPOINT = "http://localhost:8180/services/adminExternalEndpoint";
-	public static final String SVC_ENDPOINT = "http://localhost:1234/airline";
-	public static final String SVC_WSDL = "http://localhost:1234/airline?wsdl";
+	public static final String ADMIN_ENDPOINT = "http://192.168.56.101:8180/services/adminExternalEndpoint";
+	public static final String SVC_ENDPOINT = "http://192.168.56.101:1234/airline";
+	public static final String SVC_WSDL = "http://192.168.56.101:1234/airline?wsdl";
 	
 	 static {
         try {
@@ -37,6 +37,7 @@ public class EasyAPI {
 		
 		UserManagementClientSOAP cli = new UserManagementClientSOAP(ADMIN_ENDPOINT);
 		try {
+			System.out.println("-c " + ADMIN_ENDPOINT + " -pr " + SVC_ENDPOINT + " " + SVC_WSDL);
 			String result = cli.proxify(SVC_ENDPOINT, SVC_WSDL);
 			System.out.println("Proxify result: " + result);
 		} catch (ManagementException e) {
