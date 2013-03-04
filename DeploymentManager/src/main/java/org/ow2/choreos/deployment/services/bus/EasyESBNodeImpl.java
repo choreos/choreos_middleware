@@ -55,7 +55,6 @@ public class EasyESBNodeImpl implements EasyESBNode {
 		logger.debug("-c " + this.adminEndpoint + " -pr " + serviceUrl + " " + serviceWsdl);
 		UserManagementClientSOAP cli = new UserManagementClientSOAP(this.adminEndpoint);
 		String response = cli.proxify(serviceUrl, serviceWsdl);
-		logger.debug("response: " + response);
 		String proxifiedUri = response.replace("localhost", this.nodeIp);
 		return proxifiedUri;
 	}
