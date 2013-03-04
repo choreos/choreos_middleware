@@ -15,11 +15,8 @@ public class ServiceProxifier {
 		}
 		
 		String url = serviceInstance.getNativeUri();
-		String wsdl = url;
-		if (wsdl.endsWith("/")) {
-			wsdl = wsdl.replaceAll("/$", "");
-		}
-		wsdl += "?wsdl";
+		url.replace("/$", "");
+		String wsdl = url + "?wsdl";
 		
 		return esbNode.proxifyService(url, wsdl);
 	}
