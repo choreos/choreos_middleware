@@ -2,6 +2,7 @@ package org.ow2.choreos.deployment.services;
 
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
+import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
 
 
 public interface ServiceDeployer {
@@ -27,13 +28,15 @@ public interface ServiceDeployer {
 	 * @param serviceName
 	 * @throws ServiceNotDeletedException if it fails
 	 */
-	public void deleteService(String serviceName) throws ServiceNotDeletedException, ServiceNotFoundException;
+	public void deleteService(String serviceName) 
+			throws ServiceNotDeletedException, ServiceNotFoundException;
 
 	/**
 	 * 
-	 * @param serviceName
-	 * @param amount of new service instances
-	 * @throws ServiceNotFoundException if it fails
+	 * @param service specification
+	 * @return information about how the service was deployed. 
+	 * @throws UnhandledModificationException 
+	 * @throws ServiceNotDeployedException if deploy was not possible.
 	 */
-	public void addServiceInstances(String serviceId, int amount) throws ServiceNotFoundException, ServiceNotModifiedException;
+	public void updateService(ServiceSpec serviceSpec) throws ServiceNotModifiedException, UnhandledModificationException;
 }

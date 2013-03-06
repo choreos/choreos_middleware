@@ -18,6 +18,8 @@ import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
+import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
+import org.ow2.choreos.deployment.services.diff.UpdateAction;
 import org.ow2.choreos.deployment.services.recipe.Recipe;
 import org.ow2.choreos.deployment.services.recipe.RecipeBuilder;
 import org.ow2.choreos.deployment.services.recipe.RecipeBuilderFactory;
@@ -148,12 +150,50 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 	}
 
 	@Override
-	public void addServiceInstances(String serviceId, int amount)
-			throws ServiceNotFoundException, ServiceNotModifiedException {
+	public void updateService(ServiceSpec serviceSpec) throws UnhandledModificationException {
 		
-		Service service = getService(serviceId);
+		Service current = registry.getService(serviceSpec.getName());
+		ServiceSpec currentSpec = current.getSpec();
 		
-		executeDeployment(service, amount);
+		List<UpdateAction> actions = getActions(currentSpec, serviceSpec);
+		
+		applyUpdate(current, serviceSpec, actions);
+		
 	}
 
+	private void applyUpdate(Service current, ServiceSpec requested, List<UpdateAction> actions) throws UnhandledModificationException {
+		for ( UpdateAction a : actions ) {
+			switch (a) {
+			case INCREASE_NUMBER_OF_REPLICAS:
+				int amount = requested.getNumberOfInstances() - current.getSpec().getNumberOfInstances();
+				addServiceInstances(current, amount);
+				break;
+
+			default:
+				throw new UnhandledModificationException();
+			}
+		}
+	}
+
+	private void addServiceInstances(Service current, int amount) {
+		
+		executeDeployment(current, amount);
+		
+	}
+
+	private List<UpdateAction> getActions(ServiceSpec currentSpec,
+			ServiceSpec serviceSpec) {
+		boolean foundKnownModification = false;
+		
+		List<UpdateAction> actions = new ArrayList<UpdateAction>();
+		
+		if(currentSpec.getNumberOfInstances() < serviceSpec.getNumberOfInstances())
+			actions.add(UpdateAction.INCREASE_NUMBER_OF_REPLICAS);
+		
+		if(!foundKnownModification) {
+			actions.add(UpdateAction.UNKNOWN_MODIFICATION);
+		}
+		
+		return actions;
+	}
 }

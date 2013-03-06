@@ -1,4 +1,4 @@
-package org.ow2.choreos.chors.diff;
+package org.ow2.choreos.deployment.services.diff;
 
 public class UnhandledModificationException extends Exception {
 

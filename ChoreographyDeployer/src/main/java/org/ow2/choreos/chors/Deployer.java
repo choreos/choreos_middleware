@@ -19,8 +19,6 @@ import org.ow2.choreos.chors.datamodel.ChorServiceSpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ScheduledServiceModification;
 import org.ow2.choreos.chors.datamodel.SpecAndService;
-import org.ow2.choreos.chors.diff.DeployerAction;
-import org.ow2.choreos.chors.diff.UnhandledModificationException;
 import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
 import org.ow2.choreos.deployment.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
@@ -71,7 +69,7 @@ public class Deployer {
 			services = deployNewServices(chor);
 		} else {
 			if(!chor.getRequestedSpec().equals(chor.getSpec())) {
-				services = doUpdatedDiff(chor);
+				services = updateAndDeployServices(chor);
 			}
 		}
 		return services;
@@ -186,20 +184,23 @@ public class Deployer {
 		return result;
 	}
 
-	private List<Service> doUpdatedDiff(Choreography chor) {
-
-		Map<String, ChorServiceSpec> requestedSpecMap = 
-				makeMapFromServiceList(chor.getRequestedSpec().getChorServiceSpecs());
-
+	private Map<String, SpecAndService> getSpecsAndServicesForChor(
+			Choreography chor) {
 		Map<String, SpecAndService> currentSpecsAndServices = new HashMap<String, SpecAndService>();
+		
 		for( SpecAndService s : chor.getSpecsAndServices() ) {
 			currentSpecsAndServices.put(s.getSpec().getName(), s);
 		}
+		return currentSpecsAndServices;
+	}
+
+	private List<Service> updateAndDeployServices(Choreography chor) {
+
+		Map<String, ChorServiceSpec> requestedSpecMap = makeMapFromServiceList(chor.getRequestedSpec().getChorServiceSpecs());
+		Map<String, SpecAndService> currentSpecsAndServices = getSpecsAndServicesForChor(chor);
 
 		for (Map.Entry<String, SpecAndService> specEntry : currentSpecsAndServices.entrySet()) {	
-
 			ChorServiceSpec spec = requestedSpecMap.get(specEntry.getKey());
-
 			if(requestedSpecMap.containsKey(specEntry.getKey())) {
 				if(!spec.equals(specEntry.getValue().getSpec())) {
 					chor.addScheduledServiceUpdate(spec, specEntry.getValue()); // same service, different specs
@@ -220,61 +221,50 @@ public class Deployer {
 		return doUpdate(chor);
 	}
 
+
 	private List<Service> doUpdate(Choreography chor) {
 
-		logger.info("Trying to deploy new services.");
-
-		createNewServicesWithInstances(chor);
-
-		logger.info("New services deployed. ");
-
-		logger.info("Trying to create new instances for currently running services. ");
-
-		createNewServiceInstancesForExistingServices(chor);
-
-		logger.info("New instances created successfully");
+		deployNewServices(chor);
+		updateExistingServices(chor);
 
 		return chor.getDeployedServices();
 	}
 
-	private void createNewServicesWithInstances(Choreography chor) {
-		this.deployNewServices(chor);
-	}
+	private void updateExistingServices(Choreography chor) {
 
-	private void createNewServiceInstancesForExistingServices(Choreography chor) {
-		for (ScheduledServiceModification mod : chor.getScheduledServiceUpdate()) {
+		final int TIMEOUT = 5;
+		final int N = chor.getScheduledServiceUpdate().size();
 
-			// ======== number of replicas ========
-			if(mod.getRequestedSpec().getNumberOfInstances() != mod.getSpecAndService().getSpec().getNumberOfInstances()) {
-				mod.addAction(DeployerAction.CHANGE_NUMBER_OF_REPLICAS);
-			}
+		ExecutorService executor = Executors.newFixedThreadPool(N);
+		Map<ChorServiceSpec, Future<Service>> futures = new HashMap<ChorServiceSpec, Future<Service>>();
 
+		for (ScheduledServiceModification s : chor.getScheduledServiceUpdate()) {
+			ChorServiceSpec chorServiceSpec = s.getRequestedSpec();
+			ServiceSpec serviceSpec = chorServiceSpec.getServiceSpec();
+			logger.debug("Requesting update of " + serviceSpec);
+			ServiceUpdateInvoker invoker = new ServiceUpdateInvoker(chorServiceSpec);
+			Future<Service> future = executor.submit(invoker);
+			futures.put(chorServiceSpec, future);	
 		}
 
-		for(ScheduledServiceModification s : chor.getScheduledServiceUpdate()) {
-			for(DeployerAction a : s.getActions()) {
-				switch (a) {
-				case CHANGE_NUMBER_OF_REPLICAS:
+		waitExecutor(executor, TIMEOUT);
 
-					break;
-
-				default:
-					try {
-						throw new UnhandledModificationException("Do not know how to perform this change");
-					} catch (UnhandledModificationException e) {
-						e.printStackTrace();
-					}
-				}
+		for (Entry<ChorServiceSpec, Future<Service>> f : futures.entrySet())
+		{
+			try {
+				this.checkFuture(f.getValue());
+			} catch (Exception e) {
+				logger.error("Could not get service from future: " + e.getMessage());
+				e.printStackTrace();
 			}
 		}
 	}
 
-
-
-
+	
 	//===================================================================================================================
 	//								Inner Classes
 	//===================================================================================================================
+
 
 	private class ServiceDeployerInvoker implements Callable<Service> {
 
@@ -294,6 +284,23 @@ public class Deployer {
 				logger.error("Probably DeploymentManager is off");
 				throw e;
 			} 
+		}
+	}
+
+	private class ServiceUpdateInvoker implements Callable<Service> {
+
+		ServiceDeployer deployer = new ServicesClient(Configuration.get(Option.DEPLOYMENT_MANAGER_URI));
+		private ServiceSpec serviceSpec;
+
+		public ServiceUpdateInvoker(ChorServiceSpec serviceSpec) {
+			// lets make sure that are sending a ServiceSpec and NOT a ChorServiceSpec (Rests...)
+			this.serviceSpec = serviceSpec.getServiceSpec();
+		}
+
+		@Override
+		public Service call() throws Exception {
+			deployer.updateService(serviceSpec);
+			return new Service();
 		}
 	}
 

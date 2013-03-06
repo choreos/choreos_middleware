@@ -246,5 +246,4 @@ public class ServiceSpec {
 	public List<String> getLegacyServicesUris() {
 		return this.serviceUris;
 	}
-
 }

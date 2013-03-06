@@ -33,6 +33,7 @@ import org.ow2.choreos.deployment.services.ServiceNotModifiedException;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
+import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
 
 /**
  * Service Deployer REST API 
@@ -200,36 +201,44 @@ public class ServicesResource {
 
 		return Response.ok().build();
 	}
-
+	
 	/**
-	 * Client requests more instances for a service by ID
+	 * Update a service
 	 * 
-	 * @param serviceID
+	 * @param serviceSpecXML
+	 *            Request's body content with a ServiceSpec XML
+	 * @return HTTP code 201 and Location header if the service was successfully deployed;
+	 *         HTTP code 400 if request can not be properly parsed; 
+	 *         HTTP code 500 if any other error occurs.
+	 * @throws UnhandledModificationException 
 	 */
 	@PUT
 	@Path("{serviceID}")
-	public Response addServiceInstances(@PathParam("serviceId") String serviceId, int amount) {
+	@Consumes(MediaType.APPLICATION_XML)
+	@Produces(MediaType.APPLICATION_XML)
+	public Response updateService(JAXBElement<ServiceSpec> serviceSpecXML, 
+			@Context UriInfo uriInfo) throws UnhandledModificationException {
 
-		if (serviceId == null || serviceId.isEmpty()) {
+		ServiceSpec serviceSpec = serviceSpecXML.getValue();
+		if (serviceSpec.getPackageUri() == null || serviceSpec.getPackageUri().isEmpty() 
+				|| serviceSpec.getPackageType() == null)
 			return Response.status(Status.BAD_REQUEST).build();
-		}
-
-		if (amount < 1) {
-			return Response.status(Status.BAD_REQUEST).build();
-		}
-
-		logger.debug("Request to increase number of instances for service " + serviceId);
 		
+		logger.debug("Request to update " + serviceSpec.getName());
+
+		//Service service;
 		try {
-			serviceDeployer.addServiceInstances(serviceId, amount);
-		} catch (ServiceNotFoundException e) {
-			return Response.status(Status.NOT_FOUND).build();
+			serviceDeployer.updateService(serviceSpec);
 		} catch (ServiceNotModifiedException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		
-		logger.info("Service " + serviceId + " deleted");
+		logger.info(serviceSpec.getName() + " update. Running on somewhere" /*service.getUris()*/);
+		
+		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+		uriBuilder = uriBuilder.path(ServicesResource.class).path(serviceSpec.getName());
+		URI location = uriBuilder.build();
 
-		return Response.ok().build();
+		return Response.created(location).entity(serviceSpec).build();
 	}
 }
