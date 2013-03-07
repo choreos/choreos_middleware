@@ -1,9 +1,4 @@
 --- !!eu.choreos.monitoring.platform.daemon.datatypes.SingleThresholdSpec
 attribute:    load_one
 comparison:   MAX
-limit_value:  0.9
-
---- !!eu.choreos.monitoring.platform.daemon.datatypes.SingleThresholdSpec
-attribute:    load_five
-comparison:   MAX
-limit_value:  0.85
+limit_value:  1.5
