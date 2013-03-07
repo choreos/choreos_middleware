@@ -25,7 +25,7 @@ public class Spec {
 		airline.setPort(AIRLINE_PORT);
 		airline.setPackageType(PackageType.COMMAND_LINE);
 		airline.getRoles().add(AIRLINE);
-		chorSpec.addServiceSpec(airline);
+		chorSpec.addChorServiceSpec(airline);
 		
 		ChorServiceSpec travel = new ChorServiceSpec();
 		travel.setName(TRAVEL_AGENCY);
@@ -36,7 +36,7 @@ public class Spec {
 		travel.getRoles().add(TRAVEL_AGENCY);
 		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
 		travel.getDependencies().add(dep);
-		chorSpec.addServiceSpec(travel);
+		chorSpec.addChorServiceSpec(travel);
 		
 		return chorSpec;
 	}

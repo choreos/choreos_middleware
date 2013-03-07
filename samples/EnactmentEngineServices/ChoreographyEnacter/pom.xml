@@ -34,18 +34,7 @@
 		    <artifactId>ChoreographyDeployer</artifactId> 
 		    <version>0.0.1-SNAPSHOT</version>
 		    <type>jar</type>
-		    <exclusions>
-			    <exclusion>
-				    <groupId>org.ow2.choreos</groupId>
-				    <artifactId>rehearsal</artifactId>
-			    </exclusion>
-		    </exclusions>
 	    </dependency>
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-bundle</artifactId>
-			<version>2.2.5</version>
-		</dependency>
 	</dependencies>
 
 	<build>

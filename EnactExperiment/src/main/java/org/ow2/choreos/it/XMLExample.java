@@ -139,7 +139,7 @@ public class XMLExample {
 		
 		List<ChorServiceSpec> specs = new ArrayList<ChorServiceSpec>(specsMap.values());
 		ChorSpec chorSpec = new ChorSpec();
-		chorSpec.setServiceSpecs(specs);
+		chorSpec.setChorServiceSpecs(specs);
 
 		System.out.println(chorSpec);
 		
