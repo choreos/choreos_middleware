@@ -9,6 +9,11 @@ import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 
 @XmlRootElement
 public class ServiceSpec {
+	
+	private String owner;
+	private String group;
+	private List<String> roles = new ArrayList<String>();
+	private List<ServiceDependency> dependencies = new ArrayList<ServiceDependency>();
 
 	protected String name; 
 	protected ServiceType type; 
@@ -24,6 +29,32 @@ public class ServiceSpec {
 
 	// Legacy service attribs
 	protected List<String> serviceUris;
+	
+	
+	public String getOwner() {
+		return owner;
+	}
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+	public String getGroup() {
+		return group;
+	}
+	public void setGroup(String group) {
+		this.group = group;
+	}
+	public List<String> getRoles() {
+		return roles;
+	}
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
+	}
+	public List<ServiceDependency> getDependencies() {
+		return dependencies;
+	}
+	public void setDependencies(List<ServiceDependency> dependencies) {
+		this.dependencies = dependencies;
+	}
 	
 	
 	public void addServiceUri(String uri) {

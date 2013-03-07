@@ -12,10 +12,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.context.ContextCaster;
-import org.ow2.choreos.chors.datamodel.ChorServiceSpec;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
-import org.ow2.choreos.chors.datamodel.ServiceDependency;
 import org.ow2.choreos.deployment.services.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.ServiceDependency;
+import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -60,17 +60,17 @@ public class ContextCasterTest {
 		chorSpec = new ChorSpec(); 
 		deployedServices = new HashMap<String, Service>();
 		
-		ChorServiceSpec airline = new ChorServiceSpec();
+		ServiceSpec airline = new ServiceSpec();
 		airline.setName(AIRLINE);
 		airline.getRoles().add(AIRLINE);
-		chorSpec.addChorServiceSpec(airline);
+		chorSpec.addServiceSpec(airline);
 		
-		ChorServiceSpec travel = new ChorServiceSpec();
+		ServiceSpec travel = new ServiceSpec();
 		travel.setName(TRAVEL_AGENCY);
 		travel.getRoles().add(TRAVEL_AGENCY);
 		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
 		travel.getDependencies().add(dep);
-		chorSpec.addChorServiceSpec(travel);
+		chorSpec.addServiceSpec(travel);
 		
 		Service airlineServ = new Service();
 		airlineServ.setName(AIRLINE);

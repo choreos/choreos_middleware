@@ -8,11 +8,11 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.ChorDeployerImpl;
 import org.ow2.choreos.chors.ChoreographyDeployer;
-import org.ow2.choreos.chors.datamodel.ChorServiceSpec;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -46,7 +46,7 @@ public class SingleServiceEnactmentTest {
 	public void setUp() {
 		
 		chor = new ChorSpec();
-		ChorServiceSpec service = new ChorServiceSpec();
+		ServiceSpec service = new ServiceSpec();
 		service.setName(WEATHER_FORECAST_SERVICE);
 	//	service.setCodeUri(AirportProperties.get(WEATHER_FORECAST_SERVICE + ".codeUri"));
 		service.setEndpointName(WEATHER_FORECAST_SERVICE.toLowerCase());
@@ -54,7 +54,7 @@ public class SingleServiceEnactmentTest {
 		service.setPort(port);
 		service.getRoles().add(WEATHER_FORECAST_SERVICE);
 		service.setPackageType(PackageType.COMMAND_LINE);
-		chor.addChorServiceSpec(service);
+		chor.addServiceSpec(service);
 	}
 	
 	@Test

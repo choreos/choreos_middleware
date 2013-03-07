@@ -9,13 +9,13 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.client.ChorDeployerClient;
-import org.ow2.choreos.chors.datamodel.ChorServiceSpec;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.chors.datamodel.ServiceDependency;
 import org.ow2.choreos.chors.rest.ChorDeployerServer;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.ServiceDependency;
+import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -61,16 +61,16 @@ public class RestEnactmentTest {
 		
 		chorSpec = new ChorSpec(); 
 		
-		ChorServiceSpec airline = new ChorServiceSpec();
+		ServiceSpec airline = new ServiceSpec();
 		airline.setName(AIRLINE);
 	//	airline.setCodeUri(AIRLINE_JAR);
 		airline.setEndpointName(AIRLINE);
 		airline.setPort(AIRLINE_PORT);
 		airline.setPackageType(PackageType.COMMAND_LINE);
 		airline.getRoles().add(AIRLINE);
-		chorSpec.addChorServiceSpec(airline);
+		chorSpec.addServiceSpec(airline);
 		
-		ChorServiceSpec travel = new ChorServiceSpec();
+		ServiceSpec travel = new ServiceSpec();
 		travel.setName(TRAVEL_AGENCY);
 	//	travel.setCodeUri(TRAVEL_AGENCY_JAR);
 		travel.setEndpointName(TRAVEL_AGENCY);
@@ -79,7 +79,7 @@ public class RestEnactmentTest {
 		travel.getRoles().add(TRAVEL_AGENCY);
 		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
 		travel.getDependencies().add(dep);
-		chorSpec.addChorServiceSpec(travel);
+		chorSpec.addServiceSpec(travel);
 	}
 	
 	@Test
@@ -100,10 +100,10 @@ public class RestEnactmentTest {
 		String chorId = ee.createChoreography(chorSpec);
 		Choreography chor = ee.getChoreography(chorId);
 		
-		ChorServiceSpec travel = chor.getRequestedSpec().getServiceSpecByName(TRAVEL_AGENCY);
+		ServiceSpec travel = chor.getRequestedSpec().getServiceSpecByName(TRAVEL_AGENCY);
 		assertEquals(chorSpec.getServiceSpecByName(TRAVEL_AGENCY), travel);
 		
-		ChorServiceSpec airline = chor.getRequestedSpec().getServiceSpecByName(AIRLINE);
+		ServiceSpec airline = chor.getRequestedSpec().getServiceSpecByName(AIRLINE);
 		assertEquals(chorSpec.getServiceSpecByName(AIRLINE), airline);		
 	}
 	

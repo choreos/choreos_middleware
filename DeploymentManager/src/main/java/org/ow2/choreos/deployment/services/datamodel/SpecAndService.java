@@ -1,20 +1,21 @@
-package org.ow2.choreos.chors.datamodel;
+package org.ow2.choreos.deployment.services.datamodel;
+
 
 import org.ow2.choreos.deployment.services.datamodel.Service;
 
 public class SpecAndService {
 	
-	private ChorServiceSpec spec;
+	private ServiceSpec spec;
 	private Service service;
 	
-	public SpecAndService(ChorServiceSpec spec, Service serv) {
+	public SpecAndService(ServiceSpec spec, Service serv) {
 		this.spec = spec;
 		this.service = serv;
 	}
-	public ChorServiceSpec getSpec() {
+	public ServiceSpec getSpec() {
 		return spec;
 	}
-	public void setSpec(ChorServiceSpec spec) {
+	public void setSpec(ServiceSpec spec) {
 		this.spec = spec;
 	}
 	public Service getService() {

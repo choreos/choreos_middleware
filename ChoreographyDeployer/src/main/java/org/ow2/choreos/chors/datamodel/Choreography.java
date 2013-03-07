@@ -1,14 +1,16 @@
 package org.ow2.choreos.chors.datamodel;
 
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.ow2.choreos.deployment.services.ScheduledServiceModification;
 import org.ow2.choreos.deployment.services.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.SpecAndService;
 
 @XmlRootElement
 public class Choreography {
@@ -19,6 +21,9 @@ public class Choreography {
 	@XmlTransient
 	private ChoreographyRunningStatus runningStatus = new ChoreographyRunningStatus();
 
+	
+	
+	
 	public List<SpecAndService> getSpecsAndServices() {
 		return runningStatus.specsAndServices;
 	}
@@ -105,7 +110,7 @@ public class Choreography {
 		this.runningStatus.specsAndServices.add(specAndService);
 	}
 
-	public void addScheduledServiceCreation(ChorServiceSpec spec) {
+	public void addScheduledServiceCreation(ServiceSpec spec) {
 		runningStatus.addScheduledServiceChange("create", new ScheduledServiceModification(spec, null));
 	}
 
@@ -113,7 +118,7 @@ public class Choreography {
 		runningStatus.addScheduledServiceChange("remove", new ScheduledServiceModification(null, specAndService));
 	}
 
-	public void addScheduledServiceUpdate(ChorServiceSpec spec, SpecAndService specAndService) {
+	public void addScheduledServiceUpdate(ServiceSpec spec, SpecAndService specAndService) {
 		runningStatus.addScheduledServiceChange("update", new ScheduledServiceModification(spec, specAndService));
 	}
 
@@ -131,31 +136,6 @@ public class Choreography {
 
 	public List<ScheduledServiceModification> getScheduledServiceUpdate() {
 		return this.runningStatus.scheduledChanges.get("update");
-	}
-
-	private class ChoreographyRunningStatus {
-
-		public ChorSpec requestedSpec;
-		public List<SpecAndService> specsAndServices;
-		public Map<String, List<ScheduledServiceModification>> scheduledChanges;
-
-		public ChoreographyRunningStatus() {
-			this.requestedSpec = null;
-			this.specsAndServices = new ArrayList<SpecAndService>();
-			this.scheduledChanges = new HashMap<String, List<ScheduledServiceModification>>();
-			cleanUpScheduledChanges();
-		}
-		
-		private void cleanUpScheduledChanges() {
-			this.scheduledChanges.put("create", new ArrayList<ScheduledServiceModification>());
-			this.scheduledChanges.put("update", new ArrayList<ScheduledServiceModification>());
-			this.scheduledChanges.put("remove", new ArrayList<ScheduledServiceModification>());
-			this.scheduledChanges.put("nochange", new ArrayList<ScheduledServiceModification>());
-		}
-
-		private void addScheduledServiceChange(String changeType, ScheduledServiceModification scheduledServiceModification) {
-			scheduledChanges.get(changeType).add(scheduledServiceModification);
-		}
 	}
 
 }
