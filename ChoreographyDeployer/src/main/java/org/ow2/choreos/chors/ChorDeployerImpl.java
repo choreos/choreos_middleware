@@ -48,7 +48,6 @@ public class ChorDeployerImpl implements ChoreographyDeployer {
 		chor.choreographyEnacted();
 		
 		logger.info("Enactment completed; chorId=" + chorId);
-		logger.info("************ UHUUUUUUUU ***********\n\n\n\n");
 
 		return chor;
 	}
