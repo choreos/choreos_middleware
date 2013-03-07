@@ -1,10 +1,14 @@
-package org.ow2.choreos.chors.datamodel;
+package org.ow2.choreos.deployment.services;
+
+import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.SpecAndService;
+
 
 
 public class ScheduledServiceModification {
 	
 	private SpecAndService specAndService;
-	private ChorServiceSpec requestedSpec;
+	private ServiceSpec requestedSpec;
 
 	public SpecAndService getSpecAndService() {
 		return specAndService;
@@ -14,15 +18,15 @@ public class ScheduledServiceModification {
 		this.specAndService = specAndService;
 	}
 
-	public ChorServiceSpec getRequestedSpec() {
+	public ServiceSpec getRequestedSpec() {
 		return requestedSpec;
 	}
 
-	public void setRequestedSpec(ChorServiceSpec requestedSpec) {
+	public void setRequestedSpec(ServiceSpec requestedSpec) {
 		this.requestedSpec = requestedSpec;
 	}
 
-	public ScheduledServiceModification(ChorServiceSpec spec, SpecAndService specAndService) {
+	public ScheduledServiceModification(ServiceSpec spec, SpecAndService specAndService) {
 		this.requestedSpec = spec;
 		this.specAndService = specAndService;
 	}

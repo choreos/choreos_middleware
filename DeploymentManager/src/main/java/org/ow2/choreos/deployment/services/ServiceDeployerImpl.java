@@ -27,7 +27,7 @@ import org.ow2.choreos.deployment.services.recipe.RecipeBuilder;
 import org.ow2.choreos.deployment.services.recipe.RecipeBuilderFactory;
 import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
 
-public class ServiceDeployerImpl implements ServiceDeployer {
+public class ServiceDeployerImpl implements ServicesManager {
 
 	private Logger logger = Logger.getLogger(ServiceDeployerImpl.class);
 	
@@ -51,7 +51,7 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 	}
 
 	@Override
-	public Service deploy(ServiceSpec serviceSpec) throws ServiceNotDeployedException {
+	public Service createService(ServiceSpec serviceSpec) throws ServiceNotDeployedException {
 		
 		Service service = null;
 		try {

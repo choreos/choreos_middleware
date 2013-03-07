@@ -1,24 +1,31 @@
 package org.ow2.choreos.chors.datamodel;
 
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.ow2.choreos.deployment.services.ScheduledServiceModification;
 import org.ow2.choreos.deployment.services.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.SpecAndService;
 
 @XmlRootElement
 public class Choreography {
 
 	private String id;
 	private ChorSpec spec = null;
+	
 
 	@XmlTransient
 	private ChoreographyRunningStatus runningStatus = new ChoreographyRunningStatus();
-
+	@XmlTransient
+	private ChorSpec requestedSpec = null;
+	
+	
+	
 	public List<SpecAndService> getSpecsAndServices() {
 		return runningStatus.specsAndServices;
 	}
@@ -31,7 +38,7 @@ public class Choreography {
 			if (serviceName.equals(svc.getName()))
 				return svc;
 		}
-		return null;
+		throw new IllegalArgumentException("Service named " + serviceName + " does not exist");
 	}
 
 	public String getId() {
@@ -47,18 +54,18 @@ public class Choreography {
 	}
 
 	public ChorSpec getRequestedSpec() {
-		return runningStatus.requestedSpec;
+		return requestedSpec;
 	}
 
 	public void setSpec(ChorSpec spec) {
 		if(spec == null) {
 			this.spec = spec;
 		}
-		this.runningStatus.requestedSpec = spec;		
+		this.requestedSpec = spec;		
 	}
 	
 	public void choreographyEnacted() {
-		this.spec = this.runningStatus.requestedSpec;
+		this.spec = this.requestedSpec;
 	    runningStatus.cleanUpScheduledChanges(); // this should be called after all enactment (deploy or update)
 	}
 
@@ -97,7 +104,7 @@ public class Choreography {
 
 	@Override
 	public String toString() {
-		return "Choreography [id=" + id + ", chorSpec=" + runningStatus.requestedSpec
+		return "Choreography [id=" + id + ", chorSpec=" + requestedSpec
 				+ ", deployedServices=" + getDeployedServices() + "]";
 	}
 
@@ -105,7 +112,7 @@ public class Choreography {
 		this.runningStatus.specsAndServices.add(specAndService);
 	}
 
-	public void addScheduledServiceCreation(ChorServiceSpec spec) {
+	public void addScheduledServiceCreation(ServiceSpec spec) {
 		runningStatus.addScheduledServiceChange("create", new ScheduledServiceModification(spec, null));
 	}
 
@@ -113,7 +120,7 @@ public class Choreography {
 		runningStatus.addScheduledServiceChange("remove", new ScheduledServiceModification(null, specAndService));
 	}
 
-	public void addScheduledServiceUpdate(ChorServiceSpec spec, SpecAndService specAndService) {
+	public void addScheduledServiceUpdate(ServiceSpec spec, SpecAndService specAndService) {
 		runningStatus.addScheduledServiceChange("update", new ScheduledServiceModification(spec, specAndService));
 	}
 
@@ -131,31 +138,6 @@ public class Choreography {
 
 	public List<ScheduledServiceModification> getScheduledServiceUpdate() {
 		return this.runningStatus.scheduledChanges.get("update");
-	}
-
-	private class ChoreographyRunningStatus {
-
-		public ChorSpec requestedSpec;
-		public List<SpecAndService> specsAndServices;
-		public Map<String, List<ScheduledServiceModification>> scheduledChanges;
-
-		public ChoreographyRunningStatus() {
-			this.requestedSpec = null;
-			this.specsAndServices = new ArrayList<SpecAndService>();
-			this.scheduledChanges = new HashMap<String, List<ScheduledServiceModification>>();
-			cleanUpScheduledChanges();
-		}
-		
-		private void cleanUpScheduledChanges() {
-			this.scheduledChanges.put("create", new ArrayList<ScheduledServiceModification>());
-			this.scheduledChanges.put("update", new ArrayList<ScheduledServiceModification>());
-			this.scheduledChanges.put("remove", new ArrayList<ScheduledServiceModification>());
-			this.scheduledChanges.put("nochange", new ArrayList<ScheduledServiceModification>());
-		}
-
-		private void addScheduledServiceChange(String changeType, ScheduledServiceModification scheduledServiceModification) {
-			scheduledChanges.get(changeType).add(scheduledServiceModification);
-		}
 	}
 
 }

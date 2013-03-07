@@ -56,7 +56,7 @@ public class ChorEnactmentTest {
 		Choreography chor = ee.enact(chorId);
 
 		Service airline = chor.getDeployedServiceByName(ModelsForTest.AIRLINE);
-		assertEquals(2, airline.getUris().size());
+		assertEquals(3, airline.getUris().size());
 		
 		Service travel = chor.getDeployedServiceByName(ModelsForTest.TRAVEL_AGENCY);
 		WSClient client = new WSClient(travel.getUris().get(0) + "?wsdl");

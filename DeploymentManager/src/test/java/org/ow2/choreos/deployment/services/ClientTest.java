@@ -35,7 +35,7 @@ public class ClientTest {
 	private static String deploymentManagerHost;
 	
 	private NodePoolManager npm;
-	private ServiceDeployer deployer;
+	private ServicesManager deployer;
 
 	private WebClient client;
 	private ServiceSpec spec = new ServiceSpec();
@@ -71,7 +71,7 @@ public class ClientTest {
 	@Test
 	public void shouldDeployAWarServiceInANode() throws Exception {
 
-		Service service = deployer.deploy(spec);
+		Service service = deployer.createService(spec);
 		
 		// now get the first instance
 		ServiceInstance instance = service.getInstances().get(0);

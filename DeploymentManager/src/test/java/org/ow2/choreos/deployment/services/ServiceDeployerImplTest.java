@@ -28,7 +28,7 @@ import org.ow2.choreos.utils.LogConfigurator;
 public class ServiceDeployerImplTest {
 
 	private NodePoolManager npm; 
-	private ServiceDeployer serviceDeployer;
+	private ServicesManager serviceDeployer;
 	
 	private Node selectedNode;
 	private ServiceSpec serviceSpec;
@@ -85,7 +85,7 @@ public class ServiceDeployerImplTest {
 				+ serviceSpec.getPort() + "/" + serviceSpec.getEndpointName()
 				+ "/";
 		
-		Service service = serviceDeployer.deploy(serviceSpec);
+		Service service = serviceDeployer.createService(serviceSpec);
 		
 		ServiceInstance instance = service.getInstances().get(0);
 		

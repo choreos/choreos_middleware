@@ -15,7 +15,7 @@ import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
 import org.ow2.choreos.deployment.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
-import org.ow2.choreos.deployment.services.ServiceDeployer;
+import org.ow2.choreos.deployment.services.ServicesManager;
 import org.ow2.choreos.deployment.services.ServiceDeployerImpl;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
@@ -39,7 +39,7 @@ public class ParallelDeployTest {
 	
 	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
 	private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-	private ServiceDeployer deployer = new ServiceDeployerImpl(npm);
+	private ServicesManager deployer = new ServiceDeployerImpl(npm);
 
 	private ServiceSpec[] specs = new ServiceSpec[2];
 	
@@ -134,7 +134,7 @@ public class ParallelDeployTest {
 			System.out.println("Deploying " + spec);
 			Service service = null;
 			try {
-				service = deployer.deploy(spec);
+				service = deployer.createService(spec);
 			} catch (ServiceNotDeployedException e) {
 				e.printStackTrace();
 			}

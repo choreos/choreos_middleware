@@ -28,7 +28,7 @@ public class JARDeployTest {
 	
 	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
 	private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-	private ServiceDeployer deployer = new ServiceDeployerImpl(npm);
+	private ServicesManager deployer = new ServiceDeployerImpl(npm);
 
 	private WebClient client;
 	private ServiceSpec spec = new ServiceSpec();
@@ -53,7 +53,7 @@ public class JARDeployTest {
 	@Test
 	public void shouldDeployAJarServiceInANode() throws Exception {
 
-		Service service = deployer.deploy(spec);
+		Service service = deployer.createService(spec);
 		ServiceInstance instance = service.getInstances().get(0);
 		npm.upgradeNode(instance.getNode().getId());
 		Thread.sleep(1000);

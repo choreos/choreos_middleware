@@ -22,6 +22,11 @@ public class ServiceInstance {
 	 * The hosting node of a non-legacy instance
 	 */
 	private Node node;
+	
+	/**
+	 * The node that handles bus calls
+	 */
+	private String easyEsbNodeAdminEndpoint;
 
 	/**
 	 * URI for access instance directly
@@ -243,5 +248,13 @@ public class ServiceInstance {
 		if(!(equalsInstance && equalsService)) return false;
 		
 		return true;
+	}
+
+	public String getEasyEsbNodeAdminEndpoint() {
+		return easyEsbNodeAdminEndpoint;
+	}
+
+	public void setEasyEsbNodeAdminEndpoint(String easyEsbNodeAdminEndpoint) {
+		this.easyEsbNodeAdminEndpoint = easyEsbNodeAdminEndpoint;
 	}
 }

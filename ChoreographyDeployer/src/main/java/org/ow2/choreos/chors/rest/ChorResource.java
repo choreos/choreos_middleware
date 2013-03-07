@@ -50,7 +50,7 @@ public class ChorResource {
 	@Consumes(MediaType.APPLICATION_XML)
 	public Response create(ChorSpec chor, @Context UriInfo uriInfo) {
 
-		if (chor == null || chor.getChorServiceSpecs() == null || chor.getChorServiceSpecs().isEmpty()) {
+		if (chor == null || chor.getServiceSpecs() == null || chor.getServiceSpecs().isEmpty()) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		

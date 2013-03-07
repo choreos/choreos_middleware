@@ -5,7 +5,7 @@ import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
 
 
-public interface ServiceDeployer {
+public interface ServicesManager {
 
 	/**
 	 * 
@@ -13,7 +13,7 @@ public interface ServiceDeployer {
 	 * @return information about how the service was deployed. 
 	 * @throws ServiceNotDeployedException if deploy was not possible.
 	 */
-	public Service deploy(ServiceSpec serviceSpec) throws ServiceNotDeployedException;
+	public Service createService(ServiceSpec serviceSpec) throws ServiceNotDeployedException;
 
 	/**
 	 * 

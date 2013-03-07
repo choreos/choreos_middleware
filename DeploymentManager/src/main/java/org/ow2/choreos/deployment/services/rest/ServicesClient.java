@@ -6,7 +6,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
-import org.ow2.choreos.deployment.services.ServiceDeployer;
+import org.ow2.choreos.deployment.services.ServicesManager;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
 import org.ow2.choreos.deployment.services.ServiceNotModifiedException;
 import org.ow2.choreos.deployment.services.datamodel.Service;
@@ -21,7 +21,7 @@ import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
  * @author leonardo
  *
  */
-public class ServicesClient implements ServiceDeployer {
+public class ServicesClient implements ServicesManager {
 
 	private String host;
 	
@@ -51,7 +51,7 @@ public class ServicesClient implements ServiceDeployer {
 	
 	// TODO: review this methods for new client path
 	@Override
-	public Service deploy(ServiceSpec serviceSpec) throws ServiceNotDeployedException {
+	public Service createService(ServiceSpec serviceSpec) throws ServiceNotDeployedException {
 		
 		WebClient client = setupClient();
 		client.path("services");

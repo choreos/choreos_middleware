@@ -108,6 +108,10 @@ public class Service {
 	public void setSpec(ServiceSpec spec) {
 		this.spec = spec;
 	}
+	
+	public String getId() {
+		return name;
+	}
 
 	public String getName() {
 		return name;

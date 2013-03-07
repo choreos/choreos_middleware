@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.chors.datamodel.ChorServiceSpec;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
-import org.ow2.choreos.chors.datamodel.ServiceDependency;
 import org.ow2.choreos.deployment.services.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.ServiceDependency;
+import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 
 public class ContextCaster {
 
@@ -20,7 +20,7 @@ public class ContextCaster {
 	public void cast(ChorSpec chor, Map<String, Service> deployedServices) {
 
 		logger.info("Passing context to deployed services");
-		for (ChorServiceSpec spec: chor.getChorServiceSpecs()) {
+		for (ServiceSpec spec: chor.getServiceSpecs()) {
 
 			Service deployed = deployedServices.get(spec.getName());
 			if (deployed == null) {
@@ -33,7 +33,7 @@ public class ContextCaster {
 		}
 	}
 
-	private void castContext(Map<String, Service> deployedServices, ChorServiceSpec spec, Service deployed) {
+	private void castContext(Map<String, Service> deployedServices, ServiceSpec spec, Service deployed) {
 
 		List<String> serviceUris = deployed.getUris();
 		for (ServiceDependency dep: spec.getDependencies()) {
@@ -56,7 +56,7 @@ public class ContextCaster {
 		}
 	}
 
-	private void trySendContext(ChorServiceSpec spec, List<String> serviceUris,
+	private void trySendContext(ServiceSpec spec, List<String> serviceUris,
 			ServiceDependency dep, Service deployedPartner) throws ContextNotSentException {
 		List<String> partnerUris = deployedPartner.getUris();
 		int trial = 0;
@@ -79,7 +79,7 @@ public class ContextCaster {
 		}
 	}
 
-	private int tryRecoveryNotSentContext(ChorServiceSpec spec,
+	private int tryRecoveryNotSentContext(ServiceSpec spec,
 			ServiceDependency dep, int trial) {
 		trial++;
 		if (trial == MAX_TRIALS) {

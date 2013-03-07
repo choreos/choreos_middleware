@@ -23,7 +23,7 @@ import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
-import org.ow2.choreos.deployment.services.ServiceDeployer;
+import org.ow2.choreos.deployment.services.ServicesManager;
 import org.ow2.choreos.deployment.services.ServiceDeployerImpl;
 import org.ow2.choreos.deployment.services.ServiceInstanceNotFoundException;
 import org.ow2.choreos.deployment.services.ServiceNotDeletedException;
@@ -48,7 +48,7 @@ public class ServicesResource {
 	private Logger logger = Logger.getLogger(ServicesResource.class);
 	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
 	private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-	private ServiceDeployer serviceDeployer = new ServiceDeployerImpl(npm);
+	private ServicesManager serviceDeployer = new ServiceDeployerImpl(npm);
 	
 	/**
 	 * Deploys a service
@@ -74,7 +74,7 @@ public class ServicesResource {
 
 		Service service;
 		try {
-			service = serviceDeployer.deploy(serviceSpec);
+			service = serviceDeployer.createService(serviceSpec);
 		} catch (ServiceNotDeployedException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
