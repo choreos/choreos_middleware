@@ -22,7 +22,7 @@ import org.ow2.choreos.deployment.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.rest.NodesClient;
 import org.ow2.choreos.deployment.services.ScheduledServiceModification;
-import org.ow2.choreos.deployment.services.ServiceDeployer;
+import org.ow2.choreos.deployment.services.ServicesManager;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
@@ -97,7 +97,7 @@ public class Deployer {
 		for (ScheduledServiceModification s : chor.getScheduledServiceCreation()) {
 			ServiceSpec serviceSpec = s.getRequestedSpec();
 			logger.debug("Requesting deploy of " + serviceSpec);
-			ServiceDeployerInvoker invoker = new ServiceDeployerInvoker(serviceSpec);
+			ServicesManagerInvoker invoker = new ServicesManagerInvoker(serviceSpec);
 			Future<Service> future = executor.submit(invoker);
 			futures.put(serviceSpec, future);	
 		}
@@ -105,12 +105,13 @@ public class Deployer {
 		waitExecutor(executor, TIMEOUT);
 
 		List<Service> services = new ArrayList<Service>();
-		for (Entry<ServiceSpec, Future<Service>> f : futures.entrySet())
+		for (Entry<ServiceSpec, Future<Service>> entry : futures.entrySet())
 		{
 			try {
-				Service service = this.checkFuture(f.getValue());
+				Service service = this.checkFuture(entry.getValue());
 				if (service != null) {
-					chor.addSpecAndService(new SpecAndService(f.getKey(), service));
+					ServiceSpec spec = entry.getKey();
+					chor.addSpecAndService(new SpecAndService(spec, service));
 					services.add(service);
 				}
 			} catch (Exception e) {
@@ -275,19 +276,19 @@ public class Deployer {
 	//===================================================================================================================
 
 
-	private class ServiceDeployerInvoker implements Callable<Service> {
+	private class ServicesManagerInvoker implements Callable<Service> {
 
-		ServiceDeployer deployer = new ServicesClient(Configuration.get(Option.DEPLOYMENT_MANAGER_URI));
+		ServicesManager servicesManager = new ServicesClient(Configuration.get(Option.DEPLOYMENT_MANAGER_URI));
 		ServiceSpec serviceSpec; // input
 
-		public ServiceDeployerInvoker(ServiceSpec serviceSpec) {
+		public ServicesManagerInvoker(ServiceSpec serviceSpec) {
 			this.serviceSpec = serviceSpec;
 		}
 
 		@Override
 		public Service call() throws Exception {
 			try {
-				Service deployed = deployer.deploy(serviceSpec);
+				Service deployed = servicesManager.createService(serviceSpec);
 				return deployed;
 			} catch (ServiceNotDeployedException e) {
 				logger.error("Probably DeploymentManager is off");
@@ -298,7 +299,7 @@ public class Deployer {
 
 	private class ServiceUpdateInvoker implements Callable<Service> {
 
-		ServiceDeployer deployer = new ServicesClient(Configuration.get(Option.DEPLOYMENT_MANAGER_URI));
+		ServicesManager servicesManager = new ServicesClient(Configuration.get(Option.DEPLOYMENT_MANAGER_URI));
 		private ServiceSpec serviceSpec;
 
 		public ServiceUpdateInvoker(ServiceSpec serviceSpec) {
@@ -307,7 +308,7 @@ public class Deployer {
 
 		@Override
 		public Service call() throws Exception {
-			deployer.updateService(serviceSpec);
+			servicesManager.updateService(serviceSpec);
 			return new Service();
 		}
 	}

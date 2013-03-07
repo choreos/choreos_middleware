@@ -14,7 +14,7 @@ import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
-import org.ow2.choreos.deployment.services.ServiceDeployer;
+import org.ow2.choreos.deployment.services.ServicesManager;
 import org.ow2.choreos.deployment.services.ServiceDeployerImpl;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
@@ -34,7 +34,7 @@ public class WARDeployTest {
 	
 	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
 	private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-	private ServiceDeployer deployer = new ServiceDeployerImpl(npm);
+	private ServicesManager deployer = new ServiceDeployerImpl(npm);
 
 	private WebClient client;
 	private ServiceSpec specWar = new ServiceSpec();
@@ -58,7 +58,7 @@ public class WARDeployTest {
 	@Test
 	public void shouldDeployAWarServiceInANode() throws Exception {
 
-		Service service = deployer.deploy(specWar);
+		Service service = deployer.createService(specWar);
 		
 		ServiceInstance instance = service.getInstances().get(0);
 		

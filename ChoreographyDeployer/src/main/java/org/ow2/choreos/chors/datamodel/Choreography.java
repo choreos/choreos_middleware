@@ -17,10 +17,12 @@ public class Choreography {
 
 	private String id;
 	private ChorSpec spec = null;
+	
 
 	@XmlTransient
 	private ChoreographyRunningStatus runningStatus = new ChoreographyRunningStatus();
-
+	@XmlTransient
+	private ChorSpec requestedSpec = null;
 	
 	
 	
@@ -36,7 +38,7 @@ public class Choreography {
 			if (serviceName.equals(svc.getName()))
 				return svc;
 		}
-		return null;
+		throw new IllegalArgumentException("Service named " + serviceName + " does not exist");
 	}
 
 	public String getId() {
@@ -52,18 +54,18 @@ public class Choreography {
 	}
 
 	public ChorSpec getRequestedSpec() {
-		return runningStatus.requestedSpec;
+		return requestedSpec;
 	}
 
 	public void setSpec(ChorSpec spec) {
 		if(spec == null) {
 			this.spec = spec;
 		}
-		this.runningStatus.requestedSpec = spec;		
+		this.requestedSpec = spec;		
 	}
 	
 	public void choreographyEnacted() {
-		this.spec = this.runningStatus.requestedSpec;
+		this.spec = this.requestedSpec;
 	    runningStatus.cleanUpScheduledChanges(); // this should be called after all enactment (deploy or update)
 	}
 
@@ -102,7 +104,7 @@ public class Choreography {
 
 	@Override
 	public String toString() {
-		return "Choreography [id=" + id + ", chorSpec=" + runningStatus.requestedSpec
+		return "Choreography [id=" + id + ", chorSpec=" + requestedSpec
 				+ ", deployedServices=" + getDeployedServices() + "]";
 	}
 

@@ -11,7 +11,7 @@ import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
-import org.ow2.choreos.deployment.services.ServiceDeployer;
+import org.ow2.choreos.deployment.services.ServicesManager;
 import org.ow2.choreos.deployment.services.ServiceDeployerImpl;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
@@ -27,7 +27,7 @@ public class JARDeployTest {
 	
 	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
 	private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-	private ServiceDeployer deployer = new ServiceDeployerImpl(npm);
+	private ServicesManager deployer = new ServiceDeployerImpl(npm);
 
 	private WebClient client;
 	private ServiceSpec spec = new ServiceSpec();
@@ -50,7 +50,7 @@ public class JARDeployTest {
 	@Test
 	public void shouldDeployAJarServiceInANode() throws Exception {
 
-		Service service = deployer.deploy(spec);
+		Service service = deployer.createService(spec);
 		
 		ServiceInstance instance = service.getInstances().get(0);
 		
