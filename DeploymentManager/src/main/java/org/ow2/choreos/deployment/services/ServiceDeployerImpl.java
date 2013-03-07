@@ -14,10 +14,12 @@ import org.ow2.choreos.deployment.nodes.ConfigNotAppliedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.deployment.services.bus.ServiceInstanceProxifier;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
 import org.ow2.choreos.deployment.services.diff.UpdateAction;
 import org.ow2.choreos.deployment.services.recipe.Recipe;
@@ -34,6 +36,7 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 	private Knife knife;
 	
 	public ServiceDeployerImpl(NodePoolManager npm) {
+		
 		final String CHEF_REPO = Configuration.get("CHEF_REPO");
 		final String CHEF_CONFIG_FILE = Configuration.get("CHEF_CONFIG_FILE");
 		this.npm = npm;
@@ -41,27 +44,36 @@ public class ServiceDeployerImpl implements ServiceDeployer {
 	}
 	
 	// protected constructor: to test purposes
-	public ServiceDeployerImpl(NodePoolManager npm, Knife knife) {
+	ServiceDeployerImpl(NodePoolManager npm, Knife knife) {
+		
 		this.npm = npm;
 		this.knife = knife; 
 	}
 
 	@Override
-	public Service deploy(ServiceSpec serviceSpec) {
+	public Service deploy(ServiceSpec serviceSpec) throws ServiceNotDeployedException {
 		
 		Service service = null;
 		try {
 			service = new Service(serviceSpec);
-			if (serviceSpec.getPackageType() != PackageType.LEGACY) {
-				service = deployNoLegacyService(service);
-			} 
-			
-			if (service != null) {
-				registry.addService(service.getName(), service);
-			}
-		} catch (Exception e) {
-
+		} catch (IllegalArgumentException e) {
+			String message = "Invalid service spec"; 
+			logger.error(message, e);
+			throw new ServiceNotDeployedException(service.getName(), message);
 		}
+		
+		if (serviceSpec.getPackageType() != PackageType.LEGACY) {
+			service = deployNoLegacyService(service);
+		} 
+		
+		boolean useTheBus = Boolean.parseBoolean(Configuration.get("BUS"));
+		// I'm not comfortable with the "packageType != PackageType.EASY_ESB"
+		if (useTheBus && serviceSpec.getPackageType() != PackageType.EASY_ESB) {
+			// TODO ...
+		}
+		
+		
+		registry.addService(service.getName(), service);
 		return service;
 		
 	}

@@ -1,6 +1,7 @@
 package org.ow2.choreos.deployment.services;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import javax.ws.rs.core.Response;
 
@@ -58,6 +59,7 @@ public class JARDeployTest {
 		Thread.sleep(1000);
 
 		String url = instance.getNativeUri();
+		assertNotNull(url);
 		System.out.println("Service at " + url);
 		String wsdl = url.replaceAll("/$", "").concat("?wsdl");
 		client = WebClient.create(wsdl);

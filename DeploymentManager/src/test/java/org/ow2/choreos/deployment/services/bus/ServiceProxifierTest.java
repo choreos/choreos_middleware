@@ -50,7 +50,7 @@ public class ServiceProxifierTest {
 		ServiceInstance svc = this.getServiceInstance();
 		EasyESBNode esbNode = this.getEsbNode();
 		
-		ServiceProxifier proxifier = new ServiceProxifier();
+		ServiceInstanceProxifier proxifier = new ServiceInstanceProxifier();
 		String proxifiedAddress = proxifier.proxify(svc, esbNode);
 		assertEquals(PROXIFIED_ADDRESS, proxifiedAddress);
 	}

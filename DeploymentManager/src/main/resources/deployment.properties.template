@@ -1,6 +1,6 @@
 DEPLOYMENT_MANAGER_PORT=9100
 
-BUS=True # Binds and exposes services using EasyESB. Values: True or False
+BUS=False # Binds and exposes services using EasyESB. Values: True or False
 
 NODE_SELECTOR=ALWAYS_CREATE
 # others: ROUND_ROBIN and DEMO

@@ -41,8 +41,7 @@ public class Service {
 
 	}
 
-	public Service(ServiceSpec serviceSpec) throws Exception {
-
+	public Service(ServiceSpec serviceSpec) {
 
 		this.spec = serviceSpec;
 		if (this.spec.getPackageType() == null) {
@@ -50,7 +49,7 @@ public class Service {
 		}
 
 		if (serviceSpec.getName() == null || serviceSpec.getName().isEmpty()) {
-			throw new Exception();
+			throw new IllegalArgumentException();
 		} else {
 			name = serviceSpec.getName();
 		}

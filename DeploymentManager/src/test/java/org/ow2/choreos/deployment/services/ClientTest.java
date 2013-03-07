@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.rest.NodesClient;
 import org.ow2.choreos.deployment.rest.DeploymentManagerServer;
@@ -49,6 +50,8 @@ public class ClientTest {
 	
 	@Before
 	public void setUp() throws Exception {
+		
+		Configuration.set("BUS", "false");
 		
 		npm = new NodesClient(deploymentManagerHost);
 		deployer = new ServicesClient(deploymentManagerHost);

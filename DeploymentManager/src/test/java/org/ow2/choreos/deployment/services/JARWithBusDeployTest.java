@@ -11,7 +11,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.deployment.Configuration;
-import org.ow2.choreos.deployment.Locations;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
@@ -19,14 +18,14 @@ import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
 @Category(IntegrationTest.class)
-public class CDDeployTest {
-	
-	// a known CD configuration file
-	public static String CD_LOCATION = Locations.get("CD_WEATHER_LOCATION");
+public class JARWithBusDeployTest {
+
+	public static final String JAR_LOCATION = "http://valinhos.ime.usp.br:54080/services/airline-service.jar";
 	
 	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
 	private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
@@ -41,37 +40,31 @@ public class CDDeployTest {
 	}
 	
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		
-		Configuration.set("BUS", "false");
-		spec.setName("CDWeather");
-		spec.setPackageUri(CD_LOCATION);
-		spec.setPackageType(PackageType.EASY_ESB);
-		spec.setEndpointName("CDWeatherForecastServicePort"); // configured in the config.xml
+		Configuration.set("BUS", "true");
+		
+		spec.setName("AIRLINE");
+		spec.setPackageUri(JAR_LOCATION);
+		spec.setPackageType(PackageType.COMMAND_LINE);
+		spec.setEndpointName("airline");
+		spec.setPort(1234);
 	}
 
-	// should display each instance of the service
 	@Test
-	public void shouldDeployCDInEasyESBNode() throws Exception {
+	public void shouldDeployAJarServiceInANode() throws Exception {
 
 		Service service = deployer.deploy(spec);
-		
-		assertNotNull(service);
-		System.out.println(">>>> " + service.toString());
-		
 		ServiceInstance instance = service.getInstances().get(0);
-		
-		String url = instance.getNativeUri();
-		System.out.println("Instance at " + url);
 		npm.upgradeNode(instance.getNode().getId());
-		Thread.sleep(5000);
-		String wsdl = url.substring(0, url.length()-1) + "?wsdl";
-		System.out.println("Checking " + wsdl);
+		Thread.sleep(1000);
+
+		String proxified = instance.getBusUri(ServiceType.SOAP);
+		assertNotNull(proxified);
+		System.out.println("Profixified at " + proxified);
+		String wsdl = proxified.replaceAll("/$", "").concat("?wsdl");
 		client = WebClient.create(wsdl);
 		Response response = client.get();
 		assertEquals(200, response.getStatus());
 	}
-
-
-
 }

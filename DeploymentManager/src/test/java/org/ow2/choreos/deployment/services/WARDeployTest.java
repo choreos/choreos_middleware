@@ -48,6 +48,7 @@ public class WARDeployTest {
 	@Before
 	public void setUp() throws Exception {
 		
+		Configuration.set("BUS", "false");
 		specWar.setName("airline");
 		specWar.setPackageUri(WAR_LOCATION);
 		specWar.setEndpointName(ENDPOINT_NAME);

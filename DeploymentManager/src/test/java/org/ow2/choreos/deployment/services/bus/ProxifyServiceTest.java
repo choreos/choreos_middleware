@@ -71,7 +71,7 @@ public class ProxifyServiceTest {
 		BusHandler busHandler = new SimpleBusHandler(npm);
 		EasyESBNode esbNode = busHandler.retrieveBusNode();
 
-		ServiceProxifier proxifier = new ServiceProxifier();
+		ServiceInstanceProxifier proxifier = new ServiceInstanceProxifier();
 		String url = null;
 		try {
 			url = proxifier.proxify(service, esbNode);

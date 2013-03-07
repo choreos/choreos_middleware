@@ -1,24 +1,99 @@
 package org.ow2.choreos.deployment.services.bus;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import org.apache.log4j.Logger;
+import org.ow2.choreos.deployment.nodes.NodePoolManager;
+import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceType;
+import org.ow2.choreos.utils.Concurrency;
 
-import esstar.petalslink.com.service.management._1_0.ManagementException;
-
+/**
+ * 
+ * @author leonardo
+ *
+ */
 public class ServiceProxifier {
 
-	public String proxify(ServiceInstance serviceInstance, EasyESBNode esbNode) throws ManagementException {
+	private static final int PROXIFY_TIMEOUT = 5; // minutes 
+	
+	private Logger logger = Logger.getLogger(ServiceProxifier.class);
+	
+	/**
+	 * Selects EasyESB nodes to proxify the instances of the services and proxify them.
+	 * The property busUris (a map) of the serviceInstances objects are changed:
+	 * the proxified address is the value to serviceInstance.busUris.get(ServiceType.SOAP)
+	 * 
+	 * If there are problems, there is no exception to not prevent other threads completion
+	 * However, clients may check serviceInstance.busUris.get(ServiceType.SOAP) value to verify success
+	 * 
+	 * @param service whose instances will be proxified 
+	 */
+	public void proxifyInstances(Service service, NodePoolManager npm) {
+		
+		final int N = service.getInstances().size();
+		ExecutorService executor = Executors.newFixedThreadPool(N);
+		List<Future<Void>> futures = new ArrayList<Future<Void>>();
 
-		ServiceType type = serviceInstance.getMyParentServiceSpec().getType();
-		if (type != ServiceType.SOAP) {
-			throw new IllegalArgumentException("We can bind only SOAP services, not " + type);
+		logger.info("Requesting service " + service.getName() + " proxification");
+		for (ServiceInstance svcInstance: service.getInstances()) {
+			Proxifier proxifier = new Proxifier(svcInstance, npm);
+			Future<Void> future = executor.submit(proxifier);
+			futures.add(future);
 		}
 		
-		String url = serviceInstance.getNativeUri();
-		url = url.replaceAll("/$", "");
-		String wsdl = url + "?wsdl";
+		Concurrency.waitExecutor(executor, PROXIFY_TIMEOUT, this.logger);
 		
-		return esbNode.proxifyService(url, wsdl);
+		for (Future<Void> f: futures) {
+			
+			try {
+				Concurrency.checkFuture(f);
+			} catch (ExecutionException e) {
+				String msg = "Could not proxify a service instance of " + service.getName();
+				logger.error(msg, e.getCause());
+			} catch (IllegalStateException e) {
+				String msg = "Could not proxify a service instance of " + service.getName();
+				logger.error(msg, e.getCause());				
+			}
+		}
+		
+		logger.info(service.getName() + " proxification completed");
 	}
+	
+	/**
+	 * Chooses a EasyESBNode and proxifies a serviceIntance
+	 * The property busUris (a map) of the serviceInstance is changed 
+	 * It may throws the ManagementException and NoBusAvailableException
+	 *
+	 */
+	private class Proxifier implements Callable<Void> {
 
+		ServiceInstance svcInstance;
+		NodePoolManager npm;
+		
+		Proxifier(ServiceInstance svcInstance, NodePoolManager npm) {
+			this.svcInstance = svcInstance;
+			this.npm = npm;
+		}
+		
+		@Override
+		public Void call() throws Exception  {
+			
+			BusHandler busHandler = new SimpleBusHandler(this.npm);
+			EasyESBNode esbNode = busHandler.retrieveBusNode();
+			ServiceInstanceProxifier instanceProxifier = new ServiceInstanceProxifier();
+			String proxifiedAddress = instanceProxifier.proxify(this.svcInstance, esbNode);
+			this.svcInstance.setBusUri(ServiceType.SOAP, proxifiedAddress);
+			return null;
+		}
+		
+		
+	}
 }
