@@ -44,26 +44,28 @@ We proceed with a brief explanation about each class:
 \begin{description}
 \item [ChorSpec:] represents what the middleware needs to know to enact a choreography;
 \item [ChorServiceSpec:] represents what the middleware needs to know to deploy and configure one service acting in the specified choreography;
-\item [ServiceSpec:] represents what the middleware needs to know to deploy a single service, without concerning whether the service is within a choreography or not. 
+\item [ServiceSpec:] represents what the middleware needs to know to deploy a single service (with one or more instances for load balancing), without concerning whether the service is within a choreography or not. 
 \item [ServiceDependency:] represents dependencies among services (if \verb!service A! invokes \verb!service B!, we say \verb!service A! depends on \verb!service B!);
 \item [Choreography:] provides information about a choreography instance; 
 \item [Service:] provides information about a deployed service. 
+\item [ServiceInstance:] provides information about a specific instance, or replica, of a deployed service. 
 \end{description}
 
 To request a choreography enactment, it is important to understand very well the \verb!ChorServiceSpec! and \verb!ServiceSpec! classes. Therefore, it follows the description of each one of their attributes:
 
 \begin{description}
 \item [name:] a unique name within the choreography specification;
-\item [owner:] the organization that holds the infrastructure where the service must be deployed (not implemented, for while a single cloud per \ee\ instance is supported);
+\item [owner:] the organization that holds the infrastructure where the service must be deployed (not implemented, for now a single cloud per \ee\ instance is supported);
 \item [group:] services in the same group will be deployed in the same cloud node (not implemented);
 \item [roles:] list of roles implemented by the service;
 \item [dependencies:] list of \verb!ServiceDependency! entries; each entry describes the name of the dependency (matching the \verb!name! attribute), and the the role provided by the dependency;
 \item [type:] whether the service is a SOAP service or a REST service. More types can be added as necessary.
-\item [artifactType:] the type of the deployable artifact, according to the \verb!ArtifactType! enumeration\footnote{When artifact type is COMMAND\_LINE the service will be executed by the ``java -jar'' command.};
-\item [codeUri:] the location of the source to be deployed. If type is LEGACY (services that are not being deployed specifically for this choreography, but are already available somewhere), this attribute will represent the complete service endpoint;
-\item [port:] the TCP port used by the service. Mandatory if type is COMMAND\_LINE;
-\item [endpointName:] the endpoint suffix after deployment. For example, if the service will be deployed as \verb!http://<some_ip>/choreos/service!, the endpoint is \verb!choreos/service!. If type is LEGACY, endpoint is empty.
+\item [packageType:] the type of the deployable artifact, according to the \verb!PackageType! enumeration\footnote{When the package type is COMMAND\_LINE the service will be executed by the ``java -jar'' command.};
+\item [packageUri:] the location of the binary file to be deployed. If type is LEGACY (services that are not being deployed specifically for this choreography, but are already available somewhere), this attribute will represent the complete service endpoint;
+\item [port:] the TCP port used by the service. Note that multiple replicas of a single service will all use the same port. Mandatory if type is COMMAND\_LINE;
+\item [endpointName:] the endpoint suffix after deployment. For example, if the service will be deployed as \verb!http://<some_ip>/choreos/service!, the endpoint is \verb!choreos/service!. Note that multiple replicas of a single service will all use the same endpoint. If type is LEGACY, endpoint is empty.
 \item [version:] the service version, which is used by the \ee\ to define which services must be redeployed in a choreography update.
+\item [numberOfInstances:] How many instances of the service should be deployed (onto different virtual machines) in order to allow the load to be distributed.
 \end{description}
 
 
@@ -71,11 +73,11 @@ To request a choreography enactment, it is important to understand very well the
 
 In a service composition, some services depends on other services. A service that depends on other services is a \emph{consumer} service, and the service that provides functionality to the dependent service is the \emph{provider}. In simple service compositions, such dependency relations are hardcoded on consumer services. But decoupling the consumer service implementation from the actual provider endpoint is a good practice, which enables dynamic adaptation. Moreover, dependency hardcoding is not possible on cloud environments, since we do not know service addresses before deployment. Therefore, in the CHOReOS environment each consumer service is declared as depending on \emph{roles} rather than other service implementations. The consumer service must receive the actual provider endpoint of a service fulfilling the required role through the \verb!setInvocationAddress! operation, which every consumer service must implement.  
 
-The \ee\ will use \verb!ServiceDependency! data to know which calls it must perform to the  \verb!setInvocationAddress! operation of participant services. Thus, the \ee\ will be able to tell, for example, to \verb!ServiceA! that it must use \verb!ServiceB! as \verb!Role1!, where \verb!ServiceB! is an endpoint URI. In this way, the CHOReOS middleware provides a \emph{dependency injection}\footnote{Dependency Injection pattern, by Martin Fowler: \url{http://martinfowler.com/articles/injection.html}} mechanism to wire up service dependencies.
+The \ee\ will use \verb!ServiceDependency! data to know which calls it must perform to the  \verb!setInvocationAddress! operation of participant services. Thus, the \ee\ will be able to tell, for example, to \verb!ServiceA! that it must use \verb!ServiceB! as \verb!Role1!, where \verb!ServiceB! is the list of endpoint URIs corresponding to the multiple instances of \verb!ServiceB!. In this way, the CHOReOS middleware provides a \emph{dependency injection}\footnote{Dependency Injection pattern, by Martin Fowler: \url{http://martinfowler.com/articles/injection.html}} mechanism to wire up service dependencies.
 
 \subsubsection*{Resource impact specification}
 
-The \verb!ServiceSpec! class has also an attribute to specify non-functional requirements, as QoS constraints. This attribute is called ``resource impact'', and it can be used by the \verb!NodeSelector!\footnote{See the lesson Choreography Enactment.} to choose the node in which the service should be deployed. \verb!NodeSelector! will try to choose a node that enables the service to fulfil such requirements.
+The \verb!ServiceSpec! class has also an attribute to specify non-functional requirements, such as QoS constraints. This attribute is called ``resource impact'', and it can be used by the \verb!NodeSelector!\footnote{See the lesson Choreography Enactment.} to choose the node in which the service should be deployed. \verb!NodeSelector! will try to choose a node that enables the service to fulfil such requirements.
 
 This attribute is not described in this document because its structure is not fully defined yet. But it is expected to define, among others, required values of CPU, memory, and disk usage.
 
@@ -92,27 +94,29 @@ To properly build and read these XML representations, you can rely on the schema
 <chorSpec>
 
   <serviceSpecs>
-    <codeUri>http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar</codeUri>
+    <packageUri>http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar</packageUri>
      <endpointName>airline</endpointName>
      <name>airline</name>
      <port>1234</port>
      <type>SOAP</type>
-     <artifactType>COMMAND_LINE</type>
+     <packageType>COMMAND_LINE</type>
      <roles>airline</roles>
+     <numberOfInstances>1</numberOfInstances>
   </serviceSpecs>
   
   <serviceSpecs>
-    <codeUri>http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar</codeUri>
+    <packageUri>http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar</packageUri>
     <endpointName>travelagency</endpointName>
     <name>travelagency</name>
     <port>1235</port>
     <type>SOAP</type>
-    <artifactType>COMMAND_LINE</type>
+    <packageType>COMMAND_LINE</type>
     <dependences>
       <serviceName>airline</serviceName>
       <serviceRole>airline</serviceRole>
     </dependences>
     <roles>travelagency</roles>
+    <numberOfInstances>1</numberOfInstances>
   </serviceSpecs>
   
 </chorSpec>
@@ -125,26 +129,28 @@ To properly build and read these XML representations, you can rely on the schema
 
   <chorSpec>
     <serviceSpecs>
-      <codeUri>http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar</codeUri>
+      <packageUri>http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar</packageUri>
       <endpointName>airline</endpointName>
       <name>airline</name>
       <port>1234</port>
       <type>SOAP</type>
-      <artifactType>COMMAND_LINE</type>
+      <packageType>COMMAND_LINE</type>
       <roles>airline</roles>
+      <numberOfInstances>1</numberOfInstances>
     </serviceSpecs>
     <serviceSpecs>
-      <codeUri>http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar</codeUri>
+      <packageUri>http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar</packageUri>
       <endpointName>travelagency</endpointName>
       <name>travelagency</name>
       <port>1235</port>
       <type>SOAP</type>
-      <artifactType>COMMAND_LINE</type>
+      <packageType>COMMAND_LINE</type>
       <dependences>
         <serviceName>airline</serviceName>
         <serviceRole>airline</serviceRole>
       </dependences>
       <roles>travelagency</roles>
+      <numberOfInstances>1</numberOfInstances>
     </serviceSpecs>
   </chorSpec>
   
@@ -154,12 +160,12 @@ To properly build and read these XML representations, you can rely on the schema
      <name>airline</name>
      <nodeId>choreos-node1</nodeId>
      <spec xsi:type="chorServiceSpec" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-       <codeUri>http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar</codeUri>
+       <packageUri>http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar</packageUri>
        <endpointName>airline</endpointName>
        <name>airline</name>
        <port>1234</port>
        <type>SOAP</type>
-       <artifactType>COMMAND_LINE</type>
+       <packageType>COMMAND_LINE</type>
        <roles>airline</roles>
      </spec>
      <uri>http://192.168.56.101:1234/airline/</uri>
@@ -171,12 +177,12 @@ To properly build and read these XML representations, you can rely on the schema
       <name>travelagency</name>
       <nodeId>choreos-node2</nodeId>
       <spec xsi:type="chorServiceSpec" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-       <codeUri>http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar</codeUri>
+       <packageUri>http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar</packageUri>
         <endpointName>travelagency</endpointName>
         <name>travelagency</name>
         <port>1235</port>
         <type>SOAP</type>
-        <artifactType>COMMAND_LINE</type>
+        <packageType>COMMAND_LINE</type>
         <dependences>
            <serviceName>airline</serviceName>
            <serviceRole>airline</serviceRole>
@@ -428,13 +434,13 @@ public interface ChoreographyDeployer {
     </xs:complexType>
     <xs:complexType name="serviceSpec">
         <xs:sequence>
-            <xs:element minOccurs="0" name="codeUri" type="xs:string"/>
+            <xs:element minOccurs="0" name="packageUri" type="xs:string"/>
             <xs:element minOccurs="0" name="endpointName" type="xs:string"/>
             <xs:element minOccurs="0" name="name" type="xs:string"/>
             <xs:element name="port" type="xs:int"/>
             <xs:element minOccurs="0" ref="resourceImpact"/>
             <xs:element minOccurs="0" name="type" type="serviceType"/>
-            <xs:element minOccurs="0" name="artifactType" type="xs:artifactType"/>
+            <xs:element minOccurs="0" name="packageType" type="xs:packageType"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="serviceDependence">
@@ -467,7 +473,7 @@ public interface ChoreographyDeployer {
             <xs:enumeration value="REST"/>
         </xs:restriction>
     </xs:simpleType>    
-    <xs:simpleType name="artifactType">
+    <xs:simpleType name="packageType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="COMMAND_LINE"/>
             <xs:enumeration value="TOMCAT"/>

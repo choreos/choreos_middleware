@@ -19,7 +19,7 @@
 
 \section{Introduction}
 
-The \ee\ provides a Platform as a Service (PaaS) that automates the distributed deployment of service choreographies in cloud environments. The client of our middleware must build a declarative description of the choreography to be deployed. The description is passed to the \ee\ through a REST request. Such declarative description is a low level architectural description of the choreography, that must be writing in XML format and structured according to the relations in the Figure~\ref{img:data_model}. Details about how to build this description and how to invoke the REST operations are provided in the document ``\ee\ REST API''\footnote{\url{http://ccsl.ime.usp.br/baile/files/ee\_rest\_api.pdf}}. 
+The \ee\ provides a Platform as a Service (PaaS) that automates the distributed deployment of service choreographies in cloud environments. The client of our middleware must build a declarative description of the choreography to be deployed. The description is passed to the \ee\ through a REST request. Such declarative description is a low level architectural description of the choreography, that must be written in XML format and structured according to the relations in the Figure~\ref{img:data_model}. Details about how to build this description and how to invoke the REST operations are provided in the document ``\ee\ REST API''\footnote{\url{http://ccsl.ime.usp.br/baile/files/ee\_rest\_api.pdf}}. 
 
 \begin{figure}[th]
 \centering
@@ -28,17 +28,17 @@ The \ee\ provides a Platform as a Service (PaaS) that automates the distributed 
 \label{img:data_model}
 \end{figure}
 
-Each service has its own specification, defined by the \textsf{ServiceSpec} class. Its \texttt{codeUri} attribute defines the URL from where the \ee\ retrieves the artifact that will be deployed to make the service accessible. Therefore, all the choreography artifacts need to be already Internet accessible at enactment time. This can be accomplished, for example, by hosting the artifacts on a web server.
+Each service has its own specification, defined by the \textsf{ServiceSpec} class. Its \texttt{packageUri} attribute defines the URL from where the \ee\ retrieves the artifact that will be deployed to make the service accessible. Therefore, all the choreography artifacts need to be already Internet accessible at enactment time. This can be accomplished, for example, by hosting the artifacts on a web server.
 
-There are two main attributes in the \textsf{ServiceSpec} class that define constrains on how a service must be coded and packaged. The \texttt{artifactType} attribute defines which kind of deployable artifact is expected by the \ee\ and, therefore, the process of deploying and running the specified service. Examples of artifact types are COMMAND\_LINE and TOMCAT. The \texttt{serviceType} attribute defines the process of invoking the specified service, which is used by the \ee\ to properly invoke the \texttt{setInvocationAddress} operation during enactment. Examples of service types are SOAP and REST types, although only SOAP services are currently supported by the \ee.
+There are two main attributes in the \textsf{ServiceSpec} class that define constraints on how a service must be coded and packaged. The \texttt{packageType} attribute defines which kind of deployable artifact is expected by the \ee\ and, therefore, the process of deploying and running the specified service. Examples of package types are COMMAND\_LINE and TOMCAT. The \texttt{serviceType} attribute defines the process of invoking the specified service, which is used by the \ee\ to properly invoke the \texttt{setInvocationAddress} operation during enactment. Examples of service types are SOAP and REST types, although only SOAP services are currently supported by the \ee.
 
-Although the amount of artifact and service types currently supported are quite limited, the \ee\ was designed with an extensible architecture that enables developers to easily provide support to new types by simply creating new implementations of already defined interfaces.
+Although the amount of artifact and service types currently supported is quite limited, the \ee\ was designed with an extensible architecture that enables developers to easily provide support for new types by simply creating new implementations of already defined interfaces.
 
-In this document we will provide details about each artifact type and service type already supported by the \ee, as well as present some service coding guidelines. 
+In this document we will provide details about each package type and service type already supported by the \ee, as well as present some service coding guidelines. 
 
-\section{COMMAND\_LINE artifact type}
+\section{COMMAND\_LINE package type}
 
-Services whose artifact type are specified as COMMAND\_LINE must be provided as JAR packages. The JAR must contain all the dependencies and resources within it. When using this artifact type, it is mandatory to fill the attributes \texttt{port} and \texttt{endpointName} on \textsf{ServiceSpec}.
+Services whose package type are specified as COMMAND\_LINE must be provided as JAR packages. The JAR must contain all the dependencies and resources within it. When using this package type, it is mandatory to fill the attributes \texttt{port} and \texttt{endpointName} on \textsf{ServiceSpec}.
 
 It must be possible to run the JAR by typing the command \texttt{java -jar <file\_name>}, where \texttt{<file\_name>} must be replaced with the name of the JAR file. Every JAR file contains a file called \texttt{MANIFEST.MF} within the \texttt{META-INF} folder, which is in the root of JAR file. A runnable JAR contains the following entry in its \texttt{MANIFEST} file: ``\texttt{Main-Class: <class>}'', where \texttt{<class>} must be replaces by the full qualified name of the class containing the main method, as for example \texttt{org.ow2.choreos.AirlineStarter}.
 
@@ -114,13 +114,13 @@ implementation=``org.apache.maven.plugins.shade.resource.ManifestResourceTransfo
 \end{lstlisting}
 }
 
-An important issue about using JAR packages is that the \ee\ is not able to prevent TCP port conflicts. Therefore, try to avoid the use of the same port in multiple services. Also, be sure that the required ports are not blocked by the cloud infrastructure. However, a better way to prevent such port issues is not using JAR packages, but using WAR packages instead.
+An important issue about using JAR packages is that the \ee\ is not able to prevent TCP port conflicts. Therefore, try to avoid the use of the same port in multiple services. Also, be sure that the required ports are not blocked by the cloud infrastructure. However, a better way to prevent such port issues is not to use JAR packages, but use WAR packages instead.
 
-A good practice when generating JAR files is that a single JAR file must be able to run over different environments. This can be accomplished if configuration files are placed by the side of the JAR file, rather then packaged within it. Because of that, the \ee\ must also support the deployment of JAR files that are provided within another package (e.g. tar.gz), since this higher-level package can contain the JAR file and the necessary configuration files. However, this feature is not yet available.
+A good practice when generating JAR files is that a single JAR file must be able to run on top of different environments. This can be accomplished if configuration files are placed by the side of the JAR file, rather then packaged within it. Because of that, the \ee\ must also support the deployment of JAR files that are provided within another package (e.g. tar.gz), since this higher-level package can contain the JAR file and the necessary configuration files. However, this feature is not yet available.
 
-\section{TOMCAT artifact type}
+\section{TOMCAT package type}
 
-Services whose artifact type are specified as TOMCAT must be provided as WAR packages. The \ee\ will be in charge of deploying and starting a Tomcat instance, or select an already running instance, and then deploying the WAR package in the selected instance. If the service port is not specified in the service specification, the middleware assumes the port as 8080, the Tomcat default port. If the endpoint name is not specified, it is assumed as the WAR file name, without the ``war'' extension, as it is the default behavior in Tomcat.  
+Services whose package type are specified as TOMCAT must be provided as WAR packages. The \ee\ will be in charge of deploying and starting a Tomcat instance, or select an already running instance, and then deploying the WAR package onto the selected instance. If the service port is not specified in the service specification, the middleware assumes the port as 8080, the Tomcat default port. If the endpoint name is not specified, it is assumed as the WAR file name, without the ``war'' extension, as it is the default behavior in Tomcat.  
 
 Dependencies (JAR libraries) must be packaged within the WAR file. However, we provide a set of libraries in our Tomcat installation that are usually used in Java projects, specially projects using the JAX-WS framework. If some of these JARs are used by your service, they are not required to be packaged within your WAR file, since they are already on the Tomcat class path. This strategy helps in decreasing the size of WAR files and, therefore, decreasing the deployment time. The provided libraries are the following:
 
@@ -203,9 +203,9 @@ Inc.//DTD Web Application 2.3//EN''
 \end{lstlisting}
 }
 
-\section{EASY\_ESB artifact type}
+\section{EASY\_ESB package type}
 
-The \ee\ is also responsible of the coordination delegates deployment, that are executed by the EasyESB service bus. To enable this functionality, we have created the EASY\_ESB artifact type, that is a tar.gz package containing a \texttt{config.xml} file with instructions for the bus. In the package, some resources needed for the deployment can be added. This process enables not only the deployment of coordination delegates, but actually any interaction with EasyESB.
+The \ee\ is also responsible for the coordination delegates deployment, that are executed by the EasyESB service bus. To enable this functionality, we have created the EASY\_ESB package type, that is a tar.gz package containing a \texttt{config.xml} file with instructions for the bus. In the package, some resources needed for the deployment can be added. This process enables not only the deployment of coordination delegates, but actually any interaction with EasyESB.
 
 The \texttt{config.xml} file must be built according to the schema in the Listing~\ref{lst:config_xml_schema}. \texttt{Configuration} is the root element. \texttt{Service} is an element containing a set of \texttt{Actions} made on a particular EasyESB node. These actions can be:
 
@@ -329,11 +329,11 @@ endpoint=WeatherForecastServicePort
 
 \section{Choreographing services that are already running}
 
-A service choreography can be composed of services that are running before the choreography enactment. Although a service like this do not need to be deployed by the middleware, it must be declared on the choreography specification as a LEGACY 	service in the \texttt{artifactType} attribute. The \texttt{codeUri} attribute must contain the URI to invoke the service, which will be used by the middleware to invoke the \texttt{setInvocationAddress} operation of other services. 
+A service choreography can be composed of services that are running before the choreography enactment. Although a service like this do not need to be deployed by the middleware, it must be declared on the choreography specification as a LEGACY 	service in the \texttt{packageType} attribute. The \texttt{serviceUris} attribute must contain the list of URIs where the multiple replicas of the service are accessible, which will be used by the middleware to invoke the \texttt{setInvocationAddress} operation of other services. 
 
 \section{SOAP service type}
 
-The only service type currently supported by the \ee\ is the SOAP service type. The \texttt{setInvocationAddress} convention to this service type is that each service port type must provide an operation named ``\texttt{setInvocationAddress}'' that receives two strings. This is formally expressed with the WSDL elements presented in the Listing~\ref{lst:set_invocation_address_wsdl}. 
+The only service type currently supported by the \ee\ is the SOAP service type. The \texttt{setInvocationAddress} convention to this service type is that each service port type must provide an operation named ``\texttt{setInvocationAddress}'' that receives one string and a list of strings, describing the Role the service depends on and the list od service endpoints that will perform this Role. Multiple Roles are defined with multiple calls to the \texttt{serInvocationAddress} operation. This is formally expressed with the WSDL elements presented in the Listing~\ref{lst:set_invocation_address_wsdl}. 
 
 {\footnotesize
 \begin{lstlisting}[caption=Parts of the service WSDL that define the \texttt{setInvocationAddress} operation, label=lst:set_invocation_address_wsdl] 
@@ -382,7 +382,7 @@ public class SomeWebServiceClass {
     ...
     
     @WebMethod
-    public void setInvocationAddress(String role, String endpoint) {
+    public void setInvocationAddress(String role, List<String> endpoints) {
 		...
     }
 }
@@ -403,7 +403,7 @@ Here are just some few important reminders:
 
 \item When starting a JAR packaged service, do not use the ``localhost'' address to create the endpoint, since the service will be not remotely accessible. Instead, use the address ``0.0.0.0'' that will make your service listen in every possible address in the machine, including the localhost. This practice makes the service accessible from other machines.
 
-\item Do not use \texttt{System.out.println}, use a log tool instead. Since the services are deployed in an automated way, it must be impossible to retrieve the console output, which will make debugging harder. Using a logger, as Log4j for example, makes the service to record its messages in a file, which helps developers and operators in debugging.
+\item Do not use \texttt{System.out.println}, use a log tool instead. Since the services are deployed in an automated way, it might be impossible to retrieve the console output, which will make debugging harder. Using a logger, as Log4j for example, makes the service record its messages in a file, which helps developers and operators in debugging.
 
 \item Do not forget to validate the WSDL files of your web services, specially if there is some manual edition applied on them.
 
