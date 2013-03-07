@@ -117,7 +117,11 @@ public class Host {
 	}
 
 	public String getMetricValue(String metric)  {
-		return metrics.get(metric).getValue();
+        if (metrics.containsKey(metric)) {
+            return metrics.get(metric).getValue();
+        } else {
+            return "0";
+        }
 	}
 
 	public void setLastMeasurementTimestamp(long timestamp) {
