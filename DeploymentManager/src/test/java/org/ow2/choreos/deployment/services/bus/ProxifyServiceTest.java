@@ -17,7 +17,7 @@ import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.deployment.services.ServicesManager;
-import org.ow2.choreos.deployment.services.ServiceDeployerImpl;
+import org.ow2.choreos.deployment.services.ServicesManagerImpl;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
@@ -61,7 +61,7 @@ public class ProxifyServiceTest {
 		
 		String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
 		NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-		ServicesManager sd = new ServiceDeployerImpl(npm);
+		ServicesManager sd = new ServicesManagerImpl(npm);
 		
 		ServiceSpec airlineSpec = this.getSpec();
 		ServiceInstance service = sd.createService(airlineSpec).getInstances().get(0);

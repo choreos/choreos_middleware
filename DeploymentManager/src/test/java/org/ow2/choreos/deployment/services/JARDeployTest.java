@@ -28,7 +28,7 @@ public class JARDeployTest {
 	
 	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
 	private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-	private ServicesManager deployer = new ServiceDeployerImpl(npm);
+	private ServicesManager deployer = new ServicesManagerImpl(npm);
 
 	private WebClient client;
 	private ServiceSpec spec = new ServiceSpec();

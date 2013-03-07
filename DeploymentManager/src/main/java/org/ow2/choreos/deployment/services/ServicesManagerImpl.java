@@ -14,12 +14,11 @@ import org.ow2.choreos.deployment.nodes.ConfigNotAppliedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.deployment.services.bus.ServiceInstanceProxifier;
+import org.ow2.choreos.deployment.services.bus.EasyESBNodesSelector;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
-import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
 import org.ow2.choreos.deployment.services.diff.UpdateAction;
 import org.ow2.choreos.deployment.services.recipe.Recipe;
@@ -27,15 +26,15 @@ import org.ow2.choreos.deployment.services.recipe.RecipeBuilder;
 import org.ow2.choreos.deployment.services.recipe.RecipeBuilderFactory;
 import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
 
-public class ServiceDeployerImpl implements ServicesManager {
+public class ServicesManagerImpl implements ServicesManager {
 
-	private Logger logger = Logger.getLogger(ServiceDeployerImpl.class);
+	private Logger logger = Logger.getLogger(ServicesManagerImpl.class);
 	
 	private DeployedServicesRegistry registry = new DeployedServicesRegistry();
 	private NodePoolManager npm;
 	private Knife knife;
 	
-	public ServiceDeployerImpl(NodePoolManager npm) {
+	public ServicesManagerImpl(NodePoolManager npm) {
 		
 		final String CHEF_REPO = Configuration.get("CHEF_REPO");
 		final String CHEF_CONFIG_FILE = Configuration.get("CHEF_CONFIG_FILE");
@@ -44,7 +43,7 @@ public class ServiceDeployerImpl implements ServicesManager {
 	}
 	
 	// protected constructor: to test purposes
-	ServiceDeployerImpl(NodePoolManager npm, Knife knife) {
+	ServicesManagerImpl(NodePoolManager npm, Knife knife) {
 		
 		this.npm = npm;
 		this.knife = knife; 
@@ -61,17 +60,17 @@ public class ServiceDeployerImpl implements ServicesManager {
 			logger.error(message, e);
 			throw new ServiceNotDeployedException(service.getName(), message);
 		}
+
+		boolean useTheBus = Boolean.parseBoolean(Configuration.get("BUS"));
+		// I'm not comfortable with the "packageType != PackageType.EASY_ESB"
+		if (useTheBus && serviceSpec.getPackageType() != PackageType.EASY_ESB) {
+			EasyESBNodesSelector selector = new EasyESBNodesSelector();
+			selector.selecESBtNodes(service, this.npm);
+		}
 		
 		if (serviceSpec.getPackageType() != PackageType.LEGACY) {
 			service = deployNoLegacyService(service);
 		} 
-		
-		boolean useTheBus = Boolean.parseBoolean(Configuration.get("BUS"));
-		// I'm not comfortable with the "packageType != PackageType.EASY_ESB"
-		if (useTheBus && serviceSpec.getPackageType() != PackageType.EASY_ESB) {
-			// TODO ...
-		}
-		
 		
 		registry.addService(service.getName(), service);
 		return service;

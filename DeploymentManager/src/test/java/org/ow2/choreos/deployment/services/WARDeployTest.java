@@ -15,7 +15,7 @@ import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.deployment.services.ServicesManager;
-import org.ow2.choreos.deployment.services.ServiceDeployerImpl;
+import org.ow2.choreos.deployment.services.ServicesManagerImpl;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
@@ -34,7 +34,7 @@ public class WARDeployTest {
 	
 	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
 	private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-	private ServicesManager deployer = new ServiceDeployerImpl(npm);
+	private ServicesManager deployer = new ServicesManagerImpl(npm);
 
 	private WebClient client;
 	private ServiceSpec specWar = new ServiceSpec();

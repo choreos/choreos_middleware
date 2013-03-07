@@ -26,6 +26,7 @@ public class NodeBootstrapper {
 	
     private static final String CHEF_REPO = Configuration.get("CHEF_REPO");
     private static final String CHEF_CONFIG_FILE = Configuration.get("CHEF_CONFIG_FILE");
+	private static final String BOOTSTRAP_LOG_FILE_LOCATION = "/tmp/bootstrap.log";
     private static final int MAX_TIME_TO_CONNECT = 250000;
     
     private Node node;
@@ -61,10 +62,23 @@ public class NodeBootstrapper {
         waitForSSHAccess();
 
     	logger.info("Bootstrapping " + this.node.getHostname());
-		knife.bootstrap(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile());
+		String result = knife.bootstrap(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile(), DefaultRecipes.getDefaultRecipes());
+		logResultOnNode(result);
 		logger.info("Bootstrap completed at" + this.node);
 		this.retrieveAndSetChefName();
     }
+
+	private void logResultOnNode(String result) {
+
+		SshUtil ssh = new SshUtil(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile());
+		try {
+			ssh.runCommand("echo \"" + result + "\" >> " + BOOTSTRAP_LOG_FILE_LOCATION);
+		} catch (JSchException e) {
+			logger.error("Could not create the bootstrap log", e);
+		} catch (SshCommandFailed e) {
+			logger.error("Could not create the bootstrap log", e);
+		}
+	}
 
 	private void waitForSSHAccess() throws NodeNotAccessibleException {
         

@@ -12,19 +12,19 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
-import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 import org.ow2.choreos.utils.Concurrency;
 
 /**
+ * Selects EasyESB nodes to each one of the service instances.
  * 
- * @author leonardo
+ * @author leonardo, thiago
  *
  */
-public class ServiceProxifier {
+public class EasyESBNodesSelector {
 
 	private static final int PROXIFY_TIMEOUT = 5; // minutes 
 	
-	private Logger logger = Logger.getLogger(ServiceProxifier.class);
+	private Logger logger = Logger.getLogger(EasyESBNodesSelector.class);
 	
 	/**
 	 * Selects EasyESB nodes to proxify the instances of the services and proxify them.
@@ -36,7 +36,7 @@ public class ServiceProxifier {
 	 * 
 	 * @param service whose instances will be proxified 
 	 */
-	public void proxifyInstances(Service service, NodePoolManager npm) {
+	public void selecESBtNodes(Service service, NodePoolManager npm) {
 		
 		final int N = service.getInstances().size();
 		ExecutorService executor = Executors.newFixedThreadPool(N);
@@ -88,9 +88,8 @@ public class ServiceProxifier {
 			
 			BusHandler busHandler = new SimpleBusHandler(this.npm);
 			EasyESBNode esbNode = busHandler.retrieveBusNode();
-			ServiceInstanceProxifier instanceProxifier = new ServiceInstanceProxifier();
-			String proxifiedAddress = instanceProxifier.proxify(this.svcInstance, esbNode);
-			this.svcInstance.setBusUri(ServiceType.SOAP, proxifiedAddress);
+//			this.svcInstance.setBusUri(ServiceType.SOAP, proxifiedAddress);
+			this.svcInstance.setEasyEsbNodeAdminEndpoint(esbNode.getAdminEndpoint());
 			return null;
 		}
 		

@@ -5,8 +5,9 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
-import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
+import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.cm.NodeBootstrapper;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.tests.IntegrationTest;
@@ -25,6 +26,8 @@ import org.ow2.choreos.utils.LogConfigurator;
 @Category(IntegrationTest.class)
 public class NodeBootstrapperTest {
     
+	protected Node node;
+	
 	@Before
 	public void setUp() {
 		LogConfigurator.configLog();
@@ -38,8 +41,8 @@ public class NodeBootstrapperTest {
 	@Test
 	public void shouldLeaveNodeBootstraped() throws Exception {
 
-		CloudProvider cp = new FixedCloudProvider();
-		Node node = cp.createOrUseExistingNode(new Node());
+		CloudProvider cp = CloudProviderFactory.getInstance(Configuration.get("CLOUD_PROVIDER"));
+		node = cp.createOrUseExistingNode(new Node());
 		System.out.println(node);
 
 		NodeBootstrapper bootstrapper = new NodeBootstrapper(node);

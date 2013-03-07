@@ -75,7 +75,7 @@ public class ServiceDeployerImplTest {
 		String cookbookUploadResult = "Cookbook 'uploaded' by mock";
 		when(knifeCookbbok.upload(any(String.class), any(String.class))).thenReturn(cookbookUploadResult);
 		
-		serviceDeployer = new ServiceDeployerImpl(npm, knife);
+		serviceDeployer = new ServicesManagerImpl(npm, knife);
 	}
 	
 	@Test
