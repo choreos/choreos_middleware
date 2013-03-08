@@ -64,7 +64,7 @@ public interface NodePoolManager {
 	 * @return the representation of the node where the configuration will be applied,
 	 * @throws if it was not possible to allocate any node
 	 */
-	public List<Node> applyConfig(Config config, int numberOfInstances) throws ConfigNotAppliedException;
+	public List<Node> applyConfig(Config config) throws ConfigNotAppliedException;
 	
 	
 	/**

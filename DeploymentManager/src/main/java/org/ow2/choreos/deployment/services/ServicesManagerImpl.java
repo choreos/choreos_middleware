@@ -14,7 +14,6 @@ import org.ow2.choreos.deployment.nodes.ConfigNotAppliedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.deployment.services.bus.EasyESBNodesSelector;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
@@ -61,13 +60,6 @@ public class ServicesManagerImpl implements ServicesManager {
 			throw new ServiceNotDeployedException(service.getName(), message);
 		}
 
-		boolean useTheBus = Boolean.parseBoolean(Configuration.get("BUS"));
-		// I'm not comfortable with the "packageType != PackageType.EASY_ESB"
-		if (useTheBus && serviceSpec.getPackageType() != PackageType.EASY_ESB) {
-			EasyESBNodesSelector selector = new EasyESBNodesSelector();
-			selector.selecESBtNodes(service, this.npm);
-		}
-		
 		if (serviceSpec.getPackageType() != PackageType.LEGACY) {
 			service = deployNoLegacyService(service);
 		} 
@@ -120,11 +112,11 @@ public class ServicesManagerImpl implements ServicesManager {
 		
 		Recipe serviceRecipe = service.getRecipe();
 		String configName = serviceRecipe.getCookbookName() + "::" + serviceRecipe.getName();
-		Config config = new Config(configName);
+		Config config = new Config(configName, numberOfNewInstances);
 		
 		List<Node> nodes = new ArrayList<Node>();
 		try {
-			nodes = npm.applyConfig(config, numberOfNewInstances);
+			nodes = npm.applyConfig(config);
 		} catch (ConfigNotAppliedException e) {
 			logger.error(e.getMessage());
 

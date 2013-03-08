@@ -122,7 +122,7 @@ public class NodesClient implements NodePoolManager {
 	}
 	
 	@Override
-	public List<Node> applyConfig(Config config, int numberOfInstances) throws ConfigNotAppliedException {
+	public List<Node> applyConfig(Config config) throws ConfigNotAppliedException {
 
 		WebClient client = setupClient();
 		client.path("nodes/configs");   	

@@ -17,8 +17,9 @@ public class AlwaysCreateSelector implements NodeSelector {
 		this.cloudProvider = cloudProvider;
 	}
 
-	public List<Node> selectNodes(Config config, int numberOfInstances) {
+	public List<Node> selectNodes(Config config) {
 
+		int numberOfInstances = config.getNumberOfInstances();
 		List<Node> nodes = new ArrayList<Node>();
 
 		for(int i = 0; i < numberOfInstances; i++) {

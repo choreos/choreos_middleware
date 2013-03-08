@@ -44,19 +44,16 @@ public class DemoSelectorTest {
 		NodeSelector selector = new DemoSelector(this.cloudProvider);
 		
 		for (String svc: VM1) {
-			Config config = new Config();
-			config.setName(svc);
-			assertEquals(node1, selector.selectNodes(config,1).get(0));
+			Config config = new Config(svc, 1);
+			assertEquals(node1, selector.selectNodes(config).get(0));
 		}
 
 		for (String svc: VM2) {
-			Config config = new Config();
-			config.setName(svc);
-			assertEquals(node2, selector.selectNodes(config,1).get(0));
+			Config config = new Config(svc, 1);
+			assertEquals(node2, selector.selectNodes(config).get(0));
 		}
 		
-		Config config = new Config();
-		config.setName("other");
-		assertEquals(node1, selector.selectNodes(config,1).get(0));
+		Config config = new Config("other", 1);
+		assertEquals(node1, selector.selectNodes(config).get(0));
 	}
 }

@@ -80,10 +80,10 @@ public class NPMImpl implements NodePoolManager {
     }
 
     @Override
-    public List<Node> applyConfig(Config config, int numberOfInstances) throws ConfigNotAppliedException {
+    public List<Node> applyConfig(Config config) throws ConfigNotAppliedException {
 
         NodeSelector selector = NodeSelectorFactory.getInstance(this.cloudProvider);
-        List<Node> nodes = selector.selectNodes(config, numberOfInstances);
+        List<Node> nodes = selector.selectNodes(config);
 
         if (nodes == null) {
         	throw new ConfigNotAppliedException(config.getName());

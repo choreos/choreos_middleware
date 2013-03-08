@@ -32,9 +32,11 @@ public class RoundRobinSelector implements NodeSelector {
 		this.cloudProvider = cloudProvider;
 	}
 	
-	public List<Node> selectNodes(Config config, int numberOfInstances) {
+	public List<Node> selectNodes(Config config) {
 		
+		int numberOfInstances = config.getNumberOfInstances();
 		List<Node> allNodes = cloudProvider.getNodes();
+
 		if(allNodes.size() < numberOfInstances)
 			try {
 				throw new NPMException("Not enough nodes (available: " +allNodes.size()+ 

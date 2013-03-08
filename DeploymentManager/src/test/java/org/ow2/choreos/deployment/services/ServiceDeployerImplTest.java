@@ -2,7 +2,6 @@ package org.ow2.choreos.deployment.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -52,12 +51,7 @@ public class ServiceDeployerImplTest {
 		selectedNodes .add(selectedNode);
 		
 		npm = mock(NodePoolManager.class);
-		
-		when(
-				npm.applyConfig(
-						any(Config.class), anyInt()
-						)
-			).thenReturn(selectedNodes);
+		when(npm.applyConfig(any(Config.class))).thenReturn(selectedNodes);
 	}
 	
 	private void setUpServiceDeployer() throws KnifeException {
@@ -94,6 +88,6 @@ public class ServiceDeployerImplTest {
 		assertEquals(selectedNode.getId(), instance.getNode().getId());
 		assertEquals(EXPECTED_URI, instance.getNativeUri());
 		
-		verify(npm).applyConfig(any(Config.class), anyInt());
+		verify(npm).applyConfig(any(Config.class));
 	}
 }

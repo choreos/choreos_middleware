@@ -9,16 +9,10 @@ import java.util.List;
 import org.jclouds.compute.RunNodesException;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.deployment.nodes.ConfigNotAppliedException;
-import org.ow2.choreos.deployment.nodes.NPMImpl;
-import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
-import org.ow2.choreos.deployment.nodes.NodeNotUpgradedException;
-import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.deployment.nodes.rest.NodesClient;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.SshCommandFailed;
 import org.ow2.choreos.utils.SshUtil;
@@ -47,11 +41,10 @@ public class ConfigResourceTest extends BaseTest {
 		Node node = cp.createOrUseExistingNode(null);
     	
     	NodePoolManager npm = new NPMImpl(cp);
-    	Config config = new Config(RECIPE_NAME);
-    	
     	int num_replicas = 1;
+    	Config config = new Config(RECIPE_NAME, num_replicas);
     	
-    	List<Node> returnedNodes = npm.applyConfig(config, num_replicas);
+    	List<Node> returnedNodes = npm.applyConfig(config);
     	assertTrue(returnedNodes != null);
         assertTrue(returnedNodes.get(0).hasIp());
         assertEquals(node.getIp(), returnedNodes.get(0).getIp());
@@ -70,25 +63,4 @@ public class ConfigResourceTest extends BaseTest {
     	assertTrue(returnText.trim().equals(CREATED_FILE));
     }
     
-    /**
-     * This test is not passing!
-     * The server is not returning the NOT FOUND error at the second invocation
-     * See TODO on ConfigurationManager.installRecipe()
-     * @throws ConfigNotAppliedException 
-     */
-    // @Test
-    public void shouldNotApplyInValidCookbook() throws ConfigNotAppliedException{
-    	
-    	String INVALID_RECIPE = "xyz";
-    	
-    	NodePoolManager npm = new NodesClient(nodePoolManagerHost);
-    	
-    	int num_replicas = 1;
-    	
-    	List<Node> nodes1 = npm.applyConfig(null, num_replicas);
-    	List<Node> nodes2 = npm.applyConfig(new Config(INVALID_RECIPE), num_replicas);
-    	
-        assertTrue(nodes1 == null);
-        assertTrue(nodes2 == null);
-    }
 }

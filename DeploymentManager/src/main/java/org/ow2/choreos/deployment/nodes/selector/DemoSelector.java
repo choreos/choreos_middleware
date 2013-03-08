@@ -34,7 +34,7 @@ public class DemoSelector implements NodeSelector {
 		this.node2 = cloudProvider.getNodes().get(1);		
 	}
 
-	public List<Node> selectNodes(Config config, int numberOfInstances) {
+	public List<Node> selectNodes(Config config) {
 
 		List<Node> list = new ArrayList<Node>();
 		
