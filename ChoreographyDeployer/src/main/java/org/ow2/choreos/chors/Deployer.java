@@ -21,14 +21,12 @@ import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
 import org.ow2.choreos.deployment.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.rest.NodesClient;
-import org.ow2.choreos.deployment.services.ScheduledServiceModification;
 import org.ow2.choreos.deployment.services.ServicesManager;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
-import org.ow2.choreos.deployment.services.datamodel.SpecAndService;
 import org.ow2.choreos.deployment.services.rest.ServicesClient;
 
 public class Deployer {
@@ -76,26 +74,23 @@ public class Deployer {
 
 	private List<Service> deployNewChoreography(Choreography chor) {
 		List<Service> services;
-		for (ServiceSpec spec : chor.getRequestedSpec().getServiceSpecs())
-			chor.addScheduledServiceCreation(spec);
-		services = deployNewServices(chor);
+		services = deployNewServices(chor.getRequestedSpec().getServiceSpecs());
 		return services;
 	}
 
 	private boolean isFirstDeployment(Choreography chor) {
-		return chor.getSpecsAndServices().isEmpty();
+		return (chor.getServices() == null) || (chor.getServices().isEmpty());
 	}
 
-	private List<Service> deployNewServices(Choreography chor) {
+	private List<Service> deployNewServices(List<ServiceSpec> list) {
 
 		final int TIMEOUT = 1; // communication between chorDeployer and DeploymentManager should be fast
-		final int N = chor.getRequestedSpec().getServiceSpecs().size();
+		final int N = list.size();
 
 		ExecutorService executor = Executors.newFixedThreadPool(N);
 		Map<ServiceSpec, Future<Service>> futures = new HashMap<ServiceSpec, Future<Service>>();
 
-		for (ScheduledServiceModification s : chor.getScheduledServiceCreation()) {
-			ServiceSpec serviceSpec = s.getRequestedSpec();
+		for (ServiceSpec serviceSpec : list) {
 			logger.debug("Requesting deploy of " + serviceSpec);
 			ServicesManagerInvoker invoker = new ServicesManagerInvoker(serviceSpec);
 			Future<Service> future = executor.submit(invoker);
@@ -110,8 +105,6 @@ public class Deployer {
 			try {
 				Service service = this.checkFuture(entry.getValue());
 				if (service != null) {
-					ServiceSpec spec = entry.getKey();
-					chor.addSpecAndService(new SpecAndService(spec, service));
 					services.add(service);
 				}
 			} catch (Exception e) {
@@ -194,63 +187,66 @@ public class Deployer {
 			result.put(spec.getName(), spec);
 		return result;
 	}
+	
+	private Map<String, Service> getServicesForChor(Choreography chor) {
+		Map<String, Service> currentServices = new HashMap<String, Service>();
 
-	private Map<String, SpecAndService> getSpecsAndServicesForChor(
-			Choreography chor) {
-		Map<String, SpecAndService> currentSpecsAndServices = new HashMap<String, SpecAndService>();
-		
-		for( SpecAndService s : chor.getSpecsAndServices() ) {
-			currentSpecsAndServices.put(s.getSpec().getName(), s);
+		for( Service s : chor.getServices() ) {
+			currentServices.put(s.getSpec().getName(), s);
 		}
-		return currentSpecsAndServices;
+		return currentServices;
 	}
-
+	
 	private List<Service> updateAndDeployServices(Choreography chor) {
 
 		Map<String, ServiceSpec> requestedSpecMap = makeMapFromServiceList(chor.getRequestedSpec().getServiceSpecs());
-		Map<String, SpecAndService> currentSpecsAndServices = getSpecsAndServicesForChor(chor);
+		Map<String, Service> currentServices = getServicesForChor(chor);
+		
+		List<ServiceSpec> toUpdate = new ArrayList<ServiceSpec>();
+		List<ServiceSpec> toCreate = new ArrayList<ServiceSpec>();
 
-		for (Map.Entry<String, SpecAndService> specEntry : currentSpecsAndServices.entrySet()) {	
-			ServiceSpec spec = requestedSpecMap.get(specEntry.getKey());
-			if(requestedSpecMap.containsKey(specEntry.getKey())) {
-				if(!spec.equals(specEntry.getValue().getSpec())) {
-					chor.addScheduledServiceUpdate(spec, specEntry.getValue()); // same service, different specs
+		for (Map.Entry<String, Service> currentServiceEntry : currentServices.entrySet()) {	
+			
+			ServiceSpec requestedSpec = requestedSpecMap.get(currentServiceEntry.getKey());
+			
+			if(requestedSpec != null) {
+				
+				if(!requestedSpec.equals(currentServiceEntry.getValue().getSpec())) {
+					toUpdate.add(requestedSpec);
 				}
-				chor.addScheduledServiceNoChange(specEntry.getValue());
 			}
 			else {
-				chor.addScheduledServiceRemoval(specEntry.getValue()); // there is no more this service in choreography
+				//chor.addScheduledServiceRemoval(specEntry.getValue()); // there is no more this service in choreography
 			}
 		}
 
 		for (Map.Entry<String, ServiceSpec> specEntry : requestedSpecMap.entrySet()) {
-			if(!currentSpecsAndServices.containsKey(specEntry.getKey())) {
-				chor.addScheduledServiceCreation(specEntry.getValue());
+			if(!currentServices.containsKey(specEntry.getKey())) {
+				toCreate.add(specEntry.getValue());
 			}
 		}
 
-		return doUpdate(chor);
+		return doUpdate(toUpdate, toCreate);
 	}
 
 
-	private List<Service> doUpdate(Choreography chor) {
+	private List<Service> doUpdate(List<ServiceSpec> toUpdate, List<ServiceSpec> toCreate) {
 
-		deployNewServices(chor);
-		updateExistingServices(chor);
-
-		return chor.getDeployedServices();
+		List<Service> a = deployNewServices(toCreate);
+		List<Service> b = updateExistingServices(toUpdate);
+		a.addAll(b);
+		return a;
 	}
 
-	private void updateExistingServices(Choreography chor) {
+	private List<Service> updateExistingServices(List<ServiceSpec> toUpdate) {
 
 		final int TIMEOUT = 5;
-		final int N = chor.getScheduledServiceUpdate().size();
+		final int N = toUpdate.size();
 
 		ExecutorService executor = Executors.newFixedThreadPool(N);
 		Map<ServiceSpec, Future<Service>> futures = new HashMap<ServiceSpec, Future<Service>>();
 
-		for (ScheduledServiceModification s : chor.getScheduledServiceUpdate()) {
-			ServiceSpec serviceSpec = s.getRequestedSpec();
+		for (ServiceSpec serviceSpec : toUpdate) {
 			logger.debug("Requesting update of " + serviceSpec);
 			ServiceUpdateInvoker invoker = new ServiceUpdateInvoker(serviceSpec);
 			Future<Service> future = executor.submit(invoker);
@@ -259,17 +255,22 @@ public class Deployer {
 
 		waitExecutor(executor, TIMEOUT);
 
-		for (Entry<ServiceSpec, Future<Service>> f : futures.entrySet())
+		List<Service> services = new ArrayList<Service>();
+		for (Entry<ServiceSpec, Future<Service>> entry : futures.entrySet())
 		{
 			try {
-				this.checkFuture(f.getValue());
+				Service service = this.checkFuture(entry.getValue());
+				if (service != null) {
+					services.add(service);
+				}
 			} catch (Exception e) {
 				logger.error("Could not get service from future: " + e.getMessage());
 				e.printStackTrace();
 			}
 		}
-	}
 
+		return services;
+	}
 	
 	//===================================================================================================================
 	//								Inner Classes

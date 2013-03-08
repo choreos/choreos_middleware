@@ -1,5 +1,6 @@
 package org.ow2.choreos.chors;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -41,6 +42,7 @@ public class ChorDeployerImpl implements ChoreographyDeployer {
 		
 		Deployer deployer = new Deployer();
 		Map<String, Service> deployedMap = deployer.deployServices(chor);
+		chor.setDeployedServices(new ArrayList<Service>(deployedMap.values()));
 		
 		ContextCaster caster = new ContextCaster();
 		caster.cast(chor.getRequestedSpec(), deployedMap);

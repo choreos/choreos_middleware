@@ -7,10 +7,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.ow2.choreos.deployment.services.ScheduledServiceModification;
 import org.ow2.choreos.deployment.services.datamodel.Service;
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
-import org.ow2.choreos.deployment.services.datamodel.SpecAndService;
 
 @XmlRootElement
 public class Choreography {
@@ -18,16 +15,13 @@ public class Choreography {
 	private String id;
 	private ChorSpec spec = null;
 	
-
 	@XmlTransient
-	private ChoreographyRunningStatus runningStatus = new ChoreographyRunningStatus();
+	private List<Service> services = new ArrayList<Service>();
 	@XmlTransient
 	private ChorSpec requestedSpec = null;
 	
-	
-	
-	public List<SpecAndService> getSpecsAndServices() {
-		return runningStatus.specsAndServices;
+	public List<Service> getServices() {
+		return services;
 	}
 
 	public Service getDeployedServiceByName(String serviceName) {
@@ -66,15 +60,10 @@ public class Choreography {
 	
 	public void choreographyEnacted() {
 		this.spec = this.requestedSpec;
-	    runningStatus.cleanUpScheduledChanges(); // this should be called after all enactment (deploy or update)
 	}
 
 	public List<Service> getDeployedServices() {
-		List<Service> res = new ArrayList<Service>();
-		for(SpecAndService b : runningStatus.specsAndServices) {
-			res.add(b.getService());
-		}
-		return res;
+		return services;
 	}
 
 	@Override
@@ -108,36 +97,15 @@ public class Choreography {
 				+ ", deployedServices=" + getDeployedServices() + "]";
 	}
 
-	public void addSpecAndService(SpecAndService specAndService) {
-		this.runningStatus.specsAndServices.add(specAndService);
+	public void addService(Service service) {
+		services.add(service);
 	}
 
-	public void addScheduledServiceCreation(ServiceSpec spec) {
-		runningStatus.addScheduledServiceChange("create", new ScheduledServiceModification(spec, null));
+	public void setDeployedServices(List<Service> services) {
+		this.services.clear();
+		for(Service service : services) {
+			this.services.add(service);
+		}
+		
 	}
-
-	public void addScheduledServiceRemoval(SpecAndService specAndService) {
-		runningStatus.addScheduledServiceChange("remove", new ScheduledServiceModification(null, specAndService));
-	}
-
-	public void addScheduledServiceUpdate(ServiceSpec spec, SpecAndService specAndService) {
-		runningStatus.addScheduledServiceChange("update", new ScheduledServiceModification(spec, specAndService));
-	}
-
-	public void addScheduledServiceNoChange(SpecAndService specAndService) {
-		runningStatus.addScheduledServiceChange("nochange", new ScheduledServiceModification(specAndService.getSpec(), specAndService));
-	}
-
-	public void cleanUp() {
-		// TODO: remove unnecessary services
-	}
-	
-	public List<ScheduledServiceModification> getScheduledServiceCreation() {
-		return this.runningStatus.scheduledChanges.get("create");
-	}
-
-	public List<ScheduledServiceModification> getScheduledServiceUpdate() {
-		return this.runningStatus.scheduledChanges.get("update");
-	}
-
 }
