@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.services.bus;
+package org.ow2.choreos.chors.bus;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;

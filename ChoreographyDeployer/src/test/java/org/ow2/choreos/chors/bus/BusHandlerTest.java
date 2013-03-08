@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.services.bus;
+package org.ow2.choreos.chors.bus;
 
 import static org.junit.Assert.assertEquals;
 
@@ -8,13 +8,19 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.deployment.Configuration;
-import org.ow2.choreos.deployment.nodes.NPMImpl;
+import org.ow2.choreos.chors.Configuration;
+import org.ow2.choreos.chors.Configuration.Option;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
+import org.ow2.choreos.deployment.nodes.rest.NodesClient;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
+/**
+ * Before tun the test, start the deployment manager
+ * 
+ * @author leonardo
+ *
+ */
 @Category(IntegrationTest.class)
 public class BusHandlerTest {
 
@@ -25,9 +31,9 @@ public class BusHandlerTest {
 
 	@Test
 	public void sholdRetrieveBusEndpoint() throws NoBusAvailableException {
-		
-		String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
-		NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
+
+		String host = Configuration.get(Option.DEPLOYMENT_MANAGER_URI);
+		NodePoolManager npm = new NodesClient(host);
 		BusHandler busHandler = new SimpleBusHandler(npm);
 		
 		String endpoint = busHandler.retrieveBusNode().getAdminEndpoint();

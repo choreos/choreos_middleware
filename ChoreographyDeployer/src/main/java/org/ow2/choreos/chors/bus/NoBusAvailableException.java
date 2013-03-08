@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.services.bus;
+package org.ow2.choreos.chors.bus;
 
 public class NoBusAvailableException extends Exception {
 

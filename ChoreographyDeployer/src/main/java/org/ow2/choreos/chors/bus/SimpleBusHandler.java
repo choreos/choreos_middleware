@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.services.bus;
+package org.ow2.choreos.chors.bus;
 
 import java.util.ArrayList;
 import java.util.List;

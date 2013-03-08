@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.services.bus;
+package org.ow2.choreos.chors.bus;
 
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceType;

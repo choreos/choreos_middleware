@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.services.bus;
+package org.ow2.choreos.chors.bus;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -9,20 +9,20 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.deployment.Configuration;
-import org.ow2.choreos.deployment.nodes.NPMImpl;
+import org.ow2.choreos.chors.Configuration;
+import org.ow2.choreos.chors.Configuration.Option;
 import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
 import org.ow2.choreos.deployment.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.deployment.services.ServicesManager;
-import org.ow2.choreos.deployment.services.ServicesManagerImpl;
+import org.ow2.choreos.deployment.nodes.rest.NodesClient;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
+import org.ow2.choreos.deployment.services.ServicesManager;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.ServiceType;
+import org.ow2.choreos.deployment.services.rest.ServicesClient;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -59,9 +59,9 @@ public class ProxifyServiceTest {
 	@Test
 	public void shouldProxifyAService() throws ServiceNotDeployedException, NodeNotUpgradedException, NodeNotFoundException, NoBusAvailableException {
 		
-		String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
-		NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-		ServicesManager sd = new ServicesManagerImpl(npm);
+		String host = Configuration.get(Option.DEPLOYMENT_MANAGER_URI);
+		NodePoolManager npm = new NodesClient(host);
+		ServicesManager sd = new ServicesClient(host);
 		
 		ServiceSpec airlineSpec = this.getSpec();
 		ServiceInstance service = sd.createService(airlineSpec).getInstances().get(0);

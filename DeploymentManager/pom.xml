@@ -12,19 +12,6 @@
 		<version>0.2-SNAPSHOT</version>
 	</parent>
 
- 	<repositories>
-		<repository>
-			<id>ebmws-public</id>
-			<url>http://maven.petalslink.com/public-research</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
 	<dependencies>
 		<dependency>
 			<groupId>com.jcraft</groupId>
@@ -44,11 +31,6 @@
 			<version>0.0.1-SNAPSHOT</version>
 			<type>jar</type>
 		</dependency>
-	 	<dependency>
-			<artifactId>management-client</artifactId>
-			<groupId>com.ebmwebsourcing.esstar.esmanagement</groupId>
-			<version>v2013-01-10</version>
-		</dependency> 
 		<dependency>
 			<groupId>commons-configuration</groupId>
 			<artifactId>commons-configuration</artifactId>

@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.services.bus;
+package org.ow2.choreos.chors.bus;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

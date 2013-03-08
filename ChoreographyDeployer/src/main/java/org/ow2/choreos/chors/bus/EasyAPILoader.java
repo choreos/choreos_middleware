@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.services.bus;
+package org.ow2.choreos.chors.bus;
 
 import com.ebmwebsourcing.easycommons.research.util.SOAException;
 import com.ebmwebsourcing.easycommons.research.util.jaxb.SOAJAXBContext;

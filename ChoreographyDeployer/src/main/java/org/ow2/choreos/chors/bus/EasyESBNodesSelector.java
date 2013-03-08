@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.services.bus;
+package org.ow2.choreos.chors.bus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +9,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
+import org.ow2.choreos.chors.bus.EasyESBNodesSelector;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.utils.Concurrency;
+
 
 /**
  * Selects EasyESB nodes to each one of the service instances.
