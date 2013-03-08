@@ -1,7 +1,5 @@
-package org.ow2.choreos.deployment.services;
+package org.ow2.choreos.deployment.services.datamodel;
 
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
-import org.ow2.choreos.deployment.services.datamodel.SpecAndService;
 
 
 
