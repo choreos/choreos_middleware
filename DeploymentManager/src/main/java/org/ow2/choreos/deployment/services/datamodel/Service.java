@@ -42,6 +42,9 @@ public class Service {
 	}
 
 	public Service(ServiceSpec serviceSpec) {
+		
+		if(serviceSpec == null)
+			throw new IllegalArgumentException();
 
 		this.spec = serviceSpec;
 		if (this.spec.getPackageType() == null) {

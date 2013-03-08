@@ -1,13 +1,14 @@
 package org.ow2.choreos.deployment.services.registry;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.ow2.choreos.deployment.services.datamodel.Service;
 
 public class DeployedServicesRegistry {
 
-	private HashMap<String, Service> availableServices = new HashMap<String, Service>();
+	private ConcurrentMap<String, Service> availableServices = new ConcurrentHashMap<String, Service>();
 
 	public void addService(String serviceId, Service service) {
 		availableServices.put(serviceId, service);
@@ -24,6 +25,18 @@ public class DeployedServicesRegistry {
 	public void deleteService(String serviceId) {
 		if (availableServices.remove(serviceId) == null)
 			throw new IllegalArgumentException("Service " + serviceId + " not registered");
+	}
+	
+	private DeployedServicesRegistry() {
+		
+	}
+	
+	private static DeployedServicesRegistry INSTANCE = null;
+
+	public static DeployedServicesRegistry getInstance() {
+		if(INSTANCE == null)
+			INSTANCE = new DeployedServicesRegistry();
+		return INSTANCE;
 	}
 
 }

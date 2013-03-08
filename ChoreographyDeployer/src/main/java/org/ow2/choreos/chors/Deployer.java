@@ -32,6 +32,7 @@ import org.ow2.choreos.deployment.services.rest.ServicesClient;
 public class Deployer {
 
 	private Logger logger = Logger.getLogger(Deployer.class);
+	private volatile ServicesManager servicesManager = new ServicesClient(Configuration.get(Option.DEPLOYMENT_MANAGER_URI));
 
 	/** 
 	 * 
@@ -202,7 +203,7 @@ public class Deployer {
 		Map<String, ServiceSpec> requestedSpecMap = makeMapFromServiceList(chor.getRequestedSpec().getServiceSpecs());
 		Map<String, Service> currentServices = getServicesForChor(chor);
 		
-		List<ServiceSpec> toUpdate = new ArrayList<ServiceSpec>();
+		Map<String, ServiceSpec> toUpdate = new HashMap<String, ServiceSpec>();
 		List<ServiceSpec> toCreate = new ArrayList<ServiceSpec>();
 
 		for (Map.Entry<String, Service> currentServiceEntry : currentServices.entrySet()) {	
@@ -212,7 +213,7 @@ public class Deployer {
 			if(requestedSpec != null) {
 				
 				if(!requestedSpec.equals(currentServiceEntry.getValue().getSpec())) {
-					toUpdate.add(requestedSpec);
+					toUpdate.put(currentServiceEntry.getValue().getId(), requestedSpec);
 				}
 			}
 			else {
@@ -230,15 +231,17 @@ public class Deployer {
 	}
 
 
-	private List<Service> doUpdate(List<ServiceSpec> toUpdate, List<ServiceSpec> toCreate) {
+	private List<Service> doUpdate(Map<String, ServiceSpec> toUpdate, List<ServiceSpec> toCreate) {
 
-		List<Service> a = deployNewServices(toCreate);
 		List<Service> b = updateExistingServices(toUpdate);
-		a.addAll(b);
-		return a;
+		if(toCreate.size() > 0) {
+			List<Service> a = deployNewServices(toCreate);
+			b.addAll(a);
+		}
+		return b;
 	}
 
-	private List<Service> updateExistingServices(List<ServiceSpec> toUpdate) {
+	private List<Service> updateExistingServices(Map<String, ServiceSpec> toUpdate) {
 
 		final int TIMEOUT = 5;
 		final int N = toUpdate.size();
@@ -246,11 +249,11 @@ public class Deployer {
 		ExecutorService executor = Executors.newFixedThreadPool(N);
 		Map<ServiceSpec, Future<Service>> futures = new HashMap<ServiceSpec, Future<Service>>();
 
-		for (ServiceSpec serviceSpec : toUpdate) {
+		for (Entry<String, ServiceSpec> serviceSpec : toUpdate.entrySet()) {
 			logger.debug("Requesting update of " + serviceSpec);
-			ServiceUpdateInvoker invoker = new ServiceUpdateInvoker(serviceSpec);
+			ServiceUpdateInvoker invoker = new ServiceUpdateInvoker(serviceSpec.getKey(), serviceSpec.getValue());
 			Future<Service> future = executor.submit(invoker);
-			futures.put(serviceSpec, future);	
+			futures.put(serviceSpec.getValue(), future);	
 		}
 
 		waitExecutor(executor, TIMEOUT);
@@ -279,7 +282,6 @@ public class Deployer {
 
 	private class ServicesManagerInvoker implements Callable<Service> {
 
-		ServicesManager servicesManager = new ServicesClient(Configuration.get(Option.DEPLOYMENT_MANAGER_URI));
 		ServiceSpec serviceSpec; // input
 
 		public ServicesManagerInvoker(ServiceSpec serviceSpec) {
@@ -300,16 +302,17 @@ public class Deployer {
 
 	private class ServiceUpdateInvoker implements Callable<Service> {
 
-		ServicesManager servicesManager = new ServicesClient(Configuration.get(Option.DEPLOYMENT_MANAGER_URI));
 		private ServiceSpec serviceSpec;
+		private String serviceId;
 
-		public ServiceUpdateInvoker(ServiceSpec serviceSpec) {
+		public ServiceUpdateInvoker(String serviceId, ServiceSpec serviceSpec) {
 			this.serviceSpec = serviceSpec;
+			this.serviceId = serviceId;
 		}
 
 		@Override
 		public Service call() throws Exception {
-			servicesManager.updateService(serviceSpec);
+			servicesManager.updateService(serviceId, serviceSpec);
 			return new Service();
 		}
 	}
