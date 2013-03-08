@@ -1,8 +1,7 @@
 package org.ow2.choreos.chors.integration;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -65,7 +64,7 @@ public class IncreaseNumberOfInstancesTest {
 		Service travel = chor.getDeployedServiceByName(ModelsForTest.TRAVEL_AGENCY);
 		
 		
-		/*WSClient client = new WSClient(travel.getUris().get(0) + "?wsdl");
+		WSClient client = new WSClient(travel.getUris().get(0) + "?wsdl");
 		Item response = client.request("buyTrip");
 		String codes = response.getChild("return").getContent();
 		assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
@@ -73,17 +72,20 @@ public class IncreaseNumberOfInstancesTest {
 		WSClient client2 = new WSClient(travel.getUris().get(0) + "?wsdl");
 		Item response2 = client2.request("buyTrip");
 		String codes2 = response2.getChild("return").getContent();
-		assertTrue(codes2.startsWith("33") && codes2.endsWith("--22"));*/
+		assertTrue(codes2.startsWith("33") && codes2.endsWith("--22"));
+
+		assertFalse(codes.equals(codes2));
 		
 		ee.update(chorId, newSpec);
 		chor = ee.enact(chorId);
 		
-		/*WSClient client3 = new WSClient(travel.getUris().get(0) + "?wsdl");
+		WSClient client3 = new WSClient(travel.getUris().get(0) + "?wsdl");
 		Item response3 = client3.request("buyTrip");
 		String codes3 = response3.getChild("return").getContent();
 		assertTrue(codes3.startsWith("33") && codes3.endsWith("--22"));
 		
-		assertFalse(codes.equals(codes2));*/
+		assertFalse(codes3.equals(codes2));
+		assertFalse(codes3.equals(codes));
 		
 		assertEquals(3, airline.getUris().size());
 		

@@ -97,7 +97,7 @@ public class ServicesResource {
 	 * @return a service found
 	 */
 	@GET
-	@Path("{serviceID}")
+	@Path("{serviceId}")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response getService(@PathParam("serviceId") String serviceId) {
 		
@@ -123,7 +123,7 @@ public class ServicesResource {
 	 * @return a service found
 	 */
 	@GET
-	@Path("{serviceID}/instances")
+	@Path("{serviceId}/instances")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response getServiceInstances(@PathParam("serviceId") String serviceId) {
 		
@@ -150,7 +150,7 @@ public class ServicesResource {
 	 * @return a service found
 	 */
 	@GET
-	@Path("{serviceID}/instances/{instanceID}")
+	@Path("{serviceId}/instances/{instanceID}")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response getServiceInstance(@PathParam("serviceId") String serviceId,
 			@PathParam("instanceId") String instanceId) {
@@ -180,7 +180,7 @@ public class ServicesResource {
 	 * @param serviceID
 	 */
 	@DELETE
-	@Path("{serviceID}")
+	@Path("{serviceId}")
 	public Response deleteService(@PathParam("serviceId") String serviceId) {
 
 		if (serviceId == null || serviceId.isEmpty()) {
@@ -213,11 +213,11 @@ public class ServicesResource {
 	 * @throws UnhandledModificationException 
 	 */
 	@PUT
-	@Path("{serviceID}")
+	@Path("{serviceId}")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response updateService(JAXBElement<ServiceSpec> serviceSpecXML, 
-			@Context UriInfo uriInfo) throws UnhandledModificationException {
+	public Response updateService(JAXBElement<ServiceSpec> serviceSpecXML, @PathParam("serviceId") String serviceId,
+			@Context UriInfo uriInfo) {
 
 		ServiceSpec serviceSpec = serviceSpecXML.getValue();
 		if (serviceSpec.getPackageUri() == null || serviceSpec.getPackageUri().isEmpty() 
@@ -226,19 +226,21 @@ public class ServicesResource {
 		
 		logger.debug("Request to update " + serviceSpec.getName());
 
-		//Service service;
+		Service service;
 		try {
-			serviceDeployer.updateService(serviceSpec);
+			service = serviceDeployer.updateService(serviceId, serviceSpec);
 		} catch (ServiceNotModifiedException e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		} catch (UnhandledModificationException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		
-		logger.info(serviceSpec.getName() + " update. Running on somewhere" /*service.getUris()*/);
+		logger.info(serviceSpec.getName() + " update. Running on " + service.getUris());
 		
 		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-		uriBuilder = uriBuilder.path(ServicesResource.class).path(serviceSpec.getName());
-		URI location = uriBuilder.build();
-
-		return Response.created(location).entity(serviceSpec).build();
+		uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getName());
+		
+		Response build = Response.ok(service).build();
+		return build;
 	}
 }

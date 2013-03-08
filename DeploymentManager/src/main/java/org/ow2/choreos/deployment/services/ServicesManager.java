@@ -20,6 +20,7 @@ public interface ServicesManager {
 	 * @param serviceName
 	 * @return the service representation 
 	 * @throws ServiceNotFoundException if ID does not exist
+	 * @throws javax.management.ServiceNotFoundException 
 	 */
 	public Service getService(String serviceName) throws ServiceNotFoundException;
 	
@@ -38,5 +39,5 @@ public interface ServicesManager {
 	 * @throws UnhandledModificationException 
 	 * @throws ServiceNotDeployedException if deploy was not possible.
 	 */
-	public void updateService(ServiceSpec serviceSpec) throws ServiceNotModifiedException, UnhandledModificationException;
+	public Service updateService(String serviceId, ServiceSpec serviceSpec) throws ServiceNotModifiedException, UnhandledModificationException;
 }

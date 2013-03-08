@@ -30,7 +30,7 @@ public class ServicesManagerImpl implements ServicesManager {
 
 	private Logger logger = Logger.getLogger(ServicesManagerImpl.class);
 	
-	private DeployedServicesRegistry registry = new DeployedServicesRegistry();
+	private DeployedServicesRegistry registry = DeployedServicesRegistry.getInstance();
 	private NodePoolManager npm;
 	private Knife knife;
 	
@@ -146,9 +146,12 @@ public class ServicesManagerImpl implements ServicesManager {
 	}
 
 	@Override
-	public Service getService(String serviceId) {
+	public Service getService(String serviceId) throws ServiceNotFoundException {
 		
-		return registry.getService(serviceId);
+		Service s = registry.getService(serviceId);
+		if(s == null)
+			throw new ServiceNotFoundException(serviceId, "Error while getting service from service map.");
+		return s;
 	}
 
 
@@ -161,21 +164,29 @@ public class ServicesManagerImpl implements ServicesManager {
 	}
 
 	@Override
-	public void updateService(ServiceSpec serviceSpec) throws UnhandledModificationException {
+	public Service updateService(String serviceId, ServiceSpec serviceSpec) throws UnhandledModificationException {
 		
-		Service current = registry.getService(serviceSpec.getName());
+		Service current;
+		try {
+			current = getService(serviceId);
+		} catch (ServiceNotFoundException e) {
+			throw new UnhandledModificationException();
+		}
+		
 		ServiceSpec currentSpec = current.getSpec();
 		
 		List<UpdateAction> actions = getActions(currentSpec, serviceSpec);
 		
 		applyUpdate(current, serviceSpec, actions);
 		
+		return current;
 	}
 
 	private void applyUpdate(Service current, ServiceSpec requested, List<UpdateAction> actions) throws UnhandledModificationException {
 		for ( UpdateAction a : actions ) {
 			switch (a) {
 			case INCREASE_NUMBER_OF_REPLICAS:
+				System.out.println("*********** oi entrei aqui **************");
 				int amount = requested.getNumberOfInstances() - current.getSpec().getNumberOfInstances();
 				addServiceInstances(current, amount);
 				break;
@@ -198,8 +209,10 @@ public class ServicesManagerImpl implements ServicesManager {
 		
 		List<UpdateAction> actions = new ArrayList<UpdateAction>();
 		
-		if(currentSpec.getNumberOfInstances() < serviceSpec.getNumberOfInstances())
+		if(currentSpec.getNumberOfInstances() < serviceSpec.getNumberOfInstances()) {
 			actions.add(UpdateAction.INCREASE_NUMBER_OF_REPLICAS);
+			foundKnownModification = true;
+		}
 		
 		if(!foundKnownModification) {
 			actions.add(UpdateAction.UNKNOWN_MODIFICATION);
