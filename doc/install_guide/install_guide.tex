@@ -117,7 +117,10 @@ Some hints:
 \item Pay attention to the ``one-second rule'': \\ \url{http://www.a2sdeveloper.com/page-working-with-the-one-second-rule.html}.
 \item As we are charged per hour, don't forget to shutdown/stop unused VMs.
 \item You can use the Amazon EC2 web console to unblock TCP ports necessary to the choreography execution (22 to ssh, the chef server port, 8080 to use Tomcat, etc.).
-\item you can also use the \texttt{ec2} command line tools to manage your VMs.
+\item You can also use the \texttt{ec2} command line tools to manage your VMs.
+\item The \ee\ creates VMs in the ``US East'' Amazon datacenter.
+\item The SSH keypairs are datacenter-dependent. Therefore if you create a keypair in the EU
+datacenter, it won't be valid for your VMs.
 \end{itemize}
 
 \subsection{OpenStack}
