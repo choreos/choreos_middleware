@@ -1,6 +1,7 @@
 package org.ow2.choreos.chef.impl;
 
 import java.io.File;
+import java.util.List;
 
 import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeClient;
@@ -68,10 +69,10 @@ public class KnifeImpl implements Knife {
 	}
 
 	@Override
-	public String bootstrap(String ip, String user, String pKeyFile)
+	public String bootstrap(String ip, String user, String pKeyFile, List<String> defaultRecipes)
 			throws KnifeException {
 
-		String command = scripts.getKnifeBootstrap(pKeyFile, ip, user);
+		String command = scripts.getKnifeBootstrap(pKeyFile, ip, user, defaultRecipes);
 		return CommandLine.run(command, chefRepo, verbose);
 	}
 

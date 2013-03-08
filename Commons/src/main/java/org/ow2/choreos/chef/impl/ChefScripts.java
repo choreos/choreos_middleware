@@ -1,5 +1,7 @@
 package org.ow2.choreos.chef.impl;
 
+import java.util.List;
+
 /**
  * Provide access to Chef functionalities using scripts with knife commands
  * 
@@ -30,13 +32,22 @@ public class ChefScripts {
 		this.config = chefConfigFile;
 	}
     
-    public String getKnifeBootstrap(String pKeyFile, String ip, String user) {
+    public String getKnifeBootstrap(String pKeyFile, String ip, String user, List<String> defaultRecipes) {
     	
         String command = KNIFE_BOOTSTRAP;
         command = command.replace("$privateKeyFile", pKeyFile);
         command = command.replace("$ip", ip);
         command = command.replace("$user", user);
         command = command.replace("$knifeFile", config);
+        if (defaultRecipes != null && !defaultRecipes.isEmpty()) {
+	        command += " --run-list ";
+        	for (int i=0; i<defaultRecipes.size(); i++) {
+	        	command += defaultRecipes.get(i);
+	        	if (i != defaultRecipes.size()-1) {
+	        		command += ", ";
+	        	}
+	        }
+        }
         return command;
     }
     

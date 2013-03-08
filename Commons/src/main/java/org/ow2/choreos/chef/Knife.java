@@ -1,5 +1,7 @@
 package org.ow2.choreos.chef;
 
+import java.util.List;
+
 /**
  * Implementing classes must execute the knife commands
  * 
@@ -17,6 +19,6 @@ public interface Knife {
 	
 	public KnifeClient client();
 	
-	public String bootstrap(String ip, String user, String pKeyFile) throws KnifeException;
+	public String bootstrap(String ip, String user, String pKeyFile, List<String> defaultRecipes) throws KnifeException;
     
 }
