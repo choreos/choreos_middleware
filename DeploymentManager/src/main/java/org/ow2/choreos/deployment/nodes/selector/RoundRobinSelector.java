@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.deployment.nodes.NPMException;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
@@ -37,13 +36,12 @@ public class RoundRobinSelector implements NodeSelector {
 		int numberOfInstances = config.getNumberOfInstances();
 		List<Node> allNodes = cloudProvider.getNodes();
 
-		if(allNodes.size() < numberOfInstances)
-			try {
-				throw new NPMException("Not enough nodes (available: " +allNodes.size()+ 
-						") to deploy requested number of instances (requested: " +numberOfInstances+ ")");
-			} catch (NPMException e) {
-				logger.error(e.getMessage());
-			}
+		if(allNodes.size() < numberOfInstances) {
+			String message = "Not enough nodes (available: " + allNodes.size() + 
+					") to deploy requested number of instances (requested: " +numberOfInstances+ ")";
+			logger.error(message);
+			return new ArrayList<Node>();
+		}
 		
 		List<Node> resultList = new ArrayList<Node>();
 		for(int i=0;i < numberOfInstances; i++) {
