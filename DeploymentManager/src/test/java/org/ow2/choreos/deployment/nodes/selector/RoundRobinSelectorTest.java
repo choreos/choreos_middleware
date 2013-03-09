@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Test;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
@@ -25,7 +24,7 @@ public class RoundRobinSelectorTest {
 		cloudProvider2 = new FixedCloudProvider();
 	}
 	
-	@Test
+//	@Test
 	public void test() {
 		
 		Configuration.set("NODE_SELECTOR", "ROUND_ROBIN");
