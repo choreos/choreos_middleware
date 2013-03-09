@@ -1,5 +1,6 @@
 package org.ow2.choreos.chors.context;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -7,7 +8,9 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceDependency;
+import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 
 public class ContextCaster {
 
@@ -15,7 +18,11 @@ public class ContextCaster {
 	private static final int MAX_TRIALS = 5;
 	private static final int DELAY_BETWEEN_TRIALS = 30000;
 
-	private ContextSender sender = new SoapContextSender();
+	private ContextSender sender;
+	
+	public ContextCaster(ContextSender sender) {
+		this.sender = sender;
+	}
 
 	public void cast(ChorSpec chor, Map<String, Service> deployedServices) {
 
@@ -50,19 +57,41 @@ public class ContextCaster {
 				try {
 					trySendContext(spec, serviceUris, dep, deployedPartner);
 				} catch (ContextNotSentException e) {
-					logger.error("Could not set InvocationAddress to " + e.getServiceUri());
+					logger.error("Could not setInvocationAddress to " + e.getServiceUri());
 				}
 			}
 		}
 	}
 
+	/**
+	 * Get URIs from service that will be used in the setInvocationAddress.
+	 * 
+	 * Implementation: if possible, uses the SOAP bus URI; if not use the nativeUri
+	 * 
+	 * @param deployed
+	 * @return
+	 */
+	private List<String> getUris(Service deployed) {
+		
+		List<String> uris = new ArrayList<String>();
+		for (ServiceInstance instance: deployed.getInstances()) {
+			String proxifiedUri = instance.getBusUri(ServiceType.SOAP);
+			if (proxifiedUri != null) {
+				uris.add(proxifiedUri);
+			} else {
+				uris.add(instance.getNativeUri());
+			}
+		}
+		return uris;
+	}
+
 	private void trySendContext(ServiceSpec spec, List<String> serviceUris,
 			ServiceDependency dep, Service deployedPartner) throws ContextNotSentException {
-		List<String> partnerUris = deployedPartner.getUris();
+		List<String> partnerUris = this.getUris(deployedPartner);
 		int trial = 0;
 		boolean ok = false;
 
-		for(String serviceUri:serviceUris) {
+		for(String serviceUri: serviceUris) {
 			while (!ok && trial < MAX_TRIALS) {
 				try {
 					sender.sendContext(serviceUri, dep.getServiceRole(), dep.getServiceName(), partnerUris);

@@ -36,6 +36,9 @@ public class NodeUpgrader {
     	needUpdate.put(node, true);
 
         if (updating.containsKey(node) && updating.get(node)) {
+        	while (updating.get(node)) {
+        		this.sleep(10000);
+        	}
             return;
         }
 

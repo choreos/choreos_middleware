@@ -27,7 +27,6 @@ public class Choreography {
 	public Service getDeployedServiceByName(String serviceName) {
 
 		List<Service> deployedServices = this.getDeployedServices();
-		System.out.println(deployedServices);
 		for (Service svc: deployedServices) {
 			if (serviceName.equals(svc.getName()))
 				return svc;

@@ -12,10 +12,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.context.ContextCaster;
+import org.ow2.choreos.chors.context.ContextSender;
+import org.ow2.choreos.chors.context.ContextSenderFactory;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceDependency;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -89,7 +92,9 @@ public class ContextCasterTest {
 		
 		checkPreCondition();
 		
-		ContextCaster caster = new ContextCaster();
+		ContextSenderFactory fac = new ContextSenderFactory();
+		ContextSender sender = fac.getInstance(ServiceType.SOAP);
+		ContextCaster caster = new ContextCaster(sender);
 		caster.cast(chorSpec, deployedServices);
 		
 		WSClient travel = new WSClient(TRAVEL_AGENCY_URI + "?wsdl");

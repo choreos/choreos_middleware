@@ -13,7 +13,7 @@ import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 
 import esstar.petalslink.com.service.management._1_0.ManagementException;
 
-public class ServiceProxifierTest {
+public class ServiceInstanceProxifierTest {
 
 	private static final String AIRLINE_JAR = "http://valinhos.ime.usp.br:54080/chordeployer/samples/v1-2/airline-service.jar";
 	private static final String PROXIFIED_ADDRESS = "http://localhost:8180/services/AirlineServicePortClientProxyEndpoint";
