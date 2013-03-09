@@ -42,8 +42,6 @@ public class JARWithBusDeployTest {
 	@Before
 	public void setUp() {
 		
-		Configuration.set("BUS", "true");
-		
 		spec.setName("AIRLINE");
 		spec.setPackageUri(JAR_LOCATION);
 		spec.setPackageType(PackageType.COMMAND_LINE);

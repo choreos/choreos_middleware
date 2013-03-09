@@ -41,8 +41,6 @@ public class JARDeployTest {
 	@Before
 	public void setUp() throws Exception {
 		
-		Configuration.set("BUS", "false");
-		
 		spec.setName("AIRLINE");
 		spec.setPackageUri(JAR_LOCATION);
 		spec.setPackageType(PackageType.COMMAND_LINE);

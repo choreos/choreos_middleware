@@ -51,8 +51,6 @@ public class ParallelDeployTest {
 	@Before
 	public void setUp() throws Exception {
 		
-		Configuration.set("BUS", "false");
-		
 		specs[0] = new ServiceSpec();
 		specs[0].setPackageUri(JARDeployTest.JAR_LOCATION);
 		specs[0].setPackageType(PackageType.COMMAND_LINE);
