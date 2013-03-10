@@ -17,12 +17,24 @@ public class Concurrency {
 		try {
 			status = executor.awaitTermination(timeoutMinutes, TimeUnit.MINUTES);
 		} catch (InterruptedException e) {
-			logger.error("Interrupted thread! Should not happen!", e);
+			logErrorMessage("Interrupted thread! Should not happen!", logger);
 		}
 		if (!status) {
-			logger.info("Executor status is False. Probably there is some problem!.");
+			logErrorMessage("Executor status is False. Probably there is some problem!", logger);
 		}
 		executor.shutdownNow();
+	}
+	
+	public static void waitExecutor(ExecutorService executor, int timeoutMinutes) {
+		waitExecutor(executor, timeoutMinutes, null);
+	}
+	
+	private static void logErrorMessage(String msg, Logger logger) {
+		if (logger != null) {
+			logger.error(msg);
+		} else {
+			System.out.println(msg);
+		}
 	}
 	
 	/**

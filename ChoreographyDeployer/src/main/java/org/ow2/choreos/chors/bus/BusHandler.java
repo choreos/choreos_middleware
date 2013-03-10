@@ -1,7 +1,7 @@
 package org.ow2.choreos.chors.bus;
 
 /**
- * Used by DeploymentManager to retrieve EasyESB nodes
+ * Retrieve EasyESB nodes
  * 
  * @author leonardo, felps
  *

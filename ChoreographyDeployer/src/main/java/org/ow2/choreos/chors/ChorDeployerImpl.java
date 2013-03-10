@@ -6,15 +6,12 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.Configuration.Option;
-import org.ow2.choreos.chors.bus.InstancesFilter;
-import org.ow2.choreos.chors.bus.ServiceInstancesProxifier;
 import org.ow2.choreos.chors.context.ContextCaster;
 import org.ow2.choreos.chors.context.ContextSender;
 import org.ow2.choreos.chors.context.ContextSenderFactory;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.deployment.services.datamodel.Service;
-import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 
 public class ChorDeployerImpl implements ChoreographyDeployer {
@@ -70,10 +67,10 @@ public class ChorDeployerImpl implements ChoreographyDeployer {
 
 	private void proxifyServices(List<Service> deployedServices) {
 
-		InstancesFilter filter = new InstancesFilter();
-		List<ServiceInstance> instances = filter.filter(deployedServices);
-		ServiceInstancesProxifier proxifier = new ServiceInstancesProxifier();
-		proxifier.proxify(instances);
+//		InstancesFilter filter = new InstancesFilter();
+//		List<ServiceInstance> instances = filter.filter(deployedServices);
+//		SingleESBNodeSelector proxifier = new SingleESBNodeSelector();
+//		proxifier.proxify(instances);
 		// TODO:  should PUT /services/ (a registry would resolve...)
 	}
 
