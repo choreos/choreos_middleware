@@ -180,11 +180,7 @@ cookbook_path            ["#{current_dir}/../cookbooks"]
 \end{lstlisting}
 }
 
-Here, ``lleite" is also my Chef user. I advise to change ``lleite'' by your Chef user name.
-The  ``choreos-verao" is the organization name configured on the Chef Server. 
-% \Leo{essa parte tá meio ruizinha... alguém ajuda?}
-
-You will also need to upload to your Chef Server all the cookbooks from our cookbook folder: \texttt{chef-repo/cookbooks}.
+Here, the ``node\_name'' corresponds to my \emph{client} name. Make sure your client is marked as ``admin'', what can be accomplished by using the Chef Server web interface.  The  ``choreos-verao" is the organization name configured on the Chef Server. In the Chef terminology, your computer, from where you control Chef, is the \emph{workstation}. To more details about how to set up your workstation, refer to \url{http://wiki.opscode.com}. You will also need to upload to your Chef Server all the cookbooks from our cookbook folder: \texttt{chef-repo/cookbooks}.
 
 
 \section{Checkout and Compilation}
