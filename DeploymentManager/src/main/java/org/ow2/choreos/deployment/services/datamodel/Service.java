@@ -38,7 +38,6 @@ public class Service {
 	 * Default constructor for Java XML Bindings
 	 */
 	public Service() {
-
 	}
 
 	public Service(ServiceSpec serviceSpec) {
@@ -171,6 +170,7 @@ public class Service {
 	@Override
 	public String toString() {
 		String repr = "Service [name=" + name;
+		repr += ", spec={"+spec+"}";
 		repr += (getUris() != null) ? repr +=	", uri=" + getUris().toString() + "]" : "]";
 		return repr;
 	}

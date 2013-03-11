@@ -1,5 +1,7 @@
 package org.ow2.choreos;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -28,22 +30,26 @@ public class TravelAgencyService implements TravelAgency {
     @WebMethod
     @Override
     public void setInvocationAddress(String role, String name, List<String> endpoints) {
-
+    	logger.info("setting inv. addrr to "+ endpoints);
         if (role.equals("airline")) {
-        	String endpointStr = ""; 
+        	String endpointStr = "";
+        	List<URL> newEndpoints = new ArrayList<URL>();
             try { 
             	for(String str: endpoints) {
             		endpointStr = str;
-            		TravelAgencyService.endpoints.add(new URL(endpointStr));
+            		newEndpoints.add(new URL(endpointStr));
             		logger.info("Endpoint to airline: " + endpointStr);
             	}
             } catch (MalformedURLException e) {
-                TravelAgencyService.endpoints.clear();
                 logger.error("Invalid airline endpoint URL: " + endpointStr);
             }
+            TravelAgencyService.endpoints.clear();
+            TravelAgencyService.endpoints.addAll(newEndpoints);
         } else {
             logger.warn("Invalid role (" + role + ") in setInvocationAddress");
         }
+        
+        logger.info("Set inv. addrr to "+ TravelAgencyService.endpoints);
     }
 	
     @WebMethod
@@ -58,11 +64,16 @@ public class TravelAgencyService implements TravelAgency {
     	int index = counter.getAndIncrement();
     	index %= endpoints.size();
     		
-        String flightTicketNumber;
+        String flightTicketNumber = null;
         try {
+        	logger.debug("Trying airline index " + index + ", URL: " + endpoints.get(index).toString());
             FlightTicketNumberRetriever retriever = new FlightTicketNumberRetriever(endpoints.get(index));
             flightTicketNumber = retriever.getFlightTicketNumber(); // "33"
         } catch (IllegalStateException e) {
+        	ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        	PrintStream ps = new PrintStream(stream);
+        	e.printStackTrace(ps);
+        	logger.error(stream.toString());
             logger.error(AIRLINE_ERROR_MESSAGE);
             return AIRLINE_ERROR_MESSAGE;
         }

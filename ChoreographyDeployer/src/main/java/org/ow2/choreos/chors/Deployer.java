@@ -21,12 +21,14 @@ import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
 import org.ow2.choreos.deployment.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.rest.NodesClient;
+import org.ow2.choreos.deployment.services.ServiceNotModifiedException;
 import org.ow2.choreos.deployment.services.ServicesManager;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
+import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
 import org.ow2.choreos.deployment.services.rest.ServicesClient;
 
 public class Deployer {
@@ -55,18 +57,18 @@ public class Deployer {
 
 	private List<Service> configureNodes(Choreography chor) {
 		
-		List<Service> services = new ArrayList<Service>();
+		List<Service> services = null; // = new ArrayList<Service>();
 
 		if( isFirstDeployment(chor) ) {
 			services = deployNewChoreography(chor);
 		} else {
-			services = updateExistingChoreography(chor, services);
+			services = updateExistingChoreography(chor);
 		}
 		return services;
 	}
 
-	private List<Service> updateExistingChoreography(Choreography chor,
-			List<Service> services) {
+	private List<Service> updateExistingChoreography(Choreography chor /*,List<Service> services*/) {
+		List<Service> services = null;
 		if(!chor.getRequestedSpec().equals(chor.getSpec())) {
 			services = updateAndDeployServices(chor);
 		}
@@ -205,6 +207,7 @@ public class Deployer {
 		
 		Map<String, ServiceSpec> toUpdate = new HashMap<String, ServiceSpec>();
 		List<ServiceSpec> toCreate = new ArrayList<ServiceSpec>();
+		List<Service> updatedServiceList = new ArrayList<Service>();
 
 		for (Map.Entry<String, Service> currentServiceEntry : currentServices.entrySet()) {	
 			
@@ -214,6 +217,8 @@ public class Deployer {
 				
 				if(!requestedSpec.equals(currentServiceEntry.getValue().getSpec())) {
 					toUpdate.put(currentServiceEntry.getValue().getId(), requestedSpec);
+				} else {
+					updatedServiceList.add(currentServiceEntry.getValue());
 				}
 			}
 			else {
@@ -227,7 +232,8 @@ public class Deployer {
 			}
 		}
 
-		return doUpdate(toUpdate, toCreate);
+		updatedServiceList.addAll(doUpdate(toUpdate, toCreate));
+		return updatedServiceList;
 	}
 
 
@@ -263,6 +269,9 @@ public class Deployer {
 		{
 			try {
 				Service service = this.checkFuture(entry.getValue());
+				
+				//System.out.println("Printing returned service from future ... \n\n" + service + "\n\n");
+				
 				if (service != null) {
 					services.add(service);
 				}
@@ -311,9 +320,16 @@ public class Deployer {
 		}
 
 		@Override
-		public Service call() throws Exception {
-			servicesManager.updateService(serviceId, serviceSpec);
-			return new Service();
+		public Service call() throws ServiceNotModifiedException, UnhandledModificationException {
+			try {
+				return servicesManager.updateService(serviceId, serviceSpec);
+			} catch (ServiceNotModifiedException e) {
+				logger.error(e.getMessage());
+				throw e;
+			} catch (UnhandledModificationException e) {
+				logger.error(e.getMessage());
+				throw e;
+			}
 		}
 	}
 

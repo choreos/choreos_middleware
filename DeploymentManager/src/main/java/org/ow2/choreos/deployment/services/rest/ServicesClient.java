@@ -42,10 +42,7 @@ public class ServicesClient implements ServicesManager {
 
 	private WebClient setupClient() {
 
-		ResponseReader reader = new ResponseReader();
-	    reader.setEntityClass(Service.class);
-
-		WebClient client = WebClient.create(host, Collections.singletonList(reader));
+		WebClient client = WebClient.create(host);
 
 		// remove time out
 		// not proud of it!
@@ -100,24 +97,24 @@ public class ServicesClient implements ServicesManager {
 
 		WebClient client = setupClient();
 		client.path("services").path(serviceId);
-		Response response;
+		Service service;
 		try {
-			response = client.put(serviceSpec);
+			service = client.post(serviceSpec, Service.class);
 		} catch (WebApplicationException e) {
 			throw new ServiceNotModifiedException(serviceSpec.getName());
 		}
 		
-		System.out.println("\n\n Entity \n\n" + response.getEntity() + "\n\n");
+		//System.out.println("\n\n Entity \n\n" + response.getEntity() + "\n\n");
 		
-		if(response.getStatus() != 200) {
-			ServiceNotModifiedException e = new ServiceNotModifiedException(serviceId, "Error: Status code = " + response.getStatus());
-			System.out.println(e.getMessage());
-			throw e;
-		}
-		System.out.println("ULTIMA CHANCE!!!!n\n\n\n");
-		Service svc = (Service) response.getEntity();
-		System.out.println("OIEEE!!!! " + svc);
-		return svc;
+		//if(response.getStatus() != 200) {
+		//	ServiceNotModifiedException e = new ServiceNotModifiedException(serviceId, "Error: Status code = " + response.getStatus());
+			//System.out.println(e.getMessage());
+		//	throw e;
+		//}
+		//System.out.println("ULTIMA CHANCE!!!!n\n\n\n");
+		//Service svc = (Service) response.getEntity();
+		//System.out.println("OIEEE!!!! " + svc);
+		return service;
 	}
 
 }

@@ -55,6 +55,8 @@ public class ChorDeployerImpl implements ChoreographyDeployer {
 		Map<String, Service> deployedMap = deployer.deployServices(chor);
 		chor.setDeployedServices(new ArrayList<Service>(deployedMap.values()));
 		
+		logger.info("Deployed services="+ deployedMap);
+		
 		boolean useTheBus = Boolean.parseBoolean(Configuration.get(Option.BUS));
 		if (useTheBus) {
 			this.proxifyServices(chor);

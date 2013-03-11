@@ -212,7 +212,7 @@ public class ServicesResource {
 	 *         HTTP code 500 if any other error occurs.
 	 * @throws UnhandledModificationException 
 	 */
-	@PUT
+	@POST
 	@Path("{serviceId}")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)

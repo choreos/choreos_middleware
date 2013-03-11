@@ -49,7 +49,7 @@ public class IncreaseNumberOfInstancesTest {
 	}
 	
 	@Test
-	public void shouldEnactChoreographyWithTwoAirlineServices() throws Exception {
+	public void shouldEnactChoreographyWithTwoAirlineServicesAndChangeToThree() throws Exception {
 		
 		ChoreographyDeployer ee = new ChorDeployerImpl();
 		
@@ -59,35 +59,45 @@ public class IncreaseNumberOfInstancesTest {
 
 		Service airline = chor.getDeployedServiceByName(ModelsForTest.AIRLINE);
 		
-		assertEquals(2, airline.getUris().size());
-		
 		Service travel = chor.getDeployedServiceByName(ModelsForTest.TRAVEL_AGENCY);
-		
-		
 		WSClient client = new WSClient(travel.getUris().get(0) + "?wsdl");
-		Item response = client.request("buyTrip");
-		String codes = response.getChild("return").getContent();
-		assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
 		
-		WSClient client2 = new WSClient(travel.getUris().get(0) + "?wsdl");
-		Item response2 = client2.request("buyTrip");
-		String codes2 = response2.getChild("return").getContent();
-		assertTrue(codes2.startsWith("33") && codes2.endsWith("--22"));
+		String codes, codes2, codes3 = "";
+		
+		Item response = client.request("buyTrip");
+		codes = response.getChild("return").getContent();		
+		response = client.request("buyTrip");
+		codes2 = response.getChild("return").getContent();
 
+		assertEquals(2, airline.getUris().size());
+		assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
+		assertTrue(codes2.startsWith("33") && codes2.endsWith("--22"));
 		assertFalse(codes.equals(codes2));
+		
+		
+		
+		
 		
 		ee.update(chorId, newSpec);
 		chor = ee.enact(chorId);
 		
-		WSClient client3 = new WSClient(travel.getUris().get(0) + "?wsdl");
-		Item response3 = client3.request("buyTrip");
-		String codes3 = response3.getChild("return").getContent();
-		assertTrue(codes3.startsWith("33") && codes3.endsWith("--22"));
+		airline = chor.getDeployedServiceByName(ModelsForTest.AIRLINE);
 		
-		assertFalse(codes3.equals(codes2));
-		assertFalse(codes3.equals(codes));
+		response = client.request("buyTrip");
+		codes = response.getChild("return").getContent();		
+		response = client.request("buyTrip");
+		codes2 = response.getChild("return").getContent();		
+		response = client.request("buyTrip");
+		codes3 = response.getChild("return").getContent();
 		
 		assertEquals(3, airline.getUris().size());
+		assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
+		assertTrue(codes2.startsWith("33") && codes2.endsWith("--22"));
+		assertTrue(codes3.startsWith("33") && codes3.endsWith("--22"));
+		assertFalse(codes.equals(codes2));
+		assertFalse(codes3.equals(codes));
+		assertFalse(codes3.equals(codes2));
+		
 		
 	}
 
