@@ -1,17 +1,23 @@
 package org.ow2.choreos.chors;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.Configuration.Option;
+import org.ow2.choreos.chors.bus.BusHandler;
+import org.ow2.choreos.chors.bus.BusHandlerFactory;
+import org.ow2.choreos.chors.bus.ESBNodesSelector;
+import org.ow2.choreos.chors.bus.EasyESBNode;
+import org.ow2.choreos.chors.bus.ServiceInstancesProxifier;
+import org.ow2.choreos.chors.bus.SingleESBNodeSelector;
 import org.ow2.choreos.chors.context.ContextCaster;
 import org.ow2.choreos.chors.context.ContextSender;
 import org.ow2.choreos.chors.context.ContextSenderFactory;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.deployment.services.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 
 public class ChorDeployerImpl implements ChoreographyDeployer {
@@ -51,7 +57,7 @@ public class ChorDeployerImpl implements ChoreographyDeployer {
 		
 		boolean useTheBus = Boolean.parseBoolean(Configuration.get(Option.BUS));
 		if (useTheBus) {
-			this.proxifyServices(chor.getDeployedServices());
+			this.proxifyServices(chor);
 		}
 		
 		ContextSender sender = ContextSenderFactory.getInstance(ServiceType.SOAP);
@@ -65,12 +71,13 @@ public class ChorDeployerImpl implements ChoreographyDeployer {
 		return chor;
 	}
 
-	private void proxifyServices(List<Service> deployedServices) {
+	private void proxifyServices(Choreography choreography) {
 
-//		InstancesFilter filter = new InstancesFilter();
-//		List<ServiceInstance> instances = filter.filter(deployedServices);
-//		SingleESBNodeSelector proxifier = new SingleESBNodeSelector();
-//		proxifier.proxify(instances);
+		BusHandler busHandler = BusHandlerFactory.getInstance();
+		ESBNodesSelector selector = new SingleESBNodeSelector(busHandler);
+		Map<ServiceInstance, EasyESBNode> instancesNodesMap = selector.selectESBNodes(choreography);
+		ServiceInstancesProxifier proxifier = new ServiceInstancesProxifier();
+		proxifier.proxify(instancesNodesMap);
 		// TODO:  should PUT /services/ (a registry would resolve...)
 	}
 

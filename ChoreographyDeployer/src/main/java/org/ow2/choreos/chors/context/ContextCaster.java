@@ -34,7 +34,6 @@ public class ContextCaster {
 				logger.error("Service " + spec.getName()
 						+ " not deployed. Not going to pass context to it.");
 			} else {
-
 				castContext(deployedServices, spec, deployed);
 			}
 		}
@@ -87,21 +86,21 @@ public class ContextCaster {
 
 	private void trySendContext(ServiceSpec spec, List<String> serviceUris,
 			ServiceDependency dep, Service deployedPartner) throws ContextNotSentException {
+		
 		List<String> partnerUris = this.getUris(deployedPartner);
 		int trial = 0;
-		boolean ok = false;
 
 		for(String serviceUri: serviceUris) {
-			while (!ok && trial < MAX_TRIALS) {
+			while (trial < MAX_TRIALS) {
 				try {
 					sender.sendContext(serviceUri, dep.getServiceRole(), dep.getServiceName(), partnerUris);
 					logger.debug(spec.getName() + " has received "
 							+ dep.getServiceName() + " as "
-							+ dep.getServiceRole());
-					ok = true;
+							+ dep.getServiceRole() + ": " + partnerUris);
+					return;
 				} catch (ContextNotSentException e) {
 					trial = tryRecoveryNotSentContext(spec, dep, trial);
-					logger.error("Trial=" + trial + "\n >>>> ");
+					logger.error("Trial=" + trial);
 				}
 			}
 			throw new ContextNotSentException(serviceUri, dep.getServiceRole(), dep.getServiceName(), partnerUris);

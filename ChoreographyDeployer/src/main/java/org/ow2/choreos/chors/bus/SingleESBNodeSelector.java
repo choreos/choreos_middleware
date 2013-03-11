@@ -1,6 +1,5 @@
 package org.ow2.choreos.chors.bus;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.utils.Concurrency;
 
@@ -40,12 +38,7 @@ public class SingleESBNodeSelector implements ESBNodesSelector {
 		logger.info("Selecting ESB Nodes");
 
 		this.selectedNodes = new ConcurrentHashMap<ServiceInstance, EasyESBNode>();
-		
-		List<ServiceInstance> instances = new ArrayList<ServiceInstance>();
-		for (Service svc: choreography.getServices()) {
-			instances.addAll(svc.getInstances());
-		}
-		
+		List<ServiceInstance> instances = this.removeCoordels(choreography);
 		final int N = instances.size();
 		ExecutorService executor = Executors.newFixedThreadPool(N);
 
@@ -59,6 +52,12 @@ public class SingleESBNodeSelector implements ESBNodesSelector {
 		logger.info("Nodes are already selected");
 		
 		return Collections.unmodifiableMap(this.selectedNodes);
+	}
+	
+	private List<ServiceInstance> removeCoordels(Choreography chor) {
+		
+		InstancesFilter filter = new InstancesFilter();
+		return filter.filter(chor.getDeployedServices());
 	}
 	
 	/**

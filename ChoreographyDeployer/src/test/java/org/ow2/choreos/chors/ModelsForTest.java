@@ -13,6 +13,7 @@ import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceDependency;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 
 public class ModelsForTest {
 
@@ -62,6 +63,7 @@ public class ModelsForTest {
 		this.airlineSpec.setEndpointName(AIRLINE);
 		this.airlineSpec.setPort(AIRLINE_PORT);
 		this.airlineSpec.setPackageType(PackageType.COMMAND_LINE);
+		this.airlineSpec.setType(ServiceType.SOAP);
 		this.airlineSpec.getRoles().add(AIRLINE);
 		this.chorSpec.addServiceSpec(this.airlineSpec);
 
@@ -71,6 +73,7 @@ public class ModelsForTest {
 		this.travelSpec.setEndpointName(TRAVEL_AGENCY);
 		this.travelSpec.setPort(TRAVEL_AGENCY_PORT);
 		this.travelSpec.setPackageType(PackageType.COMMAND_LINE);
+		this.travelSpec.setType(ServiceType.SOAP);
 		this.travelSpec.getRoles().add(TRAVEL_AGENCY);
 		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
 		this.travelSpec.getDependencies().add(dep);
@@ -86,6 +89,7 @@ public class ModelsForTest {
 		this.airlineSpec.setPackageUri(AIRLINE_WAR);
 		this.airlineSpec.setEndpointName(AIRLINE);
 		this.airlineSpec.setPackageType(PackageType.TOMCAT);
+		this.airlineSpec.setType(ServiceType.SOAP);
 		this.airlineSpec.getRoles().add(AIRLINE);
 		this.chorSpec.addServiceSpec(this.airlineSpec);
 
@@ -94,6 +98,7 @@ public class ModelsForTest {
 		this.travelSpec.setPackageUri(TRAVEL_AGENCY_WAR);
 		this.travelSpec.setEndpointName(TRAVEL_AGENCY);
 		this.travelSpec.setPackageType(PackageType.TOMCAT);
+		this.travelSpec.setType(ServiceType.SOAP);
 		this.travelSpec.getRoles().add(TRAVEL_AGENCY);
 		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
 		this.travelSpec.getDependencies().add(dep);
@@ -129,7 +134,6 @@ public class ModelsForTest {
 
 		ServiceInstance travel = new ServiceInstance();
 		travel.setMyParentServiceSpec(travelService.getSpec());
-
 
 		travelService.addInstance(travel);
 		this.chor.getDeployedServices().add(travelService);

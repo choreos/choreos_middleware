@@ -20,7 +20,7 @@ import org.ow2.choreos.deployment.nodes.datamodel.Node;
 class SimpleBusHandler implements BusHandler {
 
 	private static final String EASY_ESB_RECIPE = "easyesb";
-	private int SYNC_WAIT_STEP = 60; // seconds 
+	private int SYNC_WAIT_STEP = 30; // seconds 
 	
 	
 	private volatile String endpoint;
@@ -73,12 +73,12 @@ class SimpleBusHandler implements BusHandler {
 		
 		if (wait) {
 			while (this.creating) {
-				sleepOneMinute();
+				sleep();
 			}
 		}
 	}
 
-	private void sleepOneMinute() {
+	private void sleep() {
 		try {
 			Thread.sleep(SYNC_WAIT_STEP * 1000);
 		} catch (InterruptedException e) {
