@@ -23,10 +23,13 @@ public class FlightTicketNumberRetriever {
 		this.endpoint = endpoint;
 	}
 
-	public String getFlightTicketNumber() throws IllegalStateException {
+	public String getFlightTicketNumber() {
 		
-		if (this.endpoint == null)
-			throw new IllegalStateException();
+		if (this.endpoint == null) {
+			
+			throw new IllegalStateException("Null endpoint");
+			
+		}
 		
 		try {
 			
@@ -54,8 +57,7 @@ public class FlightTicketNumberRetriever {
 	        return flightTicketNumber;
 		
 		} catch (Exception e) {
-			throw new IllegalStateException();
+			throw new  IllegalStateException("Something went wrong!", e);
 		}
 	}
-
 }
