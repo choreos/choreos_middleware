@@ -43,15 +43,14 @@ We proceed with a brief explanation about each class:
 
 \begin{description}
 \item [ChorSpec:] represents what the middleware needs to know to enact a choreography;
-\item [ChorServiceSpec:] represents what the middleware needs to know to deploy and configure one service acting in the specified choreography;
-\item [ServiceSpec:] represents what the middleware needs to know to deploy a single service (with one or more instances for load balancing), without concerning whether the service is within a choreography or not. 
+\item [ServiceSpec:] represents what the middleware needs to know to deploy a single service (with one or more instances for load balancing).
 \item [ServiceDependency:] represents dependencies among services (if \verb!service A! invokes \verb!service B!, we say \verb!service A! depends on \verb!service B!);
 \item [Choreography:] provides information about a choreography instance; 
 \item [Service:] provides information about a deployed service. 
 \item [ServiceInstance:] provides information about a specific instance, or replica, of a deployed service. 
 \end{description}
 
-To request a choreography enactment, it is important to understand very well the \verb!ChorServiceSpec! and \verb!ServiceSpec! classes. Therefore, it follows the description of each one of their attributes:
+To request a choreography enactment, it is important to understand very well the \verb!ServiceSpec! class. Therefore, the description of each one of their attributes follows:
 
 \begin{description}
 \item [name:] a unique name within the choreography specification;
@@ -306,7 +305,7 @@ The response arrives only after the deployment of all services, if no deployment
 It is possible to parse the output to find out failed deployments, which will be the services without associated nodes.
 We intend to redesign this operation to something more asynchronous, since waiting a long time for response is not good practice.
 
-\subsubsection*{Update a choreography (not implemented yet)}
+\subsubsection*{Update a choreography (only partially implemented at this time)}
 
 \begin{tabular}{|c|c|c|c|}
 \hline 
@@ -349,7 +348,7 @@ When the following enactment is invoked, the \ee\ will redeploy the services wit
 \section{Java client}
 \label{sec:client}
 
-In the \verb!ChoreographyDeployer! project there is the \verb!ChorDeployerImpl! class, which implements the \verb!ChoreographyDeployer! interface (Listing \ref{lst:java_interface}) and handles the REST communication with the Enactment Engine server. This means you can invoke the \ee\ by using a simple Java object, without worrying with XML details.
+In the \verb!ChoreographyDeployer! project there is the \verb!ChorDeployerClient! class, which implements the \verb!ChoreographyDeployer! interface (Listing \ref{lst:java_interface}) and handles the REST communication with the Enactment Engine server. This means you can invoke the \ee\ by using a simple Java object, without worrying with XML details.
 
 \lstset{language=Java}
 \begin{lstlisting}[caption=\ee\ Java interface, label=lst:java_interface]

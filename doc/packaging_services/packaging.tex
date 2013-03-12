@@ -333,7 +333,7 @@ A service choreography can be composed of services that are running before the c
 
 \section{SOAP service type}
 
-The only service type currently supported by the \ee\ is the SOAP service type. The \texttt{setInvocationAddress} convention to this service type is that each service port type must provide an operation named ``\texttt{setInvocationAddress}'' that receives one string and a list of strings, describing the Role the service depends on and the list od service endpoints that will perform this Role. Multiple Roles are defined with multiple calls to the \texttt{serInvocationAddress} operation. This is formally expressed with the WSDL elements presented in the Listing~\ref{lst:set_invocation_address_wsdl}. 
+The only service type currently supported by the \ee\ is the SOAP service type. By convention, services of this type must provide an operation named ``\texttt{setInvocationAddress}''; this operation is used to inform the service about the remote service endpoints that implement the various Roles it depends on. For each Role, \texttt{setInvocationAddress} is called with the relevant Role (a String), the name of the Service that implements this Role (also a String), and a list of URLs of the various replicas of the Service (a list of Strings). The name of the Service is of importance here because there may be several different Services for a single Role; for example, in an Airport we might have several airline companies. The expected interface of this operation is formally expressed by the WSDL elements presented in the Listing~\ref{lst:set_invocation_address_wsdl}. 
 
 {\footnotesize
 \begin{lstlisting}[caption=Parts of the service WSDL that define the \texttt{setInvocationAddress} operation, label=lst:set_invocation_address_wsdl] 
@@ -343,6 +343,7 @@ The only service type currently supported by the \ee\ is the SOAP service type. 
     <xs:sequence>
       <xs:element name=``arg0'' type=``xs:string'' minOccurs=``0''/>
       <xs:element name=``arg1'' type=``xs:string'' minOccurs=``0''/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="arg2" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name=``setInvocationAddressResponse''>
@@ -382,7 +383,7 @@ public class SomeWebServiceClass {
     ...
     
     @WebMethod
-    public void setInvocationAddress(String role, List<String> endpoints) {
+    public void setInvocationAddress(String role, String name, List<String> endpoints) {
 		...
     }
 }
