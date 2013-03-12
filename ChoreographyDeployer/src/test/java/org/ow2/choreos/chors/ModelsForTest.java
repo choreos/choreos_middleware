@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.xml.ChorXmlWriter;
+import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceDependency;
@@ -113,6 +114,16 @@ public class ModelsForTest {
 		this.chor = new Choreography();
 		this.chor.setId("1");
 		this.chor.setSpec(this.chorSpec);
+		
+		// create nodes
+		Node node1 = new Node();
+		node1.setId("1");
+		node1.setIp("192.168.56.101");
+		node1.setHostname("choreos-node");
+		Node node2 = new Node();
+		node2.setId("2");
+		node2.setIp("192.168.56.102");
+		node2.setHostname("choreos-node");
 
 		// create service
 		Service airlineService = new Service();
@@ -122,6 +133,7 @@ public class ModelsForTest {
 		// create instance
 		ServiceInstance airline = new ServiceInstance();
 		airline.setMyParentServiceSpec(airlineService.getSpec());
+		airline.setNode(node1);
 
 		// add instance to service
 		airlineService.addInstance(airline);
@@ -134,6 +146,7 @@ public class ModelsForTest {
 
 		ServiceInstance travel = new ServiceInstance();
 		travel.setMyParentServiceSpec(travelService.getSpec());
+		travel.setNode(node2);
 
 		travelService.addInstance(travel);
 		this.chor.getDeployedServices().add(travelService);
