@@ -73,6 +73,7 @@ public class ChorEnactmentWithBusTest {
 		assertTrue(travelProxifiedUri.contains(":8180/services/TravelAgencyServicePortClientProxyEndpoint"));
 		
 		WSClient client = new WSClient(travelProxifiedUri + "?wsdl");
+		client.setEndpoint(travelProxifiedUri);
 		Item response = client.request("buyTrip");
 		String codes = response.getChild("return").getContent();
 		assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
