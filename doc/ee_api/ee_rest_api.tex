@@ -43,14 +43,14 @@ We proceed with a brief explanation about each class:
 
 \begin{description}
 \item [ChorSpec:] represents what the middleware needs to know to enact a choreography;
-\item [ServiceSpec:] represents what the middleware needs to know to deploy a single service (with one or more instances for load balancing).
+\item [ServiceSpec:] represents what the middleware needs to know to deploy a service (with one or more instances for load balancing).
 \item [ServiceDependency:] represents dependencies among services (if \verb!service A! invokes \verb!service B!, we say \verb!service A! depends on \verb!service B!);
 \item [Choreography:] provides information about a choreography instance; 
 \item [Service:] provides information about a deployed service. 
 \item [ServiceInstance:] provides information about a specific instance, or replica, of a deployed service. 
 \end{description}
 
-To request a choreography enactment, it is important to understand very well the \verb!ServiceSpec! class. Therefore, the description of each one of their attributes follows:
+To request a choreography enactment, it is important to understand very well the \verb!ServiceSpec! class. Therefore, the description of each one of its attributes follows:
 
 \begin{description}
 \item [name:] a unique name within the choreography specification;
