@@ -91,110 +91,106 @@ To properly build and read these XML representations, you can rely on the schema
 
 \begin{lstlisting}[caption=ChorSpec XML representation example, label=lst:chor_spec_xml]
 <chorSpec>
-
-  <serviceSpecs>
-    <packageUri>http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar</packageUri>
-     <endpointName>airline</endpointName>
-     <name>airline</name>
-     <port>1234</port>
-     <type>SOAP</type>
-     <packageType>COMMAND_LINE</type>
-     <roles>airline</roles>
-     <numberOfInstances>1</numberOfInstances>
-  </serviceSpecs>
-  
-  <serviceSpecs>
-    <packageUri>http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar</packageUri>
-    <endpointName>travelagency</endpointName>
-    <name>travelagency</name>
-    <port>1235</port>
-    <type>SOAP</type>
-    <packageType>COMMAND_LINE</type>
-    <dependences>
-      <serviceName>airline</serviceName>
-      <serviceRole>airline</serviceRole>
-    </dependences>
-    <roles>travelagency</roles>
-    <numberOfInstances>1</numberOfInstances>
-  </serviceSpecs>
-  
-</chorSpec>
-\end{lstlisting}
+    <serviceSpecs>
+        <endpointName>airline</endpointName>
+        <name>airline</name>
+        <numberOfInstances>1</numberOfInstances>
+        <packageType>COMMAND_LINE</packageType>
+        <packageUri>http://valinhos.ime.usp.br:54080/airline.jar</packageUri>
+        <port>1234</port>
+        <roles>airline</roles>
+        <type>SOAP</type>
+    </serviceSpecs>
+    <serviceSpecs>
+        <dependencies>
+            <serviceName>airline</serviceName>
+            <serviceRole>airline</serviceRole>
+        </dependencies>
+        <endpointName>travelagency</endpointName>
+        <name>travelagency</name>
+        <numberOfInstances>1</numberOfInstances>
+        <packageType>COMMAND_LINE</packageType>
+        <packageUri>http://valinhos.ime.usp.br:54080/travel.jar</packageUri>
+        <port>1235</port>
+        <roles>travelagency</roles>
+        <type>SOAP</type>
+    </serviceSpecs>
+</chorSpec>\end{lstlisting}
 
 \begin{lstlisting}[caption=Choreography XML representation example, label=lst:chor_xml]
 <choreography>
-
-  <id>1</id>
-
-  <chorSpec>
-    <serviceSpecs>
-      <packageUri>http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar</packageUri>
-      <endpointName>airline</endpointName>
-      <name>airline</name>
-      <port>1234</port>
-      <type>SOAP</type>
-      <packageType>COMMAND_LINE</type>
-      <roles>airline</roles>
-      <numberOfInstances>1</numberOfInstances>
-    </serviceSpecs>
-    <serviceSpecs>
-      <packageUri>http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar</packageUri>
-      <endpointName>travelagency</endpointName>
-      <name>travelagency</name>
-      <port>1235</port>
-      <type>SOAP</type>
-      <packageType>COMMAND_LINE</type>
-      <dependences>
-        <serviceName>airline</serviceName>
-        <serviceRole>airline</serviceRole>
-      </dependences>
-      <roles>travelagency</roles>
-      <numberOfInstances>1</numberOfInstances>
-    </serviceSpecs>
-  </chorSpec>
-  
-  <deployedServices>
-    <host>choreos-node1</host>
-     <ip>192.168.56.101</ip>
-     <name>airline</name>
-     <nodeId>choreos-node1</nodeId>
-     <spec xsi:type="chorServiceSpec" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-       <packageUri>http://valinhos.ime.usp.br:54080/enact_test/airline-service.jar</packageUri>
-       <endpointName>airline</endpointName>
-       <name>airline</name>
-       <port>1234</port>
-       <type>SOAP</type>
-       <packageType>COMMAND_LINE</type>
-       <roles>airline</roles>
-     </spec>
-     <uri>http://192.168.56.101:1234/airline/</uri>
-  </deployedServices>
-  
-  <deployedServices>
-     <host>choreos-node2</host>
-      <ip>192.168.56.102</ip>
-      <name>travelagency</name>
-      <nodeId>choreos-node2</nodeId>
-      <spec xsi:type="chorServiceSpec" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-       <packageUri>http://valinhos.ime.usp.br:54080/enact_test/travel-agency-service.jar</packageUri>
-        <endpointName>travelagency</endpointName>
+    <deployedServices>
+        <instances>
+            <myParentServiceSpec>
+                <endpointName>airline</endpointName>
+                <name>airline</name>
+                <numberOfInstances>1</numberOfInstances>
+                <packageType>COMMAND_LINE</packageType>
+                <packageUri>http://valinhos.ime.usp.br:54080/airline.jar</packageUri>
+                <port>1234</port>
+                <roles>airline</roles>
+                <type>SOAP</type>
+            </myParentServiceSpec>
+            <nativeUri>http://192.168.56.101:1234/airline/</nativeUri>
+            <node>
+                <hostname>choreos-node</hostname>
+                <id>1</id>
+                <ip>192.168.56.101</ip>
+            </node>
+        </instances>
+        <name>airline</name>
+        <spec>
+            <endpointName>airline</endpointName>
+            <name>airline</name>
+            <numberOfInstances>1</numberOfInstances>
+            <packageType>COMMAND_LINE</packageType>
+            <packageUri>http://valinhos.ime.usp.br:54080/airline.jar</packageUri>
+            <port>1234</port>
+            <roles>airline</roles>
+            <type>SOAP</type>
+        </spec>
+    </deployedServices>
+    <deployedServices>
+        <instances>
+            <myParentServiceSpec>
+                <dependencies>
+                    <serviceName>airline</serviceName>
+                    <serviceRole>airline</serviceRole>
+                </dependencies>
+                <endpointName>travelagency</endpointName>
+                <name>travelagency</name>
+                <numberOfInstances>1</numberOfInstances>
+                <packageType>COMMAND_LINE</packageType>
+                <packageUri>http://valinhos.ime.usp.br:54080/travel.jar</packageUri>
+                <port>1235</port>
+                <roles>travelagency</roles>
+                <type>SOAP</type>
+            </myParentServiceSpec>
+            <nativeUri>http://192.168.56.102:1235/travelagency/</nativeUri>
+            <node>
+                <hostname>choreos-node</hostname>
+                <id>2</id>
+                <ip>192.168.56.102</ip>
+            </node>
+        </instances>
         <name>travelagency</name>
-        <port>1235</port>
-        <type>SOAP</type>
-        <packageType>COMMAND_LINE</type>
-        <dependences>
-           <serviceName>airline</serviceName>
-           <serviceRole>airline</serviceRole>
-        </dependences>
-        <roles>travelagency</roles>
-      </spec>
-      <uri>http://192.168.56.102:1235/travelagency/</uri>
-  </deployedServices>
-
+        <spec>
+            <dependencies>
+                <serviceName>airline</serviceName>
+                <serviceRole>airline</serviceRole>
+            </dependencies>
+            <endpointName>travelagency</endpointName>
+            <name>travelagency</name>
+            <numberOfInstances>1</numberOfInstances>
+            <packageType>COMMAND_LINE</packageType>
+            <packageUri>http://valinhos.ime.usp.br:54080/travel.jar</packageUri>
+            <port>1235</port>
+            <roles>travelagency</roles>
+            <type>SOAP</type>
+        </spec>
+    </deployedServices>
+    <id>1</id>
 </choreography>
-
-
-
 \end{lstlisting}
 
 }
@@ -405,44 +401,53 @@ public interface ChoreographyDeployer {
     <xs:element name="serviceSpec" type="serviceSpec"/>
     <xs:complexType name="choreography">
         <xs:sequence>
-            <xs:element minOccurs="0" ref="chorSpec"/>
             <xs:element maxOccurs="unbounded" minOccurs="0"
                 name="deployedServices" nillable="true" type="service"/>
             <xs:element minOccurs="0" name="id" type="xs:string"/>
+            <xs:element minOccurs="0" name="spec" type="chorSpec"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="chorSpec">
+    <xs:complexType name="service">
         <xs:sequence>
             <xs:element maxOccurs="unbounded" minOccurs="0"
-                name="serviceSpecs" nillable="true" type="chorServiceSpec"/>
+                name="instances" nillable="true" type="serviceInstance"/>
+            <xs:element minOccurs="0" name="name" type="xs:string"/>
+            <xs:element minOccurs="0" name="recipe" type="recipe"/>
+            <xs:element minOccurs="0" name="spec" type="serviceSpec"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="chorServiceSpec">
-        <xs:complexContent>
-            <xs:extension base="serviceSpec">
-                <xs:sequence>
-                    <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="dependences" nillable="true" type="serviceDependence"/>
-                    <xs:element minOccurs="0" name="group" type="xs:string"/>
-                    <xs:element minOccurs="0" name="owner" type="xs:string"/>
-                    <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="roles" nillable="true" type="xs:string"/>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
+    <xs:complexType name="serviceInstance">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="easyEsbNodeAdminEndpoint" type="xs:string"/>
+            <xs:element minOccurs="0" name="instanceId" type="xs:string"/>
+            <xs:element minOccurs="0" name="legacyHostname" type="xs:string"/>
+            <xs:element minOccurs="0" name="legacyIp" type="xs:string"/>
+            <xs:element minOccurs="0" name="myParentServiceSpec" type="serviceSpec"/>
+            <xs:element minOccurs="0" name="nativeUri" type="xs:string"/>
+            <xs:element minOccurs="0" name="node" type="node"/>
+            <xs:element minOccurs="0" name="serviceId" type="xs:string"/>
+        </xs:sequence>
     </xs:complexType>
     <xs:complexType name="serviceSpec">
         <xs:sequence>
-            <xs:element minOccurs="0" name="packageUri" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0"
+                name="dependencies" nillable="true" type="serviceDependency"/>
             <xs:element minOccurs="0" name="endpointName" type="xs:string"/>
+            <xs:element minOccurs="0" name="group" type="xs:string"/>
             <xs:element minOccurs="0" name="name" type="xs:string"/>
+            <xs:element name="numberOfInstances" type="xs:int"/>
+            <xs:element minOccurs="0" name="owner" type="xs:string"/>
+            <xs:element minOccurs="0" name="packageType" type="packageType"/>
+            <xs:element minOccurs="0" name="packageUri" type="xs:string"/>
             <xs:element name="port" type="xs:int"/>
             <xs:element minOccurs="0" ref="resourceImpact"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="roles"
+                nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="type" type="serviceType"/>
-            <xs:element minOccurs="0" name="packageType" type="xs:packageType"/>
+            <xs:element minOccurs="0" name="version" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="serviceDependence">
+    <xs:complexType name="serviceDependency">
         <xs:sequence>
             <xs:element minOccurs="0" name="serviceName" type="xs:string"/>
             <xs:element minOccurs="0" name="serviceRole" type="xs:string"/>
@@ -456,22 +461,36 @@ public interface ChoreographyDeployer {
             <xs:element minOccurs="0" name="region" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="service">
+    <xs:complexType name="node">
         <xs:sequence>
-            <xs:element minOccurs="0" name="host" type="xs:string"/>
+            <xs:element minOccurs="0" name="chefName" type="xs:string"/>
+            <xs:element minOccurs="0" name="cpus" type="xs:int"/>
+            <xs:element minOccurs="0" name="hostname" type="xs:string"/>
+            <xs:element minOccurs="0" name="id" type="xs:string"/>
+            <xs:element minOccurs="0" name="image" type="xs:string"/>
             <xs:element minOccurs="0" name="ip" type="xs:string"/>
-            <xs:element minOccurs="0" name="name" type="xs:string"/>
-            <xs:element minOccurs="0" name="nodeId" type="xs:string"/>
-            <xs:element minOccurs="0" name="spec" type="serviceSpec"/>
-            <xs:element minOccurs="0" name="uri" type="xs:string"/>
+            <xs:element minOccurs="0" name="privateKeyFile" type="xs:string"/>
+            <xs:element minOccurs="0" name="ram" type="xs:int"/>
+            <xs:element minOccurs="0" name="so" type="xs:string"/>
+            <xs:element minOccurs="0" name="state" type="xs:int"/>
+            <xs:element minOccurs="0" name="storage" type="xs:int"/>
+            <xs:element minOccurs="0" name="user" type="xs:string"/>
+            <xs:element minOccurs="0" name="zone" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:simpleType name="serviceType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="SOAP"/>
-            <xs:enumeration value="REST"/>
-        </xs:restriction>
-    </xs:simpleType>    
+    <xs:complexType name="recipe">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="cookbookFolder" type="xs:string"/>
+            <xs:element minOccurs="0" name="cookbookName" type="xs:string"/>
+            <xs:element minOccurs="0" name="name" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="chorSpec">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0"
+                name="serviceSpecs" nillable="true" type="serviceSpec"/>
+        </xs:sequence>
+    </xs:complexType>
     <xs:simpleType name="packageType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="COMMAND_LINE"/>
@@ -481,8 +500,13 @@ public interface ChoreographyDeployer {
             <xs:enumeration value="OTHER"/>
         </xs:restriction>
     </xs:simpleType>
+    <xs:simpleType name="serviceType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="SOAP"/>
+            <xs:enumeration value="REST"/>
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>
-
 \end{lstlisting}
 
 \end{document}
