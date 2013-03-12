@@ -83,6 +83,9 @@ public class IncreaseNumberOfInstancesTest {
 		
 		airline = chor.getDeployedServiceByName(ModelsForTest.AIRLINE);
 		
+		travel = chor.getDeployedServiceByName(ModelsForTest.TRAVEL_AGENCY);
+		client = new WSClient(travel.getUris().get(0) + "?wsdl");
+
 		response = client.request("buyTrip");
 		codes = response.getChild("return").getContent();		
 		response = client.request("buyTrip");

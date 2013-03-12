@@ -11,6 +11,7 @@
 */target/**
 *~
 .metadata/*
-chef-repo/delete-cookbooks.sh
+chef-repo/clean-chefices.sh
+smartbuild.sh
 .project
 .settings/*
