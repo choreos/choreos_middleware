@@ -51,6 +51,8 @@ public class NodeUpgrader {
             try {
 				this.runChefClient(ssh);
 			} catch (SshCommandFailed e) {
+				needUpdate.remove(node);
+				updating.remove(node);
 				String message = "chef-client returned an error exit status on node " + node.toString();
 				logger.error(message);
 				throw new NodeNotUpgradedException(node.getId(), message);
