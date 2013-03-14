@@ -21,6 +21,8 @@ public class VMsDestroyer {
 	
 	public void destroyAll() {
 		
+		logger.info("Destroying all the nodes...");
+		
 		AtomicInteger counter = new AtomicInteger();
 		for (Node node: this.cp.getNodes()) {
 			
@@ -33,6 +35,7 @@ public class VMsDestroyer {
 				this.logger.error("Node " + node.getId() + " not destroyed", e);
 			}
 		}
+		System.out.println("");
 	}
 
 }

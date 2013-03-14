@@ -9,7 +9,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
@@ -17,6 +16,7 @@ import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory.CloudProviderType;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.utils.Concurrency;
 
 public class VMsCreator { 
 
@@ -30,7 +30,7 @@ public class VMsCreator {
 	 * @param N
 	 * @param cp
 	 * @return an ordered list with the times necessary to create each VM.
-	 * If a VM is not created, tiphe size of the returned list is less then N.
+	 * If a VM is not created, the size of the returned list is less then N.
 	 */
 	public List<Long> createVMs(int N, CloudProviderType cpType) {
 
@@ -40,20 +40,11 @@ public class VMsCreator {
 		for (int i=0; i<N; i++) {
 			Future<Long> future = executor.submit(new VMCreator(cp));
 			futures.add(future);
-			sleep(); // EC2 1 second rule
+			awsOneRequestPerSecondRuleSleep(); // EC2 1 second rule
 		}
 		
-		executor.shutdown();
-		boolean status = false;
-		try {
-			status = executor.awaitTermination(TIMEOUT, TimeUnit.MINUTES);
-		} catch (InterruptedException e) {
-			logger.error("Interrupted thread! Should not happen!", e);
-		}
-		
-		if (!status) {
-			logger.info("Executor status is False. Probably some VM was not created.");
-		}
+		Concurrency.waitExecutor(executor, TIMEOUT);
+		System.out.println("");
 		
 		List<Long> times = new ArrayList<Long>();
 		for (Future<Long> f: futures) {
@@ -86,7 +77,7 @@ public class VMsCreator {
 		return time;
 	}
 
-	private void sleep() {
+	private void awsOneRequestPerSecondRuleSleep() {
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
@@ -104,6 +95,8 @@ public class VMsCreator {
 		
 		/**
 		 * Returns the time (milliseconds) to create the VM
+		 * This time encompasses the time to the VM gets ready for use,
+		 * which we verify with a SSH connection
 		 * If the VM is not created, an exception is thrown
 		 */
 		@Override
@@ -117,7 +110,6 @@ public class VMsCreator {
 			System.out.print(counter.incrementAndGet() + " ");
 			return tf - t0;
 		}
-		
 		
 	}
 
