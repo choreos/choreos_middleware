@@ -6,6 +6,13 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Choreos Monitoring Service</name>
 
+	<parent>
+                <groupId>org.ow2.choreos</groupId>
+                <artifactId>middleware</artifactId>
+                <version>0.2-SNAPSHOT</version>
+        </parent>
+
+
 	<repositories>
 		<repository>
 			<id>ccslrepository</id>
