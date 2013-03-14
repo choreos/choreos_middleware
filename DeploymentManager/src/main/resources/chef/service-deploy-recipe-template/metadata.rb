@@ -7,7 +7,6 @@ version          "0.0.1"
 
 depends "apt"
 depends "tomcat"
-depends "petals"
 
 attribute "service/$NAME/WarFile",
   :display_NAME => "WAR file name to be deployed",
