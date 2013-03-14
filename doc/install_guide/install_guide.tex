@@ -104,6 +104,8 @@ Before you run \ee, you will need:
 
 A \textsf{CloudProvider} is an \ee\ interface that specifies methods to CRUD virtual machines. It is expected that a \textsf{Cloud Provider} implementations will act just as a client of some Cloud Gateway. In this section we describe the currently available \textsf{CloudProvider} implementations and how to use them. New \textsf{CloudProvider}s may be implemented to support other virtualization tools. One example would be creating a \textsf{VirtualBoxCloudProvider} to create VMs using VirtualBox.
 
+Whatever the cloud provider you choose, ensure that the required TCP ports of the created VMs are unblocked. Required ports: 22 to SSH, 8080 to Tomcat, the Chef Server port (for us it is 4000), the ports used by your JAR services, and the port 8180 to EasyESB.
+
 \subsection{Amazon EC2}
 
 Amazon EC2 service is the simplest choice to dynamically retrieve VMs as you need. You need just to create an account at \url{http://aws.amazon.com} and configure a pair of keys to access the VMs through SSH. The trade-off is that you must to pay to Amazon! 
@@ -116,7 +118,7 @@ Some hints:
 \item Request to increase Amazon EC2 instance limit: \url{http://aws.amazon.com/contact-us/ec2-request/}. At USP we got a 50 VMs limit.
 \item Pay attention to the ``one-second rule'': \\ \url{http://www.a2sdeveloper.com/page-working-with-the-one-second-rule.html}.
 \item As we are charged per hour, don't forget to shutdown/stop unused VMs.
-\item You can use the Amazon EC2 web console to unblock TCP ports necessary to the choreography execution (22 to ssh, the chef server port, 8080 to use Tomcat, etc.).
+\item You can use the Amazon EC2 web console to unblock TCP ports necessary to the choreography execution.
 \item You can also use the \texttt{ec2} command line tools to manage your VMs.
 \item The \ee\ creates VMs in the ``US East'' Amazon datacenter.
 \item The SSH keypairs are datacenter-dependent. Therefore if you create a keypair in the EU
