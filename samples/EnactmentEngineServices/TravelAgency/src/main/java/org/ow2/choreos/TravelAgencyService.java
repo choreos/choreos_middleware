@@ -27,6 +27,11 @@ public class TravelAgencyService implements TravelAgency {
     
     private AtomicInteger counter = new AtomicInteger();
 
+    public TravelAgencyService() {
+    	
+    	logger.info("Travel Agency started at " + TravelAgencyStarter.SERVICE_ADDRESS);
+    }
+    
     @WebMethod
     @Override
     public void setInvocationAddress(String role, String name, List<String> endpoints) {

@@ -408,8 +408,19 @@ Here are just some few important reminders:
 
 \item Do not forget to validate the WSDL files of your web services, specially if there is some manual edition applied on them.
 
+\item Ensure that the service port address in the WSDL file (see Listing~\ref{lst:wsdl_address}), when seen from remote locations, do not use ``localhost'', ``0.0.0.0'', or other unsuitable addresses, as lan private IPs for example. Remember the client that sees the WSDL needs an accessible endpoint.
 
 \end{itemize}
 
+{\footnotesize
+\begin{lstlisting}[caption=Good example of service port address on a WSDL file, 
+label=lst:wsdl_address] 
+<service name="AirlineServiceService">
+  <port name="AirlineServicePort" binding="tns:AirlineServicePortBinding">
+    <soap:address location="http://200.221.3.47:1234/airline"/>
+  </port>
+</service>
+\end{lstlisting}
+}
 
 \end{document}

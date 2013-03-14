@@ -1,9 +1,9 @@
 package org.ow2.choreos.experiment.enact;
 
-import org.ow2.choreos.chors.datamodel.ChorServiceSpec;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
-import org.ow2.choreos.chors.datamodel.ServiceDependency;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
+import org.ow2.choreos.deployment.services.datamodel.ServiceDependency;
+import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 
 public class Spec {
 
@@ -18,16 +18,16 @@ public class Spec {
 		
 		ChorSpec chorSpec = new ChorSpec(); 
 		
-		ChorServiceSpec airline = new ChorServiceSpec();
+		ServiceSpec airline = new ServiceSpec();
 		airline.setName(AIRLINE);
 		airline.setPackageUri(AIRLINE_JAR);
 		airline.setEndpointName(AIRLINE);
 		airline.setPort(AIRLINE_PORT);
 		airline.setPackageType(PackageType.COMMAND_LINE);
 		airline.getRoles().add(AIRLINE);
-		chorSpec.addChorServiceSpec(airline);
+		chorSpec.addServiceSpec(airline);
 		
-		ChorServiceSpec travel = new ChorServiceSpec();
+		ServiceSpec travel = new ServiceSpec();
 		travel.setName(TRAVEL_AGENCY);
 		travel.setPackageUri(TRAVEL_AGENCY_JAR);
 		travel.setEndpointName(TRAVEL_AGENCY);
@@ -36,7 +36,7 @@ public class Spec {
 		travel.getRoles().add(TRAVEL_AGENCY);
 		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
 		travel.getDependencies().add(dep);
-		chorSpec.addChorServiceSpec(travel);
+		chorSpec.addServiceSpec(travel);
 		
 		return chorSpec;
 	}

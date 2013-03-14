@@ -13,6 +13,11 @@ public class AirlineService implements Airline {
 
 	private final SimpleLogger logger = new SimpleLoggerImpl("/tmp/airline.log");
 
+	public AirlineService() {
+		
+		logger.info("Airline started at " + AirlineStarter.SERVICE_ADDRESS);
+	}
+	
 	@WebMethod
 	@Override
 	public String buyFlight() {
