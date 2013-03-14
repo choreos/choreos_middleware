@@ -9,7 +9,7 @@
 	<packaging>pom</packaging>
 
 	<name>CHOReOS Middleware</name>
-	<description>The CHOReOS cloud moddielware</description>
+	<description>The CHOReOS cloud middleware</description>
 	<url>http://www.choreos.eu</url>
 	<inceptionYear>2011</inceptionYear>
 
@@ -70,6 +70,7 @@
 		<module>Commons</module>
 		<module>DeploymentManager</module>
 		<module>ChoreographyDeployer</module>
+	        <module>Monitoring</module>
 		<!-- <module>StorageFactory</module> <module>choreos-web</module> -->
 	</modules>
 
