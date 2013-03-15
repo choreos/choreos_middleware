@@ -58,11 +58,10 @@ public class Configuration {
 			// by other application (not the DeploymentManager itself)
 			tmp = new PropertiesConfiguration(propertiesFile);
 		} catch (ConfigurationException e) {
-			tmp = null;
 			e.printStackTrace();
-		} finally {
-			properties = tmp;
-		}
+			tmp = new PropertiesConfiguration();
+		} 
+		this.properties = tmp;
 	}
 
 }
