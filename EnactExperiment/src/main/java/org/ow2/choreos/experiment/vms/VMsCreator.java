@@ -94,7 +94,7 @@ public class VMsCreator {
 		}
 		
 		/**
-		 * Returns the time (milliseconds) to create the VM
+		 * Returns the time (seconds) to create the VM
 		 * This time encompasses the time to the VM gets ready for use,
 		 * which we verify with a SSH connection
 		 * If the VM is not created, an exception is thrown
@@ -108,7 +108,7 @@ public class VMsCreator {
 			ssh.check(node.getIp());
 			long tf = System.currentTimeMillis();					
 			System.out.print(counter.incrementAndGet() + " ");
-			return tf - t0;
+			return (tf - t0)/1000;
 		}
 		
 	}

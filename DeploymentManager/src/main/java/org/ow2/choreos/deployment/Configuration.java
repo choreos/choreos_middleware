@@ -50,9 +50,12 @@ public class Configuration {
 		
 		PropertiesConfiguration tmp = null;
 		try {
+			
 			File propertiesFile = new File(this.getClass()
 					.getClassLoader().getResource("deployment.properties")
 					.getFile());
+			// TODO try getResourceAsStrem; the current line does not works when the class is loaded
+			// by other application (not the DeploymentManager itself)
 			tmp = new PropertiesConfiguration(propertiesFile);
 		} catch (ConfigurationException e) {
 			tmp = null;

@@ -10,19 +10,18 @@ import org.ow2.choreos.utils.LogConfigurator;
 
 public class Experiment {
 
-	private static final int[] Ns = new int[]{1, 2};
-	private static final int EXECUTIONS_PER_N = 2; // how many times each N is executed
+	private static final int[] Ns = new int[]{5, 3, 1};
+	private static final int EXECUTIONS_PER_N = 3; // how many times each N is executed
 	private static final CloudProviderType CLOUD_PROVIDER_TYPE = CloudProviderType.AWS;
 
 	private Logger logger = Logger.getLogger(Experiment.class);
 
 	public void start() {
 		
+		Date now = new Date();
+		logger.info("Experiment running at " + now);
 		for (int n: Ns) {
 			
-			Date now = new Date();
-			logger.info("Experiment running at " + now);
-
 			for (int i=0; i < EXECUTIONS_PER_N; i++) {
 		
 				logger.info("== Creating " + n + " VMs / Execution " + i + " ==");
