@@ -1,16 +1,40 @@
-# ainda não é um script
-# Autores: Leonardo, Cadu
+# Authors: Leonardo, Cadu
+if [[ $# != 2 || ! -d $1 || ! -d $2 ]]; then
+    echo "Usage: $(basename $0) [git folder] [svn folder]"
+    exit
+fi
 
-git_to_svn -> git pull
-cloud -> svn up
+# _Clean_ git tree source
+GIT=$(realpath $1)
+#  Subversion folder to be completely substituted by the git one
+SVN=$(realpath $2)
 
-git log --oneline | cut -d ' ' -f2- | xclip (cola com "três dedos") // tira linha antigas
+if [ -d "$SVN/.svn" ]; then
+    echo "There's a .svn folder in ${SVN}. Quitting."
+    exit
+fi
 
-git chekcout (cópia limpa do repositório) // git_to_svn
+cd $GIT; git pull
+cd $SVN; svn up
 
-rm -rf ow2forge/.../cloud
-cp -R ~/workspaces/choreos/git_to_svn/ cloud
+rm -rf $SVN
+cd $(dirname $SVN)
+cp -R $GIT $(basename $SVN)
 
-svn add --force cloud/
-cd cloud
-svn st | grep '^!' | cut -d '!' -f2 | xargs svn rm
+cd $(basename $SVN)
+rm -rf .git/
+svn add --force .
+svn st | grep '^!' | cut -d '!' -f 2 | xargs svn rm
+
+cd $GIT
+msg=$(mktemp)
+git log --oneline | cut -d ' ' -f 2- >$msg
+echo 'Press any key to edit svn commit message...'
+read
+$EDITOR $msg
+
+cd $SVN
+svn ci -F $msg
+
+rm -f $msg
+echo 'Finished'
