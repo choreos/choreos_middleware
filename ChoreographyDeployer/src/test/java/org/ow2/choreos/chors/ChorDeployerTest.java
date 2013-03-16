@@ -1,10 +1,8 @@
 package org.ow2.choreos.chors;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
-import org.ow2.choreos.utils.LogConfigurator;
 
 /**
  * To run this test, the DeploymentManager must be off
@@ -13,11 +11,6 @@ import org.ow2.choreos.utils.LogConfigurator;
  */
 public class ChorDeployerTest {
 
-	@BeforeClass
-	public static void beforeClass() {
-		LogConfigurator.configLog();
-	}
-	
 	/**
 	 * Sometimes we run the ChoreographyDeployer missing to start before the DeploymentManager.
 	 * This test tests if the ChoreographyDeployer will fail fast in this situation.
