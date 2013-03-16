@@ -44,11 +44,14 @@ public class Configuration {
     }
 
     private Configuration() {
+    	
         try {
             final ClassLoader loader = this.getClass().getClassLoader();
             final InputStream propFile = loader.getResourceAsStream(PROPERTIES_FILE);
-            properties.load(propFile);
-            propFile.close();
+            if (propFile != null) {
+            	properties.load(propFile);
+            	propFile.close();
+            } 
         } catch (IOException e) {
             e.printStackTrace();
         }
