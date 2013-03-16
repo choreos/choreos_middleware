@@ -184,15 +184,6 @@ public class ModelsForTest {
 		}
 	}
 
-	public static void main(String[] args) throws JAXBException, IOException {
-
-		ModelsForTest models = new ModelsForTest(PackageType.COMMAND_LINE);
-		System.out.println("ChorSpec XML representation:");
-		System.out.println(models.getChorSpecXML());
-		System.out.println("\nChoreography XML representation:");
-		System.out.println(models.getChoreographyXML());
-	}
-
 	public ChorSpec getChorSpecWithReplicas(int numberOfAirlineServices) {
 		
 		ChorSpec spec = new ChorSpec(); 
@@ -223,4 +214,12 @@ public class ModelsForTest {
 		return spec;
 	}
 
+	public static void main(String[] args) throws JAXBException, IOException {
+
+		ModelsForTest models = new ModelsForTest(PackageType.COMMAND_LINE);
+		System.out.println("ChorSpec XML representation:");
+		System.out.println(models.getChorSpecXML());
+		System.out.println("\nChoreography XML representation:");
+		System.out.println(models.getChoreographyXML());
+	}
 }
