@@ -1,6 +1,7 @@
 package org.ow2.choreos.deployment;
 
 import java.io.File;
+import java.net.URL;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -51,12 +52,15 @@ public class Configuration {
 		PropertiesConfiguration tmp = null;
 		try {
 			
-			File propertiesFile = new File(this.getClass()
-					.getClassLoader().getResource("deployment.properties")
-					.getFile());
 			// TODO try getResourceAsStrem; the current line does not works when the class is loaded
 			// by other application (not the DeploymentManager itself)
-			tmp = new PropertiesConfiguration(propertiesFile);
+			URL fileUrl = this.getClass().getClassLoader().getResource("deployment.properties");
+			if (fileUrl != null) {
+				File propertiesFile = new File(fileUrl.getFile());
+				tmp = new PropertiesConfiguration(propertiesFile);
+			} else {
+				tmp = new PropertiesConfiguration();
+			}
 		} catch (ConfigurationException e) {
 			e.printStackTrace();
 			tmp = new PropertiesConfiguration();

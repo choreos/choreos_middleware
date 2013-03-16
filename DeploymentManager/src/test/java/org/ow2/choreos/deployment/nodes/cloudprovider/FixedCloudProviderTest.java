@@ -26,12 +26,15 @@ public class FixedCloudProviderTest {
 		LogConfigurator.configLog();
 	}
 
-	//@Test
+	@Test
 	public void shouldReturnNodeInfo() throws RunNodesException {
 
 		Configuration.set("FIXED_VM_IPS", "192.168.56.101");
+		Configuration.set("FIXED_VM_HOSTNAMES", "choreos");
+		Configuration.set("FIXED_VM_PRIVATE_SSH_KEYS", "key");
+		Configuration.set("FIXED_VM_USERS", "choreos");
 		CloudProvider cp = new FixedCloudProvider();
-		Node node = cp.createOrUseExistingNode(new Node());
+		Node node = cp.createOrUseExistingNode(null);
 
 		assertTrue(node.getHostname() != null && !node.getHostname().isEmpty());
 
@@ -40,23 +43,37 @@ public class FixedCloudProviderTest {
 		assertTrue(matcher.matches());
 	}
 	
-	//@Test
+	@Test
 	public void shouldReturnAvalableVMs() {
 		
-		Configuration.set("FIXED_VM_IPS", "192.168.56.101; 192.168.56.102 ");
+		Configuration.set("FIXED_VM_IPS", "192.168.56.101, 192.168.56.102");
+		Configuration.set("FIXED_VM_HOSTNAMES", "choreos, choreos");
+		Configuration.set("FIXED_VM_PRIVATE_SSH_KEYS", "key, samekey");
+		Configuration.set("FIXED_VM_USERS", "choreos, choreos");
+
 		CloudProvider cp = new FixedCloudProvider();
 		List<Node> nodes = cp.getNodes();
 		assertEquals(2, nodes.size());
-		assertEquals("0", nodes.get(0).getId());
-		assertEquals("192.168.56.101", nodes.get(0).getIp());
-		assertEquals("1", nodes.get(1).getId());
-		assertEquals("192.168.56.102", nodes.get(1).getIp());
+		
+		Node node0 = nodes.get(0);
+		Node node1 = nodes.get(1);
+		
+		assertTrue(node0.getId().equals("0") || node0.getId().equals("1"));
+		assertTrue(node1.getId().equals("0") || node1.getId().equals("1"));
+		assertTrue(!node0.getId().equals(node1.getId()));
+
+		assertTrue(node0.getIp().equals("192.168.56.101") || node0.getIp().equals("192.168.56.102"));
+		assertTrue(node1.getIp().equals("192.168.56.101") || node1.getIp().equals("192.168.56.102"));
+		assertTrue(!node0.getIp().equals(node1.getIp()));
 	}
 	
 	@Test(expected=NodeNotFoundException.class)
 	public void shouldNotFindVMs() throws NodeNotFoundException {
 		
 		Configuration.set("FIXED_VM_IPS", "192.168.56.101; 192.168.56.102 ");
+		Configuration.set("FIXED_VM_HOSTNAMES", "choreos, choreos");
+		Configuration.set("FIXED_VM_PRIVATE_SSH_KEYS", "key, samekey");
+		Configuration.set("FIXED_VM_USERS", "choreos, choreos");		
 		CloudProvider cp = new FixedCloudProvider();
 		cp.getNode("2");
 	}

@@ -145,13 +145,11 @@ public class RecipeBuilderTest {
 		assertAllOcurrencesWereReplacedInDefaultRb();
 		assertAllOcurrencesWereReplacedInDefaultRecipe();
 		assertFilesAreAvailableInFolder(recipe);
-
 	}
 
 	private void assertFilesAreAvailableInFolder(Recipe recipe)
 			throws IOException {
 		
-		System.out.println(recipe.getCookbookFolder() + "/attributes/default.rb");
 		String fileData = FileUtils.readFileToString(new File(recipe
 				.getCookbookFolder() + "/attributes/default.rb"));
 
