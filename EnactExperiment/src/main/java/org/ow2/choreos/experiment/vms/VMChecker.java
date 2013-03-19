@@ -8,7 +8,7 @@ public class VMChecker {
 	private Logger logger = Logger.getLogger(VMChecker.class);
 
 	private static final String USER = "ubuntu";
-	private static final String KEY = "/home/leonardo/.ssh/leofl.pem";
+	private static final String KEY = "/home/leonardo/.ssh/leoflaws.pem";
 	
 	public void check(String ip) {
 		

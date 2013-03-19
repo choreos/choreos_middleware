@@ -8,10 +8,19 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory.CloudProviderType;
 import org.ow2.choreos.utils.LogConfigurator;
 
+/**
+ * This experiment evaluates the VM creation time.
+ * The creation time is the time to VM be available to use,
+ * which includes the time necessary to get a successful SSH connection.
+ * Outputs are the experiment.log and the files under the vm_results folder
+ * 
+ * @author leonardo
+ *
+ */
 public class Experiment {
 
-	private static final int[] Ns = new int[]{5, 3, 1};
-	private static final int EXECUTIONS_PER_N = 3; // how many times each N is executed
+	private static final int[] Ns = new int[]{50};
+	private static final int EXECUTIONS_PER_N = 1; // how many times each N is executed
 	private static final CloudProviderType CLOUD_PROVIDER_TYPE = CloudProviderType.AWS;
 
 	private Logger logger = Logger.getLogger(Experiment.class);
