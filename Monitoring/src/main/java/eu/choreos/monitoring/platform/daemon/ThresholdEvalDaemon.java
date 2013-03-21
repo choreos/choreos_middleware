@@ -107,7 +107,7 @@ public class ThresholdEvalDaemon {
 			
 			for (AbstractThreshold threshold : surpassedThresholds.get(host)) {
 								
-				event.setEventData(threshold.toEventRuleData());
+				event.setEventData(threshold.toEventRuleData()  + " on node " + host);
 				event.setTimeStamp(threshold.timestampOccur);
 				event.setEventName(threshold.getName());
 				event.setChoreographySource("chor");
