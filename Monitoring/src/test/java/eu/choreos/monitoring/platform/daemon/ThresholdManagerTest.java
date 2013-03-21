@@ -103,7 +103,7 @@ public class ThresholdManagerTest {
 				
 		assertEquals("surpassed thresholds", 1, list1.size());
 
-		List<AbstractThreshold> list = list1.get(extraLargeHost.getHostName());
+		List<AbstractThreshold> list = list1.get(extraLargeHost.getIp());
 		
 		assertEquals("hosts with surpassed thresholds", 1, list.size());
 		
@@ -124,10 +124,10 @@ public class ThresholdManagerTest {
 		
 		List<AbstractThreshold> list;
 
-		list = list1.get(extraLargeHost.getHostName());
+		list = list1.get(extraLargeHost.getIp());
 		assertTrue(list.contains(threshold));
 
-		list = list1.get(mediumHost.getHostName());
+		list = list1.get(mediumHost.getIp());
 		assertTrue(list.contains(threshold));
 
 	}
@@ -157,8 +157,8 @@ public class ThresholdManagerTest {
 		hostList.add(largeHostDown);
 		notifier.updateThresholdsInfo();
 		Map<String, List<AbstractThreshold>> t = notifier.getSurpassedThresholds();
-		assertTrue(t.containsKey(largeHostDown.getHostName()));
-		assertEquals("host_down", t.get(largeHostDown.getHostName()).get(0).getName());
+		assertTrue(t.containsKey(largeHostDown.getIp()));
+		assertEquals("host_down", t.get(largeHostDown.getIp()).get(0).getName());
 	}
 
 }

@@ -138,10 +138,10 @@ public class ThresholdManager {
 			List<AbstractThreshold> thresholdsOfHost = getAllSurpassedThresholds(host);
 			
 			if (!thresholdsOfHost.isEmpty()) {
-				surpassedThresholds.put(host.getHostName(), new ArrayList<AbstractThreshold>());
+				surpassedThresholds.put(host.getIp(), new ArrayList<AbstractThreshold>());
 			
 				for(AbstractThreshold t : thresholdsOfHost)
-					surpassedThresholds.get(host.getHostName()).add(t);
+					surpassedThresholds.get(host.getIp()).add(t);
 			}
 		}
 		
