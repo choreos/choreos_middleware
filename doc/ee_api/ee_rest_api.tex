@@ -74,6 +74,8 @@ In a service composition, some services depends on other services. A service tha
 
 The \ee\ will use \verb!ServiceDependency! data to know which calls it must perform to the  \verb!setInvocationAddress! operation of participant services. Thus, the \ee\ will be able to tell, for example, to \verb!ServiceA! that it must use \verb!ServiceB! as \verb!Role1!, where \verb!ServiceB! is the list of endpoint URIs corresponding to the multiple instances of \verb!ServiceB!. In this way, the CHOReOS middleware provides a \emph{dependency injection}\footnote{Dependency Injection pattern, by Martin Fowler: \url{http://martinfowler.com/articles/injection.html}} mechanism to wire up service dependencies.
 
+\emph{Obs:} to SOAP services, the URI passed to the \texttt{setInvocationAddress} operation does not contain the `\texttt{?wsdl}' suffix.
+
 \subsubsection*{Resource impact specification}
 
 The \verb!ServiceSpec! class has also an attribute to specify non-functional requirements, such as QoS constraints. This attribute is called ``resource impact'', and it can be used by the \verb!NodeSelector!\footnote{See the lesson Choreography Enactment.} to choose the node in which the service should be deployed. \verb!NodeSelector! will try to choose a node that enables the service to fulfil such requirements.
@@ -231,7 +233,9 @@ location = "/chors/{id}"
 \end{tabular} \\
 
 Creates a specification of the choreography on the \ee.
-It does not enact the choreography. \\
+It does not enact the choreography. 
+
+\emph{Obs:} \texttt{application/xml} is the value to the \texttt{Content Type} header when XML representations are written in the request or response body. 
 
 \subsubsection*{Retrieve choreography information}
 
