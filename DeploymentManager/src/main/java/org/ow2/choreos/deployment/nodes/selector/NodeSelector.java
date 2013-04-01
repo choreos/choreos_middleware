@@ -16,6 +16,5 @@ import org.ow2.choreos.deployment.nodes.datamodel.Node;
  *
  */
 public interface NodeSelector {
-
 	public List<Node> selectNodes(Config config);
 }

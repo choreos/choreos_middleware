@@ -25,7 +25,7 @@ public class AlwaysCreateSelector implements NodeSelector {
 		for(int i = 0; i < numberOfInstances; i++) {
 			Node node = new Node();
 			try {
-				node = this.cloudProvider.createNode(node);
+				node = this.cloudProvider.createNode(node, config.getResourceImpact());
 				nodes.add(node);
 			} catch (RunNodesException e) {
 				e.printStackTrace();

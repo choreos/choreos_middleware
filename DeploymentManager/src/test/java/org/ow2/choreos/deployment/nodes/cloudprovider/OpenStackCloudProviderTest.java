@@ -10,6 +10,7 @@ import org.junit.experimental.categories.Category;
 import org.ow2.choreos.deployment.nodes.BaseTest;
 import org.ow2.choreos.deployment.nodes.cloudprovider.OpenStackKeystoneCloudProvider;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.tests.IntegrationTest;
 
 @Category(IntegrationTest.class)
@@ -55,7 +56,7 @@ public class OpenStackCloudProviderTest extends BaseTest {
             // Create new Node
             System.out.println("TEST: Create New Node from OpenStack\n");
             Node nodeNew = new Node();
-            infra.createNode(nodeNew);
+            infra.createNode(nodeNew, new ResourceImpact());
         }
 
         if (bTestNodesList) {

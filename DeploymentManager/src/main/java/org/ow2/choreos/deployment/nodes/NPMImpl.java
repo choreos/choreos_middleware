@@ -13,6 +13,7 @@ import org.ow2.choreos.deployment.nodes.cm.NodeUpgrader;
 import org.ow2.choreos.deployment.nodes.cm.RecipeApplier;
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelector;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelectorFactory;
 
@@ -34,19 +35,19 @@ public class NPMImpl implements NodePoolManager {
     }
 
     @Override
-    public Node createNode(Node node) throws NodeNotCreatedException {
+    public Node createNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException {
 
-    	return this.createNode(node, true);
+    	return this.createNode(node, resourceImpact, true);
     }
     
-    private Node createNode(Node node, boolean retry) throws NodeNotCreatedException {
+    private Node createNode(Node node, ResourceImpact resourceImpact, boolean retry) throws NodeNotCreatedException {
     	
         try {
-            cloudProvider.createNode(node);
+            cloudProvider.createNode(node, resourceImpact);
         } catch (RunNodesException e) {
         	if (retry) {
         		logger.warn("Could not create VM. Going to try again!");
-        		this.createNode(node, false);        		
+        		this.createNode(node, resourceImpact, false);        		
         	} else {
         		throw new NodeNotCreatedException(node.getId(), "Could not create VM");
         	}
@@ -60,7 +61,7 @@ public class NPMImpl implements NodePoolManager {
         } catch (NodeNotAccessibleException e) {
         	if (retry) {
         		logger.warn("Could not connect to the node " + node +  ". We will forget this node and try a new one.");
-        		this.createNode(node, false);
+        		this.createNode(node, resourceImpact, false);
         	} else {
         		throw new NodeNotCreatedException(node.getId(), "Could not connect to the node " + node);
         	}

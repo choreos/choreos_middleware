@@ -4,11 +4,13 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpactDefs.MemoryTypes;
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
 public class ResourceImpact {
 	
-	private String memory;
+	private MemoryTypes memory;
 	
 	private String cpu;
 	
@@ -16,11 +18,10 @@ public class ResourceImpact {
 	
 	private String region;
 	
-	
-	public String getMemory() {
+	public MemoryTypes getMemory() {
 		return memory;
 	}
-	public void setMemory(String memory) {
+	public void setMemory(MemoryTypes memory) {
 		this.memory = memory;
 	}
 	public String getCpu() {

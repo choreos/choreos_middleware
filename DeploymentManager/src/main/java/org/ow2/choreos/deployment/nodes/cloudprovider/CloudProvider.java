@@ -6,6 +6,7 @@ import org.jclouds.compute.RunNodesException;
 import org.ow2.choreos.deployment.nodes.NodeNotDestroyed;
 import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 
 
 /**
@@ -21,7 +22,7 @@ public interface CloudProvider {
 
 	public String getProviderName();
 	
-	public Node createNode(Node node) throws RunNodesException;
+	public Node createNode(Node node, ResourceImpact resourceImpact) throws RunNodesException;
 
 	public Node getNode(String nodeId) throws NodeNotFoundException;
 
@@ -29,6 +30,6 @@ public interface CloudProvider {
 
 	public void destroyNode(String id) throws NodeNotDestroyed, NodeNotFoundException;
 
-	public Node createOrUseExistingNode(Node node) throws RunNodesException;
+	public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact) throws RunNodesException;
 
 }

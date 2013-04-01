@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
+import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpactDefs.MemoryTypes;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.deployment.services.recipe.Recipe;
@@ -33,7 +34,7 @@ public class RecipeBuilderTest {
 		
 		impact.setCpu("low");
 		impact.setIo("low");
-		impact.setMemory("low");
+		impact.setMemory(MemoryTypes.SMALL);
 		impact.setRegion("BR");
 
 		service = new ServiceSpec();

@@ -22,6 +22,7 @@ import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -65,8 +66,10 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
     }
 
     @Override
-    public Node createNode(Node node) throws RunNodesException {
+    public Node createNode(Node node, ResourceImpact resourceImpact) throws RunNodesException {
         System.out.println(">OpenStack: Create new Node.");
+        
+     // TODO: resource impact changes
 
         ComputeService client = getClient("");
         Set<? extends NodeMetadata> createdNodes;
@@ -174,14 +177,14 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
     }
 
     @Override
-    public Node createOrUseExistingNode(Node node) throws RunNodesException {
+    public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact) throws RunNodesException {
     	for (Node n : getNodes()) {
 			if (n.getImage().equals(node.getImage())
 					&& NodeState.RUNNING.ordinal() == n.getState()) {
 				return n;
 			}
 		}
-		return createNode(node);
+		return createNode(node, resourceImpact);
     }
 
     private Template getTemplate(ComputeService client, String imageId) {

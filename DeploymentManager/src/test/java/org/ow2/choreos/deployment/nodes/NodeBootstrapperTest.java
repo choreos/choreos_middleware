@@ -10,6 +10,7 @@ import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.cm.NodeBootstrapper;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -42,7 +43,7 @@ public class NodeBootstrapperTest {
 	public void shouldLeaveNodeBootstraped() throws Exception {
 
 		CloudProvider cp = CloudProviderFactory.getInstance(Configuration.get("CLOUD_PROVIDER"));
-		node = cp.createOrUseExistingNode(new Node());
+		node = cp.createOrUseExistingNode(new Node(), new ResourceImpact());
 		System.out.println(node);
 
 		NodeBootstrapper bootstrapper = new NodeBootstrapper(node);

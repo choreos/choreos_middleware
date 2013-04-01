@@ -15,6 +15,7 @@ import org.ow2.choreos.deployment.nodes.cloudprovider.AWSCloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cm.NodeBootstrapper;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -79,7 +80,7 @@ public class MultipleAWSNodesCreationTest {
 		public void run() {
 
 			try {
-				Node node = npm.createNode(new Node());
+				Node node = npm.createNode(new Node(), new ResourceImpact());
 				created = true;
 				NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
 				bootstrapped = bootstrapper.isNodeAlreadyBootstrapped();

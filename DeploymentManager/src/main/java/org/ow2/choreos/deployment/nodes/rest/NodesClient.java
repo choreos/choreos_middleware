@@ -20,7 +20,9 @@ import org.ow2.choreos.deployment.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.deployment.nodes.datamodel.NodeCreationRequestSpec;
 import org.ow2.choreos.deployment.nodes.datamodel.NodeRestRepresentation;
+import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 
 
 /**
@@ -61,16 +63,16 @@ public class NodesClient implements NodePoolManager {
 	}
 	
 	@Override
-	public Node createNode(Node node) throws NodeNotCreatedException {
+	public Node createNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException {
 
 		WebClient client = setupClient();
 		client.path("nodes");   	
 		client.type(MediaType.APPLICATION_XML);
-		NodeRestRepresentation nodeRequest = new NodeRestRepresentation(node);
+		NodeCreationRequestSpec request = new NodeCreationRequestSpec(node, resourceImpact);
 		NodeRestRepresentation nodeRest = null;
 
         try {
-        	nodeRest = client.post(nodeRequest, NodeRestRepresentation.class);
+        	nodeRest = client.post(request, NodeRestRepresentation.class);
         } catch (WebApplicationException e) {
         	throw new NodeNotCreatedException(node.getId());
         }

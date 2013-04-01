@@ -10,6 +10,8 @@ import org.jclouds.compute.RunNodesException;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
+import org.ow2.choreos.deployment.nodes.selector.NodeSelectorMapper;
 
 
 
@@ -29,22 +31,20 @@ public class FixedCloudProvider implements CloudProvider {
 
 	public FixedCloudProvider() {
 
-		// TODO: resolve enactment of two replicas creates two cloud provider
-		// object
-
 		nodes = new HashMap<String, Node>();
 
 		String[] ips = Configuration.getMultiple("FIXED_VM_IPS");
 		String[] hosts = Configuration.getMultiple("FIXED_VM_HOSTNAMES");
 		String[] users = Configuration.getMultiple("FIXED_VM_USERS");
 		String[] keys = Configuration.getMultiple("FIXED_VM_PRIVATE_SSH_KEYS");
+		String[] types = Configuration.getMultiple("FIXED_VM_TYPES");
 
 		if ((ips.length == hosts.length) && (ips.length == users.length)
-				&& (ips.length == keys.length)) {
+				&& (ips.length == keys.length) && (types.length == ips.length)) {
 			int node_id = 0;
 			for (int i = 0; i < ips.length; i++, node_id++) {
 				Node node = new Node();
-				String id = setNode(ips, hosts, users, keys, i, node, node_id);
+				String id = setNode(ips[i], hosts[i], users[i], keys[i], types[i], node, node_id);
 				addNode(node, id);
 			}
 		}
@@ -54,29 +54,29 @@ public class FixedCloudProvider implements CloudProvider {
 		nodes.put(id, node);
 	}
 
-	private String setNode(String[] ips, String[] hosts, String[] users,
-			String[] keys, int i, Node node, int id) {
-		node.setIp(ips[i]);
-		node.setHostname(hosts[i]);
-		node.setChefName(hosts[i]);
-		node.setUser(users[i]);
-		node.setPrivateKey(keys[i]);
-
-		// String id = UUID.randomUUID().toString();
+	private String setNode(String ip, String host, String user, String key, String type, Node node, int id) {
+		node.setIp(ip);
+		node.setHostname(host);
+		node.setChefName(host);
+		node.setUser(user);
+		node.setPrivateKey(key);
 		node.setId(Integer.toString(id));
-
 		node.setCpus(1);
-		node.setRam(512);
+		node.setRam(memFromType(type));
 		node.setSo("Ubuntu server 10.04");
 		node.setStorage(10000);
 		node.setZone("BR");
 		return node.getId();
 	}
 
-	public Node createNode(Node node) throws RunNodesException {
-
-		throw new UnsupportedOperationException(
-				"FixedCloudProvider cannot create new nodes");
+	private int memFromType(String type) {
+		if(type.compareTo("SMALL") == 0) {
+			return 256;
+		} else if(type.compareTo("MEDIUM") == 0) {
+			return 512;
+		} else if(type.compareTo("LARGE") == 0) {
+			return 768;
+		} else return 256;
 	}
 
 	public Node getNode(String nodeId) throws NodeNotFoundException {
@@ -91,17 +91,12 @@ public class FixedCloudProvider implements CloudProvider {
 		return theList;
 	}
 
-	public void destroyNode(String id) {
-
-		throw new UnsupportedOperationException(
-				"FixedCloudProvider does not destroy nodes");
-	}
-
-	public Node createOrUseExistingNode(Node node) throws RunNodesException {
-
+	@Override
+	public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact)
+			throws RunNodesException {
 		if (node != null) {
 			return (nodes.containsKey(node.getId())) ? nodes.get(node.getId())
-					: createNode(node);
+					: createNode(node, resourceImpact);
 		} else {
 			if (!nodes.keySet().isEmpty()) {
 				Iterator<String> it = nodes.keySet().iterator();
@@ -119,4 +114,23 @@ public class FixedCloudProvider implements CloudProvider {
 		return "Fixed Provider";
 	}
 
+
+
+
+
+	/*============================= UNSUPPORTED OPERATIONS ============================*/
+
+	public void destroyNode(String id) {
+
+		throw new UnsupportedOperationException(
+				"FixedCloudProvider does not destroy nodes");
+	}
+
+	@Override
+	public Node createNode(Node node, ResourceImpact resourceImpact)
+			throws RunNodesException {
+
+		throw new UnsupportedOperationException(
+				"FixedCloudProvider cannot create new nodes");
+	}
 }

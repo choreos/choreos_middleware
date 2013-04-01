@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeException;
@@ -112,7 +113,7 @@ public class ServicesManagerImpl implements ServicesManager {
 		
 		Recipe serviceRecipe = service.getRecipe();
 		String configName = serviceRecipe.getCookbookName() + "::" + serviceRecipe.getName();
-		Config config = new Config(configName, numberOfNewInstances);
+		Config config = new Config(configName, null, numberOfNewInstances);
 		
 		List<Node> nodes = new ArrayList<Node>();
 		try {
@@ -174,19 +175,30 @@ public class ServicesManagerImpl implements ServicesManager {
 		return current;
 	}
 
-	private void applyUpdate(Service current, ServiceSpec requested, List<UpdateAction> actions) throws UnhandledModificationException {
+	private void applyUpdate(Service currentService, ServiceSpec requestedSpec, List<UpdateAction> actions) throws UnhandledModificationException {
 		for ( UpdateAction a : actions ) {
 			switch (a) {
 			case INCREASE_NUMBER_OF_REPLICAS:
-				System.out.println("*********** oi entrei aqui **************");
-				int amount = requested.getNumberOfInstances() - current.getSpec().getNumberOfInstances();
-				addServiceInstances(current, amount);
+				int amount = requestedSpec.getNumberOfInstances() - currentService.getSpec().getNumberOfInstances();
+				addServiceInstances(currentService, amount);
+				break;
+				
+			case DECREASE_NUMBER_OF_REPLICAS:
+				throw new NotImplementedException();
+				
+			case MIGRATE:
+				migrateServiceInstances(currentService, requestedSpec);
 				break;
 
 			default:
 				throw new UnhandledModificationException();
 			}
 		}
+	}
+
+	private void migrateServiceInstances(Service currentService, ServiceSpec requestedSpec) {
+		currentService.setSpec(requestedSpec);
+		deployNoLegacyService(currentService);
 	}
 
 	private void addServiceInstances(Service current, int amount) {
@@ -203,6 +215,14 @@ public class ServicesManagerImpl implements ServicesManager {
 		
 		if(currentSpec.getNumberOfInstances() < serviceSpec.getNumberOfInstances()) {
 			actions.add(UpdateAction.INCREASE_NUMBER_OF_REPLICAS);
+			foundKnownModification = true;
+		} else if(currentSpec.getNumberOfInstances() > serviceSpec.getNumberOfInstances()) {
+			actions.add(UpdateAction.DECREASE_NUMBER_OF_REPLICAS);
+			foundKnownModification = true;
+		}
+		
+		if(! (currentSpec.getResourceImpact().getMemory().ordinal() == serviceSpec.getResourceImpact().getMemory().ordinal() ) ) {
+			actions.add(UpdateAction.MIGRATE);
 			foundKnownModification = true;
 		}
 		

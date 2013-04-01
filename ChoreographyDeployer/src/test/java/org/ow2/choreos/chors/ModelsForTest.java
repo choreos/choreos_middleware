@@ -9,6 +9,8 @@ import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.xml.ChorXmlWriter;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
+import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpactDefs.MemoryTypes;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceDependency;
@@ -221,5 +223,39 @@ public class ModelsForTest {
 		System.out.println(models.getChorSpecXML());
 		System.out.println("\nChoreography XML representation:");
 		System.out.println(models.getChoreographyXML());
+	}
+
+	public ChorSpec getChorSpecWithResourceImpact(MemoryTypes type) {
+		ChorSpec spec = new ChorSpec(); 
+
+		ServiceSpec airlineServiceSpec = new ServiceSpec();
+		
+		airlineServiceSpec.setName(AIRLINE);
+		airlineServiceSpec.setPackageUri(AIRLINE_JAR);
+		airlineServiceSpec.setEndpointName(AIRLINE);
+		airlineServiceSpec.setPort(AIRLINE_PORT);
+		airlineServiceSpec.setPackageType(PackageType.COMMAND_LINE);
+		
+		ResourceImpact r1 = new ResourceImpact();
+		r1.setMemory(type);
+		airlineServiceSpec.setResourceImpact(r1);
+		
+		airlineServiceSpec.getRoles().add(AIRLINE);
+		spec.addServiceSpec(airlineServiceSpec);
+
+		ServiceSpec travelServiceSpec = new ServiceSpec();
+		
+		travelServiceSpec.setName(TRAVEL_AGENCY);
+		travelServiceSpec.setPackageUri(TRAVEL_AGENCY_JAR);
+		travelServiceSpec.setEndpointName(TRAVEL_AGENCY);
+		travelServiceSpec.setPort(TRAVEL_AGENCY_PORT);
+		travelServiceSpec.setPackageType(PackageType.COMMAND_LINE);
+		
+		travelServiceSpec.getRoles().add(TRAVEL_AGENCY);
+		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
+		travelServiceSpec.getDependencies().add(dep);
+		spec.addServiceSpec(travelServiceSpec);
+		
+		return spec;
 	}
 }

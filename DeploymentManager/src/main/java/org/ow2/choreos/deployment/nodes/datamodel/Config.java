@@ -19,9 +19,10 @@ public class Config {
     	this.name = name;
     }
 
-    public Config(String name, int numberOfInstances) {
+    public Config(String name, ResourceImpact resourceImpact, int numberOfInstances) {
     	this.name = name;
     	this.numberOfInstances = numberOfInstances;
+    	this.resourceImpact = resourceImpact;
     }
     
     @XmlElement(required = true)

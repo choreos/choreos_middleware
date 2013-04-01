@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 
 public interface NodePoolManager {
 
@@ -14,7 +15,7 @@ public interface NodePoolManager {
 	 * @return the representation of the created node
 	 * @throws NodeNotCreatedException if node was not created
 	 */
-	public Node createNode(Node node) throws NodeNotCreatedException;
+	public Node createNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException;
 	
 	/**
 	 * Retrieve information about all the nodes managed by this Node Pool Manager

@@ -38,11 +38,11 @@ public class ConfigResourceTest extends BaseTest {
     	String RECIPE_NAME = "getting-started";
     	String CREATED_FILE = "chef-getting-started.txt";
 		CloudProvider cp = new FixedCloudProvider();
-		Node node = cp.createOrUseExistingNode(null);
+		Node node = cp.createOrUseExistingNode(null, null);
     	
     	NodePoolManager npm = new NPMImpl(cp);
     	int num_replicas = 1;
-    	Config config = new Config(RECIPE_NAME, num_replicas);
+    	Config config = new Config(RECIPE_NAME, null, num_replicas);
     	
     	List<Node> returnedNodes = npm.applyConfig(config);
     	assertTrue(returnedNodes != null);

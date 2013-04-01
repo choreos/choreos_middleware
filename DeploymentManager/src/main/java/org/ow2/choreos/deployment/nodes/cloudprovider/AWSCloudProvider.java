@@ -23,11 +23,13 @@ import org.jclouds.ec2.domain.InstanceType;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.inject.Module;
 
+@SuppressWarnings("deprecation")
 public class AWSCloudProvider implements CloudProvider {
 	
 	private Logger logger = Logger.getLogger(AWSCloudProvider.class);
@@ -58,7 +60,7 @@ public class AWSCloudProvider implements CloudProvider {
 		return context.getComputeService();
 	}
 
-	public Node createNode(Node node) throws RunNodesException {
+	public Node createNode(Node node, ResourceImpact resourceImpact) throws RunNodesException {
 		
 		long t0 = System.currentTimeMillis(); 
 		logger.debug("Creating node...");
@@ -71,7 +73,7 @@ public class AWSCloudProvider implements CloudProvider {
 
 		ComputeService client = getClient(image); 
 		Set<? extends NodeMetadata> createdNodes = client.createNodesInGroup(
-				"default", 1, getTemplate(client, imageId));
+				"default", 1, getTemplate(client, imageId, resourceImpact));
 		NodeMetadata cloudNode = Iterables.get(createdNodes, 0);
 
 		setNodeProperties(node, cloudNode);
@@ -171,10 +173,13 @@ public class AWSCloudProvider implements CloudProvider {
 		}
 	}
 
-	private Template getTemplate(ComputeService client, String imageId) {
+	private Template getTemplate(ComputeService client, String imageId, ResourceImpact resourceImpact) {
+		
+		String AWSInstanceType = getInstanceTypeFromResourceImpact(resourceImpact);
+		
 		TemplateBuilder builder = client.templateBuilder().imageId(imageId);
 		if (client instanceof AWSEC2ComputeService) {
-			builder.hardwareId(InstanceType.M1_SMALL);
+			builder.hardwareId(AWSInstanceType);
 			Template template = builder.build();
 			AWSEC2TemplateOptions options = template.getOptions().as(
 					AWSEC2TemplateOptions.class);
@@ -186,13 +191,26 @@ public class AWSCloudProvider implements CloudProvider {
 		return builder.build();
 	}
 
-	public Node createOrUseExistingNode(Node node) throws RunNodesException {
+	private String getInstanceTypeFromResourceImpact(
+			ResourceImpact resourceImpact) {
+		switch (resourceImpact.getMemory()) {
+		case SMALL :
+			return InstanceType.M1_SMALL;
+		case MEDIUM :
+			return InstanceType.M1_MEDIUM;
+		case LARGE :
+			return InstanceType.M1_LARGE;
+		}
+		return null;
+	}
+
+	public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact) throws RunNodesException {
 		
 		List<Node> nodes = this.getNodes();
 		if (nodes.size() > 0)
 			return nodes.get(0);
 		else
-			return createNode(node);
+			return createNode(node, resourceImpact);
 	}
 
 }

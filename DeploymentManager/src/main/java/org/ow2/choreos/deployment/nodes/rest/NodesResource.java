@@ -28,7 +28,9 @@ import org.ow2.choreos.deployment.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.deployment.nodes.datamodel.NodeCreationRequestSpec;
 import org.ow2.choreos.deployment.nodes.datamodel.NodeRestRepresentation;
+import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 
 
 
@@ -46,7 +48,7 @@ public class NodesResource {
 	 * 
 	 * Body: node representation used as specification
 	 * 
-	 * @param node the node representation provided in the Body
+	 * @param nodeRepr the node representation provided in the Body
 	 * @param uriInfo provided by the REST framework
 	 * @return HTTP code 201 (CREATED)
 	 *          Body: representation of the just created node
@@ -56,24 +58,25 @@ public class NodesResource {
 	 */
     @POST
     @Consumes(MediaType.APPLICATION_XML)
-    public Response createNode(NodeRestRepresentation node, @Context UriInfo uriInfo) throws URISyntaxException {
+    public Response createNode(NodeCreationRequestSpec requestSpec, @Context UriInfo uriInfo) throws URISyntaxException {
 
     	logger.debug("Request to create node");
     	
-    	Node newNode = new Node(node);
+    	Node node = requestSpec.getNode();
+    	ResourceImpact resourceImpact = requestSpec.getResourceImpact();
     	try {
-			npm.createNode(newNode);
+			npm.createNode(node, resourceImpact);
 		} catch (NodeNotCreatedException e) {
 			logger.warn("Node not created", e);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
     	
-    	logger.info(newNode + " created");
+    	logger.info(node + " created");
 		
     	UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-		uriBuilder = uriBuilder.path(NodesResource.class).path(newNode.getId());
+		uriBuilder = uriBuilder.path(NodesResource.class).path(node.getId());
 		URI uri = uriBuilder.build();
-		NodeRestRepresentation nodeRest = new NodeRestRepresentation(newNode);
+		NodeRestRepresentation nodeRest = new NodeRestRepresentation(node);
     	return Response.created(uri).entity(nodeRest).build();
     }
 

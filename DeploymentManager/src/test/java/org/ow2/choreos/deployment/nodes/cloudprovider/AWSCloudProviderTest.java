@@ -13,6 +13,7 @@ import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
 import org.ow2.choreos.deployment.nodes.cloudprovider.AWSCloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -24,6 +25,7 @@ public class AWSCloudProviderTest {
 	
 	private final CloudProvider infra = new AWSCloudProvider();
     private Node node = new Node();
+    private ResourceImpact resourceImpact = new ResourceImpact();
 
     @Before
     public void SetUp() {
@@ -35,7 +37,7 @@ public class AWSCloudProviderTest {
 	@Test
     public void shouldCreateAndDeleteNode() throws RunNodesException, JSchException, NodeNotDestroyed, NodeNotFoundException {
         
-        Node created = infra.createNode(node);
+        Node created = infra.createNode(node, resourceImpact);
         System.out.println("created " + created);
         assertTrue(created != null);
         

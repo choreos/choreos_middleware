@@ -20,7 +20,7 @@ public class NodesResourceTest extends BaseTest {
 	public void getNode() throws Exception {
 
 		CloudProvider cp = new FixedCloudProvider();
-		Node node = cp.createOrUseExistingNode(null);
+		Node node = cp.createOrUseExistingNode(null, null);
 		
 		NodePoolManager npm = new NodesClient(nodePoolManagerHost);
 		Node returnedNode = npm.getNode(node.getId());

@@ -34,7 +34,7 @@ public class FixedCloudProviderTest {
 		Configuration.set("FIXED_VM_PRIVATE_SSH_KEYS", "key");
 		Configuration.set("FIXED_VM_USERS", "choreos");
 		CloudProvider cp = new FixedCloudProvider();
-		Node node = cp.createOrUseExistingNode(null);
+		Node node = cp.createOrUseExistingNode(null, null);
 
 		assertTrue(node.getHostname() != null && !node.getHostname().isEmpty());
 
