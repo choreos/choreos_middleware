@@ -193,15 +193,22 @@ public class AWSCloudProvider implements CloudProvider {
 
 	private String getInstanceTypeFromResourceImpact(
 			ResourceImpact resourceImpact) {
-		switch (resourceImpact.getMemory()) {
-		case SMALL :
-			return InstanceType.M1_SMALL;
-		case MEDIUM :
-			return InstanceType.M1_MEDIUM;
-		case LARGE :
-			return InstanceType.M1_LARGE;
+		
+		String defaultImage = InstanceType.M1_SMALL;
+		
+		if (resourceImpact != null && resourceImpact.getMemory() != null) {
+			switch (resourceImpact.getMemory()) {
+			case SMALL :
+				return InstanceType.M1_SMALL;
+			case MEDIUM :
+				return InstanceType.M1_MEDIUM;
+			case LARGE :
+				return InstanceType.M1_LARGE;
+			default:
+				return defaultImage;
+			}
 		}
-		return null;
+		return defaultImage;
 	}
 
 	public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact) throws RunNodesException {
