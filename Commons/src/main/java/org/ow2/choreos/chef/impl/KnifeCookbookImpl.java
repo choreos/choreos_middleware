@@ -3,6 +3,7 @@ package org.ow2.choreos.chef.impl;
 import org.ow2.choreos.chef.KnifeCookbook;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.utils.CommandLine;
+import org.ow2.choreos.utils.CommandLineException;
 
 public class KnifeCookbookImpl implements KnifeCookbook {
 
@@ -36,7 +37,11 @@ public class KnifeCookbookImpl implements KnifeCookbook {
 			String cookbookParentFolder) throws KnifeException {
 
 		String command = scripts.getKnifeCookbookUpload(cookbookName, cookbookParentFolder);
-		return CommandLine.run(command, verbose);
+		try {
+			return CommandLine.run(command, verbose);
+		} catch (CommandLineException e) {
+			throw new KnifeException("Exit status > 0", command);
+		}
 	}
 	
 	@Override
@@ -48,14 +53,22 @@ public class KnifeCookbookImpl implements KnifeCookbook {
 	public String delete(String cookbookName) throws KnifeException {
 
 		String command = scripts.getKnifeCookbookDelete(cookbookName);
-		return CommandLine.run(command, verbose);
+		try {
+			return CommandLine.run(command, verbose);
+		} catch (CommandLineException e) {
+			throw new KnifeException("Exit status > 0", command);
+		}
 	}
 
 	@Override
 	public String list() throws KnifeException {
 
 		String command = scripts.getKnifeCookbooksList();
-		return CommandLine.run(command, verbose);
+		try {
+			return CommandLine.run(command, verbose);
+		} catch (CommandLineException e) {
+			throw new KnifeException("Exit status > 0", command);
+		}
 	}
 
 }

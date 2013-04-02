@@ -70,7 +70,7 @@ public class ServicesManagerImpl implements ServicesManager {
 		
 	}
 
-	private Service deployNoLegacyService(Service service) {
+	private Service deployNoLegacyService(Service service) throws ServiceNotDeployedException {
 		
 		prepareDeployment(service);
 		logger.debug("prepare deployment complete");
@@ -80,14 +80,15 @@ public class ServicesManagerImpl implements ServicesManager {
 		return service;
 	}
 
-	private void prepareDeployment(Service service) {
+	private void prepareDeployment(Service service) throws ServiceNotDeployedException {
+		
 		Recipe serviceRecipe = this.createRecipe(service);
 
 		try {
 			this.uploadRecipe(serviceRecipe);
 		} catch (KnifeException e) {
 			logger.error("Could not upload recipe", e);
-			return;
+			throw new ServiceNotDeployedException(service.getName());
 		}
 	}
 	
@@ -196,9 +197,13 @@ public class ServicesManagerImpl implements ServicesManager {
 		}
 	}
 
-	private void migrateServiceInstances(Service currentService, ServiceSpec requestedSpec) {
+	private void migrateServiceInstances(Service currentService, ServiceSpec requestedSpec) throws UnhandledModificationException {
 		currentService.setSpec(requestedSpec);
-		deployNoLegacyService(currentService);
+		try {
+			deployNoLegacyService(currentService);
+		} catch (ServiceNotDeployedException e) {
+			throw new UnhandledModificationException();
+		}
 	}
 
 	private void addServiceInstances(Service current, int amount) {

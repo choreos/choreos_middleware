@@ -9,6 +9,7 @@ import org.ow2.choreos.chef.KnifeCookbook;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.chef.KnifeNode;
 import org.ow2.choreos.utils.CommandLine;
+import org.ow2.choreos.utils.CommandLineException;
 
 public class KnifeImpl implements Knife {
 
@@ -73,7 +74,11 @@ public class KnifeImpl implements Knife {
 			throws KnifeException {
 
 		String command = scripts.getKnifeBootstrap(pKeyFile, ip, user, defaultRecipes);
-		return CommandLine.run(command, chefRepo, verbose);
+		try {
+			return CommandLine.run(command, chefRepo, verbose);
+		} catch (CommandLineException e) {
+			throw new KnifeException("Exit status > 0", command);
+		}
 	}
 
 

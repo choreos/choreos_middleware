@@ -3,6 +3,7 @@ package org.ow2.choreos.chef.impl;
 import org.ow2.choreos.chef.KnifeClient;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.utils.CommandLine;
+import org.ow2.choreos.utils.CommandLineException;
 
 public class KnifeClientImpl implements KnifeClient {
 
@@ -33,7 +34,11 @@ public class KnifeClientImpl implements KnifeClient {
 	public String delete(String clientName) throws KnifeException {
 
 		String command = scripts.getKnifeClientDelete(clientName);
-		return CommandLine.run(command, verbose);
+		try {
+			return CommandLine.run(command, verbose);
+		} catch (CommandLineException e) {
+			throw new KnifeException("Exit status > 0", command);
+		}
 	}
 
 }

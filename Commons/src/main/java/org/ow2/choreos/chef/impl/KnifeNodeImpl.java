@@ -8,6 +8,7 @@ import org.ow2.choreos.chef.ChefNode;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.chef.KnifeNode;
 import org.ow2.choreos.utils.CommandLine;
+import org.ow2.choreos.utils.CommandLineException;
 
 public class KnifeNodeImpl implements KnifeNode {
 
@@ -40,7 +41,11 @@ public class KnifeNodeImpl implements KnifeNode {
 		
 		String command = scripts.getKnifeRunListAdd(nodeName, cookbook, recipe);
 		synchronized(KnifeNodeImpl.class) { 
-			return CommandLine.run(command, verbose);
+			try {
+				return CommandLine.run(command, verbose);
+			} catch (CommandLineException e) {
+				throw new KnifeException("Exit status > 0", command);
+			}
 		}
 	}
 
@@ -54,7 +59,12 @@ public class KnifeNodeImpl implements KnifeNode {
 	public List<String> list() throws KnifeException {
 
 		String command = scripts.getKnifeNodeList();
-		String result = CommandLine.run(command, verbose);
+		String result;
+		try {
+			result = CommandLine.run(command, verbose);
+		} catch (CommandLineException e) {
+			throw new KnifeException("Exit status > 0", command);
+		}
 		
 		List<String> nodes = new ArrayList<String>();
 		for (String node: result.split("\n"))
@@ -67,7 +77,12 @@ public class KnifeNodeImpl implements KnifeNode {
 	public ChefNode show(String nodeName) throws KnifeException {
 
 		String command = scripts.getKnifeNodeShow(nodeName);
-		String output = CommandLine.run(command, verbose);
+		String output;
+		try {
+			output = CommandLine.run(command, verbose);
+		} catch (CommandLineException e1) {
+			throw new KnifeException("Exit status > 0", command);
+		}
 		ShowNodeParser parser = new ShowNodeParser();
 		ChefNode node = null;
 		try {
@@ -85,7 +100,11 @@ public class KnifeNodeImpl implements KnifeNode {
 	public String delete(String nodeName) throws KnifeException {
 
 		String command = scripts.getKnifeNodeDelete(nodeName);
-		return CommandLine.run(command, verbose);
+		try {
+			return CommandLine.run(command, verbose);
+		} catch (CommandLineException e) {
+			throw new KnifeException("Exit status > 0", command);
+		}
 	}
 
 	@Override
@@ -99,7 +118,11 @@ public class KnifeNodeImpl implements KnifeNode {
 	public String create(String nodeName) throws KnifeException {
 
 		String command = scripts.getKnifeNodeCreate(nodeName);
-		return CommandLine.run(command, verbose);
+		try {
+			return CommandLine.run(command, verbose);
+		} catch (CommandLineException e) {
+			throw new KnifeException("Exit status > 0", command);
+		}
 	}
 
 }
