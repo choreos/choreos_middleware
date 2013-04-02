@@ -68,7 +68,7 @@ public class ProxifyServiceTest {
 		Node node = service.getNode();
 		npm.upgradeNode(node.getId());
 		
-		BusHandler busHandler = new SimpleBusHandler(npm);
+		BusHandler busHandler = new SingleBusHandler(npm);
 		EasyESBNode esbNode = busHandler.retrieveBusNode();
 
 		ServiceInstanceProxifier proxifier = new ServiceInstanceProxifier();

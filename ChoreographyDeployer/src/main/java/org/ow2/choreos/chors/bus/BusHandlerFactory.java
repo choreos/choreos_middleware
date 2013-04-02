@@ -26,7 +26,7 @@ public class BusHandlerFactory {
 			if (busHandler == null) {
 				String host = Configuration.get(Option.DEPLOYMENT_MANAGER_URI);
 				NodePoolManager npm = new NodesClient(host);
-				busHandler = new SimpleBusHandler(npm);
+				busHandler = new SingleBusHandler(npm);
 			}
 		} 
 		

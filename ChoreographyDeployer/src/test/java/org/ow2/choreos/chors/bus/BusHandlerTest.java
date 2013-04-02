@@ -12,7 +12,7 @@ import org.ow2.choreos.chors.Configuration;
 import org.ow2.choreos.chors.Configuration.Option;
 import org.ow2.choreos.chors.bus.BusHandler;
 import org.ow2.choreos.chors.bus.NoBusAvailableException;
-import org.ow2.choreos.chors.bus.SimpleBusHandler;
+import org.ow2.choreos.chors.bus.SingleBusHandler;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.rest.NodesClient;
 import org.ow2.choreos.tests.IntegrationTest;
@@ -37,7 +37,7 @@ public class BusHandlerTest {
 
 		String host = Configuration.get(Option.DEPLOYMENT_MANAGER_URI);
 		NodePoolManager npm = new NodesClient(host);
-		BusHandler busHandler = new SimpleBusHandler(npm);
+		BusHandler busHandler = new SingleBusHandler(npm);
 		
 		String endpoint = busHandler.retrieveBusNode().getAdminEndpoint();
 		String url = endpoint + "?wsdl";
