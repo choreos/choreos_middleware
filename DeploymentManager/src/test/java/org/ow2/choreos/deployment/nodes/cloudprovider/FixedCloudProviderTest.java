@@ -33,6 +33,8 @@ public class FixedCloudProviderTest {
 		Configuration.set("FIXED_VM_HOSTNAMES", "choreos");
 		Configuration.set("FIXED_VM_PRIVATE_SSH_KEYS", "key");
 		Configuration.set("FIXED_VM_USERS", "choreos");
+		Configuration.set("FIXED_VM_TYPES", "SMALL");
+		Configuration.set("MAPPER_POLICY", "ANY_FIT");
 		CloudProvider cp = new FixedCloudProvider();
 		Node node = cp.createOrUseExistingNode(null, null);
 
@@ -50,6 +52,8 @@ public class FixedCloudProviderTest {
 		Configuration.set("FIXED_VM_HOSTNAMES", "choreos, choreos");
 		Configuration.set("FIXED_VM_PRIVATE_SSH_KEYS", "key, samekey");
 		Configuration.set("FIXED_VM_USERS", "choreos, choreos");
+		Configuration.set("FIXED_VM_TYPES", "SMALL, SMALL");
+		Configuration.set("MAPPER_POLICY", "ANY_FIT");
 
 		CloudProvider cp = new FixedCloudProvider();
 		List<Node> nodes = cp.getNodes();
