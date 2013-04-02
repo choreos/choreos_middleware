@@ -5,12 +5,10 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.Configuration.Option;
-import org.ow2.choreos.chors.bus.BusHandler;
-import org.ow2.choreos.chors.bus.BusHandlerFactory;
 import org.ow2.choreos.chors.bus.ESBNodesSelector;
+import org.ow2.choreos.chors.bus.ESBNodesSelectorFactory;
 import org.ow2.choreos.chors.bus.EasyESBNode;
 import org.ow2.choreos.chors.bus.ServiceInstancesProxifier;
-import org.ow2.choreos.chors.bus.SingleESBNodeSelector;
 import org.ow2.choreos.chors.context.ContextCaster;
 import org.ow2.choreos.chors.context.ContextSender;
 import org.ow2.choreos.chors.context.ContextSenderFactory;
@@ -75,12 +73,16 @@ public class ChorDeployerImpl implements ChoreographyDeployer {
 
 	private void proxifyServices(Choreography choreography) {
 
-		BusHandler busHandler = BusHandlerFactory.getInstance();
-		ESBNodesSelector selector = new SingleESBNodeSelector(busHandler);
-		Map<ServiceInstance, EasyESBNode> instancesNodesMap = selector.selectESBNodes(choreography);
-		ServiceInstancesProxifier proxifier = new ServiceInstancesProxifier();
-		proxifier.proxify(instancesNodesMap);
-		// TODO:  should PUT /services/ (a registry would resolve...)
+		try {
+			String esbSelectorType = Configuration.get(Option.BUS_POLICY);
+			ESBNodesSelector selector = ESBNodesSelectorFactory.getInstance(esbSelectorType);
+			Map<ServiceInstance, EasyESBNode> instancesNodesMap = selector.selectESBNodes(choreography);
+			ServiceInstancesProxifier proxifier = new ServiceInstancesProxifier();
+			proxifier.proxify(instancesNodesMap);
+			// TODO:  should PUT /services/ (a registry would resolve...)
+		} catch(IllegalArgumentException e) {
+			logger.error("Not going to proxify services because invalid ESBNodesSelector type.");
+		}
 	}
 
 	@Override

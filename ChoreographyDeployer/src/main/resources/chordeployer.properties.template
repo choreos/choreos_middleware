@@ -1,3 +1,4 @@
 CHOR_DEPLOYER_PORT=9102
 DEPLOYMENT_MANAGER_URI=http://localhost:9100/deploymentmanager
 BUS=False # Binds and exposes services using EasyESB. Values: True or False
+BUS_POLICY=SINGLE_NODE # Values: SINGLE_NODE or ALWAYS_CREATE 

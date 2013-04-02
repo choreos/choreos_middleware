@@ -29,7 +29,8 @@ import eu.choreos.vv.clientgenerator.WSClient;
  * with a service depending on the other (like SimpleChorEnactment),
  * but using the bus to integrate the services.
  * 
- * Before the test, start the DeploymentManager server
+ * Before the test, start the DeploymentManager server.
+ * You must also configure the BUS_POLICY property.
  *
  * @author leonardo, tfmend, nelson
  *

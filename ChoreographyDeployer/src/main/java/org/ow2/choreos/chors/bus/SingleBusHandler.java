@@ -12,13 +12,24 @@ import org.ow2.choreos.deployment.nodes.NodePoolManager;
  */
 class SingleBusHandler implements BusHandler {
 
+	private static SingleBusHandler singleton;
+	
 	private int SYNC_WAIT_STEP = 30; // seconds 
 	
 	private volatile EasyESBNode esbNode;
 	private NodePoolManager npm;
 	private boolean creating = false;
 	
-	public SingleBusHandler(NodePoolManager npm) {
+	public static synchronized SingleBusHandler getInstance(NodePoolManager npm) {
+		
+		if (singleton == null) {
+			singleton = new SingleBusHandler(npm);
+		} 
+		return singleton;
+	}
+
+	// to test purposes
+	SingleBusHandler(NodePoolManager npm) {
 		this.npm = npm;
 	}
 	
