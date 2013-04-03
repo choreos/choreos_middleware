@@ -87,7 +87,7 @@ public class Deployer {
 
 	private List<Service> deployNewServices(List<ServiceSpec> list) {
 
-		final int TIMEOUT = 1; // communication between chorDeployer and DeploymentManager should be fast
+		final int TIMEOUT = 5; // it may encompasses bootstrap time
 		final int N = list.size();
 
 		ExecutorService executor = Executors.newFixedThreadPool(N);

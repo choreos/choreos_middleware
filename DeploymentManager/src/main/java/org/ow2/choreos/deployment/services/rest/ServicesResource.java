@@ -6,7 +6,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -23,13 +22,13 @@ import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
-import org.ow2.choreos.deployment.services.ServicesManager;
-import org.ow2.choreos.deployment.services.ServicesManagerImpl;
 import org.ow2.choreos.deployment.services.ServiceInstanceNotFoundException;
 import org.ow2.choreos.deployment.services.ServiceNotDeletedException;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
 import org.ow2.choreos.deployment.services.ServiceNotFoundException;
 import org.ow2.choreos.deployment.services.ServiceNotModifiedException;
+import org.ow2.choreos.deployment.services.ServicesManager;
+import org.ow2.choreos.deployment.services.ServicesManagerImpl;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
@@ -80,7 +79,7 @@ public class ServicesResource {
 		}
 		
 		//TODO: AVISA QUE NÃO TEM NÓ MEU CARO!!!
-		logger.info(service.getName() + " deployed on " + service.getUris());
+		logger.info(service.getName() + " configured to be deployed on " + service.getUris());
 		
 		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
 		uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getName());

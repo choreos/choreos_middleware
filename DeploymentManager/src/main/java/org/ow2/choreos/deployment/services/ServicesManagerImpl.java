@@ -120,17 +120,17 @@ public class ServicesManagerImpl implements ServicesManager {
 		try {
 			nodes = npm.applyConfig(config);
 		} catch (ConfigNotAppliedException e) {
-			logger.error(e.getMessage());
+			logger.error("Service " + service.getName() + " not deployed: " + e.getMessage());
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("Service " + service.getName() + " not deployed: " + e.getMessage());
 		}
 		
 		for(Node node:nodes) {
 			if (!((node.getHostname() == null || node.getHostname().isEmpty()) 
 					&& (node.getIp() == null || node.getIp().isEmpty()))) {
 				logger.debug("nodeLocation= " + node.getHostname() + "; node IP=" + node.getIp());
-				@SuppressWarnings("unused") // service will have pointers to their instances
-				ServiceInstance serviceInstance = new ServiceInstance(node, service);
+				// service will have pointers to their instances
+				new ServiceInstance(node, service);
 			} else {
 				logger.debug("request to create a node with no IP or hostname!");
 			}
