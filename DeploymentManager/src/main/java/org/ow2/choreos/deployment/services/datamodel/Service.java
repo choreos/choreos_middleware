@@ -26,7 +26,7 @@ public class Service {
 	/**
 	 * The list of all instances of the service
 	 */
-	private List<ServiceInstance> serviceInstances;
+	private List<ServiceInstance> serviceInstances = new ArrayList<ServiceInstance>();
 
 	@XmlTransient
 	private Recipe recipe;
@@ -125,6 +125,7 @@ public class Service {
 
 	public List<String> getUris() {
 		List<String> result = new ArrayList<String>();
+		
 		for(ServiceInstance inst: serviceInstances)
 			result.add(inst.getNativeUri());
 		return result;

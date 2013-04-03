@@ -74,9 +74,9 @@ public class NodeBootstrapper {
 		try {
 			ssh.runCommand("echo \"" + result + "\" >> " + BOOTSTRAP_LOG_FILE_LOCATION);
 		} catch (JSchException e) {
-			logger.error("Could not create the bootstrap log", e);
+			logger.error("Could not create the bootstrap log");
 		} catch (SshCommandFailed e) {
-			logger.error("Could not create the bootstrap log", e);
+			logger.error("Could not create the bootstrap log");
 		}
 	}
 
