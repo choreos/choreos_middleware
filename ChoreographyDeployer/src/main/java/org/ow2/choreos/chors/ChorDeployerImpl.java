@@ -73,16 +73,19 @@ public class ChorDeployerImpl implements ChoreographyDeployer {
 
 	private void proxifyServices(Choreography choreography) {
 
+		ESBNodesSelector selector = null;
 		try {
 			String esbSelectorType = Configuration.get(Option.BUS_POLICY);
-			ESBNodesSelector selector = ESBNodesSelectorFactory.getInstance(esbSelectorType);
-			Map<ServiceInstance, EasyESBNode> instancesNodesMap = selector.selectESBNodes(choreography);
-			ServiceInstancesProxifier proxifier = new ServiceInstancesProxifier();
-			proxifier.proxify(instancesNodesMap);
-			// TODO:  should PUT /services/ (a registry would resolve...)
+			selector = ESBNodesSelectorFactory.getInstance(esbSelectorType);
 		} catch(IllegalArgumentException e) {
 			logger.error("Not going to proxify services because invalid ESBNodesSelector type.");
+			return;
 		}
+
+		Map<ServiceInstance, EasyESBNode> instancesNodesMap = selector.selectESBNodes(choreography);
+		ServiceInstancesProxifier proxifier = new ServiceInstancesProxifier();
+		proxifier.proxify(instancesNodesMap);
+		// TODO:  should PUT /services/ (a registry would resolve...)
 	}
 
 	@Override
