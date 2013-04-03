@@ -28,6 +28,7 @@ public class Choreography {
 
 		List<Service> deployedServices = this.getDeployedServices();
 		for (Service svc: deployedServices) {
+			System.out.println("Searching for " + serviceName + ", found " + svc.toString());
 			if (serviceName.equals(svc.getName()))
 				return svc;
 		}

@@ -226,6 +226,7 @@ public class ModelsForTest {
 	}
 
 	public ChorSpec getChorSpecWithResourceImpact(MemoryTypes type) {
+		
 		ChorSpec spec = new ChorSpec(); 
 
 		ServiceSpec airlineServiceSpec = new ServiceSpec();

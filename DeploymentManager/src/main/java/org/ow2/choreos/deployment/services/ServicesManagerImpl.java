@@ -114,14 +114,13 @@ public class ServicesManagerImpl implements ServicesManager {
 		
 		Recipe serviceRecipe = service.getRecipe();
 		String configName = serviceRecipe.getCookbookName() + "::" + serviceRecipe.getName();
-		Config config = new Config(configName, null, numberOfNewInstances);
+		Config config = new Config(configName, service.getSpec().getResourceImpact(), numberOfNewInstances);
 		
 		List<Node> nodes = new ArrayList<Node>();
 		try {
 			nodes = npm.applyConfig(config);
 		} catch (ConfigNotAppliedException e) {
 			logger.error(e.getMessage());
-
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
@@ -199,6 +198,7 @@ public class ServicesManagerImpl implements ServicesManager {
 
 	private void migrateServiceInstances(Service currentService, ServiceSpec requestedSpec) throws UnhandledModificationException {
 		currentService.setSpec(requestedSpec);
+		currentService.getInstances().clear();
 		try {
 			deployNoLegacyService(currentService);
 		} catch (ServiceNotDeployedException e) {
