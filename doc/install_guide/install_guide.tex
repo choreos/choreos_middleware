@@ -184,6 +184,14 @@ cookbook_path            ["#{current_dir}/../cookbooks"]
 
 Here, the ``node\_name'' corresponds to my \emph{client} name. Make sure your client is marked as ``admin'', what can be accomplished by using the Chef Server web interface.  The  ``choreos-verao" is the organization name configured on the Chef Server. In the Chef terminology, your computer, from where you control Chef, is the \emph{workstation}. To more details about how to set up your workstation, refer to \url{http://wiki.opscode.com}. You will also need to upload to your Chef Server all the cookbooks from our cookbook folder: \texttt{chef-repo/cookbooks}.
 
+\section{EasyESB}
+
+The \ee\ enables the usage of a Distributed Service Bus, EasyESB~\footnote{\url{https://research.petalslink.org/display/easyesb}}, to bind the services according to the choreography specification. In this way, a service is not directly consumed by other services, but rather accessed through the bus. We also say that a service is ``proxified'' by the bus. The usage of the bus also enables some management and monitoring facilities. To enable the bus usage by \ee, add `\texttt{BUS=True}' to the \texttt{chordeployer.properties} configuration file. If this property is not set, the \ee\ deploys the services and bind them directly, without using the bus. If `\texttt{BUS=True}' is set, you must still set the \texttt{BUS\_POLICY} property on the same file. Possible values to the \texttt{BUS\_POLICY} property are:
+
+\begin{description}
+\item [SINGLE\_NODE:] \ee\ creates only a single EasyESB node, and all the deployed services are exposed by this esb node.
+\item [ALWAYS\_CREATE:] each deployed service has a different associated EasyESB node. Since \ee\ deploys only one EasyESB node per virtual machine, an EasyESB node may manage different services if there are more services than available virtual machines.
+\end{description}
 
 \section{Checkout and Compilation}
 
