@@ -103,7 +103,7 @@ public class VMsCreator {
 		public Long call() throws Exception {
 
 			long t0 = System.currentTimeMillis();
-			Node node = cp.createNode(new Node());
+			Node node = cp.createNode(new Node(), null);
 			VMChecker ssh = new VMChecker();
 			ssh.check(node.getIp());
 			long tf = System.currentTimeMillis();					

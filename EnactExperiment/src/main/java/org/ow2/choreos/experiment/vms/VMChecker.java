@@ -20,7 +20,8 @@ public class VMChecker {
             try {
                 Thread.sleep(DELAY);
             } catch (InterruptedException e) {
-            	logger.error("Exception at sleeping! Thread was killed!");
+            	logger.error("Exception at sleeping! Thread was killed! Node " + ip);
+            	return;
             }
         }
         ssh.disconnect();
