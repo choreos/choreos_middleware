@@ -62,7 +62,7 @@ public class Bootstrapper {
 					
 					while (!created) {
 						try {
-							vm = npm.createNode(req);
+							vm = npm.createNode(req, null);
 							created = true;
 						} catch (NodeNotCreatedException e) {
 							System.out.println(Utils.getTimeStamp() + "VM #" + idx + " not created!");
