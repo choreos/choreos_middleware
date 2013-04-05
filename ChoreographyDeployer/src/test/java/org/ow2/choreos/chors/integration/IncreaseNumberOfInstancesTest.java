@@ -81,6 +81,8 @@ public class IncreaseNumberOfInstancesTest {
 		ee.update(chorId, newSpec);
 		chor = ee.enact(chorId);
 		
+		Thread.sleep(4000);
+		
 		airline = chor.getDeployedServiceByName(ModelsForTest.AIRLINE);
 		
 		travel = chor.getDeployedServiceByName(ModelsForTest.TRAVEL_AGENCY);
