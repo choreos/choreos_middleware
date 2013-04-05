@@ -5,7 +5,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeException;
@@ -179,37 +178,23 @@ public class ServicesManagerImpl implements ServicesManager {
 		for ( UpdateAction a : actions ) {
 			switch (a) {
 			case INCREASE_NUMBER_OF_REPLICAS:
-				int amount = requestedSpec.getNumberOfInstances() - currentService.getSpec().getNumberOfInstances();
-				addServiceInstances(currentService, amount);
+				requestToIncreaseNumberOfInstances(currentService,
+						requestedSpec);
 				break;
 
 			case DECREASE_NUMBER_OF_REPLICAS:
-				throw new NotImplementedException();
+				requestToDecreaseNumberOfInstances(currentService,
+						requestedSpec);
+				break;
 
 			case MIGRATE:
-				migrateServiceInstances(currentService, requestedSpec);
+				requestToMigrateServiceInstances(currentService, requestedSpec);
 				break;
 
 			default:
 				throw new UnhandledModificationException();
 			}
 		}
-	}
-
-	private void migrateServiceInstances(Service currentService, ServiceSpec requestedSpec) throws UnhandledModificationException {
-		currentService.setSpec(requestedSpec);
-		currentService.getInstances().clear();
-		try {
-			deployNoLegacyService(currentService);
-		} catch (ServiceNotDeployedException e) {
-			throw new UnhandledModificationException();
-		}
-	}
-
-	private void addServiceInstances(Service current, int amount) {
-
-		executeDeployment(current, amount);
-
 	}
 
 	private List<UpdateAction> getActions(ServiceSpec currentSpec,
@@ -238,5 +223,48 @@ public class ServicesManagerImpl implements ServicesManager {
 		}
 
 		return actions;
+	}
+	
+	
+	
+	
+
+	private void requestToDecreaseNumberOfInstances(Service currentService,
+			ServiceSpec requestedSpec) {
+		int decreaseAmount = currentService.getSpec().getNumberOfInstances() - requestedSpec.getNumberOfInstances();
+		removeServiceInstances(currentService, decreaseAmount);
+	}
+	
+	private void requestToIncreaseNumberOfInstances(Service currentService,
+			ServiceSpec requestedSpec) {
+		int increaseAmount = requestedSpec.getNumberOfInstances() - currentService.getSpec().getNumberOfInstances();
+		addServiceInstances(currentService, increaseAmount);
+	}
+	
+	private void requestToMigrateServiceInstances(Service currentService, ServiceSpec requestedSpec) throws UnhandledModificationException {
+		currentService.setSpec(requestedSpec);
+		currentService.getInstances().clear();
+		migrateServiceInstances(currentService);
+	}
+
+	private void migrateServiceInstances(Service currentService)
+			throws UnhandledModificationException {
+		try {
+			deployNoLegacyService(currentService);
+		} catch (ServiceNotDeployedException e) {
+			throw new UnhandledModificationException();
+		}
+	}
+	
+	private void removeServiceInstances(Service currentService, int amount) {
+		if(amount <= currentService.getInstances().size()) {
+			for(int i = 0; i < amount; i++) {
+				currentService.getInstances().remove(0);
+			}
+		}
+	}
+	
+	private void addServiceInstances(Service current, int amount) {
+		executeDeployment(current, amount);
 	}
 }
