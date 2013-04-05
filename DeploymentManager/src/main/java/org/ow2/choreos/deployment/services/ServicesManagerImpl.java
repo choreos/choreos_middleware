@@ -86,7 +86,7 @@ public class ServicesManagerImpl implements ServicesManager {
 		try {
 			this.uploadRecipe(serviceRecipe);
 		} catch (KnifeException e) {
-			logger.error("Could not upload recipe", e);
+			logger.error("Could not upload recipe: " + e.getMessage());
 			throw new ServiceNotDeployedException(service.getName());
 		}
 	}

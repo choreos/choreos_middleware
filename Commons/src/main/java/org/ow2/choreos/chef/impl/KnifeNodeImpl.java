@@ -11,6 +11,8 @@ import org.ow2.choreos.utils.CommandLine;
 import org.ow2.choreos.utils.CommandLineException;
 
 public class KnifeNodeImpl implements KnifeNode {
+	
+	private static final String EXIT_STATUS_ERROR_MESSAGE = "Knife exit status > 0";
 
 	private ChefScripts scripts;
 	private boolean verbose;
@@ -44,7 +46,7 @@ public class KnifeNodeImpl implements KnifeNode {
 			try {
 				return CommandLine.run(command, verbose);
 			} catch (CommandLineException e) {
-				throw new KnifeException("Exit status > 0", command);
+				throw new KnifeException(EXIT_STATUS_ERROR_MESSAGE, command);
 			}
 		}
 	}
@@ -63,7 +65,7 @@ public class KnifeNodeImpl implements KnifeNode {
 		try {
 			result = CommandLine.run(command, verbose);
 		} catch (CommandLineException e) {
-			throw new KnifeException("Exit status > 0", command);
+			throw new KnifeException(EXIT_STATUS_ERROR_MESSAGE, command);
 		}
 		
 		List<String> nodes = new ArrayList<String>();
@@ -81,7 +83,7 @@ public class KnifeNodeImpl implements KnifeNode {
 		try {
 			output = CommandLine.run(command, verbose);
 		} catch (CommandLineException e1) {
-			throw new KnifeException("Exit status > 0", command);
+			throw new KnifeException(EXIT_STATUS_ERROR_MESSAGE, command);
 		}
 		ShowNodeParser parser = new ShowNodeParser();
 		ChefNode node = null;
@@ -103,7 +105,7 @@ public class KnifeNodeImpl implements KnifeNode {
 		try {
 			return CommandLine.run(command, verbose);
 		} catch (CommandLineException e) {
-			throw new KnifeException("Exit status > 0", command);
+			throw new KnifeException(EXIT_STATUS_ERROR_MESSAGE, command);
 		}
 	}
 
@@ -121,7 +123,7 @@ public class KnifeNodeImpl implements KnifeNode {
 		try {
 			return CommandLine.run(command, verbose);
 		} catch (CommandLineException e) {
-			throw new KnifeException("Exit status > 0", command);
+			throw new KnifeException(EXIT_STATUS_ERROR_MESSAGE, command);
 		}
 	}
 

@@ -7,6 +7,8 @@ import org.ow2.choreos.utils.CommandLineException;
 
 public class KnifeCookbookImpl implements KnifeCookbook {
 
+	private static final String EXIT_STATUS_ERROR_MESSAGE = "Knife exit status > 0";
+	
 	private ChefScripts scripts;
 	private String chefRepo;
 	private boolean verbose;
@@ -40,7 +42,7 @@ public class KnifeCookbookImpl implements KnifeCookbook {
 		try {
 			return CommandLine.run(command, verbose);
 		} catch (CommandLineException e) {
-			throw new KnifeException("Exit status > 0", command);
+			throw new KnifeException(EXIT_STATUS_ERROR_MESSAGE, command);
 		}
 	}
 	
@@ -56,7 +58,7 @@ public class KnifeCookbookImpl implements KnifeCookbook {
 		try {
 			return CommandLine.run(command, verbose);
 		} catch (CommandLineException e) {
-			throw new KnifeException("Exit status > 0", command);
+			throw new KnifeException(EXIT_STATUS_ERROR_MESSAGE, command);
 		}
 	}
 
@@ -67,7 +69,7 @@ public class KnifeCookbookImpl implements KnifeCookbook {
 		try {
 			return CommandLine.run(command, verbose);
 		} catch (CommandLineException e) {
-			throw new KnifeException("Exit status > 0", command);
+			throw new KnifeException(EXIT_STATUS_ERROR_MESSAGE, command);
 		}
 	}
 
