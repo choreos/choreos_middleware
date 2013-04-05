@@ -3,8 +3,8 @@
   xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime"
   version="2.0">
   <endpoint
-      name="Airline"
-      implementation="org.ow2.choreos.AirlineService"
-      url-pattern="/airline"/>
+      name="TravelAgency"
+      implementation="org.ow2.choreos.TravelAgencyService"
+      url-pattern="/travelagency"/>
 </endpoints>
 
