@@ -26,13 +26,11 @@ public class Service {
 	/**
 	 * The list of all instances of the service
 	 */
-	private List<ServiceInstance> serviceInstances;
+	private List<ServiceInstance> serviceInstances;// = new ArrayList<ServiceInstance>(); should be null at first because JAXB
 
 	@XmlTransient
 	private Recipe recipe;
 
-	
-	
 	
 	/**
 	 * Default constructor for Java XML Bindings
@@ -44,7 +42,7 @@ public class Service {
 		
 		if(serviceSpec == null)
 			throw new IllegalArgumentException();
-
+		
 		this.serviceInstances = new ArrayList<ServiceInstance>();
 		this.spec = serviceSpec;
 		if (this.spec.getPackageType() == null) {
