@@ -26,7 +26,7 @@ public class Service {
 	/**
 	 * The list of all instances of the service
 	 */
-	private List<ServiceInstance> serviceInstances = new ArrayList<ServiceInstance>();
+	private List<ServiceInstance> serviceInstances;// = new ArrayList<ServiceInstance>(); should be null at first because JAXB
 
 	@XmlTransient
 	private Recipe recipe;
@@ -44,6 +44,8 @@ public class Service {
 		
 		if(serviceSpec == null)
 			throw new IllegalArgumentException();
+		
+		serviceInstances = new ArrayList<ServiceInstance>();
 
 		this.spec = serviceSpec;
 		if (this.spec.getPackageType() == null) {
