@@ -33,7 +33,7 @@ import eu.choreos.vv.clientgenerator.WSClient;
 @Category(IntegrationTest.class)
 public class SimpleChorEnactmentTest {
 
-	private ChorSpec chorSpec;
+	protected ChorSpec chorSpec;
 	
 	@BeforeClass
 	public static void startServers() {
