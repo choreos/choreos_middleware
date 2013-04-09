@@ -43,17 +43,19 @@ public class RestEnactmentTest {
 	private static final int AIRLINE_PORT = 1234;
 	private static final int TRAVEL_AGENCY_PORT = 1235;	
 	
+	private static ChorDeployerServer server;
 	private ChorSpec chorSpec;
 	
 	@BeforeClass
 	public static void startServers() {
 		LogConfigurator.configLog();
-		ChorDeployerServer.start();
+		server = new ChorDeployerServer();
+		server.start();
 	}
 	
 	@AfterClass
 	public static void shutDownServers() {
-		ChorDeployerServer.stop();
+		server.stop();
 	}
 	
 	@Before

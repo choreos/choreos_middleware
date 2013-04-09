@@ -33,6 +33,7 @@ public class ClientTest {
 	public static final String JAR_LOCATION = "https://github.com/downloads/choreos/choreos_middleware/simplews.jar";
 	
 	private static String deploymentManagerHost;
+	private static DeploymentManagerServer server;
 	
 	private NodePoolManager npm;
 	private ServicesManager deployer;
@@ -44,7 +45,8 @@ public class ClientTest {
 	public static void configureLog() throws InterruptedException {
 		
 		LogConfigurator.configLog();
-		DeploymentManagerServer.start();
+		server = new DeploymentManagerServer();
+		server.start();
         deploymentManagerHost = DeploymentManagerServer.URL;
 	}
 	
@@ -65,7 +67,7 @@ public class ClientTest {
 	
 	@AfterClass
 	public static void stopServer() {
-		DeploymentManagerServer.stop();
+		server.stop();
 	}
 
 	@Test

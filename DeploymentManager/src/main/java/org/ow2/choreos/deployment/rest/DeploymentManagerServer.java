@@ -1,11 +1,10 @@
 package org.ow2.choreos.deployment.rest;
 
-import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
-import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.rest.ConfigsResource;
 import org.ow2.choreos.deployment.nodes.rest.NodesResource;
 import org.ow2.choreos.deployment.services.rest.ServicesResource;
+import org.ow2.choreos.rest.RESTServer;
 import org.ow2.choreos.utils.LogConfigurator;
 
 
@@ -15,62 +14,38 @@ import org.ow2.choreos.utils.LogConfigurator;
  * @author alfonso, leonardo
  * 
  */
-public class DeploymentManagerServer implements Runnable {
+public class DeploymentManagerServer {
 
-	private static Logger logger;
-	
+	public final String NAME = "Deployment Manager";
 	public static String URL;
-	private static boolean running = false;
-
+	private RESTServer restServer;
+	
     static {
     	String port = Configuration.get("DEPLOYMENT_MANAGER_PORT");
     	URL = "http://localhost:" + port + "/deploymentmanager/";
     	System.out.println(URL);
     }
+
+    public DeploymentManagerServer() {
     
-	public static void start() {
-		
-		logger = Logger.getLogger(DeploymentManagerServer.class);
-		new Thread(new DeploymentManagerServer()).start();
-		while (!running) {
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				logger.error(e);
-			}
-		}
-
-	}
-
-	public static void stop() {
-		running = false;
-	}
-
-	public void run() {
-		
-		JAXRSServerFactoryBean sf = new JAXRSServerFactoryBean();
-		sf.setResourceClasses(NodesResource.class);
-		sf.setResourceClasses(ServicesResource.class);
-		sf.setResourceClasses(ConfigsResource.class);
-		sf.setAddress(URL);
-		sf.create();
-		logger.info("Deployment Manager has started [" + URL + "]");
-		running = true;
-
-		while (running) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		logger.info("Deployment Manager has stopped");
-
-	}
-
-	public static void main(String[] args) throws InterruptedException {
+    	this.restServer = new RESTServer(NAME, URL, new Class[]{
+    			NodesResource.class, ConfigsResource.class, ServicesResource.class});
+    }
+    
+    public void start() {
+    	
+    	this.restServer.start();
+    }
+    
+    public void stop() {
+    	
+    	this.restServer.stop();
+    }
+    
+	public static void main(String[] args) {
 		
     	LogConfigurator.configLog();
-		DeploymentManagerServer.start();
+    	DeploymentManagerServer server = new DeploymentManagerServer();
+    	server.start();
 	}
 }

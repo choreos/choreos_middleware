@@ -19,19 +19,21 @@ import org.ow2.choreos.utils.LogConfigurator;
 public class BaseTest {
 	
 	protected static String nodePoolManagerHost;
+	private static DeploymentManagerServer server;
 	
     @BeforeClass
     public static void startServer() throws Exception {
     	
     	LogConfigurator.configLog();
-        DeploymentManagerServer.start();
+		server = new DeploymentManagerServer();
+		server.start();
         nodePoolManagerHost = DeploymentManagerServer.URL;
     }
 
     @AfterClass
     public static void stopServer() throws UnsupportedEncodingException {
     	
-    	DeploymentManagerServer.stop();
+    	server.stop();
     }
 
     protected static NodeRestRepresentation getNodeFromResponse(Response response) {
