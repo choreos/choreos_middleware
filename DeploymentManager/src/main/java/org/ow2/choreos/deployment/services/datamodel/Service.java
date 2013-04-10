@@ -1,6 +1,7 @@
 package org.ow2.choreos.deployment.services.datamodel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -26,7 +27,7 @@ public class Service {
 	/**
 	 * The list of all instances of the service
 	 */
-	private List<ServiceInstance> serviceInstances;// = new ArrayList<ServiceInstance>(); should be null at first because JAXB
+	private List<ServiceInstance> serviceInstances = new ArrayList<ServiceInstance>(); // should be null at first because JAXB
 
 	@XmlTransient
 	private Recipe recipe;
@@ -36,6 +37,7 @@ public class Service {
 	 * Default constructor for Java XML Bindings
 	 */
 	public Service() {
+		
 	}
 
 	public Service(ServiceSpec serviceSpec) {
@@ -43,7 +45,6 @@ public class Service {
 		if(serviceSpec == null)
 			throw new IllegalArgumentException();
 		
-		this.serviceInstances = new ArrayList<ServiceInstance>();
 		this.spec = serviceSpec;
 		if (this.spec.getPackageType() == null) {
 			this.spec.setPackageType(PackageType.OTHER);
@@ -74,13 +75,15 @@ public class Service {
 				si.setLegacyIp(info.getIp());
 				si.setNativeUri(serviceSpec.getPackageUri());
 
+				if(serviceInstances == null)
+					serviceInstances = new ArrayList<ServiceInstance>();
 				serviceInstances.add(si);
 			}
 		}
 	}
 
 	public List<ServiceInstance> getInstances() {
-		return serviceInstances;
+		return Collections.unmodifiableList(serviceInstances);
 	}
 
 	public void setInstances(List<ServiceInstance> instances) {
@@ -125,15 +128,20 @@ public class Service {
 	public List<String> getUris() {
 		List<String> result = new ArrayList<String>();
 		
-		for(ServiceInstance inst: serviceInstances)
-			result.add(inst.getNativeUri());
+		if (serviceInstances != null) {
+			for(ServiceInstance inst: serviceInstances)
+				result.add(inst.getNativeUri());
+		}
 		return result;
 	}
 
 	public ServiceInstance getInstance(String instanceId) throws ServiceInstanceNotFoundException{
-		for(ServiceInstance instance: serviceInstances) {
-			if(instance.getInstanceId().equals(instanceId))
-				return instance;
+		
+		if (serviceInstances != null) {
+			for(ServiceInstance instance: serviceInstances) {
+				if(instance.getInstanceId().equals(instanceId))
+					return instance;
+			}
 		}
 		
 		throw new ServiceInstanceNotFoundException(this.name, instanceId);

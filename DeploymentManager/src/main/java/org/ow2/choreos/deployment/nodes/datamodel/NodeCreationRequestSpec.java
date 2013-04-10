@@ -27,6 +27,9 @@ public class NodeCreationRequestSpec {
 	private String ioImpact;
 	private String regionImpact;
 
+	public NodeCreationRequestSpec() {
+		
+	}
 	
 	public NodeCreationRequestSpec(Node node, ResourceImpact resImpact) {
 		nodeId = node.getId();
