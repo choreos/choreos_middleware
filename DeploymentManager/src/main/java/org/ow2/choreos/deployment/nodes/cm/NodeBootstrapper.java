@@ -10,6 +10,7 @@ import org.ow2.choreos.chef.impl.KnifeImpl;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.utils.RemoteFileWriter;
 import org.ow2.choreos.utils.SshCommandFailed;
 import org.ow2.choreos.utils.SshUtil;
 
@@ -61,23 +62,25 @@ public class NodeBootstrapper {
     	
         waitForSSHAccess();
 
-    	logger.info("Bootstrapping " + this.node.getHostname());
+    	logger.info("Bootstrapping " + this.node.getIp());
 		String result = knife.bootstrap(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile(), DefaultRecipes.getDefaultRecipes());
-		logResultOnNode(result);
+		saveLogOnNode(result);
 		logger.info("Bootstrap completed at" + this.node);
 		this.retrieveAndSetChefName();
     }
 
-	private void logResultOnNode(String result) {
+	private void saveLogOnNode(String bootstrapLog) {
 
 		SshUtil ssh = new SshUtil(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile());
+		RemoteFileWriter remoteFileWriter = new RemoteFileWriter();
+		
 		try {
-			ssh.runCommand("echo \"" + result + "\" >> " + BOOTSTRAP_LOG_FILE_LOCATION);
-		} catch (JSchException e) {
-			logger.error("Could not create the bootstrap log");
+			remoteFileWriter.writeFile(bootstrapLog, BOOTSTRAP_LOG_FILE_LOCATION, ssh);
 		} catch (SshCommandFailed e) {
-			logger.error("Could not create the bootstrap log");
+			logger.error("Could not create the bootstrap");
 		}
+		
+		ssh.disconnect();
 	}
 
 	private void waitForSSHAccess() throws NodeNotAccessibleException {
@@ -115,9 +118,9 @@ public class NodeBootstrapper {
 			chefClientName = nameRetriever.getChefNodeName(this.node.getIp(), 
 					this.node.getUser(), this.node.getPrivateKeyFile());
 		} catch (JSchException e) {
-			chefClientName = this.node.getHostname();
+			chefClientName = this.node.getIp();
 		} catch (SshCommandFailed e) {
-			chefClientName = this.node.getHostname();
+			chefClientName = this.node.getIp();
 		}
 
 		this.node.setChefName(chefClientName);
