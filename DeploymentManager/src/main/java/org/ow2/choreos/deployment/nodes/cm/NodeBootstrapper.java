@@ -63,10 +63,10 @@ public class NodeBootstrapper {
         waitForSSHAccess();
 
     	logger.info("Bootstrapping " + this.node.getIp());
-		String result = knife.bootstrap(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile(), DefaultRecipes.getDefaultRecipes());
-		saveLogOnNode(result);
+		String bootstrapLog = knife.bootstrap(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile(), DefaultRecipes.getDefaultRecipes());
+		saveLogOnNode(bootstrapLog);
 		logger.info("Bootstrap completed at" + this.node);
-		this.retrieveAndSetChefName();
+		this.retrieveAndSetChefName(bootstrapLog);
     }
 
 	private void saveLogOnNode(String bootstrapLog) {
@@ -110,20 +110,27 @@ public class NodeBootstrapper {
         logger.debug("Connected to " + this.node);
 	}
 	
-	public void retrieveAndSetChefName() {
+	public void retrieveAndSetChefName(String bootstrapLog) {
         
     	ChefNodeNameRetriever nameRetriever = new ChefNodeNameRetriever();
-        String chefClientName = null;
-		try {
-			chefClientName = nameRetriever.getChefNodeName(this.node.getIp(), 
-					this.node.getUser(), this.node.getPrivateKeyFile());
-		} catch (JSchException e) {
-			chefClientName = this.node.getIp();
-		} catch (SshCommandFailed e) {
-			chefClientName = this.node.getIp();
-		}
-
-		this.node.setChefName(chefClientName);
+        String chefNodeName = null;
+        
+        try {
+        	chefNodeName = nameRetriever.retrieveChefNodeNameFromBootstrapLog(bootstrapLog);
+        } catch (IllegalArgumentException e1) {
+			try {
+				logger.debug("Going to retrieve chef name by running retriever script on node...");
+				chefNodeName = nameRetriever.getChefNodeName(this.node.getIp(), 
+						this.node.getUser(), this.node.getPrivateKeyFile());
+			} catch (JSchException e) {
+				chefNodeName = this.node.getHostname();
+			} catch (SshCommandFailed e) {
+				chefNodeName = this.node.getHostname();
+			}
+        }
+		
+		logger.debug("Retrieved chef name: " + chefNodeName);
+		this.node.setChefName(chefNodeName);
     }
 	
 	private class Timer implements Runnable {

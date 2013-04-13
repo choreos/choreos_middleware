@@ -3,6 +3,8 @@ package org.ow2.choreos.chef;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -53,6 +55,25 @@ public class ChefNodeNameRetriever {
 	private String getHostname(SshUtil ssh) throws JSchException, SshCommandFailed {
 
 		return ssh.runCommand("hostname");
+	}
+	
+	/**
+	 * 
+	 * @param bootstrapLog
+	 * @throws IllegalArgumentException if could not retrieve chef node name
+	 * @return
+	 */
+	public String retrieveChefNodeNameFromBootstrapLog(String bootstrapLog)  {
+		
+		Pattern pattern = Pattern.compile("Creating a new client identity for (.*) using the validator key");
+		Matcher matcher = pattern.matcher(bootstrapLog);
+		
+		if (matcher.find()) {
+			String chefNodeName = matcher.group(1);
+			return chefNodeName;
+		} else {
+			throw new IllegalArgumentException("Could not extract chef node name from bootstrap log.");
+		}
 	}
     
 }

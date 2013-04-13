@@ -38,6 +38,7 @@ public class RecipeApplier {
     public void applyRecipe(Node node, String cookbook, String recipe) throws ConfigNotAppliedException {
 
     	NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
+    	String configName = cookbook + "::" + recipe;
     	
         try {
 			if (!bootstrapper.isNodeAlreadyBootstrapped()) {
@@ -45,13 +46,14 @@ public class RecipeApplier {
 				bootstrapper.bootstrapNode();
 			}
 		} catch (NodeNotAccessibleException e) {
-			throw new ConfigNotAppliedException(cookbook + "::" + recipe, node.getId());
+			throw new ConfigNotAppliedException(configName, node.getId());
 		} catch (KnifeException e) {
-			throw new ConfigNotAppliedException(cookbook + "::" + recipe, node.getId());
+			throw new ConfigNotAppliedException(configName, node.getId());
 		}
 
 		if (node.getChefName() == null) {
-			bootstrapper.retrieveAndSetChefName();
+			logger.error("Node " + node.getIp() + " does not have a chef node name!");
+			throw new ConfigNotAppliedException(configName, node.getId());
 		}
         
         Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
