@@ -10,12 +10,12 @@ import org.apache.log4j.Logger;
 
 public class Concurrency {
 
-	public static void waitExecutor(ExecutorService executor, int timeoutMinutes, Logger logger) {
+	public static void waitExecutor(ExecutorService executor, int timeoutMinutes, TimeUnit timeUnit, Logger logger) {
 
 		executor.shutdown();
 		boolean status = false;
 		try {
-			status = executor.awaitTermination(timeoutMinutes, TimeUnit.MINUTES);
+			status = executor.awaitTermination(timeoutMinutes, timeUnit);
 		} catch (InterruptedException e) {
 			logErrorMessage("Interrupted thread! Should not happen!", logger);
 		}
@@ -26,9 +26,13 @@ public class Concurrency {
 	}
 	
 	public static void waitExecutor(ExecutorService executor, int timeoutMinutes) {
-		waitExecutor(executor, timeoutMinutes, null);
+		waitExecutor(executor, timeoutMinutes, TimeUnit.MINUTES, null);
 	}
-	
+
+	public static void waitExecutor(ExecutorService executor, int timeoutMinutes, Logger logger) {
+		waitExecutor(executor, timeoutMinutes, TimeUnit.MINUTES, logger);
+	}
+
 	private static void logErrorMessage(String msg, Logger logger) {
 		if (logger != null) {
 			logger.error(msg);
