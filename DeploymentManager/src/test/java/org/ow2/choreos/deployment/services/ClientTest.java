@@ -12,6 +12,8 @@ import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.rest.NodesClient;
 import org.ow2.choreos.deployment.rest.DeploymentManagerServer;
+import org.ow2.choreos.deployment.services.datamodel.DeployedService;
+import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
@@ -39,7 +41,7 @@ public class ClientTest {
 	private ServicesManager servicesManager;
 
 	private WebClient client;
-	private ServiceSpec spec = new ServiceSpec();
+	private DeployedServiceSpec spec = new DeployedServiceSpec();
 
 	@BeforeClass
 	public static void configureLog() throws InterruptedException {
@@ -58,7 +60,6 @@ public class ClientTest {
 		npm = new NodesClient(deploymentManagerHost);
 		servicesManager = new ServicesClient(deploymentManagerHost);
 		
-		spec.setName("simplews");
 		spec.setPackageUri(JAR_LOCATION);
 		spec.setPackageType(PackageType.COMMAND_LINE);
 		spec.setEndpointName("");

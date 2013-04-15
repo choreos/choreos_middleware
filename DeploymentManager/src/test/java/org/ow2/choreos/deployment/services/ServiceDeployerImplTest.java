@@ -18,10 +18,10 @@ import org.ow2.choreos.deployment.nodes.ConfigNotAppliedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.deployment.services.datamodel.DeployedService;
+import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
-import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.utils.LogConfigurator;
 
 public class ServiceDeployerImplTest {
@@ -30,7 +30,7 @@ public class ServiceDeployerImplTest {
 	private ServicesManager serviceDeployer;
 	
 	private Node selectedNode;
-	private ServiceSpec serviceSpec;
+	private DeployedServiceSpec serviceSpec;
 	
 	@Before
 	public void setUp() throws ConfigNotAppliedException, KnifeException {
@@ -56,8 +56,7 @@ public class ServiceDeployerImplTest {
 	
 	private void setUpServiceDeployer() throws KnifeException {
 		
-		serviceSpec = new ServiceSpec();
-		serviceSpec.setName("Airline");
+		serviceSpec = new DeployedServiceSpec();
 		serviceSpec.setPackageUri("http://choreos.eu/services/airline.jar");
 		serviceSpec.setPackageType(PackageType.COMMAND_LINE);
 		serviceSpec.setEndpointName("airline");
@@ -69,7 +68,7 @@ public class ServiceDeployerImplTest {
 		String cookbookUploadResult = "Cookbook 'uploaded' by mock";
 		when(knifeCookbbok.upload(any(String.class), any(String.class))).thenReturn(cookbookUploadResult);
 		
-		serviceDeployer = new ServicesManagerImpl(npm, knife);
+		serviceDeployer = new ServicesManagerImplForTests(npm, knife);
 	}
 	
 	@Test
@@ -79,7 +78,7 @@ public class ServiceDeployerImplTest {
 				+ serviceSpec.getPort() + "/" + serviceSpec.getEndpointName()
 				+ "/";
 		
-		Service service = serviceDeployer.createService(serviceSpec);
+		DeployedService service = serviceDeployer.createService(serviceSpec);
 		
 		ServiceInstance instance = service.getInstances().get(0);
 		
@@ -89,5 +88,14 @@ public class ServiceDeployerImplTest {
 		assertEquals(EXPECTED_URI, instance.getNativeUri());
 		
 		verify(npm).applyConfig(any(Config.class));
+	}
+	
+	
+	class ServicesManagerImplForTests extends ServicesManagerImpl {
+		
+		ServicesManagerImplForTests(NodePoolManager npm, Knife k) {
+			super(npm);
+			knife = k;
+		}
 	}
 }

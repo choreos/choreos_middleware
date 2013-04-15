@@ -15,10 +15,10 @@ import org.ow2.choreos.deployment.Locations;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
+import org.ow2.choreos.deployment.services.datamodel.DeployedService;
+import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
-import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -33,7 +33,7 @@ public class CDDeployTest {
 	private ServicesManager deployer = new ServicesManagerImpl(npm);
 
 	private WebClient client;
-	private ServiceSpec spec = new ServiceSpec();
+	private DeployedServiceSpec spec = new DeployedServiceSpec();
 	
 	@BeforeClass
 	public static void configureLog() {
@@ -44,7 +44,6 @@ public class CDDeployTest {
 	public void setUp() throws Exception {
 		
 		Configuration.set("BUS", "false");
-		spec.setName("CDWeather");
 		spec.setPackageUri(CD_LOCATION);
 		spec.setPackageType(PackageType.EASY_ESB);
 		spec.setEndpointName("CDWeatherForecastServicePort"); // configured in the config.xml
@@ -54,7 +53,7 @@ public class CDDeployTest {
 	@Test
 	public void shouldDeployCDInEasyESBNode() throws Exception {
 
-		Service service = deployer.createService(spec);
+		DeployedService service = deployer.createService(spec);
 		
 		assertNotNull(service);
 		System.out.println(">>>> " + service.toString());
