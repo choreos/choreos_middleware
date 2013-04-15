@@ -7,10 +7,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.chors.ChorDeployerImpl;
+import org.ow2.choreos.chors.ChoreographyDeployerImpl;
 import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.ModelsForTest;
-import org.ow2.choreos.chors.datamodel.ChorSpec;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
@@ -32,8 +32,8 @@ import eu.choreos.vv.clientgenerator.WSClient;
 @Category(IntegrationTest.class)
 public class IncreaseNumberOfInstancesTest {
 
-	private ChorSpec spec;
-	private ChorSpec newSpec;
+	private ChoreographySpec spec;
+	private ChoreographySpec newSpec;
 	
 	@BeforeClass
 	public static void startServers() {
@@ -51,15 +51,15 @@ public class IncreaseNumberOfInstancesTest {
 	@Test
 	public void shouldEnactChoreographyWithTwoAirlineServicesAndChangeToThree() throws Exception {
 		
-		ChoreographyDeployer ee = new ChorDeployerImpl();
+		ChoreographyDeployer ee = new ChoreographyDeployerImpl();
 		
 		String chorId = ee.createChoreography(spec);
-		Choreography chor = ee.enact(chorId);
+		Choreography chor = ee.enactChoreography(chorId);
 
 
-		Service airline = chor.getDeployedServiceByName(ModelsForTest.AIRLINE);
+		Service airline = chor.getDeployedChoreographyServiceByChoreographyServiceUID(ModelsForTest.AIRLINE);
 		
-		Service travel = chor.getDeployedServiceByName(ModelsForTest.TRAVEL_AGENCY);
+		Service travel = chor.getDeployedChoreographyServiceByChoreographyServiceUID(ModelsForTest.TRAVEL_AGENCY);
 		WSClient client = new WSClient(travel.getUris().get(0) + "?wsdl");
 		
 		String codes, codes2, codes3 = "";
@@ -78,14 +78,14 @@ public class IncreaseNumberOfInstancesTest {
 		
 		
 		
-		ee.update(chorId, newSpec);
-		chor = ee.enact(chorId);
+		ee.updateChoreography(chorId, newSpec);
+		chor = ee.enactChoreography(chorId);
 		
 		Thread.sleep(4000);
 		
-		airline = chor.getDeployedServiceByName(ModelsForTest.AIRLINE);
+		airline = chor.getDeployedChoreographyServiceByChoreographyServiceUID(ModelsForTest.AIRLINE);
 		
-		travel = chor.getDeployedServiceByName(ModelsForTest.TRAVEL_AGENCY);
+		travel = chor.getDeployedChoreographyServiceByChoreographyServiceUID(ModelsForTest.TRAVEL_AGENCY);
 		client = new WSClient(travel.getUris().get(0) + "?wsdl");
 
 		response = client.request("buyTrip");

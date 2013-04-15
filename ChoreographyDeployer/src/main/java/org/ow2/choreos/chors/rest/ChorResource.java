@@ -17,10 +17,10 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import org.ow2.choreos.chors.ChoreographyNotFoundException;
-import org.ow2.choreos.chors.ChorDeployerImpl;
+import org.ow2.choreos.chors.ChoreographyDeployerImpl;
 import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.EnactmentException;
-import org.ow2.choreos.chors.datamodel.ChorSpec;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
 
 /**
@@ -33,7 +33,7 @@ import org.ow2.choreos.chors.datamodel.Choreography;
 @Path("chors")
 public class ChorResource {
 	
-	private ChoreographyDeployer chorDeployer = new ChorDeployerImpl();
+	private ChoreographyDeployer chorDeployer = new ChoreographyDeployerImpl();
 
 	/**
 	 * POST /chors
@@ -48,9 +48,9 @@ public class ChorResource {
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_XML)
-	public Response create(ChorSpec chor, @Context UriInfo uriInfo) {
+	public Response create(ChoreographySpec chor, @Context UriInfo uriInfo) {
 
-		if (chor == null || chor.getServiceSpecs() == null || chor.getServiceSpecs().isEmpty()) {
+		if (chor == null || chor.getChoreographyServiceSpecs() == null || chor.getChoreographyServiceSpecs().isEmpty()) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
@@ -130,7 +130,7 @@ public class ChorResource {
 		
 		Choreography chor;
 		try {
-			chor = chorDeployer.enact(chorId);
+			chor = chorDeployer.enactChoreography(chorId);
 		} catch (EnactmentException e) {
 			return Response.serverError().build(); 
 		} catch (ChoreographyNotFoundException e) {
@@ -144,7 +144,7 @@ public class ChorResource {
 	@Path("{chorID}/update")
 	@Produces(MediaType.APPLICATION_XML)
 	@Consumes(MediaType.APPLICATION_XML)
-	public Response update(@PathParam("chorID") String chorId, ChorSpec spec, @Context UriInfo uriInfo) {
+	public Response update(@PathParam("chorID") String chorId, ChoreographySpec spec, @Context UriInfo uriInfo) {
 		
 		if (chorId == null || chorId.isEmpty()) {
 			return Response.status(Status.BAD_REQUEST).build();
@@ -156,7 +156,7 @@ public class ChorResource {
 		
 		Choreography chor;
 		try {
-			chorDeployer.update(chorId, spec);
+			chorDeployer.updateChoreography(chorId, spec);
 			chor = chorDeployer.getChoreography(chorId);
 		} catch (EnactmentException e) {
 			return Response.serverError().build();

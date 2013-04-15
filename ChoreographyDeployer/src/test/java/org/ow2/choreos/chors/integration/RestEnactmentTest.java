@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.client.ChorDeployerClient;
-import org.ow2.choreos.chors.datamodel.ChorSpec;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.rest.ChorDeployerServer;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
@@ -44,7 +44,7 @@ public class RestEnactmentTest {
 	private static final int TRAVEL_AGENCY_PORT = 1235;	
 	
 	private static ChorDeployerServer server;
-	private ChorSpec chorSpec;
+	private ChoreographySpec chorSpec;
 	
 	@BeforeClass
 	public static void startServers() {
@@ -61,7 +61,7 @@ public class RestEnactmentTest {
 	@Before
 	public void setUp() {
 		
-		chorSpec = new ChorSpec(); 
+		chorSpec = new ChoreographySpec(); 
 		
 		ServiceSpec airline = new ServiceSpec();
 		airline.setName(AIRLINE);
@@ -70,7 +70,7 @@ public class RestEnactmentTest {
 		airline.setPort(AIRLINE_PORT);
 		airline.setPackageType(PackageType.COMMAND_LINE);
 		airline.getRoles().add(AIRLINE);
-		chorSpec.addServiceSpec(airline);
+		chorSpec.addChoreographyServiceSpec(airline);
 		
 		ServiceSpec travel = new ServiceSpec();
 		travel.setName(TRAVEL_AGENCY);
@@ -79,9 +79,9 @@ public class RestEnactmentTest {
 		travel.setPort(TRAVEL_AGENCY_PORT);
 		travel.setPackageType(PackageType.COMMAND_LINE);
 		travel.getRoles().add(TRAVEL_AGENCY);
-		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
+		ChoreographyServiceDependency dep = new ChoreographyServiceDependency(AIRLINE, AIRLINE);
 		travel.getDependencies().add(dep);
-		chorSpec.addServiceSpec(travel);
+		chorSpec.addChoreographyServiceSpec(travel);
 	}
 	
 	@Test
@@ -102,11 +102,11 @@ public class RestEnactmentTest {
 		String chorId = ee.createChoreography(chorSpec);
 		Choreography chor = ee.getChoreography(chorId);
 		
-		ServiceSpec travel = chor.getRequestedSpec().getServiceSpecByName(TRAVEL_AGENCY);
-		assertEquals(chorSpec.getServiceSpecByName(TRAVEL_AGENCY), travel);
+		ServiceSpec travel = chor.getRequestedChoreographySpec().getChoreographyServiceSpecByChoreographyServiceUID(TRAVEL_AGENCY);
+		assertEquals(chorSpec.getChoreographyServiceSpecByChoreographyServiceUID(TRAVEL_AGENCY), travel);
 		
-		ServiceSpec airline = chor.getRequestedSpec().getServiceSpecByName(AIRLINE);
-		assertEquals(chorSpec.getServiceSpecByName(AIRLINE), airline);		
+		ServiceSpec airline = chor.getRequestedChoreographySpec().getChoreographyServiceSpecByChoreographyServiceUID(AIRLINE);
+		assertEquals(chorSpec.getChoreographyServiceSpecByChoreographyServiceUID(AIRLINE), airline);		
 	}
 	
 	@Test
@@ -115,9 +115,9 @@ public class RestEnactmentTest {
 		String host = ChorDeployerServer.URL;
 		ChoreographyDeployer ee = new ChorDeployerClient(host);
 		String chorId = ee.createChoreography(chorSpec);
-		Choreography chor = ee.enact(chorId);
+		Choreography chor = ee.enactChoreography(chorId);
 		
-		Service travel = chor.getDeployedServiceByName(TRAVEL_AGENCY);
+		Service travel = chor.getDeployedChoreographyServiceByChoreographyServiceUID(TRAVEL_AGENCY);
 		String uri = "";//travel.getUri();
 		WSClient client = new WSClient(uri + "?wsdl");
 		Item response = client.request("buyTrip");

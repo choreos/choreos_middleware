@@ -12,19 +12,19 @@ import org.ow2.choreos.chors.bus.ServiceInstancesProxifier;
 import org.ow2.choreos.chors.context.ContextCaster;
 import org.ow2.choreos.chors.context.ContextSender;
 import org.ow2.choreos.chors.context.ContextSenderFactory;
-import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.deployment.services.datamodel.Service;
+import org.ow2.choreos.chors.datamodel.ChoreographyService;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 
-public class ChorDeployerImpl implements ChoreographyDeployer {
+public class ChoreographyDeployerImpl implements ChoreographyDeployer {
 
-	private Logger logger = Logger.getLogger(ChorDeployerImpl.class);
+	private Logger logger = Logger.getLogger(ChoreographyDeployerImpl.class);
 	private ChorRegistry reg = ChorRegistry.getInstance();
 	
 	@Override
-	public String createChoreography(ChorSpec chor) {
+	public String createChoreography(ChoreographySpec chor) {
 
 		String chorId = reg.create(chor);
 		logger.info("Choreography " + chorId + " created.");
@@ -40,7 +40,7 @@ public class ChorDeployerImpl implements ChoreographyDeployer {
 	}
 
 	@Override
-	public Choreography enact(String chorId) throws EnactmentException, ChoreographyNotFoundException {
+	public Choreography enactChoreography(String chorId) throws EnactmentException, ChoreographyNotFoundException {
 
 		Choreography chor = reg.get(chorId);
 		if (chor == null) {
@@ -50,8 +50,9 @@ public class ChorDeployerImpl implements ChoreographyDeployer {
 		logger.info("Starting enactment; chorId= " + chorId);
 		
 		Deployer deployer = new Deployer();
-		Map<String, Service> deployedMap = deployer.deployServices(chor);
-		chor.setDeployedServices(new ArrayList<Service>(deployedMap.values()));
+		Map<String, ChoreographyService> deployedMap = deployer.deployChoreographyServices(chor);
+		chor.setDeployedChoreographyServices(
+				new ArrayList<ChoreographyService>(deployedMap.values()));
 		
 		logger.info("Deployed services="+ deployedMap);
 		
@@ -62,9 +63,9 @@ public class ChorDeployerImpl implements ChoreographyDeployer {
 		
 		ContextSender sender = ContextSenderFactory.getInstance(ServiceType.SOAP);
 		ContextCaster caster = new ContextCaster(sender);
-		caster.cast(chor.getRequestedSpec(), deployedMap);
+		caster.cast(chor.getRequestedChoreographySpec(), deployedMap);
 		
-		chor.choreographyEnacted();
+		chor.finishChoreographyEnactment();
 		
 		logger.info("Enactment completed; chorId=" + chorId);
 
@@ -89,7 +90,7 @@ public class ChorDeployerImpl implements ChoreographyDeployer {
 	}
 
 	@Override
-	public void update(String chorId, ChorSpec spec) throws ChoreographyNotFoundException {
+	public void updateChoreography(String chorId, ChoreographySpec spec) throws ChoreographyNotFoundException {
 
 		Choreography chor = reg.get(chorId);
 		if(chor == null) {
@@ -98,7 +99,7 @@ public class ChorDeployerImpl implements ChoreographyDeployer {
 		
 		logger.info("Starting update on choreography with ID " + chorId);
 		
-		chor.setSpec(spec);
+		chor.setChoreographySpec(spec);
 		
 		logger.info("Updated choreography with ID " + chorId);
 		

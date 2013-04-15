@@ -11,10 +11,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.chors.ChorDeployerImpl;
+import org.ow2.choreos.chors.ChoreographyDeployerImpl;
 import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.ModelsForTest;
-import org.ow2.choreos.chors.datamodel.ChorSpec;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpactDefs;
@@ -34,8 +34,8 @@ import eu.choreos.vv.clientgenerator.WSClient;
 @Category(IntegrationTest.class)
 public class VerticalScalingTest {
 
-	private ChorSpec smallSpec;
-	private ChorSpec mediumSpec;
+	private ChoreographySpec smallSpec;
+	private ChoreographySpec mediumSpec;
 	//private ChorSpec largeSpec;
 	
 	/**
@@ -62,13 +62,13 @@ public class VerticalScalingTest {
 	@Test
 	public void shouldMigrateAirlineServiceFromSmallToMediumMachine() throws Exception {
 		
-		ChoreographyDeployer ee = new ChorDeployerImpl();
+		ChoreographyDeployer ee = new ChoreographyDeployerImpl();
 		
 		String chorId = ee.createChoreography(smallSpec);
-		Choreography chor = ee.enact(chorId);
+		Choreography chor = ee.enactChoreography(chorId);
 
-		Service airline = chor.getDeployedServiceByName(ModelsForTest.AIRLINE);
-		Service travel = chor.getDeployedServiceByName(ModelsForTest.TRAVEL_AGENCY);
+		Service airline = chor.getDeployedChoreographyServiceByChoreographyServiceUID(ModelsForTest.AIRLINE);
+		Service travel = chor.getDeployedChoreographyServiceByChoreographyServiceUID(ModelsForTest.TRAVEL_AGENCY);
 		
 		WSClient client = new WSClient(travel.getUris().get(0) + "?wsdl");
 		
@@ -82,12 +82,12 @@ public class VerticalScalingTest {
 		
 		
 		
-		ee.update(chorId, mediumSpec);
-		chor = ee.enact(chorId);
+		ee.updateChoreography(chorId, mediumSpec);
+		chor = ee.enactChoreography(chorId);
 		Thread.sleep(4000);
 		
-		airline = chor.getDeployedServiceByName(ModelsForTest.AIRLINE);
-		travel = chor.getDeployedServiceByName(ModelsForTest.TRAVEL_AGENCY);
+		airline = chor.getDeployedChoreographyServiceByChoreographyServiceUID(ModelsForTest.AIRLINE);
+		travel = chor.getDeployedChoreographyServiceByChoreographyServiceUID(ModelsForTest.TRAVEL_AGENCY);
 		
 		client = new WSClient(travel.getUris().get(0) + "?wsdl");
 		

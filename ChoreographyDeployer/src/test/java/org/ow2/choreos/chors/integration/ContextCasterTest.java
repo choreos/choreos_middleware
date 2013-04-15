@@ -14,7 +14,7 @@ import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.context.ContextCaster;
 import org.ow2.choreos.chors.context.ContextSender;
 import org.ow2.choreos.chors.context.ContextSenderFactory;
-import org.ow2.choreos.chors.datamodel.ChorSpec;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceDependency;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
@@ -49,7 +49,7 @@ public class ContextCasterTest {
 	private static final String AIRLINE_URI = "http://localhost:1234/airline";
 	private static final String TRAVEL_AGENCY_URI = "http://localhost:1235/travelagency";	
 	
-	private ChorSpec chorSpec; 
+	private ChoreographySpec chorSpec; 
 	private Map<String, Service> deployedServices;
 	
 	@BeforeClass
@@ -60,20 +60,20 @@ public class ContextCasterTest {
 	@Before
 	public void setUp() {
 		
-		chorSpec = new ChorSpec(); 
+		chorSpec = new ChoreographySpec(); 
 		deployedServices = new HashMap<String, Service>();
 		
 		ServiceSpec airline = new ServiceSpec();
 		airline.setName(AIRLINE);
 		airline.getRoles().add(AIRLINE);
-		chorSpec.addServiceSpec(airline);
+		chorSpec.addChoreographyServiceSpec(airline);
 		
 		ServiceSpec travel = new ServiceSpec();
 		travel.setName(TRAVEL_AGENCY);
 		travel.getRoles().add(TRAVEL_AGENCY);
-		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
+		ChoreographyServiceDependency dep = new ChoreographyServiceDependency(AIRLINE, AIRLINE);
 		travel.getDependencies().add(dep);
-		chorSpec.addServiceSpec(travel);
+		chorSpec.addChoreographyServiceSpec(travel);
 		
 		Service airlineServ = new Service();
 		airlineServ.setName(AIRLINE);

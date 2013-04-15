@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.chors.ModelsForTest;
-import org.ow2.choreos.chors.datamodel.ChorSpec;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.deployment.services.ServiceInstanceNotFoundException;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
@@ -35,7 +35,7 @@ public class ContextCasterTest {
 	private static final String TRAVEL_AGENCY_URI = "http://localhost:1235/travelagency";	
 	private static final String TRAVEL_AGENCY_PROXIFIED_URI = "http://localhost:8180/services/TravelAgencyServicePortClientProxyEndpoint";
 	
-	private ChorSpec chorSpec;
+	private ChoreographySpec chorSpec;
 	private Service airlineServ, travelServ;
 	private Map<String, Service> deployedServices;
 	
@@ -53,7 +53,7 @@ public class ContextCasterTest {
 		
 		airlineServ = new Service();
 		airlineServ.setName(AIRLINE);
-		airlineServ.setSpec(chorSpec.getServiceSpecByName(AIRLINE));
+		airlineServ.setChoreographySpec(chorSpec.getChoreographyServiceSpecByChoreographyServiceUID(AIRLINE));
 		ServiceInstance airlineInstance = new ServiceInstance(); 
 		airlineInstance.setInstanceId(AIRLINE);
 		airlineInstance.setNativeUri(AIRLINE_URI);
@@ -62,7 +62,7 @@ public class ContextCasterTest {
 
 		travelServ = new Service();
 		travelServ.setName(TRAVEL_AGENCY);
-		travelServ.setSpec(chorSpec.getServiceSpecByName(TRAVEL_AGENCY));
+		travelServ.setChoreographySpec(chorSpec.getChoreographyServiceSpecByChoreographyServiceUID(TRAVEL_AGENCY));
 		ServiceInstance travelInstance = new ServiceInstance(); 
 		travelInstance.setInstanceId(TRAVEL_AGENCY);
 		travelInstance.setNativeUri(TRAVEL_AGENCY_URI);
