@@ -7,15 +7,8 @@ import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.chef.impl.KnifeImpl;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.ConfigNotAppliedException;
-import org.ow2.choreos.deployment.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 
-/**
- * Uses knife commands (from chef) to manage cloud nodes
- * 
- * @author leonardo, cadu, felps
- *
- */
 public class RecipeApplier {
 
 	private Logger logger = Logger.getLogger(RecipeApplier.class);
@@ -37,28 +30,18 @@ public class RecipeApplier {
 
     public void applyRecipe(Node node, String cookbook, String recipe) throws ConfigNotAppliedException {
 
-    	NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
     	String configName = cookbook + "::" + recipe;
-    	
-        try {
-			if (!bootstrapper.isNodeAlreadyBootstrapped()) {
-				logger.debug("Node not initialized yet. Going to initialize it.");
-				bootstrapper.bootstrapNode();
-			}
-		} catch (NodeNotAccessibleException e) {
-			throw new ConfigNotAppliedException(configName, node.getId());
-		} catch (KnifeException e) {
-			throw new ConfigNotAppliedException(configName, node.getId());
-		}
 
-		if (node.getChefName() == null) {
-			logger.error("Node " + node.getIp() + " does not have a chef node name!");
+    	NodeChecker checker = new NodeChecker();
+    	try {
+    		checker.checkAndPrepareNode(node);
+		} catch (NodeNotOKException e) {
 			throw new ConfigNotAppliedException(configName, node.getId());
-		}
-        
+		} 
+
         Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
 
-        logger.debug("node name = " + node.getChefName());
+        logger.debug("aaplying " + configName + " to node " + node.getChefName());
 
         // Chef fails silently when adding multiple recipes concurrently
         synchronized(RecipeApplier.class) {
@@ -74,7 +57,7 @@ public class RecipeApplier {
 			throw new ConfigNotAppliedException(cookbook + "::" + recipe, node.getId());
         }
     }
-
+    
     private boolean verifyRecipeInRunList(Knife knife, String chefName,
 			String cookbook, String recipe) {
 
@@ -85,8 +68,4 @@ public class RecipeApplier {
 			return false;
 		}
 	}
-
-
-
-    
 }

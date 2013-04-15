@@ -87,7 +87,7 @@ public class Deployer {
 
 	private List<Service> deployNewServices(List<ServiceSpec> list) {
 
-		final int TIMEOUT = 5; // it may encompasses bootstrap time
+		final int TIMEOUT = 8; // it may encompasses bootstrap time
 		final int N = list.size();
 
 		ExecutorService executor = Executors.newFixedThreadPool(N);

@@ -1,7 +1,5 @@
 package org.ow2.choreos.deployment.nodes.cm;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chef.ChefNodeNameRetriever;
 import org.ow2.choreos.chef.Knife;
@@ -46,27 +44,7 @@ public class NodeBootstrapper {
     	this.sshTimeoutInSeconds = sshTimeoutInSeconds;
     }
     
-	public boolean isNodeAlreadyBootstrapped() {
-
-		Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
-		
-		List<String> nodes;
-		try {
-			nodes = knife.node().list();
-		} catch (KnifeException e) {
-			logger.error("Knife exception when verifying if node was initialized", e);
-			return false;
-		}
-		
-		if (nodes == null) { 
-			logger.error("knife.node().list() returned null list; this should never happen.");
-			return false;
-		}
-		
-		return nodes.contains(this.node.getChefName());
-    }
-	
-    public void bootstrapNode() throws NodeNotAccessibleException, KnifeException {
+    public void bootstrapNode() throws NodeNotAccessibleException, KnifeException, NodeNotBootstrappedException {
 
         SshWaiter sshWaiter = new SshWaiter();
         try {
@@ -82,6 +60,11 @@ public class NodeBootstrapper {
 		saveLogOnNode(bootstrapLog);
 		logger.info("Bootstrap completed at" + this.node);
 		this.retrieveAndSetChefName(bootstrapLog);
+		
+		NodeChecker checker = new NodeChecker();
+		if (!checker.checkNodeOnNodesList(node)) {
+			throw new NodeNotBootstrappedException("Node " + node.getId() + " not bootstrapped");
+		}
     }
 
 	private void saveLogOnNode(String bootstrapLog) {

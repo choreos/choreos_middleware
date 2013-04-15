@@ -9,6 +9,7 @@ import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.deployment.nodes.chef.ConfigToChef;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cm.NodeBootstrapper;
+import org.ow2.choreos.deployment.nodes.cm.NodeNotBootstrappedException;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpgrader;
 import org.ow2.choreos.deployment.nodes.cm.RecipeApplier;
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
@@ -57,6 +58,8 @@ public class NPMImpl implements NodePoolManager {
         	NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
         	bootstrapper.bootstrapNode();
         } catch (KnifeException e) {
+        	throw new NodeNotCreatedException(node.getId(), "Could not initialize node " + node);
+        } catch (NodeNotBootstrappedException e) {
         	throw new NodeNotCreatedException(node.getId(), "Could not initialize node " + node);
         } catch (NodeNotAccessibleException e) {
         	if (retry) {

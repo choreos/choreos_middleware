@@ -8,6 +8,7 @@ import org.junit.experimental.categories.Category;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
+import org.ow2.choreos.deployment.nodes.cm.BootstrapChecker;
 import org.ow2.choreos.deployment.nodes.cm.NodeBootstrapper;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
@@ -46,12 +47,13 @@ public class NodeBootstrapperTest {
 		node = cp.createOrUseExistingNode(new Node(), new ResourceImpact());
 		System.out.println(node);
 
-		NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
-		if (!bootstrapper.isNodeAlreadyBootstrapped()) {
+		BootstrapChecker checker = new BootstrapChecker(); 
+		if (!checker.isBootstrapped(node)) {
 			System.out.println("Going to bootstrap the node");
+			NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
 			bootstrapper.bootstrapNode();
 			System.out.println("Checking if bootstrap was OK");
-			assertTrue(bootstrapper.isNodeAlreadyBootstrapped());
+			assertTrue(checker.isBootstrapped(node));
 		} else {
 			System.out.println("Node was already bootstrapped");
 		}

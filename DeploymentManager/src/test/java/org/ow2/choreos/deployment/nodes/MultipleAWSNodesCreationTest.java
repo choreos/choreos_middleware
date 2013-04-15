@@ -8,12 +8,9 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.deployment.nodes.NPMImpl;
-import org.ow2.choreos.deployment.nodes.NodeNotCreatedException;
-import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.AWSCloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
-import org.ow2.choreos.deployment.nodes.cm.NodeBootstrapper;
+import org.ow2.choreos.deployment.nodes.cm.NodeChecker;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.tests.IntegrationTest;
@@ -82,8 +79,8 @@ public class MultipleAWSNodesCreationTest {
 			try {
 				Node node = npm.createNode(new Node(), new ResourceImpact());
 				created = true;
-				NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
-				bootstrapped = bootstrapper.isNodeAlreadyBootstrapped();
+				NodeChecker checker = new NodeChecker();
+				bootstrapped = checker.checkNodeOnNodesList(node);
 			} catch (NodeNotCreatedException e) {
 				System.out.println("Node not created in " + index + " because " + e.getMessage());
 			}
