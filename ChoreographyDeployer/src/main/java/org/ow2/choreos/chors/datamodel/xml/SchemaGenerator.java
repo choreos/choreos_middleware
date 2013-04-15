@@ -14,7 +14,7 @@ import javax.xml.transform.dom.DOMResult;
 import org.apache.log4j.Logger;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
-import org.ow2.choreos.chors.datamodel.ChorSpec;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.w3c.dom.Document;
 
@@ -25,7 +25,7 @@ public class SchemaGenerator {
 	public String generateChorSpecSchema() {
 		
 		try {
-			return this.generateSchema(ChorSpec.class);
+			return this.generateSchema(ChoreographySpec.class);
 		} catch (JAXBException e) {
 			logger.error("It should never happen");
 			return null;

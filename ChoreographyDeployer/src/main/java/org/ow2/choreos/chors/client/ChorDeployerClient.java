@@ -12,7 +12,7 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.ow2.choreos.chors.ChoreographyNotFoundException;
 import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.EnactmentException;
-import org.ow2.choreos.chors.datamodel.ChorSpec;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
 
 public class ChorDeployerClient implements ChoreographyDeployer {
@@ -51,7 +51,7 @@ public class ChorDeployerClient implements ChoreographyDeployer {
 	}
 
 	@Override
-	public String createChoreography(ChorSpec chor) {
+	public String createChoreography(ChoreographySpec chor) {
 
 		WebClient client = setupClient();
 		client.path("chors");
@@ -83,7 +83,7 @@ public class ChorDeployerClient implements ChoreographyDeployer {
 	}
 
 	@Override
-	public Choreography enact(String chorId) throws EnactmentException, ChoreographyNotFoundException {
+	public Choreography enactChoreography(String chorId) throws EnactmentException, ChoreographyNotFoundException {
 		
 		WebClient client = setupClient();
 		client.path("chors");
@@ -105,7 +105,7 @@ public class ChorDeployerClient implements ChoreographyDeployer {
 	}
 
 	@Override
-	public void update(String chorId, ChorSpec spec) throws ChoreographyNotFoundException, EnactmentException {
+	public void updateChoreography(String chorId, ChoreographySpec spec) throws ChoreographyNotFoundException, EnactmentException {
 	
 		WebClient client = setupClient();
 		client.path("chors");

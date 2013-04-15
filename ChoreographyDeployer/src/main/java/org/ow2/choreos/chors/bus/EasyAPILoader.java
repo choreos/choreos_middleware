@@ -21,7 +21,8 @@ public class EasyAPILoader {
 		if (!loaded) {
 	        try {
 	            // ADD JAXB FACTORY
-	        	Class[] classes = new Class[]{esstar.petalslink.com.data.management.user._1.ObjectFactory.class,
+	        	@SuppressWarnings("rawtypes")
+				Class[] classes = new Class[]{esstar.petalslink.com.data.management.user._1.ObjectFactory.class,
 	        			easybox.org.oasis_open.docs.wsrf.bf_2.ObjectFactory.class,
 	        			easybox.org.oasis_open.docs.wsn.b_2.ObjectFactory.class,
 	        			easybox.org.oasis_open.docs.wsrf.r_2.ObjectFactory.class,

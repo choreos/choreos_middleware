@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.ow2.choreos.chors.datamodel.ChorSpec;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
 
 
@@ -37,13 +37,13 @@ public class ChorRegistry {
 	 * Creates a new choreography entry
 	 * @return the just registred choreography ID
 	 */
-	public String create(ChorSpec chorSpec) {
+	public String create(ChoreographySpec chorSpec) {
 		
 		String id = Integer.toString(counter.incrementAndGet());
 		
 		Choreography chor = new Choreography();
 		chor.setId(id);
-		chor.setSpec(chorSpec);
+		chor.setChoreographySpec(chorSpec);
 		chors.put(id, chor);
 		
 		return id;

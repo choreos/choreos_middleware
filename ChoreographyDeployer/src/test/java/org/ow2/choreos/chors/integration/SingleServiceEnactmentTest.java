@@ -6,9 +6,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.chors.ChorDeployerImpl;
+import org.ow2.choreos.chors.ChoreographyDeployerImpl;
 import org.ow2.choreos.chors.ChoreographyDeployer;
-import org.ow2.choreos.chors.datamodel.ChorSpec;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
@@ -35,7 +35,7 @@ public class SingleServiceEnactmentTest {
 	private static final String WEATHER_FORECAST_CODE_URI = "http://valinhos.ime.usp.br:54080/demo2/jars/choreos-usecase-1.0-SNAPSHOT-WeatherForecast.jar";
 	private static final int WEATHER_FORECAST_PORT = 8192;
 	
-	private ChorSpec chor;
+	private ChoreographySpec chor;
 	
 	@BeforeClass
 	public static void startServers() {
@@ -45,7 +45,7 @@ public class SingleServiceEnactmentTest {
 	@Before
 	public void setUp() {
 		
-		chor = new ChorSpec();
+		chor = new ChoreographySpec();
 		ServiceSpec service = new ServiceSpec();
 		service.setName(WEATHER_FORECAST_SERVICE);
 	//	service.setCodeUri(AirportProperties.get(WEATHER_FORECAST_SERVICE + ".codeUri"));
@@ -54,17 +54,17 @@ public class SingleServiceEnactmentTest {
 		service.setPort(port);
 		service.getRoles().add(WEATHER_FORECAST_SERVICE);
 		service.setPackageType(PackageType.COMMAND_LINE);
-		chor.addServiceSpec(service);
+		chor.addChoreographyServiceSpec(service);
 	}
 	
 	@Test
 	public void shouldEnactChoreography() throws Exception {
 		
-		ChoreographyDeployer ee = new ChorDeployerImpl();
+		ChoreographyDeployer ee = new ChoreographyDeployerImpl();
 		String chorId = ee.createChoreography(chor);
-		Choreography chor = ee.enact(chorId);
+		Choreography chor = ee.enactChoreography(chorId);
 		
-		Service weather = chor.getDeployedServiceByName(WEATHER_FORECAST_SERVICE);
+		Service weather = chor.getDeployedChoreographyServiceByChoreographyServiceUID(WEATHER_FORECAST_SERVICE);
 		WSClient client = new WSClient(""/*weather.getUri()*/ + "?wsdl");
 		
 		Item request = new ItemImpl("getWeatherAt");

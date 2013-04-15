@@ -1,7 +1,7 @@
 package org.ow2.choreos.chors;
 
 import org.junit.Test;
-import org.ow2.choreos.chors.datamodel.ChorSpec;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 
 /**
@@ -20,11 +20,11 @@ public class ChorDeployerTest {
 	@Test(expected=EnactmentException.class)
 	public void shouldThrowExceptionWhenDeploymentManagerIsNotAvailable() throws EnactmentException, ChoreographyNotFoundException {
 		
-		ChoreographyDeployer chorDeployer = new ChorDeployerImpl();
+		ChoreographyDeployer chorDeployer = new ChoreographyDeployerImpl();
 		ModelsForTest models = new ModelsForTest(PackageType.COMMAND_LINE);
-		ChorSpec chorSpec = models.getChorSpec();
+		ChoreographySpec chorSpec = models.getChorSpec();
 		String id = chorDeployer.createChoreography(chorSpec);
-		chorDeployer.enact(id);
+		chorDeployer.enactChoreography(id);
 	}
 
 }
