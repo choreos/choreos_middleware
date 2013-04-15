@@ -9,16 +9,6 @@ import org.ow2.choreos.deployment.nodes.datamodel.Node;
 public class ServiceInstance {
 	
 	/**
-	 * Host name of node that hosts the legacy instance
-	 */
-	private String legacyHostname;
-	
-	/**
-	 * Ip address of node that hosts the legacy instance
-	 */
-	private String legacyIp;
-	
-	/**
 	 * The hosting node of a non-legacy instance
 	 */
 	private Node node;
@@ -43,31 +33,40 @@ public class ServiceInstance {
 	 */
 	private String instanceId;
 	
-	/**
-	 * Id of its service
+	/*
+	 * The reference to the service object that this service instance is its
 	 */
-	private String serviceId;
+	private DeployedService service;
 	
-	
-	// must have not this property
-	private ServiceSpec myParentServiceSpec;
-	
-	
-	
-	
-	
+
 	/*
 	 * Default constructor used by Java XML Bindings
 	 */
 	public ServiceInstance() {
 		
 	}
+
+	public Map<ServiceType, String> getBusUris() {
+		return busUris;
+	}
 	
-	public ServiceInstance(Node node, Service service) {
+	public void setBusUris(Map<ServiceType, String> busUris) {
+		this.busUris = busUris;
+	}
+	
+	public DeployedService getService() {
+		return service;
+	}
+	
+	public void setService(DeployedService service) {
+		this.service = service;
+	}
+	
+	public ServiceInstance(Node node, DeployedService service) {
 		this.setNode(node);
-		this.setMyParentServiceSpec(service.getSpec());
 		this.setInstanceId(UUID.randomUUID().toString());
 		service.addInstance(this);
+		this.service = service;
 	}
 	
 	public Node getNode() {
@@ -76,42 +75,8 @@ public class ServiceInstance {
 
 	public void setNode(Node node) {
 		this.node = node;
-		//this.setLegacyHostname(node.getHostname());
-		//this.setLegacyIp(node.getIp());
 	}
-	
-	/**
-	 * 
-	 * @param host It can be the IP or the host name where the service was deployed
-	 */
-	public void setLegacyHostname(String host) {
-		this.legacyHostname = host;
-	}
-	
-	/**
-	 * 
-	 * @return It can be the IP or the host name where the service was deployed
-	 */
-	public String getLegacyHostname() {
-		return legacyHostname;
-	}
-
-	public String getLegacyIp() {
-		return legacyIp;
-	}
-
-	public void setLegacyIp(String ip) {
-		this.legacyIp = ip;
-	}
-	
-	public ServiceSpec getMyParentServiceSpec() {
-		return myParentServiceSpec;
-	}
-
-	public void setMyParentServiceSpec(ServiceSpec myParentServiceSpec) {
-		this.myParentServiceSpec = myParentServiceSpec;
-	}
-
+		
 	public String getBusUri(ServiceType type) {
 		return this.busUris.get(type);
 	}
@@ -126,14 +91,6 @@ public class ServiceInstance {
 
 	public void setInstanceId(String instanceId) {
 		this.instanceId = instanceId;
-	}
-
-	public String getServiceId() {
-		return serviceId;
-	}
-
-	public void setServiceId(String serviceId) {
-		this.serviceId = serviceId;
 	}
 
 	public void setNativeUri(String uri) {
@@ -158,50 +115,47 @@ public class ServiceInstance {
 		// http://www.searchenginejournal.com/to-slash-or-not-to-slash-thats-a-server-header-question/6763/
 		
 		String _hostname, _ip;
-		if(this.getMyParentServiceSpec().getPackageType() == PackageType.LEGACY) {
-			_hostname = legacyHostname;
-			_ip = legacyIp;
-		} else {
-			_hostname = node.getHostname();
-			_ip = node.getIp();
-		}
+		_hostname = node.getHostname();
+		_ip = node.getIp();
 		
 		if(_hostname == null && _ip == null)
 			throw new IllegalStateException("Sorry, I don't know neither the hostname nor the IP yet");
 		
-		String uriContext;
+		String uriContext;		
+		String endpointName = ((DeployedServiceSpec)service.getSpec()).getEndpointName();
+		PackageType packageType = service.getSpec().packageType;
 		
-		switch (getMyParentServiceSpec().getPackageType()) {
+		switch (packageType) {
 			case TOMCAT:
-				uriContext = getMyParentServiceSpec().getName() + "/" + getMyParentServiceSpec().getEndpointName();
+			uriContext = service.getSpec().getUUID() + "/" + 
+						endpointName;
 				break;
 			case COMMAND_LINE:
-				uriContext = getMyParentServiceSpec().getEndpointName() + "/";
+				uriContext = endpointName + "/";
 				break;
 			case EASY_ESB:
-				uriContext = "services/" + getMyParentServiceSpec().getEndpointName() + "ClientProxyEndpoint/";
+				uriContext = "services/" + endpointName + "ClientProxyEndpoint/";
 				break;
 			default:
-				throw new IllegalStateException(
+			throw new IllegalStateException(
 						"Sorry, I don't know how to provide an URL to a "
-								+ getMyParentServiceSpec().packageType + " service.");
+								+ packageType + " service.");
 		}
 		
-		if (_ip != null && !_ip.isEmpty())
-			return "http://" + _ip + ":" + getMyParentServiceSpec().getPort() + "/" + uriContext;
-		else
-			return "http://" + _hostname + ":" + getMyParentServiceSpec().getPort() + "/" + uriContext;
+		int port = ((DeployedServiceSpec)service.getSpec()).getPort();
+		if (_ip != null && !_ip.isEmpty()) {
+			return "http://" + _ip + ":" + port + "/" + uriContext;
+		} else
+			return "http://" + _hostname + ":" + port + "/" + uriContext;
 	}
 	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		ServiceSpec spec = getMyParentServiceSpec();
 		result = prime * result + ((nativeUri == null) ? 0 : nativeUri.hashCode());
-		result = prime * result + ((spec == null) ? 0 : spec.hashCode());
 		result = prime * result + ((instanceId == null) ? 0 : instanceId.hashCode());
-		result = prime * result + ((serviceId == null) ? 0 : serviceId.hashCode());
+		result = prime * result + ((service == null) ? 0 : service.hashCode());
 		return result;
 	}
 
@@ -222,12 +176,6 @@ public class ServiceInstance {
 		} else if (!nativeUri.equals(other.nativeUri))
 			return false;
 		
-		if (getMyParentServiceSpec() == null) {
-			if (other.getMyParentServiceSpec() != null)
-				return false;
-		} else if (!getMyParentServiceSpec().equals(other.getMyParentServiceSpec()))
-			return false;
-		
 		boolean equalsInstance = true;
 		if(instanceId == null)  {
 			if(other.instanceId != null)
@@ -236,15 +184,12 @@ public class ServiceInstance {
 			equalsInstance = false;
 		
 		boolean equalsService = true;
-		if(serviceId == null)  {
-			if(other.serviceId != null)
+		if(service == null)  {
+			if(other.service != null)
 				equalsService = false;
-		} else if(!serviceId.equals(other.serviceId))
+		} else if(!service.equals(other.service))
 			equalsService = false;
 		
-		/*
-		 * same instance of the same service
-		 */
 		if(!(equalsInstance && equalsService)) return false;
 		
 		return true;

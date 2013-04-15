@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.Configuration;
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
 
 
 public abstract class BaseRecipeBuilder implements RecipeBuilder {
@@ -24,14 +24,14 @@ public abstract class BaseRecipeBuilder implements RecipeBuilder {
 		this.recipeName = recipeName;
 	}
 	
-	public Recipe createRecipe(ServiceSpec serviceSpec) {
+	public Recipe createRecipe(DeployedServiceSpec serviceSpec) {
 		
 		Recipe recipe = new Recipe();
 
 		try {
 			
 			recipe.setName(this.recipeName);
-			recipe.setCookbookName("service" + serviceSpec.getName());
+			recipe.setCookbookName("service" + serviceSpec.getUUID());
 			this.recipeFile = this.recipeName + ".rb";
 			File targetFolder = getTargetFolder(serviceSpec);
 			recipe.setCookbookFolder(targetFolder.getAbsolutePath());
@@ -68,26 +68,26 @@ public abstract class BaseRecipeBuilder implements RecipeBuilder {
 	 * @param serviceSpec
 	 * @return
 	 */
-	public abstract String replace(String content, ServiceSpec serviceSpec);
+	public abstract String replace(String content, DeployedServiceSpec serviceSpec);
 
 	// methods have "package visibility" to testing purposes
 
-	void changeMetadataRb(ServiceSpec serviceSpec) throws IOException {
-		changeFileContents(serviceSpec, "/service" + serviceSpec.getName()
+	void changeMetadataRb(DeployedServiceSpec serviceSpec) throws IOException {
+		changeFileContents(serviceSpec, "/service" + serviceSpec.getUUID()
 				+ "/metadata.rb");
 	}
 
-	private void changeServerRecipe(ServiceSpec serviceSpec) throws IOException {
-		changeFileContents(serviceSpec, "/service" + serviceSpec.getName()
+	private void changeServerRecipe(DeployedServiceSpec serviceSpec) throws IOException {
+		changeFileContents(serviceSpec, "/service" + serviceSpec.getUUID()
 				+ "/recipes/"+this.recipeFile);
 	}
 
-	void changeAttributesDefaultRb(ServiceSpec serviceSpec) throws IOException {
-		changeFileContents(serviceSpec, "/service" + serviceSpec.getName()
+	void changeAttributesDefaultRb(DeployedServiceSpec serviceSpec) throws IOException {
+		changeFileContents(serviceSpec, "/service" + serviceSpec.getUUID()
 				+ "/attributes/default.rb");
 	}
 
-	private void changeFileContents(ServiceSpec serviceSpec, String fileLocation)
+	private void changeFileContents(DeployedServiceSpec serviceSpec, String fileLocation)
 			throws IOException {
 
 		File file = new File(DEST_DIR + fileLocation);
@@ -105,19 +105,19 @@ public abstract class BaseRecipeBuilder implements RecipeBuilder {
 		}
 	}
 	
-	private File getTargetFolder(ServiceSpec serviceSpec) {
+	private File getTargetFolder(DeployedServiceSpec serviceSpec) {
 		
-		String destPath = DEST_DIR.getAbsolutePath() + "/service" + serviceSpec.getName();
+		String destPath = DEST_DIR.getAbsolutePath() + "/service" + serviceSpec.getUUID();
 		File destFolder = new File(destPath);
 		
 		return destFolder;
 	}
 
-	String copyTemplate(ServiceSpec serviceSpec) throws IOException {
+	String copyTemplate(DeployedServiceSpec serviceSpec) throws IOException {
 		
 		File srcFolder = new File(this.templateDir);
 		
-		String destPath = DEST_DIR.getAbsolutePath() + "/service" + serviceSpec.getName();
+		String destPath = DEST_DIR.getAbsolutePath() + "/service" + serviceSpec.getUUID();
 		File destFolder = new File(destPath);
 		
 		synchronized(BaseRecipeBuilder.class) {
