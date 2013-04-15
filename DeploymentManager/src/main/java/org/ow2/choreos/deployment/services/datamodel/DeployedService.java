@@ -33,7 +33,9 @@ public class DeployedService extends Service {
 	}
 
 	public void setInstances(List<ServiceInstance> instances) {
-		this.serviceInstances = instances;
+		for (ServiceInstance ins: instances) {
+			addInstance(ins);
+		}
 	}
 
 	public void addInstance(ServiceInstance instance) {
@@ -41,6 +43,7 @@ public class DeployedService extends Service {
 			serviceInstances = new ArrayList<ServiceInstance>();
 		}
 		serviceInstances.add(instance);
+		instance.setService(this);
 	}
 
 	@Override
