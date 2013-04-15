@@ -1,23 +1,17 @@
 package org.ow2.choreos.deployment.services.rest;
 
-import java.util.Collections;
-
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.apache.cxf.jaxrs.client.ResponseReader;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
-import org.ow2.choreos.deployment.services.ServiceNotFoundException;
-import org.ow2.choreos.deployment.services.ServicesManager;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
+import org.ow2.choreos.deployment.services.ServiceNotFoundException;
 import org.ow2.choreos.deployment.services.ServiceNotModifiedException;
 import org.ow2.choreos.deployment.services.ServicesManager;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
-import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
 
 /**
  * Access Service Deployer functionalities through the REST API.

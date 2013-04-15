@@ -257,4 +257,14 @@ public class ServiceInstance {
 	public void setEasyEsbNodeAdminEndpoint(String easyEsbNodeAdminEndpoint) {
 		this.easyEsbNodeAdminEndpoint = easyEsbNodeAdminEndpoint;
 	}
+
+	@Override
+	public String toString() {
+		return "ServiceInstance [legacyHostname=" + legacyHostname
+				+ ", legacyIp=" + legacyIp + ", node=" + node
+				+ ", easyEsbNodeAdminEndpoint=" + easyEsbNodeAdminEndpoint
+				+ ", nativeUri=" + nativeUri + ", instanceId=" + instanceId
+				+ ", serviceId=" + serviceId + "]";
+	}
+	
 }

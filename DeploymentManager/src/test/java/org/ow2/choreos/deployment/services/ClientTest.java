@@ -22,7 +22,7 @@ import org.ow2.choreos.utils.LogConfigurator;
 
 /**
  * This is the same that JARDeployTest,
- * but now we using the REST API.
+ * but now using the REST API.
  * 
  * @author leonardo
  *
@@ -36,7 +36,7 @@ public class ClientTest {
 	private static DeploymentManagerServer server;
 	
 	private NodePoolManager npm;
-	private ServicesManager deployer;
+	private ServicesManager servicesManager;
 
 	private WebClient client;
 	private ServiceSpec spec = new ServiceSpec();
@@ -56,7 +56,7 @@ public class ClientTest {
 		Configuration.set("BUS", "false");
 		
 		npm = new NodesClient(deploymentManagerHost);
-		deployer = new ServicesClient(deploymentManagerHost);
+		servicesManager = new ServicesClient(deploymentManagerHost);
 		
 		spec.setName("simplews");
 		spec.setPackageUri(JAR_LOCATION);
@@ -73,7 +73,7 @@ public class ClientTest {
 	@Test
 	public void shouldDeployAWarServiceInANode() throws Exception {
 
-		Service service = deployer.createService(spec);
+		Service service = servicesManager.createService(spec);
 		
 		// now get the first instance
 		ServiceInstance instance = service.getInstances().get(0);

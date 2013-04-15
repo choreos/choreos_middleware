@@ -1,11 +1,9 @@
 package org.ow2.choreos.deployment.services.datamodel;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.ow2.choreos.deployment.services.ServiceInstanceNotFoundException;
 import org.ow2.choreos.deployment.services.recipe.Recipe;
@@ -27,9 +25,8 @@ public class Service {
 	/**
 	 * The list of all instances of the service
 	 */
-	private List<ServiceInstance> serviceInstances = new ArrayList<ServiceInstance>(); // should be null at first because JAXB
+	private List<ServiceInstance> serviceInstances; // should be null at first because JAXB
 
-	@XmlTransient
 	private Recipe recipe;
 
 	
@@ -83,7 +80,7 @@ public class Service {
 	}
 
 	public List<ServiceInstance> getInstances() {
-		return Collections.unmodifiableList(serviceInstances);
+		return serviceInstances;
 	}
 
 	public void setInstances(List<ServiceInstance> instances) {
@@ -190,4 +187,5 @@ public class Service {
 	public Recipe getRecipe() {
 		return recipe;
 	}
+	
 }

@@ -47,7 +47,17 @@ public class ServicesResource {
 	private Logger logger = Logger.getLogger(ServicesResource.class);
 	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
 	private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-	private ServicesManager serviceDeployer = new ServicesManagerImpl(npm);
+	private ServicesManager servicesManager = new ServicesManagerImpl(npm);
+	
+	public ServicesResource() {
+		
+	}
+	
+	// to test purposes
+	ServicesResource(ServicesManager servicesManager, NodePoolManager npm) {
+		this.servicesManager = servicesManager;
+		this.npm = npm;
+	}
 	
 	/**
 	 * Deploys a service
@@ -61,10 +71,8 @@ public class ServicesResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response deployService(JAXBElement<ServiceSpec> serviceSpecXML, 
-			@Context UriInfo uriInfo) {
+	public Response createService(ServiceSpec serviceSpec, @Context UriInfo uriInfo) {
 
-		ServiceSpec serviceSpec = serviceSpecXML.getValue();
 		if (serviceSpec.getPackageUri() == null || serviceSpec.getPackageUri().isEmpty() 
 				|| serviceSpec.getPackageType() == null)
 			return Response.status(Status.BAD_REQUEST).build();
@@ -73,7 +81,7 @@ public class ServicesResource {
 
 		Service service;
 		try {
-			service = serviceDeployer.createService(serviceSpec);
+			service = servicesManager.createService(serviceSpec);
 		} catch (ServiceNotDeployedException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
@@ -107,7 +115,7 @@ public class ServicesResource {
 		logger.debug("Request to get service " + serviceId);
 		Service service;
 		try {
-			service = serviceDeployer.getService(serviceId);
+			service = servicesManager.getService(serviceId);
 		} catch (ServiceNotFoundException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
@@ -133,7 +141,7 @@ public class ServicesResource {
 		logger.debug("Request to get instance " + serviceId + " of service "+ serviceId);
 		Service service;
 		try {
-			service = serviceDeployer.getService(serviceId);
+			service = servicesManager.getService(serviceId);
 		} catch (ServiceNotFoundException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();			
 		}
@@ -162,7 +170,7 @@ public class ServicesResource {
 		Service service;
 		ServiceInstance instance;
 		try {
-			service = serviceDeployer.getService(serviceId);
+			service = servicesManager.getService(serviceId);
 			instance = service.getInstance(instanceId);
 		} catch (ServiceNotFoundException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();			
@@ -189,7 +197,7 @@ public class ServicesResource {
 		logger.debug("Request to delete service " + serviceId);
 		
 		try {
-			serviceDeployer.deleteService(serviceId);
+			servicesManager.deleteService(serviceId);
 		} catch (ServiceNotDeletedException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		} catch (ServiceNotFoundException e) {
@@ -227,7 +235,7 @@ public class ServicesResource {
 
 		Service service;
 		try {
-			service = serviceDeployer.updateService(serviceId, serviceSpec);
+			service = servicesManager.updateService(serviceId, serviceSpec);
 		} catch (ServiceNotModifiedException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		} catch (UnhandledModificationException e) {
