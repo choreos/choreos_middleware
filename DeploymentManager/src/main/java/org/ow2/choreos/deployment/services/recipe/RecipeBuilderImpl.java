@@ -1,6 +1,6 @@
 package org.ow2.choreos.deployment.services.recipe;
 
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
 
 
 public class RecipeBuilderImpl extends BaseRecipeBuilder {
@@ -12,9 +12,9 @@ public class RecipeBuilderImpl extends BaseRecipeBuilder {
 	}
 	
 	@Override
-	public String replace(String content, ServiceSpec serviceSpec) {
-		content = content.replace("$NAME", serviceSpec.getName());
-		content = content.replace("$URL", serviceSpec.getPackageUri());
+	public String replace(String content, DeployedServiceSpec serviceSpec) {
+		content = content.replace("$NAME", serviceSpec.getUUID());
+		content = content.replace("$PackageURL", serviceSpec.getPackageUri());
 		content = content.replace("$WARFILE", serviceSpec.getFileName());
 		return content;
 	}

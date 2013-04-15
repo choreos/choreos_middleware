@@ -12,17 +12,15 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpactDefs.MemoryTypes;
+import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
-import org.ow2.choreos.deployment.services.recipe.Recipe;
-import org.ow2.choreos.deployment.services.recipe.RecipeBuilderImpl;
 
 public class RecipeBuilderTest {
 
 	private static String RECIPES_FOLDER = "chef/recipes";
 	
 	private RecipeBuilderImpl recipeBuilder;
-	private static ServiceSpec service;
+	private static DeployedServiceSpec serviceSpec;
 	private static String id = "myServletWAR";
 	private static String codeLocationURI = "https://github.com/downloads/choreos/choreos_middleware/myServletWAR.war";
 	private static ResourceImpact impact = new ResourceImpact();
@@ -37,11 +35,10 @@ public class RecipeBuilderTest {
 		impact.setMemory(MemoryTypes.SMALL);
 		impact.setRegion("BR");
 
-		service = new ServiceSpec();
-		service.setPackageUri(codeLocationURI);
-		service.setPackageType(PackageType.TOMCAT);
-		service.setResourceImpact(impact);
-		service.setName(id);
+		serviceSpec = new DeployedServiceSpec();
+		serviceSpec.setPackageUri(codeLocationURI);
+		serviceSpec.setPackageType(PackageType.TOMCAT);
+		serviceSpec.setResourceImpact(impact);
 	}
 
 	@Before
@@ -58,7 +55,7 @@ public class RecipeBuilderTest {
 	@Test
 	public void shouldCreateACopyOfTheFilesInTheTemplate() throws IOException {
 
-		recipeBuilder.copyTemplate(service);
+		recipeBuilder.copyTemplate(serviceSpec);
 		assertTemplateFolderWasCopied();
 	}
 
@@ -72,7 +69,7 @@ public class RecipeBuilderTest {
 	@Test
 	public void shouldReplaceOcurrencesInMetadataRb() throws IOException {
 
-		recipeBuilder.changeMetadataRb(service);
+		recipeBuilder.changeMetadataRb(serviceSpec);
 		assertAllOcurrencesInMetadataRbWereReplaced();
 	}
 
@@ -93,7 +90,7 @@ public class RecipeBuilderTest {
 	@Test
 	public void shouldReplaceOcurrencesInAttributesServerRb() throws Exception {
 		
-		recipeBuilder.changeAttributesDefaultRb(service);
+		recipeBuilder.changeAttributesDefaultRb(serviceSpec);
 		assertAllOcurrencesWereReplacedInDefaultRb();
 	}
 
@@ -108,7 +105,7 @@ public class RecipeBuilderTest {
 		assertFalse(fileData.contains("$NAME"));
 
 		// Ensure the ocurrences of $WARFILE were replaced with war file name
-		String warFile = service.getFileName();
+		String warFile = serviceSpec.getFileName();
 		assertTrue(fileData.contains(warFile));
 		assertFalse(fileData.contains("$WARFILE"));
 
@@ -139,7 +136,7 @@ public class RecipeBuilderTest {
 	public void shouldCreateFullRecipe() throws Exception {
 		deleteDirectory();
 
-		Recipe recipe = recipeBuilder.createRecipe(service);
+		Recipe recipe = recipeBuilder.createRecipe(serviceSpec);
 
 		assertTemplateFolderWasCopied();
 		assertAllOcurrencesInMetadataRbWereReplaced();

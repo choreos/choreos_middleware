@@ -9,12 +9,13 @@
 
 
 # Name of the deployed service 
-default['service']['$NAME']['WarFile']	    = "$WARFILE"
-default['service']['$NAME']['URL']          = "$URL"
+default['CHOReOSData']['serviceData']['$NAME']['WarFile'] = "$WARFILE"
+default['CHOReOSData']['serviceData']['$NAME']['PackageURL'] = "$PackageURL"
+default['CHOReOSData']['serviceData']['$NAME']['NumberOfClients'] = 1
 
 # Set the default log filewar_depl
-default['service']['$NAME']['logFile']      = "/dev/stdout"
+default['CHOReOSData']['serviceData']['$NAME']['logFile'] = "/dev/stdout"
 
 # Set the destination folder for JAR files
-default['service']['$NAME']['jarDir']       = ENV["HOME"]
+default['CHOReOSData']['serviceData']['$NAME']['InstallationDir'] = ENV["HOME"]
 

@@ -19,13 +19,27 @@
 include_recipe "apt" # java recipe is failing without recipe apt
 include_recipe "java"
 
-remote_file "#{node['service']['$NAME']['jarDir']}/service$NAMEDeploy.jar" do
-  source "#{node['service']['$NAME']['URL']}"
-  action :create_if_missing
+
+service "service_$NAME_jar" do
+ 	start_command "start-stop-daemon -b --start --quiet --oknodo --pidfile /var/run/service$NAMEDeploy.pid --exec `/usr/bin/which java` -- -jar #{node['CHOReOSData']['serviceData']['$NAME']['installationDir']}/service$NAMEDeploy.jar"
+ 	stop_command "start-stop-daemon --stop --signal 15 --quiet --oknodo --pidfile /var/run/service$NAMEDeploy.pid"
+ 	action :nothing
+ 	supports :start => true, :stop => true
 end
 
-service "execute_jar" do
-  supports :start => true
-  start_command "java -jar #{node['service']['$NAME']['jarDir']}/service$NAMEDeploy.jar &"
-  action [ :start ]
+if node['CHOReOSData']['serviceData']['$NAME']['NumberOfClients'] > 0
+	remote_file "#{node['CHOReOSData']['serviceData']['$NAME']['InstallationDir']}/service$NAMEDeploy.jar" do
+  		source "#{node['CHOReOSData']['serviceData']['$NAME']['PackageURL']}"
+  		action :create_if_missing
+		#notifies :enable, "service[service_$NAME_jar]"
+		notifies :start, "service[service_$NAME_jar]"
+	end
+end
+
+if node['CHOReOSData']['serviceData']['$NAME']['NumberOfClients'] <= 0
+	file "#{node['CHOReOSData']['serviceData']['$NAME']['InstallationDir']}/service$NAMEDeploy.jar" do
+		notifies :stop, "service[service_$NAME_jar]", :immediately
+		#notifies :disable, "service[service_$NAME_jar]", :immediately
+		action :delete
+	end
 end
