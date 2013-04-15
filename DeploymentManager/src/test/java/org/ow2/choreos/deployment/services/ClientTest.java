@@ -12,10 +12,10 @@ import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.rest.NodesClient;
 import org.ow2.choreos.deployment.rest.DeploymentManagerServer;
+import org.ow2.choreos.deployment.services.datamodel.DeployedService;
+import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
-import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.deployment.services.rest.ServicesClient;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -39,7 +39,7 @@ public class ClientTest {
 	private ServicesManager deployer;
 
 	private WebClient client;
-	private ServiceSpec spec = new ServiceSpec();
+	private DeployedServiceSpec spec = new DeployedServiceSpec();
 
 	@BeforeClass
 	public static void configureLog() throws InterruptedException {
@@ -58,7 +58,6 @@ public class ClientTest {
 		npm = new NodesClient(deploymentManagerHost);
 		deployer = new ServicesClient(deploymentManagerHost);
 		
-		spec.setName("simplews");
 		spec.setPackageUri(JAR_LOCATION);
 		spec.setPackageType(PackageType.COMMAND_LINE);
 		spec.setEndpointName("");
@@ -73,7 +72,7 @@ public class ClientTest {
 	@Test
 	public void shouldDeployAWarServiceInANode() throws Exception {
 
-		Service service = deployer.createService(spec);
+		DeployedService service = deployer.createService(spec);
 		
 		// now get the first instance
 		ServiceInstance instance = service.getInstances().get(0);
