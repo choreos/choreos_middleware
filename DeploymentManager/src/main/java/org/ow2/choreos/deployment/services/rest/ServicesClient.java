@@ -1,23 +1,17 @@
 package org.ow2.choreos.deployment.services.rest;
 
-import java.util.Collections;
-
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.apache.cxf.jaxrs.client.ResponseReader;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
-import org.ow2.choreos.deployment.services.ServiceNotFoundException;
-import org.ow2.choreos.deployment.services.ServicesManager;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
+import org.ow2.choreos.deployment.services.ServiceNotFoundException;
 import org.ow2.choreos.deployment.services.ServiceNotModifiedException;
 import org.ow2.choreos.deployment.services.ServicesManager;
-import org.ow2.choreos.deployment.services.datamodel.Service;
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
-import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
+import org.ow2.choreos.deployment.services.datamodel.DeployedService;
+import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
 
 /**
  * Access Service Deployer functionalities through the REST API.
@@ -57,63 +51,52 @@ public class ServicesClient implements ServicesManager {
 
 	// TODO: review this methods for new client path
 	@Override
-	public Service createService(ServiceSpec serviceSpec) throws ServiceNotDeployedException {
+	public DeployedService createService(DeployedServiceSpec serviceSpec) throws ServiceNotDeployedException {
 
 		WebClient client = setupClient();
 		client.path("services");
-		Service service = null;
+		DeployedService service = null;
 		try {
-			service = client.post(serviceSpec, Service.class);
+			service = client.post(serviceSpec, DeployedService.class);
 		} catch (WebApplicationException e) {
-			throw new ServiceNotDeployedException(serviceSpec.getName());
+			throw new ServiceNotDeployedException(service.getSpec().getUUID());
 		}
 
 		return service;
 	}
 
 	@Override
-	public Service getService(String serviceId) throws ServiceNotFoundException{
+	public DeployedService getService(String uuid) throws ServiceNotFoundException{
 		WebClient client = setupClient();
-		client.path("services").path(serviceId);
-		Service service = null;
+		client.path("services").path(uuid);
+		DeployedService service = null;
 		try {
 			service = client.get(null);
 		} catch (WebApplicationException e) {
-			throw new ServiceNotFoundException(serviceId);
+			throw new ServiceNotFoundException(uuid);
 		}
 
 		return service;
 	}
 
 	@Override
-	public void deleteService(String serviceId) {
+	public void deleteService(String uuid) {
 
 		throw new NotImplementedException();
 	}
 
 	@Override
-	public Service updateService(String serviceId, ServiceSpec serviceSpec)
+	public DeployedService updateService(String uuid, DeployedServiceSpec serviceSpec)
 			throws ServiceNotModifiedException {
 
 		WebClient client = setupClient();
-		client.path("services").path(serviceId);
-		Service service;
+		client.path("services").path(uuid);
+		DeployedService service = null;
 		try {
-			service = client.post(serviceSpec, Service.class);
+			service = client.post(serviceSpec, DeployedService.class);
 		} catch (WebApplicationException e) {
-			throw new ServiceNotModifiedException(serviceSpec.getName());
+			throw new ServiceNotModifiedException(service.getSpec().getUUID());
 		}
-		
-		//System.out.println("\n\n Entity \n\n" + response.getEntity() + "\n\n");
-		
-		//if(response.getStatus() != 200) {
-		//	ServiceNotModifiedException e = new ServiceNotModifiedException(serviceId, "Error: Status code = " + response.getStatus());
-			//System.out.println(e.getMessage());
-		//	throw e;
-		//}
-		//System.out.println("ULTIMA CHANCE!!!!n\n\n\n");
-		//Service svc = (Service) response.getEntity();
-		//System.out.println("OIEEE!!!! " + svc);
 		return service;
 	}
 
