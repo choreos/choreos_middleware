@@ -11,6 +11,10 @@ public class ChoreographySpec {
 	protected List<ChoreographyServiceSpec> choreographyServiceSpecs = 
 			new ArrayList<ChoreographyServiceSpec>();
 	
+	public ChoreographySpec() {
+		
+	}
+	
 	public ChoreographySpec(ChoreographyServiceSpec...choreographyServiceSpecs) {
 		for(ChoreographyServiceSpec spec:choreographyServiceSpecs) 
 			this.choreographyServiceSpecs.add(spec);
