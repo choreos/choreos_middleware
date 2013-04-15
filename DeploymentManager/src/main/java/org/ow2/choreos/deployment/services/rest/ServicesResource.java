@@ -45,12 +45,14 @@ import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
 public class ServicesResource {
 	
 	private Logger logger = Logger.getLogger(ServicesResource.class);
-	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
-	private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-	private ServicesManager servicesManager = new ServicesManagerImpl(npm);
+	private NodePoolManager npm;
+	private ServicesManager servicesManager;
 	
 	public ServicesResource() {
-		
+
+		String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
+		this.npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
+		this.servicesManager = new ServicesManagerImpl(npm);
 	}
 	
 	// to test purposes
