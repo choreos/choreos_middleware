@@ -12,10 +12,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.chors.ModelsForTest;
-import org.ow2.choreos.chors.datamodel.ChoreographySpec;
+import org.ow2.choreos.chors.datamodel.ChoreographyService;
 import org.ow2.choreos.deployment.services.ServiceInstanceNotFoundException;
+import org.ow2.choreos.deployment.services.datamodel.DeployedService;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
-import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -28,16 +28,16 @@ import org.ow2.choreos.utils.LogConfigurator;
  */
 public class ContextCasterTest {
 
-	private static final String AIRLINE = "airline";
-	private static final String TRAVEL_AGENCY = "travelagency";	
+	private static final String AIRLINE = ModelsForTest.AIRLINE;
+	private static final String TRAVEL_AGENCY = ModelsForTest.TRAVEL_AGENCY;	
 	private static final String AIRLINE_URI = "http://localhost:1234/airline";
 	private static final String AIRLINE_PROXIFIED_URI = "http://localhost:8180/services/AirlineServicePortClientProxyEndpoint";
 	private static final String TRAVEL_AGENCY_URI = "http://localhost:1235/travelagency";	
 	private static final String TRAVEL_AGENCY_PROXIFIED_URI = "http://localhost:8180/services/TravelAgencyServicePortClientProxyEndpoint";
 	
-	private ChoreographySpec chorSpec;
-	private Service airlineServ, travelServ;
-	private Map<String, Service> deployedServices;
+	private Map<String, ChoreographyService> deployedServices;
+	
+	ModelsForTest models;
 	
 	@BeforeClass
 	public static void configLog() {
@@ -47,34 +47,17 @@ public class ContextCasterTest {
 	@Before
 	public void setUp() {
 		
-		ModelsForTest models = new ModelsForTest(PackageType.COMMAND_LINE);
-		this.chorSpec = models.getChorSpec(); 
-		this.deployedServices = new HashMap<String, Service>();
-		
-		airlineServ = new Service();
-		airlineServ.setName(AIRLINE);
-		airlineServ.setChoreographySpec(chorSpec.getChoreographyServiceSpecByChoreographyServiceUID(AIRLINE));
-		ServiceInstance airlineInstance = new ServiceInstance(); 
-		airlineInstance.setInstanceId(AIRLINE);
-		airlineInstance.setNativeUri(AIRLINE_URI);
-		airlineServ.addInstance(airlineInstance);
-		this.deployedServices.put(AIRLINE, airlineServ);
-
-		travelServ = new Service();
-		travelServ.setName(TRAVEL_AGENCY);
-		travelServ.setChoreographySpec(chorSpec.getChoreographyServiceSpecByChoreographyServiceUID(TRAVEL_AGENCY));
-		ServiceInstance travelInstance = new ServiceInstance(); 
-		travelInstance.setInstanceId(TRAVEL_AGENCY);
-		travelInstance.setNativeUri(TRAVEL_AGENCY_URI);
-		travelServ.addInstance(travelInstance);
-		this.deployedServices.put(TRAVEL_AGENCY, travelServ);
+		models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
+		this.deployedServices = new HashMap<String, ChoreographyService>();
+		this.deployedServices.put(AIRLINE, models.getAirlineChoreographyService());
+		this.deployedServices.put(TRAVEL_AGENCY, models.getTravelChoreographyService());
 	}
 
 	private void setUpBusUris() throws ServiceInstanceNotFoundException {
 	
-		ServiceInstance airlineInstance = this.airlineServ.getInstance(AIRLINE);
+		ServiceInstance airlineInstance = ((DeployedService)(deployedServices.get(AIRLINE).getService())).getInstance(AIRLINE); 
 		airlineInstance.setBusUri(ServiceType.SOAP, AIRLINE_PROXIFIED_URI);
-		ServiceInstance travelInstance = this.travelServ.getInstance(TRAVEL_AGENCY);
+		ServiceInstance travelInstance = ((DeployedService)(deployedServices.get(AIRLINE).getService())).getInstance(TRAVEL_AGENCY);
 		travelInstance.setBusUri(ServiceType.SOAP, TRAVEL_AGENCY_PROXIFIED_URI);
 	}
 	
@@ -84,7 +67,7 @@ public class ContextCasterTest {
 		this.setUpBusUris();
 		ContextSender sender = mock(ContextSender.class);
 		ContextCaster caster = new ContextCaster(sender);
-		caster.cast(chorSpec, deployedServices);
+		caster.cast(models.getChorSpec(), deployedServices);
 		
 		List<String> expectedAirlineUrisList = new ArrayList<String>();
 		expectedAirlineUrisList.add(AIRLINE_PROXIFIED_URI);
@@ -96,7 +79,7 @@ public class ContextCasterTest {
 		
 		ContextSender sender = mock(ContextSender.class);
 		ContextCaster caster = new ContextCaster(sender);
-		caster.cast(chorSpec, deployedServices);
+		caster.cast(models.getChorSpec(), deployedServices);
 		
 		List<String> expectedAirlineUrisList = new ArrayList<String>();
 		expectedAirlineUrisList.add(AIRLINE_URI);

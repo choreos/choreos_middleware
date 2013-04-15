@@ -7,6 +7,7 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
+import org.ow2.choreos.chors.datamodel.ChoreographyService;
 import org.ow2.choreos.chors.datamodel.ChoreographyServiceDependency;
 import org.ow2.choreos.chors.datamodel.ChoreographyServiceSpec;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
@@ -15,6 +16,7 @@ import org.ow2.choreos.chors.datamodel.xml.ChorXmlWriter;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpactDefs.MemoryTypes;
+import org.ow2.choreos.deployment.services.datamodel.DeployedService;
 import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
@@ -40,19 +42,49 @@ public class ModelsForTest {
 	private ChoreographySpec chorSpec;
 	private Choreography chor;
 	private PackageType type;
+	private ServiceType serviceType;
 
 	private ServiceSpec airlineSpec;
 
 	private ServiceSpec travelSpec;
+	
+	private Service airlineService;
+	private Service travelAgencyService;
 
 	private ChoreographyServiceSpec airlineChoreographyServiceSpec;
 
 	private ChoreographyServiceSpec travelAgencyChoreographyServiceSpec;
 
-	public ModelsForTest(PackageType type) {
+	private ChoreographyService travelChoreographyService;
+
+	public ChoreographyServiceSpec getAirlineChoreographyServiceSpec() {
+		return airlineChoreographyServiceSpec;
+	}
+
+	public ChoreographyServiceSpec getTravelAgencyChoreographyServiceSpec() {
+		return travelAgencyChoreographyServiceSpec;
+	}
+
+	public ChoreographyService getTravelChoreographyService() {
+		return travelChoreographyService;
+	}
+
+	public ChoreographyService getAirlineChoreographyService() {
+		return airlineChoreographyService;
+	}
+
+	private ChoreographyService airlineChoreographyService;
+
+	public ModelsForTest(ServiceType serviceType, PackageType type) {
 		this.type = type;
+		this.serviceType = serviceType;
+
+		initAirlineSpecs();
+		initTravelAgencySpecs();
+		initAirlineServices();
+		initTravelServices();
 		createChorSpec();
-		creteChoreography();
+		createChoreography();
 	}
 
 	private void createChorSpec() {
@@ -69,17 +101,97 @@ public class ModelsForTest {
 		}
 	}
 
+	private void initAirlineSpecs() {
+		if (type == PackageType.COMMAND_LINE) {
+			airlineSpec = new DeployedServiceSpec(serviceType, type,
+					null, null, AIRLINE_JAR, AIRLINE_PORT, AIRLINE, 1);
+		} else {
+			airlineSpec = new DeployedServiceSpec(serviceType, type,
+					null, null, AIRLINE_JAR, AIRLINE, 1);
+		}
+		List<String> roles = new ArrayList<String>();
+		roles.add(AIRLINE);
+
+		airlineChoreographyServiceSpec = new ChoreographyServiceSpec(
+				airlineSpec, null, null, roles, TRAVEL_AGENCY);
+	}
+	
+	public ServiceSpec getAirlineSpec() {
+		initAirlineSpecs();
+		return airlineSpec;
+	}
+
+	public ServiceSpec getTravelSpec() {
+		initTravelAgencySpecs();
+		return travelSpec;
+	}
+	
+	public void initTravelServices() {
+		initTravelAgencySpecs();
+		Node node= createTestNode("2", "192.168.56.102", "choreos-node");
+		travelAgencyService = new DeployedService(
+				(DeployedServiceSpec) this.travelSpec);
+		ServiceInstance agency = new ServiceInstance(node,
+				(DeployedService) travelAgencyService);
+		((DeployedService) travelAgencyService).addInstance(agency);
+		travelChoreographyService = new ChoreographyService(travelAgencyChoreographyServiceSpec);
+		travelChoreographyService.setService(getTravelService());
+	}
+	
+	public Service getTravelService() {
+		return travelAgencyService;
+	}
+	
+	public void initAirlineServices() {
+		initAirlineSpecs();
+		Node node= createTestNode("1", "192.168.56.101", "choreos-node");
+		airlineService = new DeployedService(
+				(DeployedServiceSpec) this.airlineSpec);
+		ServiceInstance airline = new ServiceInstance(node,
+				(DeployedService) airlineService);
+		((DeployedService) airlineService).addInstance(airline);
+		airlineChoreographyService = new ChoreographyService(airlineChoreographyServiceSpec);
+		airlineChoreographyService.setService(getAirlineService());
+	}
+
+	public Service getAirlineService() {
+		return airlineService;
+	}
+	
 	private void createJarChorSpec() {
 
-		createServiceSpecsForAirlineAndTravelAgency();
+		createServiceSpecsForAirlineAndTravelAgencyUsingJAR();
 
 		createChoreographyServiceSpecForAirlineAndTravelAgency();
 
 		ChoreographyServiceDependency dep = new ChoreographyServiceDependency(
 				AIRLINE, AIRLINE);
 		this.travelAgencyChoreographyServiceSpec.addDependency(dep);
+
+		this.chorSpec = new ChoreographySpec(
+				this.airlineChoreographyServiceSpec,
+				this.travelAgencyChoreographyServiceSpec);
+	}
+
+	private void initTravelAgencySpecs() {
+		if (type == PackageType.COMMAND_LINE) {
+		travelSpec = new DeployedServiceSpec(serviceType,
+				type, null, null, TRAVEL_AGENCY_JAR,
+				TRAVEL_AGENCY_PORT, TRAVEL_AGENCY, 1);
+		} else {
+			travelSpec = new DeployedServiceSpec(serviceType, type,
+					null, null, TRAVEL_AGENCY_JAR, TRAVEL_AGENCY, 1);
+		}
+
+		List<String>roles = new ArrayList<String>();
+		roles.add(TRAVEL_AGENCY);
+
+		List<ChoreographyServiceDependency> dependencies =
+				new ArrayList<ChoreographyServiceDependency>();
+		dependencies.add(new ChoreographyServiceDependency(AIRLINE, AIRLINE));
 		
-		this.chorSpec = new ChoreographySpec(this.airlineChoreographyServiceSpec,this.travelAgencyChoreographyServiceSpec);
+		travelAgencyChoreographyServiceSpec = new ChoreographyServiceSpec(
+				travelSpec, null, null, roles, dependencies, TRAVEL_AGENCY);
 	}
 
 	private void createChoreographyServiceSpecForAirlineAndTravelAgency() {
@@ -92,7 +204,7 @@ public class ModelsForTest {
 		this.travelAgencyChoreographyServiceSpec.addRole(TRAVEL_AGENCY);
 	}
 
-	private void createServiceSpecsForAirlineAndTravelAgency() {
+	private void createServiceSpecsForAirlineAndTravelAgencyUsingJAR() {
 		this.airlineSpec = new DeployedServiceSpec(ServiceType.SOAP,
 				PackageType.COMMAND_LINE, null, null, AIRLINE_JAR,
 				AIRLINE_PORT, AIRLINE, 1);
@@ -104,31 +216,29 @@ public class ModelsForTest {
 
 	private void createWarChorSpec() {
 
-		this.chorSpec = new ChoreographySpec();
+		createServiceSpecsForAirlineAndTravelAgencyUsingWAR();
 
-		this.airlineSpec = new ServiceSpec();
-		this.airlineSpec.setName(AIRLINE);
-		this.airlineSpec.setPackageUri(AIRLINE_WAR);
-		this.airlineSpec.setEndpointName(AIRLINE);
-		this.airlineSpec.setPackageType(PackageType.TOMCAT);
-		this.airlineSpec.setType(ServiceType.SOAP);
-		this.airlineSpec.getRoles().add(AIRLINE);
-		this.chorSpec.addChoreographyServiceSpec(this.airlineSpec);
+		createChoreographyServiceSpecForAirlineAndTravelAgency();
 
-		this.travelSpec = new ServiceSpec();
-		this.travelSpec.setName(TRAVEL_AGENCY);
-		this.travelSpec.setPackageUri(TRAVEL_AGENCY_WAR);
-		this.travelSpec.setEndpointName(TRAVEL_AGENCY);
-		this.travelSpec.setPackageType(PackageType.TOMCAT);
-		this.travelSpec.setType(ServiceType.SOAP);
-		this.travelSpec.getRoles().add(TRAVEL_AGENCY);
 		ChoreographyServiceDependency dep = new ChoreographyServiceDependency(
 				AIRLINE, AIRLINE);
-		this.travelSpec.getDependencies().add(dep);
-		this.chorSpec.addChoreographyServiceSpec(this.travelSpec);
+		this.travelAgencyChoreographyServiceSpec.addDependency(dep);
+
+		this.chorSpec = new ChoreographySpec(
+				this.airlineChoreographyServiceSpec,
+				this.travelAgencyChoreographyServiceSpec);
 	}
 
-	private void creteChoreography() {
+	private void createServiceSpecsForAirlineAndTravelAgencyUsingWAR() {
+		this.airlineSpec = new DeployedServiceSpec(ServiceType.SOAP,
+				PackageType.TOMCAT, null, null, AIRLINE_WAR, AIRLINE, 1);
+
+		this.travelSpec = new DeployedServiceSpec(ServiceType.SOAP,
+				PackageType.COMMAND_LINE, null, null, TRAVEL_AGENCY_WAR,
+				TRAVEL_AGENCY, 1);
+	}
+
+	private void createChoreography() {
 
 		if (chorSpec == null)
 			createChorSpec();
@@ -137,41 +247,30 @@ public class ModelsForTest {
 		this.chor.setId("1");
 		this.chor.setChoreographySpec(this.chorSpec);
 
-		// create nodes
+		initAirlineChoreographyService();
+		initTravelChoreographyService();
+		this.chor.addChoreographyService(travelChoreographyService);
+		this.chor.addChoreographyService(airlineChoreographyService);
+	}
+
+	private void initTravelChoreographyService() {
+		travelChoreographyService = new ChoreographyService(
+				this.travelAgencyChoreographyServiceSpec);
+		travelChoreographyService.setService(getTravelService());
+	}
+
+	private void initAirlineChoreographyService() {
+		airlineChoreographyService = new ChoreographyService(
+				this.airlineChoreographyServiceSpec);
+		airlineChoreographyService.setService(getAirlineService());
+	}
+
+	private Node createTestNode(String id, String ip, String hostname) {
 		Node node1 = new Node();
-		node1.setId("1");
-		node1.setIp("192.168.56.101");
-		node1.setHostname("choreos-node");
-		Node node2 = new Node();
-		node2.setId("2");
-		node2.setIp("192.168.56.102");
-		node2.setHostname("choreos-node");
-
-		// create service
-		Service airlineService = new Service();
-		airlineService.setName(AIRLINE);
-		airlineService.setSpec(this.airlineSpec);
-
-		// create instance
-		ServiceInstance airline = new ServiceInstance();
-		airline.setMyParentServiceSpec(airlineService.getSpec());
-		airline.setNode(node1);
-
-		// add instance to service
-		airlineService.addInstance(airline);
-		// add service to choreography
-		this.chor.getDeployedChoreographyServices().add(airlineService);
-
-		Service travelService = new Service();
-		travelService.setName(TRAVEL_AGENCY);
-		travelService.setSpec(this.travelSpec);
-
-		ServiceInstance travel = new ServiceInstance();
-		travel.setMyParentServiceSpec(travelService.getSpec());
-		travel.setNode(node2);
-
-		travelService.addInstance(travel);
-		this.chor.getDeployedChoreographyServices().add(travelService);
+		node1.setId(id);
+		node1.setIp(ip);
+		node1.setHostname(hostname);
+		return node1;
 	}
 
 	public ChoreographySpec getChorSpec() {
@@ -210,36 +309,24 @@ public class ModelsForTest {
 
 		ChoreographySpec spec = new ChoreographySpec();
 
-		ServiceSpec airlineServiceSpec = new ServiceSpec();
+		ServiceSpec airlineServiceSpec = new DeployedServiceSpec(
+				ServiceType.SOAP, PackageType.COMMAND_LINE, null, null,
+				AIRLINE_JAR, AIRLINE_PORT, AIRLINE, numberOfAirlineServices);
 
-		airlineServiceSpec.setName(AIRLINE);
-		airlineServiceSpec.setPackageUri(AIRLINE_JAR);
-		airlineServiceSpec.setEndpointName(AIRLINE);
-		airlineServiceSpec.setPort(AIRLINE_PORT);
-		airlineServiceSpec.setPackageType(PackageType.COMMAND_LINE);
-		airlineServiceSpec.getRoles().add(AIRLINE);
-		airlineServiceSpec.setNumberOfInstances(numberOfAirlineServices);
-		spec.addChoreographyServiceSpec(airlineServiceSpec);
+		List<String> roles = new ArrayList<String>();
+		roles.add(AIRLINE);
+		ChoreographyServiceSpec airChorServiceSpec = new ChoreographyServiceSpec(
+				airlineServiceSpec, null, null, roles, AIRLINE);
 
-		ServiceSpec travelServiceSpec = new ServiceSpec();
-
-		travelServiceSpec.setName(TRAVEL_AGENCY);
-		travelServiceSpec.setPackageUri(TRAVEL_AGENCY_JAR);
-		travelServiceSpec.setEndpointName(TRAVEL_AGENCY);
-		travelServiceSpec.setPort(TRAVEL_AGENCY_PORT);
-		travelServiceSpec.setPackageType(PackageType.COMMAND_LINE);
-		travelServiceSpec.getRoles().add(TRAVEL_AGENCY);
-		ChoreographyServiceDependency dep = new ChoreographyServiceDependency(
-				AIRLINE, AIRLINE);
-		travelServiceSpec.getDependencies().add(dep);
-		spec.addChoreographyServiceSpec(travelServiceSpec);
-
+		spec.addChoreographyServiceSpec(airChorServiceSpec);
+		initTravelAgencySpecs();
+		spec.addChoreographyServiceSpec(this.travelAgencyChoreographyServiceSpec);
 		return spec;
 	}
 
 	public static void main(String[] args) throws JAXBException, IOException {
 
-		ModelsForTest models = new ModelsForTest(PackageType.COMMAND_LINE);
+		ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
 		System.out.println("ChorSpec XML representation:");
 		System.out.println(models.getChorSpecXML());
 		System.out.println("\nChoreography XML representation:");
@@ -250,35 +337,21 @@ public class ModelsForTest {
 
 		ChoreographySpec spec = new ChoreographySpec();
 
-		ServiceSpec airlineServiceSpec = new ServiceSpec();
-
-		airlineServiceSpec.setName(AIRLINE);
-		airlineServiceSpec.setPackageUri(AIRLINE_JAR);
-		airlineServiceSpec.setEndpointName(AIRLINE);
-		airlineServiceSpec.setPort(AIRLINE_PORT);
-		airlineServiceSpec.setPackageType(PackageType.COMMAND_LINE);
-
 		ResourceImpact r1 = new ResourceImpact();
 		r1.setMemory(type);
-		airlineServiceSpec.setResourceImpact(r1);
 
-		airlineServiceSpec.getRoles().add(AIRLINE);
-		spec.addChoreographyServiceSpec(airlineServiceSpec);
+		ServiceSpec airlineServiceSpec = new DeployedServiceSpec(
+				ServiceType.SOAP, PackageType.COMMAND_LINE, r1, null,
+				AIRLINE_JAR, AIRLINE_PORT, AIRLINE, 1);
 
-		ServiceSpec travelServiceSpec = new ServiceSpec();
+		List<String> roles = new ArrayList<String>();
+		roles.add(AIRLINE);
+		ChoreographyServiceSpec airChorServiceSpec = new ChoreographyServiceSpec(
+				airlineServiceSpec, null, null, roles, AIRLINE);
 
-		travelServiceSpec.setName(TRAVEL_AGENCY);
-		travelServiceSpec.setPackageUri(TRAVEL_AGENCY_JAR);
-		travelServiceSpec.setEndpointName(TRAVEL_AGENCY);
-		travelServiceSpec.setPort(TRAVEL_AGENCY_PORT);
-		travelServiceSpec.setPackageType(PackageType.COMMAND_LINE);
-
-		travelServiceSpec.getRoles().add(TRAVEL_AGENCY);
-		ChoreographyServiceDependency dep = new ChoreographyServiceDependency(
-				AIRLINE, AIRLINE);
-		travelServiceSpec.getDependencies().add(dep);
-		spec.addChoreographyServiceSpec(travelServiceSpec);
-
+		spec.addChoreographyServiceSpec(airChorServiceSpec);
+		initTravelAgencySpecs();
+		spec.addChoreographyServiceSpec(travelAgencyChoreographyServiceSpec);
 		return spec;
 	}
 }

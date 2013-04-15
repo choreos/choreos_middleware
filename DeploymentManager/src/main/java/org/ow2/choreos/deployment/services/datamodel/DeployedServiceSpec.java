@@ -25,7 +25,7 @@ public class DeployedServiceSpec extends ServiceSpec {
 	 * @param resourceImpact
 	 * @param version
 	 * @param packageUri
-	 * @param port
+	 * @param port Sets the port for run a JAR package
 	 * @param endpointName
 	 * @param numberOfInstances
 	 */
@@ -42,7 +42,26 @@ public class DeployedServiceSpec extends ServiceSpec {
 		this.numberOfInstances = numberOfInstances;
 	}
 
-
+	/**
+	 * @param serviceType
+	 * @param packageType
+	 * @param resourceImpact
+	 * @param version
+	 * @param packageUri
+	 * @param endpointName
+	 * @param numberOfInstances
+	 */
+	public DeployedServiceSpec(ServiceType serviceType,
+			PackageType packageType, ResourceImpact resourceImpact,
+			String version, String packageUri, String endpointName,
+			int numberOfInstances) {
+		super(serviceType, packageType);
+		this.resourceImpact = resourceImpact;
+		this.version = version;
+		this.packageUri = packageUri;
+		this.endpointName = endpointName;
+		this.numberOfInstances = numberOfInstances;
+	}
 
 	public String getPackageUri() {
 		return packageUri;

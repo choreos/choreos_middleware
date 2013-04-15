@@ -2,10 +2,18 @@ package org.ow2.choreos.chors.datamodel;
 
 import java.util.List;
 
+import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 
 public class LegacyServiceSpec extends ServiceSpec {
+
 	List<String> nativeURIs;
+
+	protected LegacyServiceSpec(ServiceType serviceType, PackageType packageType) {
+		super(serviceType, packageType);
+	}
+
 	
 	public List<String> getNativeURIs() {
 		return nativeURIs;

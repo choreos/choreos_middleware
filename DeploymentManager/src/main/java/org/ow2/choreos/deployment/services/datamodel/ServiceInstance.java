@@ -59,6 +59,9 @@ public class ServiceInstance {
 	}
 	
 	public void setService(DeployedService service) {
+		if (this.service != null) {
+			throw new IllegalStateException("This instance already has a Service defined!");
+		}
 		this.service = service;
 	}
 	
