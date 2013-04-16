@@ -33,7 +33,6 @@ import org.ow2.choreos.deployment.services.datamodel.DeployedService;
 import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
 
 /**
@@ -48,8 +47,15 @@ public class ServicesResource {
 	
 	private Logger logger = Logger.getLogger(ServicesResource.class);
 	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
-	private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-	private ServicesManager serviceDeployer = new ServicesManagerImpl(npm);
+	protected NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
+	protected ServicesManager servicesManager = new ServicesManagerImpl(npm);
+	
+	public ServicesResource() {
+
+		String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
+		this.npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
+		this.servicesManager = new ServicesManagerImpl(npm);
+	}
 	
 	/**
 	 * Deploys a service
@@ -63,10 +69,9 @@ public class ServicesResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response deployService(JAXBElement<DeployedServiceSpec> serviceSpecXML, 
+	public Response deployService(DeployedServiceSpec serviceSpec, 
 			@Context UriInfo uriInfo) {
 
-		DeployedServiceSpec serviceSpec = serviceSpecXML.getValue();
 		if (serviceSpec.getPackageUri() == null || serviceSpec.getPackageUri().isEmpty() 
 				|| serviceSpec.getPackageType() == null)
 			return Response.status(Status.BAD_REQUEST).build();
@@ -109,7 +114,7 @@ public class ServicesResource {
 		logger.debug("Request to get service " + uuid);
 		DeployedService service;
 		try {
-			service = serviceDeployer.getService(uuid);
+			service = servicesManager.getService(uuid);
 		} catch (ServiceNotFoundException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
@@ -135,7 +140,7 @@ public class ServicesResource {
 		logger.debug("Request to get instances of service "+ uuid);
 		DeployedService service;
 		try {
-			service = serviceDeployer.getService(uuid);
+			service = servicesManager.getService(uuid);
 		} catch (ServiceNotFoundException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();			
 		}
@@ -164,7 +169,7 @@ public class ServicesResource {
 		DeployedService service;
 		ServiceInstance instance;
 		try {
-			service = serviceDeployer.getService(uuid);
+			service = servicesManager.getService(uuid);
 			instance = service.getInstance(instanceId);
 		} catch (ServiceNotFoundException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();			
@@ -191,7 +196,7 @@ public class ServicesResource {
 		logger.debug("Request to delete service " + uuid);
 		
 		try {
-			serviceDeployer.deleteService(uuid);
+			servicesManager.deleteService(uuid);
 		} catch (ServiceNotDeletedException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		} catch (ServiceNotFoundException e) {
@@ -230,7 +235,7 @@ public class ServicesResource {
 
 		DeployedService service;
 		try {
-			service = servicesManager.updateService(serviceId, serviceSpec);
+			service = servicesManager.updateService(uuid, serviceSpec);
 		} catch (ServiceNotModifiedException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		} catch (UnhandledModificationException e) {

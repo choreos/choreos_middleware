@@ -202,11 +202,11 @@ public class ServiceInstance {
 
 	@Override
 	public String toString() {
-		return "ServiceInstance [legacyHostname=" + legacyHostname
-				+ ", legacyIp=" + legacyIp + ", node=" + node
+		return "ServiceInstance [hostname=" + node.getHostname()
+				+ ", ip=" + node.getIp() + ", node=" + node
 				+ ", easyEsbNodeAdminEndpoint=" + easyEsbNodeAdminEndpoint
 				+ ", nativeUri=" + nativeUri + ", instanceId=" + instanceId
-				+ ", serviceId=" + serviceId + "]";
+				+ ", serviceUUID=" + service.getSpec().getUUID() + "]";
 	}
 	
 }
