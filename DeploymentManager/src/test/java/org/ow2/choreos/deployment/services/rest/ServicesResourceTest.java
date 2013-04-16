@@ -1,9 +1,9 @@
 package org.ow2.choreos.deployment.services.rest;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -23,12 +23,12 @@ import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 
 public class ServicesResourceTest {
 
 	private ServicesResourceForTest servicesResources;
+	private String expectedServiceUUID;
 
 	@Before
 	public void setUp() throws ServiceNotDeployedException {
@@ -50,6 +50,7 @@ public class ServicesResourceTest {
 	private DeployedService getService() {
 
 		DeployedService airline = new DeployedService(getSpec());
+		expectedServiceUUID = airline.getSpec().getUUID();
 		ServiceInstance instance = new ServiceInstance();
 		instance.setInstanceId("1");
 		instance.setNativeUri("http://hostname:1234/airline");
@@ -75,7 +76,7 @@ public class ServicesResourceTest {
 
 		assertEquals(201, response.getStatus());
 		Service entity = (Service) response.getEntity();
-		assertEquals("airline", entity.getSpec().getUUID());
+		assertEquals(expectedServiceUUID, entity.getSpec().getUUID());
 		assertEquals(getSpec(), entity.getSpec());
 		assertEquals(1, ((DeployedService) entity).getInstances().size());
 		assertEquals(getService().getInstance("1"), ((DeployedService) entity).getInstance("1"));
