@@ -21,7 +21,7 @@ public class RecipeBuilderTest {
 	
 	private RecipeBuilderImpl recipeBuilder;
 	private static DeployedServiceSpec serviceSpec;
-	private static String id = "myServletWAR";
+	private static String id;
 	private static String codeLocationURI = "https://github.com/downloads/choreos/choreos_middleware/myServletWAR.war";
 	private static ResourceImpact impact = new ResourceImpact();
 
@@ -36,6 +36,7 @@ public class RecipeBuilderTest {
 		impact.setRegion("BR");
 
 		serviceSpec = new DeployedServiceSpec();
+		id = serviceSpec.getUUID();
 		serviceSpec.setPackageUri(codeLocationURI);
 		serviceSpec.setPackageType(PackageType.TOMCAT);
 		serviceSpec.setResourceImpact(impact);

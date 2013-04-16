@@ -1,8 +1,5 @@
 package org.ow2.choreos.chors.datamodel;
 
-import org.ow2.choreos.deployment.services.datamodel.DeployedService;
-import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
-import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 
 public class ChoreographyService {
@@ -12,13 +9,6 @@ public class ChoreographyService {
 
 	public ChoreographyService(ChoreographyServiceSpec choreographyServiceSpec) {
 		this.choreographyServiceSpec = choreographyServiceSpec;
-		Service newService = null;
-		if (choreographyServiceSpec.getServiceSpec().getPackageType() == PackageType.LEGACY) {
-			newService = new LegacyService((LegacyServiceSpec) choreographyServiceSpec.getServiceSpec());
-		} else {
-			newService = new DeployedService((DeployedServiceSpec) choreographyServiceSpec.getServiceSpec());
-		}
-		service = newService;
 	}
 
 	public ChoreographyServiceSpec getChoreographyServiceSpec() {

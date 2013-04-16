@@ -3,12 +3,14 @@ package org.ow2.choreos.deployment.services.datamodel;
 import java.util.UUID;
 
 public abstract class ServiceSpec {
-	protected ServiceType type; 
+	protected ServiceType serviceType; 
 	protected PackageType packageType;
 	private String uuid;
 	
 	protected ServiceSpec(ServiceType serviceType, PackageType packageType) {
 		uuid = UUID.randomUUID().toString();
+		this.serviceType = serviceType;
+		this.packageType = packageType;
 	}
 	
 	public String getUUID() {
@@ -16,11 +18,11 @@ public abstract class ServiceSpec {
 	}
 	
 	public ServiceType getType() {
-		return type;
+		return serviceType;
 	}
 
 	public void setType(ServiceType type) {
-		this.type = type;
+		this.serviceType = type;
 	}
 
 	public PackageType getPackageType() {
@@ -46,10 +48,10 @@ public abstract class ServiceSpec {
 		ServiceSpec other = (ServiceSpec) obj;
 
 		
-	if (type == null) {
-		if (other.type != null)
+	if (serviceType == null) {
+		if (other.serviceType != null)
 			return false;
-	} else if (!type.equals(other.type))
+	} else if (!serviceType.equals(other.serviceType))
 		return false;
 	
 	if (packageType == null) {

@@ -33,17 +33,21 @@ public class ServiceInstance {
 	 */
 	private String instanceId;
 	
-	/*
+	/**
 	 * The reference to the service object that this service instance is its
 	 */
 	private DeployedService service;
 	
-
-	/*
+	/**
 	 * Default constructor used by Java XML Bindings
 	 */
 	public ServiceInstance() {
 		
+	}
+
+	public ServiceInstance(Node node) {
+		this.setNode(node);
+		this.setInstanceId(UUID.randomUUID().toString());
 	}
 
 	public Map<ServiceType, String> getBusUris() {
@@ -59,16 +63,6 @@ public class ServiceInstance {
 	}
 	
 	public void setService(DeployedService service) {
-		if (this.service != null) {
-			throw new IllegalStateException("This instance already has a Service defined!");
-		}
-		this.service = service;
-	}
-	
-	public ServiceInstance(Node node, DeployedService service) {
-		this.setNode(node);
-		this.setInstanceId(UUID.randomUUID().toString());
-		service.addInstance(this);
 		this.service = service;
 	}
 	
@@ -126,7 +120,7 @@ public class ServiceInstance {
 		
 		String uriContext;		
 		String endpointName = ((DeployedServiceSpec)service.getSpec()).getEndpointName();
-		PackageType packageType = service.getSpec().packageType;
+		PackageType packageType = service.getSpec().getPackageType();
 		
 		switch (packageType) {
 			case TOMCAT:
