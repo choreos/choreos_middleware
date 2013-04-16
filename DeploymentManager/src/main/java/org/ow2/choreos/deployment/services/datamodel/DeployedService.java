@@ -57,6 +57,7 @@ public class DeployedService extends Service {
 
 	public ServiceInstance getInstance(String instanceId) throws ServiceInstanceNotFoundException{
 		for(ServiceInstance instance: serviceInstances) {
+			System.out.println("Searching for " + instanceId + " found "+ instance.getInstanceId());
 			if(instance.getInstanceId().equals(instanceId))
 				return instance;
 		}

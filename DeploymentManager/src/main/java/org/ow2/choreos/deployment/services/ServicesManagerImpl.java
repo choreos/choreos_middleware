@@ -122,8 +122,7 @@ public class ServicesManagerImpl implements ServicesManager {
 			if (!((node.getHostname() == null || node.getHostname().isEmpty()) 
 					&& (node.getIp() == null || node.getIp().isEmpty()))) {
 				logger.debug("nodeLocation= " + node.getHostname() + "; node IP=" + node.getIp());
-				// service will have pointers to their instances
-				new ServiceInstance(node, service);
+				service.addInstance(new ServiceInstance(node));
 			} else {
 				logger.debug("request to create a node with no IP or hostname!");
 			}

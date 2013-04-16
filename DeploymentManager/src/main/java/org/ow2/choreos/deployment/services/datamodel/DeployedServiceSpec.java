@@ -199,7 +199,7 @@ public class DeployedServiceSpec extends ServiceSpec {
 
 	@Override
 	public String toString() {
-		return "ServiceSpec [type=" + type
+		return "ServiceSpec [type=" + serviceType
 				+ ", artifactType=" + packageType + ", packageUri=" + packageUri
 				+ ", port=" + port + ", endpointName=" + endpointName
 				+ ", version=" + version + "]";
