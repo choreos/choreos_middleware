@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.chors.datamodel.ChoreographyServiceDependency;
 import org.ow2.choreos.chors.datamodel.ChoreographyService;
+import org.ow2.choreos.chors.datamodel.ChoreographyServiceDependency;
 import org.ow2.choreos.chors.datamodel.ChoreographyServiceSpec;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.deployment.services.datamodel.DeployedService;

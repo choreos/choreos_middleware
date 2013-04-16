@@ -1,7 +1,7 @@
 package org.ow2.choreos.chors;
 
-import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 
 public interface ChoreographyDeployer {
 	

@@ -7,11 +7,11 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
+import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographyService;
 import org.ow2.choreos.chors.datamodel.ChoreographyServiceDependency;
 import org.ow2.choreos.chors.datamodel.ChoreographyServiceSpec;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
-import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.xml.ChorXmlWriter;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;

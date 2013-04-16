@@ -1,9 +1,9 @@
 package org.ow2.choreos.deployment.services.datamodel;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
-import org.ow2.choreos.deployment.services.datamodel.URIInfoRetriever;
 
 public class URIInfoRetrieverTest {
 

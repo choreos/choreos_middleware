@@ -16,12 +16,12 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import org.ow2.choreos.chors.ChoreographyNotFoundException;
-import org.ow2.choreos.chors.ChoreographyDeployerImpl;
 import org.ow2.choreos.chors.ChoreographyDeployer;
+import org.ow2.choreos.chors.ChoreographyDeployerImpl;
+import org.ow2.choreos.chors.ChoreographyNotFoundException;
 import org.ow2.choreos.chors.EnactmentException;
-import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 
 /**
  * Enactment Engine REST API.
