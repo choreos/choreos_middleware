@@ -7,6 +7,10 @@ public abstract class ServiceSpec {
 	protected PackageType packageType;
 	private String uuid;
 	
+	public ServiceSpec() {
+		
+	}
+	
 	protected ServiceSpec(ServiceType serviceType, PackageType packageType) {
 		uuid = UUID.randomUUID().toString();
 		this.serviceType = serviceType;

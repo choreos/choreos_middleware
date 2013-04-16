@@ -59,6 +59,9 @@ public class ServicesClient implements ServicesManager {
 		try {
 			service = client.post(serviceSpec, DeployedService.class);
 		} catch (WebApplicationException e) {
+			System.out.println(e.getMessage());
+			System.out.println(service);
+			System.out.println(service.getSpec());
 			throw new ServiceNotDeployedException(service.getSpec().getUUID());
 		}
 

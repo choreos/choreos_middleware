@@ -12,6 +12,9 @@ public abstract class Service {
 		setSpec(serviceSpec);
 	}
 	
+	public Service() {
+	}
+
 	public ServiceSpec getSpec() {
 		return spec;
 	}

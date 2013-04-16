@@ -78,7 +78,7 @@ public class BaseESBNodeSelector implements ESBNodesSelector {
 		@Override
 		public void run() {
 			
-			String svcName = this.svcInstance.getService().getSpec().getUUID();
+			String svcName = this.svcInstance.getServiceSpec().getUUID();
 			try {
 				EasyESBNode esbNode = BaseESBNodeSelector.this.busHandler.retrieveBusNode();
 				BaseESBNodeSelector.this.selectedNodes.put(svcInstance, esbNode);

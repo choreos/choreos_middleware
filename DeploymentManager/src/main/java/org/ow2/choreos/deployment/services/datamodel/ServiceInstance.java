@@ -36,7 +36,7 @@ public class ServiceInstance {
 	/**
 	 * The reference to the service object that this service instance is its
 	 */
-	private DeployedService service;
+	private DeployedServiceSpec serviceSpec;
 	
 	/**
 	 * Default constructor used by Java XML Bindings
@@ -58,12 +58,12 @@ public class ServiceInstance {
 		this.busUris = busUris;
 	}
 	
-	public DeployedService getService() {
-		return service;
+	public DeployedServiceSpec getServiceSpec() {
+		return serviceSpec;
 	}
-	
-	public void setService(DeployedService service) {
-		this.service = service;
+
+	public void setServiceSpec(DeployedServiceSpec serviceSpec) {
+		this.serviceSpec = serviceSpec;
 	}
 	
 	public Node getNode() {
@@ -119,12 +119,12 @@ public class ServiceInstance {
 			throw new IllegalStateException("Sorry, I don't know neither the hostname nor the IP yet");
 		
 		String uriContext;		
-		String endpointName = ((DeployedServiceSpec)service.getSpec()).getEndpointName();
-		PackageType packageType = service.getSpec().getPackageType();
+		String endpointName = serviceSpec.getEndpointName();
+		PackageType packageType = serviceSpec.getPackageType();
 		
 		switch (packageType) {
 			case TOMCAT:
-			uriContext = service.getSpec().getUUID() + "/" + 
+			uriContext = serviceSpec.getUUID() + "/" + 
 						endpointName;
 				break;
 			case COMMAND_LINE:
@@ -139,7 +139,7 @@ public class ServiceInstance {
 								+ packageType + " service.");
 		}
 		
-		int port = ((DeployedServiceSpec)service.getSpec()).getPort();
+		int port = serviceSpec.getPort();
 		if (_ip != null && !_ip.isEmpty()) {
 			return "http://" + _ip + ":" + port + "/" + uriContext;
 		} else
@@ -152,7 +152,7 @@ public class ServiceInstance {
 		int result = 1;
 		result = prime * result + ((nativeUri == null) ? 0 : nativeUri.hashCode());
 		result = prime * result + ((instanceId == null) ? 0 : instanceId.hashCode());
-		result = prime * result + ((service == null) ? 0 : service.hashCode());
+		result = prime * result + ((serviceSpec == null) ? 0 : serviceSpec.hashCode());
 		return result;
 	}
 
@@ -181,10 +181,10 @@ public class ServiceInstance {
 			equalsInstance = false;
 		
 		boolean equalsService = true;
-		if(service == null)  {
-			if(other.service != null)
+		if(serviceSpec == null)  {
+			if(other.serviceSpec != null)
 				equalsService = false;
-		} else if(!service.equals(other.service))
+		} else if(!serviceSpec.equals(other.serviceSpec))
 			equalsService = false;
 		
 		if(!(equalsInstance && equalsService)) return false;
@@ -206,7 +206,7 @@ public class ServiceInstance {
 				+ ", ip=" + node.getIp() + ", node=" + node
 				+ ", easyEsbNodeAdminEndpoint=" + easyEsbNodeAdminEndpoint
 				+ ", nativeUri=" + nativeUri + ", instanceId=" + instanceId
-				+ ", serviceUUID=" + service.getSpec().getUUID() + "]";
+				+ ", serviceUUID=" + serviceSpec.getUUID() + "]";
 	}
 	
 }

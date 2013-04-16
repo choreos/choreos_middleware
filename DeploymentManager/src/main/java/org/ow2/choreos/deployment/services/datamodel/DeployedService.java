@@ -3,12 +3,13 @@ package org.ow2.choreos.deployment.services.datamodel;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.ow2.choreos.deployment.services.ServiceInstanceNotFoundException;
 import org.ow2.choreos.deployment.services.recipe.Recipe;
 
-
+@XmlRootElement
 public class DeployedService extends Service {
 
 	/**
@@ -18,6 +19,10 @@ public class DeployedService extends Service {
 
 	@XmlTransient
 	private Recipe recipe;
+	
+	public DeployedService() {
+		super();
+	}
 
 	public DeployedService(DeployedServiceSpec spec) {
 		super(spec);
@@ -43,7 +48,7 @@ public class DeployedService extends Service {
 			serviceInstances = new ArrayList<ServiceInstance>();
 		}
 		serviceInstances.add(instance);
-		instance.setService(this);
+		instance.setServiceSpec(this.getSpec());
 	}
 
 	@Override
