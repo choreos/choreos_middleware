@@ -17,6 +17,7 @@ import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
+import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.deployment.services.rest.ServicesClient;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;

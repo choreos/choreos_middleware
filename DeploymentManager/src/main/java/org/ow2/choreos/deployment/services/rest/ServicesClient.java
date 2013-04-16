@@ -97,17 +97,6 @@ public class ServicesClient implements ServicesManager {
 		} catch (WebApplicationException e) {
 			throw new ServiceNotModifiedException(service.getSpec().getUUID());
 		}
-		
-		//System.out.println("\n\n Entity \n\n" + response.getEntity() + "\n\n");
-		
-		//if(response.getStatus() != 200) {
-		//	ServiceNotModifiedException e = new ServiceNotModifiedException(serviceId, "Error: Status code = " + response.getStatus());
-			//System.out.println(e.getMessage());
-		//	throw e;
-		//}
-		//System.out.println("ULTIMA CHANCE!!!!n\n\n\n");
-		//Service svc = (Service) response.getEntity();
-		//System.out.println("OIEEE!!!! " + svc);
 		return service;
 	}
 
