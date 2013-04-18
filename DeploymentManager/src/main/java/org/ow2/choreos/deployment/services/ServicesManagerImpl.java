@@ -149,11 +149,11 @@ public class ServicesManagerImpl implements ServicesManager {
 	}
 
 	@Override
-	public DeployedService updateService(String serviceId, DeployedServiceSpec serviceSpec) throws UnhandledModificationException {
+	public DeployedService updateService(DeployedServiceSpec serviceSpec) throws UnhandledModificationException {
 
 		DeployedService current;
 		try {
-			current = getService(serviceId);
+			current = getService(serviceSpec.getUUID());
 		} catch (ServiceNotFoundException e) {
 			throw new UnhandledModificationException();
 		}

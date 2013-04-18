@@ -89,11 +89,11 @@ public class ServicesClient implements ServicesManager {
 	}
 
 	@Override
-	public DeployedService updateService(String uuid, DeployedServiceSpec serviceSpec)
+	public DeployedService updateService(DeployedServiceSpec serviceSpec)
 			throws ServiceNotModifiedException {
 
 		WebClient client = setupClient();
-		client.path("services").path(uuid);
+		client.path("services").path(serviceSpec.getUUID());
 		DeployedService service = null;
 		try {
 			service = client.post(serviceSpec, DeployedService.class);

@@ -39,5 +39,5 @@ public interface ServicesManager {
 	 * @throws UnhandledModificationException 
 	 * @throws ServiceNotDeployedException if deploy was not possible.
 	 */
-	public DeployedService updateService(String uuid, DeployedServiceSpec newServiceSpec) throws ServiceNotModifiedException, UnhandledModificationException;
+	public DeployedService updateService(DeployedServiceSpec newServiceSpec) throws ServiceNotModifiedException, UnhandledModificationException;
 }

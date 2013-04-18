@@ -137,7 +137,7 @@ public class ModelsForTest {
 		roles.add(AIRLINE);
 
 		airlineChoreographyServiceSpec = new ChoreographyServiceSpec(
-				airlineSpec, null, null, roles, TRAVEL_AGENCY);
+				airlineSpec, null, null, roles, AIRLINE);
 	}
 
 	private void initTravelAgencySpecs() {

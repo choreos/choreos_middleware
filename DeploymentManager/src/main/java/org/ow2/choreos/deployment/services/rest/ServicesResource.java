@@ -31,7 +31,6 @@ import org.ow2.choreos.deployment.services.ServicesManager;
 import org.ow2.choreos.deployment.services.ServicesManagerImpl;
 import org.ow2.choreos.deployment.services.datamodel.DeployedService;
 import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
-import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
 
@@ -78,7 +77,7 @@ public class ServicesResource {
 		
 		logger.debug("Request to deploy " + serviceSpec.getPackageUri());
 
-		Service service;
+		DeployedService service;
 		try {
 			service = servicesManager.createService(serviceSpec);
 		} catch (ServiceNotDeployedException e) {
@@ -235,7 +234,7 @@ public class ServicesResource {
 
 		DeployedService service;
 		try {
-			service = servicesManager.updateService(uuid, serviceSpec);
+			service = servicesManager.updateService(serviceSpec);
 		} catch (ServiceNotModifiedException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		} catch (UnhandledModificationException e) {

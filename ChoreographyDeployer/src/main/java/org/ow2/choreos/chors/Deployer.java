@@ -77,6 +77,8 @@ public class Deployer {
 		if (!chor.getRequestedChoreographySpec().equals(
 				chor.getChoreographySpec())) {
 			services = updateAndDeployServices(chor);
+		} else {
+			logger.error("Updating a choreography to become the same?!");
 		}
 		return services;
 	}
@@ -227,9 +229,11 @@ public class Deployer {
 		List<ChoreographyServiceSpec> toCreate = new ArrayList<ChoreographyServiceSpec>();
 		List<ChoreographyService> updatedServiceList = new ArrayList<ChoreographyService>();
 
+		System.out.println("oiiii");
+		System.out.println("hello"+ currentServices.size());
 		for (Map.Entry<String, ChoreographyService> currentServiceEntry : currentServices
 				.entrySet()) {
-
+			System.out.println("in loop");
 			ChoreographyServiceSpec requestedSpec = requestedSpecMap
 					.get(currentServiceEntry.getKey());
 
@@ -256,16 +260,16 @@ public class Deployer {
 			}
 		}
 
-		updatedServiceList.addAll(doUpdate(toUpdate, toCreate));
+		updatedServiceList.addAll(doUpdate(chor, toUpdate, toCreate));
 		return updatedServiceList;
 	}
 
 	private List<ChoreographyService> doUpdate(
-			Map<String, ChoreographyServiceSpec> toUpdate,
+			Choreography chor, Map<String, ChoreographyServiceSpec> toUpdate,
 			List<ChoreographyServiceSpec> toCreate) {
 
-		List<ChoreographyService> b = updateExistingServices(toUpdate);
-		
+		List<ChoreographyService> b = updateExistingServices(chor, toUpdate);
+
 		if (toCreate.size() > 0) {
 			List<ChoreographyService> a = deployNewServices(toCreate);
 			b.addAll(a);
@@ -274,19 +278,21 @@ public class Deployer {
 	}
 
 	private List<ChoreographyService> updateExistingServices(
-			Map<String, ChoreographyServiceSpec> toUpdate) {
+			Choreography chor, Map<String, ChoreographyServiceSpec> toUpdate) {
 
 		final int TIMEOUT = 5;
 		final int N = toUpdate.size();
-
+		
 		ExecutorService executor = Executors.newFixedThreadPool(N);
 		Map<ChoreographyServiceSpec, Future<ChoreographyService>> futures = new HashMap<ChoreographyServiceSpec, Future<ChoreographyService>>();
 
 		for (Entry<String, ChoreographyServiceSpec> serviceSpec : toUpdate
 				.entrySet()) {
 			logger.debug("Requesting update of " + serviceSpec);
-			ServiceUpdateInvoker invoker = new ServiceUpdateInvoker(
-					serviceSpec.getKey(), serviceSpec.getValue());
+
+			ChoreographyService chorService = chor.getDeployedChoreographyServiceByChoreographyServiceUID(serviceSpec.getKey());
+			
+			ServiceUpdateInvoker invoker = new ServiceUpdateInvoker(chorService);
 			Future<ChoreographyService> future = executor.submit(invoker);
 			futures.put(serviceSpec.getValue(), future);
 		}
@@ -294,9 +300,11 @@ public class Deployer {
 		waitExecutor(executor, TIMEOUT);
 
 		List<ChoreographyService> services = new ArrayList<ChoreographyService>();
-		for (Entry<ChoreographyServiceSpec, Future<ChoreographyService>> entry : futures.entrySet()) {
+		for (Entry<ChoreographyServiceSpec, Future<ChoreographyService>> entry : futures
+				.entrySet()) {
 			try {
-				ChoreographyService service = this.checkFuture(entry.getValue());
+				ChoreographyService service = this
+						.checkFuture(entry.getValue());
 
 				// System.out.println("Printing returned service from future ... \n\n"
 				// + service + "\n\n");
@@ -342,30 +350,26 @@ public class Deployer {
 		}
 
 		private ChoreographyService getChoreographyService(DeployedService d) {
-			return null;
+			ChoreographyService s = new ChoreographyService(
+					choreographyServiceSpec);
+			s.setService(d);
+			return s;
 		}
 	}
 
 	private class ServiceUpdateInvoker implements Callable<ChoreographyService> {
 
-		private ChoreographyServiceSpec choreographyServiceSpec;
-		private String choreographyServiceUID;
+		private ChoreographyService choreographyService;
 
-		public ServiceUpdateInvoker(String choreographyServiceUID,
-				ChoreographyServiceSpec choreographyServiceSpec) {
-			this.choreographyServiceSpec = choreographyServiceSpec;
-			this.choreographyServiceUID = choreographyServiceUID;
+		public ServiceUpdateInvoker(ChoreographyService choreographyService) {
+			this.choreographyService = choreographyService;
 		}
 
 		@Override
 		public ChoreographyService call() throws ServiceNotModifiedException,
 				UnhandledModificationException {
 			try {
-				DeployedService deployedServiceUpdated = servicesManager
-						.updateService(choreographyServiceUID,
-								(DeployedServiceSpec) choreographyServiceSpec
-										.getServiceSpec());
-				return getChoreographyService(deployedServiceUpdated);
+				servicesManager.updateService((DeployedServiceSpec) choreographyService.getChoreographyServiceSpec().getServiceSpec());
 			} catch (ServiceNotModifiedException e) {
 				logger.error(e.getMessage());
 				throw e;
@@ -373,10 +377,7 @@ public class Deployer {
 				logger.error(e.getMessage());
 				throw e;
 			}
-		}
-
-		private ChoreographyService getChoreographyService(DeployedService d) {
-			return null;
+			return choreographyService;
 		}
 	}
 
