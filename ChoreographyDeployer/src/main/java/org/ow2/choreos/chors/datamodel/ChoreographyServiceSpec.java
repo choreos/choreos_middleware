@@ -41,7 +41,7 @@ public class ChoreographyServiceSpec {
 	public ServiceSpec getServiceSpec() {
 		return serviceSpec;
 	}
-	
+
 	public void setServiceSpec(ServiceSpec serviceSpec) {
 		this.serviceSpec = serviceSpec;
 	}
@@ -69,15 +69,15 @@ public class ChoreographyServiceSpec {
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
 	}
-	
+
 	public void addRole(String role) {
-		if(this.roles == null)
+		if (this.roles == null)
 			this.roles = new ArrayList<String>();
 		roles.add(role);
 	}
-	
+
 	public void addAllRoles(List<String> roles) {
-		if(this.roles == null)
+		if (this.roles == null)
 			this.roles = new ArrayList<String>();
 		roles.addAll(roles);
 	}
@@ -89,19 +89,18 @@ public class ChoreographyServiceSpec {
 	public void setDependencies(List<ChoreographyServiceDependency> dependencies) {
 		this.dependencies = dependencies;
 	}
-	
+
 	public void addDependency(ChoreographyServiceDependency dependency) {
-		if(this.dependencies == null) 
+		if (this.dependencies == null)
 			this.dependencies = new ArrayList<ChoreographyServiceDependency>();
 		this.dependencies.add(dependency);
 	}
-	
+
 	public void addDependencies(List<ChoreographyServiceDependency> dependencies) {
-		if(this.dependencies == null) 
+		if (this.dependencies == null)
 			this.dependencies = new ArrayList<ChoreographyServiceDependency>();
 		this.dependencies.addAll(dependencies);
 	}
-
 
 	public String getChoreographyServiceUID() {
 		return choreographyServiceUID;
@@ -168,5 +167,13 @@ public class ChoreographyServiceSpec {
 			return false;
 
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "ChoreographyServiceSpec [uid=" + choreographyServiceUID
+				+ ", owner=" + owner + ", group=" + group + ", roles=" + roles
+				+ ", dependencies=" + dependencies + ", serviceSpec="
+				+ serviceSpec;
 	}
 }

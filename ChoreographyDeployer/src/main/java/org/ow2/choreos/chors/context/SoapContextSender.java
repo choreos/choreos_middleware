@@ -119,11 +119,11 @@ public class SoapContextSender implements ContextSender {
 
 			URL endpoint = new URL(serviceEndpoint);
 			//@SuppressWarnings("unused")
-			this.printSOAPMessage(sm);
+			//this.printSOAPMessage(sm);
 			
-			SOAPMessage msg = connection.call(sm, endpoint);
+			connection.call(sm, endpoint);
 			
-			this.printSOAPMessage(msg);
+			//this.printSOAPMessage(msg);
 			
 
 		} catch (Exception e) {
@@ -132,6 +132,7 @@ public class SoapContextSender implements ContextSender {
 		
 	}
 
+	@SuppressWarnings("unused")
 	private void printSOAPMessage(SOAPMessage sm) {
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();  
 		Transformer transformer;

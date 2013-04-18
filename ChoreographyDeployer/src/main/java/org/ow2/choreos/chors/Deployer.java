@@ -47,50 +47,45 @@ public class Deployer {
 	 */
 	public Map<String, ChoreographyService> deployChoreographyServices(
 			Choreography chor) throws EnactmentException {
-
 		logger.info("Starting to deploy services of choreography "
 				+ chor.getId());
-
+		logger.info("Request to configure nodes; creating services; setting up Chef");
 		List<ChoreographyService> choreographyServices = configureNodes(chor);
-
-		if (choreographyServices == null || choreographyServices.isEmpty()) {
-			throw new EnactmentException("Probably DeploymentManager is off");
+		if (choreographyServices == null) {
+			logger.info("Deployer got a null list of choreography services; "
+					+ "Verify if the DeploymentManager is up");
+			throw new EnactmentException("Probably DeploymentManager is off. "
+					+ "Deployer got a null list of choreography services");
+		} else if (choreographyServices.isEmpty()) {
+			logger.info("Deployer got a empty list of choreography services; "
+					+ "Verify if the DeploymentManager is up");
+			throw new EnactmentException("Probably DeploymentManager is off. "
+					+ "Deployer got a null list of choreography services");
 		}
-
-		logger.info("Nodes are configured to receive services");
-
-		Map<String, ChoreographyService> deployedServices = requestToRunChefClientOnServiceNodes(choreographyServices);
-
+		logger.info("Nodes are configured to run chef-client");
+		logger.info("Requested to run chef-client on nodes");
+		Map<String, ChoreographyService> deployedServices = runChefClient(choreographyServices);
+		if (deployedServices == null) {
+			logger.info("Deployed service list became null after run chef-client");
+			throw new EnactmentException(
+					"Deployed service list became null after run chef-client");
+		} else if (choreographyServices.isEmpty()) {
+			logger.info("eployed service list became empty after run chef-client");
+			throw new EnactmentException(
+					"eployed service list became empty after run chef-client");
+		}
 		logger.info("Deployement finished");
-
 		return deployedServices;
 	}
 
 	private List<ChoreographyService> configureNodes(Choreography chor) {
-		return isFirstDeployment(chor) ? deployNewChoreography(chor)
-				: updateExistingChoreography(chor);
-	}
-
-	private List<ChoreographyService> updateExistingChoreography(
-			Choreography chor) {
-		List<ChoreographyService> services = null;
-		if (!chor.getRequestedChoreographySpec().equals(
-				chor.getChoreographySpec())) {
-			services = updateAndDeployServices(chor);
+		if ((chor.getChoregraphyServices() == null)
+				|| (chor.getChoregraphyServices().isEmpty())) {
+			return deployNewServices(chor.getRequestedChoreographySpec()
+					.getChoreographyServiceSpecs());
 		} else {
-			logger.error("Updating a choreography to become the same?!");
+			return updateAndDeployServices(chor);
 		}
-		return services;
-	}
-
-	private List<ChoreographyService> deployNewChoreography(Choreography chor) {
-		return deployNewServices(chor.getRequestedChoreographySpec()
-				.getChoreographyServiceSpecs());
-	}
-
-	private boolean isFirstDeployment(Choreography chor) {
-		return (chor.getChoregraphyServices() == null)
-				|| (chor.getChoregraphyServices().isEmpty());
 	}
 
 	private List<ChoreographyService> deployNewServices(
@@ -150,7 +145,7 @@ public class Deployer {
 	}
 
 	// chef-client
-	private Map<String, ChoreographyService> requestToRunChefClientOnServiceNodes(
+	private Map<String, ChoreographyService> runChefClient(
 			List<ChoreographyService> services) {
 
 		final int TIMEOUT = 10; // chef-client may take a long time
@@ -230,7 +225,7 @@ public class Deployer {
 		List<ChoreographyService> updatedServiceList = new ArrayList<ChoreographyService>();
 
 		System.out.println("oiiii");
-		System.out.println("hello"+ currentServices.size());
+		System.out.println("hello" + currentServices.size());
 		for (Map.Entry<String, ChoreographyService> currentServiceEntry : currentServices
 				.entrySet()) {
 			System.out.println("in loop");
@@ -264,8 +259,8 @@ public class Deployer {
 		return updatedServiceList;
 	}
 
-	private List<ChoreographyService> doUpdate(
-			Choreography chor, Map<String, ChoreographyServiceSpec> toUpdate,
+	private List<ChoreographyService> doUpdate(Choreography chor,
+			Map<String, ChoreographyServiceSpec> toUpdate,
 			List<ChoreographyServiceSpec> toCreate) {
 
 		List<ChoreographyService> b = updateExistingServices(chor, toUpdate);
@@ -277,11 +272,15 @@ public class Deployer {
 		return b;
 	}
 
-	private List<ChoreographyService> updateExistingServices(
-			Choreography chor, Map<String, ChoreographyServiceSpec> toUpdate) {
+	private List<ChoreographyService> updateExistingServices(Choreography chor,
+			Map<String, ChoreographyServiceSpec> toUpdate) {
 
 		final int TIMEOUT = 5;
 		final int N = toUpdate.size();
+		
+		System.out.println("==================== \n\n\n\n\n");
+		System.out.println("toUpdate size is " + N);
+		System.out.println("\n\n\n\n\n====================");
 		
 		ExecutorService executor = Executors.newFixedThreadPool(N);
 		Map<ChoreographyServiceSpec, Future<ChoreographyService>> futures = new HashMap<ChoreographyServiceSpec, Future<ChoreographyService>>();
@@ -290,8 +289,10 @@ public class Deployer {
 				.entrySet()) {
 			logger.debug("Requesting update of " + serviceSpec);
 
-			ChoreographyService chorService = chor.getDeployedChoreographyServiceByChoreographyServiceUID(serviceSpec.getKey());
-			
+			ChoreographyService chorService = chor
+					.getDeployedChoreographyServiceByChoreographyServiceUID(serviceSpec
+							.getKey());
+
 			ServiceUpdateInvoker invoker = new ServiceUpdateInvoker(chorService);
 			Future<ChoreographyService> future = executor.submit(invoker);
 			futures.put(serviceSpec.getValue(), future);
@@ -369,7 +370,9 @@ public class Deployer {
 		public ChoreographyService call() throws ServiceNotModifiedException,
 				UnhandledModificationException {
 			try {
-				servicesManager.updateService((DeployedServiceSpec) choreographyService.getChoreographyServiceSpec().getServiceSpec());
+				servicesManager
+						.updateService((DeployedServiceSpec) choreographyService
+								.getChoreographyServiceSpec().getServiceSpec());
 			} catch (ServiceNotModifiedException e) {
 				logger.error(e.getMessage());
 				throw e;

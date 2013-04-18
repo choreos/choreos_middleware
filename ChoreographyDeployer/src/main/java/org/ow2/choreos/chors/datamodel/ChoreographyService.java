@@ -27,4 +27,10 @@ public class ChoreographyService {
 	public void setService(Service service) {
 		this.service = service;
 	}
+
+	@Override
+	public String toString() {
+		return "ChoreographyService [choreographyServiceSpec="
+				+ choreographyServiceSpec + ", service=" + service;
+	}
 }

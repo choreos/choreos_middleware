@@ -1,6 +1,5 @@
 package org.ow2.choreos.chors.datamodel;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,12 +11,12 @@ public class Choreography {
 
 	private String id;
 	private ChoreographySpec choreographySpec = null;
-	
+
 	@XmlTransient
 	private List<ChoreographyService> choreographyServices = new ArrayList<ChoreographyService>();
 	@XmlTransient
 	private ChoreographySpec requestedChoreographySpec = null;
-	
+
 	public List<ChoreographyService> getChoregraphyServices() {
 		return choreographyServices;
 	}
@@ -26,12 +25,19 @@ public class Choreography {
 			String choreographyServiceUID) {
 
 		List<ChoreographyService> deployedServices = getDeployedChoreographyServices();
-		for (ChoreographyService svc: deployedServices) {
-			System.out.println("Searching for " + choreographyServiceUID + ", found " + svc.toString());
-			if (choreographyServiceUID.equals(svc.getChoreographyServiceSpec().getChoreographyServiceUID()))
+		
+		System.out.println("...................\n\n\n\n\n");
+		System.out.println("Existing choreography services: " + deployedServices);
+		System.out.println("\n\n\n\n\n...................");
+		for (ChoreographyService svc : deployedServices) {
+			System.out.println("Searching for " + choreographyServiceUID
+					+ ", found " + svc.toString());
+			if (choreographyServiceUID.equals(svc.getChoreographyServiceSpec()
+					.getChoreographyServiceUID()))
 				return svc;
 		}
-		throw new IllegalArgumentException("Service named " + choreographyServiceUID + " does not exist");
+		throw new IllegalArgumentException("Service named "
+				+ choreographyServiceUID + " does not exist");
 	}
 
 	public String getId() {
@@ -51,12 +57,12 @@ public class Choreography {
 	}
 
 	public void setChoreographySpec(ChoreographySpec spec) {
-		if(spec == null) {
+		if (spec == null) {
 			this.choreographySpec = spec;
 		}
-		this.requestedChoreographySpec = spec;		
+		this.requestedChoreographySpec = spec;
 	}
-	
+
 	public void finishChoreographyEnactment() {
 		this.choreographySpec = this.requestedChoreographySpec;
 	}
@@ -92,17 +98,19 @@ public class Choreography {
 
 	@Override
 	public String toString() {
-		return "Choreography [id=" + id + ", chorSpec=" + requestedChoreographySpec
-				+ ", deployedServices=" + getDeployedChoreographyServices() + "]";
+		return "Choreography [id=" + id + ", chorSpec="
+				+ requestedChoreographySpec + ", deployedServices="
+				+ getDeployedChoreographyServices() + "]";
 	}
 
 	public void addChoreographyService(ChoreographyService choreographyService) {
 		choreographyServices.add(choreographyService);
 	}
 
-	public void setDeployedChoreographyServices(List<ChoreographyService> choreographyServices) {
+	public void setDeployedChoreographyServices(
+			List<ChoreographyService> choreographyServices) {
 		this.choreographyServices.clear();
-		for(ChoreographyService service : choreographyServices) {
+		for (ChoreographyService service : choreographyServices) {
 			this.choreographyServices.add(service);
 		}
 	}
