@@ -25,13 +25,9 @@ public class Choreography {
 			String choreographyServiceUID) {
 
 		List<ChoreographyService> deployedServices = getDeployedChoreographyServices();
-		
-		System.out.println("...................\n\n\n\n\n");
-		System.out.println("Existing choreography services: " + deployedServices);
-		System.out.println("\n\n\n\n\n...................");
 		for (ChoreographyService svc : deployedServices) {
-			System.out.println("Searching for " + choreographyServiceUID
-					+ ", found " + svc.toString());
+//		System.out.println("Searching for " + choreographyServiceUID
+//					+ ", found " + svc.toString());
 			if (choreographyServiceUID.equals(svc.getChoreographyServiceSpec()
 					.getChoreographyServiceUID()))
 				return svc;
