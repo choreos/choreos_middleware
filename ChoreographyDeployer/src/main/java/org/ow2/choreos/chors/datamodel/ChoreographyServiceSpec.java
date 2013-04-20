@@ -123,6 +123,7 @@ public class ChoreographyServiceSpec {
 		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
 		result = prime * result
 				+ ((dependencies == null) ? 0 : dependencies.hashCode());
+		result = prime * result + ((serviceSpec == null) ? 0 : serviceSpec.hashCode());
 		return result;
 	}
 
@@ -164,6 +165,12 @@ public class ChoreographyServiceSpec {
 			if (other.dependencies != null)
 				return false;
 		} else if (!dependencies.equals(other.dependencies))
+			return false;
+		
+		if (serviceSpec == null) {
+			if(other.serviceSpec != null)
+				return false;
+		} else if (!serviceSpec.equals(other.serviceSpec))
 			return false;
 
 		return true;

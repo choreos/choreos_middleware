@@ -40,7 +40,7 @@ public class SingleESBNodeSelctorTest {
 				PackageType.COMMAND_LINE);
 		this.chor = models.getChoreography();
 		this.serviceInstancesN = 0;
-		for (ChoreographyService svc : this.chor.getChoregraphyServices()) {
+		for (ChoreographyService svc : this.chor.getDeployedChoreographyServices()) {
 			this.serviceInstancesN += ((DeployedService) (svc.getService()))
 					.getInstances().size();
 		}

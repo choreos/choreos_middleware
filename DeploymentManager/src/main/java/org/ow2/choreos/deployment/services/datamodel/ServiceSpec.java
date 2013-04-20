@@ -21,6 +21,14 @@ public abstract class ServiceSpec {
 		return uuid;
 	}
 	
+	/**
+	 * Use it carefully. Should be used only when updating a existing service
+	 * @return
+	 */
+	public void setUUID(String uuid) {
+		this.uuid = uuid;
+	}
+	
 	public ServiceType getType() {
 		return serviceType;
 	}

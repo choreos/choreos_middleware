@@ -79,11 +79,12 @@ public class Deployer {
 	}
 
 	private List<ChoreographyService> configureNodes(Choreography chor) {
-		if ((chor.getChoregraphyServices() == null)
-				|| (chor.getChoregraphyServices().isEmpty())) {
+		if ((chor.getDeployedChoreographyServices() == null)
+				|| (chor.getDeployedChoreographyServices().isEmpty())) {
 			return deployNewServices(chor.getRequestedChoreographySpec()
 					.getChoreographyServiceSpecs());
 		} else {
+			System.out.println("THE WHOLE CHOR >>> " + chor);
 			return updateAndDeployServices(chor);
 		}
 	}
@@ -197,9 +198,11 @@ public class Deployer {
 
 	private Map<String, ChoreographyServiceSpec> makeMapFromServiceList(
 			List<ChoreographyServiceSpec> list) {
+		
 		Map<String, ChoreographyServiceSpec> result = new HashMap<String, ChoreographyServiceSpec>();
 		for (ChoreographyServiceSpec spec : list)
 			result.put(spec.getChoreographyServiceUID(), spec);
+		
 		return result;
 	}
 
@@ -207,7 +210,7 @@ public class Deployer {
 			Choreography chor) {
 		Map<String, ChoreographyService> currentServices = new HashMap<String, ChoreographyService>();
 
-		for (ChoreographyService s : chor.getChoregraphyServices()) {
+		for (ChoreographyService s : chor.getDeployedChoreographyServices()) {
 			currentServices.put(s.getChoreographyServiceSpec()
 					.getChoreographyServiceUID(), s);
 		}
@@ -219,32 +222,27 @@ public class Deployer {
 		Map<String, ChoreographyServiceSpec> requestedSpecMap = makeMapFromServiceList(chor
 				.getRequestedChoreographySpec().getChoreographyServiceSpecs());
 		Map<String, ChoreographyService> currentServices = getServicesForChor(chor);
-
 		Map<String, ChoreographyServiceSpec> toUpdate = new HashMap<String, ChoreographyServiceSpec>();
 		List<ChoreographyServiceSpec> toCreate = new ArrayList<ChoreographyServiceSpec>();
 		List<ChoreographyService> updatedServiceList = new ArrayList<ChoreographyService>();
 
-		System.out.println("oiiii");
-		System.out.println("hello" + currentServices.size());
 		for (Map.Entry<String, ChoreographyService> currentServiceEntry : currentServices
-				.entrySet()) {
-			System.out.println("in loop");
+				.entrySet()) {			
 			ChoreographyServiceSpec requestedSpec = requestedSpecMap
 					.get(currentServiceEntry.getKey());
-
+			
 			if (requestedSpec != null) {
-
+				
 				if (!requestedSpec.equals(currentServiceEntry.getValue()
 						.getChoreographyServiceSpec())) {
+					
 					toUpdate.put(currentServiceEntry.getValue()
 							.getChoreographyServiceSpec()
 							.getChoreographyServiceUID(), requestedSpec);
+					
 				} else {
 					updatedServiceList.add(currentServiceEntry.getValue());
 				}
-			} else {
-				// chor.addScheduledServiceRemoval(specEntry.getValue()); //
-				// there is no more this service in choreography
 			}
 		}
 
@@ -263,7 +261,9 @@ public class Deployer {
 			Map<String, ChoreographyServiceSpec> toUpdate,
 			List<ChoreographyServiceSpec> toCreate) {
 
-		List<ChoreographyService> b = updateExistingServices(chor, toUpdate);
+		List<ChoreographyService> b = new ArrayList<ChoreographyService>();
+		if(toUpdate.size() > 0) 
+			b = updateExistingServices(chor, toUpdate);
 
 		if (toCreate.size() > 0) {
 			List<ChoreographyService> a = deployNewServices(toCreate);
@@ -275,12 +275,8 @@ public class Deployer {
 	private List<ChoreographyService> updateExistingServices(Choreography chor,
 			Map<String, ChoreographyServiceSpec> toUpdate) {
 
-		final int TIMEOUT = 5;
+		final int TIMEOUT = 10;
 		final int N = toUpdate.size();
-		
-		System.out.println("==================== \n\n\n\n\n");
-		System.out.println("toUpdate size is " + N);
-		System.out.println("\n\n\n\n\n====================");
 		
 		ExecutorService executor = Executors.newFixedThreadPool(N);
 		Map<ChoreographyServiceSpec, Future<ChoreographyService>> futures = new HashMap<ChoreographyServiceSpec, Future<ChoreographyService>>();
@@ -306,9 +302,6 @@ public class Deployer {
 			try {
 				ChoreographyService service = this
 						.checkFuture(entry.getValue());
-
-				// System.out.println("Printing returned service from future ... \n\n"
-				// + service + "\n\n");
 
 				if (service != null) {
 					services.add(service);
@@ -370,8 +363,12 @@ public class Deployer {
 		public ChoreographyService call() throws ServiceNotModifiedException,
 				UnhandledModificationException {
 			try {
+				choreographyService.getChoreographyServiceSpec()
+				.getServiceSpec().setUUID(choreographyService.getService().getSpec().getUUID());
+				
 				servicesManager
-						.updateService((DeployedServiceSpec) choreographyService
+						.updateService(
+								(DeployedServiceSpec) choreographyService
 								.getChoreographyServiceSpec().getServiceSpec());
 			} catch (ServiceNotModifiedException e) {
 				logger.error(e.getMessage());

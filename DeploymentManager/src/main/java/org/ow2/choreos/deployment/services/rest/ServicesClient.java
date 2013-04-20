@@ -91,14 +91,15 @@ public class ServicesClient implements ServicesManager {
 	@Override
 	public DeployedService updateService(DeployedServiceSpec serviceSpec)
 			throws ServiceNotModifiedException {
-
+		System.out.println("sending   " + serviceSpec);
 		WebClient client = setupClient();
 		client.path("services").path(serviceSpec.getUUID());
 		DeployedService service = null;
 		try {
 			service = client.post(serviceSpec, DeployedService.class);
 		} catch (WebApplicationException e) {
-			throw new ServiceNotModifiedException(service.getSpec().getUUID());
+			System.out.println(e.getMessage());
+			throw new ServiceNotModifiedException(serviceSpec.getUUID());
 		}
 		return service;
 	}

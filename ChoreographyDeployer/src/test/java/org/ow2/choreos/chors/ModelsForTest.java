@@ -240,8 +240,21 @@ public class ModelsForTest {
 				airlineServiceSpec, null, null, roles, AIRLINE);
 
 		spec.addChoreographyServiceSpec(airChorServiceSpec);
-		initTravelAgencySpecs();
-		spec.addChoreographyServiceSpec(this.travelAgencyChoreographyServiceSpec);
+		
+		ServiceSpec travelAgencyServiceSpec = new DeployedServiceSpec(
+				ServiceType.SOAP, PackageType.COMMAND_LINE, null, null,
+				TRAVEL_AGENCY_JAR, TRAVEL_AGENCY_PORT, TRAVEL_AGENCY, 1);
+
+		List<String> roles1 = new ArrayList<String>();
+		roles1.add(TRAVEL_AGENCY);
+		
+		ChoreographyServiceSpec travelAgencyChorServiceSpec = new ChoreographyServiceSpec(
+				travelAgencyServiceSpec, null, null, roles1, TRAVEL_AGENCY);
+		
+		travelAgencyChorServiceSpec.addDependency(new ChoreographyServiceDependency(AIRLINE, AIRLINE));
+		
+		spec.addChoreographyServiceSpec(travelAgencyChorServiceSpec);
+
 		return spec;
 	}
 

@@ -32,6 +32,15 @@ public class DeployedService extends Service {
 	public DeployedServiceSpec getSpec() {
 		return (DeployedServiceSpec) super.getSpec();
 	}
+	
+	/**
+	 * This method seems to be necessary to JAXB set the super class
+	 * attribute when doing unmarshalling
+	 */
+	@Override
+	public void setSpec(ServiceSpec spec) {
+		super.setSpec((DeployedServiceSpec) spec);
+	}
 
 	public List<ServiceInstance> getInstances() {
 		return serviceInstances;

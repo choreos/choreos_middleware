@@ -70,6 +70,8 @@ public class ServicesResource {
 	@Produces(MediaType.APPLICATION_XML)
 	public Response deployService(DeployedServiceSpec serviceSpec, 
 			@Context UriInfo uriInfo) {
+		
+		System.out.println("received  " + serviceSpec);
 
 		if (serviceSpec.getPackageUri() == null || serviceSpec.getPackageUri().isEmpty() 
 				|| serviceSpec.getPackageType() == null)
@@ -84,7 +86,6 @@ public class ServicesResource {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		
-		//TODO: AVISA QUE NÃO TEM NÓ MEU CARO!!!
 		logger.info(service.getSpec().getUUID() + " configured to be deployed on " + service.getUris());
 		
 		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();

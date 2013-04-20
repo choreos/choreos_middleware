@@ -67,7 +67,7 @@ public class ChoreographyDeployerImpl implements ChoreographyDeployer {
 		ContextCaster caster = new ContextCaster(sender);
 		logger.info("Resquested to cast service context");
 		caster.cast(chor.getRequestedChoreographySpec(), deployedMap);
-		logger.info("Going to set choreography "+ chorId + " as deployed");
+		logger.info("Going to set choreography " + chorId + " as deployed");
 		chor.finishChoreographyEnactment();
 		logger.info("Enactment completed; chorId=" + chorId);
 		return chor;
@@ -78,12 +78,13 @@ public class ChoreographyDeployerImpl implements ChoreographyDeployer {
 			throws ChoreographyNotFoundException {
 		logger.info("Requested to update choreography " + chorId);
 		Choreography chor = reg.get(chorId);
+
 		if (chor == null) {
 			logger.info("Could not get choreography with ID = " + chorId);
 			throw new ChoreographyNotFoundException(chorId);
 		}
-		if (chor.getRequestedChoreographySpec().equals(
-				chor.getChoreographySpec())) {
+
+		if (spec.equals(chor.getChoreographySpec())) {
 			logger.info("Requested to update choreography with the same spec that already have");
 			return;
 		}

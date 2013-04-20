@@ -59,7 +59,7 @@ public class IncreaseNumberOfInstancesTest {
 
 		String chorId = ee.createChoreography(spec);
 		Choreography chor = ee.enactChoreography(chorId);
-
+		
 		ChoreographyService airline = chor
 				.getDeployedChoreographyServiceByChoreographyServiceUID(ModelsForTest.AIRLINE);
 
@@ -70,6 +70,7 @@ public class IncreaseNumberOfInstancesTest {
 
 		String codes, codes2, codes3 = "";
 
+		
 		Item response = client.request("buyTrip");
 		codes = response.getChild("return").getContent();
 		response = client.request("buyTrip");
@@ -79,6 +80,7 @@ public class IncreaseNumberOfInstancesTest {
 		assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
 		assertTrue(codes2.startsWith("33") && codes2.endsWith("--22"));
 		assertFalse(codes.equals(codes2));
+		
 
 		ee.updateChoreography(chorId, newSpec);
 		chor = ee.enactChoreography(chorId);
@@ -90,6 +92,7 @@ public class IncreaseNumberOfInstancesTest {
 
 		travel = chor
 				.getDeployedChoreographyServiceByChoreographyServiceUID(ModelsForTest.TRAVEL_AGENCY);
+		
 		client = new WSClient(travel.getService().getUris().get(0) + "?wsdl");
 
 		response = client.request("buyTrip");

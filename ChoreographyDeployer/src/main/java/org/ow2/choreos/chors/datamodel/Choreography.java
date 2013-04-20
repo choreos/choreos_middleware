@@ -16,18 +16,16 @@ public class Choreography {
 	private List<ChoreographyService> choreographyServices = new ArrayList<ChoreographyService>();
 	@XmlTransient
 	private ChoreographySpec requestedChoreographySpec = null;
-
-	public List<ChoreographyService> getChoregraphyServices() {
-		return choreographyServices;
-	}
-
+	
 	public ChoreographyService getDeployedChoreographyServiceByChoreographyServiceUID(
 			String choreographyServiceUID) {
 
 		List<ChoreographyService> deployedServices = getDeployedChoreographyServices();
 		for (ChoreographyService svc : deployedServices) {
-//		System.out.println("Searching for " + choreographyServiceUID
-//					+ ", found " + svc.toString());
+		//System.out.println("Searching for " + choreographyServiceUID
+		//			+ ", found " + svc.toString());
+		System.out.println("procurei \"" + choreographyServiceUID
+				+ "\", achei \"" + svc.getChoreographyServiceSpec().getChoreographyServiceUID() + "\"");
 			if (choreographyServiceUID.equals(svc.getChoreographyServiceSpec()
 					.getChoreographyServiceUID()))
 				return svc;
@@ -53,7 +51,9 @@ public class Choreography {
 	}
 
 	public void setChoreographySpec(ChoreographySpec spec) {
-		if (spec == null) {
+		System.out.println(">>>>> "+ spec);
+		if (choreographySpec == null) {
+			System.out.println("setting spec...");
 			this.choreographySpec = spec;
 		}
 		this.requestedChoreographySpec = spec;
@@ -94,9 +94,9 @@ public class Choreography {
 
 	@Override
 	public String toString() {
-		return "Choreography [id=" + id + ", chorSpec="
-				+ requestedChoreographySpec + ", deployedServices="
-				+ getDeployedChoreographyServices() + "]";
+		return "Choreography [id=" + id + ", chorSpec="	+ choreographySpec 
+				+ ", deployedServices=" + getDeployedChoreographyServices()
+				+ ", requestedChorSpec=" + requestedChoreographySpec + "]";
 	}
 
 	public void addChoreographyService(ChoreographyService choreographyService) {

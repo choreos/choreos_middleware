@@ -194,6 +194,9 @@ public class DeployedServiceSpec extends ServiceSpec {
 		if (! (port == other.port) )
 			return false;
 		
+		if (! (numberOfInstances == other.numberOfInstances) )
+			return false;
+		
 		return true;
 	}
 
@@ -202,6 +205,7 @@ public class DeployedServiceSpec extends ServiceSpec {
 		return "ServiceSpec [type=" + serviceType
 				+ ", artifactType=" + packageType + ", packageUri=" + packageUri
 				+ ", port=" + port + ", endpointName=" + endpointName
-				+ ", version=" + version + "]";
+				+ ", version=" + version
+				+ ", #instances=" + numberOfInstances +"]";
 	}
 }
