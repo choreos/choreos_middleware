@@ -81,11 +81,20 @@ public class ServicesManagerImpl implements ServicesManager {
 
 		Recipe serviceRecipe = this.createRecipe(service);
 
-		try {
-			this.uploadRecipe(serviceRecipe);
-		} catch (KnifeException e) {
-			logger.error("Could not upload recipe: " + e.getMessage());
-			throw new ServiceNotDeployedException(service.getSpec().getUUID());
+		for (int i = 0; i < 5; i++) {
+			try {
+				this.uploadRecipe(serviceRecipe);
+			} catch (KnifeException e) {
+				if (i >= 4) {
+					logger.error("Could not upload recipe: " + e.getMessage());
+					throw new ServiceNotDeployedException(service.getSpec()
+							.getUUID());
+				} else
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e1) {
+					}
+			}
 		}
 	}
 
@@ -172,7 +181,8 @@ public class ServicesManagerImpl implements ServicesManager {
 		DeployedService current;
 		try {
 			logger.info("Trying to get service with id "
-					+ serviceSpec.getUUID() + " from \n" + registry.getServices());
+					+ serviceSpec.getUUID() + " from \n"
+					+ registry.getServices());
 			current = getService(serviceSpec.getUUID());
 			logger.info("getService got " + current);
 		} catch (ServiceNotFoundException e) {
@@ -222,7 +232,7 @@ public class ServicesManagerImpl implements ServicesManager {
 		}
 		logger.info("Setting the new service spec for service "
 				+ currentService);
-		
+
 		String uuid = currentService.getSpec().getUUID();
 		currentService.setSpec(requestedSpec);
 		registry.addService(currentService.getSpec().getUUID(), currentService);
@@ -315,5 +325,7 @@ public class ServicesManagerImpl implements ServicesManager {
 		logger.info("Requesting to execute deploy of " + amount
 				+ " replicas for" + current);
 		executeDeployment(current, amount);
+		// Until here working very nice
+		//logger.info("UPGRADED " + current);
 	}
 }

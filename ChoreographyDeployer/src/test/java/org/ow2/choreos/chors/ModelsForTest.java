@@ -71,8 +71,6 @@ public class ModelsForTest {
 
 		initTravelAgencySpecs();
 		initTravelServices();
-		// System.out.println("sizeeee 2 = " + ((DeployedService)
-		// airlineChoreographyService.getService()).getInstances().size());
 		createChorSpec();
 		createChoreography();
 

@@ -22,10 +22,6 @@ public class Choreography {
 
 		List<ChoreographyService> deployedServices = getDeployedChoreographyServices();
 		for (ChoreographyService svc : deployedServices) {
-		//System.out.println("Searching for " + choreographyServiceUID
-		//			+ ", found " + svc.toString());
-		System.out.println("procurei \"" + choreographyServiceUID
-				+ "\", achei \"" + svc.getChoreographyServiceSpec().getChoreographyServiceUID() + "\"");
 			if (choreographyServiceUID.equals(svc.getChoreographyServiceSpec()
 					.getChoreographyServiceUID()))
 				return svc;
@@ -51,9 +47,7 @@ public class Choreography {
 	}
 
 	public void setChoreographySpec(ChoreographySpec spec) {
-		System.out.println(">>>>> "+ spec);
 		if (choreographySpec == null) {
-			System.out.println("setting spec...");
 			this.choreographySpec = spec;
 		}
 		this.requestedChoreographySpec = spec;

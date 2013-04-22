@@ -283,7 +283,6 @@ public class Deployer {
 		for (Entry<String, ChoreographyServiceSpec> serviceSpec : toUpdate
 				.entrySet()) {
 			logger.debug("Requesting update of " + serviceSpec);
-			System.out.println("...\n\nRequesting update of " + serviceSpec + "\n\n...");
 
 			ChoreographyService chorService = chor
 					.getDeployedChoreographyServiceByChoreographyServiceUID(serviceSpec
@@ -367,9 +366,10 @@ public class Deployer {
 		public ChoreographyService call() throws ServiceNotModifiedException,
 				UnhandledModificationException {
 			try {				
-				servicesManager.updateService(
+				DeployedService a = servicesManager.updateService(
 								(DeployedServiceSpec) choreographyService.getChoreographyServiceSpec().getServiceSpec());
-				System.out.println("naisydfauysd " + choreographyService.getChoreographyServiceSpec());
+				
+				this.choreographyService.setService(a);
 			} catch (ServiceNotModifiedException e) {
 				logger.error(e.getMessage());
 				throw e;

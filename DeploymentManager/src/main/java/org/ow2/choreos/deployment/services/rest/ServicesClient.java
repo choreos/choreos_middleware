@@ -59,10 +59,7 @@ public class ServicesClient implements ServicesManager {
 		try {
 			service = client.post(serviceSpec, DeployedService.class);
 		} catch (WebApplicationException e) {
-			System.out.println(e.getMessage());
-			System.out.println(service);
-			System.out.println(service.getSpec());
-			throw new ServiceNotDeployedException(service.getSpec().getUUID());
+			throw new ServiceNotDeployedException(serviceSpec.getUUID());
 		}
 
 		return service;
@@ -91,14 +88,12 @@ public class ServicesClient implements ServicesManager {
 	@Override
 	public DeployedService updateService(DeployedServiceSpec serviceSpec)
 			throws ServiceNotModifiedException {
-		System.out.println("sending   " + serviceSpec);
 		WebClient client = setupClient();
 		client.path("services").path(serviceSpec.getUUID());
 		DeployedService service = null;
 		try {
 			service = client.post(serviceSpec, DeployedService.class);
 		} catch (WebApplicationException e) {
-			System.out.println(e.getMessage());
 			throw new ServiceNotModifiedException(serviceSpec.getUUID(), e.getMessage());
 		}
 		return service;

@@ -100,7 +100,6 @@ public class ContextCaster {
 			ChoreographyService providerService) throws ContextNotSentException {
 
 		List<String> providerUris = this.getUris(providerService);
-		System.out.println("Uris : " +providerUris);
 		int trial = 0;
 
 		for (String serviceUri : consumerServiceInstanceUris) {

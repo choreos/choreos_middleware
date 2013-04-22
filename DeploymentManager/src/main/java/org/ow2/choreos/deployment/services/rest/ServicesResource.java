@@ -70,8 +70,6 @@ public class ServicesResource {
 	public Response deployService(DeployedServiceSpec serviceSpec, 
 			@Context UriInfo uriInfo) {
 		
-		System.out.println("received  " + serviceSpec);
-
 		if (serviceSpec.getPackageUri() == null || serviceSpec.getPackageUri().isEmpty() 
 				|| serviceSpec.getPackageType() == null)
 			return Response.status(Status.BAD_REQUEST).build();
