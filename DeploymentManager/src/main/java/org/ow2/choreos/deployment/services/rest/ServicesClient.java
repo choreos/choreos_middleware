@@ -99,7 +99,7 @@ public class ServicesClient implements ServicesManager {
 			service = client.post(serviceSpec, DeployedService.class);
 		} catch (WebApplicationException e) {
 			System.out.println(e.getMessage());
-			throw new ServiceNotModifiedException(serviceSpec.getUUID());
+			throw new ServiceNotModifiedException(serviceSpec.getUUID(), e.getMessage());
 		}
 		return service;
 	}

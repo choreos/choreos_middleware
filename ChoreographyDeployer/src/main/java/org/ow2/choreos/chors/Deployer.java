@@ -84,7 +84,6 @@ public class Deployer {
 			return deployNewServices(chor.getRequestedChoreographySpec()
 					.getChoreographyServiceSpecs());
 		} else {
-			System.out.println("THE WHOLE CHOR >>> " + chor);
 			return updateAndDeployServices(chor);
 		}
 	}
@@ -284,10 +283,15 @@ public class Deployer {
 		for (Entry<String, ChoreographyServiceSpec> serviceSpec : toUpdate
 				.entrySet()) {
 			logger.debug("Requesting update of " + serviceSpec);
+			System.out.println("...\n\nRequesting update of " + serviceSpec + "\n\n...");
 
 			ChoreographyService chorService = chor
 					.getDeployedChoreographyServiceByChoreographyServiceUID(serviceSpec
 							.getKey());
+			
+			ChoreographyServiceSpec tmp = serviceSpec.getValue();
+			tmp.getServiceSpec().setUUID(chorService.getChoreographyServiceSpec().getServiceSpec().getUUID());
+			chorService.setChoreographyServiceSpec(tmp);
 
 			ServiceUpdateInvoker invoker = new ServiceUpdateInvoker(chorService);
 			Future<ChoreographyService> future = executor.submit(invoker);
@@ -362,14 +366,10 @@ public class Deployer {
 		@Override
 		public ChoreographyService call() throws ServiceNotModifiedException,
 				UnhandledModificationException {
-			try {
-				choreographyService.getChoreographyServiceSpec()
-				.getServiceSpec().setUUID(choreographyService.getService().getSpec().getUUID());
-				
-				servicesManager
-						.updateService(
-								(DeployedServiceSpec) choreographyService
-								.getChoreographyServiceSpec().getServiceSpec());
+			try {				
+				servicesManager.updateService(
+								(DeployedServiceSpec) choreographyService.getChoreographyServiceSpec().getServiceSpec());
+				System.out.println("naisydfauysd " + choreographyService.getChoreographyServiceSpec());
 			} catch (ServiceNotModifiedException e) {
 				logger.error(e.getMessage());
 				throw e;

@@ -15,7 +15,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.JAXBElement;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.Configuration;
@@ -222,11 +221,10 @@ public class ServicesResource {
 	@Path("{uuid}")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response updateService(JAXBElement<DeployedServiceSpec> serviceSpecXML,
+	public Response updateService(DeployedServiceSpec serviceSpec,
 			@PathParam("uuid") String uuid,
 			@Context UriInfo uriInfo) {
 
-		DeployedServiceSpec serviceSpec = serviceSpecXML.getValue();
 		if (serviceSpec.getPackageUri() == null || serviceSpec.getPackageUri().isEmpty() 
 				|| serviceSpec.getPackageType() == null)
 			return Response.status(Status.BAD_REQUEST).build();
