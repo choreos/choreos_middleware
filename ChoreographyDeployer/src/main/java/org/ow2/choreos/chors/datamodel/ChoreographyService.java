@@ -6,7 +6,10 @@ public class ChoreographyService {
 
 	private ChoreographyServiceSpec choreographyServiceSpec;
 	private Service service;
-
+	
+	public ChoreographyService() {
+	}
+	
 	public ChoreographyService(ChoreographyServiceSpec choreographyServiceSpec) {
 		this.choreographyServiceSpec = choreographyServiceSpec;
 	}

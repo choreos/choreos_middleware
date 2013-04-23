@@ -1,8 +1,7 @@
-package org.ow2.choreos.chors.datamodel;
+package org.ow2.choreos.deployment.services.datamodel;
 
 import java.util.List;
 
-import org.ow2.choreos.deployment.services.datamodel.Service;
 
 /* When dealing with legacy services, there is no real Service object; these
  * only exist when they are created by the DeploymentManager. But we want to
@@ -17,6 +16,8 @@ public class LegacyService extends Service {
 		super(serviceSpec);
 		URIs = serviceSpec.getNativeURIs();
 	}
+	
+	public LegacyService(){}
 
 	@Override
 	public List<String> getUris() {

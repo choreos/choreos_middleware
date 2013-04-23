@@ -58,7 +58,7 @@ public class BaseESBNodeSelector implements ESBNodesSelector {
 	private List<ServiceInstance> removeCoordels(Choreography chor) {
 		
 		InstancesFilter filter = new InstancesFilter();
-		return filter.filter(chor.getDeployedChoreographyServices());
+		return filter.filter(chor.getChoreographyServices());
 	}
 	
 	/**

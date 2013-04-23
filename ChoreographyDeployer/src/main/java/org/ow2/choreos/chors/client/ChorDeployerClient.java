@@ -101,6 +101,7 @@ public class ChorDeployerClient implements ChoreographyDeployer {
     		}
     	}
 		
+		System.out.println("At Client: "+ chor);
         return chor;
 	}
 

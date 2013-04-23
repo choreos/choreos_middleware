@@ -41,7 +41,7 @@ public class AlwaysCreateESBNodeSelectorTest {
 				PackageType.COMMAND_LINE);
 		this.chor = models.getChoreography();
 		this.serviceInstancesN = 0;
-		for (ChoreographyService svc : this.chor.getDeployedChoreographyServices()) {
+		for (ChoreographyService svc : this.chor.getChoreographyServices()) {
 			this.serviceInstancesN += ((DeployedService) svc.getService())
 					.getInstances().size();
 		}

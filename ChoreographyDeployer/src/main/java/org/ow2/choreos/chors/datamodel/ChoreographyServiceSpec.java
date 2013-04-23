@@ -3,10 +3,15 @@ package org.ow2.choreos.chors.datamodel;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
+
+import org.ow2.choreos.deployment.services.datamodel.DeployedService;
+import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 
 public class ChoreographyServiceSpec {
-
 	private ServiceSpec serviceSpec;
 
 	private String owner;
@@ -14,10 +19,13 @@ public class ChoreographyServiceSpec {
 	private List<String> roles;
 	private List<ChoreographyServiceDependency> dependencies;
 	private String choreographyServiceUID;
+	
+	public ChoreographyServiceSpec() {
+		
+	}
 
 	public ChoreographyServiceSpec(ServiceSpec serviceSpec, String owner,
 			String group, List<String> roles, String choreographyServiceUID) {
-		super();
 		this.serviceSpec = serviceSpec;
 		this.owner = owner;
 		this.group = group;
@@ -29,7 +37,6 @@ public class ChoreographyServiceSpec {
 			String group, List<String> roles,
 			List<ChoreographyServiceDependency> dependencies,
 			String choreographyServiceUID) {
-		super();
 		this.serviceSpec = serviceSpec;
 		this.owner = owner;
 		this.group = group;

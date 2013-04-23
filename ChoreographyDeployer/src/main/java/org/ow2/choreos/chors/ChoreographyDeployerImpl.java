@@ -54,7 +54,7 @@ public class ChoreographyDeployerImpl implements ChoreographyDeployer {
 		Deployer deployer = new Deployer();
 		Map<String, ChoreographyService> deployedMap = deployer
 				.deployChoreographyServices(chor);
-		chor.setDeployedChoreographyServices(new ArrayList<ChoreographyService>(
+		chor.setChoreographyServices(new ArrayList<ChoreographyService>(
 				deployedMap.values()));
 		logger.info("Deployed services=" + deployedMap);
 		boolean useTheBus = Boolean.parseBoolean(Configuration.get(Option.BUS));

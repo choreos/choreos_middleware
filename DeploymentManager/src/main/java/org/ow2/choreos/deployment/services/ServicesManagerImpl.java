@@ -81,20 +81,24 @@ public class ServicesManagerImpl implements ServicesManager {
 
 		Recipe serviceRecipe = this.createRecipe(service);
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 5;) {
 			try {
 				this.uploadRecipe(serviceRecipe);
 			} catch (KnifeException e) {
+				i++;
 				if (i >= 4) {
 					logger.error("Could not upload recipe: " + e.getMessage());
 					throw new ServiceNotDeployedException(service.getSpec()
 							.getUUID());
-				} else
+				} else {
 					try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e1) {
 					}
+					continue;
+				}
 			}
+			break;
 		}
 	}
 

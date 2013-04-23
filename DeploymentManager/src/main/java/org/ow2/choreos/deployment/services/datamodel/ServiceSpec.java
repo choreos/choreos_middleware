@@ -2,6 +2,9 @@ package org.ow2.choreos.deployment.services.datamodel;
 
 import java.util.UUID;
 
+import javax.xml.bind.annotation.XmlSeeAlso;
+
+@XmlSeeAlso({ DeployedServiceSpec.class, LegacyServiceSpec.class })
 public abstract class ServiceSpec {
 	protected ServiceType serviceType; 
 	protected PackageType packageType;

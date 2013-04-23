@@ -1,17 +1,21 @@
-package org.ow2.choreos.chors.datamodel;
+package org.ow2.choreos.deployment.services.datamodel;
 
 import java.util.List;
 
-import org.ow2.choreos.deployment.services.datamodel.PackageType;
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
-import org.ow2.choreos.deployment.services.datamodel.ServiceType;
+import javax.xml.bind.annotation.XmlRootElement;
 
+
+@XmlRootElement
 public class LegacyServiceSpec extends ServiceSpec {
 
 	List<String> nativeURIs;
 
 	protected LegacyServiceSpec(ServiceType serviceType, PackageType packageType) {
 		super(serviceType, packageType);
+	}
+	
+	public LegacyServiceSpec() {
+		super();
 	}
 
 	

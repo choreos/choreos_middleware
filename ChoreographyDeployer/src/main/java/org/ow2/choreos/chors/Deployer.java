@@ -79,8 +79,8 @@ public class Deployer {
 	}
 
 	private List<ChoreographyService> configureNodes(Choreography chor) {
-		if ((chor.getDeployedChoreographyServices() == null)
-				|| (chor.getDeployedChoreographyServices().isEmpty())) {
+		if ((chor.getChoreographyServices() == null)
+				|| (chor.getChoreographyServices().isEmpty())) {
 			return deployNewServices(chor.getRequestedChoreographySpec()
 					.getChoreographyServiceSpecs());
 		} else {
@@ -209,7 +209,7 @@ public class Deployer {
 			Choreography chor) {
 		Map<String, ChoreographyService> currentServices = new HashMap<String, ChoreographyService>();
 
-		for (ChoreographyService s : chor.getDeployedChoreographyServices()) {
+		for (ChoreographyService s : chor.getChoreographyServices()) {
 			currentServices.put(s.getChoreographyServiceSpec()
 					.getChoreographyServiceUID(), s);
 		}

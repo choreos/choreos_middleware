@@ -1,6 +1,7 @@
 package org.ow2.choreos.chors.integration;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -14,6 +15,7 @@ import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographyServiceSpec;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.chors.rest.ChorDeployerServer;
+import org.ow2.choreos.deployment.services.datamodel.DeployedService;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
@@ -102,12 +104,20 @@ public class RestEnactmentTest {
 	@Test
 	public void shouldEnactChoreography() throws Exception {
 
-		String uri = "";
+		String host = ChorDeployerServer.URL;
+		ChoreographyDeployer ee = new ChorDeployerClient(host);
+		String chorId = ee.createChoreography(chorSpec);
+		Choreography chor = ee.enactChoreography(chorId);
+		System.out.println("A chor: " + chor);
+
+		String uri =
+				((DeployedService) chor.getDeployedChoreographyServiceByChoreographyServiceUID(
+						ModelsForTest.TRAVEL_AGENCY).getService()).getInstances().get(0).getNativeUri();
 		WSClient client = new WSClient(uri + "?wsdl");
 		Item response = client.request("buyTrip");
 		String codes = response.getChild("return").getContent();
 
-		assertEquals("33--22", codes);
+		assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
 	}
 
 }

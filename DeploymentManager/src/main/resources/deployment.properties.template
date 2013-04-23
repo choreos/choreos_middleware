@@ -6,13 +6,17 @@ NODE_SELECTOR=ALWAYS_CREATE
 CLOUD_PROVIDER=FIXED
 # others: AWS and OPEN_STACK
 
-FIXED_VM_IPS=192.168.56.101; 192.168.56.102; 192.168.56.103
-FIXED_VM_HOSTNAMES=choreos-node
-FIXED_VM_PRIVATE_SSH_KEYS=/home/leonardo/.ssh/id_rsa
+NODE_TYPES=SMALL,MEDIUM,LARGE # User defined machine sizes to be used on FIXED_VM_TYPES
+MAPPER_POLICY=EXACT_FIT # Can be also ANY_FIT
+
+# others: AWS and OPEN_STACK
+FIXED_VM_IPS=192.168.122.160, 192.168.122.91, 192.168.122.14, 192.168.122.182
+FIXED_VM_HOSTNAMES=debian32, debian32doB, debian64, debian64doB
+FIXED_VM_PRIVATE_SSH_KEYS=/home/thiago/keys/id_rsa, /home/thiago/keys/id_rsa, /home/thiago/keys/id_rsa, /home/thiago/keys/id_rsa
 # user with passwordless login and sudo
-FIXED_VM_USERS=choreos
-MAPPER_POLICY=EXACT_FIT
-FIXED_VM_TYPES=SMALL
+FIXED_VM_USERS=root, root, root, root
+# Types of previously defined machines
+FIXED_VM_TYPES=LARGE, SMALL, MEDIUM, SMALL
 
 AMAZON_ACCESS_KEY_ID=secret
 AMAZON_SECRET_KEY=secret

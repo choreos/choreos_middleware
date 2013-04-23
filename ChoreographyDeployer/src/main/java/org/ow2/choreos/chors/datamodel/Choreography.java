@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement
 public class Choreography {
@@ -12,15 +11,15 @@ public class Choreography {
 	private String id;
 	private ChoreographySpec choreographySpec = null;
 
-	@XmlTransient
-	private List<ChoreographyService> choreographyServices = new ArrayList<ChoreographyService>();
-	@XmlTransient
+	// For some mysterious reason, this cannot be initialized here
+	// nor at any constructor (JAXB weirdness)
+	private List<ChoreographyService> choreographyServices;
 	private ChoreographySpec requestedChoreographySpec = null;
 	
 	public ChoreographyService getDeployedChoreographyServiceByChoreographyServiceUID(
 			String choreographyServiceUID) {
 
-		List<ChoreographyService> deployedServices = getDeployedChoreographyServices();
+		List<ChoreographyService> deployedServices = getChoreographyServices();
 		for (ChoreographyService svc : deployedServices) {
 			if (choreographyServiceUID.equals(svc.getChoreographyServiceSpec()
 					.getChoreographyServiceUID()))
@@ -57,7 +56,10 @@ public class Choreography {
 		this.choreographySpec = this.requestedChoreographySpec;
 	}
 
-	public List<ChoreographyService> getDeployedChoreographyServices() {
+	public List<ChoreographyService> getChoreographyServices() {
+		if(choreographyServices == null) {
+			this.choreographyServices = new ArrayList<ChoreographyService>();
+		}
 		return choreographyServices;
 	}
 
@@ -89,19 +91,24 @@ public class Choreography {
 	@Override
 	public String toString() {
 		return "Choreography [id=" + id + ", chorSpec="	+ choreographySpec 
-				+ ", deployedServices=" + getDeployedChoreographyServices()
+				+ ", deployedServices=" + getChoreographyServices()
 				+ ", requestedChorSpec=" + requestedChoreographySpec + "]";
 	}
 
 	public void addChoreographyService(ChoreographyService choreographyService) {
-		choreographyServices.add(choreographyService);
+		getChoreographyServices().add(choreographyService);
 	}
 
-	public void setDeployedChoreographyServices(
+	public void setChoreographyServices(
 			List<ChoreographyService> choreographyServices) {
-		this.choreographyServices.clear();
+
+		// This does not work, thanks to JAXB...
+		/*
+		getChoreographyServices().clear();
 		for (ChoreographyService service : choreographyServices) {
 			this.choreographyServices.add(service);
 		}
+		*/
+		this.choreographyServices = choreographyServices;
 	}
 }
