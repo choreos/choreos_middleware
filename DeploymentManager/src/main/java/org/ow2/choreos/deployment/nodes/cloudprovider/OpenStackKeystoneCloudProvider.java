@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.inject.Module;
 
+@SuppressWarnings("deprecation")
 public class OpenStackKeystoneCloudProvider implements CloudProvider {
 
     public String getProviderName() {

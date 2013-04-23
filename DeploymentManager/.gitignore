@@ -1,1 +1,3 @@
 src/main/resources/chef/recipes/
+/bin
+/target

@@ -9,7 +9,7 @@ public class ServiceInstanceProxifier {
 
 	public String proxify(ServiceInstance serviceInstance, EasyESBNode esbNode) throws ManagementException {
 
-		ServiceType type = serviceInstance.getMyParentServiceSpec().getType();
+		ServiceType type = serviceInstance.getServiceSpec().getType();
 		if (type != ServiceType.SOAP) {
 			throw new IllegalArgumentException("We can bind only SOAP services, not " + type);
 		}

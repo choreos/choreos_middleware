@@ -8,16 +8,16 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 
 public class ChorXmlWriter {
 
 	private Logger logger = Logger.getLogger(ChorXmlWriter.class);
 	
-	public String getChorSpecXML(ChorSpec chorSpec) throws JAXBException {
+	public String getChorSpecXML(ChoreographySpec chorSpec) throws JAXBException {
 
-		return getXML(chorSpec, ChorSpec.class);
+		return getXML(chorSpec, ChoreographySpec.class);
 	}
 	
 	public String getChoreographyXML(Choreography chor) throws JAXBException {

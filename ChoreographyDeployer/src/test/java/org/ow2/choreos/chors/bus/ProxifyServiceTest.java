@@ -12,10 +12,12 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.Configuration;
 import org.ow2.choreos.chors.Configuration.Option;
+import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.deployment.nodes.rest.NodesClient;
 import org.ow2.choreos.deployment.services.ServicesManager;
+import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
@@ -29,45 +31,36 @@ import eu.choreos.vv.clientgenerator.Item;
 import eu.choreos.vv.clientgenerator.WSClient;
 
 /**
- * Deploys a service and a EasyESB node and proxify the service 
+ * Deploys a service and a EasyESB node and proxify the service
+ * 
  * @author leonardo
- *
+ * 
  */
 @Category(IntegrationTest.class)
 public class ProxifyServiceTest {
-	
-	private static final String AIRLINE_JAR = "http://valinhos.ime.usp.br:54080/chordeployer/samples/v1-2/airline-service.jar";
+
+	ModelsForTest models = new ModelsForTest(ServiceType.SOAP,
+			PackageType.COMMAND_LINE);
 
 	@BeforeClass
 	public static void configureLog() {
 		LogConfigurator.configLog();
 	}
-	
-	private ServiceSpec getSpec() {
-		
-		ServiceSpec airlineSpec = new ServiceSpec();
-		airlineSpec.setName("airline");
-		airlineSpec.setPackageUri(AIRLINE_JAR);
-		airlineSpec.setType(ServiceType.SOAP);
-		airlineSpec.setEndpointName("airline");
-		airlineSpec.setPort(1234);
-		airlineSpec.setPackageType(PackageType.COMMAND_LINE);
-		
-		return airlineSpec;
-	}
 
 	@Test
 	public void shouldProxifyAService() throws Exception {
-		
+
 		String host = Configuration.get(Option.DEPLOYMENT_MANAGER_URI);
 		NodePoolManager npm = new NodesClient(host);
 		ServicesManager sd = new ServicesClient(host);
-		
-		ServiceSpec airlineSpec = this.getSpec();
-		ServiceInstance service = sd.createService(airlineSpec).getInstances().get(0);
+
+		ServiceSpec airlineSpec = models.getAirlineSpec();
+		ServiceInstance service = sd
+				.createService((DeployedServiceSpec) airlineSpec)
+				.getInstances().get(0);
 		Node node = service.getNode();
 		npm.upgradeNode(node.getId());
-		
+
 		BusHandler busHandler = new SingleBusHandler(npm);
 		EasyESBNode esbNode = busHandler.retrieveBusNode();
 
@@ -79,14 +72,14 @@ public class ProxifyServiceTest {
 			System.out.println(e);
 			fail();
 		}
-		
+
 		// check WSDL is online
 		String wsdl = url + "?wsdl";
 		System.out.println("Accessing " + wsdl);
 		WebClient client = WebClient.create(wsdl);
 		Response response = client.get();
 		assertEquals(200, response.getStatus());
-		
+
 		// invoke the service
 		WSClient wsClient = new WSClient(wsdl);
 		wsClient.setEndpoint(url);

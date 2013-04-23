@@ -10,8 +10,6 @@ import org.junit.experimental.categories.Category;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NodeNotDestroyed;
 import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
-import org.ow2.choreos.deployment.nodes.cloudprovider.AWSCloudProvider;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.tests.IntegrationTest;

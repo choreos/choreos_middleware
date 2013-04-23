@@ -14,12 +14,10 @@ import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
-import org.ow2.choreos.deployment.services.ServicesManager;
-import org.ow2.choreos.deployment.services.ServicesManagerImpl;
+import org.ow2.choreos.deployment.services.datamodel.DeployedService;
+import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
-import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -37,7 +35,7 @@ public class WARDeployTest {
 	private ServicesManager deployer = new ServicesManagerImpl(npm);
 
 	private WebClient client;
-	private ServiceSpec specWar = new ServiceSpec();
+	private DeployedServiceSpec specWar = new DeployedServiceSpec();
 	private ResourceImpact resourceImpact = new ResourceImpact();
 
 	@BeforeClass
@@ -48,7 +46,6 @@ public class WARDeployTest {
 	@Before
 	public void setUp() throws Exception {
 		
-		specWar.setName("airline");
 		specWar.setPackageUri(WAR_LOCATION);
 		specWar.setEndpointName(ENDPOINT_NAME);
 		specWar.setPackageType(PackageType.TOMCAT);
@@ -58,7 +55,7 @@ public class WARDeployTest {
 	@Test
 	public void shouldDeployAWarServiceInANode() throws Exception {
 
-		Service service = deployer.createService(specWar);
+		DeployedService service = deployer.createService(specWar);
 		
 		ServiceInstance instance = service.getInstances().get(0);
 		

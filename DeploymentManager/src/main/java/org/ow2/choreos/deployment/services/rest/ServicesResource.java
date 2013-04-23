@@ -15,7 +15,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.JAXBElement;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.Configuration;
@@ -29,9 +28,9 @@ import org.ow2.choreos.deployment.services.ServiceNotFoundException;
 import org.ow2.choreos.deployment.services.ServiceNotModifiedException;
 import org.ow2.choreos.deployment.services.ServicesManager;
 import org.ow2.choreos.deployment.services.ServicesManagerImpl;
-import org.ow2.choreos.deployment.services.datamodel.Service;
+import org.ow2.choreos.deployment.services.datamodel.DeployedService;
+import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
 
 /**
@@ -45,20 +44,15 @@ import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
 public class ServicesResource {
 	
 	private Logger logger = Logger.getLogger(ServicesResource.class);
-	private NodePoolManager npm;
-	private ServicesManager servicesManager;
+	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
+	protected NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
+	protected ServicesManager servicesManager = new ServicesManagerImpl(npm);
 	
 	public ServicesResource() {
 
 		String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
 		this.npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
 		this.servicesManager = new ServicesManagerImpl(npm);
-	}
-	
-	// to test purposes
-	ServicesResource(ServicesManager servicesManager, NodePoolManager npm) {
-		this.servicesManager = servicesManager;
-		this.npm = npm;
 	}
 	
 	/**
@@ -73,26 +67,26 @@ public class ServicesResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response createService(ServiceSpec serviceSpec, @Context UriInfo uriInfo) {
-
+	public Response deployService(DeployedServiceSpec serviceSpec, 
+			@Context UriInfo uriInfo) {
+		
 		if (serviceSpec.getPackageUri() == null || serviceSpec.getPackageUri().isEmpty() 
 				|| serviceSpec.getPackageType() == null)
 			return Response.status(Status.BAD_REQUEST).build();
 		
 		logger.debug("Request to deploy " + serviceSpec.getPackageUri());
 
-		Service service;
+		DeployedService service;
 		try {
 			service = servicesManager.createService(serviceSpec);
 		} catch (ServiceNotDeployedException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		
-		//TODO: AVISA QUE NÃO TEM NÓ MEU CARO!!!
-		logger.info(service.getName() + " configured to be deployed on " + service.getUris());
+		logger.info(service.getSpec().getUUID() + " configured to be deployed on " + service.getUris());
 		
 		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-		uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getName());
+		uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getSpec().getUUID());
 		URI location = uriBuilder.build();
 
 		return Response.created(location).entity(service).build();
@@ -106,18 +100,18 @@ public class ServicesResource {
 	 * @return a service found
 	 */
 	@GET
-	@Path("{serviceId}")
+	@Path("{uuid}")
 	@Produces(MediaType.APPLICATION_XML)
-	public Response getService(@PathParam("serviceId") String serviceId) {
+	public Response getService(@PathParam("uuid") String uuid) {
 		
-		if (serviceId == null || serviceId.isEmpty()) {
+		if (uuid == null || uuid.isEmpty()) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
-		logger.debug("Request to get service " + serviceId);
-		Service service;
+		logger.debug("Request to get service " + uuid);
+		DeployedService service;
 		try {
-			service = servicesManager.getService(serviceId);
+			service = servicesManager.getService(uuid);
 		} catch (ServiceNotFoundException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
@@ -132,18 +126,18 @@ public class ServicesResource {
 	 * @return a service found
 	 */
 	@GET
-	@Path("{serviceId}/instances")
+	@Path("{uuid}/instances")
 	@Produces(MediaType.APPLICATION_XML)
-	public Response getServiceInstances(@PathParam("serviceId") String serviceId) {
+	public Response getServiceInstances(@PathParam("uuid") String uuid) {
 		
-		if (serviceId == null || serviceId.isEmpty()) {
+		if (uuid == null || uuid.isEmpty()) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
-		logger.debug("Request to get instance " + serviceId + " of service "+ serviceId);
-		Service service;
+		logger.debug("Request to get instances of service "+ uuid);
+		DeployedService service;
 		try {
-			service = servicesManager.getService(serviceId);
+			service = servicesManager.getService(uuid);
 		} catch (ServiceNotFoundException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();			
 		}
@@ -159,20 +153,20 @@ public class ServicesResource {
 	 * @return a service found
 	 */
 	@GET
-	@Path("{serviceId}/instances/{instanceID}")
+	@Path("{uuid}/instances/{instanceID}")
 	@Produces(MediaType.APPLICATION_XML)
-	public Response getServiceInstance(@PathParam("serviceId") String serviceId,
+	public Response getServiceInstance(@PathParam("uuid") String uuid,
 			@PathParam("instanceId") String instanceId) {
 		
-		if (serviceId == null || serviceId.isEmpty()) {
+		if (uuid == null || uuid.isEmpty()) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
-		logger.debug("Request to get instance " + serviceId + " of service "+ serviceId);
-		Service service;
+		logger.debug("Request to get instance " + instanceId + " of service "+ uuid);
+		DeployedService service;
 		ServiceInstance instance;
 		try {
-			service = servicesManager.getService(serviceId);
+			service = servicesManager.getService(uuid);
 			instance = service.getInstance(instanceId);
 		} catch (ServiceNotFoundException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();			
@@ -189,24 +183,24 @@ public class ServicesResource {
 	 * @param serviceID
 	 */
 	@DELETE
-	@Path("{serviceId}")
-	public Response deleteService(@PathParam("serviceId") String serviceId) {
+	@Path("{uuid}")
+	public Response deleteService(@PathParam("uuid") String uuid) {
 
-		if (serviceId == null || serviceId.isEmpty()) {
+		if (uuid == null || uuid.isEmpty()) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 
-		logger.debug("Request to delete service " + serviceId);
+		logger.debug("Request to delete service " + uuid);
 		
 		try {
-			servicesManager.deleteService(serviceId);
+			servicesManager.deleteService(uuid);
 		} catch (ServiceNotDeletedException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		} catch (ServiceNotFoundException e) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		
-		logger.info("Service " + serviceId + " deleted");
+		logger.info("Service " + uuid + " deleted");
 
 		return Response.ok().build();
 	}
@@ -222,32 +216,32 @@ public class ServicesResource {
 	 * @throws UnhandledModificationException 
 	 */
 	@POST
-	@Path("{serviceId}")
+	@Path("{uuid}")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response updateService(JAXBElement<ServiceSpec> serviceSpecXML, @PathParam("serviceId") String serviceId,
+	public Response updateService(DeployedServiceSpec serviceSpec,
+			@PathParam("uuid") String uuid,
 			@Context UriInfo uriInfo) {
 
-		ServiceSpec serviceSpec = serviceSpecXML.getValue();
 		if (serviceSpec.getPackageUri() == null || serviceSpec.getPackageUri().isEmpty() 
 				|| serviceSpec.getPackageType() == null)
 			return Response.status(Status.BAD_REQUEST).build();
 		
-		logger.debug("Request to update " + serviceSpec.getName());
+		logger.debug("Request to update " + uuid);
 
-		Service service;
+		DeployedService service;
 		try {
-			service = servicesManager.updateService(serviceId, serviceSpec);
+			service = servicesManager.updateService(serviceSpec);
 		} catch (ServiceNotModifiedException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		} catch (UnhandledModificationException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		
-		logger.info(serviceSpec.getName() + " update. Running on " + service.getUris());
+		logger.info(uuid + " updated. Running on " + service.getUris());
 		
 		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-		uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getName());
+		uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getSpec().getUUID());
 		
 		Response build = Response.ok(service).build();
 		return build;

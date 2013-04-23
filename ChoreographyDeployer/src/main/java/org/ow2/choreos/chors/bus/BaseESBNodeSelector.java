@@ -58,7 +58,7 @@ public class BaseESBNodeSelector implements ESBNodesSelector {
 	private List<ServiceInstance> removeCoordels(Choreography chor) {
 		
 		InstancesFilter filter = new InstancesFilter();
-		return filter.filter(chor.getDeployedServices());
+		return filter.filter(chor.getDeployedChoreographyServices());
 	}
 	
 	/**
@@ -78,7 +78,7 @@ public class BaseESBNodeSelector implements ESBNodesSelector {
 		@Override
 		public void run() {
 			
-			String svcName = this.svcInstance.getMyParentServiceSpec().getName();
+			String svcName = this.svcInstance.getServiceSpec().getUUID();
 			try {
 				EasyESBNode esbNode = BaseESBNodeSelector.this.busHandler.retrieveBusNode();
 				BaseESBNodeSelector.this.selectedNodes.put(svcInstance, esbNode);

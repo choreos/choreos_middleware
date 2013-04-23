@@ -14,10 +14,10 @@ import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
+import org.ow2.choreos.deployment.services.datamodel.DeployedService;
+import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
-import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -32,7 +32,7 @@ public class JARWithBusDeployTest {
 	private ServicesManager servicesManager = new ServicesManagerImpl(npm);
 
 	private WebClient client;
-	private ServiceSpec spec = new ServiceSpec();
+	private DeployedServiceSpec spec = new DeployedServiceSpec();
 	
 	@BeforeClass
 	public static void configureLog() {
@@ -42,7 +42,6 @@ public class JARWithBusDeployTest {
 	@Before
 	public void setUp() {
 		
-		spec.setName("AIRLINE");
 		spec.setPackageUri(JAR_LOCATION);
 		spec.setPackageType(PackageType.COMMAND_LINE);
 		spec.setEndpointName("airline");
@@ -52,7 +51,7 @@ public class JARWithBusDeployTest {
 	@Test
 	public void shouldDeployAJarServiceInANode() throws Exception {
 
-		Service service = servicesManager.createService(spec);
+		DeployedService service = servicesManager.createService(spec);
 		ServiceInstance instance = service.getInstances().get(0);
 		npm.upgradeNode(instance.getNode().getId());
 		Thread.sleep(1000);
