@@ -16,8 +16,8 @@ import org.ow2.choreos.chors.datamodel.xml.ChorXmlWriter;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpactDefs.MemoryTypes;
-import org.ow2.choreos.deployment.services.datamodel.DeployedService;
-import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.DeployableService;
+import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
@@ -125,10 +125,10 @@ public class ModelsForTest {
 
 	private void initAirlineSpecs() {
 		if (packageType == PackageType.COMMAND_LINE) {
-			airlineSpec = new DeployedServiceSpec(serviceType, packageType,
+			airlineSpec = new DeployableServiceSpec(serviceType, packageType,
 					null, null, AIRLINE_JAR, AIRLINE_PORT, AIRLINE, 1);
 		} else {
-			airlineSpec = new DeployedServiceSpec(serviceType, packageType,
+			airlineSpec = new DeployableServiceSpec(serviceType, packageType,
 					null, null, AIRLINE_JAR, AIRLINE, 1);
 		}
 		List<String> roles = new ArrayList<String>();
@@ -140,11 +140,11 @@ public class ModelsForTest {
 
 	private void initTravelAgencySpecs() {
 		if (packageType == PackageType.COMMAND_LINE) {
-			travelSpec = new DeployedServiceSpec(serviceType, packageType,
+			travelSpec = new DeployableServiceSpec(serviceType, packageType,
 					null, null, TRAVEL_AGENCY_JAR, TRAVEL_AGENCY_PORT,
 					TRAVEL_AGENCY, 1);
 		} else {
-			travelSpec = new DeployedServiceSpec(serviceType, packageType,
+			travelSpec = new DeployableServiceSpec(serviceType, packageType,
 					null, null, TRAVEL_AGENCY_JAR, TRAVEL_AGENCY, 1);
 		}
 
@@ -160,10 +160,10 @@ public class ModelsForTest {
 
 	public void initTravelServices() {
 		Node node = createTestNode("2", TRAVEL_AGENCY_IP, "choreos-node");
-		travelAgencyService = new DeployedService(
-				(DeployedServiceSpec) this.travelSpec);
+		travelAgencyService = new DeployableService(
+				(DeployableServiceSpec) this.travelSpec);
 
-		((DeployedService) travelAgencyService)
+		((DeployableService) travelAgencyService)
 				.addInstance(new ServiceInstance(node));
 		travelChoreographyService = new ChoreographyService(
 				travelAgencyChoreographyServiceSpec);
@@ -172,9 +172,9 @@ public class ModelsForTest {
 
 	public void initAirlineServices() {
 		Node node = createTestNode("1", AIRLINE_IP, "choreos-node");
-		airlineService = new DeployedService(
-				(DeployedServiceSpec) this.airlineSpec);
-		((DeployedService) airlineService)
+		airlineService = new DeployableService(
+				(DeployableServiceSpec) this.airlineSpec);
+		((DeployableService) airlineService)
 				.addInstance(new ServiceInstance(node));
 		airlineChoreographyService = new ChoreographyService(
 				airlineChoreographyServiceSpec);
@@ -228,7 +228,7 @@ public class ModelsForTest {
 
 		ChoreographySpec spec = new ChoreographySpec();
 
-		ServiceSpec airlineServiceSpec = new DeployedServiceSpec(
+		ServiceSpec airlineServiceSpec = new DeployableServiceSpec(
 				ServiceType.SOAP, PackageType.COMMAND_LINE, null, null,
 				AIRLINE_JAR, AIRLINE_PORT, AIRLINE, numberOfAirlineServices);
 
@@ -239,7 +239,7 @@ public class ModelsForTest {
 
 		spec.addChoreographyServiceSpec(airChorServiceSpec);
 		
-		ServiceSpec travelAgencyServiceSpec = new DeployedServiceSpec(
+		ServiceSpec travelAgencyServiceSpec = new DeployableServiceSpec(
 				ServiceType.SOAP, PackageType.COMMAND_LINE, null, null,
 				TRAVEL_AGENCY_JAR, TRAVEL_AGENCY_PORT, TRAVEL_AGENCY, 1);
 
@@ -273,7 +273,7 @@ public class ModelsForTest {
 		ResourceImpact r1 = new ResourceImpact();
 		r1.setMemory(type);
 
-		ServiceSpec airlineServiceSpec = new DeployedServiceSpec(
+		ServiceSpec airlineServiceSpec = new DeployableServiceSpec(
 				ServiceType.SOAP, PackageType.COMMAND_LINE, r1, null,
 				AIRLINE_JAR, AIRLINE_PORT, AIRLINE, 1);
 

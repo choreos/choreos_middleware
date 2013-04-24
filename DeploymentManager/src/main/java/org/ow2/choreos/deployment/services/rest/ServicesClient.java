@@ -10,8 +10,8 @@ import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
 import org.ow2.choreos.deployment.services.ServiceNotFoundException;
 import org.ow2.choreos.deployment.services.ServiceNotModifiedException;
 import org.ow2.choreos.deployment.services.ServicesManager;
-import org.ow2.choreos.deployment.services.datamodel.DeployedService;
-import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.DeployableService;
+import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
 
 /**
  * Access Service Deployer functionalities through the REST API.
@@ -51,13 +51,13 @@ public class ServicesClient implements ServicesManager {
 
 	// TODO: review this methods for new client path
 	@Override
-	public DeployedService createService(DeployedServiceSpec serviceSpec) throws ServiceNotDeployedException {
+	public DeployableService createService(DeployableServiceSpec serviceSpec) throws ServiceNotDeployedException {
 
 		WebClient client = setupClient();
 		client.path("services");
-		DeployedService service = null;
+		DeployableService service = null;
 		try {
-			service = client.post(serviceSpec, DeployedService.class);
+			service = client.post(serviceSpec, DeployableService.class);
 		} catch (WebApplicationException e) {
 			throw new ServiceNotDeployedException(serviceSpec.getUUID());
 		}
@@ -66,10 +66,10 @@ public class ServicesClient implements ServicesManager {
 	}
 
 	@Override
-	public DeployedService getService(String uuid) throws ServiceNotFoundException{
+	public DeployableService getService(String uuid) throws ServiceNotFoundException{
 		WebClient client = setupClient();
 		client.path("services").path(uuid);
-		DeployedService service = null;
+		DeployableService service = null;
 		try {
 			service = client.get(null);
 		} catch (WebApplicationException e) {
@@ -86,13 +86,13 @@ public class ServicesClient implements ServicesManager {
 	}
 
 	@Override
-	public DeployedService updateService(DeployedServiceSpec serviceSpec)
+	public DeployableService updateService(DeployableServiceSpec serviceSpec)
 			throws ServiceNotModifiedException {
 		WebClient client = setupClient();
 		client.path("services").path(serviceSpec.getUUID());
-		DeployedService service = null;
+		DeployableService service = null;
 		try {
-			service = client.post(serviceSpec, DeployedService.class);
+			service = client.post(serviceSpec, DeployableService.class);
 		} catch (WebApplicationException e) {
 			throw new ServiceNotModifiedException(serviceSpec.getUUID(), e.getMessage());
 		}

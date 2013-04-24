@@ -14,8 +14,8 @@ import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
-import org.ow2.choreos.deployment.services.datamodel.DeployedService;
-import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.DeployableService;
+import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceType;
@@ -32,7 +32,7 @@ public class JARWithBusDeployTest {
 	private ServicesManager servicesManager = new ServicesManagerImpl(npm);
 
 	private WebClient client;
-	private DeployedServiceSpec spec = new DeployedServiceSpec();
+	private DeployableServiceSpec spec = new DeployableServiceSpec();
 	
 	@BeforeClass
 	public static void configureLog() {
@@ -51,7 +51,7 @@ public class JARWithBusDeployTest {
 	@Test
 	public void shouldDeployAJarServiceInANode() throws Exception {
 
-		DeployedService service = servicesManager.createService(spec);
+		DeployableService service = servicesManager.createService(spec);
 		ServiceInstance instance = service.getInstances().get(0);
 		npm.upgradeNode(instance.getNode().getId());
 		Thread.sleep(1000);

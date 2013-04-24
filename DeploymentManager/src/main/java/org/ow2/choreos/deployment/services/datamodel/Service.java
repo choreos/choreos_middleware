@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlSeeAlso;
 
-@XmlSeeAlso({DeployedService.class, LegacyService.class})
+@XmlSeeAlso({DeployableService.class, LegacyService.class})
 public abstract class Service {
 
 	private ServiceSpec spec;

@@ -18,8 +18,8 @@ import org.ow2.choreos.deployment.nodes.ConfigNotAppliedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.deployment.services.datamodel.DeployedService;
-import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.DeployableService;
+import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -30,7 +30,7 @@ public class ServiceDeployerImplTest {
 	private ServicesManager serviceDeployer;
 	
 	private Node selectedNode;
-	private DeployedServiceSpec serviceSpec;
+	private DeployableServiceSpec serviceSpec;
 	
 	@Before
 	public void setUp() throws ConfigNotAppliedException, KnifeException {
@@ -56,7 +56,7 @@ public class ServiceDeployerImplTest {
 	
 	private void setUpServiceDeployer() throws KnifeException {
 		
-		serviceSpec = new DeployedServiceSpec();
+		serviceSpec = new DeployableServiceSpec();
 		serviceSpec.setPackageUri("http://choreos.eu/services/airline.jar");
 		serviceSpec.setPackageType(PackageType.COMMAND_LINE);
 		serviceSpec.setEndpointName("airline");
@@ -78,7 +78,7 @@ public class ServiceDeployerImplTest {
 				+ serviceSpec.getPort() + "/" + serviceSpec.getEndpointName()
 				+ "/";
 		
-		DeployedService service = serviceDeployer.createService(serviceSpec);
+		DeployableService service = serviceDeployer.createService(serviceSpec);
 		
 		ServiceInstance instance = service.getInstances().get(0);
 		

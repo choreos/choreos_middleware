@@ -15,8 +15,8 @@ import org.ow2.choreos.deployment.Locations;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
-import org.ow2.choreos.deployment.services.datamodel.DeployedService;
-import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.DeployableService;
+import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.tests.IntegrationTest;
@@ -33,7 +33,7 @@ public class CDDeployTest {
 	private ServicesManager deployer = new ServicesManagerImpl(npm);
 
 	private WebClient client;
-	private DeployedServiceSpec spec = new DeployedServiceSpec();
+	private DeployableServiceSpec spec = new DeployableServiceSpec();
 	
 	@BeforeClass
 	public static void configureLog() {
@@ -53,7 +53,7 @@ public class CDDeployTest {
 	@Test
 	public void shouldDeployCDInEasyESBNode() throws Exception {
 
-		DeployedService service = deployer.createService(spec);
+		DeployableService service = deployer.createService(spec);
 		
 		assertNotNull(service);
 		System.out.println(">>>> " + service.toString());

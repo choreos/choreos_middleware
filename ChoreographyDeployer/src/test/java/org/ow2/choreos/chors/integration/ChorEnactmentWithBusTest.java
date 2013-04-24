@@ -15,7 +15,7 @@ import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographyService;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
-import org.ow2.choreos.deployment.services.datamodel.DeployedService;
+import org.ow2.choreos.deployment.services.datamodel.DeployableService;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceType;
@@ -65,11 +65,11 @@ public class ChorEnactmentWithBusTest {
 
 		ChoreographyService travel = chor
 				.getDeployedChoreographyServiceByChoreographyServiceUID(ModelsForTest.TRAVEL_AGENCY);
-		ServiceInstance airlineInstance = ((DeployedService) chor
+		ServiceInstance airlineInstance = ((DeployableService) chor
 				.getDeployedChoreographyServiceByChoreographyServiceUID(
 						ModelsForTest.AIRLINE).getService()).getInstances()
 				.get(0);
-		ServiceInstance travelInstance = ((DeployedService) travel.getService())
+		ServiceInstance travelInstance = ((DeployableService) travel.getService())
 				.getInstances().get(0);
 		String airlineProxifiedUri = airlineInstance
 				.getBusUri(ServiceType.SOAP);

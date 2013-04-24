@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographyService;
-import org.ow2.choreos.deployment.services.datamodel.DeployedService;
+import org.ow2.choreos.deployment.services.datamodel.DeployableService;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceType;
@@ -42,7 +42,7 @@ public class AlwaysCreateESBNodeSelectorTest {
 		this.chor = models.getChoreography();
 		this.serviceInstancesN = 0;
 		for (ChoreographyService svc : this.chor.getChoreographyServices()) {
-			this.serviceInstancesN += ((DeployedService) svc.getService())
+			this.serviceInstancesN += ((DeployableService) svc.getService())
 					.getInstances().size();
 		}
 

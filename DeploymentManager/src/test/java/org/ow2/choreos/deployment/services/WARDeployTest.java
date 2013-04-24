@@ -14,8 +14,8 @@ import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
-import org.ow2.choreos.deployment.services.datamodel.DeployedService;
-import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.DeployableService;
+import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.tests.IntegrationTest;
@@ -35,7 +35,7 @@ public class WARDeployTest {
 	private ServicesManager deployer = new ServicesManagerImpl(npm);
 
 	private WebClient client;
-	private DeployedServiceSpec specWar = new DeployedServiceSpec();
+	private DeployableServiceSpec specWar = new DeployableServiceSpec();
 	private ResourceImpact resourceImpact = new ResourceImpact();
 
 	@BeforeClass
@@ -55,7 +55,7 @@ public class WARDeployTest {
 	@Test
 	public void shouldDeployAWarServiceInANode() throws Exception {
 
-		DeployedService service = deployer.createService(specWar);
+		DeployableService service = deployer.createService(specWar);
 		
 		ServiceInstance instance = service.getInstances().get(0);
 		

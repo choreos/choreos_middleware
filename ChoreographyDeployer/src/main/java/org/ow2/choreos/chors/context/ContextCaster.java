@@ -9,7 +9,7 @@ import org.ow2.choreos.chors.datamodel.ChoreographyService;
 import org.ow2.choreos.chors.datamodel.ChoreographyServiceDependency;
 import org.ow2.choreos.chors.datamodel.ChoreographyServiceSpec;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
-import org.ow2.choreos.deployment.services.datamodel.DeployedService;
+import org.ow2.choreos.deployment.services.datamodel.DeployableService;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 
@@ -82,7 +82,7 @@ public class ContextCaster {
 	private List<String> getUris(ChoreographyService providerService) {
 
 		List<String> uris = new ArrayList<String>();
-		for (ServiceInstance instance : ((DeployedService) providerService
+		for (ServiceInstance instance : ((DeployableService) providerService
 				.getService()).getInstances()) {
 			String proxifiedUri = instance.getBusUri(ServiceType.SOAP);
 			if (proxifiedUri != null) {

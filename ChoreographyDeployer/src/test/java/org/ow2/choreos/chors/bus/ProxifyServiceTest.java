@@ -17,7 +17,7 @@ import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.deployment.nodes.rest.NodesClient;
 import org.ow2.choreos.deployment.services.ServicesManager;
-import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
@@ -56,7 +56,7 @@ public class ProxifyServiceTest {
 
 		ServiceSpec airlineSpec = models.getAirlineSpec();
 		ServiceInstance service = sd
-				.createService((DeployedServiceSpec) airlineSpec)
+				.createService((DeployableServiceSpec) airlineSpec)
 				.getInstances().get(0);
 		Node node = service.getNode();
 		npm.upgradeNode(node.getId());

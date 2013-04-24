@@ -36,7 +36,7 @@ public class ServiceInstance {
 	/**
 	 * The reference to the service object that this service instance is its
 	 */
-	private DeployedServiceSpec serviceSpec;
+	private DeployableServiceSpec serviceSpec;
 	
 	/**
 	 * Default constructor used by Java XML Bindings
@@ -58,11 +58,11 @@ public class ServiceInstance {
 		this.busUris = busUris;
 	}
 	
-	public DeployedServiceSpec getServiceSpec() {
+	public DeployableServiceSpec getServiceSpec() {
 		return serviceSpec;
 	}
 
-	public void setServiceSpec(DeployedServiceSpec serviceSpec) {
+	public void setServiceSpec(DeployableServiceSpec serviceSpec) {
 		this.serviceSpec = serviceSpec;
 	}
 	

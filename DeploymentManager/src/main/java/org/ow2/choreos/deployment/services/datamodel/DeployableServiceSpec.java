@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 
 @XmlRootElement
-public class DeployedServiceSpec extends ServiceSpec {
+public class DeployableServiceSpec extends ServiceSpec {
 	
 	protected ResourceImpact resourceImpact; 
 	protected String version; 
@@ -15,7 +15,7 @@ public class DeployedServiceSpec extends ServiceSpec {
 	protected String endpointName;
 	private int numberOfInstances = 1;
 	
-	public DeployedServiceSpec() {
+	public DeployableServiceSpec() {
 		super(null, null);
 	}
 	
@@ -29,7 +29,7 @@ public class DeployedServiceSpec extends ServiceSpec {
 	 * @param endpointName
 	 * @param numberOfInstances
 	 */
-	public DeployedServiceSpec(ServiceType serviceType,
+	public DeployableServiceSpec(ServiceType serviceType,
 			PackageType packageType, ResourceImpact resourceImpact,
 			String version, String packageUri, int port, String endpointName,
 			int numberOfInstances) {
@@ -51,7 +51,7 @@ public class DeployedServiceSpec extends ServiceSpec {
 	 * @param endpointName
 	 * @param numberOfInstances
 	 */
-	public DeployedServiceSpec(ServiceType serviceType,
+	public DeployableServiceSpec(ServiceType serviceType,
 			PackageType packageType, ResourceImpact resourceImpact,
 			String version, String packageUri, String endpointName,
 			int numberOfInstances) {
@@ -165,7 +165,7 @@ public class DeployedServiceSpec extends ServiceSpec {
 		if (!super.equals(obj))
 			return false;
 		
-		DeployedServiceSpec other = (DeployedServiceSpec) obj;
+		DeployableServiceSpec other = (DeployableServiceSpec) obj;
 		
 		if (resourceImpact == null) {
 			if (other.resourceImpact != null)

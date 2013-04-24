@@ -13,8 +13,8 @@ import org.ow2.choreos.deployment.nodes.ConfigNotAppliedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.deployment.services.datamodel.DeployedService;
-import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.DeployableService;
+import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
@@ -43,12 +43,12 @@ public class ServicesManagerImpl implements ServicesManager {
 	}
 
 	@Override
-	public DeployedService createService(DeployedServiceSpec serviceSpec)
+	public DeployableService createService(DeployableServiceSpec serviceSpec)
 			throws ServiceNotDeployedException {
 
-		DeployedService service = null;
+		DeployableService service = null;
 		try {
-			service = new DeployedService(serviceSpec);
+			service = new DeployableService(serviceSpec);
 		} catch (IllegalArgumentException e) {
 			String message = "Invalid service spec";
 			logger.error(message, e);
@@ -65,7 +65,7 @@ public class ServicesManagerImpl implements ServicesManager {
 
 	}
 
-	private DeployedService deployService(DeployedService service)
+	private DeployableService deployService(DeployableService service)
 			throws ServiceNotDeployedException {
 
 		prepareDeployment(service);
@@ -76,7 +76,7 @@ public class ServicesManagerImpl implements ServicesManager {
 		return service;
 	}
 
-	private void prepareDeployment(DeployedService service)
+	private void prepareDeployment(DeployableService service)
 			throws ServiceNotDeployedException {
 
 		Recipe serviceRecipe = this.createRecipe(service);
@@ -102,7 +102,7 @@ public class ServicesManagerImpl implements ServicesManager {
 		}
 	}
 
-	private Recipe createRecipe(DeployedService service) {
+	private Recipe createRecipe(DeployableService service) {
 
 		PackageType type = service.getSpec().getPackageType();
 		RecipeBuilder builder = RecipeBuilderFactory
@@ -122,7 +122,7 @@ public class ServicesManagerImpl implements ServicesManager {
 		logger.debug(result);
 	}
 
-	private void executeDeployment(DeployedService service,
+	private void executeDeployment(DeployableService service,
 			int numberOfNewInstances) {
 
 		Recipe serviceRecipe = service.getRecipe();
@@ -157,10 +157,10 @@ public class ServicesManagerImpl implements ServicesManager {
 	}
 
 	@Override
-	public DeployedService getService(String serviceId)
+	public DeployableService getService(String serviceId)
 			throws ServiceNotFoundException {
 
-		DeployedService s = registry.getService(serviceId);
+		DeployableService s = registry.getService(serviceId);
 		if (s == null)
 			throw new ServiceNotFoundException(serviceId,
 					"Error while getting service from service map.");
@@ -177,12 +177,12 @@ public class ServicesManagerImpl implements ServicesManager {
 	}
 
 	@Override
-	public DeployedService updateService(DeployedServiceSpec serviceSpec)
+	public DeployableService updateService(DeployableServiceSpec serviceSpec)
 			throws UnhandledModificationException {
 
 		logger.info("Requested to update service " + serviceSpec.getUUID()
 				+ " with spec " + serviceSpec);
-		DeployedService current;
+		DeployableService current;
 		try {
 			logger.info("Trying to get service with id "
 					+ serviceSpec.getUUID() + " from \n"
@@ -196,7 +196,7 @@ public class ServicesManagerImpl implements ServicesManager {
 			throw new UnhandledModificationException();
 		}
 
-		DeployedServiceSpec currentSpec = current.getSpec();
+		DeployableServiceSpec currentSpec = current.getSpec();
 		logger.info("Current service spec " + currentSpec);
 		List<UpdateAction> actions = getActions(currentSpec, serviceSpec);
 		applyUpdate(current, serviceSpec, actions);
@@ -204,8 +204,8 @@ public class ServicesManagerImpl implements ServicesManager {
 		return current;
 	}
 
-	private void applyUpdate(DeployedService currentService,
-			DeployedServiceSpec requestedSpec, List<UpdateAction> actions)
+	private void applyUpdate(DeployableService currentService,
+			DeployableServiceSpec requestedSpec, List<UpdateAction> actions)
 			throws UnhandledModificationException {
 		logger.info("Going to apply scheduled updates...");
 		for (UpdateAction a : actions) {
@@ -243,8 +243,8 @@ public class ServicesManagerImpl implements ServicesManager {
 		registry.deleteService(uuid);
 	}
 
-	private List<UpdateAction> getActions(DeployedServiceSpec currentSpec,
-			DeployedServiceSpec serviceSpec) {
+	private List<UpdateAction> getActions(DeployableServiceSpec currentSpec,
+			DeployableServiceSpec serviceSpec) {
 		boolean foundKnownModification = false;
 
 		List<UpdateAction> actions = new ArrayList<UpdateAction>();
@@ -283,14 +283,14 @@ public class ServicesManagerImpl implements ServicesManager {
 	}
 
 	private void requestToDecreaseNumberOfInstances(
-			DeployedService currentService, ServiceSpec requestedSpec) {
+			DeployableService currentService, ServiceSpec requestedSpec) {
 		int decreaseAmount = currentService.getSpec().getNumberOfInstances()
 				- requestedSpec.getNumberOfInstances();
 		removeServiceInstances(currentService, decreaseAmount);
 	}
 
 	private void requestToIncreaseNumberOfInstances(
-			DeployedService currentService, ServiceSpec requestedSpec) {
+			DeployableService currentService, ServiceSpec requestedSpec) {
 		int increaseAmount = requestedSpec.getNumberOfInstances()
 				- currentService.getSpec().getNumberOfInstances();
 
@@ -300,14 +300,14 @@ public class ServicesManagerImpl implements ServicesManager {
 	}
 
 	private void requestToMigrateServiceInstances(
-			DeployedService currentService, ServiceSpec requestedSpec)
+			DeployableService currentService, ServiceSpec requestedSpec)
 			throws UnhandledModificationException {
 		currentService.setSpec(requestedSpec);
 		currentService.getInstances().clear();
 		migrateServiceInstances(currentService);
 	}
 
-	private void migrateServiceInstances(DeployedService currentService)
+	private void migrateServiceInstances(DeployableService currentService)
 			throws UnhandledModificationException {
 		try {
 			deployService(currentService);
@@ -316,7 +316,7 @@ public class ServicesManagerImpl implements ServicesManager {
 		}
 	}
 
-	private void removeServiceInstances(DeployedService currentService,
+	private void removeServiceInstances(DeployableService currentService,
 			int amount) {
 		if (amount <= currentService.getInstances().size()) {
 			for (int i = 0; i < amount; i++) {
@@ -325,7 +325,7 @@ public class ServicesManagerImpl implements ServicesManager {
 		}
 	}
 
-	private void addServiceInstances(DeployedService current, int amount) {
+	private void addServiceInstances(DeployableService current, int amount) {
 		logger.info("Requesting to execute deploy of " + amount
 				+ " replicas for" + current);
 		executeDeployment(current, amount);

@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import javax.xml.bind.annotation.XmlSeeAlso;
 
-@XmlSeeAlso({ DeployedServiceSpec.class, LegacyServiceSpec.class })
+@XmlSeeAlso({ DeployableServiceSpec.class, LegacyServiceSpec.class })
 public abstract class ServiceSpec {
 	protected ServiceType serviceType; 
 	protected PackageType packageType;

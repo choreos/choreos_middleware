@@ -25,8 +25,8 @@ import org.ow2.choreos.deployment.nodes.rest.NodesClient;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
 import org.ow2.choreos.deployment.services.ServiceNotModifiedException;
 import org.ow2.choreos.deployment.services.ServicesManager;
-import org.ow2.choreos.deployment.services.datamodel.DeployedService;
-import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.DeployableService;
+import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
@@ -162,7 +162,7 @@ public class Deployer {
 
 			if (deployed.getChoreographyServiceSpec().getServiceSpec()
 					.getPackageType() != PackageType.LEGACY) {
-				for (ServiceInstance instance : ((DeployedService) deployed
+				for (ServiceInstance instance : ((DeployableService) deployed
 						.getService()).getInstances()) {
 					String nodeId = instance.getNode().getId();
 					NodeUpgrader upgrader = new NodeUpgrader(nodeId);
@@ -336,8 +336,8 @@ public class Deployer {
 		@Override
 		public ChoreographyService call() throws Exception {
 			try {
-				DeployedService deployed = servicesManager
-						.createService((DeployedServiceSpec) choreographyServiceSpec
+				DeployableService deployed = servicesManager
+						.createService((DeployableServiceSpec) choreographyServiceSpec
 								.getServiceSpec());
 				return getChoreographyService(deployed);
 			} catch (ServiceNotDeployedException e) {
@@ -346,7 +346,7 @@ public class Deployer {
 			}
 		}
 
-		private ChoreographyService getChoreographyService(DeployedService d) {
+		private ChoreographyService getChoreographyService(DeployableService d) {
 			ChoreographyService s = new ChoreographyService(
 					choreographyServiceSpec);
 			s.setService(d);
@@ -366,8 +366,8 @@ public class Deployer {
 		public ChoreographyService call() throws ServiceNotModifiedException,
 				UnhandledModificationException {
 			try {				
-				DeployedService a = servicesManager.updateService(
-								(DeployedServiceSpec) choreographyService.getChoreographyServiceSpec().getServiceSpec());
+				DeployableService a = servicesManager.updateService(
+								(DeployableServiceSpec) choreographyService.getChoreographyServiceSpec().getServiceSpec());
 				
 				this.choreographyService.setService(a);
 			} catch (ServiceNotModifiedException e) {

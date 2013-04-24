@@ -15,8 +15,8 @@ import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
 import org.ow2.choreos.deployment.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
-import org.ow2.choreos.deployment.services.datamodel.DeployedService;
-import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.DeployableService;
+import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.tests.IntegrationTest;
@@ -38,7 +38,7 @@ public class ParallelDeployTest {
 	private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
 	private ServicesManager deployer = new ServicesManagerImpl(npm);
 
-	private DeployedServiceSpec[] specs = new DeployedServiceSpec[2];
+	private DeployableServiceSpec[] specs = new DeployableServiceSpec[2];
 	
 	@BeforeClass
 	public static void configureLog() {
@@ -48,13 +48,13 @@ public class ParallelDeployTest {
 	@Before
 	public void setUp() throws Exception {
 		
-		specs[0] = new DeployedServiceSpec();
+		specs[0] = new DeployableServiceSpec();
 		specs[0].setPackageUri(JARDeployTest.JAR_LOCATION);
 		specs[0].setPackageType(PackageType.COMMAND_LINE);
 		specs[0].setEndpointName("");
 		specs[0].setPort(8042);
 
-		specs[1] = new DeployedServiceSpec();
+		specs[1] = new DeployableServiceSpec();
 		specs[1].setPackageUri(WARDeployTest.WAR_LOCATION);
 		specs[1].setPackageType(PackageType.TOMCAT);
 	}
@@ -116,18 +116,18 @@ public class ParallelDeployTest {
 	
 	private class TestDeployer implements Runnable {
 
-		DeployedServiceSpec spec;
+		DeployableServiceSpec spec;
 		String url;
 		String nodeId;
 		
-		public TestDeployer(DeployedServiceSpec spec) {
+		public TestDeployer(DeployableServiceSpec spec) {
 			this.spec = spec;
 		}
 		
 		@Override
 		public void run() {
 			System.out.println("Deploying " + spec);
-			DeployedService service = null;
+			DeployableService service = null;
 			try {
 				service = deployer.createService(spec);
 			} catch (ServiceNotDeployedException e) {

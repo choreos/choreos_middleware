@@ -1,6 +1,6 @@
 package org.ow2.choreos.deployment.services.recipe;
 
-import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
 
 public class CDRecipeBuilder extends BaseRecipeBuilder {
 
@@ -12,7 +12,7 @@ public class CDRecipeBuilder extends BaseRecipeBuilder {
 	}
 
 	@Override
-	public String replace(String content, DeployedServiceSpec serviceSpec) {
+	public String replace(String content, DeployableServiceSpec serviceSpec) {
 		content = content.replace("$NAME", serviceSpec.getUUID());
 		content = content.replace("$CD_URL", serviceSpec.getPackageUri());
 		return content;

@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.datamodel.ChoreographyService;
 import org.ow2.choreos.deployment.services.ServiceInstanceNotFoundException;
-import org.ow2.choreos.deployment.services.datamodel.DeployedService;
+import org.ow2.choreos.deployment.services.datamodel.DeployableService;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceType;
@@ -60,9 +60,9 @@ public class ContextCasterTest {
 
 	private void setUpBusUris() throws ServiceInstanceNotFoundException {
 	
-		ServiceInstance airlineInstance = ((DeployedService)(deployedServices.get(AIRLINE).getService())).getInstances().get(0); 
+		ServiceInstance airlineInstance = ((DeployableService)(deployedServices.get(AIRLINE).getService())).getInstances().get(0); 
 		airlineInstance.setBusUri(ServiceType.SOAP, AIRLINE_PROXIFIED_URI);
-		ServiceInstance travelInstance = ((DeployedService)(deployedServices.get(TRAVEL_AGENCY).getService())).getInstances().get(0);
+		ServiceInstance travelInstance = ((DeployableService)(deployedServices.get(TRAVEL_AGENCY).getService())).getInstances().get(0);
 		travelInstance.setBusUri(ServiceType.SOAP, TRAVEL_AGENCY_PROXIFIED_URI);
 	}
 	

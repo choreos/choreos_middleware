@@ -10,7 +10,7 @@ import org.ow2.choreos.deployment.services.ServiceInstanceNotFoundException;
 import org.ow2.choreos.deployment.services.recipe.Recipe;
 
 @XmlRootElement
-public class DeployedService extends Service {
+public class DeployableService extends Service {
 
 	/**
 	 * The list of all instances of the service
@@ -20,17 +20,17 @@ public class DeployedService extends Service {
 	@XmlTransient
 	private Recipe recipe;
 	
-	public DeployedService() {
+	public DeployableService() {
 		super();
 	}
 
-	public DeployedService(DeployedServiceSpec spec) {
+	public DeployableService(DeployableServiceSpec spec) {
 		super(spec);
 	}
 	
 	@Override
-	public DeployedServiceSpec getSpec() {
-		return (DeployedServiceSpec) super.getSpec();
+	public DeployableServiceSpec getSpec() {
+		return (DeployableServiceSpec) super.getSpec();
 	}
 	
 	/**
@@ -39,7 +39,7 @@ public class DeployedService extends Service {
 	 */
 	@Override
 	public void setSpec(ServiceSpec spec) {
-		super.setSpec((DeployedServiceSpec) spec);
+		super.setSpec((DeployableServiceSpec) spec);
 	}
 
 	public List<ServiceInstance> getInstances() {

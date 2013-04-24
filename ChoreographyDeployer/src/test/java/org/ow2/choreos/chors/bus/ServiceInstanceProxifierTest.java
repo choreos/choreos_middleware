@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 import org.ow2.choreos.chors.ModelsForTest;
-import org.ow2.choreos.deployment.services.datamodel.DeployedService;
+import org.ow2.choreos.deployment.services.datamodel.DeployableService;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
@@ -24,7 +24,7 @@ public class ServiceInstanceProxifierTest {
 	private ServiceInstance getServiceInstance() {
 
 		Service airlineService = models.getAirlineService();
-		ServiceInstance instance = ((DeployedService) airlineService)
+		ServiceInstance instance = ((DeployableService) airlineService)
 				.getInstances().get(0);
 		instance.setNativeUri("http://localhost:1234/airline/");
 

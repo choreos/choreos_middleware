@@ -15,7 +15,7 @@ import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographyServiceSpec;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.chors.rest.ChorDeployerServer;
-import org.ow2.choreos.deployment.services.datamodel.DeployedService;
+import org.ow2.choreos.deployment.services.datamodel.DeployableService;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
@@ -111,7 +111,7 @@ public class RestEnactmentTest {
 		System.out.println("A chor: " + chor);
 
 		String uri =
-				((DeployedService) chor.getDeployedChoreographyServiceByChoreographyServiceUID(
+				((DeployableService) chor.getDeployedChoreographyServiceByChoreographyServiceUID(
 						ModelsForTest.TRAVEL_AGENCY).getService()).getInstances().get(0).getNativeUri();
 		WSClient client = new WSClient(uri + "?wsdl");
 		Item response = client.request("buyTrip");

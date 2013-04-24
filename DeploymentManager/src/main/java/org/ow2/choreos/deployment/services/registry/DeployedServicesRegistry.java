@@ -4,21 +4,21 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.ow2.choreos.deployment.services.datamodel.DeployedService;
+import org.ow2.choreos.deployment.services.datamodel.DeployableService;
 
 public class DeployedServicesRegistry {
 
-	private ConcurrentMap<String, DeployedService> availableServices = new ConcurrentHashMap<String, DeployedService>();
+	private ConcurrentMap<String, DeployableService> availableServices = new ConcurrentHashMap<String, DeployableService>();
 
-	public void addService(String serviceId, DeployedService service) {
+	public void addService(String serviceId, DeployableService service) {
 		availableServices.put(serviceId, service);
 	}
 	
-	public DeployedService getService(String serviceId) {
+	public DeployableService getService(String serviceId) {
 		return availableServices.get(serviceId);
 	}
 
-	public Collection<DeployedService> getServices() {
+	public Collection<DeployableService> getServices() {
 		return availableServices.values();
 	}
 

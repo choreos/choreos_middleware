@@ -18,8 +18,8 @@ import org.junit.Test;
 import org.ow2.choreos.deployment.services.ServiceInstanceNotFoundException;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
 import org.ow2.choreos.deployment.services.ServicesManager;
-import org.ow2.choreos.deployment.services.datamodel.DeployedService;
-import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.DeployableService;
+import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.Service;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
@@ -41,15 +41,15 @@ public class ServicesResourceTest {
 				servicesManagerMock, null);
 	}
 
-	private DeployedServiceSpec getSpec() {
-		return new DeployedServiceSpec(ServiceType.SOAP,
+	private DeployableServiceSpec getSpec() {
+		return new DeployableServiceSpec(ServiceType.SOAP,
 				PackageType.COMMAND_LINE, null, null,
 				"http://choreos.eu/airilne.jar", 1234, "airline", 1);
 	}
 
-	private DeployedService getService() {
+	private DeployableService getService() {
 
-		DeployedService airline = new DeployedService(getSpec());
+		DeployableService airline = new DeployableService(getSpec());
 		expectedServiceUUID = airline.getSpec().getUUID();
 		ServiceInstance instance = new ServiceInstance();
 		instance.setInstanceId("1");
@@ -78,8 +78,8 @@ public class ServicesResourceTest {
 		Service entity = (Service) response.getEntity();
 		assertEquals(expectedServiceUUID, entity.getSpec().getUUID());
 		assertEquals(getSpec(), entity.getSpec());
-		assertEquals(1, ((DeployedService) entity).getInstances().size());
-		assertEquals(getService().getInstance("1"), ((DeployedService) entity).getInstance("1"));
+		assertEquals(1, ((DeployableService) entity).getInstances().size());
+		assertEquals(getService().getInstance("1"), ((DeployableService) entity).getInstance("1"));
 		assertEquals(uri, response.getMetadata().get("location").get(0));
 	}
 

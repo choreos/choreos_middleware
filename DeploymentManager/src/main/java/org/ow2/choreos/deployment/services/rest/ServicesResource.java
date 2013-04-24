@@ -28,8 +28,8 @@ import org.ow2.choreos.deployment.services.ServiceNotFoundException;
 import org.ow2.choreos.deployment.services.ServiceNotModifiedException;
 import org.ow2.choreos.deployment.services.ServicesManager;
 import org.ow2.choreos.deployment.services.ServicesManagerImpl;
-import org.ow2.choreos.deployment.services.datamodel.DeployedService;
-import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.DeployableService;
+import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
 
@@ -67,7 +67,7 @@ public class ServicesResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response deployService(DeployedServiceSpec serviceSpec, 
+	public Response deployService(DeployableServiceSpec serviceSpec, 
 			@Context UriInfo uriInfo) {
 		
 		if (serviceSpec.getPackageUri() == null || serviceSpec.getPackageUri().isEmpty() 
@@ -76,7 +76,7 @@ public class ServicesResource {
 		
 		logger.debug("Request to deploy " + serviceSpec.getPackageUri());
 
-		DeployedService service;
+		DeployableService service;
 		try {
 			service = servicesManager.createService(serviceSpec);
 		} catch (ServiceNotDeployedException e) {
@@ -109,7 +109,7 @@ public class ServicesResource {
 		}
 		
 		logger.debug("Request to get service " + uuid);
-		DeployedService service;
+		DeployableService service;
 		try {
 			service = servicesManager.getService(uuid);
 		} catch (ServiceNotFoundException e) {
@@ -135,7 +135,7 @@ public class ServicesResource {
 		}
 		
 		logger.debug("Request to get instances of service "+ uuid);
-		DeployedService service;
+		DeployableService service;
 		try {
 			service = servicesManager.getService(uuid);
 		} catch (ServiceNotFoundException e) {
@@ -163,7 +163,7 @@ public class ServicesResource {
 		}
 		
 		logger.debug("Request to get instance " + instanceId + " of service "+ uuid);
-		DeployedService service;
+		DeployableService service;
 		ServiceInstance instance;
 		try {
 			service = servicesManager.getService(uuid);
@@ -219,7 +219,7 @@ public class ServicesResource {
 	@Path("{uuid}")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response updateService(DeployedServiceSpec serviceSpec,
+	public Response updateService(DeployableServiceSpec serviceSpec,
 			@PathParam("uuid") String uuid,
 			@Context UriInfo uriInfo) {
 
@@ -229,7 +229,7 @@ public class ServicesResource {
 		
 		logger.debug("Request to update " + uuid);
 
-		DeployedService service;
+		DeployableService service;
 		try {
 			service = servicesManager.updateService(serviceSpec);
 		} catch (ServiceNotModifiedException e) {

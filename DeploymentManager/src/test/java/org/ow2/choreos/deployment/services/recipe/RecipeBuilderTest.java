@@ -12,7 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpactDefs.MemoryTypes;
-import org.ow2.choreos.deployment.services.datamodel.DeployedServiceSpec;
+import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.PackageType;
 
 public class RecipeBuilderTest {
@@ -20,7 +20,7 @@ public class RecipeBuilderTest {
 	private static String RECIPES_FOLDER = "chef/recipes";
 	
 	private RecipeBuilderImpl recipeBuilder;
-	private static DeployedServiceSpec serviceSpec;
+	private static DeployableServiceSpec serviceSpec;
 	private static String id;
 	private static String codeLocationURI = "https://github.com/downloads/choreos/choreos_middleware/myServletWAR.war";
 	private static ResourceImpact impact = new ResourceImpact();
@@ -35,7 +35,7 @@ public class RecipeBuilderTest {
 		impact.setMemory(MemoryTypes.SMALL);
 		impact.setRegion("BR");
 
-		serviceSpec = new DeployedServiceSpec();
+		serviceSpec = new DeployableServiceSpec();
 		id = serviceSpec.getUUID();
 		serviceSpec.setPackageUri(codeLocationURI);
 		serviceSpec.setPackageType(PackageType.TOMCAT);
