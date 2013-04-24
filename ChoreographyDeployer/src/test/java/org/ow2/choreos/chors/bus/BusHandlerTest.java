@@ -16,7 +16,7 @@ import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
 /**
- * Before tun the test, start the deployment manager
+ * Before run the test, start the deployment manager
  * 
  * @author leonardo
  *

@@ -10,7 +10,9 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.ChoreographyDeployerImpl;
+import org.ow2.choreos.chors.Configuration;
 import org.ow2.choreos.chors.ModelsForTest;
+import org.ow2.choreos.chors.Configuration.Option;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographyService;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
@@ -44,6 +46,7 @@ public class ChorEnactmentTest {
 	@Before
 	public void setUp() {
 
+		Configuration.set(Option.BUS, "false");
 		ModelsForTest models = new ModelsForTest(ServiceType.SOAP,
 				PackageType.COMMAND_LINE);
 		spec = models.getChorSpecWithReplicas(2);
