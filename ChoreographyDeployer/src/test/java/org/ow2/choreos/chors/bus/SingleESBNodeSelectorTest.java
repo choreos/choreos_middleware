@@ -20,7 +20,7 @@ import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 import org.ow2.choreos.utils.LogConfigurator;
 
-public class SingleESBNodeSelctorTest {
+public class SingleESBNodeSelectorTest {
 
 	private static final String ESB_ADMIN_ENDPOINT = "http://192.168.56.101:8180/services/adminExternalEndpoint";
 
