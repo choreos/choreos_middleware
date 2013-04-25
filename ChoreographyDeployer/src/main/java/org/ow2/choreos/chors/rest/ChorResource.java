@@ -21,7 +21,8 @@ import org.ow2.choreos.chors.ChoreographyDeployerImpl;
 import org.ow2.choreos.chors.ChoreographyNotFoundException;
 import org.ow2.choreos.chors.EnactmentException;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.chors.datamodel.ChoreographySpec;
+
+import org.ow2.choreos.ee.api.ChoreographySpec;
 
 /**
  * Enactment Engine REST API.

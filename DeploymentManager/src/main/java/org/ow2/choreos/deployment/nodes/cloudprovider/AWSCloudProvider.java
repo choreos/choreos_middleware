@@ -23,7 +23,7 @@ import org.jclouds.ec2.domain.InstanceType;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
+import org.ow2.choreos.ee.api.ResourceImpact;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;

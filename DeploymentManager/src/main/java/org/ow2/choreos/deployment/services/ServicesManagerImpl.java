@@ -14,16 +14,17 @@ import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.deployment.services.datamodel.DeployableService;
-import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
-import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
 import org.ow2.choreos.deployment.services.diff.UpdateAction;
 import org.ow2.choreos.deployment.services.recipe.Recipe;
 import org.ow2.choreos.deployment.services.recipe.RecipeBuilder;
 import org.ow2.choreos.deployment.services.recipe.RecipeBuilderFactory;
 import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
+import org.ow2.choreos.ee.api.PackageType;
+
+import org.ow2.choreos.ee.api.DeployableServiceSpec;
+import org.ow2.choreos.ee.api.ServiceSpec;
 
 public class ServicesManagerImpl implements ServicesManager {
 

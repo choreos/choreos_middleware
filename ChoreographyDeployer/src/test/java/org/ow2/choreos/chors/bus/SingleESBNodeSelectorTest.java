@@ -15,9 +15,9 @@ import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographyService;
 import org.ow2.choreos.deployment.services.datamodel.DeployableService;
-import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
-import org.ow2.choreos.deployment.services.datamodel.ServiceType;
+import org.ow2.choreos.ee.api.PackageType;
+import org.ow2.choreos.ee.api.ServiceType;
 import org.ow2.choreos.utils.LogConfigurator;
 
 public class SingleESBNodeSelectorTest {

@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.nodes.datamodel;
+package org.ow2.choreos.ee.api;
 
 public class ResourceImpactDefs {
 

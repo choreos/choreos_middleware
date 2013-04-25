@@ -38,6 +38,12 @@
 			<version>0.0.1-SNAPSHOT</version>
 			<type>jar</type>
 		</dependency>
+		<dependency>
+			<groupId>org.ow2.choreos</groupId>
+			<artifactId>EnactmentEngineAPI</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<type>jar</type>
+		</dependency>
 	 	<dependency>
 			<artifactId>management-client</artifactId>
 			<groupId>com.ebmwebsourcing.esstar.esmanagement</groupId>

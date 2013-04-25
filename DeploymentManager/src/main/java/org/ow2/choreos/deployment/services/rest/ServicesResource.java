@@ -29,9 +29,10 @@ import org.ow2.choreos.deployment.services.ServiceNotModifiedException;
 import org.ow2.choreos.deployment.services.ServicesManager;
 import org.ow2.choreos.deployment.services.ServicesManagerImpl;
 import org.ow2.choreos.deployment.services.datamodel.DeployableService;
-import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
+
+import org.ow2.choreos.ee.api.DeployableServiceSpec;
 
 /**
  * Service Deployer REST API 

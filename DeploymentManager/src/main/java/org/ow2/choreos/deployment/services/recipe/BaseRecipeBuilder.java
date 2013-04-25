@@ -6,7 +6,8 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.Configuration;
-import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
+
+import org.ow2.choreos.ee.api.DeployableServiceSpec;
 
 
 public abstract class BaseRecipeBuilder implements RecipeBuilder {

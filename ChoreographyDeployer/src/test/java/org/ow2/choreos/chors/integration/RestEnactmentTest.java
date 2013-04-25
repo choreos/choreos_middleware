@@ -12,12 +12,12 @@ import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.client.ChorDeployerClient;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.chors.datamodel.ChoreographyServiceSpec;
-import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.chors.rest.ChorDeployerServer;
 import org.ow2.choreos.deployment.services.datamodel.DeployableService;
-import org.ow2.choreos.deployment.services.datamodel.PackageType;
-import org.ow2.choreos.deployment.services.datamodel.ServiceType;
+import org.ow2.choreos.ee.api.ChoreographyServiceSpec;
+import org.ow2.choreos.ee.api.ChoreographySpec;
+import org.ow2.choreos.ee.api.PackageType;
+import org.ow2.choreos.ee.api.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 

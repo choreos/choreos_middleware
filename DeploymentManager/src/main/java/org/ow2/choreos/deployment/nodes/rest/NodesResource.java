@@ -30,7 +30,7 @@ import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.deployment.nodes.datamodel.NodeCreationRequestSpec;
 import org.ow2.choreos.deployment.nodes.datamodel.NodeRestRepresentation;
-import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
+import org.ow2.choreos.ee.api.ResourceImpact;
 
 
 

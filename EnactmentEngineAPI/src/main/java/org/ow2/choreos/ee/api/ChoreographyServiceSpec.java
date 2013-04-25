@@ -1,9 +1,7 @@
-package org.ow2.choreos.chors.datamodel;
+package org.ow2.choreos.ee.api;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
 
 public class ChoreographyServiceSpec {
 	private ServiceSpec serviceSpec;

@@ -17,12 +17,12 @@ import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.deployment.nodes.rest.NodesClient;
 import org.ow2.choreos.deployment.services.ServicesManager;
-import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
-import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
-import org.ow2.choreos.deployment.services.datamodel.ServiceType;
 import org.ow2.choreos.deployment.services.rest.ServicesClient;
+import org.ow2.choreos.ee.api.DeployableServiceSpec;
+import org.ow2.choreos.ee.api.PackageType;
+import org.ow2.choreos.ee.api.ServiceSpec;
+import org.ow2.choreos.ee.api.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 

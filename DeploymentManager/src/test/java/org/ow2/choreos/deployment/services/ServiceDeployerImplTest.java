@@ -19,10 +19,11 @@ import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.datamodel.Config;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.deployment.services.datamodel.DeployableService;
-import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
-import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
+import org.ow2.choreos.ee.api.PackageType;
 import org.ow2.choreos.utils.LogConfigurator;
+
+import org.ow2.choreos.ee.api.DeployableServiceSpec;
 
 public class ServiceDeployerImplTest {
 

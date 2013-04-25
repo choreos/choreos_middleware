@@ -10,10 +10,11 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
-import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpactDefs.MemoryTypes;
-import org.ow2.choreos.deployment.services.datamodel.DeployableServiceSpec;
-import org.ow2.choreos.deployment.services.datamodel.PackageType;
+import org.ow2.choreos.ee.api.PackageType;
+import org.ow2.choreos.ee.api.ResourceImpact;
+import org.ow2.choreos.ee.api.ResourceImpactDefs.MemoryTypes;
+
+import org.ow2.choreos.ee.api.DeployableServiceSpec;
 
 public class RecipeBuilderTest {
 

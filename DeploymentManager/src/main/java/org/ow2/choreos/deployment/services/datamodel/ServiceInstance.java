@@ -5,6 +5,10 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.ee.api.PackageType;
+import org.ow2.choreos.ee.api.ServiceType;
+
+import org.ow2.choreos.ee.api.DeployableServiceSpec;
 
 public class ServiceInstance {
 	

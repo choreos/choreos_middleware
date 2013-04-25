@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
-import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpactDefs.MemoryTypes;
+import org.ow2.choreos.ee.api.ResourceImpact;
+import org.ow2.choreos.ee.api.ResourceImpactDefs.MemoryTypes;
 
 enum NodeSelectorMapperPolicy {
 	ANY_FIT,

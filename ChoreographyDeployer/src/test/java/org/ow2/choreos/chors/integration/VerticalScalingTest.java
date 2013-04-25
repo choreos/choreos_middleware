@@ -16,10 +16,10 @@ import org.ow2.choreos.chors.ChoreographyDeployerImpl;
 import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographyService;
-import org.ow2.choreos.chors.datamodel.ChoreographySpec;
-import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpactDefs;
-import org.ow2.choreos.deployment.services.datamodel.PackageType;
-import org.ow2.choreos.deployment.services.datamodel.ServiceType;
+import org.ow2.choreos.ee.api.ChoreographySpec;
+import org.ow2.choreos.ee.api.PackageType;
+import org.ow2.choreos.ee.api.ResourceImpactDefs;
+import org.ow2.choreos.ee.api.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 

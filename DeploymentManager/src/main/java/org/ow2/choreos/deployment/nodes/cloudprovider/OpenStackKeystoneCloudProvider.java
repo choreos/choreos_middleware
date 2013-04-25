@@ -22,7 +22,7 @@ import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
+import org.ow2.choreos.ee.api.ResourceImpact;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;

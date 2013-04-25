@@ -1,9 +1,10 @@
 package org.ow2.choreos.chors;
 
 import org.junit.Test;
-import org.ow2.choreos.chors.datamodel.ChoreographySpec;
-import org.ow2.choreos.deployment.services.datamodel.PackageType;
-import org.ow2.choreos.deployment.services.datamodel.ServiceType;
+
+import org.ow2.choreos.ee.api.ChoreographySpec;
+import org.ow2.choreos.ee.api.PackageType;
+import org.ow2.choreos.ee.api.ServiceType;
 
 /**
  * To run this test, the DeploymentManager must be off

@@ -70,6 +70,7 @@
 		<module>Commons</module>
 		<module>DeploymentManager</module>
 		<module>ChoreographyDeployer</module>
+		<module>EnactmentEngineAPI</module>
 	    <!--  <module>Monitoring</module> -->
 		<!-- <module>StorageFactory</module> <module>choreos-web</module> -->
 	</modules>

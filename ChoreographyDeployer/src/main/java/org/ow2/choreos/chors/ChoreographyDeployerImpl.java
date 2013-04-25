@@ -14,9 +14,10 @@ import org.ow2.choreos.chors.context.ContextSender;
 import org.ow2.choreos.chors.context.ContextSenderFactory;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographyService;
-import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
-import org.ow2.choreos.deployment.services.datamodel.ServiceType;
+
+import org.ow2.choreos.ee.api.ChoreographySpec;
+import org.ow2.choreos.ee.api.ServiceType;
 
 public class ChoreographyDeployerImpl implements ChoreographyDeployer {
 

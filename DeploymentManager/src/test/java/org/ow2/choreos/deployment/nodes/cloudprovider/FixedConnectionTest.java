@@ -6,7 +6,7 @@ import org.jclouds.compute.RunNodesException;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
+import org.ow2.choreos.ee.api.ResourceImpact;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.SshUtil;
 

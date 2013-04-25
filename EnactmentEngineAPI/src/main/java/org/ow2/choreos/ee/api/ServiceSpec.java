@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.services.datamodel;
+package org.ow2.choreos.ee.api;
 
 import java.util.UUID;
 

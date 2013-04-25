@@ -9,6 +9,9 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.ow2.choreos.deployment.services.ServiceInstanceNotFoundException;
 import org.ow2.choreos.deployment.services.recipe.Recipe;
 
+import org.ow2.choreos.ee.api.DeployableServiceSpec;
+import org.ow2.choreos.ee.api.ServiceSpec;
+
 @XmlRootElement
 public class DeployableService extends Service {
 

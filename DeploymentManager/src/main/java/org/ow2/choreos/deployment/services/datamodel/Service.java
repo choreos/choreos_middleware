@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlSeeAlso;
 
+import org.ow2.choreos.ee.api.ServiceSpec;
+
 @XmlSeeAlso({DeployableService.class, LegacyService.class})
 public abstract class Service {
 

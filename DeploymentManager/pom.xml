@@ -32,6 +32,12 @@
 			<type>jar</type>
 		</dependency>
 		<dependency>
+                        <groupId>org.ow2.choreos</groupId>
+                        <artifactId>EnactmentEngineAPI</artifactId>
+                        <version>0.0.1-SNAPSHOT</version>
+                        <type>jar</type>
+                </dependency>
+		<dependency>
 			<groupId>commons-configuration</groupId>
 			<artifactId>commons-configuration</artifactId>
 			<version>1.9</version>

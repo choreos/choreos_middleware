@@ -1,4 +1,4 @@
-package org.ow2.choreos.chors.datamodel;
+package org.ow2.choreos.ee.api;
 
 import java.util.ArrayList;
 import java.util.List;

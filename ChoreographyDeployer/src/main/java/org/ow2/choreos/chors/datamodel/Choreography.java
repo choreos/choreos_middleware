@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.ow2.choreos.ee.api.ChoreographySpec;
+
 @XmlRootElement
 public class Choreography {
 

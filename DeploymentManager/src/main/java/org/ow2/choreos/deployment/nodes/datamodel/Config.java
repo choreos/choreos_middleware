@@ -3,6 +3,8 @@ package org.ow2.choreos.deployment.nodes.datamodel;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.ow2.choreos.ee.api.ResourceImpact;
+
 
 @XmlRootElement
 public class Config {

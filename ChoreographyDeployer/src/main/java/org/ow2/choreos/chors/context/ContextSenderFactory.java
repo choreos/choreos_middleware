@@ -1,6 +1,7 @@
 package org.ow2.choreos.chors.context;
 
-import org.ow2.choreos.deployment.services.datamodel.ServiceType;
+import org.ow2.choreos.ee.api.ServiceType;
+
 
 public class ContextSenderFactory {
 

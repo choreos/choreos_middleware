@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
-import org.ow2.choreos.deployment.services.datamodel.ServiceType;
+import org.ow2.choreos.ee.api.ServiceType;
 
 import esstar.petalslink.com.service.management._1_0.ManagementException;
 

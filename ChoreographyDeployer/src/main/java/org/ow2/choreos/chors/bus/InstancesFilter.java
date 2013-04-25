@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.ow2.choreos.chors.datamodel.ChoreographyService;
 import org.ow2.choreos.deployment.services.datamodel.DeployableService;
-import org.ow2.choreos.deployment.services.datamodel.PackageType;
 import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
+import org.ow2.choreos.ee.api.PackageType;
 
 public class InstancesFilter {
 

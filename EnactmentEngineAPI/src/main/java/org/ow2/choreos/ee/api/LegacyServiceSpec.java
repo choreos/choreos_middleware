@@ -1,9 +1,8 @@
-package org.ow2.choreos.deployment.services.datamodel;
+package org.ow2.choreos.ee.api;
 
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
 
 @XmlRootElement
 public class LegacyServiceSpec extends ServiceSpec {

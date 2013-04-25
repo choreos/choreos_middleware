@@ -1,8 +1,6 @@
-package org.ow2.choreos.deployment.services.datamodel;
+package org.ow2.choreos.ee.api;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.ow2.choreos.deployment.nodes.datamodel.ResourceImpact;
 
 @XmlRootElement
 public class DeployableServiceSpec extends ServiceSpec {
