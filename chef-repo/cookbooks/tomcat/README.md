@@ -1,20 +1,19 @@
 Description
 ===========
 
-Installs and configures the Tomcat, Java servlet engine and webserver.
+Installs and configures Tomcat version 6, Java servlet engine and webserver.
 
 Requirements
 ============
 
-Platform: 
+Platform:
 
-* Debian, Ubuntu (OpenJDK, Sun)
-* CentOS, Red Hat, Fedora (OpenJDK)
+* Debian, Ubuntu (OpenJDK, Oracle)
+* CentOS 6+, Red Hat 6+, Fedora (OpenJDK, Oracle)
 
 The following Opscode cookbooks are dependencies:
 
 * java
-* jpackage
 
 Attributes
 ==========
@@ -30,18 +29,43 @@ Usage
 
 Simply include the recipe where you want Tomcat installed.
 
-TODO
-====
+Due to the ways that some system init scripts call the configuration,
+you may wish to set the java options to include `JAVA_OPTS`. As an
+example for a java app server role:
 
-* SSL support
-* create a LWRP for deploying WAR files (file based and )
+    name "java-app-server"
+    run_list("recipe[tomcat]")
+    override_attributes(
+      'tomcat' => {
+        'java_options' => "${JAVA_OPTS} -Xmx128M -Djava.awt.headless=true"
+      }
+    )
+
+Managing Tomcat Users
+=====================
+
+The recipe `tomcat::users` included in this cookbook is used for managing Tomcat users. The recipe adds users and roles to the `tomcat-users.xml` conf file.
+
+Users are defined by creating a `tomcat_users` data bag and placing [Encrypted Data Bag Items](http://wiki.opscode.com/display/chef/Encrypted+Data+Bags) in that data bag. Each encrypted data bag item requires an 'id', 'password', and a 'roles' field.
+
+    {
+      "id": "reset",
+      "password": "supersecret",
+      "roles": [
+        "manager",
+        "admin"
+      ]
+    }
+
+If you are a Chef Solo user the data bag items are not required to be encrypted and should not be.
 
 License and Author
 ==================
 
 Author:: Seth Chisamore (<schisamo@opscode.com>)
+Author:: Jamie Winsor (<jamie@vialstudios.com>)
 
-Copyright:: 2010, Opscode, Inc
+Copyright:: 2010-2012, Opscode, Inc
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

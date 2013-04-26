@@ -16,13 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-include_recipe "apt"
-include_recipe "java"
 
-case node.platform
-when "centos","redhat","fedora"
-  include_recipe "jpackage"
-end
+include_recipe "java"
 
 tomcat_pkgs = value_for_platform(
   ["debian","ubuntu"] => {

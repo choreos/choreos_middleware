@@ -1,9 +1,10 @@
 #
-# Author:: Seth Chisamore (<schisamo@opscode.com>)
-# Cookbook Name:: java
-# Recipe:: default
+# Cookbook Name:: tomcat
+# Recipe:: users
 #
-# Copyright 2008-2011, Opscode, Inc.
+# Author:: Jamie Winsor (<jamie@vialstudios.com>)
+#
+# Copyright 2010-2012, Opscode, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,16 +19,14 @@
 # limitations under the License.
 #
 
-if node['platform_family'] == "windows"
-  include_recipe "java::windows"
-else
-  include_recipe "java::#{node['java']['install_flavor']}"
-end
-
-# Purge the deprecated Sun Java packages if remove_deprecated_packages is true
-%w[sun-java6-jdk sun-java6-bin sun-java6-jre].each do |pkg|
-  package pkg do
-    action :purge
-    only_if { node['java']['remove_deprecated_packages'] }
-  end
+template "/etc/tomcat6/tomcat-users.xml" do
+  source "tomcat-users.xml.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+  variables(
+    :users => TomcatCookbook.users,
+    :roles => TomcatCookbook.roles
+  )
+  notifies :restart, resources(:service => "tomcat")
 end
