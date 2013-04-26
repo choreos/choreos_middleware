@@ -1,4 +1,4 @@
-package org.ow2.choreos.ee.api;
+package org.ow2.choreos.ee.api.datamodel;
 
 public enum ServiceType {
 

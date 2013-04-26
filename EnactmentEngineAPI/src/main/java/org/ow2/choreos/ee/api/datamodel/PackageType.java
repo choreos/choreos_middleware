@@ -1,4 +1,4 @@
-package org.ow2.choreos.ee.api;
+package org.ow2.choreos.ee.api.datamodel;
 
 /**
  * The artifact is the deployable unit encompassing service binaries,
