@@ -9,7 +9,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.ChoreographyDeployer;
+import org.ow2.choreos.chors.Configuration;
 import org.ow2.choreos.chors.ModelsForTest;
+import org.ow2.choreos.chors.Configuration.Option;
 import org.ow2.choreos.chors.client.ChorDeployerClient;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographyServiceSpec;
@@ -27,7 +29,7 @@ import eu.choreos.vv.clientgenerator.WSClient;
 /**
  * It is the same than SimpleEnactmentTest, but using the REST API.
  * 
- * Before the test, start the NPMServer and the ServiceDeployerServer.
+ * Before the test, start the DeployerManagerServer.
  * 
  * This test will enact a choreography with two services, with a service
  * depending on the other.
@@ -61,6 +63,7 @@ public class RestEnactmentTest {
 	@Before
 	public void setUp() {
 
+		Configuration.set(Option.BUS, "false");
 		models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
 		chorSpec = new ChoreographySpec();
 		chorSpec.addChoreographyServiceSpec(models

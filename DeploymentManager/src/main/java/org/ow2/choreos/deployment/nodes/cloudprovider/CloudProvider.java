@@ -3,8 +3,8 @@ package org.ow2.choreos.deployment.nodes.cloudprovider;
 import java.util.List;
 
 import org.jclouds.compute.RunNodesException;
-import org.ow2.choreos.deployment.nodes.NodeNotDestroyed;
-import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
+import org.ow2.choreos.nodes.NodeNotDestroyed;
+import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
 

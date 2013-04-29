@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.services.rest;
+package org.ow2.choreos.services.client;
 
 import javax.ws.rs.WebApplicationException;
 
@@ -6,10 +6,10 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
-import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
-import org.ow2.choreos.deployment.services.ServiceNotFoundException;
-import org.ow2.choreos.deployment.services.ServiceNotModifiedException;
-import org.ow2.choreos.deployment.services.ServicesManager;
+import org.ow2.choreos.services.ServiceNotDeployedException;
+import org.ow2.choreos.services.ServiceNotFoundException;
+import org.ow2.choreos.services.ServiceNotModifiedException;
+import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
@@ -66,14 +66,14 @@ public class ServicesClient implements ServicesManager {
 	}
 
 	@Override
-	public DeployableService getService(String uuid) throws ServiceNotFoundException{
+	public DeployableService getService(String uuid) throws ServiceNotFoundException  {
 		WebClient client = setupClient();
 		client.path("services").path(uuid);
 		DeployableService service = null;
 		try {
 			service = client.get(null);
 		} catch (WebApplicationException e) {
-			throw new ServiceNotFoundException(uuid);
+//			throw new ServiceNotFoundException(uuid);
 		}
 
 		return service;

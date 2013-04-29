@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.nodes;
+package org.ow2.choreos.nodes;
 
 import java.util.List;
 

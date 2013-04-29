@@ -2,10 +2,10 @@ package org.ow2.choreos.chors.bus;
 
 import java.util.List;
 
-import org.ow2.choreos.deployment.nodes.ConfigNotAppliedException;
-import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
-import org.ow2.choreos.deployment.nodes.NodeNotUpgradedException;
-import org.ow2.choreos.deployment.nodes.NodePoolManager;
+import org.ow2.choreos.nodes.ConfigNotAppliedException;
+import org.ow2.choreos.nodes.NodeNotFoundException;
+import org.ow2.choreos.nodes.NodeNotUpgradedException;
+import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
 

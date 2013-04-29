@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.nodes;
+package org.ow2.choreos.nodes;
 
 
 public class NodeNotUpgradedException extends NPMException {

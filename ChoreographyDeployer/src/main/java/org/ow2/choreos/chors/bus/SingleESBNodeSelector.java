@@ -1,6 +1,6 @@
 package org.ow2.choreos.chors.bus;
 
-import org.ow2.choreos.deployment.nodes.NodePoolManager;
+import org.ow2.choreos.nodes.NodePoolManager;
 
 
 /**

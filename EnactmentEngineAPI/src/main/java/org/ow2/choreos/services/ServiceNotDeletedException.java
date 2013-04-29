@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.services;
+package org.ow2.choreos.services;
 
 public class ServiceNotDeletedException extends ServiceDeployerException {
 

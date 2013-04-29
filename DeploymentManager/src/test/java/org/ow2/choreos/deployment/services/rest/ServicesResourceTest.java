@@ -15,9 +15,9 @@ import javax.ws.rs.core.UriInfo;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.ow2.choreos.deployment.services.ServiceInstanceNotFoundException;
-import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
-import org.ow2.choreos.deployment.services.ServicesManager;
+import org.ow2.choreos.services.ServiceInstanceNotFoundException;
+import org.ow2.choreos.services.ServiceNotDeployedException;
+import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;

@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.nodes;
+package org.ow2.choreos.nodes;
 
 /**
  * Used if it is not possible to connect in a node using SSH

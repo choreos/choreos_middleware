@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.nodes.rest;
+package org.ow2.choreos.nodes.client;
 
 
 import java.util.ArrayList;
@@ -12,12 +12,12 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
-import org.ow2.choreos.deployment.nodes.ConfigNotAppliedException;
-import org.ow2.choreos.deployment.nodes.NodeNotCreatedException;
-import org.ow2.choreos.deployment.nodes.NodeNotDestroyed;
-import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
-import org.ow2.choreos.deployment.nodes.NodeNotUpgradedException;
-import org.ow2.choreos.deployment.nodes.NodePoolManager;
+import org.ow2.choreos.nodes.ConfigNotAppliedException;
+import org.ow2.choreos.nodes.NodeNotCreatedException;
+import org.ow2.choreos.nodes.NodeNotDestroyed;
+import org.ow2.choreos.nodes.NodeNotFoundException;
+import org.ow2.choreos.nodes.NodeNotUpgradedException;
+import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.nodes.datamodel.NodeCreationRequestSpec;

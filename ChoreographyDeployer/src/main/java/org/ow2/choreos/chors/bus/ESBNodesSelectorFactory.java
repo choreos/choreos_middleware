@@ -3,8 +3,8 @@ package org.ow2.choreos.chors.bus;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.Configuration;
 import org.ow2.choreos.chors.Configuration.Option;
-import org.ow2.choreos.deployment.nodes.NodePoolManager;
-import org.ow2.choreos.deployment.nodes.rest.NodesClient;
+import org.ow2.choreos.nodes.NodePoolManager;
+import org.ow2.choreos.nodes.client.NodesClient;
 
 public class ESBNodesSelectorFactory {
 

@@ -10,8 +10,8 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.Configuration;
 import org.ow2.choreos.chors.Configuration.Option;
-import org.ow2.choreos.deployment.nodes.NodePoolManager;
-import org.ow2.choreos.deployment.nodes.rest.NodesClient;
+import org.ow2.choreos.nodes.NodePoolManager;
+import org.ow2.choreos.nodes.client.NodesClient;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 

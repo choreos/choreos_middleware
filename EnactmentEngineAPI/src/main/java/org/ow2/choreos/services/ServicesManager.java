@@ -1,6 +1,5 @@
-package org.ow2.choreos.deployment.services;
+package org.ow2.choreos.services;
 
-import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
@@ -20,7 +19,7 @@ public interface ServicesManager {
 	 * @param uuid
 	 * @return the service representation 
 	 * @throws ServiceNotFoundException if ID does not exist
-	 * @throws javax.management.ServiceNotFoundException 
+	 * @throws ServiceNotFoundException 
 	 */
 	public DeployableService getService(String uuid) throws ServiceNotFoundException;
 	
