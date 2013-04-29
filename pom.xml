@@ -66,6 +66,20 @@
 		<url>scp://danicuki@valinhos.ime.usp.br:54022/var/www/choreos/</url> </site> 
 		</distributionManagement> -->
 
+	<distributionManagement>
+    		<repository>
+        		<id>Server-artifactory.petalslink.com</id>
+        		<name>Server-artifactory.petalslink.com-releases</name>
+        		<url>http://maven.petalslink.com/private-choreos-snapshot</url>
+    		</repository>
+    		<snapshotRepository>
+        		<id>Server-artifactory.petalslink.com</id>
+        		<name>Server-artifactory.petalslink.com-snapshots</name>
+        		<url>http://maven.petalslink.com/private-choreos-snapshot</url>
+    		</snapshotRepository>
+	</distributionManagement>
+
+
 	<modules>
 		<module>Commons</module>
 		<module>DeploymentManager</module>
