@@ -10,9 +10,8 @@ import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
 import org.ow2.choreos.deployment.services.ServiceNotFoundException;
 import org.ow2.choreos.deployment.services.ServiceNotModifiedException;
 import org.ow2.choreos.deployment.services.ServicesManager;
-import org.ow2.choreos.deployment.services.datamodel.DeployableService;
-
-import org.ow2.choreos.ee.api.DeployableServiceSpec;
+import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
 /**
  * Access Service Deployer functionalities through the REST API.

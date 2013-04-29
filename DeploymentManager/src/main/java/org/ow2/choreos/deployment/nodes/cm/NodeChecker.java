@@ -9,7 +9,7 @@ import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.chef.impl.KnifeImpl;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NodeNotAccessibleException;
-import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.utils.SshCommandFailed;
 
 import com.jcraft.jsch.JSchException;

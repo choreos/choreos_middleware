@@ -13,14 +13,13 @@ import org.ow2.choreos.deployment.Locations;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
-import org.ow2.choreos.deployment.services.datamodel.DeployableService;
-import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
-import org.ow2.choreos.ee.api.PackageType;
-import org.ow2.choreos.ee.api.ResourceImpact;
+import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
+import org.ow2.choreos.services.datamodel.PackageType;
+import org.ow2.choreos.services.datamodel.ResourceImpact;
+import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
-
-import org.ow2.choreos.ee.api.DeployableServiceSpec;
 
 @Category(IntegrationTest.class)
 public class WARDeployTest {

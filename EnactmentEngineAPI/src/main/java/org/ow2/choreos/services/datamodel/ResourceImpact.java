@@ -1,10 +1,10 @@
-package org.ow2.choreos.ee.api.datamodel;
+package org.ow2.choreos.services.datamodel;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.ow2.choreos.ee.api.datamodel.ResourceImpactDefs.MemoryTypes;
+import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryTypes;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)

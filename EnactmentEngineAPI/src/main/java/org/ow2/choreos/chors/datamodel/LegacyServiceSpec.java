@@ -1,8 +1,12 @@
-package org.ow2.choreos.ee.api.datamodel;
+package org.ow2.choreos.chors.datamodel;
 
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.ow2.choreos.services.datamodel.PackageType;
+import org.ow2.choreos.services.datamodel.ServiceSpec;
+import org.ow2.choreos.services.datamodel.ServiceType;
 
 @XmlRootElement
 public class LegacyServiceSpec extends ServiceSpec {

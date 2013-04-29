@@ -7,11 +7,11 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 import org.ow2.choreos.chors.ModelsForTest;
-import org.ow2.choreos.deployment.services.datamodel.DeployableService;
-import org.ow2.choreos.deployment.services.datamodel.Service;
-import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
-import org.ow2.choreos.ee.api.PackageType;
-import org.ow2.choreos.ee.api.ServiceType;
+import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.PackageType;
+import org.ow2.choreos.services.datamodel.Service;
+import org.ow2.choreos.services.datamodel.ServiceInstance;
+import org.ow2.choreos.services.datamodel.ServiceType;
 
 import esstar.petalslink.com.service.management._1_0.ManagementException;
 

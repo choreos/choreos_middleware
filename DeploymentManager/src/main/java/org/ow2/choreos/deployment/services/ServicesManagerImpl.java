@@ -11,20 +11,19 @@ import org.ow2.choreos.chef.impl.KnifeImpl;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.ConfigNotAppliedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
-import org.ow2.choreos.deployment.nodes.datamodel.Config;
-import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.deployment.services.datamodel.DeployableService;
-import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
 import org.ow2.choreos.deployment.services.diff.UpdateAction;
-import org.ow2.choreos.deployment.services.recipe.Recipe;
 import org.ow2.choreos.deployment.services.recipe.RecipeBuilder;
 import org.ow2.choreos.deployment.services.recipe.RecipeBuilderFactory;
 import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
-import org.ow2.choreos.ee.api.PackageType;
-
-import org.ow2.choreos.ee.api.DeployableServiceSpec;
-import org.ow2.choreos.ee.api.ServiceSpec;
+import org.ow2.choreos.nodes.datamodel.Config;
+import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
+import org.ow2.choreos.services.datamodel.PackageType;
+import org.ow2.choreos.services.datamodel.Recipe;
+import org.ow2.choreos.services.datamodel.ServiceInstance;
+import org.ow2.choreos.services.datamodel.ServiceSpec;
 
 public class ServicesManagerImpl implements ServicesManager {
 

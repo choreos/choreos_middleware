@@ -11,8 +11,8 @@ import org.junit.experimental.categories.Category;
 import org.ow2.choreos.deployment.nodes.cloudprovider.AWSCloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cm.NodeChecker;
-import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.ee.api.ResourceImpact;
+import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.services.datamodel.ResourceImpact;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 

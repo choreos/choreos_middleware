@@ -6,7 +6,7 @@
 //
 
 
-package org.ow2.choreos.deployment.nodes.datamodel;
+package org.ow2.choreos.nodes.datamodel;
 
 import java.util.ArrayList;
 import java.util.List;

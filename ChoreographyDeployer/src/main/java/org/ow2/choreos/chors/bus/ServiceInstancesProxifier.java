@@ -3,8 +3,8 @@ package org.ow2.choreos.chors.bus;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
-import org.ow2.choreos.ee.api.ServiceType;
+import org.ow2.choreos.services.datamodel.ServiceInstance;
+import org.ow2.choreos.services.datamodel.ServiceType;
 
 import esstar.petalslink.com.service.management._1_0.ManagementException;
 

@@ -13,8 +13,7 @@ import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.ChoreographyNotFoundException;
 import org.ow2.choreos.chors.EnactmentException;
 import org.ow2.choreos.chors.datamodel.Choreography;
-
-import org.ow2.choreos.ee.api.ChoreographySpec;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 
 public class ChorDeployerClient implements ChoreographyDeployer {
 

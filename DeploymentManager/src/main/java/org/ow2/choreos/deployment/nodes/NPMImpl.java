@@ -12,11 +12,11 @@ import org.ow2.choreos.deployment.nodes.cm.NodeBootstrapper;
 import org.ow2.choreos.deployment.nodes.cm.NodeNotBootstrappedException;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpgrader;
 import org.ow2.choreos.deployment.nodes.cm.RecipeApplier;
-import org.ow2.choreos.deployment.nodes.datamodel.Config;
-import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelector;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelectorFactory;
-import org.ow2.choreos.ee.api.ResourceImpact;
+import org.ow2.choreos.nodes.datamodel.Config;
+import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.services.datamodel.ResourceImpact;
 
 import com.jcraft.jsch.JSchException;
 

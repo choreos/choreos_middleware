@@ -21,18 +21,16 @@ import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
-import org.ow2.choreos.deployment.services.ServiceInstanceNotFoundException;
 import org.ow2.choreos.deployment.services.ServiceNotDeletedException;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
 import org.ow2.choreos.deployment.services.ServiceNotFoundException;
 import org.ow2.choreos.deployment.services.ServiceNotModifiedException;
 import org.ow2.choreos.deployment.services.ServicesManager;
 import org.ow2.choreos.deployment.services.ServicesManagerImpl;
-import org.ow2.choreos.deployment.services.datamodel.DeployableService;
-import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
-
-import org.ow2.choreos.ee.api.DeployableServiceSpec;
+import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
+import org.ow2.choreos.services.datamodel.ServiceInstance;
 
 /**
  * Service Deployer REST API 
@@ -171,7 +169,7 @@ public class ServicesResource {
 			instance = service.getInstance(instanceId);
 		} catch (ServiceNotFoundException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();			
-		} catch (ServiceInstanceNotFoundException e) {
+		} catch (IllegalArgumentException e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		

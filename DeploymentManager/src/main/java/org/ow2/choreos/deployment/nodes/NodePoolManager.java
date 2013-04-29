@@ -2,9 +2,9 @@ package org.ow2.choreos.deployment.nodes;
 
 import java.util.List;
 
-import org.ow2.choreos.deployment.nodes.datamodel.Config;
-import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.ee.api.ResourceImpact;
+import org.ow2.choreos.nodes.datamodel.Config;
+import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.services.datamodel.ResourceImpact;
 
 public interface NodePoolManager {
 

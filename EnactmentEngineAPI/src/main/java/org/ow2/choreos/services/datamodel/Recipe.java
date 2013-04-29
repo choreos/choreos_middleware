@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.services.recipe;
+package org.ow2.choreos.services.datamodel;
 
 public class Recipe {
 

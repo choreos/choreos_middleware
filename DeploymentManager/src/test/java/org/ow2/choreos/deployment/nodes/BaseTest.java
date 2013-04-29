@@ -10,8 +10,8 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.deployment.nodes.datamodel.NodeRestRepresentation;
 import org.ow2.choreos.deployment.rest.DeploymentManagerServer;
+import org.ow2.choreos.nodes.datamodel.NodeRestRepresentation;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 

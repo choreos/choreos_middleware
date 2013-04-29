@@ -6,7 +6,7 @@
 //
 
 
-package org.ow2.choreos.deployment.nodes.datamodel;
+package org.ow2.choreos.nodes.datamodel;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

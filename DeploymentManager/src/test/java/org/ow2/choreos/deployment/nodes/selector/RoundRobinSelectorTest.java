@@ -11,10 +11,10 @@ import org.junit.Test;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
-import org.ow2.choreos.deployment.nodes.datamodel.Config;
-import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.ee.api.ResourceImpact;
-import org.ow2.choreos.ee.api.ResourceImpactDefs.MemoryTypes;
+import org.ow2.choreos.nodes.datamodel.Config;
+import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.services.datamodel.ResourceImpact;
+import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryTypes;
 
 public class RoundRobinSelectorTest {
 	

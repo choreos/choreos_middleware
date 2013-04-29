@@ -1,9 +1,8 @@
 package org.ow2.choreos.deployment.services;
 
-import org.ow2.choreos.deployment.services.datamodel.DeployableService;
 import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
-
-import org.ow2.choreos.ee.api.DeployableServiceSpec;
+import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
 
 public interface ServicesManager {

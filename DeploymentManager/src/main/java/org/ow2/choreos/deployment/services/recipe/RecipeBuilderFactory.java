@@ -1,6 +1,6 @@
 package org.ow2.choreos.deployment.services.recipe;
 
-import org.ow2.choreos.ee.api.PackageType;
+import org.ow2.choreos.services.datamodel.PackageType;
 
 public class RecipeBuilderFactory {
 

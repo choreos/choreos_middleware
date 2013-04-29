@@ -1,8 +1,8 @@
-package org.ow2.choreos.deployment.services.datamodel;
+package org.ow2.choreos.chors.datamodel;
 
 import java.util.List;
 
-import org.ow2.choreos.ee.api.LegacyServiceSpec;
+import org.ow2.choreos.services.datamodel.Service;
 
 
 /* When dealing with legacy services, there is no real Service object; these

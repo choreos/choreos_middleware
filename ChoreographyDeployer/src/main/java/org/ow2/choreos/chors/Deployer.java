@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.Configuration.Option;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographyService;
+import org.ow2.choreos.chors.datamodel.ChoreographyServiceSpec;
 import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
 import org.ow2.choreos.deployment.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
@@ -24,13 +25,12 @@ import org.ow2.choreos.deployment.nodes.rest.NodesClient;
 import org.ow2.choreos.deployment.services.ServiceNotDeployedException;
 import org.ow2.choreos.deployment.services.ServiceNotModifiedException;
 import org.ow2.choreos.deployment.services.ServicesManager;
-import org.ow2.choreos.deployment.services.datamodel.DeployableService;
-import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
 import org.ow2.choreos.deployment.services.diff.UnhandledModificationException;
 import org.ow2.choreos.deployment.services.rest.ServicesClient;
-import org.ow2.choreos.ee.api.ChoreographyServiceSpec;
-import org.ow2.choreos.ee.api.DeployableServiceSpec;
-import org.ow2.choreos.ee.api.PackageType;
+import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
+import org.ow2.choreos.services.datamodel.PackageType;
+import org.ow2.choreos.services.datamodel.ServiceInstance;
 
 public class Deployer {
 

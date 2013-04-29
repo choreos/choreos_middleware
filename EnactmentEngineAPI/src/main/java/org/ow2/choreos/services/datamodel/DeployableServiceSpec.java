@@ -1,4 +1,4 @@
-package org.ow2.choreos.ee.api.datamodel;
+package org.ow2.choreos.services.datamodel;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

@@ -7,10 +7,8 @@ import java.util.Map;
 
 import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.client.ChorDeployerClient;
-import org.ow2.choreos.chors.datamodel.ChorSpec;
-import org.ow2.choreos.deployment.services.datamodel.PackageType;
-import org.ow2.choreos.deployment.services.datamodel.ServiceDependency;
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
+import org.ow2.choreos.services.datamodel.PackageType;
+import org.ow2.choreos.services.datamodel.ServiceSpec;
 
 public class XMLExample {
 	

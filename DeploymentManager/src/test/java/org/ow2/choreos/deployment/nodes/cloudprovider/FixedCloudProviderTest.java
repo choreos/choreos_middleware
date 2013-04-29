@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
-import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.utils.LogConfigurator;
 
 

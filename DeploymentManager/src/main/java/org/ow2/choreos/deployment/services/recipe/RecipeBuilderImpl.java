@@ -1,6 +1,6 @@
 package org.ow2.choreos.deployment.services.recipe;
 
-import org.ow2.choreos.ee.api.DeployableServiceSpec;
+import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
 
 public class RecipeBuilderImpl extends BaseRecipeBuilder {

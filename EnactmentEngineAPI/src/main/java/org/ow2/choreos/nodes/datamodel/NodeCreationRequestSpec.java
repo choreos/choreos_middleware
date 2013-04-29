@@ -1,9 +1,9 @@
-package org.ow2.choreos.deployment.nodes.datamodel;
+package org.ow2.choreos.nodes.datamodel;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.ow2.choreos.ee.api.ResourceImpact;
-import org.ow2.choreos.ee.api.ResourceImpactDefs.MemoryTypes;
+import org.ow2.choreos.services.datamodel.ResourceImpact;
+import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryTypes;
 
 /* This class is used to pass two different objects to a REST operation. We
  * build this class with both object's attributes and send it as XML

@@ -5,8 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.ow2.choreos.chors.datamodel.Choreography;
-
-import org.ow2.choreos.ee.api.ChoreographySpec;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 
 /**
  * Stores choreography descriptions.

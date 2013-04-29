@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.ow2.choreos.deployment.nodes.chef.ConfigToChef;
-import org.ow2.choreos.deployment.nodes.datamodel.Config;
+import org.ow2.choreos.nodes.datamodel.Config;
 
 
 public class ConfigToChefTest {

@@ -1,8 +1,10 @@
-package org.ow2.choreos.ee.api.datamodel;
+package org.ow2.choreos.services.datamodel;
 
 import java.util.UUID;
 
 import javax.xml.bind.annotation.XmlSeeAlso;
+
+import org.ow2.choreos.chors.datamodel.LegacyServiceSpec;
 
 @XmlSeeAlso({ DeployableServiceSpec.class, LegacyServiceSpec.class })
 public abstract class ServiceSpec {

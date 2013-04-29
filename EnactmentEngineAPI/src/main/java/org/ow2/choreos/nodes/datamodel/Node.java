@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.nodes.datamodel;
+package org.ow2.choreos.nodes.datamodel;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

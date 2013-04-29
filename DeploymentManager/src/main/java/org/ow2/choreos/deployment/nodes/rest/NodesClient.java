@@ -18,11 +18,11 @@ import org.ow2.choreos.deployment.nodes.NodeNotDestroyed;
 import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
 import org.ow2.choreos.deployment.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
-import org.ow2.choreos.deployment.nodes.datamodel.Config;
-import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.deployment.nodes.datamodel.NodeCreationRequestSpec;
-import org.ow2.choreos.deployment.nodes.datamodel.NodeRestRepresentation;
-import org.ow2.choreos.ee.api.ResourceImpact;
+import org.ow2.choreos.nodes.datamodel.Config;
+import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.NodeCreationRequestSpec;
+import org.ow2.choreos.nodes.datamodel.NodeRestRepresentation;
+import org.ow2.choreos.services.datamodel.ResourceImpact;
 
 
 /**

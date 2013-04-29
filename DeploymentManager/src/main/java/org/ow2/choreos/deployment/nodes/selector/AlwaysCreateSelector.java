@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.jclouds.compute.RunNodesException;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
-import org.ow2.choreos.deployment.nodes.datamodel.Config;
-import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.Config;
+import org.ow2.choreos.nodes.datamodel.Node;
 
 
 public class AlwaysCreateSelector implements NodeSelector {
@@ -17,6 +17,7 @@ public class AlwaysCreateSelector implements NodeSelector {
 		this.cloudProvider = cloudProvider;
 	}
 
+	@Override
 	public List<Node> selectNodes(Config config) {
 
 		int numberOfInstances = config.getNumberOfInstances();

@@ -1,4 +1,4 @@
-package org.ow2.choreos.ee.api.datamodel;
+package org.ow2.choreos.chors.datamodel;
 
 /**
  * Represents the dependence of a service acting with a role

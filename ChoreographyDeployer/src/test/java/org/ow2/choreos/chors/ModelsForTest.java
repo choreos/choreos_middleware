@@ -9,21 +9,21 @@ import javax.xml.bind.JAXBException;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographyService;
+import org.ow2.choreos.chors.datamodel.ChoreographyServiceDependency;
+import org.ow2.choreos.chors.datamodel.ChoreographyServiceSpec;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.chors.datamodel.xml.ChorXmlWriter;
-import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.deployment.services.datamodel.DeployableService;
-import org.ow2.choreos.deployment.services.datamodel.Service;
-import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
+import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
+import org.ow2.choreos.services.datamodel.PackageType;
+import org.ow2.choreos.services.datamodel.ResourceImpact;
+import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryTypes;
+import org.ow2.choreos.services.datamodel.Service;
+import org.ow2.choreos.services.datamodel.ServiceInstance;
+import org.ow2.choreos.services.datamodel.ServiceSpec;
+import org.ow2.choreos.services.datamodel.ServiceType;
 
-import org.ow2.choreos.ee.api.ChoreographyServiceDependency;
-import org.ow2.choreos.ee.api.ChoreographyServiceSpec;
-import org.ow2.choreos.ee.api.ChoreographySpec;
-import org.ow2.choreos.ee.api.DeployableServiceSpec;
-import org.ow2.choreos.ee.api.PackageType;
-import org.ow2.choreos.ee.api.ResourceImpact;
-import org.ow2.choreos.ee.api.ResourceImpactDefs.MemoryTypes;
-import org.ow2.choreos.ee.api.ServiceSpec;
-import org.ow2.choreos.ee.api.ServiceType;
 
 public class ModelsForTest {
 	private Logger logger = Logger.getLogger(ModelsForTest.class);

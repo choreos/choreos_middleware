@@ -1,16 +1,10 @@
-package org.ow2.choreos.deployment.services.datamodel;
+package org.ow2.choreos.services.datamodel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-
-import org.ow2.choreos.deployment.services.ServiceInstanceNotFoundException;
-import org.ow2.choreos.deployment.services.recipe.Recipe;
-
-import org.ow2.choreos.ee.api.DeployableServiceSpec;
-import org.ow2.choreos.ee.api.ServiceSpec;
 
 @XmlRootElement
 public class DeployableService extends Service {
@@ -72,12 +66,12 @@ public class DeployableService extends Service {
 		return uris;
 	}
 
-	public ServiceInstance getInstance(String instanceId) throws ServiceInstanceNotFoundException{
+	public ServiceInstance getInstance(String instanceId) {
 		for(ServiceInstance instance: serviceInstances) {
 			if(instance.getInstanceId().equals(instanceId))
 				return instance;
 		}
-		throw new ServiceInstanceNotFoundException(getSpec().getUUID(), instanceId);
+		throw new IllegalArgumentException("getSpec().getUUID() " + " / " + instanceId);
 	}
 
 	public Recipe getRecipe() {

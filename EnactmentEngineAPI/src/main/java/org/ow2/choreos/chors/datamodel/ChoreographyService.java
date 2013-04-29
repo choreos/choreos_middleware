@@ -1,8 +1,6 @@
 package org.ow2.choreos.chors.datamodel;
 
-import org.ow2.choreos.deployment.services.datamodel.Service;
-
-import org.ow2.choreos.ee.api.ChoreographyServiceSpec;
+import org.ow2.choreos.services.datamodel.Service;
 
 public class ChoreographyService {
 

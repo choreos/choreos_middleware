@@ -18,8 +18,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.deployment.nodes.ConfigNotAppliedException;
 import org.ow2.choreos.deployment.nodes.NodePoolManager;
-import org.ow2.choreos.deployment.nodes.datamodel.Config;
-import org.ow2.choreos.deployment.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.Config;
+import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.utils.Concurrency;
 import org.ow2.choreos.utils.LogConfigurator;
 

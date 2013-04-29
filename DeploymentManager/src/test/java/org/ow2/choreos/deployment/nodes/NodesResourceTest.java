@@ -7,8 +7,8 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
-import org.ow2.choreos.deployment.nodes.datamodel.Node;
 import org.ow2.choreos.deployment.nodes.rest.NodesClient;
+import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.tests.IntegrationTest;
 
 @Category(IntegrationTest.class)

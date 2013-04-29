@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.ow2.choreos.deployment.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.DeployableService;
 
 public class DeployedServicesRegistry {
 

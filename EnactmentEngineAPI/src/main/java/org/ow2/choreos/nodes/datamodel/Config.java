@@ -1,9 +1,9 @@
-package org.ow2.choreos.deployment.nodes.datamodel;
+package org.ow2.choreos.nodes.datamodel;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.ow2.choreos.ee.api.ResourceImpact;
+import org.ow2.choreos.services.datamodel.ResourceImpact;
 
 
 @XmlRootElement

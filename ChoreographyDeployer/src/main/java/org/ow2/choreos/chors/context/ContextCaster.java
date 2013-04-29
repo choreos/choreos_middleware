@@ -6,12 +6,12 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.datamodel.ChoreographyService;
-import org.ow2.choreos.deployment.services.datamodel.DeployableService;
-import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
-import org.ow2.choreos.ee.api.ChoreographyServiceDependency;
-import org.ow2.choreos.ee.api.ChoreographyServiceSpec;
-import org.ow2.choreos.ee.api.ChoreographySpec;
-import org.ow2.choreos.ee.api.ServiceType;
+import org.ow2.choreos.chors.datamodel.ChoreographyServiceDependency;
+import org.ow2.choreos.chors.datamodel.ChoreographyServiceSpec;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
+import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.ServiceInstance;
+import org.ow2.choreos.services.datamodel.ServiceType;
 
 public class ContextCaster {
 

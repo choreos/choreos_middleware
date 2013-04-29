@@ -9,9 +9,8 @@ import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
+import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.utils.Concurrency;
-
 
 /**
  * Selects an EasyESBNode depending on the received busHandler.

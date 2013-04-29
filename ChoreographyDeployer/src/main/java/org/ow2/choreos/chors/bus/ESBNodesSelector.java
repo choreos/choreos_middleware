@@ -3,7 +3,7 @@ package org.ow2.choreos.chors.bus;
 import java.util.Map;
 
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.deployment.services.datamodel.ServiceInstance;
+import org.ow2.choreos.services.datamodel.ServiceInstance;
 
 /**
  * 
