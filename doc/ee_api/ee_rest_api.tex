@@ -5,7 +5,7 @@
 \usepackage{graphicx} % para as figuras  
 \usepackage{color}
 \usepackage[hidelinks]{hyperref}
-\usepackage{listings}
+\usepackage{listings,enumerate}
 
 \newcommand{\ee}{CHOReOS Enactment Engine}
 
@@ -42,37 +42,63 @@ Although the REST API handles XML representations, we use here the UML notation,
 We proceed with a brief explanation about each class:
 
 \begin{description}
-\item [ChorSpec:] represents what the middleware needs to know to enact a choreography;
-\item [ServiceSpec:] represents what the middleware needs to know to deploy a service (with one or more instances for load balancing).
-\item [ServiceDependency:] represents dependencies among services (if \verb!service A! invokes \verb!service B!, we say \verb!service A! depends on \verb!service B!);
-\item [Choreography:] provides information about a choreography instance; 
-\item [Service:] provides information about a deployed service. 
-\item [ServiceInstance:] provides information about a specific instance, or replica, of a deployed service. 
+\item [ChoreographySpec:] represents what the middleware needs to know to enact a choreography;
+\item [ServiceSpec:] a super class for common data of \verb!DeployableServiceSpec! and \verb!LegacyServiceSpec!;
+\item [DeployableServiceSpec:] represents what the middleware needs to know to deploy a service (with one or more instances for load balancing); 
+\item [LegacyServiceSpec:] represents an already existing service used by the choreography;
+\item [ChoreographyServiceSpec:] represents a service specification along with its role within the choreography;
+\item [ChoreographyServiceDependency:] represents dependencies among services (if \verb!service A! invokes \verb!service B!, we say \verb!service A! depends on \verb!service B!);
+\item [Choreography:] provides information about a choreography instance;
+\item [ChoreographyService:] wraps information from a \verb!Service! and a \verb!ChoreographyServiceSpec! together;
+\item [Service:] a super class for common data of \verb!DeployableService! and \verb!LegacyService!;
+\item [DeployableService:] provides information about a deployed service (such as the list of URIs);
+\item [LegacyService:] provides information about a legacy service;
+\item [ServiceInstance:] provides information about a specific instance, or replica, of a deployed service (URI, node data etc.). 
 \end{description}
 
-To request a choreography enactment, it is important to understand very well the \verb!ServiceSpec! class. Therefore, the description of each one of its attributes follows:
+To request a choreography enactment, it is important to understand very well the \verb!ChoreographyServiceSpec!, \verb!ServiceSpec!, \verb!DeployableServiceSpec!, and the \verb!LegacyServiceSpec! classes. Therefore, the description of them follows:
 
-\begin{description}
-\item [name:] a unique name within the choreography specification;
-\item [owner:] the organization that holds the infrastructure where the service must be deployed (not implemented, for now a single cloud per \ee\ instance is supported);
-\item [group:] services in the same group will be deployed in the same cloud node (not implemented);
-\item [roles:] list of roles implemented by the service;
-\item [dependencies:] list of \verb!ServiceDependency! entries; each entry describes the name of the dependency (matching the \verb!name! attribute), and the the role provided by the dependency;
-\item [type:] whether the service is a SOAP service or a REST service. More types can be added as necessary.
-\item [packageType:] the type of the deployable artifact, according to the \verb!PackageType! enumeration\footnote{When the package type is COMMAND\_LINE the service will be executed by the ``java -jar'' command.};
-\item [packageUri:] the location of the binary file to be deployed. If type is LEGACY (services that are not being deployed specifically for this choreography, but are already available somewhere), this attribute will represent the complete service endpoint;
-\item [port:] the TCP port used by the service. Note that multiple replicas of a single service will all use the same port. Mandatory if type is COMMAND\_LINE;
-\item [endpointName:] the endpoint suffix after deployment. For example, if the service will be deployed as \verb!http://<some_ip>/choreos/service!, the endpoint is \verb!choreos/service!. Note that multiple replicas of a single service will all use the same endpoint. If type is LEGACY, endpoint is empty.
-\item [version:] the service version, which is used by the \ee\ to define which services must be redeployed in a choreography update.
-\item [numberOfInstances:] How many instances of the service should be deployed (onto different virtual machines) in order to allow the load to be distributed.
-\end{description}
+\begin{enumerate}
 
+\item \verb!ChoreographyServiceSpec! 
+	\begin{description}
+		\item [choreographyServiceUID:] a unique character sequence within the choreography specification;
+		\item [owner:] the organization that holds the infrastructure where the service must be deployed (not implemented, for now a single cloud per \ee\ instance is supported);
+		\item [group:] services in the same group will be deployed in the same cloud node (not implemented);
+		\item [roles:] list of roles implemented by the service;
+		\item [dependencies:] list of \verb!ChoreographyServiceDependency! entries; each entry describes the name of the dependency (matching the \verb!choreographyServiceUID! attribute), and the the role provided by the dependency;
+		\item [serviceSpec:] the specification of the service (to be deployed or already existing) that will take this role in the choreography.
+	\end{description}
+
+\item \verb!ServiceSpec!
+	\begin{description}
+		\item [type:] whether the service is a SOAP service or a REST service. More types can be added as necessary.
+		\item [UUID:] A randomly-generated unique identifier for the service
+	\end{description}
+
+\item \verb!DeployableServiceSpec!
+	\begin{description}
+		\item [packageUri:] the location of the binary file to be deployed. If type is LEGACY (services that are not being deployed specifically for this choreography, but are already available somewhere), this attribute will represent the complete service endpoint;
+		\item [port:] the TCP port used by the service. Note that multiple replicas of a single service will all use the same port. Mandatory if type is COMMAND\_LINE;
+		\item [endpointName:] the endpoint suffix after deployment. For example, if the service will be deployed as \verb!http://<some_ip>/choreos/service!, the endpoint is \verb!choreos/service!. Note that multiple replicas of a single service will all use the same endpoint. If type is LEGACY, endpoint is empty;
+		\item [version:] the service version, which is used by the \ee\ to define which services must be redeployed in a choreography update;
+		\item [numberOfInstances:] How many instances of the service should be deployed (onto different virtual machines) in order to allow the load to be distributed;
+		\item [resourceImpact:] General information regarding the expected type of machine needed to run the service (see \emph{Resource impact specification});
+		\item [packageType:] the type of the deployable artifact, according to the \verb!PackageType! enumeration\footnote{When the package type i    s COMMAND\_LINE the service will be executed by the ``java -jar'' command.}.
+	\end{description}
+
+\item \verb!LegacyServiceSpec!
+	\begin{description}
+		\item [nativeUris:] The URIs for the various replicas of the service.
+	\end{description}
+
+\end{enumerate}
 
 \subsubsection*{More about dependencies}
 
 In a service composition, some services depends on other services. A service that depends on other services is a \emph{consumer} service, and the service that provides functionality to the dependent service is the \emph{provider}. In simple service compositions, such dependency relations are hardcoded on consumer services. But decoupling the consumer service implementation from the actual provider endpoint is a good practice, which enables dynamic adaptation. Moreover, dependency hardcoding is not possible on cloud environments, since we do not know service addresses before deployment. Therefore, in the CHOReOS environment each consumer service is declared as depending on \emph{roles} rather than other service implementations. The consumer service must receive the actual provider endpoint of a service fulfilling the required role through the \verb!setInvocationAddress! operation, which every consumer service must implement.  
 
-The \ee\ will use \verb!ServiceDependency! data to know which calls it must perform to the  \verb!setInvocationAddress! operation of participant services. Thus, the \ee\ will be able to tell, for example, to \verb!ServiceA! that it must use \verb!ServiceB! as \verb!Role1!, where \verb!ServiceB! is the list of endpoint URIs corresponding to the multiple instances of \verb!ServiceB!. In this way, the CHOReOS middleware provides a \emph{dependency injection}\footnote{Dependency Injection pattern, by Martin Fowler: \url{http://martinfowler.com/articles/injection.html}} mechanism to wire up service dependencies.
+The \ee\ will use \verb!ChoreographyServiceDependency! data to know which calls it must perform to the  \verb!setInvocationAddress! operation of participant services. Thus, the \ee\ will be able to tell, for example, to \verb!ServiceA! that it must use \verb!ServiceB! as \verb!Role1!, where \verb!ServiceB! is the list of endpoint URIs corresponding to the multiple instances of \verb!ServiceB!. In this way, the CHOReOS middleware provides a \emph{dependency injection}\footnote{Dependency Injection pattern, by Martin Fowler: \url{http://martinfowler.com/articles/injection.html}} mechanism to wire up service dependencies.
 
 \emph{Obs:} to SOAP services, the URI passed to the \texttt{setInvocationAddress} operation does not contain the `\texttt{?wsdl}' suffix.
 
