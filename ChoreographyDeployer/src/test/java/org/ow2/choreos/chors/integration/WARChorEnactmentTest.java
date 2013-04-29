@@ -1,5 +1,6 @@
 package org.ow2.choreos.chors.integration;
 
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Category;
