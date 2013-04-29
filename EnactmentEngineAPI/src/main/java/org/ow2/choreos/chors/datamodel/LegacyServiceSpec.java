@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceSpec;
 import org.ow2.choreos.services.datamodel.ServiceType;
 
@@ -13,8 +12,8 @@ public class LegacyServiceSpec extends ServiceSpec {
 
 	List<String> nativeURIs;
 
-	protected LegacyServiceSpec(ServiceType serviceType, PackageType packageType) {
-		super(serviceType, packageType);
+	protected LegacyServiceSpec(ServiceType serviceType) {
+		super(serviceType);
 	}
 	
 	public LegacyServiceSpec() {
