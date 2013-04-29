@@ -348,7 +348,7 @@ When the following enactment is invoked, the \ee\ will redeploy the services wit
 \section{Java client}
 \label{sec:client}
 
-In the \verb!ChoreographyDeployer! project there is the \verb!ChorDeployerClient! class, which implements the \verb!ChoreographyDeployer! interface (Listing \ref{lst:java_interface}) and handles the REST communication with the Enactment Engine server. This means you can invoke the \ee\ by using a simple Java object, without worrying with XML details.
+In the \verb!EnactmentEngineAPI! project there is the \verb!ChorDeployerClient! class, which implements the \verb!ChoreographyDeployer! interface (Listing \ref{lst:java_interface}) and handles the REST communication with the Enactment Engine server. This means you can invoke the \ee\ by using a simple Java object, without worrying with XML details.
 
 \lstset{language=Java}
 \begin{lstlisting}[caption=\ee\ Java interface, label=lst:java_interface]
@@ -388,6 +388,8 @@ public interface ChoreographyDeployer {
 	
 }
 \end{lstlisting}
+
+To use the \ee\ Java client in your code, it's enough to import the API project into your project. One way of doing this is using Maven: install the API into your local maven repo (\texttt{EnactmentEngineAPI\$mvn install}), add API as a dependency of your project by editing your pom.xml, and finally compile your project.
 
 \section*{Appendix -- Choreography XML Schema Definition (XSD file)}
 
