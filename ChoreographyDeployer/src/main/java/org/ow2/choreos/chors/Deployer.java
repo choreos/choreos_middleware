@@ -160,7 +160,7 @@ public class Deployer {
 			deployedServices.put(deployed.getChoreographyServiceSpec()
 					.getChoreographyServiceUID(), deployed);
 
-			if (deployed.getChoreographyServiceSpec().getServiceSpec()
+			if (((DeployableServiceSpec) deployed.getChoreographyServiceSpec().getServiceSpec())
 					.getPackageType() != PackageType.LEGACY) {
 				for (ServiceInstance instance : ((DeployableService) deployed
 						.getService()).getInstances()) {

@@ -9,17 +9,15 @@ import org.ow2.choreos.chors.datamodel.LegacyServiceSpec;
 @XmlSeeAlso({ DeployableServiceSpec.class, LegacyServiceSpec.class })
 public abstract class ServiceSpec {
 	protected ServiceType serviceType; 
-	protected PackageType packageType;
 	private String uuid;
 	
 	public ServiceSpec() {
 		
 	}
 	
-	protected ServiceSpec(ServiceType serviceType, PackageType packageType) {
+	protected ServiceSpec(ServiceType serviceType) {
 		uuid = UUID.randomUUID().toString();
 		this.serviceType = serviceType;
-		this.packageType = packageType;
 	}
 	
 	public String getUUID() {
@@ -40,14 +38,6 @@ public abstract class ServiceSpec {
 
 	public void setType(ServiceType type) {
 		this.serviceType = type;
-	}
-
-	public PackageType getPackageType() {
-		return packageType;
-	}
-
-	public void setPackageType(PackageType packageType) {
-		this.packageType = packageType;
 	}
 	
 	public abstract int getNumberOfInstances();
@@ -71,11 +61,6 @@ public abstract class ServiceSpec {
 	} else if (!serviceType.equals(other.serviceType))
 		return false;
 	
-	if (packageType == null) {
-		if (other.packageType != null)
-			return false;
-	} else if (!packageType.equals(other.packageType))
-		return false;
 
 	return true;
 	}

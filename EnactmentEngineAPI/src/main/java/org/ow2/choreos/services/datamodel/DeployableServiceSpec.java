@@ -12,9 +12,18 @@ public class DeployableServiceSpec extends ServiceSpec {
 	protected int port;
 	protected String endpointName;
 	private int numberOfInstances = 1;
+	protected PackageType packageType;
 	
 	public DeployableServiceSpec() {
-		super(null, null);
+		super(null);
+	}
+	
+	public PackageType getPackageType() {
+		return packageType;
+	}
+
+	public void setPackageType(PackageType packageType) {
+		this.packageType = packageType;
 	}
 	
 	/**
@@ -31,7 +40,8 @@ public class DeployableServiceSpec extends ServiceSpec {
 			PackageType packageType, ResourceImpact resourceImpact,
 			String version, String packageUri, int port, String endpointName,
 			int numberOfInstances) {
-		super(serviceType, packageType);
+		super(serviceType);
+		this.packageType = packageType;
 		this.resourceImpact = resourceImpact;
 		this.version = version;
 		this.packageUri = packageUri;
@@ -53,7 +63,8 @@ public class DeployableServiceSpec extends ServiceSpec {
 			PackageType packageType, ResourceImpact resourceImpact,
 			String version, String packageUri, String endpointName,
 			int numberOfInstances) {
-		super(serviceType, packageType);
+		super(serviceType);
+		this.packageType = packageType;
 		this.resourceImpact = resourceImpact;
 		this.version = version;
 		this.packageUri = packageUri;
@@ -148,6 +159,7 @@ public class DeployableServiceSpec extends ServiceSpec {
 		result = prime * result + ((version == null) ? 0 : version.hashCode());
 		result = prime * result + ((packageUri == null) ? 0 : packageUri.hashCode());
 		result = prime * result + ((endpointName == null) ? 0 : endpointName.hashCode());
+		result = prime * result + ((packageType == null) ? 0 : packageType.hashCode());
 		result = prime * result + (port);
 		return result;
 	}
@@ -188,6 +200,13 @@ public class DeployableServiceSpec extends ServiceSpec {
 				return false;
 		} else if (!endpointName.equals(other.endpointName))
 			return false;		
+		
+		if (packageType == null) {
+			if (other.packageType != null)
+				return false;
+		} else if (!packageType.equals(other.packageType))
+			return false;
+
 		
 		if (! (port == other.port) )
 			return false;
