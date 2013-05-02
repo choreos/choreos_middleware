@@ -93,19 +93,15 @@ public class FixedCloudProvider implements CloudProvider {
 	@Override
 	public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact)
 			throws RunNodesException {
-		if (node != null) {
-			return (nodes.containsKey(node.getId())) ? nodes.get(node.getId())
-					: createNode(node, resourceImpact);
+
+		if (nodes != null && !nodes.keySet().isEmpty()) {
+			Iterator<String> it = nodes.keySet().iterator();
+			return nodes.get(it.next());
 		} else {
-			if (!nodes.keySet().isEmpty()) {
-				Iterator<String> it = nodes.keySet().iterator();
-				return nodes.get(it.next());
-			} else {
-				// TODO should throws RunNodesException
-				// actually we should't use RunNodesException, but a Exception of our own
-				throw new IllegalStateException(
-						"FixedCloudProvider does not creates nodes and there is no node available in the moment.");
-			}
+			// TODO should throws RunNodesException
+			// actually we should't use RunNodesException, but a Exception of our own
+			throw new IllegalStateException(
+					"FixedCloudProvider does not creates nodes and there is no node available in the moment.");
 		}
 	}
 
