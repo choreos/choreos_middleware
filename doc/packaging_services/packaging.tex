@@ -412,8 +412,6 @@ Here are just some few important reminders:
 
 \item Ensure that the service port address in the WSDL file (see Listing~\ref{lst:wsdl_address}), when seen from remote locations, do not use ``localhost'', ``0.0.0.0'', or other unsuitable addresses, as lan private IPs for example. Remember the client that sees the WSDL needs an accessible endpoint.
 
-\end{itemize}
-
 {\footnotesize
 \begin{lstlisting}[caption=Good example of service port address on a WSDL file, 
 label=lst:wsdl_address] 
@@ -424,5 +422,9 @@ label=lst:wsdl_address]
 </service>
 \end{lstlisting}
 }
+
+\item If service A needs to invoke service B, there is no problem if service A is compiled with classes used to build service B. Actually, usually it is very useful to A having access to B interfaces. Nonetheless, this class dependency must be only static. There is no point in service A trying to access objects states of service B, or access resources, as configuration files, bundled in service B package.
+
+\end{itemize}
 
 \end{document}
