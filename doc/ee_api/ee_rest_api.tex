@@ -10,8 +10,8 @@
 \newcommand{\ee}{CHOReOS Enactment Engine}
 
 
-\title{\ee\ REST API \\ {\normalsize Version 1.1}}
-\author{Leonardo Leite (IME - USP)}
+\title{\ee\ REST API \\ {\normalsize Version 2.1}}
+\author{Leonardo Leite, Thiago Furtado, Nelson Lago (IME - USP)}
 
 \begin{document}
 
@@ -34,7 +34,7 @@ Although the REST API handles XML representations, we use here the UML notation,
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.75]{img/data_model.pdf}
+\includegraphics[scale=0.9]{img/data_model.pdf}
 \caption{\ee\ REST API data model}
 \label{img:data_model}
 \end{figure}
@@ -45,7 +45,7 @@ We proceed with a brief explanation about each class:
 \item [ChoreographySpec:] represents what the middleware needs to know to enact a choreography;
 \item [ServiceSpec:] a super class for common data of \verb!DeployableServiceSpec! and \verb!LegacyServiceSpec!;
 \item [DeployableServiceSpec:] represents what the middleware needs to know to deploy a service (with one or more instances for load balancing); 
-\item [LegacyServiceSpec:] represents an already existing service used by the choreography;
+\item [LegacyServiceSpec:] represents an already existing service to used by the choreography;
 \item [ChoreographyServiceSpec:] represents a service specification along with its role within the choreography;
 \item [ChoreographyServiceDependency:] represents dependencies among services (if \verb!service A! invokes \verb!service B!, we say \verb!service A! depends on \verb!service B!);
 \item [Choreography:] provides information about a choreography instance;
@@ -53,7 +53,8 @@ We proceed with a brief explanation about each class:
 \item [Service:] a super class for common data of \verb!DeployableService! and \verb!LegacyService!;
 \item [DeployableService:] provides information about a deployed service (such as the list of URIs);
 \item [LegacyService:] provides information about a legacy service;
-\item [ServiceInstance:] provides information about a specific instance, or replica, of a deployed service (URI, node data etc.). 
+\item [ServiceInstance:] provides information about a specific instance, also called replica, of a deployed service (URI, node data etc.). 
+\item [Node:] information about the node, including IP address, where a service instance is running.
 \end{description}
 
 To request a choreography enactment, it is important to understand very well the \verb!ChoreographyServiceSpec!, \verb!ServiceSpec!, \verb!DeployableServiceSpec!, and the \verb!LegacyServiceSpec! classes. Therefore, the description of them follows:
@@ -78,9 +79,9 @@ To request a choreography enactment, it is important to understand very well the
 
 \item \verb!DeployableServiceSpec!
 	\begin{description}
-		\item [packageUri:] the location of the binary file to be deployed. If type is LEGACY (services that are not being deployed specifically for this choreography, but are already available somewhere), this attribute will represent the complete service endpoint;
+		\item [packageUri:] the location of the binary file to be deployed;
 		\item [port:] the TCP port used by the service. Note that multiple replicas of a single service will all use the same port. Mandatory if type is COMMAND\_LINE;
-		\item [endpointName:] the endpoint suffix after deployment. For example, if the service will be deployed as \verb!http://<some_ip>/choreos/service!, the endpoint is \verb!choreos/service!. Note that multiple replicas of a single service will all use the same endpoint. If type is LEGACY, endpoint is empty;
+		\item [endpointName:] the endpoint suffix after deployment. For example, if the service will be deployed as \verb!http://<some_ip>/choreos/service!, the endpoint name is \verb!choreos/service!. Note that multiple replicas of a single service will all use the same endpoint;
 		\item [version:] the service version, which is used by the \ee\ to define which services must be redeployed in a choreography update;
 		\item [numberOfInstances:] How many instances of the service should be deployed (onto different virtual machines) in order to allow the load to be distributed;
 		\item [resourceImpact:] General information regarding the expected type of machine needed to run the service (see \emph{Resource impact specification});
@@ -104,7 +105,7 @@ The \ee\ will use \verb!ChoreographyServiceDependency! data to know which calls 
 
 \subsubsection*{Resource impact specification}
 
-The \verb!ServiceSpec! class has also an attribute to specify non-functional requirements, such as QoS constraints. This attribute is called ``resource impact'', and it can be used by the \verb!NodeSelector!\footnote{See the lesson Choreography Enactment.} to choose the node in which the service should be deployed. \verb!NodeSelector! will try to choose a node that enables the service to fulfil such requirements.
+The \verb!ServiceSpec! class has also an attribute to specify non-functional requirements, such as QoS constraints. This attribute is called ``resource impact'', and it can be used by the \verb!NodeSelector! to choose the node in which the service should be deployed. \verb!NodeSelector! will try to choose a node that enables the service to fulfil such requirements.
 
 This attribute is not described in this document because its structure is not fully defined yet. But it is expected to define, among others, required values of CPU, memory, and disk usage.
 
@@ -118,105 +119,176 @@ To properly build and read these XML representations, you can rely on the schema
 \lstset{language=XML}
 
 \begin{lstlisting}[caption=ChorSpec XML representation example, label=lst:chor_spec_xml]
-<chorSpec>
-    <serviceSpecs>
-        <endpointName>airline</endpointName>
-        <name>airline</name>
-        <numberOfInstances>1</numberOfInstances>
-        <packageType>COMMAND_LINE</packageType>
-        <packageUri>http://valinhos.ime.usp.br:54080/airline.jar</packageUri>
-        <port>1234</port>
+<choreographySpec>
+    <choreographyServiceSpecs>
+        <choreographyServiceUID>airline</choreographyServiceUID>
         <roles>airline</roles>
-        <type>SOAP</type>
-    </serviceSpecs>
-    <serviceSpecs>
+        <serviceSpec xsi:type="deployableServiceSpec" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <numberOfInstances>1</numberOfInstances>
+            <packageType>COMMAND_LINE</packageType>
+            <type>SOAP</type>
+            <UUID>d52eb183-99e7-40f8-8fad-235ea588288e</UUID>
+            <endpointName>airline</endpointName>
+            <packageUri>http://valinhos.ime.usp.br:54080/airline.jar</packageUri>
+            <port>1234</port>
+        </serviceSpec>
+    </choreographyServiceSpecs>
+    <choreographyServiceSpecs>
+        <choreographyServiceUID>travelagency</choreographyServiceUID>
         <dependencies>
-            <serviceName>airline</serviceName>
-            <serviceRole>airline</serviceRole>
+            <choreographyServiceRole>airline</choreographyServiceRole>
+            <choreographyServiceUID>airline</choreographyServiceUID>
         </dependencies>
-        <endpointName>travelagency</endpointName>
-        <name>travelagency</name>
-        <numberOfInstances>1</numberOfInstances>
-        <packageType>COMMAND_LINE</packageType>
-        <packageUri>http://valinhos.ime.usp.br:54080/travel.jar</packageUri>
-        <port>1235</port>
         <roles>travelagency</roles>
-        <type>SOAP</type>
-    </serviceSpecs>
+        <serviceSpec xsi:type="deployableServiceSpec" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <numberOfInstances>1</numberOfInstances>
+            <packageType>COMMAND_LINE</packageType>
+            <type>SOAP</type>
+            <UUID>63a6eacf-b59e-4ce2-b18c-93c3672f1f3e</UUID>
+            <endpointName>travelagency</endpointName>
+            <packageUri>http://valinhos.ime.usp.br:54080/travel.jar</packageUri>
+            <port>1235</port>
+        </serviceSpec>
+    </choreographyServiceSpecs>
+</choreographySpec>
 </chorSpec>\end{lstlisting}
 
 \begin{lstlisting}[caption=Choreography XML representation example, label=lst:chor_xml]
 <choreography>
-    <deployedServices>
-        <instances>
-            <myParentServiceSpec>
-                <endpointName>airline</endpointName>
-                <name>airline</name>
+    <choreographyServices>
+        <choreographyServiceSpec>
+            <choreographyServiceUID>travelagency</choreographyServiceUID>
+            <dependencies>
+                <choreographyServiceRole>airline</choreographyServiceRole>
+                <choreographyServiceUID>airline</choreographyServiceUID>
+            </dependencies>
+            <roles>travelagency</roles>
+            <serviceSpec xsi:type="deployableServiceSpec" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                 <numberOfInstances>1</numberOfInstances>
                 <packageType>COMMAND_LINE</packageType>
-                <packageUri>http://valinhos.ime.usp.br:54080/airline.jar</packageUri>
-                <port>1234</port>
-                <roles>airline</roles>
                 <type>SOAP</type>
-            </myParentServiceSpec>
-            <nativeUri>http://192.168.56.101:1234/airline/</nativeUri>
-            <node>
-                <hostname>choreos-node</hostname>
-                <id>1</id>
-                <ip>192.168.56.101</ip>
-            </node>
-        </instances>
-        <name>airline</name>
-        <spec>
-            <endpointName>airline</endpointName>
-            <name>airline</name>
-            <numberOfInstances>1</numberOfInstances>
-            <packageType>COMMAND_LINE</packageType>
-            <packageUri>http://valinhos.ime.usp.br:54080/airline.jar</packageUri>
-            <port>1234</port>
-            <roles>airline</roles>
-            <type>SOAP</type>
-        </spec>
-    </deployedServices>
-    <deployedServices>
-        <instances>
-            <myParentServiceSpec>
-                <dependencies>
-                    <serviceName>airline</serviceName>
-                    <serviceRole>airline</serviceRole>
-                </dependencies>
+                <UUID>63a6eacf-b59e-4ce2-b18c-93c3672f1f3e</UUID>
                 <endpointName>travelagency</endpointName>
-                <name>travelagency</name>
-                <numberOfInstances>1</numberOfInstances>
-                <packageType>COMMAND_LINE</packageType>
                 <packageUri>http://valinhos.ime.usp.br:54080/travel.jar</packageUri>
                 <port>1235</port>
-                <roles>travelagency</roles>
+            </serviceSpec>
+        </choreographyServiceSpec>
+        <service xsi:type="deployableService" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <spec xsi:type="deployableServiceSpec">
+                <numberOfInstances>1</numberOfInstances>
+                <packageType>COMMAND_LINE</packageType>
                 <type>SOAP</type>
-            </myParentServiceSpec>
-            <nativeUri>http://192.168.56.102:1235/travelagency/</nativeUri>
-            <node>
-                <hostname>choreos-node</hostname>
-                <id>2</id>
-                <ip>192.168.56.102</ip>
-            </node>
-        </instances>
-        <name>travelagency</name>
-        <spec>
+                <UUID>63a6eacf-b59e-4ce2-b18c-93c3672f1f3e</UUID>
+                <endpointName>travelagency</endpointName>
+                <packageUri>http://valinhos.ime.usp.br:54080/travel.jar</packageUri>
+                <port>1235</port>
+            </spec>
+            <instances>
+                <busUris/>
+                <instanceId>cfe274e8-2f89-4de7-b1bf-eb8f23cf34b7</instanceId>
+                <nativeUri>http://192.168.56.102:1235/travelagency/</nativeUri>
+                <node>
+                    <hostname>choreos-node</hostname>
+                    <id>2</id>
+                    <ip>192.168.56.102</ip>
+                </node>
+                <serviceSpec>
+                    <numberOfInstances>1</numberOfInstances>
+                    <packageType>COMMAND_LINE</packageType>
+                    <type>SOAP</type>
+                    <UUID>63a6eacf-b59e-4ce2-b18c-93c3672f1f3e</UUID>
+                    <endpointName>travelagency</endpointName>
+                    <packageUri>http://valinhos.ime.usp.br:54080/travel.jar</packageUri>
+                    <port>1235</port>
+                </serviceSpec>
+            </instances>
+        </service>
+    </choreographyServices>
+    <choreographyServices>
+        <choreographyServiceSpec>
+            <choreographyServiceUID>airline</choreographyServiceUID>
+            <roles>airline</roles>
+            <serviceSpec xsi:type="deployableServiceSpec" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <numberOfInstances>1</numberOfInstances>
+                <packageType>COMMAND_LINE</packageType>
+                <type>SOAP</type>
+                <UUID>d52eb183-99e7-40f8-8fad-235ea588288e</UUID>
+                <endpointName>airline</endpointName>
+                <packageUri>http://valinhos.ime.usp.br:54080/airline.jar</packageUri>
+                <port>1234</port>
+            </serviceSpec>
+        </choreographyServiceSpec>
+        <service xsi:type="deployableService" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <spec xsi:type="deployableServiceSpec">
+                <numberOfInstances>1</numberOfInstances>
+                <packageType>COMMAND_LINE</packageType>
+                <type>SOAP</type>
+                <UUID>d52eb183-99e7-40f8-8fad-235ea588288e</UUID>
+                <endpointName>airline</endpointName>
+                <packageUri>http://valinhos.ime.usp.br:54080/airline.jar</packageUri>
+                <port>1234</port>
+            </spec>
+            <instances>
+                <busUris/>
+                <instanceId>919f73a6-497f-46c5-9cfb-1518ad22b372</instanceId>
+                <nativeUri>http://192.168.56.101:1234/airline/</nativeUri>
+                <node>
+                    <hostname>choreos-node</hostname>
+                    <id>1</id>
+                    <ip>192.168.56.101</ip>
+                </node>
+                <serviceSpec>
+                    <numberOfInstances>1</numberOfInstances>
+                    <packageType>COMMAND_LINE</packageType>
+                    <type>SOAP</type>
+                    <UUID>d52eb183-99e7-40f8-8fad-235ea588288e</UUID>
+                    <endpointName>airline</endpointName>
+                    <packageUri>http://valinhos.ime.usp.br:54080/airline.jar</packageUri>
+                    <port>1234</port>
+                </serviceSpec>
+            </instances>
+        </service>
+    </choreographyServices>
+    <choreographySpec>
+        <choreographyServiceSpecs>
+            <choreographyServiceUID>airline</choreographyServiceUID>
+            <roles>airline</roles>
+            <serviceSpec xsi:type="deployableServiceSpec" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <numberOfInstances>1</numberOfInstances>
+                <packageType>COMMAND_LINE</packageType>
+                <type>SOAP</type>
+                <UUID>d52eb183-99e7-40f8-8fad-235ea588288e</UUID>
+                <endpointName>airline</endpointName>
+                <packageUri>http://valinhos.ime.usp.br:54080/airline.jar</packageUri>
+                <port>1234</port>
+            </serviceSpec>
+        </choreographyServiceSpecs>
+        <choreographyServiceSpecs>
+            <choreographyServiceUID>travelagency</choreographyServiceUID>
             <dependencies>
-                <serviceName>airline</serviceName>
-                <serviceRole>airline</serviceRole>
+                <choreographyServiceRole>airline</choreographyServiceRole>
+                <choreographyServiceUID>airline</choreographyServiceUID>
             </dependencies>
-            <endpointName>travelagency</endpointName>
-            <name>travelagency</name>
-            <numberOfInstances>1</numberOfInstances>
-            <packageType>COMMAND_LINE</packageType>
-            <packageUri>http://valinhos.ime.usp.br:54080/travel.jar</packageUri>
-            <port>1235</port>
             <roles>travelagency</roles>
-            <type>SOAP</type>
-        </spec>
-    </deployedServices>
+            <serviceSpec xsi:type="deployableServiceSpec" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <numberOfInstances>1</numberOfInstances>
+                <packageType>COMMAND_LINE</packageType>
+                <type>SOAP</type>
+                <UUID>63a6eacf-b59e-4ce2-b18c-93c3672f1f3e</UUID>
+                <endpointName>travelagency</endpointName>
+                <packageUri>http://valinhos.ime.usp.br:54080/travel.jar</packageUri>
+                <port>1235</port>
+            </serviceSpec>
+        </choreographyServiceSpecs>
+    </choreographySpec>
     <id>1</id>
 </choreography>
 \end{lstlisting}
@@ -376,6 +448,7 @@ When the following enactment is invoked, the \ee\ will redeploy the services wit
 
 In the \verb!EnactmentEngineAPI! project there is the \verb!ChorDeployerClient! class, which implements the \verb!ChoreographyDeployer! interface (Listing \ref{lst:java_interface}) and handles the REST communication with the Enactment Engine server. This means you can invoke the \ee\ by using a simple Java object, without worrying with XML details.
 
+{\small
 \lstset{language=Java}
 \begin{lstlisting}[caption=\ee\ Java interface, label=lst:java_interface]
 package org.ow2.choreos.chors;
@@ -390,7 +463,7 @@ public interface ChoreographyDeployer {
 	 * @param services specification of choreography services
 	 * @return the id of the just created choreography
 	 */
-	public String createChoreography(ChorSpec chor);
+	public String createChoreography(ChoreographySpec chor);
 	
 	/**
 	 * Retrieve choreography information.
@@ -399,21 +472,33 @@ public interface ChoreographyDeployer {
 	 * @throws ChoreographyNotFoundException if chorId does not exist 
 	 */
 	public Choreography getChoreography(String chorId) 
-	             throws ChoreographyNotFoundException;
+		throws ChoreographyNotFoundException;
 
 	/**
 	 * Enacts a choreography
 	 * @param chorId the choreography id
 	 * @return choreography representation, 
-	 * including information about deployed services 
+	   including information about deployed services 
 	 * @throws ChoreographyNotFoundException if chorId does not exist 
 	 * @throws EnactmentException if something goes wrong 
 	 */
-	public Choreography enact(String chorId) 
-	             throws EnactmentException, ChoreographyNotFoundException;
+	public Choreography enactChoreography(String chorId) 
+		throws EnactmentException, ChoreographyNotFoundException;
+
+	/**
+	 * Updates a choreography
+	 * @param chorId the choreography id
+	 * @return choreography representation, 
+	   including information about deployed services 
+	 * @throws ChoreographyNotFoundException if chorId does not exist 
+	 * @throws EnactmentException if something goes wrong
+	 */
+	public void updateChoreography(String chorId, ChoreographySpec spec) 
+		throws EnactmentException, ChoreographyNotFoundException;
 	
 }
 \end{lstlisting}
+}
 
 To use the \ee\ Java client in your code, it's enough to import the API project into your project. One way of doing this is using Maven: install the API into your local maven repo (\texttt{EnactmentEngineAPI\$mvn install}), add API as a dependency of your project by editing your pom.xml, and finally compile your project.
 
@@ -426,71 +511,122 @@ To use the \ee\ Java client in your code, it's enough to import the API project 
 \begin{lstlisting}[caption=, label=lst:chor_xsd]
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:element name="chorSpec" type="chorSpec"/>
     <xs:element name="choreography" type="choreography"/>
+    <xs:element name="choreographySpec" type="choreographySpec"/>
+    <xs:element name="deployableService" type="deployableService"/>
+    <xs:element name="deployableServiceSpec" type="deployableServiceSpec"/>
+    <xs:element name="legacyServiceSpec" type="legacyServiceSpec"/>
     <xs:element name="resourceImpact" type="resourceImpact"/>
-    <xs:element name="service" type="service"/>
-    <xs:element name="serviceSpec" type="serviceSpec"/>
     <xs:complexType name="choreography">
         <xs:sequence>
             <xs:element maxOccurs="unbounded" minOccurs="0"
-                name="deployedServices" nillable="true" type="service"/>
+                name="choreographyServices" nillable="true" type="choreographyService"/>
+            <xs:element minOccurs="0" ref="choreographySpec"/>
             <xs:element minOccurs="0" name="id" type="xs:string"/>
-            <xs:element minOccurs="0" name="spec" type="chorSpec"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="service">
+    <xs:complexType name="choreographyService">
         <xs:sequence>
+            <xs:element minOccurs="0" name="choreographyServiceSpec" 
+            type="choreographyServiceSpec"/>
+            <xs:element minOccurs="0" name="service" type="service"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="choreographyServiceSpec">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="choreographyServiceUID" type="xs:string"/>
             <xs:element maxOccurs="unbounded" minOccurs="0"
-                name="instances" nillable="true" type="serviceInstance"/>
-            <xs:element minOccurs="0" name="name" type="xs:string"/>
-            <xs:element minOccurs="0" name="recipe" type="recipe"/>
-            <xs:element minOccurs="0" name="spec" type="serviceSpec"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="serviceInstance">
-        <xs:sequence>
-            <xs:element minOccurs="0" name="easyEsbNodeAdminEndpoint" type="xs:string"/>
-            <xs:element minOccurs="0" name="instanceId" type="xs:string"/>
-            <xs:element minOccurs="0" name="legacyHostname" type="xs:string"/>
-            <xs:element minOccurs="0" name="legacyIp" type="xs:string"/>
-            <xs:element minOccurs="0" name="myParentServiceSpec" type="serviceSpec"/>
-            <xs:element minOccurs="0" name="nativeUri" type="xs:string"/>
-            <xs:element minOccurs="0" name="node" type="node"/>
-            <xs:element minOccurs="0" name="serviceId" type="xs:string"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="serviceSpec">
-        <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0"
-                name="dependencies" nillable="true" type="serviceDependency"/>
-            <xs:element minOccurs="0" name="endpointName" type="xs:string"/>
+                name="dependencies" nillable="true" type="choreographyServiceDependency"/>
             <xs:element minOccurs="0" name="group" type="xs:string"/>
-            <xs:element minOccurs="0" name="name" type="xs:string"/>
-            <xs:element name="numberOfInstances" type="xs:int"/>
             <xs:element minOccurs="0" name="owner" type="xs:string"/>
-            <xs:element minOccurs="0" name="packageType" type="packageType"/>
-            <xs:element minOccurs="0" name="packageUri" type="xs:string"/>
-            <xs:element name="port" type="xs:int"/>
-            <xs:element minOccurs="0" ref="resourceImpact"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="roles"
                 nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="type" type="serviceType"/>
-            <xs:element minOccurs="0" name="version" type="xs:string"/>
+            <xs:element minOccurs="0" name="serviceSpec" type="serviceSpec"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="serviceDependency">
+    <xs:complexType name="choreographyServiceDependency">
         <xs:sequence>
-            <xs:element minOccurs="0" name="serviceName" type="xs:string"/>
-            <xs:element minOccurs="0" name="serviceRole" type="xs:string"/>
+            <xs:element minOccurs="0" name="choreographyServiceRole" type="xs:string"/>
+            <xs:element minOccurs="0" name="choreographyServiceUID" type="xs:string"/>
         </xs:sequence>
+    </xs:complexType>
+    <xs:complexType abstract="true" name="serviceSpec">
+        <xs:sequence>
+            <xs:element name="numberOfInstances" type="xs:int"/>
+            <xs:element minOccurs="0" name="type" type="serviceType"/>
+            <xs:element minOccurs="0" name="UUID" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="deployableServiceSpec">
+        <xs:complexContent>
+            <xs:extension base="serviceSpec">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="endpointName" type="xs:string"/>
+                    <xs:element minOccurs="0" name="packageType" type="packageType"/>
+                    <xs:element minOccurs="0" name="packageUri" type="xs:string"/>
+                    <xs:element name="port" type="xs:int"/>
+                    <xs:element minOccurs="0" ref="resourceImpact"/>
+                    <xs:element minOccurs="0" name="version" type="xs:string"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     <xs:complexType name="resourceImpact">
         <xs:sequence>
-            <xs:element minOccurs="0" name="memory" type="xs:string"/>
+            <xs:element minOccurs="0" name="memory" type="memoryTypes"/>
             <xs:element minOccurs="0" name="cpu" type="xs:string"/>
             <xs:element minOccurs="0" name="io" type="xs:string"/>
             <xs:element minOccurs="0" name="region" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="legacyServiceSpec">
+        <xs:complexContent>
+            <xs:extension base="serviceSpec">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0"
+                        name="nativeURIs" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType abstract="true" name="service">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="spec" type="serviceSpec"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="deployableService">
+        <xs:complexContent>
+            <xs:extension base="service">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0"
+                        name="instances" nillable="true" type="serviceInstance"/>
+                    <xs:element minOccurs="0" name="recipe" type="recipe"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="serviceInstance">
+        <xs:sequence>
+            <xs:element name="busUris">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="entry">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element minOccurs="0" name="key" type="serviceType"/>
+                                    <xs:element minOccurs="0"
+                                    name="value" type="xs:string"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="easyEsbNodeAdminEndpoint" type="xs:string"/>
+            <xs:element minOccurs="0" name="instanceId" type="xs:string"/>
+            <xs:element minOccurs="0" name="nativeUri" type="xs:string"/>
+            <xs:element minOccurs="0" name="node" type="node"/>
+            <xs:element minOccurs="0" name="serviceSpec" type="deployableServiceSpec"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="node">
@@ -517,12 +653,25 @@ To use the \ee\ Java client in your code, it's enough to import the API project 
             <xs:element minOccurs="0" name="name" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="chorSpec">
+    <xs:complexType name="legacyService">
+        <xs:complexContent>
+            <xs:extension base="service">
+                <xs:sequence/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="choreographySpec">
         <xs:sequence>
             <xs:element maxOccurs="unbounded" minOccurs="0"
-                name="serviceSpecs" nillable="true" type="serviceSpec"/>
+                name="choreographyServiceSpecs" nillable="true" type="choreographyServiceSpec"/>
         </xs:sequence>
     </xs:complexType>
+    <xs:simpleType name="serviceType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="SOAP"/>
+            <xs:enumeration value="REST"/>
+        </xs:restriction>
+    </xs:simpleType>
     <xs:simpleType name="packageType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="COMMAND_LINE"/>
@@ -532,10 +681,11 @@ To use the \ee\ Java client in your code, it's enough to import the API project 
             <xs:enumeration value="OTHER"/>
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType name="serviceType">
+    <xs:simpleType name="memoryTypes">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="SOAP"/>
-            <xs:enumeration value="REST"/>
+            <xs:enumeration value="SMALL"/>
+            <xs:enumeration value="MEDIUM"/>
+            <xs:enumeration value="LARGE"/>
         </xs:restriction>
     </xs:simpleType>
 </xs:schema>
