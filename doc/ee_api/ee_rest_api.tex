@@ -124,54 +124,55 @@ To properly build and read these XML representations, you can rely on the schema
         <name>airline</name>
         <roles>airline</roles>
         <serviceSpec xsi:type="deployableServiceSpec" 
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <numberOfInstances>1</numberOfInstances>
-            <packageType>COMMAND_LINE</packageType>
             <type>SOAP</type>
-            <UUID>d52eb183-99e7-40f8-8fad-235ea588288e</UUID>
+            <UUID>8b644c9d-e619-4f45-b7b1-bd16dd9b560d</UUID>
             <endpointName>airline</endpointName>
+            <packageType>COMMAND_LINE</packageType>
             <packageUri>http://valinhos.ime.usp.br:54080/airline.jar</packageUri>
             <port>1234</port>
         </serviceSpec>
     </choreographyServiceSpecs>
     <choreographyServiceSpecs>
-        <name>travelagency</name>
         <dependencies>
-            <choreographyServiceRole>airline</choreographyServiceRole>
-            <name>airline</name>
+            <choreographyServiceSpecName>airline</choreographyServiceSpecName>
+            <choreographyServiceSpecRole>airline</choreographyServiceSpecRole>
         </dependencies>
+        <name>travelagency</name>
         <roles>travelagency</roles>
         <serviceSpec xsi:type="deployableServiceSpec" 
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <numberOfInstances>1</numberOfInstances>
-            <packageType>COMMAND_LINE</packageType>
             <type>SOAP</type>
-            <UUID>63a6eacf-b59e-4ce2-b18c-93c3672f1f3e</UUID>
+            <UUID>fdf8876d-569c-41a8-88fa-e336f301760f</UUID>
             <endpointName>travelagency</endpointName>
+            <packageType>COMMAND_LINE</packageType>
             <packageUri>http://valinhos.ime.usp.br:54080/travel.jar</packageUri>
             <port>1235</port>
         </serviceSpec>
     </choreographyServiceSpecs>
 </choreographySpec>
-</chorSpec>\end{lstlisting}
+</chorSpec>
+\end{lstlisting}
 
 \begin{lstlisting}[caption=Choreography XML representation example, label=lst:chor_xml]
 <choreography>
     <choreographyServices>
         <choreographyServiceSpec>
-            <name>travelagency</name>
             <dependencies>
-                <choreographyServiceRole>airline</choreographyServiceRole>
-                <name>airline</name>
+                <choreographyServiceSpecName>airline</choreographyServiceSpecName>
+                <choreographyServiceSpecRole>airline</choreographyServiceSpecRole>
             </dependencies>
+            <name>travelagency</name>
             <roles>travelagency</roles>
             <serviceSpec xsi:type="deployableServiceSpec" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                 <numberOfInstances>1</numberOfInstances>
-                <packageType>COMMAND_LINE</packageType>
                 <type>SOAP</type>
-                <UUID>63a6eacf-b59e-4ce2-b18c-93c3672f1f3e</UUID>
+                <UUID>fdf8876d-569c-41a8-88fa-e336f301760f</UUID>
                 <endpointName>travelagency</endpointName>
+                <packageType>COMMAND_LINE</packageType>
                 <packageUri>http://valinhos.ime.usp.br:54080/travel.jar</packageUri>
                 <port>1235</port>
             </serviceSpec>
@@ -180,16 +181,16 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <spec xsi:type="deployableServiceSpec">
                 <numberOfInstances>1</numberOfInstances>
-                <packageType>COMMAND_LINE</packageType>
                 <type>SOAP</type>
-                <UUID>63a6eacf-b59e-4ce2-b18c-93c3672f1f3e</UUID>
+                <UUID>fdf8876d-569c-41a8-88fa-e336f301760f</UUID>
                 <endpointName>travelagency</endpointName>
+                <packageType>COMMAND_LINE</packageType>
                 <packageUri>http://valinhos.ime.usp.br:54080/travel.jar</packageUri>
                 <port>1235</port>
             </spec>
             <instances>
                 <busUris/>
-                <instanceId>cfe274e8-2f89-4de7-b1bf-eb8f23cf34b7</instanceId>
+                <instanceId>a9ae531f-d9e9-4db7-91fd-a442dc4d769a</instanceId>
                 <nativeUri>http://192.168.56.102:1235/travelagency/</nativeUri>
                 <node>
                     <hostname>choreos-node</hostname>
@@ -198,10 +199,10 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                 </node>
                 <serviceSpec>
                     <numberOfInstances>1</numberOfInstances>
-                    <packageType>COMMAND_LINE</packageType>
                     <type>SOAP</type>
-                    <UUID>63a6eacf-b59e-4ce2-b18c-93c3672f1f3e</UUID>
+                    <UUID>fdf8876d-569c-41a8-88fa-e336f301760f</UUID>
                     <endpointName>travelagency</endpointName>
+                    <packageType>COMMAND_LINE</packageType>
                     <packageUri>http://valinhos.ime.usp.br:54080/travel.jar</packageUri>
                     <port>1235</port>
                 </serviceSpec>
@@ -215,10 +216,10 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <serviceSpec xsi:type="deployableServiceSpec" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                 <numberOfInstances>1</numberOfInstances>
-                <packageType>COMMAND_LINE</packageType>
                 <type>SOAP</type>
-                <UUID>d52eb183-99e7-40f8-8fad-235ea588288e</UUID>
+                <UUID>8b644c9d-e619-4f45-b7b1-bd16dd9b560d</UUID>
                 <endpointName>airline</endpointName>
+                <packageType>COMMAND_LINE</packageType>
                 <packageUri>http://valinhos.ime.usp.br:54080/airline.jar</packageUri>
                 <port>1234</port>
             </serviceSpec>
@@ -227,16 +228,16 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <spec xsi:type="deployableServiceSpec">
                 <numberOfInstances>1</numberOfInstances>
-                <packageType>COMMAND_LINE</packageType>
                 <type>SOAP</type>
-                <UUID>d52eb183-99e7-40f8-8fad-235ea588288e</UUID>
+                <UUID>8b644c9d-e619-4f45-b7b1-bd16dd9b560d</UUID>
                 <endpointName>airline</endpointName>
+                <packageType>COMMAND_LINE</packageType>
                 <packageUri>http://valinhos.ime.usp.br:54080/airline.jar</packageUri>
                 <port>1234</port>
             </spec>
             <instances>
                 <busUris/>
-                <instanceId>919f73a6-497f-46c5-9cfb-1518ad22b372</instanceId>
+                <instanceId>dbaa1db6-cb27-49ab-a055-f71f4aa4e9c5</instanceId>
                 <nativeUri>http://192.168.56.101:1234/airline/</nativeUri>
                 <node>
                     <hostname>choreos-node</hostname>
@@ -245,10 +246,10 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                 </node>
                 <serviceSpec>
                     <numberOfInstances>1</numberOfInstances>
-                    <packageType>COMMAND_LINE</packageType>
                     <type>SOAP</type>
-                    <UUID>d52eb183-99e7-40f8-8fad-235ea588288e</UUID>
+                    <UUID>8b644c9d-e619-4f45-b7b1-bd16dd9b560d</UUID>
                     <endpointName>airline</endpointName>
+                    <packageType>COMMAND_LINE</packageType>
                     <packageUri>http://valinhos.ime.usp.br:54080/airline.jar</packageUri>
                     <port>1234</port>
                 </serviceSpec>
@@ -262,28 +263,28 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <serviceSpec xsi:type="deployableServiceSpec" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                 <numberOfInstances>1</numberOfInstances>
-                <packageType>COMMAND_LINE</packageType>
                 <type>SOAP</type>
-                <UUID>d52eb183-99e7-40f8-8fad-235ea588288e</UUID>
+                <UUID>8b644c9d-e619-4f45-b7b1-bd16dd9b560d</UUID>
                 <endpointName>airline</endpointName>
+                <packageType>COMMAND_LINE</packageType>
                 <packageUri>http://valinhos.ime.usp.br:54080/airline.jar</packageUri>
                 <port>1234</port>
             </serviceSpec>
         </choreographyServiceSpecs>
         <choreographyServiceSpecs>
-            <name>travelagency</name>
             <dependencies>
-                <choreographyServiceRole>airline</choreographyServiceRole>
-                <name>airline</name>
+                <choreographyServiceSpecName>airline</choreographyServiceSpecName>
+                <choreographyServiceSpecRole>airline</choreographyServiceSpecRole>
             </dependencies>
+            <name>travelagency</name>
             <roles>travelagency</roles>
             <serviceSpec xsi:type="deployableServiceSpec" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                 <numberOfInstances>1</numberOfInstances>
-                <packageType>COMMAND_LINE</packageType>
                 <type>SOAP</type>
-                <UUID>63a6eacf-b59e-4ce2-b18c-93c3672f1f3e</UUID>
+                <UUID>fdf8876d-569c-41a8-88fa-e336f301760f</UUID>
                 <endpointName>travelagency</endpointName>
+                <packageType>COMMAND_LINE</packageType>
                 <packageUri>http://valinhos.ime.usp.br:54080/travel.jar</packageUri>
                 <port>1235</port>
             </serviceSpec>
@@ -539,10 +540,10 @@ To use the \ee\ Java client in your code, it's enough to import the API project 
     </xs:complexType>
     <xs:complexType name="choreographyServiceSpec">
         <xs:sequence>
-            <xs:element minOccurs="0" name="name" type="xs:string"/>
             <xs:element maxOccurs="unbounded" minOccurs="0"
                 name="dependencies" nillable="true" type="choreographyServiceDependency"/>
             <xs:element minOccurs="0" name="group" type="xs:string"/>
+            <xs:element minOccurs="0" name="name" type="xs:string"/>
             <xs:element minOccurs="0" name="owner" type="xs:string"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="roles"
                 nillable="true" type="xs:string"/>
@@ -551,8 +552,8 @@ To use the \ee\ Java client in your code, it's enough to import the API project 
     </xs:complexType>
     <xs:complexType name="choreographyServiceDependency">
         <xs:sequence>
-            <xs:element minOccurs="0" name="choreographyServiceRole" type="xs:string"/>
-            <xs:element minOccurs="0" name="name" type="xs:string"/>
+            <xs:element minOccurs="0" name="choreographyServiceSpecName" type="xs:string"/>
+            <xs:element minOccurs="0" name="choreographyServiceSpecRole" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType abstract="true" name="serviceSpec">
