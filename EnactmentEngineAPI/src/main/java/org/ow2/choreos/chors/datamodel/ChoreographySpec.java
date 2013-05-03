@@ -24,7 +24,7 @@ public class ChoreographySpec {
 			String choreographyServiceUID) {
 		
 		for (ChoreographyServiceSpec svc: choreographyServiceSpecs) {
-			if (choreographyServiceUID.equals(svc.getChoreographyServiceUID()))
+			if (choreographyServiceUID.equals(svc.getName()))
 				return svc;
 		}
 		return null;

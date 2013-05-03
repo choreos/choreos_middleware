@@ -20,13 +20,6 @@
 	</pluginRepositories>
 	
 	<dependencies>
-<!-- 
-		<dependency>
-			<groupId>org.ow2.choreos</groupId>
-			<artifactId>MiddlewareCommons</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
- -->
 		<dependency>
 			<groupId>xerces</groupId>
 			<artifactId>xerces</artifactId>

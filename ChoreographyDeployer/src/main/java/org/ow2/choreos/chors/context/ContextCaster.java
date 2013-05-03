@@ -49,16 +49,16 @@ public class ContextCaster {
 		for (ChoreographyServiceDependency dep : spec.getDependencies()) {
 
 			ChoreographyService providerService = deployedServices.get(dep
-					.getChoreographyServiceUID());
+					.getChoreographyServiceSpecName());
 			
 					
 			if (providerService == null) {
 				logger.error("Service "
-						+ dep.getChoreographyServiceUID()
+						+ dep.getChoreographyServiceSpecName()
 						+ " ("
-						+ spec.getChoreographyServiceUID()
+						+ spec.getName()
 						+ "dependency) not deployed. Not goint to pass this context to "
-						+ spec.getChoreographyServiceUID());
+						+ spec.getName());
 			} else {
 				try {
 					trySendContext(spec, serviceUris, dep, providerService);
@@ -107,17 +107,17 @@ public class ContextCaster {
 				try {
 					sender.sendContext(
 							serviceUri,
-							consumerServiceDependency.getChoreographyServiceRole(),
-							consumerServiceDependency.getChoreographyServiceUID(),
+							consumerServiceDependency.getChoreographyServiceSpecRole(),
+							consumerServiceDependency.getChoreographyServiceSpecName(),
 							providerUris);
 					logger.debug(consumerServiceSpec
-							.getChoreographyServiceUID()
+							.getName()
 							+ " has received "
 							+ consumerServiceDependency
-									.getChoreographyServiceUID()
+									.getChoreographyServiceSpecName()
 							+ " as "
 							+ consumerServiceDependency
-									.getChoreographyServiceRole()
+									.getChoreographyServiceSpecRole()
 							+ ": "
 							+ providerUris);
 					return;
@@ -128,8 +128,8 @@ public class ContextCaster {
 				}
 			}
 			throw new ContextNotSentException(serviceUri,
-					consumerServiceDependency.getChoreographyServiceRole(),
-					consumerServiceDependency.getChoreographyServiceUID(),
+					consumerServiceDependency.getChoreographyServiceSpecRole(),
+					consumerServiceDependency.getChoreographyServiceSpecName(),
 					providerUris);
 		}
 	}
@@ -138,9 +138,9 @@ public class ContextCaster {
 			ChoreographyServiceDependency dep, int trial) {
 		trial++;
 		if (trial == MAX_TRIALS) {
-			logger.error("Could not set " + dep.getChoreographyServiceUID()
-					+ " as " + dep.getChoreographyServiceRole() + " to "
-					+ spec.getChoreographyServiceUID());
+			logger.error("Could not set " + dep.getChoreographyServiceSpecName()
+					+ " as " + dep.getChoreographyServiceSpecRole() + " to "
+					+ spec.getName());
 		}
 		try {
 			Thread.sleep(DELAY_BETWEEN_TRIALS);

@@ -22,7 +22,7 @@ public class Choreography {
 		List<ChoreographyService> deployedServices = getChoreographyServices();
 		for (ChoreographyService svc : deployedServices) {
 			if (choreographyServiceUID.equals(svc.getChoreographyServiceSpec()
-					.getChoreographyServiceUID()))
+					.getName()))
 				return svc;
 		}
 		throw new IllegalArgumentException("Service named "

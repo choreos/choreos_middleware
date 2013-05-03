@@ -8,33 +8,33 @@ package org.ow2.choreos.chors.datamodel;
  */
 public class ChoreographyServiceDependency {
 
-	private String choreographyServiceUID;
-	private String choreographyServiceRole;
+	private String choreographyServiceSpecName;
+	private String choreographyServiceSpecRole;
 
 	public ChoreographyServiceDependency() {
 
 	}
 
-	public ChoreographyServiceDependency(String choreographyServiceUID,
+	public ChoreographyServiceDependency(String choreographyServiceSpecName,
 			String choreographyServiceRole) {
-		this.choreographyServiceUID = choreographyServiceUID;
-		this.choreographyServiceRole = choreographyServiceRole;
+		this.choreographyServiceSpecName = choreographyServiceSpecName;
+		this.choreographyServiceSpecRole = choreographyServiceRole;
 	}
 
-	public String getChoreographyServiceUID() {
-		return choreographyServiceUID;
+	public String getChoreographyServiceSpecName() {
+		return choreographyServiceSpecName;
 	}
 
-	public void setChoreographyServiceUID(String choreographyServiceUID) {
-		this.choreographyServiceUID = choreographyServiceUID;
+	public void setChoreographyServiceSpecName(String choreographyServiceSpecName) {
+		this.choreographyServiceSpecName = choreographyServiceSpecName;
 	}
 
-	public String getChoreographyServiceRole() {
-		return choreographyServiceRole;
+	public String getChoreographyServiceSpecRole() {
+		return choreographyServiceSpecRole;
 	}
 
-	public void setChoreographyServiceRole(String choreographyServiceRole) {
-		this.choreographyServiceRole = choreographyServiceRole;
+	public void setChoreographyServiceSpecRole(String choreographyServiceSpecRole) {
+		this.choreographyServiceSpecRole = choreographyServiceSpecRole;
 	}
 
 	@Override
@@ -43,12 +43,12 @@ public class ChoreographyServiceDependency {
 		int result = 1;
 		result = prime
 				* result
-				+ ((choreographyServiceUID == null) ? 0
-						: choreographyServiceUID.hashCode());
+				+ ((choreographyServiceSpecName == null) ? 0
+						: choreographyServiceSpecName.hashCode());
 		result = prime
 				* result
-				+ ((choreographyServiceRole == null) ? 0
-						: choreographyServiceRole.hashCode());
+				+ ((choreographyServiceSpecRole == null) ? 0
+						: choreographyServiceSpecRole.hashCode());
 		return result;
 	}
 
@@ -61,24 +61,24 @@ public class ChoreographyServiceDependency {
 		if (getClass() != obj.getClass())
 			return false;
 		ChoreographyServiceDependency other = (ChoreographyServiceDependency) obj;
-		if (choreographyServiceUID == null) {
-			if (other.choreographyServiceUID != null)
+		if (choreographyServiceSpecName == null) {
+			if (other.choreographyServiceSpecName != null)
 				return false;
-		} else if (!choreographyServiceUID.equals(other.choreographyServiceUID))
+		} else if (!choreographyServiceSpecName.equals(other.choreographyServiceSpecName))
 			return false;
-		if (choreographyServiceRole == null) {
-			if (other.choreographyServiceRole != null)
+		if (choreographyServiceSpecRole == null) {
+			if (other.choreographyServiceSpecRole != null)
 				return false;
-		} else if (!choreographyServiceRole
-				.equals(other.choreographyServiceRole))
+		} else if (!choreographyServiceSpecRole
+				.equals(other.choreographyServiceSpecRole))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "ServiceDependency [serviceName=" + choreographyServiceUID
-				+ ", serviceRole=" + choreographyServiceRole + "]";
+		return "ServiceDependency [name=" + choreographyServiceSpecName
+				+ ", role=" + choreographyServiceSpecRole + "]";
 	}
 
 }

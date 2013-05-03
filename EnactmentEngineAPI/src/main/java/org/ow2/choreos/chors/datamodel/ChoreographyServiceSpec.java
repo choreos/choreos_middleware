@@ -8,11 +8,11 @@ import org.ow2.choreos.services.datamodel.ServiceSpec;
 public class ChoreographyServiceSpec {
 	private ServiceSpec serviceSpec;
 
+	private String name;
 	private String owner;
 	private String group;
 	private List<String> roles;
 	private List<ChoreographyServiceDependency> dependencies;
-	private String choreographyServiceUID;
 	
 	public ChoreographyServiceSpec() {
 		
@@ -24,19 +24,19 @@ public class ChoreographyServiceSpec {
 		this.owner = owner;
 		this.group = group;
 		this.roles = roles;
-		this.choreographyServiceUID = choreographyServiceUID;
+		this.name = choreographyServiceUID;
 	}
 
 	public ChoreographyServiceSpec(ServiceSpec serviceSpec, String owner,
 			String group, List<String> roles,
 			List<ChoreographyServiceDependency> dependencies,
-			String choreographyServiceUID) {
+			String name) {
 		this.serviceSpec = serviceSpec;
 		this.owner = owner;
 		this.group = group;
 		this.roles = roles;
 		this.dependencies = dependencies;
-		this.choreographyServiceUID = choreographyServiceUID;
+		this.name = name;
 	}
 
 	public ServiceSpec getServiceSpec() {
@@ -103,12 +103,12 @@ public class ChoreographyServiceSpec {
 		this.dependencies.addAll(dependencies);
 	}
 
-	public String getChoreographyServiceUID() {
-		return choreographyServiceUID;
+	public String getName() {
+		return name;
 	}
 
-	public void setChoreographyServiceUID(String choreographyServiceUID) {
-		this.choreographyServiceUID = choreographyServiceUID;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override
@@ -117,8 +117,8 @@ public class ChoreographyServiceSpec {
 		int result = 1;
 		result = prime
 				* result
-				+ ((choreographyServiceUID == null) ? 0
-						: choreographyServiceUID.hashCode());
+				+ ((name == null) ? 0
+						: name.hashCode());
 		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
 		result = prime * result + ((group == null) ? 0 : group.hashCode());
 		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
@@ -138,10 +138,10 @@ public class ChoreographyServiceSpec {
 			return false;
 		ChoreographyServiceSpec other = (ChoreographyServiceSpec) obj;
 
-		if (choreographyServiceUID == null) {
-			if (other.choreographyServiceUID != null)
+		if (name == null) {
+			if (other.name != null)
 				return false;
-		} else if (!choreographyServiceUID.equals(other.choreographyServiceUID))
+		} else if (!name.equals(other.name))
 			return false;
 
 		if (owner == null) {
@@ -179,7 +179,7 @@ public class ChoreographyServiceSpec {
 
 	@Override
 	public String toString() {
-		return "ChoreographyServiceSpec [uid=" + choreographyServiceUID
+		return "ChoreographyServiceSpec [name=" + name
 				+ ", owner=" + owner + ", group=" + group + ", roles=" + roles
 				+ ", dependencies=" + dependencies + ", serviceSpec="
 				+ serviceSpec;

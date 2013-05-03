@@ -158,7 +158,7 @@ public class Deployer {
 		for (ChoreographyService deployed : services) {
 
 			deployedServices.put(deployed.getChoreographyServiceSpec()
-					.getChoreographyServiceUID(), deployed);
+					.getName(), deployed);
 
 			if (((DeployableServiceSpec) deployed.getChoreographyServiceSpec().getServiceSpec())
 					.getPackageType() != PackageType.LEGACY) {
@@ -200,7 +200,7 @@ public class Deployer {
 		
 		Map<String, ChoreographyServiceSpec> result = new HashMap<String, ChoreographyServiceSpec>();
 		for (ChoreographyServiceSpec spec : list)
-			result.put(spec.getChoreographyServiceUID(), spec);
+			result.put(spec.getName(), spec);
 		
 		return result;
 	}
@@ -211,7 +211,7 @@ public class Deployer {
 
 		for (ChoreographyService s : chor.getChoreographyServices()) {
 			currentServices.put(s.getChoreographyServiceSpec()
-					.getChoreographyServiceUID(), s);
+					.getName(), s);
 		}
 		return currentServices;
 	}
@@ -237,7 +237,7 @@ public class Deployer {
 					
 					toUpdate.put(currentServiceEntry.getValue()
 							.getChoreographyServiceSpec()
-							.getChoreographyServiceUID(), requestedSpec);
+							.getName(), requestedSpec);
 					
 				} else {
 					updatedServiceList.add(currentServiceEntry.getValue());
