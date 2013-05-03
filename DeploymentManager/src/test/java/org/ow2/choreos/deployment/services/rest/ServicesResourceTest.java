@@ -27,7 +27,7 @@ import org.ow2.choreos.services.datamodel.ServiceType;
 
 public class ServicesResourceTest {
 
-	private ServicesResourceForTest servicesResources;
+	private ServicesResource servicesResources;
 	private String expectedServiceUUID;
 
 	@Before
@@ -37,8 +37,7 @@ public class ServicesResourceTest {
 		when(servicesManagerMock.createService(getSpec())).thenReturn(
 				getService());
 
-		this.servicesResources = new ServicesResourceForTest(
-				servicesManagerMock, null);
+		this.servicesResources = new ServicesResource(null, servicesManagerMock);
 	}
 
 	private DeployableServiceSpec getSpec() {

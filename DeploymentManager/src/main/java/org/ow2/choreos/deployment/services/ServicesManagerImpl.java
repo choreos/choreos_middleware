@@ -36,16 +36,25 @@ public class ServicesManagerImpl implements ServicesManager {
 	private DeployedServicesRegistry registry = DeployedServicesRegistry
 			.getInstance();
 	private NodePoolManager npm;
-	protected Knife knife;
+	private Knife knife;
 
 	public ServicesManagerImpl(NodePoolManager npm) {
-
 		final String CHEF_REPO = Configuration.get("CHEF_REPO");
 		final String CHEF_CONFIG_FILE = Configuration.get("CHEF_CONFIG_FILE");
-		this.npm = npm;
-		this.knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
+		Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
+		fakeConstructor(npm, knife);
 	}
 
+	// constructor created to mock knife in tests
+	public ServicesManagerImpl(NodePoolManager npm, Knife knife) {
+		fakeConstructor(npm, knife);
+	}
+
+	private void fakeConstructor(NodePoolManager npm, Knife knife) {
+		this.npm = npm;
+		this.knife = knife;
+	}
+	
 	@Override
 	public DeployableService createService(DeployableServiceSpec serviceSpec)
 			throws ServiceNotDeployedException {

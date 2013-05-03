@@ -43,15 +43,24 @@ import org.ow2.choreos.services.datamodel.ServiceInstance;
 public class ServicesResource {
 	
 	private Logger logger = Logger.getLogger(ServicesResource.class);
-	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
-	protected NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-	protected ServicesManager servicesManager = new ServicesManagerImpl(npm);
+	protected NodePoolManager npm;
+	protected ServicesManager servicesManager;
 	
 	public ServicesResource() {
-
 		String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
-		this.npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-		this.servicesManager = new ServicesManagerImpl(npm);
+		NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
+		ServicesManager servicesManager = new ServicesManagerImpl(npm);
+		this.fakeConstructor(npm, servicesManager);
+	}
+
+	// constructor created to mock npm and servicesManager in tests
+	public ServicesResource(NodePoolManager npm, ServicesManager servicesManager) {
+		this.fakeConstructor(npm, servicesManager);
+	}
+	
+	private void fakeConstructor(NodePoolManager npm, ServicesManager servicesManager) {
+		this.npm = npm;
+		this.servicesManager = servicesManager;
 	}
 	
 	/**

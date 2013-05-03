@@ -70,7 +70,7 @@ public class ServiceDeployerImplTest {
 		String cookbookUploadResult = "Cookbook 'uploaded' by mock";
 		when(knifeCookbbok.upload(any(String.class), any(String.class))).thenReturn(cookbookUploadResult);
 		
-		serviceDeployer = new ServicesManagerImplForTests(npm, knife);
+		serviceDeployer = new ServicesManagerImpl(npm, knife);
 	}
 	
 	@Test
@@ -92,12 +92,4 @@ public class ServiceDeployerImplTest {
 		verify(npm).applyConfig(any(Config.class));
 	}
 	
-	
-	class ServicesManagerImplForTests extends ServicesManagerImpl {
-		
-		ServicesManagerImplForTests(NodePoolManager npm, Knife k) {
-			super(npm);
-			knife = k;
-		}
-	}
 }
