@@ -63,11 +63,11 @@ To request a choreography enactment, it is important to understand very well the
 
 \item \verb!ChoreographyServiceSpec! 
 	\begin{description}
-		\item [choreographyServiceUID:] a unique character sequence within the choreography specification;
+		\item [name:] a unique character sequence within the choreography specification;
 		\item [owner:] the organization that holds the infrastructure where the service must be deployed (not implemented, for now a single cloud per \ee\ instance is supported);
 		\item [group:] services in the same group will be deployed in the same cloud node (not implemented);
 		\item [roles:] list of roles implemented by the service;
-		\item [dependencies:] list of \verb!ChoreographyServiceDependency! entries; each entry describes the name of the dependency (matching the \verb!choreographyServiceUID! attribute), and the the role provided by the dependency;
+		\item [dependencies:] list of \verb!ChoreographyServiceDependency! entries; each entry describes the name of the dependency (matching the \verb!name! attribute), and the the role provided by the dependency;
 		\item [serviceSpec:] the specification of the service (to be deployed or already existing) that will take this role in the choreography.
 	\end{description}
 
@@ -82,7 +82,7 @@ To request a choreography enactment, it is important to understand very well the
 		\item [packageUri:] the location of the binary file to be deployed;
 		\item [port:] the TCP port used by the service. Note that multiple replicas of a single service will all use the same port. Mandatory if type is COMMAND\_LINE;
 		\item [endpointName:] the endpoint suffix after deployment. For example, if the service will be deployed as \verb!http://<some_ip>/choreos/service!, the endpoint name is \verb!choreos/service!. Note that multiple replicas of a single service will all use the same endpoint;
-		\item [version:] the service version, which is used by the \ee\ to define which services must be redeployed in a choreography update;
+		\item [version:] the service version, which is used by the \ee\ to define which services must be redeployed in a choreography update (not used currently);
 		\item [numberOfInstances:] How many instances of the service should be deployed (onto different virtual machines) in order to allow the load to be distributed;
 		\item [resourceImpact:] General information regarding the expected type of machine needed to run the service (see \emph{Resource impact specification});
 		\item [packageType:] the type of the deployable artifact, according to the \verb!PackageType! enumeration\footnote{When the package type i    s COMMAND\_LINE the service will be executed by the ``java -jar'' command.}.
@@ -121,7 +121,7 @@ To properly build and read these XML representations, you can rely on the schema
 \begin{lstlisting}[caption=ChorSpec XML representation example, label=lst:chor_spec_xml]
 <choreographySpec>
     <choreographyServiceSpecs>
-        <choreographyServiceUID>airline</choreographyServiceUID>
+        <name>airline</name>
         <roles>airline</roles>
         <serviceSpec xsi:type="deployableServiceSpec" 
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -135,10 +135,10 @@ To properly build and read these XML representations, you can rely on the schema
         </serviceSpec>
     </choreographyServiceSpecs>
     <choreographyServiceSpecs>
-        <choreographyServiceUID>travelagency</choreographyServiceUID>
+        <name>travelagency</name>
         <dependencies>
             <choreographyServiceRole>airline</choreographyServiceRole>
-            <choreographyServiceUID>airline</choreographyServiceUID>
+            <name>airline</name>
         </dependencies>
         <roles>travelagency</roles>
         <serviceSpec xsi:type="deployableServiceSpec" 
@@ -159,10 +159,10 @@ To properly build and read these XML representations, you can rely on the schema
 <choreography>
     <choreographyServices>
         <choreographyServiceSpec>
-            <choreographyServiceUID>travelagency</choreographyServiceUID>
+            <name>travelagency</name>
             <dependencies>
                 <choreographyServiceRole>airline</choreographyServiceRole>
-                <choreographyServiceUID>airline</choreographyServiceUID>
+                <name>airline</name>
             </dependencies>
             <roles>travelagency</roles>
             <serviceSpec xsi:type="deployableServiceSpec" 
@@ -210,7 +210,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     </choreographyServices>
     <choreographyServices>
         <choreographyServiceSpec>
-            <choreographyServiceUID>airline</choreographyServiceUID>
+            <name>airline</name>
             <roles>airline</roles>
             <serviceSpec xsi:type="deployableServiceSpec" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -257,7 +257,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     </choreographyServices>
     <choreographySpec>
         <choreographyServiceSpecs>
-            <choreographyServiceUID>airline</choreographyServiceUID>
+            <name>airline</name>
             <roles>airline</roles>
             <serviceSpec xsi:type="deployableServiceSpec" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -271,10 +271,10 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             </serviceSpec>
         </choreographyServiceSpecs>
         <choreographyServiceSpecs>
-            <choreographyServiceUID>travelagency</choreographyServiceUID>
+            <name>travelagency</name>
             <dependencies>
                 <choreographyServiceRole>airline</choreographyServiceRole>
-                <choreographyServiceUID>airline</choreographyServiceUID>
+                <name>airline</name>
             </dependencies>
             <roles>travelagency</roles>
             <serviceSpec xsi:type="deployableServiceSpec" 
@@ -439,9 +439,14 @@ representation \\
 \hline 
 \end{tabular} \\
 
-This operation has the same behavior than the create choreography operation.
-To apply the new changes it is necessary to invoke the enactment operation again.
-When the following enactment is invoked, the \ee\ will redeploy the services with increased version number and the services that did not exist in the previous choreography version. This tracking is done with the \texttt{name} attribute of the service.
+This operation has the same behavior of the create choreography operation.
+To apply the changes it is necessary to invoke the enactment operation again.
+When the new enactment is invoked, the \ee\ will detect the changes that have
+been inserted in the choreography and deploys new services, remove unneeded services and redeploy
+services where some aspect (such as version number, number of instances etc) has changed.
+Currently, the only detected changes are increased or decreased number of instances
+and increased or decreased memory consumption. Services on the old and new versions
+of the choreography are correlated by means of the \texttt{name} attribute of ChorServiceSpec.
 
 \section{Java client}
 \label{sec:client}
@@ -534,7 +539,7 @@ To use the \ee\ Java client in your code, it's enough to import the API project 
     </xs:complexType>
     <xs:complexType name="choreographyServiceSpec">
         <xs:sequence>
-            <xs:element minOccurs="0" name="choreographyServiceUID" type="xs:string"/>
+            <xs:element minOccurs="0" name="name" type="xs:string"/>
             <xs:element maxOccurs="unbounded" minOccurs="0"
                 name="dependencies" nillable="true" type="choreographyServiceDependency"/>
             <xs:element minOccurs="0" name="group" type="xs:string"/>
@@ -547,7 +552,7 @@ To use the \ee\ Java client in your code, it's enough to import the API project 
     <xs:complexType name="choreographyServiceDependency">
         <xs:sequence>
             <xs:element minOccurs="0" name="choreographyServiceRole" type="xs:string"/>
-            <xs:element minOccurs="0" name="choreographyServiceUID" type="xs:string"/>
+            <xs:element minOccurs="0" name="name" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType abstract="true" name="serviceSpec">
