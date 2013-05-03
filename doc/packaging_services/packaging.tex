@@ -19,14 +19,7 @@
 
 \section{Introduction}
 
-The \ee\ provides a Platform as a Service (PaaS) that automates the distributed deployment of service choreographies in cloud environments. The client of our middleware must build a declarative description of the choreography to be deployed. The description is passed to the \ee\ through a REST request. Such declarative description is a low level architectural description of the choreography, that must be written in XML format and structured according to the relations in the Figure~\ref{img:data_model}. Details about how to build this description and how to invoke the REST operations are provided in the document ``\ee\ REST API''\footnote{\url{http://ccsl.ime.usp.br/baile/files/ee\_rest\_api.pdf}}. 
-
-\begin{figure}[th]
-\centering
-\includegraphics[scale=0.75]{img/data_model.pdf}
-\caption{\ee\ REST API data model}
-\label{img:data_model}
-\end{figure}
+The \ee\ provides a Platform as a Service (PaaS) that automates the distributed deployment of service choreographies in cloud environments. The client of our middleware must build a declarative description of the choreography to be deployed. The description is passed to the \ee\ through a REST request. Such declarative description is a low level architectural description of the choreography, that must be written in XML format and structured according to the Enactment Engine API. Details about how to build this description and how to invoke the REST operations are provided in the document ``\ee\ REST API''\footnote{\url{http://ccsl.ime.usp.br/baile/files/ee\_rest\_api.pdf}}. 
 
 Each service has its own specification, defined by the \textsf{ServiceSpec} class. Its \texttt{packageUri} attribute defines the URL from where the \ee\ retrieves the artifact that will be deployed to make the service accessible. Therefore, all the choreography artifacts need to be already Internet accessible at enactment time. This can be accomplished, for example, by hosting the artifacts on a web server.
 
