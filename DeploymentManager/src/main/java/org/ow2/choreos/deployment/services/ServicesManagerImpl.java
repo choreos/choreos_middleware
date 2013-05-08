@@ -25,7 +25,7 @@ import org.ow2.choreos.services.UnhandledModificationException;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
-import org.ow2.choreos.services.datamodel.Recipe;
+import org.ow2.choreos.services.datamodel.RecipeBundle;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceSpec;
 
@@ -92,11 +92,11 @@ public class ServicesManagerImpl implements ServicesManager {
 	private void prepareDeployment(DeployableService service)
 			throws ServiceNotDeployedException {
 
-		Recipe serviceRecipe = this.createRecipe(service);
+		RecipeBundle recipes = this.createRecipes(service);
 
 		for (int i = 0; i < 5;) {
 			try {
-				this.uploadRecipe(serviceRecipe);
+				this.uploadRecipes(recipes);
 			} catch (KnifeException e) {
 				i++;
 				if (i >= 4) {
@@ -115,32 +115,57 @@ public class ServicesManagerImpl implements ServicesManager {
 		}
 	}
 
-	private Recipe createRecipe(DeployableService service) {
-
-		PackageType type = service.getSpec().getPackageType();
+	private RecipeBundle createRecipes(DeployableService service) {
+		PackageType type = service.getSpec().getPackageType();		
 		RecipeBuilder builder = RecipeBuilderFactory
 				.getRecipeBuilderInstance(type);
-		Recipe serviceRecipe = builder.createRecipe(service.getSpec());
-		service.setRecipe(serviceRecipe);
-		return serviceRecipe;
+		RecipeBundle bundle = builder.createServiceRecipeBundle(service.getSpec());
+		service.setRecipeBundle(bundle);
+		return bundle;
 	}
 
-	private void uploadRecipe(Recipe serviceRecipe) throws KnifeException {
+	private void uploadRecipes(RecipeBundle serviceRecipeBundle) throws KnifeException {
 
-		File folder = new File(serviceRecipe.getCookbookFolder());
+		File folder = new File(serviceRecipeBundle.getCookbookFolder());
 		String parent = folder.getParent();
-		logger.debug("Uploading recipe " + serviceRecipe.getName());
+		uploadServiceRecipe(serviceRecipeBundle, parent);
+		uploadActivateRecipe(serviceRecipeBundle, parent);
+		// must be called on undeploy action
+		//uploadDeactivateRecipe(serviceRecipeBundle, parent);
+	}
+
+	private void uploadDeactivateRecipe(RecipeBundle serviceRecipeBundle,
+			String parent) throws KnifeException {
+		String result;
+		logger.debug("Uploading deactivate recipe " + serviceRecipeBundle.getServiceRecipe().getCookbookName());
+		result = this.knife.cookbook().upload(
+				serviceRecipeBundle.getDeactivateRecipe().getCookbookName(), parent);
+		logger.debug(result);
+	}
+
+	private void uploadActivateRecipe(RecipeBundle serviceRecipeBundle,
+			String parent) throws KnifeException {
+		String result;
+		logger.debug("Uploading activate recipe " + serviceRecipeBundle.getActivateRecipe().getCookbookName());
+		result = this.knife.cookbook().upload(
+				serviceRecipeBundle.getActivateRecipe().getCookbookName(), parent);
+		logger.debug(result);
+	}
+
+	private void uploadServiceRecipe(RecipeBundle serviceRecipeBundle,
+			String parent) throws KnifeException {
+		logger.debug("Uploading service recipe " + serviceRecipeBundle.getServiceRecipe().getCookbookName());
 		String result = this.knife.cookbook().upload(
-				serviceRecipe.getCookbookName(), parent);
+				serviceRecipeBundle.getServiceRecipe().getCookbookName(), parent);
 		logger.debug(result);
 	}
 
 	private void executeDeployment(DeployableService service,
 			int numberOfNewInstances) {
 
-		Recipe serviceRecipe = service.getRecipe();
-		String configName = serviceRecipe.getCookbookName() + "::"
-				+ serviceRecipe.getName();
+		RecipeBundle serviceRecipe = service.getRecipeBundle();
+		String configName = serviceRecipe.getServiceRecipe().getCookbookName() + "::"
+				+ serviceRecipe.getServiceRecipe().getName();
 		Config config = new Config(configName, service.getSpec()
 				.getResourceImpact(), numberOfNewInstances);
 

@@ -4,8 +4,6 @@ public class Recipe {
 
 	private String name;
 	private String cookbookName;
-	private String cookbookFolder;
-	
 	public String getName() {
 		return name;
 	}
@@ -17,14 +15,7 @@ public class Recipe {
 	}
 	public void setCookbookName(String cookbookName) {
 		this.cookbookName = cookbookName;
-	}
-	public String getCookbookFolder() {
-		return cookbookFolder;
-	}
-	public void setCookbookFolder(String cookbookFolder) {
-		this.cookbookFolder = cookbookFolder;
-	}
-	
+	}	
 	
 	@Override
 	public int hashCode() {
@@ -60,7 +51,7 @@ public class Recipe {
 	@Override
 	public String toString() {
 		return "Recipe [name=" + name + ", cookbookName=" + cookbookName
-				+ ", cookbookFolder=" + cookbookFolder + "]";
+				 + "]";
 	}
 
 }

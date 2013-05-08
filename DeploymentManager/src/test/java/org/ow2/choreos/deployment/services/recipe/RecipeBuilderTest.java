@@ -13,24 +13,28 @@ import org.junit.Test;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.Recipe;
+import org.ow2.choreos.services.datamodel.RecipeBundle;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
 import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryTypes;
 
 public class RecipeBuilderTest {
 
 	private static String RECIPES_FOLDER = "chef/recipes";
-	
+
 	private RecipeBuilderImpl recipeBuilder;
 	private static DeployableServiceSpec serviceSpec;
 	private static String id;
 	private static String codeLocationURI = "https://github.com/downloads/choreos/choreos_middleware/myServletWAR.war";
 	private static ResourceImpact impact = new ResourceImpact();
+	
+	private static final File DEST_DIR = new File(
+			"src/main/resources/chef/recipes");
 
 	@BeforeClass
 	public static void setUpBeforeClass() {
-		
+
 		deleteDirectory();
-		
+
 		impact.setCpu("low");
 		impact.setIo("low");
 		impact.setMemory(MemoryTypes.SMALL);
@@ -47,9 +51,9 @@ public class RecipeBuilderTest {
 	public void setUp() {
 		recipeBuilder = new RecipeBuilderImpl("war");
 	}
-	
+
 	private static File getResource(String resource) {
-		
+
 		String resourcesPath = "src/main/resources/";
 		return new File(resourcesPath + resource);
 	}
@@ -57,13 +61,21 @@ public class RecipeBuilderTest {
 	@Test
 	public void shouldCreateACopyOfTheFilesInTheTemplate() throws IOException {
 
-		recipeBuilder.copyTemplate(serviceSpec);
+		File srcFolder = new File("src/main/resources/chef/"
+				+ "service-deploy-recipe-template");
+
+		String destPath = DEST_DIR.getAbsolutePath() + "/service"
+				+ serviceSpec.getUUID();
+
+		File destFolder = new File(destPath);
+		
+		recipeBuilder.copyRecipeTemplate(srcFolder, destFolder);
 		assertTemplateFolderWasCopied();
 	}
 
 	private void assertTemplateFolderWasCopied() {
-		
-		String[] extensions = {"rb"};
+
+		String[] extensions = { "rb" };
 		File directory = getResource(RECIPES_FOLDER + "/service" + id);
 		assertTrue((FileUtils.listFiles(directory, extensions, false)).size() > 0);
 	}
@@ -71,13 +83,14 @@ public class RecipeBuilderTest {
 	@Test
 	public void shouldReplaceOcurrencesInMetadataRb() throws IOException {
 
-		recipeBuilder.changeMetadataRb(serviceSpec);
+		recipeBuilder.changeMetadataRb(serviceSpec,
+				"/service" + serviceSpec.getUUID() + "/metadata.rb");
 		assertAllOcurrencesInMetadataRbWereReplaced();
 	}
 
 	private void assertAllOcurrencesInMetadataRbWereReplaced()
 			throws IOException {
-		
+
 		File fileLocation = getResource(RECIPES_FOLDER + "/service" + id
 				+ "/metadata.rb");
 		String fileData = FileUtils.readFileToString(fileLocation);
@@ -91,8 +104,9 @@ public class RecipeBuilderTest {
 
 	@Test
 	public void shouldReplaceOcurrencesInAttributesServerRb() throws Exception {
-		
-		recipeBuilder.changeAttributesDefaultRb(serviceSpec);
+
+		recipeBuilder.changeAttributesDefaultRb(serviceSpec, "/service"
+				+ serviceSpec.getUUID() + "/attributes/default.rb");
 		assertAllOcurrencesWereReplacedInDefaultRb();
 	}
 
@@ -121,7 +135,7 @@ public class RecipeBuilderTest {
 
 	private void assertAllOcurrencesWereReplacedInDefaultRecipe()
 			throws IOException {
-		
+
 		File fileLocation = getResource(RECIPES_FOLDER + "/service" + id
 				+ "/recipes/war.rb");
 		String fileData = FileUtils.readFileToString(fileLocation);
@@ -138,7 +152,8 @@ public class RecipeBuilderTest {
 	public void shouldCreateFullRecipe() throws Exception {
 		deleteDirectory();
 
-		Recipe recipe = recipeBuilder.createRecipe(serviceSpec);
+		RecipeBundle recipe = recipeBuilder
+				.createServiceRecipeBundle(serviceSpec);
 
 		assertTemplateFolderWasCopied();
 		assertAllOcurrencesInMetadataRbWereReplaced();
@@ -147,11 +162,11 @@ public class RecipeBuilderTest {
 		assertFilesAreAvailableInFolder(recipe);
 	}
 
-	private void assertFilesAreAvailableInFolder(Recipe recipe)
+	private void assertFilesAreAvailableInFolder(RecipeBundle recipe)
 			throws IOException {
-		
+
 		String fileData = FileUtils.readFileToString(new File(recipe
-				.getCookbookFolder() + "/attributes/default.rb"));
+				.getCookbookFolder() + "/" + recipe.getServiceRecipe().getCookbookName() + "/attributes/default.rb"));
 
 		// Ensure the ocurrences of $UUID were replaced with THIS_IS_A_TEST
 		assertTrue(fileData.contains(id));
@@ -167,6 +182,5 @@ public class RecipeBuilderTest {
 		if (fileLocation != null)
 			FileUtils.deleteQuietly(fileLocation);
 	}
-
 
 }

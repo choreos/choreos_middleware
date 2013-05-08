@@ -15,7 +15,7 @@ public class DeployableService extends Service {
 	private List<ServiceInstance> serviceInstances;
 
 	@XmlTransient
-	private Recipe recipe;
+	private RecipeBundle recipeBundle;
 	
 	public DeployableService() {
 		super();
@@ -74,11 +74,11 @@ public class DeployableService extends Service {
 		throw new IllegalArgumentException("getSpec().getUUID() " + " / " + instanceId);
 	}
 
-	public Recipe getRecipe() {
-		return recipe;
+	public RecipeBundle getRecipeBundle() {
+		return recipeBundle;
 	}
 
-	public void setRecipe(Recipe recipe) {
-		this.recipe = recipe;
+	public void setRecipeBundle(RecipeBundle recipeBundle) {
+		this.recipeBundle = recipeBundle;
 	}
 }

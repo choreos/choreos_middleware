@@ -5,7 +5,7 @@ import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
 public class RecipeBuilderImpl extends BaseRecipeBuilder {
 	
-	private static final String TEMPLATE_DIR = "src/main/resources/chef/service-deploy-recipe-template";
+	private static final String TEMPLATE_DIR = "src/main/resources/chef/";
 
 	public RecipeBuilderImpl(String recipeName) {
 		super(TEMPLATE_DIR, recipeName);
