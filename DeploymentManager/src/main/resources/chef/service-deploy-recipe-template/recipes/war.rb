@@ -19,7 +19,7 @@
 include_recipe "apt" # java recipe is failing without recipe apt (and tomcat depends on java)
 include_recipe "tomcat::choreos"
 
-if node['CHOReOSData']['serviceData']['$NAME']['NumberOfClients'] > 0
+if node['CHOReOSData']['serviceData']['$NAME']['NumberOfClients']
 	remote_file "war_file" do
   		source "#{node['CHOReOSData']['serviceData']['$NAME']['PackageURL']}"
   		path "#{node['tomcat']['webapp_dir']}/$NAME.war"
@@ -28,7 +28,7 @@ if node['CHOReOSData']['serviceData']['$NAME']['NumberOfClients'] > 0
 	end
 end
 
-if node['CHOReOSData']['serviceData']['$NAME']['NumberOfClients'] <= 0
+if not node['CHOReOSData']['serviceData']['$NAME']['NumberOfClients']
 	file "#{node['tomcat']['webapp_dir']}/$NAME.war" do
 		action :delete
 	end

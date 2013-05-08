@@ -333,7 +333,5 @@ public class ServicesManagerImpl implements ServicesManager {
 		logger.info("Requesting to execute deploy of " + amount
 				+ " replicas for" + current);
 		executeDeployment(current, amount);
-		// Until here working very nice
-		//logger.info("UPGRADED " + current);
 	}
 }
