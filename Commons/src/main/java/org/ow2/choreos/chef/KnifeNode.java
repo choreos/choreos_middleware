@@ -8,8 +8,6 @@ public interface KnifeNode {
 
 	public ChefNode show(String nodeName) throws KnifeException;
 
-	public String runListAdd(String nodeName, String cookbook, String recipe) throws KnifeException;
-
 	/**
 	 * Uses default recipe
 	 * @param nodeName
@@ -17,9 +15,9 @@ public interface KnifeNode {
 	 * @return
 	 * @throws KnifeException
 	 */
-	public String runListAdd(String nodeName, String cookbook) throws KnifeException;
+	public String runListAdd(String nodeName, String recipeFullName) throws KnifeException;
 
-	public String runListRemove(String nodeName, String cookbook, String recipe) throws KnifeException;
+	public String runListRemove(String nodeName, String recipeFullName) throws KnifeException;
     
     public String create(String nodeName) throws KnifeException;
     

@@ -30,7 +30,6 @@ public abstract class BaseRecipeBuilder implements RecipeBuilder {
 
 		RecipeBundle recipeBundle = new RecipeBundle();
 		Recipe serviceRecipe;
-		Recipe activateRecipe;
 		Recipe deactivateRecipe;
 
 		try {
@@ -38,9 +37,6 @@ public abstract class BaseRecipeBuilder implements RecipeBuilder {
 
 			serviceRecipe = createServiceRecipe(serviceSpec);
 			recipeBundle.setServiceRecipe(serviceRecipe);
-
-			activateRecipe = createActivateRecipe(serviceSpec);
-			recipeBundle.setActivateRecipe(activateRecipe);
 
 			deactivateRecipe = createDeactivateRecipe(serviceSpec);
 			recipeBundle.setDeactivateRecipe(deactivateRecipe);
@@ -73,10 +69,10 @@ public abstract class BaseRecipeBuilder implements RecipeBuilder {
 	private Recipe createDeactivateRecipe(DeployableServiceSpec serviceSpec)
 			throws IOException {
 		Recipe activateRecipe = new Recipe();
-		activateRecipe.setName("activate-service" + this.recipeName);
-		activateRecipe.setCookbookName("activate-service"
+		activateRecipe.setName("deactivate-service" + this.recipeName);
+		activateRecipe.setCookbookName("deactivate-service"
 				+ serviceSpec.getUUID());
-		this.recipeFile = "activate-" + this.recipeName + ".rb";
+		this.recipeFile = "deactivate-" + this.recipeName + ".rb";
 
 		File srcFolder = new File(this.templateDir
 				+ "deactivate-service-template");
@@ -94,29 +90,6 @@ public abstract class BaseRecipeBuilder implements RecipeBuilder {
 		changeRecipeRb(serviceSpec,
 				"/deactivate-service" + serviceSpec.getUUID()
 						+ "/recipes/default.rb");
-
-		return activateRecipe;
-	}
-
-	private Recipe createActivateRecipe(DeployableServiceSpec serviceSpec)
-			throws IOException {
-		Recipe activateRecipe = new Recipe();
-		activateRecipe.setName("activate-service" + this.recipeName);
-		activateRecipe.setCookbookName("activate-service"
-				+ serviceSpec.getUUID());
-		this.recipeFile = "activate-" + this.recipeName + ".rb";
-
-		File srcFolder = new File(this.templateDir
-				+ "activate-service-template");
-
-		String destPath = DEST_DIR.getAbsolutePath() + "/activate-service"
-				+ serviceSpec.getUUID();
-
-		File destFolder = new File(destPath);
-
-		copyRecipeTemplate(srcFolder, destFolder);
-		changeAttributesDefaultRb(serviceSpec, "/activate-service"
-				+ serviceSpec.getUUID() + "/attributes/default.rb");
 
 		return activateRecipe;
 	}

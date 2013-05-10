@@ -17,8 +17,7 @@ public class ChefScriptsTest {
     	String user = "myUser";
     	String ip = "127.0.0.1";
     	String hostname = "myHost";
-    	String cookbook = "cook";
-    	String recipe = "recipe";
+    	String recipeFullName = "cook::recipe";
     	String key = "myKey";
     	
     	ChefScripts cs = new ChefScripts(config);
@@ -44,7 +43,7 @@ public class ChefScriptsTest {
         expected = "knife bootstrap 127.0.0.1 -x myUser -i " + key + " --no-host-key-verify --sudo -c " + config + " --run-list easyesb, ganglia";
         assertEquals(expected.trim(), command.trim());
 
-        command = cs.getKnifeRunListAdd(hostname, cookbook, recipe);
+        command = cs.getKnifeRunListAdd(hostname, recipeFullName);
         expected = "knife node run_list add myHost cook::recipe -c " + config;
         assertEquals(expected.trim(), command.trim());
     }

@@ -9,12 +9,6 @@ public class RecipeBundle {
 	public void setServiceRecipe(Recipe serviceRecipe) {
 		this.serviceRecipe = serviceRecipe;
 	}
-	public Recipe getActivateRecipe() {
-		return activateRecipe;
-	}
-	public void setActivateRecipe(Recipe activateRecipe) {
-		this.activateRecipe = activateRecipe;
-	}
 	public Recipe getDeactivateRecipe() {
 		return deactivateRecipe;
 	}
@@ -28,7 +22,6 @@ public class RecipeBundle {
 		this.cookbookFolder = cookbookFolder;
 	}
 	private Recipe serviceRecipe;
-	private Recipe activateRecipe;
 	private Recipe deactivateRecipe;
 	private String cookbookFolder;
 	

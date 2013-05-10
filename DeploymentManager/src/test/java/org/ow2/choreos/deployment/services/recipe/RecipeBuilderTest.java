@@ -12,7 +12,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
-import org.ow2.choreos.services.datamodel.Recipe;
 import org.ow2.choreos.services.datamodel.RecipeBundle;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
 import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryTypes;
@@ -167,6 +166,7 @@ public class RecipeBuilderTest {
 
 		String fileData = FileUtils.readFileToString(new File(recipe
 				.getCookbookFolder() + "/" + recipe.getServiceRecipe().getCookbookName() + "/attributes/default.rb"));
+
 
 		// Ensure the ocurrences of $UUID were replaced with THIS_IS_A_TEST
 		assertTrue(fileData.contains(id));

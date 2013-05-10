@@ -38,10 +38,10 @@ public class KnifeNodeImpl implements KnifeNode {
 	}
 	
 	@Override
-	public String runListAdd(String nodeName, String cookbook, String recipe)
+	public String runListAdd(String nodeName, String recipeFullName)
 			throws KnifeException {
 		
-		String command = scripts.getKnifeRunListAdd(nodeName, cookbook, recipe);
+		String command = scripts.getKnifeRunListAdd(nodeName, recipeFullName);
 		synchronized(KnifeNodeImpl.class) { 
 			try {
 				return CommandLine.run(command, verbose);
@@ -49,12 +49,6 @@ public class KnifeNodeImpl implements KnifeNode {
 				throw new KnifeException(EXIT_STATUS_ERROR_MESSAGE, command);
 			}
 		}
-	}
-
-	@Override
-	public String runListAdd(String nodeName, String cookbook) throws KnifeException {
-		
-		return this.runListAdd(nodeName, cookbook, "default");
 	}
 	
 	@Override
@@ -110,7 +104,7 @@ public class KnifeNodeImpl implements KnifeNode {
 	}
 
 	@Override
-	public String runListRemove(String nodeName, String cookbook, String recipe)
+	public String runListRemove(String nodeName, String recipeFullName)
 			throws KnifeException {
 		
 		throw new UnsupportedOperationException();

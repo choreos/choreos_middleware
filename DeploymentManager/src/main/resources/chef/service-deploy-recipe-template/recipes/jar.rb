@@ -29,31 +29,35 @@ service "service_$NAME_jar" do
  	supports :start => true, :stop => true, :status => true
 end
 
-if node['CHOReOSData']['serviceData']['$NAME']['Active']
-	remote_file "#{node['CHOReOSData']['serviceData']['$NAME']['InstallationDir']}/service-$NAME.jar" do
-  		source "#{node['CHOReOSData']['serviceData']['$NAME']['PackageURL']}"
-  		action :create_if_missing
-		#notifies :enable, "service[service_$NAME_jar]"
-		notifies :start, "service[service_$NAME_jar]"
+remote_file "#{node['CHOReOSData']['serviceData']['$NAME']['InstallationDir']}/service-$NAME.jar" do
+    source "#{node['CHOReOSData']['serviceData']['$NAME']['PackageURL']}"
+    action :nothing
+    #notifies :enable, "service[service_$NAME_jar]"
+    notifies :start, "service[service_$NAME_jar]"
+end
+
+if not node['CHOReOSData']['serviceData']['$NAME']['deactivate']
+	ruby_block "install-file-$NAME" do
+	    block do
+	    	# do nothing!
+	    	i = 0
+	    end
+		notifies :create_if_missing, "remote_file[#{node['CHOReOSData']['serviceData']['$NAME']['InstallationDir']}/service-$NAME.jar]"
 	end
 end
 
-if not node['CHOReOSData']['serviceData']['$NAME']['Active']
-	file "#{node['CHOReOSData']['serviceData']['$NAME']['InstallationDir']}/service-$NAME.jar" do
-		notifies :stop, "service[service_$NAME_jar]", :immediately
-		#notifies :disable, "service[service_$NAME_jar]", :immediately
-		action :delete
-	end
+file "#{node['CHOReOSData']['serviceData']['$NAME']['InstallationDir']}/service-$NAME.jar" do
+    notifies :stop, "service[service_$NAME_jar]", :immediately
+    #notifies :disable, "service[service_$NAME_jar]", :immediately
+    action :nothing
 end
 
-
-
-
-# As the last resource in the dnsserver::remove_slave recipe, assuming that the remove_slave
-# "undoes" a dnsserver slave installation of some kind, without knowing what that might have been.
-#ruby_block "remove_this_recipe" do
-#  block do
-#    node.run_list.remove("recipe[dnsserver::remove_slave]") if node.run_list.include?("recipe[dnsserver::remove_slave]")
-#  end
-#  action :nothing
-#end
+if node['CHOReOSData']['serviceData']['$NAME']['deactivate']
+	ruby_block "remove-file-$NAME" do
+	    block do
+	    	# do nothing!
+	    	i = 0
+	    end
+		notifies :delete, "remote_file[#{node['CHOReOSData']['serviceData']['$NAME']['InstallationDir']}/service-$NAME.jar]"
+	end
+end

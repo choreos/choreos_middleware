@@ -9,6 +9,7 @@ import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.chef.impl.KnifeImpl;
 import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.nodes.cm.RecipeApplier;
 import org.ow2.choreos.deployment.services.diff.UpdateAction;
 import org.ow2.choreos.deployment.services.recipe.RecipeBuilder;
 import org.ow2.choreos.deployment.services.recipe.RecipeBuilderFactory;
@@ -25,6 +26,7 @@ import org.ow2.choreos.services.UnhandledModificationException;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
+import org.ow2.choreos.services.datamodel.Recipe;
 import org.ow2.choreos.services.datamodel.RecipeBundle;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceSpec;
@@ -91,12 +93,9 @@ public class ServicesManagerImpl implements ServicesManager {
 
 	private void prepareDeployment(DeployableService service)
 			throws ServiceNotDeployedException {
-
-		RecipeBundle recipes = this.createRecipes(service);
-
 		for (int i = 0; i < 5;) {
 			try {
-				this.uploadRecipes(recipes);
+				this.uploadRecipes(this.createRecipes(service));
 			} catch (KnifeException e) {
 				i++;
 				if (i >= 4) {
@@ -127,36 +126,25 @@ public class ServicesManagerImpl implements ServicesManager {
 	private void uploadRecipes(RecipeBundle serviceRecipeBundle) throws KnifeException {
 
 		File folder = new File(serviceRecipeBundle.getCookbookFolder());
-		String parent = folder.getParent();
-		uploadServiceRecipe(serviceRecipeBundle, parent);
-		uploadActivateRecipe(serviceRecipeBundle, parent);
-		// must be called on undeploy action
-		//uploadDeactivateRecipe(serviceRecipeBundle, parent);
+		String dir = folder.getAbsolutePath();
+		uploadServiceRecipe(serviceRecipeBundle, dir);
+		uploadDeactivateRecipe(serviceRecipeBundle, dir);
 	}
 
 	private void uploadDeactivateRecipe(RecipeBundle serviceRecipeBundle,
-			String parent) throws KnifeException {
+			String dir) throws KnifeException {
 		String result;
 		logger.debug("Uploading deactivate recipe " + serviceRecipeBundle.getServiceRecipe().getCookbookName());
 		result = this.knife.cookbook().upload(
-				serviceRecipeBundle.getDeactivateRecipe().getCookbookName(), parent);
-		logger.debug(result);
-	}
-
-	private void uploadActivateRecipe(RecipeBundle serviceRecipeBundle,
-			String parent) throws KnifeException {
-		String result;
-		logger.debug("Uploading activate recipe " + serviceRecipeBundle.getActivateRecipe().getCookbookName());
-		result = this.knife.cookbook().upload(
-				serviceRecipeBundle.getActivateRecipe().getCookbookName(), parent);
+				serviceRecipeBundle.getDeactivateRecipe().getCookbookName(), dir);
 		logger.debug(result);
 	}
 
 	private void uploadServiceRecipe(RecipeBundle serviceRecipeBundle,
-			String parent) throws KnifeException {
+			String dir) throws KnifeException {
 		logger.debug("Uploading service recipe " + serviceRecipeBundle.getServiceRecipe().getCookbookName());
 		String result = this.knife.cookbook().upload(
-				serviceRecipeBundle.getServiceRecipe().getCookbookName(), parent);
+				serviceRecipeBundle.getServiceRecipe().getCookbookName(), dir);
 		logger.debug(result);
 	}
 
@@ -164,11 +152,13 @@ public class ServicesManagerImpl implements ServicesManager {
 			int numberOfNewInstances) {
 
 		RecipeBundle serviceRecipe = service.getRecipeBundle();
+		
 		String configName = serviceRecipe.getServiceRecipe().getCookbookName() + "::"
 				+ serviceRecipe.getServiceRecipe().getName();
+		
 		Config config = new Config(configName, service.getSpec()
 				.getResourceImpact(), numberOfNewInstances);
-
+	
 		// TODO: throw exception
 		List<Node> nodes = new ArrayList<Node>();
 		try {
@@ -205,15 +195,47 @@ public class ServicesManagerImpl implements ServicesManager {
 		return s;
 	}
 
+	
+	
+	
 	@Override
-	public void deleteService(String serviceName)
+	public void deleteService(String uuid)
 			throws ServiceNotDeletedException {
 
-		registry.deleteService(serviceName);
-		if (registry.getService(serviceName) != null)
-			throw new ServiceNotDeletedException(serviceName);
+		DeployableService service = null;
+		try {
+			service = this.getService(uuid);
+		} catch (ServiceNotFoundException e) {
+			logger.error("Could not get service " + uuid);
+		}
+		
+		this.executeUndeployment(service);
+		
+		
+		registry.deleteService(uuid);
+		if (registry.getService(uuid) != null)
+			throw new ServiceNotDeletedException(uuid);
+	}
+	
+	private void executeUndeployment(DeployableService service) {
+		RecipeBundle recipeBundle = service.getRecipeBundle();
+		Recipe deactivateRecipe = recipeBundle.getDeactivateRecipe();
+		
+		RecipeApplier recipeApplyer = new RecipeApplier();
+		for(ServiceInstance instance : service.getInstances()) {
+			try {
+				recipeApplyer.applyRecipe(instance.getNode(), deactivateRecipe.getCookbookName(), "");
+			} catch (ConfigNotAppliedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
+	
+	
+	
+	
+	
 	@Override
 	public DeployableService updateService(DeployableServiceSpec serviceSpec)
 			throws UnhandledModificationException {

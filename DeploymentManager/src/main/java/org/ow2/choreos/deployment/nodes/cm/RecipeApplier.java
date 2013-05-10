@@ -25,45 +25,55 @@ public class RecipeApplier {
 	 * @throws ConfigNotAppliedException
 	 */
     public void applyRecipe(Node node, String cookbook) throws ConfigNotAppliedException {
-        this.applyRecipe(node, cookbook, "default");
+        this.applyRecipe(node, cookbook, "");
     }
 
     public void applyRecipe(Node node, String cookbook, String recipe) throws ConfigNotAppliedException {
 
-    	String configName = cookbook + "::" + recipe;
+    	String recipeFullName;
+    	if(recipe.equals(""))
+    		recipeFullName = cookbook;
+    	else
+    		recipeFullName = cookbook + "::" + recipe;
 
     	NodeChecker checker = new NodeChecker();
     	try {
     		checker.checkAndPrepareNode(node);
 		} catch (NodeNotOKException e) {
-			throw new ConfigNotAppliedException(configName, node.getId());
+			throw new ConfigNotAppliedException(recipeFullName, node.getId());
 		} 
 
         Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
 
-        logger.debug("aaplying " + configName + " to node " + node.getChefName());
+        logger.debug("aplying " + recipeFullName + " to node " + node.getChefName());
 
         // Chef fails silently when adding multiple recipes concurrently
         synchronized(RecipeApplier.class) {
         	try {
-				knife.node().runListAdd(node.getChefName(), cookbook, recipe);
+				knife.node().runListAdd(node.getChefName(), recipeFullName);
 			} catch (KnifeException e) {
-				throw new ConfigNotAppliedException(cookbook + "::" + recipe, node.getId());
+				throw new ConfigNotAppliedException(recipeFullName, node.getId());
 			}
         }
 
         boolean ok = verifyRecipeInRunList(knife, node.getChefName(), cookbook, recipe);
         if (!ok) {
-			throw new ConfigNotAppliedException(cookbook + "::" + recipe, node.getId());
+			throw new ConfigNotAppliedException(recipeFullName, node.getId());
         }
     }
     
     private boolean verifyRecipeInRunList(Knife knife, String chefName,
 			String cookbook, String recipe) {
 
+    	String recipeFullName;
+    	if(recipe.equals(""))
+    		recipeFullName = cookbook;
+    	else
+    		recipeFullName = cookbook + "::" + recipe;
+
     	try {
 			ChefNode chefNode = knife.node().show(chefName);
-			return chefNode.hasRecipeOnRunlist(cookbook + "::" + recipe);
+			return chefNode.hasRecipeOnRunlist(recipeFullName);
 		} catch (KnifeException e) {
 			return false;
 		}

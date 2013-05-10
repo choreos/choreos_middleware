@@ -8,4 +8,4 @@
 ##########################################################################
 
 
-default['CHOReOSData']['serviceData']['$NAME']['Active'] = false
+default['CHOReOSData']['serviceData']['$NAME']['deactivate'] = true

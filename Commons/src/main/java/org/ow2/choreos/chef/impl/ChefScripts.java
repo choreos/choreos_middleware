@@ -11,7 +11,7 @@ import java.util.List;
 public class ChefScripts {
 	
 	private static final String KNIFE_BOOTSTRAP = "knife bootstrap $ip -x $user -i $privateKeyFile --no-host-key-verify --sudo -c $knifeFile";
-	private static final String KNIFE_RUN_LIST_ADD = "knife node run_list add $nodeName $cookbook::$recipe -c $knifeFile";
+	private static final String KNIFE_RUN_LIST_ADD = "knife node run_list add $nodeName $recipeFullName -c $knifeFile";
 	private static final String KNIFE_NODE_LIST = "knife node list -c $knifeFile";
 	private static final String KNIFE_NODE_SHOW = "knife node show $nodeName -c $knifeFile";
 	private static final String KNIFE_NODE_DELETE = "knife node delete $nodeName -c $knifeFile -y";
@@ -51,12 +51,11 @@ public class ChefScripts {
         return command;
     }
     
-    public String getKnifeRunListAdd(String nodeName, String cookbook, String recipe) {
+    public String getKnifeRunListAdd(String nodeName, String recipeFullName) {
     	
     	String command = KNIFE_RUN_LIST_ADD;
     	command = command.replace("$nodeName", nodeName);
-    	command = command.replace("$cookbook", cookbook);
-    	command = command.replace("$recipe", recipe);
+    	command = command.replace("$recipeFullName", recipeFullName);
     	command = command.replace("$knifeFile", config);
     	return command;
     }

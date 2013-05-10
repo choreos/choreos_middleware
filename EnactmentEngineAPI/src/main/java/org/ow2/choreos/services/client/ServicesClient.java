@@ -6,6 +6,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+import org.ow2.choreos.services.ServiceNotDeletedException;
 import org.ow2.choreos.services.ServiceNotDeployedException;
 import org.ow2.choreos.services.ServiceNotFoundException;
 import org.ow2.choreos.services.ServiceNotModifiedException;
@@ -80,9 +81,16 @@ public class ServicesClient implements ServicesManager {
 	}
 
 	@Override
-	public void deleteService(String uuid) {
-
-		throw new NotImplementedException();
+	public void deleteService(String uuid) throws ServiceNotDeletedException {
+		
+		WebClient client = setupClient();
+		client.path("services").path(uuid);
+		
+		try {
+			client.delete();
+		} catch (WebApplicationException e) {
+			throw new ServiceNotDeletedException(uuid);
+		}
 	}
 
 	@Override

@@ -10,7 +10,7 @@ import org.ow2.choreos.services.datamodel.ResourceImpact;
 public class Config {
 
     private String name;
-    private ResourceImpact resourceImpact;
+	private ResourceImpact resourceImpact;
     private int numberOfInstances = 1;
 
     public Config() {
