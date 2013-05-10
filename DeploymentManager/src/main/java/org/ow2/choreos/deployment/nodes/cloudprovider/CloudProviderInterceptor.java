@@ -17,13 +17,13 @@ import org.ow2.choreos.services.datamodel.ResourceImpact;
  * @author leonardo
  *
  */
-public class PoolInterceptor implements CloudProvider {
+public class CloudProviderInterceptor implements CloudProvider {
 
 	// this class follows the decorator design pattern =)
 	
 	private CloudProvider cp;
 	
-	public PoolInterceptor(CloudProvider cp) {
+	public CloudProviderInterceptor(CloudProvider cp) {
 		this.cp = cp;
 	}
 

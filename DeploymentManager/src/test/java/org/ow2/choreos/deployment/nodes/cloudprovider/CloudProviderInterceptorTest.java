@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
 
-public class PoolInterceptorTest {
+public class CloudProviderInterceptorTest {
 	
 	private static final String CP_MOCK_NAME = "MockCloudProvider"; 
 	
@@ -20,7 +20,7 @@ public class PoolInterceptorTest {
 	public void shouldDelegateAllTheRequests() throws Exception {
 		
 		CloudProvider cpMock = this.getMockCloudProvider();
-		PoolInterceptor interceptor = new PoolInterceptor(cpMock);
+		CloudProviderInterceptor interceptor = new CloudProviderInterceptor(cpMock);
 		
 		interceptor.getProviderName();
 		verify(cpMock).getProviderName();
