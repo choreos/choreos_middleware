@@ -19,7 +19,6 @@ import org.ow2.choreos.utils.LogConfigurator;
 
 public class IdlePoolTest {
 
-	private static final int N = 3;
 	private CloudProvider cp;
 	
 	@BeforeClass
@@ -30,6 +29,7 @@ public class IdlePoolTest {
 	@Before
 	public void setUp() throws RunNodesException {
 	
+		int N = 10;
 		cp = mock(CloudProvider.class);
 		OngoingStubbing<Node> ongoingStubbing = 
 				when(cp.createNode(any(Node.class), any(ResourceImpact.class)));
@@ -43,6 +43,7 @@ public class IdlePoolTest {
 	@Test
 	public void shouldCreateExtraVMs() throws InterruptedException {
 		
+		int N = 3;
 		IdlePool pool = IdlePool.getInstance(N, cp);
 		int howManyVMs = N;
 		pool.createExtraVMs(howManyVMs);
@@ -56,13 +57,48 @@ public class IdlePoolTest {
 	@Test
 	public void shouldFillThePool() throws InterruptedException {
 		
-		IdlePool pool = IdlePool.getInstance(N, cp);
+		int N = 3;
+		IdlePool pool = IdlePool.getCleanInstance(N, cp);
 		pool.createExtraVMs(1);
+		Thread.sleep(100);
+		System.out.println("pool size = " + pool.getIdleNodes().size());
 		pool.fillPool();
+		Thread.sleep(100);
+		
+		Set<String> idlePool = pool.getIdleNodes();
+		assertEquals(N, idlePool.size());
+	}
+	
+	@Test
+	public void shouldFillThePoolConcurrently() throws InterruptedException {
+		
+		int N = 5;
+		IdlePool pool = IdlePool.getCleanInstance(N, cp);
+		pool.createExtraVMs(1);
+		Thread.sleep(100);
+		for (int i=0; i<3; i++) {
+			PoolFiller filler = new PoolFiller(pool);
+			Thread thrd = new Thread(filler);
+			thrd.start();
+		}
 		
 		Thread.sleep(100);
 		
 		Set<String> idlePool = pool.getIdleNodes();
 		assertEquals(N, idlePool.size());
+	}
+	
+	private class PoolFiller implements Runnable {
+		
+		IdlePool pool;
+
+		public PoolFiller(IdlePool pool) {
+			this.pool = pool;
+		}
+		
+		@Override
+		public void run() {
+			this.pool.fillPool();
+		}
 	}
 }

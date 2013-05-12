@@ -22,6 +22,7 @@ public class IdlePool {
 	private NodeRegistry nodeRegistry = NodeRegistry.getInstance(); 
 	private CloudProvider cp;
 	private int poolSize;
+	private boolean filling = false;
 	
 	private IdlePool(int poolSize, CloudProvider cp) {
 		this.poolSize = poolSize;
@@ -50,6 +51,17 @@ public class IdlePool {
 		}
 		return instance;
 	}
+
+	/**
+	 * Not thread safe
+	 * @param poolSize
+	 * @param cp
+	 * @return
+	 */
+	public static IdlePool getCleanInstance(int poolSize, CloudProvider cp) {
+		instance = new IdlePool(poolSize, cp);
+		return instance;
+	}
 	
 	/**
 	 * 
@@ -75,7 +87,14 @@ public class IdlePool {
 	
 	public void fillPool() {
 		
-		int extra = this.poolSize - this.idleNodes.size();
+		int extra = 0;
+		synchronized (this) {
+			if (!filling) {
+				extra = this.poolSize - this.idleNodes.size();
+				filling = true;
+			}
+		}
+		System.out.println("going to create " + extra);
 		this.createExtraVMs(extra);
 	}
 
@@ -95,6 +114,8 @@ public class IdlePool {
 				synchronized (IdlePool.this) {
 					logger.info("Adding " + node.getId() + " to the idle pool");
 					idleNodes.add(node.getId());
+					if (idleNodes.size() == poolSize)
+						filling = false;
 				}
 			} catch (RunNodesException e) {
 				logger.error("Could not create one of the extra VMs to the pool");
