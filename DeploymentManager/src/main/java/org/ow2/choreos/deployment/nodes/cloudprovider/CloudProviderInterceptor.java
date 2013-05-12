@@ -7,6 +7,7 @@ import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
+import org.ow2.choreos.utils.BurstDetector;
 
 /**
  * Intercepts create node requests and manages the node pool size.
@@ -22,6 +23,7 @@ public class CloudProviderInterceptor implements CloudProvider {
 	// this class follows the decorator design pattern =)
 	
 	private CloudProvider cp;
+	private BurstDetector burstDetector = new BurstDetector(10, 1000);
 	
 	public CloudProviderInterceptor(CloudProvider cp) {
 		this.cp = cp;
@@ -35,6 +37,11 @@ public class CloudProviderInterceptor implements CloudProvider {
 	@Override
 	public Node createNode(Node node, ResourceImpact resourceImpact)
 			throws RunNodesException {
+		
+		if (burstDetector.invoke()) {
+			
+		}
+		
 		return this.cp.createNode(node, resourceImpact);
 	}
 
