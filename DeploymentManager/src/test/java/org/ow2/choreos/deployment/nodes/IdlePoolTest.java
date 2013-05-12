@@ -43,13 +43,26 @@ public class IdlePoolTest {
 	@Test
 	public void shouldCreateExtraVMs() throws InterruptedException {
 		
-		IdlePool pool = IdlePool.getInstance();
+		IdlePool pool = IdlePool.getInstance(N, cp);
 		int howManyVMs = N;
-		pool.createExtraVMs(howManyVMs, cp);
+		pool.createExtraVMs(howManyVMs);
 		
 		Thread.sleep(100);
 		
 		Set<String> idlePool = pool.getIdleNodes();
 		assertEquals(howManyVMs, idlePool.size());
+	}
+	
+	@Test
+	public void shouldFillThePool() throws InterruptedException {
+		
+		IdlePool pool = IdlePool.getInstance(N, cp);
+		pool.createExtraVMs(1);
+		pool.fillPool();
+		
+		Thread.sleep(100);
+		
+		Set<String> idlePool = pool.getIdleNodes();
+		assertEquals(N, idlePool.size());
 	}
 }
