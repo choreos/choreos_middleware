@@ -2,7 +2,6 @@ package org.ow2.choreos.services.client;
 
 import javax.ws.rs.WebApplicationException;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;

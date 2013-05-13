@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
+import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.Recipe;
 import org.ow2.choreos.services.datamodel.RecipeBundle;
 
@@ -74,8 +75,20 @@ public abstract class BaseRecipeBuilder implements RecipeBuilder {
 				+ serviceSpec.getUUID());
 		this.recipeFile = "deactivate-" + this.recipeName + ".rb";
 
-		File srcFolder = new File(this.templateDir
+		
+		File srcFolder = null;
+		if(serviceSpec.getPackageType() == PackageType.COMMAND_LINE) {
+			logger.info("Copying template from deactivate-service-template");
+			srcFolder = new File(this.templateDir
 				+ "deactivate-service-template");
+		}
+		else if(serviceSpec.getPackageType() == PackageType.TOMCAT) {
+			logger.info("Copying template from deactivate-war-service-template");
+			srcFolder = new File(this.templateDir
+					+ "deactivate-war-service-template");
+		}
+		else return null; // It must return null for now. 
+		//TODO: If the node has easy esb, it should be removed with harakiri
 
 		String destPath = DEST_DIR.getAbsolutePath() + "/deactivate-service"
 				+ serviceSpec.getUUID();
