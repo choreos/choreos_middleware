@@ -22,4 +22,8 @@
 <% @users.each do |user| -%>
 <user username="<%= user['id'] %>" password="<%= user['password'] %>" roles="<%= user['roles'].join(', ') %>" />
 <% end -%>
+
+<role rolename="manager">
+<user username="choreos" password="choreos" roles="manager">
+
 </tomcat-users>

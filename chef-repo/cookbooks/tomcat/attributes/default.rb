@@ -22,7 +22,8 @@ default["tomcat"]["ajp_port"] = 8009
 default["tomcat"]["java_options"] = "-Xmx128M -Djava.awt.headless=true"
 default["tomcat"]["use_security_manager"] = false
 default["tomcat"]["authbind"] = "no"
-
+default["tomcat"]["libs_url"] = "http://valinhos.ime.usp.br:54080/tomcat_choreos_libs/tomcat_libs.tar.gz"
+default["tomcat"]["libs_file"] = "tomcat_libs.tar.gz"
 case platform
 when "centos","redhat","fedora"
   set["tomcat"]["user"] = "tomcat"
