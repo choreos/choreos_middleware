@@ -130,7 +130,7 @@ public class ModelsForTest {
 					null, null, AIRLINE_JAR, AIRLINE_PORT, AIRLINE, 1);
 		} else {
 			airlineSpec = new DeployableServiceSpec(serviceType, packageType,
-					null, null, AIRLINE_JAR, AIRLINE, 1);
+					null, null, AIRLINE_WAR, AIRLINE, 1);
 		}
 		List<String> roles = new ArrayList<String>();
 		roles.add(AIRLINE);
@@ -146,7 +146,7 @@ public class ModelsForTest {
 					TRAVEL_AGENCY, 1);
 		} else {
 			travelSpec = new DeployableServiceSpec(serviceType, packageType,
-					null, null, TRAVEL_AGENCY_JAR, TRAVEL_AGENCY, 1);
+					null, null, TRAVEL_AGENCY_WAR, TRAVEL_AGENCY, 1);
 		}
 
 		List<String> roles = new ArrayList<String>();
