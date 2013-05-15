@@ -1,16 +1,16 @@
 package org.ow2.choreos.deployment.nodes.cloudprovider;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.ow2.choreos.nodes.datamodel.Node;
 
 /**
  * Local node registry.
  * 
- * It works as a cache to nodes information provided by the cloud provider.
+ * The nodes managed by the NodePoolManager
  * @author leonardo
  *
  */
@@ -18,7 +18,7 @@ public class NodeRegistry {
 	
 	private static NodeRegistry instance = new NodeRegistry();
 
-	private Map<String, Node> nodes = new HashMap<String, Node>();
+	private Map<String, Node> nodes = new ConcurrentHashMap<String, Node>();
 	
 	private NodeRegistry() {
 		

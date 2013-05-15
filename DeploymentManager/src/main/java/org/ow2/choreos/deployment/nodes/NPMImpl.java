@@ -8,6 +8,7 @@ import org.jclouds.compute.RunNodesException;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.deployment.nodes.chef.ConfigToChef;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
+import org.ow2.choreos.deployment.nodes.cloudprovider.NodeRegistry;
 import org.ow2.choreos.deployment.nodes.cm.NodeBootstrapper;
 import org.ow2.choreos.deployment.nodes.cm.NodeNotBootstrappedException;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpgrader;
@@ -37,9 +38,11 @@ public class NPMImpl implements NodePoolManager {
 	private Logger logger = Logger.getLogger(NPMImpl.class);
 
 	private CloudProvider cloudProvider;
+	private NodeRegistry nodeRegistry;
 
 	public NPMImpl(CloudProvider provider) {
 		cloudProvider = provider;
+		nodeRegistry = NodeRegistry.getInstance();
 	}
 
 	@Override
@@ -54,6 +57,7 @@ public class NPMImpl implements NodePoolManager {
 
 		try {
 			cloudProvider.createNode(node, resourceImpact);
+			nodeRegistry.putNode(node);
 		} catch (RunNodesException e) {
 			if (retry) {
 				logger.warn("Could not create VM. Going to try again!");
@@ -89,12 +93,12 @@ public class NPMImpl implements NodePoolManager {
 
 	@Override
 	public List<Node> getNodes() {
-		return cloudProvider.getNodes();
+		return nodeRegistry.getNodes();
 	}
 
 	@Override
 	public Node getNode(String nodeId) throws NodeNotFoundException {
-		return cloudProvider.getNode(nodeId);
+		return nodeRegistry.getNode(nodeId);
 	}
 
 	@Override
