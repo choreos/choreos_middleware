@@ -26,8 +26,11 @@ import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.inject.Module;
 
+@SuppressWarnings("deprecation")
 public class AWSCloudProvider implements CloudProvider {
 	
 	private Logger logger = Logger.getLogger(AWSCloudProvider.class);
@@ -36,6 +39,8 @@ public class AWSCloudProvider implements CloudProvider {
 	private static String PROVIDER="aws-ec2";
 	private static String DEFAULT_IMAGE= "us-east-1/ami-3b4ff252";
 //	private static String DEFAULT_IMAGE= "us-east-1/ami-ccf405a5";
+	
+	private NodeRegistry registry = NodeRegistry.getInstance();
 	
 	public String getProviderName() {
 		return PROVIDER;
@@ -82,8 +87,11 @@ public class AWSCloudProvider implements CloudProvider {
 		long duration = tf - t0;
 		logger.debug(node + " created in " + duration + " miliseconds");
 		
+		this.registry.putNode(node);
 		return node;
 	}
+
+
 
 	public Node getNode(String nodeId) throws NodeNotFoundException {
 
@@ -104,6 +112,30 @@ public class AWSCloudProvider implements CloudProvider {
 	}
 
 	public List<Node> getNodes() {
+
+		List<Node> nodes= this.registry.getNodes();
+		if (nodes.isEmpty()) {
+			nodes = fillRegistry();
+		}
+		return nodes; 
+	}
+	
+	/**
+	 * Maybe NPM has just started and the registry is empty,
+	 * although may be there VMs on Amazon
+	 * @return
+	 */
+	private List<Node> fillRegistry() {
+		
+		List<Node> nodes = new ArrayList<Node>();
+		for (Node node: getNodesWithoutCache()) {
+			this.registry.putNode(node);
+			nodes.add(node);
+		}
+		return nodes;
+	}
+	
+	public List<Node> getNodesWithoutCache() {
 		List<Node> nodeList = new ArrayList<Node>();
 		Node node;
 
@@ -131,6 +163,7 @@ public class AWSCloudProvider implements CloudProvider {
 		ComputeService client = getClient("");
 		client.destroyNode(id);
 		client.getContext().close();
+		this.registry.deleteNode(id);
 	}
 
 	private void setNodeProperties(Node node, NodeMetadata cloudNode) {

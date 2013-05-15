@@ -22,7 +22,14 @@
 			<groupId>org.jclouds</groupId>
 			<artifactId>jclouds-all</artifactId>
 			<version>1.6.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
 		</dependency>
+		<dependency>
+    		<groupId>org.jclouds.driver</groupId>
+    		<artifactId>jclouds-slf4j</artifactId>
+    		<version>1.6.0</version>
+  		</dependency>
 		<dependency>
         	<groupId>org.ow2.choreos</groupId>
             <artifactId>EnactmentEngineAPI</artifactId>

@@ -2,6 +2,8 @@ package org.ow2.choreos.deployment.nodes.cm;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -10,6 +12,7 @@ import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.chef.impl.KnifeImpl;
 import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.services.recipe.BaseRecipeBuilder;
 import org.ow2.choreos.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.utils.RemoteFileWriter;
@@ -66,7 +69,7 @@ public class NodeBootstrapper {
 		String bootstrapLog = knife.bootstrap(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile(), DefaultRecipes.getDefaultRecipes());
 		logger.debug("remote Bootstrap log: " + bootstrapLog);
 		saveLogOnNode(bootstrapLog);
-		logger.info("Bootstrap completed at " + this.node);
+		logger.info("Bootstrap completed at" + this.node);
 		this.retrieveAndSetChefName(bootstrapLog);
 		
 		NodeChecker checker = new NodeChecker();
@@ -78,24 +81,62 @@ public class NodeBootstrapper {
     }
     
     private void configureHarakiri(String deploymentManagerURL, String nodeId) {
-    	String  chef_repo_path = Configuration.get(CHEF_REPO);
+    	String chefRepoPath = copyTemplate();
+    	
+    	Map<String,String> replacementItems = new HashMap<String, String>();
+    	
+    	// replace content of attributes/default.rb
+    	replacementItems.put("$DEPLOYMENT_MANAGER_URL", deploymentManagerURL);
+    	replacementItems.put("$NODE_ID", nodeId);
+    	changeFileContents(chefRepoPath + "/harakiri/attributes/default.rb", replacementItems);
+    }
+
+	private String copyTemplate() {
+		String  chefRepoPath = Configuration.get(CHEF_REPO)+"/cookbooks";
     	try {
-			FileUtils.deleteDirectory(new File(chef_repo_path+"/harakiri"));
+			FileUtils.deleteDirectory(new File(chefRepoPath+"/harakiri"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    	File chef_repo_folder = new File(chef_repo_path);
+    	File chefRepoFolder = new File(chefRepoPath);
     	
-    	String harakiri_template_path = "src/main/resources/chef/harakiri";
-    	File harakiri_template_folder = new File(harakiri_template_path);
+    	String harakiriTemplatePath = "src/main/resources/chef/harakiri";
+    	File harakiriTemplateFolder = new File(harakiriTemplatePath);
     	
     	try {
-			FileUtils.copyDirectoryToDirectory(harakiri_template_folder, chef_repo_folder);
+			FileUtils.copyDirectoryToDirectory(harakiriTemplateFolder, chefRepoFolder);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    	
-    	// .... create a new recipe builder
+		return chefRepoPath;
+	}
+    
+    private void changeFileContents(String filename, Map<String, String> replacementItems) {
+    	File attributesDefaultFile = new File(filename);
+
+		String attributesDefaultFileData = null;
+		synchronized (NodeBootstrapper.class) {
+			try {
+				attributesDefaultFileData = FileUtils.readFileToString(attributesDefaultFile);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		for (Map.Entry<String, String> entry : replacementItems.entrySet()) {
+			attributesDefaultFileData = attributesDefaultFileData.replace(entry.getKey(), entry.getValue());
+		}		
+		
+		synchronized (BaseRecipeBuilder.class) {
+			FileUtils.deleteQuietly(attributesDefaultFile);
+			try {
+				FileUtils.writeStringToFile(attributesDefaultFile, attributesDefaultFileData);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
     }
 
 	private void saveLogOnNode(String bootstrapLog) {

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.jclouds.Constants;
 import org.jclouds.ContextBuilder;
 import org.jclouds.compute.ComputeService;
@@ -18,6 +19,8 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeMetadata.Status;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
+import org.jclouds.compute.options.TemplateOptions;
+import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
