@@ -5,10 +5,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.jclouds.compute.RunNodesException;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
-import org.ow2.choreos.deployment.nodes.cloudprovider.NodeRegistry;
+import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.datamodel.Node;
 
 public class IdlePool {
@@ -117,7 +116,7 @@ public class IdlePool {
 					if (idleNodes.size() == poolSize)
 						filling = false;
 				}
-			} catch (RunNodesException e) {
+			} catch (NodeNotCreatedException e) {
 				logger.error("Could not create one of the extra VMs to the pool");
 			}
 		}

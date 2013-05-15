@@ -4,19 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.jclouds.compute.RunNodesException;
-import org.ow2.choreos.chef.KnifeException;
+import org.ow2.choreos.deployment.NodeDestroyer;
 import org.ow2.choreos.deployment.nodes.chef.ConfigToChef;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
-import org.ow2.choreos.deployment.nodes.cloudprovider.NodeRegistry;
-import org.ow2.choreos.deployment.nodes.cm.NodeBootstrapper;
-import org.ow2.choreos.deployment.nodes.cm.NodeNotBootstrappedException;
+import org.ow2.choreos.deployment.nodes.cloudprovider.NodeCreator;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpgrader;
 import org.ow2.choreos.deployment.nodes.cm.RecipeApplier;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelector;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelectorFactory;
 import org.ow2.choreos.nodes.ConfigNotAppliedException;
-import org.ow2.choreos.nodes.NodeNotAccessibleException;
+import org.ow2.choreos.nodes.NPMException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
@@ -49,43 +46,11 @@ public class NPMImpl implements NodePoolManager {
 	public Node createNode(Node node, ResourceImpact resourceImpact)
 			throws NodeNotCreatedException {
 
-		return this.createNode(node, resourceImpact, true);
-	}
-
-	private Node createNode(Node node, ResourceImpact resourceImpact,
-			boolean retry) throws NodeNotCreatedException {
-
+		NodeCreator creator = new NodeCreator(node, resourceImpact, cloudProvider, nodeRegistry, true);
 		try {
-			cloudProvider.createNode(node, resourceImpact);
-			nodeRegistry.putNode(node);
-		} catch (RunNodesException e) {
-			if (retry) {
-				logger.warn("Could not create VM. Going to try again!");
-				this.createNode(node, resourceImpact, false);
-			} else {
-				throw new NodeNotCreatedException(node.getId(),
-						"Could not create VM");
-			}
-		}
-
-		try {
-			NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
-			bootstrapper.bootstrapNode();
-		} catch (KnifeException e) {
-			throw new NodeNotCreatedException(node.getId(),
-					"Could not initialize node " + node);
-		} catch (NodeNotBootstrappedException e) {
-			throw new NodeNotCreatedException(node.getId(),
-					"Could not initialize node " + node);
-		} catch (NodeNotAccessibleException e) {
-			if (retry) {
-				logger.warn("Could not connect to the node " + node
-						+ ". We will forget this node and try a new one.");
-				this.createNode(node, resourceImpact, false);
-			} else {
-				throw new NodeNotCreatedException(node.getId(),
-						"Could not connect to the node " + node);
-			}
+			node = creator.call();
+		} catch (NPMException e) {
+			throw new NodeNotCreatedException(node.getId());
 		}
 
 		return node;
@@ -180,7 +145,7 @@ public class NPMImpl implements NodePoolManager {
 		List<NodeDestroyer> destroyers = new ArrayList<NodeDestroyer>();
 
 		for (Node node : this.getNodes()) {
-			NodeDestroyer destroyer = new NodeDestroyer(node);
+			NodeDestroyer destroyer = new NodeDestroyer(node, this.cloudProvider, this.nodeRegistry);
 			Thread trd = new Thread(destroyer);
 			destroyers.add(destroyer);
 			trds.add(trd);
@@ -190,8 +155,8 @@ public class NPMImpl implements NodePoolManager {
 		waitThreads(trds);
 
 		for (NodeDestroyer destroyer : destroyers) {
-			if (!destroyer.ok) {
-				throw new NodeNotDestroyed(destroyer.node.getId());
+			if (!destroyer.isOK()) {
+				throw new NodeNotDestroyed(destroyer.getNode().getId());
 			}
 		}
 	}
@@ -207,30 +172,5 @@ public class NPMImpl implements NodePoolManager {
 		}
 	}
 
-	private class NodeDestroyer implements Runnable {
-
-		Node node;
-		boolean ok;
-
-		public NodeDestroyer(Node node) {
-			this.node = node;
-		}
-
-		@Override
-		public void run() {
-			try {
-				destroyNode(node.getId());
-			} catch (NodeNotDestroyed e) {
-				ok = false;
-				logger.error("Node not destroyed", e);
-			} catch (NodeNotFoundException e) {
-				ok = false;
-				logger.error("Impossible!", e);
-			}
-			logger.info("Node " + node.getId() + " destroyed");
-			ok = true;
-		}
-
-	}
 
 }

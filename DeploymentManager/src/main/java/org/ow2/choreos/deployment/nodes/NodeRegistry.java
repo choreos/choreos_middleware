@@ -1,10 +1,11 @@
-package org.ow2.choreos.deployment.nodes.cloudprovider;
+package org.ow2.choreos.deployment.nodes;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
 
 /**
@@ -32,8 +33,12 @@ public class NodeRegistry {
 		this.nodes.put(node.getId(), node);
 	}
 	
-	public Node getNode(String nodeId) {
-		return this.nodes.get(nodeId);
+	public Node getNode(String nodeId) throws NodeNotFoundException {
+		Node node = this.nodes.get(nodeId);
+		if (node == null) {
+			throw new NodeNotFoundException(nodeId);
+		}
+		return node;
 	}
 	
 	public void deleteNode(String nodeId) {

@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.jclouds.compute.RunNodesException;
 import org.junit.Before;
 import org.junit.Test;
 import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -25,7 +25,7 @@ public class FixedCloudProviderTest {
 	}
 
 	@Test
-	public void shouldReturnNodeInfo() throws RunNodesException {
+	public void shouldReturnNodeInfo() throws NodeNotCreatedException {
 
 		Configuration.set("FIXED_VM_IPS", "192.168.56.101");
 		Configuration.set("FIXED_VM_HOSTNAMES", "choreos");

@@ -3,11 +3,11 @@ package org.ow2.choreos.deployment.nodes.cloudprovider;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.jclouds.compute.RunNodesException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
@@ -33,7 +33,7 @@ public class AWSCloudProviderTest {
     }
 
 	@Test
-    public void shouldCreateAndDeleteNode() throws RunNodesException, JSchException, NodeNotDestroyed, NodeNotFoundException {
+    public void shouldCreateAndDeleteNode() throws NodeNotCreatedException, JSchException, NodeNotDestroyed, NodeNotFoundException {
         
         Node created = infra.createNode(node, resourceImpact);
         System.out.println("created " + created);

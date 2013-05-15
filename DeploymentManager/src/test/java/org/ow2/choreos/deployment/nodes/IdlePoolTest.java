@@ -7,12 +7,12 @@ import static org.mockito.Mockito.when;
 
 import java.util.Set;
 
-import org.jclouds.compute.RunNodesException;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.stubbing.OngoingStubbing;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
+import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -27,7 +27,7 @@ public class IdlePoolTest {
 	}
 	
 	@Before
-	public void setUp() throws RunNodesException {
+	public void setUp() throws NodeNotCreatedException {
 	
 		int N = 10;
 		cp = mock(CloudProvider.class);

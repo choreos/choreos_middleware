@@ -2,7 +2,7 @@ package org.ow2.choreos.deployment.nodes.cloudprovider;
 
 import java.util.List;
 
-import org.jclouds.compute.RunNodesException;
+import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
@@ -36,7 +36,7 @@ public class CloudProviderInterceptor implements CloudProvider {
 
 	@Override
 	public Node createNode(Node node, ResourceImpact resourceImpact)
-			throws RunNodesException {
+			throws NodeNotCreatedException {
 		
 		if (burstDetector.invoke()) {
 			
@@ -63,7 +63,7 @@ public class CloudProviderInterceptor implements CloudProvider {
 
 	@Override
 	public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact)
-			throws RunNodesException {
+			throws NodeNotCreatedException {
 		return this.cp.createOrUseExistingNode(node, resourceImpact);
 	}
 

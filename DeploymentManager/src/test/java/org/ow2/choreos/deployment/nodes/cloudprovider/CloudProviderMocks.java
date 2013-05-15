@@ -1,0 +1,114 @@
+package org.ow2.choreos.deployment.nodes.cloudprovider;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.ow2.choreos.nodes.NodeNotCreatedException;
+import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.services.datamodel.ResourceImpact;
+
+public class CloudProviderMocks {
+	
+	private static final String CP_MOCK_NAME = "MockCloudProvider";
+
+	/**
+	 * This mock has a initial list of two nodes (node1 and node2)
+	 * and supports the creation of one node (node3).
+	 * @return
+	 * @throws Exception
+	 */
+	public static CloudProvider getGoodMock() throws Exception {
+		
+		Node node1 = new Node();
+		node1.setId("1");
+		Node node2 = new Node();
+		node2.setId("2");
+		Node node3 = new Node();
+		node3.setId("3");
+		
+		List<Node> initialNodes = new ArrayList<Node>();
+		initialNodes.add(node1);
+		initialNodes.add(node2);
+		
+		CloudProvider cpMock = mock(CloudProvider.class);
+		when(cpMock.getProviderName()).thenReturn(CP_MOCK_NAME);
+		when(cpMock.getNodes()).thenReturn(initialNodes);
+		when(cpMock.getNode("1")).thenReturn(node1);
+		when(cpMock.getNode("2")).thenReturn(node1);
+		when(cpMock.createNode(any(Node.class), any(ResourceImpact.class)))
+			.thenReturn(node3);
+		when(cpMock.createOrUseExistingNode(any(Node.class), any(ResourceImpact.class)))
+			.thenReturn(node1);
+		
+		return cpMock;
+	}
+	
+	/**
+	 * This mock has a initial list of two nodes (node1 and node2)
+	 * If someone tries to create a new node, an exception is thrown
+	 * @return
+	 * @throws Exception
+	 */
+	public static CloudProvider getBadMock() throws Exception {
+		
+		Node node1 = new Node();
+		node1.setId("1");
+		Node node2 = new Node();
+		node2.setId("2");
+		
+		List<Node> initialNodes = new ArrayList<Node>();
+		initialNodes.add(node1);
+		initialNodes.add(node2);
+		
+		CloudProvider cpMock = mock(CloudProvider.class);
+		when(cpMock.getProviderName()).thenReturn(CP_MOCK_NAME);
+		when(cpMock.getNodes()).thenReturn(initialNodes);
+		when(cpMock.getNode("1")).thenReturn(node1);
+		when(cpMock.getNode("2")).thenReturn(node1);
+		when(cpMock.createNode(any(Node.class), any(ResourceImpact.class)))
+			.thenThrow(new NodeNotCreatedException("3"));
+		when(cpMock.createOrUseExistingNode(any(Node.class), any(ResourceImpact.class)))
+			.thenReturn(node1);
+		
+		return cpMock;
+	}
+
+	/**
+	 * This mock has a initial list of two nodes (node1 and node2)
+	 * If someone tries to create a new node, an exception is thrown in the first try.
+	 * In subsequent invocations, the node3 is created.
+	 * @return
+	 * @throws Exception
+	 */
+	public static CloudProvider getIntermitentMock() throws Exception {
+		
+		Node node1 = new Node();
+		node1.setId("1");
+		Node node2 = new Node();
+		node2.setId("2");
+		Node node3 = new Node();
+		node3.setId("3");
+		
+		List<Node> initialNodes = new ArrayList<Node>();
+		initialNodes.add(node1);
+		initialNodes.add(node2);
+		
+		CloudProvider cpMock = mock(CloudProvider.class);
+		when(cpMock.getProviderName()).thenReturn(CP_MOCK_NAME);
+		when(cpMock.getNodes()).thenReturn(initialNodes);
+		when(cpMock.getNode("1")).thenReturn(node1);
+		when(cpMock.getNode("2")).thenReturn(node1);
+		when(cpMock.createNode(any(Node.class), any(ResourceImpact.class)))
+			.thenThrow(new NodeNotCreatedException("3"))
+			.thenReturn(node3);
+		when(cpMock.createOrUseExistingNode(any(Node.class), any(ResourceImpact.class)))
+			.thenReturn(node1);
+		
+		return cpMock;
+	}
+
+}

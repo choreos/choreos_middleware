@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.jclouds.compute.RunNodesException;
 import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
@@ -92,7 +92,7 @@ public class FixedCloudProvider implements CloudProvider {
 
 	@Override
 	public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact)
-			throws RunNodesException {
+			throws NodeNotCreatedException {
 
 		if (nodes != null && !nodes.keySet().isEmpty()) {
 			Iterator<String> it = nodes.keySet().iterator();
@@ -123,7 +123,7 @@ public class FixedCloudProvider implements CloudProvider {
 
 	@Override
 	public Node createNode(Node node, ResourceImpact resourceImpact)
-			throws RunNodesException {
+			throws NodeNotCreatedException {
 
 		throw new UnsupportedOperationException(
 				"FixedCloudProvider cannot create new nodes");

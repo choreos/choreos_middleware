@@ -3,8 +3,8 @@ package org.ow2.choreos.deployment.nodes.selector;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jclouds.compute.RunNodesException;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
+import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
 
@@ -28,7 +28,7 @@ public class AlwaysCreateSelector implements NodeSelector {
 			try {
 				node = this.cloudProvider.createNode(node, config.getResourceImpact());
 				nodes.add(node);
-			} catch (RunNodesException e) {
+			} catch (NodeNotCreatedException e) {
 				e.printStackTrace();
 				return null;
 			}

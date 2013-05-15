@@ -20,6 +20,7 @@ import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
@@ -67,7 +68,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
     }
 
     @Override
-    public Node createNode(Node node, ResourceImpact resourceImpact) throws RunNodesException {
+    public Node createNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException {
         System.out.println(">OpenStack: Create new Node.");
         
      // TODO: resource impact changes
@@ -82,6 +83,8 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
             System.out
                     .println(">OpenStack: Authorization failed. Provided user doesn't have authorization to create a new node.");
             throw e;
+        } catch (RunNodesException e) {
+        	throw new NodeNotCreatedException(node.getId());
         }
 
         NodeMetadata cloudNode = Iterables.get(createdNodes, 0);
@@ -178,7 +181,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
     }
 
     @Override
-    public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact) throws RunNodesException {
+    public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException {
     	for (Node n : getNodes()) {
 			if (n.getImage().equals(node.getImage())
 					&& NodeState.RUNNING.ordinal() == n.getState()) {

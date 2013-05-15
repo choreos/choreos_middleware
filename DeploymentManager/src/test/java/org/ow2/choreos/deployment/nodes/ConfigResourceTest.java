@@ -12,6 +12,7 @@ import org.junit.experimental.categories.Category;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.nodes.ConfigNotAppliedException;
+import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.nodes.NodePoolManager;
@@ -37,7 +38,7 @@ public class ConfigResourceTest extends BaseTest {
      * @throws Exception 
      */
     @Test
-    public void shouldApplyValidCookbook() throws RunNodesException, ConfigNotAppliedException, JSchException, SshCommandFailed {
+    public void shouldApplyValidCookbook() throws NodeNotCreatedException, ConfigNotAppliedException, JSchException, SshCommandFailed {
     	
     	String RECIPE_NAME = "getting-started";
     	String CREATED_FILE = "chef-getting-started.txt";

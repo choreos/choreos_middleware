@@ -21,6 +21,7 @@ import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.ec2.domain.InstanceType;
 import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
@@ -58,7 +59,7 @@ public class AWSCloudProvider implements CloudProvider {
 		return context.getComputeService();
 	}
 
-	public Node createNode(Node node, ResourceImpact resourceImpact) throws RunNodesException {
+	public Node createNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException {
 		
 		long t0 = System.currentTimeMillis(); 
 		logger.debug("Creating node...");
@@ -70,12 +71,16 @@ public class AWSCloudProvider implements CloudProvider {
 		String image = imageId.substring(imageId.indexOf('/') + 1);
 
 		ComputeService client = getClient(image); 
-		Set<? extends NodeMetadata> createdNodes = client.createNodesInGroup(
-				"default", 1, getTemplate(client, imageId, resourceImpact));
-		NodeMetadata cloudNode = Iterables.get(createdNodes, 0);
-
-		setNodeProperties(node, cloudNode);
-		client.getContext().close();
+		try {
+			Set<? extends NodeMetadata> createdNodes = client.createNodesInGroup(
+					"default", 1, getTemplate(client, imageId, resourceImpact));
+			NodeMetadata cloudNode = Iterables.get(createdNodes, 0);
+			
+			setNodeProperties(node, cloudNode);
+			client.getContext().close();
+		} catch(RunNodesException e) {
+			throw new NodeNotCreatedException(node.getId());
+		}
 
 		long tf = System.currentTimeMillis();
 		long duration = tf - t0;
@@ -186,7 +191,7 @@ public class AWSCloudProvider implements CloudProvider {
 		return defaultImage;
 	}
 
-	public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact) throws RunNodesException {
+	public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException {
 		
 		List<Node> nodes = this.getNodes();
 		if (nodes.size() > 0)
