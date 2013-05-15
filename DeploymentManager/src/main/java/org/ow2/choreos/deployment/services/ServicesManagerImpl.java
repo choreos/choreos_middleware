@@ -41,6 +41,7 @@ public class ServicesManagerImpl implements ServicesManager {
 	private Knife knife;
 
 	public ServicesManagerImpl(NodePoolManager npm) {
+
 		final String CHEF_REPO = Configuration.get("CHEF_REPO");
 		final String CHEF_CONFIG_FILE = Configuration.get("CHEF_CONFIG_FILE");
 		Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
