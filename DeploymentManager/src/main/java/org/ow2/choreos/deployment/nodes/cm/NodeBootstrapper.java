@@ -1,5 +1,9 @@
 package org.ow2.choreos.deployment.nodes.cm;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chef.ChefNodeNameRetriever;
 import org.ow2.choreos.chef.Knife;
@@ -56,6 +60,9 @@ public class NodeBootstrapper {
 
     	logger.info("Bootstrapping " + this.node.getIp());
     	Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
+    	
+    	configureHarakiri("http://172.16.239.10:9100/deploymentmanager/", this.node.getChefName());
+    	
 		String bootstrapLog = knife.bootstrap(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile(), DefaultRecipes.getDefaultRecipes());
 		logger.debug("remote Bootstrap log: " + bootstrapLog);
 		saveLogOnNode(bootstrapLog);
@@ -68,6 +75,27 @@ public class NodeBootstrapper {
 			logger.error(msg);
 			throw new NodeNotBootstrappedException(msg);
 		}
+    }
+    
+    private void configureHarakiri(String deploymentManagerURL, String nodeId) {
+    	String  chef_repo_path = Configuration.get(CHEF_REPO);
+    	try {
+			FileUtils.deleteDirectory(new File(chef_repo_path+"/harakiri"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	File chef_repo_folder = new File(chef_repo_path);
+    	
+    	String harakiri_template_path = "src/main/resources/chef/harakiri";
+    	File harakiri_template_folder = new File(harakiri_template_path);
+    	
+    	try {
+			FileUtils.copyDirectoryToDirectory(harakiri_template_folder, chef_repo_folder);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+    	// .... create a new recipe builder
     }
 
 	private void saveLogOnNode(String bootstrapLog) {

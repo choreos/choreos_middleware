@@ -22,7 +22,7 @@ public class DeploymentManagerServer {
 	
     static {
     	String port = Configuration.get("DEPLOYMENT_MANAGER_PORT");
-    	URL = "http://localhost:" + port + "/deploymentmanager/";
+    	URL = "http://0.0.0.0:" + port + "/deploymentmanager/";
     	System.out.println(URL);
     }
 

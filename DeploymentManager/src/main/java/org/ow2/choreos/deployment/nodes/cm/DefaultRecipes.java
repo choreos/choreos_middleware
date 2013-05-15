@@ -1,7 +1,10 @@
 package org.ow2.choreos.deployment.nodes.cm;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import org.ow2.choreos.deployment.Configuration;
 
 /**
  * Recipes to be applied on bootstrap
@@ -11,8 +14,7 @@ import java.util.List;
 public class DefaultRecipes {
 
 	public static List<String> getDefaultRecipes() {
-
-		List<String> recipes =  new ArrayList<String>();
-		return recipes;
+		return new ArrayList<String>(Arrays.asList(Configuration.getMultiple("DEFAULT_RECIPES")));
 	}
+
 }
