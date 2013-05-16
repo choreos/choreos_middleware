@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.Configuration;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
+import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
 
@@ -28,16 +28,11 @@ public class RoundRobinSelector implements NodeSelector {
 	private NodeSelectorMapper mapper = new NodeSelectorMapper(Configuration.get("MAPPER_POLICY"));
 
 	private AtomicInteger counter = new AtomicInteger();
-	private CloudProvider cloudProvider;
 
-	public RoundRobinSelector(CloudProvider cloudProvider) {
-		this.cloudProvider = cloudProvider;
-	}
-
-	public List<Node> selectNodes(Config config) {
+	public List<Node> selectNodes(Config config, NodePoolManager npm) throws NodeNotSelectedException {
 
 		int numberOfInstances = config.getNumberOfInstances();
-		List<Node> allNodes = cloudProvider.getNodes();
+		List<Node> allNodes = npm.getNodes();
 		
 		List<Node> compatibleNodes = mapper.filterByResourceImpact(config.getResourceImpact(), allNodes);
 		
@@ -45,7 +40,7 @@ public class RoundRobinSelector implements NodeSelector {
 			String message = "Not enough nodes (available: " + compatibleNodes.size() + 
 					") to deploy requested number of instances (requested: " +numberOfInstances+ ")";
 			logger.error(message);
-			return new ArrayList<Node>();
+			throw new NodeNotSelectedException(message);
 		}
 
 		List<Node> resultList = new ArrayList<Node>();

@@ -9,6 +9,7 @@ import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpgrader;
 import org.ow2.choreos.deployment.nodes.cm.RecipeApplier;
+import org.ow2.choreos.deployment.nodes.selector.NodeNotSelectedException;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelector;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelectorFactory;
 import org.ow2.choreos.nodes.ConfigNotAppliedException;
@@ -56,9 +57,8 @@ public class NPMImpl implements NodePoolManager {
 		try {
 			node = nodeCreator.create(node, resourceImpact);
 			nodeRegistry.putNode(node);
-			System.out.println("nodeRegistry= " + nodeRegistry);
-			
 		} catch (NPMException e) {
+			System.out.println("!!!!!!!!!");
 			throw new NodeNotCreatedException(node.getId());
 		}
 
@@ -80,8 +80,6 @@ public class NPMImpl implements NodePoolManager {
 		if (this.cloudProvider.getProviderName() == FixedCloudProvider.FIXED_CLOUD_PROVIDER) {
 			return this.cloudProvider.getNode(nodeId);
 		} else {
-			System.out.println("nodeRegistry= " + nodeRegistry);
-			System.out.println("REGISTRY SIZE = " + nodeRegistry.getNodes().size());
 			return nodeRegistry.getNode(nodeId);
 		}
 	}
@@ -90,11 +88,16 @@ public class NPMImpl implements NodePoolManager {
 	public List<Node> applyConfig(Config config)
 			throws ConfigNotAppliedException {
 
-		NodeSelector selector = NodeSelectorFactory
-				.getInstance(this.cloudProvider);
-		List<Node> nodes = selector.selectNodes(config);
+		NodePoolManager restrictedNPM = new RestrictedNPM(this);
+		NodeSelector selector = NodeSelectorFactory.getInstance();
+		List<Node> nodes = null;
+		try {
+			nodes = selector.selectNodes(config, restrictedNPM);
+		} catch (NodeNotSelectedException e) {
+			throw new ConfigNotAppliedException(config.getName());
+		}
 
-		if (nodes == null) {
+		if (nodes == null || nodes.isEmpty()) {
 			throw new ConfigNotAppliedException(config.getName());
 		}
 

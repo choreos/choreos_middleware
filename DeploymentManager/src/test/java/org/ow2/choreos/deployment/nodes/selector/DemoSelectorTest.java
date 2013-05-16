@@ -9,14 +9,14 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
+import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
 
 
 public class DemoSelectorTest {
 
-	private CloudProvider cloudProvider;
+	private NodePoolManager npm;
 	private Node node1, node2;
 	
 	private String[] VM1 = {"serviceairline-service", "servicesa-CD-AirlineService-provide",
@@ -34,26 +34,26 @@ public class DemoSelectorTest {
 		List<Node> nodes = new ArrayList<Node>();
 		nodes.add(node1);
 		nodes.add(node2);
-		cloudProvider = Mockito.mock(CloudProvider.class);
-		when(cloudProvider.getNodes()).thenReturn(nodes);
+		npm = Mockito.mock(NodePoolManager.class);
+		when(npm.getNodes()).thenReturn(nodes);
 	}
 	
 	@Test
-	public void test() {
+	public void test() throws NodeNotSelectedException {
 		
-		NodeSelector selector = new DemoSelector(this.cloudProvider);
+		NodeSelector selector = new DemoSelector();
 		
 		for (String svc: VM1) {
 			Config config = new Config(svc, null, 1);
-			assertEquals(node1, selector.selectNodes(config).get(0));
+			assertEquals(node1, selector.selectNodes(config, npm).get(0));
 		}
 
 		for (String svc: VM2) {
 			Config config = new Config(svc, null, 1);
-			assertEquals(node2, selector.selectNodes(config).get(0));
+			assertEquals(node2, selector.selectNodes(config, npm).get(0));
 		}
 		
 		Config config = new Config("other", null, 1);
-		assertEquals(node1, selector.selectNodes(config).get(0));
+		assertEquals(node1, selector.selectNodes(config, npm).get(0));
 	}
 }

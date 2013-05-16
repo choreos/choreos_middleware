@@ -3,22 +3,16 @@ package org.ow2.choreos.deployment.nodes.selector;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
+import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
 
 
 public class AlwaysCreateSelector implements NodeSelector {
 
-	private CloudProvider cloudProvider;
-
-	public AlwaysCreateSelector(CloudProvider cloudProvider) {
-		this.cloudProvider = cloudProvider;
-	}
-
 	@Override
-	public List<Node> selectNodes(Config config) {
+	public List<Node> selectNodes(Config config, NodePoolManager npm) throws NodeNotSelectedException {
 
 		int numberOfInstances = config.getNumberOfInstances();
 		List<Node> nodes = new ArrayList<Node>();
@@ -26,11 +20,11 @@ public class AlwaysCreateSelector implements NodeSelector {
 		for(int i = 0; i < numberOfInstances; i++) {
 			Node node = new Node();
 			try {
-				node = this.cloudProvider.createNode(node, config.getResourceImpact());
+				node = npm.createNode(node, config.getResourceImpact());
 				nodes.add(node);
 			} catch (NodeNotCreatedException e) {
 				e.printStackTrace();
-				return null;
+				throw new NodeNotSelectedException("Nodes not selected to config " + config.getName());
 			}
 		}
 		return nodes;

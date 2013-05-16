@@ -1,7 +1,6 @@
 package org.ow2.choreos.deployment.nodes.selector;
 
 import org.ow2.choreos.deployment.Configuration;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 
 public class NodeSelectorFactory {
 
@@ -12,7 +11,7 @@ public class NodeSelectorFactory {
 	// singleton
 	private static NodeSelector roundRobinSelector, demoSelector;
 	
-	public static NodeSelector getInstance(CloudProvider cloudProvider) {
+	public static NodeSelector getInstance() {
 
 		String selector = Configuration.get("NODE_SELECTOR");
 		NodeSelectorType type = null;
@@ -22,25 +21,24 @@ public class NodeSelectorFactory {
 			throw new IllegalStateException(
 					"Invalid NODE_SELECTOR in properties file: " + selector);
 		}
-		return getNodeSelectorInstance(cloudProvider, type);
+		return getNodeSelectorInstance(type);
 	}
 
-	private static NodeSelector getNodeSelectorInstance(
-			CloudProvider cloudProvider, NodeSelectorType nodeSelectorType) {
+	private static NodeSelector getNodeSelectorInstance(NodeSelectorType nodeSelectorType) {
 
 		switch (nodeSelectorType) {
 
 		case ALWAYS_CREATE:
-			return new AlwaysCreateSelector(cloudProvider);
+			return new AlwaysCreateSelector();
 
 		case ROUND_ROBIN:
 			if (roundRobinSelector == null)
-				roundRobinSelector = new RoundRobinSelector(cloudProvider);
+				roundRobinSelector = new RoundRobinSelector();
 			return roundRobinSelector;
 			
 		case DEMO:
 			if (demoSelector == null)
-				demoSelector = new DemoSelector(cloudProvider);
+				demoSelector = new DemoSelector();
 			return demoSelector;
 			
 		default:

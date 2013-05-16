@@ -3,7 +3,7 @@ package org.ow2.choreos.deployment.nodes.selector;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
+import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
 
@@ -22,19 +22,10 @@ public class DemoSelector implements NodeSelector {
 	private static final String[] VM2 = { "Hotel", "StandAndGate",
 			"Travelagency", "Weather" };
 
-	private Node node1, node2;
+	public List<Node> selectNodes(Config config, NodePoolManager npm) throws NodeNotSelectedException {
 
-	/**
-	 * Before select a node, the cloud provider must contains two clean VMs
-	 * @param cloudProvider
-	 */
-	public DemoSelector(CloudProvider cloudProvider) {
-		
-		this.node1 = cloudProvider.getNodes().get(0);
-		this.node2 = cloudProvider.getNodes().get(1);		
-	}
-
-	public List<Node> selectNodes(Config config) {
+		Node node1 = npm.getNodes().get(0);
+		Node node2 = npm.getNodes().get(1);		
 
 		List<Node> list = new ArrayList<Node>();
 		
