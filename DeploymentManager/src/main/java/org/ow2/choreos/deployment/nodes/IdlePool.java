@@ -89,14 +89,22 @@ public class IdlePool {
 	 * Retrieves a node from the idle pool.
 	 * 
 	 * The node is removed from the pool.
-	 * The method is synchronized, so multiple invocation will not get the same node.
+	 * The method is synchronized, so multiple invocations will not get the same node.
+	 * If the pool is empty, the client waits for the creation of a VM
 	 * @return
 	 */
-	public synchronized Node retriveNode() {
+	public Node retriveNode() {
 		
-		Node node = idleNodes.iterator().next();
-		idleNodes.remove(node);
-		return node;
+		if (idleNodes.isEmpty()) {
+			VMCreator vmCreator = new VMCreator(cp);
+			vmCreator.run();
+		}
+		
+		synchronized (this) {
+			Node node = idleNodes.iterator().next();
+			idleNodes.remove(node);
+			return node;
+		}
 	}
 	
 	/**

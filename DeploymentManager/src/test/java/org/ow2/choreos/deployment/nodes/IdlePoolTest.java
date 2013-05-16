@@ -1,8 +1,6 @@
 package org.ow2.choreos.deployment.nodes;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -138,6 +136,44 @@ public class IdlePoolTest {
 		int poolSize = pool.getIdleNodes().size();
 		assertEquals(N, poolSize);
 	}
+	
+	@Test
+	public void shouldRetrieveANodeEvenWithAnEmptyPool() {
+		
+		int N = 5;
+		IdlePool pool = IdlePool.getCleanInstance(N, cp);
+		Node node = pool.retriveNode();
+		assertNotNull(node);
+		assertNotNull(node.getId());
+		assertFalse(node.getId().isEmpty());
+	}
+	
+	@Test
+	public void multipleClientsShouldRetrieveNodesEvenWithAnEmptyPool() throws InterruptedException {
+		
+		int N = 5;
+		IdlePool pool = IdlePool.getCleanInstance(N, cp);
+		List<PoolClient> clients = new ArrayList<PoolClient>();
+		for (int i=0; i<3; i++) {
+			PoolClient client = new PoolClient(pool);
+			clients.add(client);
+			Thread thrd = new Thread(client);
+			thrd.start();
+		}
+		
+		Thread.sleep(200);
+		
+		Iterator<PoolClient> it = clients.iterator();
+		Node previousNode = it.next().retrievedNode;
+		assertNotNull(previousNode);
+		while (it.hasNext()) {
+			Node node = it.next().retrievedNode;
+			assertNotNull(node);
+			assertNotSame(previousNode, node);
+			previousNode = node;
+		}
+	}
+
 	
 	private class PoolFiller implements Runnable {
 		
