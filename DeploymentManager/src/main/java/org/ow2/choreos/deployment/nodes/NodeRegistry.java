@@ -29,7 +29,7 @@ public class NodeRegistry {
 		return instance;
 	}
 	
-	public void putNode(Node node) {
+	public synchronized void putNode(Node node) {
 		this.nodes.put(node.getId(), node);
 	}
 	
@@ -47,5 +47,9 @@ public class NodeRegistry {
 	
 	public List<Node> getNodes() {
 		return new ArrayList<Node>(this.nodes.values());
+	}
+	
+	public void clear() {
+		this.nodes.clear();
 	}
 }

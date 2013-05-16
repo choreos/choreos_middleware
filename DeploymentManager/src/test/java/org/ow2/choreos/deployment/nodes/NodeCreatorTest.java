@@ -1,5 +1,7 @@
 package org.ow2.choreos.deployment.nodes;
 
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderMocks;
@@ -14,9 +16,9 @@ public class NodeCreatorTest {
 		
 		CloudProvider goodCP = CloudProviderMocks.getGoodMock();
 		
-		NodeCreator nodeCreator = new NodeCreator(new Node(), new ResourceImpact(), goodCP, false, false);
-		Node createdNode = nodeCreator.call();
-		this.isNodeOK(createdNode);
+		NodeCreator nodeCreator = new NodeCreator(goodCP, false, false);
+		Node createdNode = nodeCreator.create(new Node(), new ResourceImpact());
+		assertTrue(this.isNodeOK(createdNode));
 	}
 	
 	private boolean isNodeOK(Node node) {
@@ -29,9 +31,9 @@ public class NodeCreatorTest {
 		
 		CloudProvider intermitentCP = CloudProviderMocks.getIntermitentMock();
 		
-		NodeCreator nodeCreator = new NodeCreator(new Node(), new ResourceImpact(), intermitentCP, false, true);
-		Node createdNode = nodeCreator.call();
-		this.isNodeOK(createdNode);
+		NodeCreator nodeCreator = new NodeCreator(intermitentCP, false, true);
+		Node createdNode = nodeCreator.create(new Node(), new ResourceImpact());
+		assertTrue(this.isNodeOK(createdNode));
 	}
 
 	@Test(expected=NodeNotCreatedException.class)
@@ -39,8 +41,8 @@ public class NodeCreatorTest {
 		
 		CloudProvider badCP = CloudProviderMocks.getBadMock();
 		
-		NodeCreator nodeCreator = new NodeCreator(new Node(), new ResourceImpact(), badCP, false, true);
-		nodeCreator.call();
+		NodeCreator nodeCreator = new NodeCreator(badCP, false, true);
+		nodeCreator.create(new Node(), new ResourceImpact());
 	}
 
 }

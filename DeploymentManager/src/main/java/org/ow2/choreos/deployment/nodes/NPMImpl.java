@@ -35,20 +35,29 @@ public class NPMImpl implements NodePoolManager {
 
 	private CloudProvider cloudProvider;
 	private NodeRegistry nodeRegistry;
+	private NodeCreator nodeCreator;
 
 	public NPMImpl(CloudProvider provider) {
 		cloudProvider = provider;
 		nodeRegistry = NodeRegistry.getInstance();
+		this.nodeCreator = new NodeCreator(cloudProvider, true);
+	}
+	
+	public NPMImpl(CloudProvider provider, NodeCreator nodeCreator) {
+		cloudProvider = provider;
+		nodeRegistry = NodeRegistry.getInstance();
+		this.nodeCreator = nodeCreator;
 	}
 
 	@Override
 	public Node createNode(Node node, ResourceImpact resourceImpact)
 			throws NodeNotCreatedException {
 
-		NodeCreator creator = new NodeCreator(node, resourceImpact, cloudProvider, true);
 		try {
-			node = creator.call();
+			node = nodeCreator.create(node, resourceImpact);
 			nodeRegistry.putNode(node);
+			System.out.println("nodeRegistry= " + nodeRegistry);
+			
 		} catch (NPMException e) {
 			throw new NodeNotCreatedException(node.getId());
 		}
@@ -71,6 +80,8 @@ public class NPMImpl implements NodePoolManager {
 		if (this.cloudProvider.getProviderName() == FixedCloudProvider.FIXED_CLOUD_PROVIDER) {
 			return this.cloudProvider.getNode(nodeId);
 		} else {
+			System.out.println("nodeRegistry= " + nodeRegistry);
+			System.out.println("REGISTRY SIZE = " + nodeRegistry.getNodes().size());
 			return nodeRegistry.getNode(nodeId);
 		}
 	}
@@ -145,6 +156,7 @@ public class NPMImpl implements NodePoolManager {
 			NodeNotFoundException {
 
 		this.cloudProvider.destroyNode(nodeId);
+		this.nodeRegistry.deleteNode(nodeId);
 	}
 
 	@Override
@@ -154,7 +166,7 @@ public class NPMImpl implements NodePoolManager {
 		List<NodeDestroyer> destroyers = new ArrayList<NodeDestroyer>();
 
 		for (Node node : this.getNodes()) {
-			NodeDestroyer destroyer = new NodeDestroyer(node, this.cloudProvider, this.nodeRegistry);
+			NodeDestroyer destroyer = new NodeDestroyer(node, this.cloudProvider);
 			Thread trd = new Thread(destroyer);
 			destroyers.add(destroyer);
 			trds.add(trd);
@@ -164,7 +176,9 @@ public class NPMImpl implements NodePoolManager {
 		waitThreads(trds);
 
 		for (NodeDestroyer destroyer : destroyers) {
-			if (!destroyer.isOK()) {
+			if (destroyer.isOK()) {
+				this.nodeRegistry.deleteNode(destroyer.getNode().getId());
+			} else {
 				throw new NodeNotDestroyed(destroyer.getNode().getId());
 			}
 		}

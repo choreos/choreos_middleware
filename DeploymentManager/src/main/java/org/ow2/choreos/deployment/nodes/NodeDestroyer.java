@@ -12,13 +12,11 @@ public class NodeDestroyer implements Runnable {
 
 	private Node node;
 	private CloudProvider cp;
-	private NodeRegistry registry;
 	private boolean ok;
 
-	public NodeDestroyer(Node node, CloudProvider cp, NodeRegistry registry) {
+	public NodeDestroyer(Node node, CloudProvider cp) {
 		this.node = node;
 		this.cp = cp;
-		this.registry = registry;
 	}
 	
 	public boolean isOK() {
@@ -37,7 +35,6 @@ public class NodeDestroyer implements Runnable {
 	public void run() {
 		try {
 			cp.destroyNode(node.getId());
-			registry.deleteNode(node.getId());
 		} catch (NodeNotDestroyed e) {
 			ok = false;
 			logger.error("Node not destroyed", e);
