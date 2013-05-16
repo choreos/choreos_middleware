@@ -1,7 +1,6 @@
-package org.ow2.choreos.deployment;
+package org.ow2.choreos.deployment.nodes;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.deployment.nodes.NodeRegistry;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;

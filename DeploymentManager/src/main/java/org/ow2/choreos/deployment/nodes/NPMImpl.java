@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.deployment.NodeDestroyer;
 import org.ow2.choreos.deployment.nodes.chef.ConfigToChef;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
-import org.ow2.choreos.deployment.nodes.cloudprovider.NodeCreator;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpgrader;
 import org.ow2.choreos.deployment.nodes.cm.RecipeApplier;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelector;
@@ -47,9 +45,10 @@ public class NPMImpl implements NodePoolManager {
 	public Node createNode(Node node, ResourceImpact resourceImpact)
 			throws NodeNotCreatedException {
 
-		NodeCreator creator = new NodeCreator(node, resourceImpact, cloudProvider, nodeRegistry, true);
+		NodeCreator creator = new NodeCreator(node, resourceImpact, cloudProvider, true);
 		try {
 			node = creator.call();
+			nodeRegistry.putNode(node);
 		} catch (NPMException e) {
 			throw new NodeNotCreatedException(node.getId());
 		}

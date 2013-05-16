@@ -1,11 +1,10 @@
-package org.ow2.choreos.deployment.nodes.cloudprovider;
+package org.ow2.choreos.deployment.nodes;
 
 import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chef.KnifeException;
-import org.ow2.choreos.deployment.NodeDestroyer;
-import org.ow2.choreos.deployment.nodes.NodeRegistry;
+import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cm.NodeBootstrapper;
 import org.ow2.choreos.deployment.nodes.cm.NodeNotBootstrappedException;
 import org.ow2.choreos.nodes.NPMException;
@@ -21,7 +20,6 @@ public class NodeCreator implements Callable<Node> {
 	private Node node;
 	private ResourceImpact resourceImpact;
 	private CloudProvider cloudProvider;
-	private NodeRegistry nodesRegistry;
 	private boolean bootstrapNode = true;
 	private boolean retry = false;
 
@@ -30,15 +28,12 @@ public class NodeCreator implements Callable<Node> {
 	 * @param node work as node specification
 	 * @param resourceImpact
 	 * @param cp
-	 * @param registry
 	 * @param retry
 	 */
-	public NodeCreator(Node node, ResourceImpact resourceImpact, CloudProvider cp, 
-			NodeRegistry registry, boolean retry) {
+	public NodeCreator(Node node, ResourceImpact resourceImpact, CloudProvider cp, boolean retry) {
 		this.node = node;
 		this.resourceImpact = resourceImpact;
 		this.cloudProvider = cp;
-		this.nodesRegistry = registry;
 		this.retry = retry;
 	}
 
@@ -47,14 +42,13 @@ public class NodeCreator implements Callable<Node> {
 	 * @param node work as node specification
 	 * @param resourceImpact
 	 * @param cp
-	 * @param registry
 	 * @param bootstrapNode
 	 * @param retry
 	 */
 	public NodeCreator(Node node, ResourceImpact resourceImpact, CloudProvider cp, 
-			NodeRegistry registry, boolean bootstrapNode, boolean retry) {
+			boolean bootstrapNode, boolean retry) {
 		
-		this(node, resourceImpact, cp, registry, retry);
+		this(node, resourceImpact, cp, retry);
 		this.bootstrapNode = bootstrapNode;
 	}
 
@@ -70,7 +64,7 @@ public class NodeCreator implements Callable<Node> {
 			if (retry) {
 				logger.warn("Could not create VM. Going to try again!");
 				NodeCreator creator = new NodeCreator(node, resourceImpact, cloudProvider, 
-						nodesRegistry, bootstrapNode, false);
+						bootstrapNode, false);
 				return creator.call();
 			} else {
 				throw new NodeNotCreatedException(node.getId(),
@@ -93,7 +87,7 @@ public class NodeCreator implements Callable<Node> {
 					logger.warn("Could not connect to the node " + node
 							+ ". We will forget this node and try a new one.");
 					NodeCreator creator = new NodeCreator(node, resourceImpact, cloudProvider, 
-							nodesRegistry, bootstrapNode, false);
+							bootstrapNode, false);
 					return creator.call();
 				} else {
 					throw new NodeNotCreatedException(node.getId(),
@@ -102,7 +96,6 @@ public class NodeCreator implements Callable<Node> {
 			}
 		}
 
-		nodesRegistry.putNode(node);
 		return node;
 	}
 		
