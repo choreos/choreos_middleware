@@ -1,5 +1,6 @@
 package org.ow2.choreos.utils;
 
+import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -68,6 +69,17 @@ public class Concurrency {
 			throw new IllegalStateException(e);
 		}
 		return result;
+	}
+	
+	public static void waitThreads(List<Thread> threads) {
+		
+		for (Thread trd: threads) {
+			try {
+				trd.join();
+			} catch (InterruptedException e) {
+				System.out.println("Vish! Thread died at sleep!");
+			}
+		}
 	}
 	
 }
