@@ -92,13 +92,17 @@ public class AWSCloudProvider implements CloudProvider {
 	public Node getNode(String nodeId) throws NodeNotFoundException {
 
 		ComputeService client = getClient("");
-		ComputeMetadata computeMetadata = client.getNodeMetadata(nodeId);
-		NodeMetadata cloudNode = client.getNodeMetadata(computeMetadata
-				.getId());
-		Node node = new Node();
-		setNodeProperties(node, cloudNode);
-		
-		client.getContext().close();
+		Node node = null;
+		try {
+			ComputeMetadata computeMetadata = client.getNodeMetadata(nodeId);
+			NodeMetadata cloudNode = client.getNodeMetadata(computeMetadata
+					.getId());
+			node = new Node();
+			setNodeProperties(node, cloudNode);
+			client.getContext().close();
+		} catch (Exception e) {
+			throw new NodeNotFoundException(nodeId);
+		}
 		
 		return node;
 	}

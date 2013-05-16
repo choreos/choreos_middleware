@@ -26,6 +26,7 @@ import org.ow2.choreos.services.datamodel.ResourceImpact;
  */
 public class FixedCloudProvider implements CloudProvider {
 
+	public static final String FIXED_CLOUD_PROVIDER = "Fixed Provider";
 	private Map<String, Node> nodes = null;
 
 	public FixedCloudProvider() {
@@ -106,7 +107,7 @@ public class FixedCloudProvider implements CloudProvider {
 	}
 
 	public String getProviderName() {
-		return "Fixed Provider";
+		return FIXED_CLOUD_PROVIDER;
 	}
 
 

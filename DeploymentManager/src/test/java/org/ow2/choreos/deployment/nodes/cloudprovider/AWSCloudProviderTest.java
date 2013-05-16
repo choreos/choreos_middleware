@@ -1,7 +1,6 @@
 package org.ow2.choreos.deployment.nodes.cloudprovider;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,9 +12,8 @@ import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
 import org.ow2.choreos.tests.IntegrationTest;
+import org.ow2.choreos.utils.CommandLineException;
 import org.ow2.choreos.utils.LogConfigurator;
-
-import com.jcraft.jsch.JSchException;
 
 
 @Category(IntegrationTest.class)
@@ -33,21 +31,13 @@ public class AWSCloudProviderTest {
     }
 
 	@Test
-    public void shouldCreateAndDeleteNode() throws NodeNotCreatedException, JSchException, NodeNotDestroyed, NodeNotFoundException {
+    public void shouldCreateAndDeleteNode() throws NodeNotCreatedException, NodeNotDestroyed, NodeNotFoundException, CommandLineException, InterruptedException  {
         
         Node created = infra.createNode(node, resourceImpact);
         System.out.println("created " + created);
         assertTrue(created != null);
         
         infra.destroyNode(created.getId());
-        
-        try {
-			node = infra.getNode(created.getId());
-		} catch (NodeNotFoundException e) {
-			System.out.println(e.getMessage());
-			return; // OK
-		}
-        fail(node + " should not be retrieved"); // exception above not caught
     }
 
 }

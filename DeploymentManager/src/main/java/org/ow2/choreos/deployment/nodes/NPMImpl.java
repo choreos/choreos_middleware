@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.NodeDestroyer;
 import org.ow2.choreos.deployment.nodes.chef.ConfigToChef;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
+import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.NodeCreator;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpgrader;
 import org.ow2.choreos.deployment.nodes.cm.RecipeApplier;
@@ -58,12 +59,21 @@ public class NPMImpl implements NodePoolManager {
 
 	@Override
 	public List<Node> getNodes() {
-		return nodeRegistry.getNodes();
+		
+		if (this.cloudProvider.getProviderName() == FixedCloudProvider.FIXED_CLOUD_PROVIDER) {
+			return this.cloudProvider.getNodes();
+		} else {
+			return nodeRegistry.getNodes();
+		}
 	}
 
 	@Override
 	public Node getNode(String nodeId) throws NodeNotFoundException {
-		return nodeRegistry.getNode(nodeId);
+		if (this.cloudProvider.getProviderName() == FixedCloudProvider.FIXED_CLOUD_PROVIDER) {
+			return this.cloudProvider.getNode(nodeId);
+		} else {
+			return nodeRegistry.getNode(nodeId);
+		}
 	}
 
 	@Override
