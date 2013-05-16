@@ -81,34 +81,33 @@ public class NodeBootstrapper {
     }
     
     private void configureHarakiri(String deploymentManagerURL, String nodeId) {
-    	String chefRepoPath = copyTemplate();
+    	String chefRepoPath = copyTemplate(nodeId.replace("/", "-"));
     	
     	Map<String,String> replacementItems = new HashMap<String, String>();
     	
     	// replace content of attributes/default.rb
     	replacementItems.put("$DEPLOYMENT_MANAGER_URL", deploymentManagerURL);
     	replacementItems.put("$NODE_ID", nodeId);
-    	changeFileContents(chefRepoPath + "/harakiri/attributes/default.rb", replacementItems);
+    	String filename = chefRepoPath + "/attributes/default.rb";
+    	logger.info("Replacing file contents for file "+filename);
+		changeFileContents(filename, replacementItems);
     }
 
-	private String copyTemplate() {
-		String  chefRepoPath = Configuration.get(CHEF_REPO)+"/cookbooks";
-    	try {
-			FileUtils.deleteDirectory(new File(chefRepoPath+"/harakiri"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	private String copyTemplate(String nodeID) {
+		String  chefRepoPath = CHEF_REPO+"/cookbooks/harakiri"+nodeID;
+		logger.info("Copying templates to dir: " + chefRepoPath);
     	File chefRepoFolder = new File(chefRepoPath);
     	
-    	String harakiriTemplatePath = "src/main/resources/chef/harakiri";
+    	String harakiriTemplatePath = System.getProperty("user.dir")+"/src/main/resources/chef/harakiri";
+    	logger.info("Destination dir: " + harakiriTemplatePath);
     	File harakiriTemplateFolder = new File(harakiriTemplatePath);
     	
     	try {
-			FileUtils.copyDirectoryToDirectory(harakiriTemplateFolder, chefRepoFolder);
+			FileUtils.copyDirectory(harakiriTemplateFolder, chefRepoFolder);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return chefRepoPath;
+		return chefRepoFolder.getAbsolutePath();
 	}
     
     private void changeFileContents(String filename, Map<String, String> replacementItems) {
