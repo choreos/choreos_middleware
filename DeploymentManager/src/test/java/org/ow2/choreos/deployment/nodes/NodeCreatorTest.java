@@ -15,8 +15,10 @@ public class NodeCreatorTest {
 	public void shouldCreateNodeAndRegistryIt() throws Exception {
 		
 		CloudProvider goodCP = CloudProviderMocks.getGoodMock();
+		int N = goodCP.getNodes().size();
+		IdlePool pool = IdlePool.getCleanInstance(N, goodCP);
 		
-		NodeCreator nodeCreator = new NodeCreator(goodCP, false, false);
+		NodeCreator nodeCreator = new NodeCreator(pool, false, false);
 		Node createdNode = nodeCreator.create(new Node(), new ResourceImpact());
 		assertTrue(this.isNodeOK(createdNode));
 	}
@@ -30,8 +32,10 @@ public class NodeCreatorTest {
 	public void shouldCreateNodeAndRegistryItEvenWithOneCPFailure() throws Exception {
 		
 		CloudProvider intermitentCP = CloudProviderMocks.getIntermitentMock();
-		
-		NodeCreator nodeCreator = new NodeCreator(intermitentCP, false, true);
+		int N = intermitentCP.getNodes().size();
+		IdlePool pool = IdlePool.getCleanInstance(N, intermitentCP);
+
+		NodeCreator nodeCreator = new NodeCreator(pool, false, true);
 		Node createdNode = nodeCreator.create(new Node(), new ResourceImpact());
 		assertTrue(this.isNodeOK(createdNode));
 	}
@@ -40,8 +44,10 @@ public class NodeCreatorTest {
 	public void shouldNotCreateNode() throws Exception {
 		
 		CloudProvider badCP = CloudProviderMocks.getBadMock();
-		
-		NodeCreator nodeCreator = new NodeCreator(badCP, false, true);
+		int N = badCP.getNodes().size();
+		IdlePool pool = IdlePool.getCleanInstance(N, badCP);
+
+		NodeCreator nodeCreator = new NodeCreator(pool, false, true);
 		nodeCreator.create(new Node(), new ResourceImpact());
 	}
 

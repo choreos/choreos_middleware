@@ -31,17 +31,21 @@ import com.jcraft.jsch.JSchException;
  * 
  */
 public class NPMImpl implements NodePoolManager {
+	
+	public static final int POOL_SIZE = 5;
 
 	private Logger logger = Logger.getLogger(NPMImpl.class);
 
 	private CloudProvider cloudProvider;
 	private NodeRegistry nodeRegistry;
 	private NodeCreator nodeCreator;
+	private IdlePool idlePool;
 
 	public NPMImpl(CloudProvider provider) {
 		cloudProvider = provider;
 		nodeRegistry = NodeRegistry.getInstance();
-		this.nodeCreator = new NodeCreator(cloudProvider, true);
+		this.idlePool = IdlePool.getInstance(POOL_SIZE, cloudProvider);
+		this.nodeCreator = new NodeCreator(this.idlePool, true);
 	}
 	
 	public NPMImpl(CloudProvider provider, NodeCreator nodeCreator) {

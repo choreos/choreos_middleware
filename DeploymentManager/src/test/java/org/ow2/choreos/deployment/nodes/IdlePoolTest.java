@@ -47,11 +47,11 @@ public class IdlePoolTest {
 	public void shouldCreateExtraVMs() throws InterruptedException {
 		
 		int N = 3;
-		IdlePool pool = IdlePool.getInstance(N, cp);
+		IdlePool pool = IdlePool.getCleanInstance(N, cp);
 		int howManyVMs = N;
 		pool.createExtraVMs(howManyVMs);
 		
-		Thread.sleep(100);
+		Thread.sleep(300);
 		
 		Set<Node> idlePool = pool.getIdleNodes();
 		assertEquals(howManyVMs, idlePool.size());
@@ -138,7 +138,7 @@ public class IdlePoolTest {
 	}
 	
 	@Test
-	public void shouldRetrieveANodeEvenWithAnEmptyPool() {
+	public void shouldRetrieveANodeEvenWithAnEmptyPool() throws NodeNotCreatedException {
 		
 		int N = 5;
 		IdlePool pool = IdlePool.getCleanInstance(N, cp);
@@ -200,7 +200,11 @@ public class IdlePoolTest {
 		
 		@Override
 		public void run() {
-			this.retrievedNode = pool.retriveNode();
+			try {
+				this.retrievedNode = pool.retriveNode();
+			} catch (NodeNotCreatedException e) {
+				System.out.println("=(");
+			}
 		}
 	}
 
@@ -214,7 +218,11 @@ public class IdlePoolTest {
 		
 		@Override
 		public void run() {
-			pool.retriveNode();
+			try {
+				pool.retriveNode();
+			} catch (NodeNotCreatedException e) {
+				System.out.println("=(");
+			}
 			pool.fillPool();
 		}
 	}

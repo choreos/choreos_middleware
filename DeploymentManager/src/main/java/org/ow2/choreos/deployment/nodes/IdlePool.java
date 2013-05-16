@@ -56,6 +56,12 @@ public class IdlePool {
 		return getInstance(poolSize, cp);
 	}
 	
+	/**
+	 * Thread safe
+	 * @param poolSize
+	 * @param cp
+	 * @return
+	 */
 	public static IdlePool getInstance(int poolSize, CloudProvider cp) {
 		
 		synchronized(IdlePool.class) {
@@ -91,13 +97,18 @@ public class IdlePool {
 	 * The node is removed from the pool.
 	 * The method is synchronized, so multiple invocations will not get the same node.
 	 * If the pool is empty, the client waits for the creation of a VM
+	 * 
+	 * @throws NodeNotCreatedException 
 	 * @return
 	 */
-	public Node retriveNode() {
+	public Node retriveNode() throws NodeNotCreatedException {
 		
 		if (idleNodes.isEmpty()) {
 			VMCreator vmCreator = new VMCreator(cp);
 			vmCreator.run();
+			if (!vmCreator.ok) {
+				throw new NodeNotCreatedException("");
+			}
 		}
 		
 		synchronized (this) {
@@ -135,6 +146,7 @@ public class IdlePool {
 	private class VMCreator implements Runnable {
 
 		CloudProvider cp;
+		boolean ok;
 
 		public VMCreator(CloudProvider cp) {
 			this.cp = cp;
@@ -144,12 +156,13 @@ public class IdlePool {
 		public void run() {
 			try {
 				Node node = cp.createNode(new Node(), null);
+				ok = true;
 				synchronized (IdlePool.this) {
-					logger.info("Adding node " + node.getId() + " to the idle pool");
 					idleNodes.add(node);
 				}
 			} catch (NodeNotCreatedException e) {
 				logger.error("Could not create one of the extra VMs to the pool");
+				ok = false;
 			}
 		}
 	}
