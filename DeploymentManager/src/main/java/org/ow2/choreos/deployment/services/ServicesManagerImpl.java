@@ -223,8 +223,18 @@ public class ServicesManagerImpl implements ServicesManager {
 		RecipeBundle recipeBundle = service.getRecipeBundle();
 		Recipe deactivateRecipe = recipeBundle.getDeactivateRecipe();
 
+		// deactivate service instances and
 		for (ServiceInstance instance : service.getInstances()) {
 			executeServiceInstanceUndeployment(deactivateRecipe, instance);
+		}
+		
+		// remove cookbooks from chef-server
+		try {
+			this.knife.cookbook().delete(deactivateRecipe.getCookbookName());
+			this.knife.cookbook().delete(recipeBundle.getServiceRecipe().getCookbookName());
+		} catch (KnifeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
