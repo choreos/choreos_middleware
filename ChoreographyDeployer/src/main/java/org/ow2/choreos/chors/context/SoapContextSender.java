@@ -106,7 +106,7 @@ public class SoapContextSender implements ContextSender {
 			
 			QName name = new QName("arg1");
 			SOAPElement quotation2 = bodyElement.addChildElement(name);
-			quotation2.addTextNode(partnerRole);
+			quotation2.addTextNode(partnerName);
 
 			for(String partnerEndpoint: partnerEndpoints) {
 				QName address = new QName("arg2");
