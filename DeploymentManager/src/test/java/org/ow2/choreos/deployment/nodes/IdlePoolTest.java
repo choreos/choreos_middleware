@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -149,6 +150,27 @@ public class IdlePoolTest {
 		assertNotNull(node);
 		assertNotNull(node.getId());
 		assertFalse(node.getId().isEmpty());
+	}
+	
+	@Test
+	public void shouldRetrieveANodeThatWasAlreadyInThePool() throws NodeNotCreatedException, InterruptedException {
+		
+		int N = 5;
+		IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
+		pool.fillPool();
+		
+		Thread.sleep(200);
+
+		List<String> nodes = new ArrayList<String>();
+		for (Node n: pool.getIdleNodes()) {
+			nodes.add(n.getId());
+		}
+		
+		Node node = pool.retriveNode();
+		assertNotNull(node);
+		assertNotNull(node.getId());
+		assertFalse(node.getId().isEmpty());
+		assertTrue(nodes.contains(node.getId()));
 	}
 	
 	@Test
