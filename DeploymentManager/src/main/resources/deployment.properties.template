@@ -8,6 +8,7 @@ CLOUD_PROVIDER=FIXED
 
 NODE_TYPES=SMALL,MEDIUM,LARGE # User defined machine sizes to be used on FIXED_VM_TYPES
 MAPPER_POLICY=EXACT_FIT # Can be also ANY_FIT
+VM_LIMIT=5 # Maximum number of VMs that can be created (like AWS VM limit)
 
 FIXED_VM_IPS=192.168.122.160, 192.168.122.91, 192.168.122.14, 192.168.122.182
 FIXED_VM_HOSTNAMES=debian32, debian32doB, debian64, debian64doB

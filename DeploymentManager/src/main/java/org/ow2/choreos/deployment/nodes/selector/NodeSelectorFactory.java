@@ -5,7 +5,7 @@ import org.ow2.choreos.deployment.Configuration;
 public class NodeSelectorFactory {
 
 	public enum NodeSelectorType {
-		ALWAYS_CREATE, ROUND_ROBIN, DEMO
+		ALWAYS_CREATE, ROUND_ROBIN, DEMO, NODE_POOL
 	};
 
 	// singleton
@@ -40,6 +40,9 @@ public class NodeSelectorFactory {
 			if (demoSelector == null)
 				demoSelector = new DemoSelector();
 			return demoSelector;
+			
+		case NODE_POOL:
+			return new NodePoolSelector();			
 			
 		default:
 			throw new IllegalStateException("Could not choose NodeSelector");
