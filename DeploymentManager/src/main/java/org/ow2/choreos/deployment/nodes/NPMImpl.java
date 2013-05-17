@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.chef.ConfigToChef;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
@@ -32,8 +33,6 @@ import com.jcraft.jsch.JSchException;
  */
 public class NPMImpl implements NodePoolManager {
 	
-	public static final int POOL_SIZE = 3;
-
 	private Logger logger = Logger.getLogger(NPMImpl.class);
 
 	private CloudProvider cloudProvider;
@@ -42,10 +41,18 @@ public class NPMImpl implements NodePoolManager {
 	private IdlePool idlePool;
 
 	public NPMImpl(CloudProvider provider) {
+		
+		int poolSize = 0;
+		try {
+			poolSize = Integer.parseInt(Configuration.get("IDLE_POOL_SIZE"));
+		} catch (NumberFormatException e) {
+			; // no problem, poolSize is zero
+		}
+		
 		cloudProvider = provider;
 		nodeRegistry = NodeRegistry.getInstance();
 		nodeCreator = new NodeCreator(cloudProvider, true);
-		idlePool = IdlePool.getInstance(POOL_SIZE, nodeCreator);
+		idlePool = IdlePool.getInstance(poolSize, nodeCreator);
 	}
 	
 	public NPMImpl(CloudProvider provider, IdlePool pool) {

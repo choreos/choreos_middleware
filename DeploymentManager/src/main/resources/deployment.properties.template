@@ -43,3 +43,8 @@ CHEF_CLIENT_LOG=/tmp/chef-client.log # log written on chef nodes
 # but be aware it can prevent you for properly updating a recipe!
 # RecipeBuilder implementors should observe this variable
 RECIPES_CACHE=False
+
+# creates a pool of extra VMs to make the deployment faster and more scalable
+# the trade-off is the cost of some more VMs
+# if you do not want to use the pool, leave IDLE_POOL_SIZE as zero.
+IDLE_POOL_SIZE=0
