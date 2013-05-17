@@ -391,12 +391,19 @@ public class ServicesManagerImpl implements ServicesManager {
 
 	private void removeServiceInstances(DeployableService currentService,
 			int amount) {
-		if (amount <= currentService.getInstances().size()) {
+		if (amount < currentService.getInstances().size()) {
 			for (int i = 0; i < amount; i++) {
 				executeServiceInstanceUndeployment(currentService
 						.getRecipeBundle().getDeactivateRecipe(),
 						currentService.getInstances().get(0));
 				currentService.getInstances().remove(0);
+			}
+		} else if (amount < currentService.getInstances().size()) {
+			try {
+				this.deleteService(currentService.getSpec().getUUID());
+			} catch (ServiceNotDeletedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
