@@ -50,7 +50,7 @@
 \newcommand{\cd}{Choreography Deployer}
 \newcommand{\dm}{Deployment Manager}
 
-\title{CHOReOS \ee\ Installation Guide \\ {\normalsize Version 1.1}}
+\title{CHOReOS \ee\ Installation Guide \\ {\normalsize Version 1.2}}
 \author{Leonardo Leite (IME - USP)}
 
 \begin{document}
@@ -209,20 +209,29 @@ numbers=left
 
 {\footnotesize
 \begin{lstlisting}[caption=deployment.properties example,label=lst:deployment_properties] 
-NODE_POOL_MANAGER_PORT=9100
-SERVICE_DEPLOYER_PORT=9101
+DEPLOYMENT_MANAGER_PORT=9100
 NODE_SELECTOR=ROUND_ROBIN
 CLOUD_PROVIDER=AWS
-FIXED_VM_IP=192.168.56.102
-FIXED_VM_HOSTNAME=choreos-node
-FIXED_VM_PRIVATE_SSH_KEY=/home/leonardo/.ssh/nopass
-FIXED_VM_USER=choreos
+FIXED_VM_IPS=192.168.122.160, 192.168.122.91, 192.168.122.14, 192.168.122.182
+FIXED_VM_HOSTNAMES=debian32, debian32doB, debian64, debian64doB
+FIXED_VM_PRIVATE_SSH_KEYS=/path/to/id_rsa, /path/to/id_rsa, /path/to/id_rsa
+FIXED_VM_USERS=choreos, choreos, choreos, choreos
+FIXED_VM_TYPES=LARGE, SMALL, MEDIUM, SMALL
 AMAZON_ACCESS_KEY_ID=AKIAIIT2fsdfISddSECRETEFJH6Q
 AMAZON_SECRET_KEY=N+KzHQITaALSOwzfdsAj9MiSECRETE0UPuwyD
 AMAZON_KEY_PAIR=leofl
 AMAZON_PRIVATE_SSH_KEY=/home/leonardo/.ssh/leofl.pem
+OPENSTACK_IP=http://198.55.33.14:5000/v2.0
+OPENSTACK_TENANT=Choreos
+OPENSTACK_USER=secret
+OPENSTACK_PASSWORD=secret
+OPENSTACK_KEY_PAIR=keyname
+OPENSTACK_PRIVATE_SSH_KEY=/path/to/keyname.pem
 CHEF_CONFIG_FILE=/home/leonardo/chef/chef-repo/.chef/knife.rb
 CHEF_REPO=/home/leonardo/chef/chef-repo
+CHEF_CLIENT_LOG=/tmp/chef-client.log 
+RECIPES_CACHE=False
+IDLE_POOL_SIZE=0
 \end{lstlisting}
 }
 
@@ -230,6 +239,9 @@ Options to CLOUD\_PROVIDER: AWS, OPEN\_STACK, and FIXED.
 
 Options to NODE\_SELECTOR: ALWAYS\_CREATE (a new VM is created to each deployed service) and ROUND\_ROBIN (\textsf{NodeSelector} makes a round robin using the available VMs, without create any new VM).
 
+The IDLE\_POOL\_SIZE makes the Deployment Manager operate with a pool of idle nodes, which makes the node retrieval to be faster when necessary. The use of this pool makes the deployment process more scalable, however the trade-off is the cost of some more VMs created by the infrastructure provider. 
+
+Other options are explained in the \texttt{deployment.properties.template} file.
 
 \section{Execution}
 
