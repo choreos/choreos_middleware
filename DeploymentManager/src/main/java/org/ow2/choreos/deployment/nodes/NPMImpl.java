@@ -13,7 +13,6 @@ import org.ow2.choreos.deployment.nodes.selector.NodeNotSelectedException;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelector;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelectorFactory;
 import org.ow2.choreos.nodes.ConfigNotAppliedException;
-import org.ow2.choreos.nodes.NPMException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
@@ -22,6 +21,7 @@ import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
+import org.ow2.choreos.utils.Concurrency;
 
 import com.jcraft.jsch.JSchException;
 
@@ -32,7 +32,7 @@ import com.jcraft.jsch.JSchException;
  */
 public class NPMImpl implements NodePoolManager {
 	
-	public static final int POOL_SIZE = 5;
+	public static final int POOL_SIZE = 3;
 
 	private Logger logger = Logger.getLogger(NPMImpl.class);
 
@@ -44,14 +44,14 @@ public class NPMImpl implements NodePoolManager {
 	public NPMImpl(CloudProvider provider) {
 		cloudProvider = provider;
 		nodeRegistry = NodeRegistry.getInstance();
-		this.idlePool = IdlePool.getInstance(POOL_SIZE, cloudProvider);
-		this.nodeCreator = new NodeCreator(this.idlePool, true);
+		nodeCreator = new NodeCreator(cloudProvider, true);
+		idlePool = IdlePool.getInstance(POOL_SIZE, nodeCreator);
 	}
 	
-	public NPMImpl(CloudProvider provider, NodeCreator nodeCreator) {
+	public NPMImpl(CloudProvider provider, IdlePool pool) {
 		cloudProvider = provider;
 		nodeRegistry = NodeRegistry.getInstance();
-		this.nodeCreator = nodeCreator;
+		idlePool = pool;
 	}
 
 	@Override
@@ -59,10 +59,10 @@ public class NPMImpl implements NodePoolManager {
 			throws NodeNotCreatedException {
 
 		try {
-			node = nodeCreator.create(node, resourceImpact);
+			node = idlePool.retriveNode();
+			idlePool.fillPool();
 			nodeRegistry.putNode(node);
-		} catch (NPMException e) {
-			System.out.println("!!!!!!!!!");
+		} catch (NodeNotCreatedException e) {
 			throw new NodeNotCreatedException(node.getId());
 		}
 
@@ -180,7 +180,7 @@ public class NPMImpl implements NodePoolManager {
 			trd.start();
 		}
 
-		waitThreads(trds);
+		Concurrency.waitThreads(trds);
 
 		for (NodeDestroyer destroyer : destroyers) {
 			if (destroyer.isOK()) {
@@ -190,17 +190,4 @@ public class NPMImpl implements NodePoolManager {
 			}
 		}
 	}
-
-	private void waitThreads(List<Thread> trds) {
-
-		for (Thread t : trds) {
-			try {
-				t.join();
-			} catch (InterruptedException e) {
-				logger.error("Error while waiting thread", e);
-			}
-		}
-	}
-
-
 }

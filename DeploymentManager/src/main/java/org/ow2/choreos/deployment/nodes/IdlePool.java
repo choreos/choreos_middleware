@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.Configuration;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
+import org.ow2.choreos.nodes.NPMException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.utils.Concurrency;
@@ -34,16 +34,16 @@ public class IdlePool {
 	private static Logger logger = Logger.getLogger(IdlePool.class);
 	
 	private Set<Node> idleNodes = new HashSet<Node>();
-	private CloudProvider cp;
+	private NodeCreator nodeCreator;
 	private int poolSize;
 	private ExecutorService fillerExecutor = Executors.newSingleThreadExecutor();
 	
-	private IdlePool(int poolSize, CloudProvider cp) {
+	private IdlePool(int poolSize, NodeCreator nodeCreator) {
 		this.poolSize = poolSize;
-		this.cp = cp;
+		this.nodeCreator = nodeCreator;
 	}
 	
-	public static IdlePool getInstance(CloudProvider cp) {
+	public static IdlePool getInstance(NodeCreator nodeCreator) {
 	
 		int poolSize = 0;
 		try {
@@ -53,20 +53,20 @@ public class IdlePool {
 			logger.error(msg);
 			throw new IllegalStateException(msg);
 		}
-		return getInstance(poolSize, cp);
+		return getInstance(poolSize, nodeCreator);
 	}
 	
 	/**
 	 * Thread safe
 	 * @param poolSize
-	 * @param cp
+	 * @param nodeCreator
 	 * @return
 	 */
-	public static IdlePool getInstance(int poolSize, CloudProvider cp) {
+	public static IdlePool getInstance(int poolSize, NodeCreator nodeCreator) {
 		
 		synchronized(IdlePool.class) {
 			if (instance == null) {
-				instance = new IdlePool(poolSize, cp);
+				instance = new IdlePool(poolSize, nodeCreator);
 			}
 		}
 		return instance;
@@ -75,11 +75,11 @@ public class IdlePool {
 	/**
 	 * Not thread safe
 	 * @param poolSize
-	 * @param cp
+	 * @param nodeCreator
 	 * @return
 	 */
-	public static IdlePool getCleanInstance(int poolSize, CloudProvider cp) {
-		instance = new IdlePool(poolSize, cp);
+	public static IdlePool getCleanInstance(int poolSize, NodeCreator nodeCreator) {
+		instance = new IdlePool(poolSize, nodeCreator);
 		return instance;
 	}
 	
@@ -104,7 +104,7 @@ public class IdlePool {
 	public Node retriveNode() throws NodeNotCreatedException {
 		
 		if (idleNodes.isEmpty()) {
-			VMCreator vmCreator = new VMCreator(cp);
+			VMCreator vmCreator = new VMCreator(nodeCreator);
 			vmCreator.run();
 			if (!vmCreator.ok) {
 				throw new NodeNotCreatedException("");
@@ -121,12 +121,12 @@ public class IdlePool {
 	/**
 	 * Creates extra VMs asynchronously 
 	 * @param howManyVMs
-	 * @param cp
+	 * @param nodeCreator
 	 */
 	public void createExtraVMs(int howManyVMs) {
 		
 		for (int i=0; i<howManyVMs; i++) {
-			VMCreator vmCreator = new VMCreator(cp);
+			VMCreator vmCreator = new VMCreator(nodeCreator);
 			Thread thrd = new Thread(vmCreator);
 			thrd.start();
 		}
@@ -145,22 +145,22 @@ public class IdlePool {
 
 	private class VMCreator implements Runnable {
 
-		CloudProvider cp;
+		NodeCreator nodeCreator;
 		boolean ok;
 
-		public VMCreator(CloudProvider cp) {
-			this.cp = cp;
+		public VMCreator(NodeCreator nodeCreator) {
+			this.nodeCreator = nodeCreator;
 		}
 		
 		@Override
 		public void run() {
 			try {
-				Node node = cp.createNode(new Node(), null);
+				Node node = nodeCreator.create(new Node(), null);
 				ok = true;
 				synchronized (IdlePool.this) {
 					idleNodes.add(node);
 				}
-			} catch (NodeNotCreatedException e) {
+			} catch (NPMException e) {
 				logger.error("Could not create one of the extra VMs to the pool");
 				ok = false;
 			}
@@ -177,7 +177,7 @@ public class IdlePool {
 			if (extra > 0) {
 				ExecutorService executor = Executors.newFixedThreadPool(extra);
 				for (int i=0; i<extra; i++) {
-					VMCreator vmCreator = new VMCreator(cp);
+					VMCreator vmCreator = new VMCreator(nodeCreator);
 					executor.execute(vmCreator);
 				}
 				Concurrency.waitExecutor(executor, FILLING_POOL_TIMEOUT_MINUTES);

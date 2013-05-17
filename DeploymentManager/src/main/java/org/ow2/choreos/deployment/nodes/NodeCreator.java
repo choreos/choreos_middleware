@@ -2,6 +2,7 @@ package org.ow2.choreos.deployment.nodes;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chef.KnifeException;
+import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cm.NodeBootstrapper;
 import org.ow2.choreos.deployment.nodes.cm.NodeNotBootstrappedException;
 import org.ow2.choreos.nodes.NPMException;
@@ -20,18 +21,18 @@ public class NodeCreator {
 
 	private Logger logger = Logger.getLogger(NodeDestroyer.class);
 
-	private IdlePool pool;
+	private CloudProvider cp;
 	private boolean bootstrapNode = true;
 	private boolean retry = false;
 
-	public NodeCreator(IdlePool pool, boolean retry) {
-		this.pool = pool;
+	public NodeCreator(CloudProvider cp, boolean retry) {
+		this.cp = cp;
 		this.retry = retry;
 	}
 
-	public NodeCreator(IdlePool pool, boolean bootstrapNode, boolean retry) {
+	public NodeCreator(CloudProvider cp, boolean bootstrapNode, boolean retry) {
 		
-		this(pool, retry);
+		this(cp, retry);
 		this.bootstrapNode = bootstrapNode;
 	}
 
@@ -41,12 +42,11 @@ public class NodeCreator {
 	public Node create(Node node, ResourceImpact resourceImpact) throws NPMException {
 		
 		try {
-			node = pool.retriveNode();
-			pool.fillPool();
+			node = cp.createNode(node, resourceImpact);
 		} catch (NodeNotCreatedException e) {
 			if (retry) {
 				logger.warn("Could not create VM. Going to try again!");
-				NodeCreator creator = new NodeCreator(pool, 
+				NodeCreator creator = new NodeCreator(cp, 
 						bootstrapNode, false);
 				return creator.create(node, resourceImpact);
 			} else {
@@ -69,7 +69,7 @@ public class NodeCreator {
 				if (retry) {
 					logger.warn("Could not connect to the node " + node
 							+ ". We will forget this node and try a new one.");
-					NodeCreator creator = new NodeCreator(pool, bootstrapNode, false);
+					NodeCreator creator = new NodeCreator(cp, bootstrapNode, false);
 					return creator.create(node, resourceImpact);
 				} else {
 					throw new NodeNotCreatedException(node.getId(),

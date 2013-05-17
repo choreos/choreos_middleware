@@ -1,6 +1,9 @@
 package org.ow2.choreos.deployment.nodes;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -14,7 +17,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.stubbing.OngoingStubbing;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
+import org.ow2.choreos.nodes.NPMException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
@@ -22,7 +25,7 @@ import org.ow2.choreos.utils.LogConfigurator;
 
 public class IdlePoolTest {
 
-	private CloudProvider cp;
+	private NodeCreator nodeCreator;
 	
 	@BeforeClass
 	public static void setUpClass() {
@@ -30,12 +33,12 @@ public class IdlePoolTest {
 	}
 	
 	@Before
-	public void setUp() throws NodeNotCreatedException {
+	public void setUp() throws NPMException {
 	
 		int N = 10;
-		cp = mock(CloudProvider.class);
+		nodeCreator = mock(NodeCreator.class);
 		OngoingStubbing<Node> ongoingStubbing = 
-				when(cp.createNode(any(Node.class), any(ResourceImpact.class)));
+				when(nodeCreator.create(any(Node.class), any(ResourceImpact.class)));
 		for (int i=0; i<N; i++) {
 			Node node = new Node();
 			node.setId("node" + i);
@@ -47,7 +50,7 @@ public class IdlePoolTest {
 	public void shouldCreateExtraVMs() throws InterruptedException {
 		
 		int N = 3;
-		IdlePool pool = IdlePool.getCleanInstance(N, cp);
+		IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
 		int howManyVMs = N;
 		pool.createExtraVMs(howManyVMs);
 		
@@ -61,7 +64,7 @@ public class IdlePoolTest {
 	public void shouldFillThePool() throws InterruptedException {
 		
 		int N = 3;
-		IdlePool pool = IdlePool.getCleanInstance(N, cp);
+		IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
 		pool.createExtraVMs(1);
 		Thread.sleep(100);
 		pool.fillPool();
@@ -75,7 +78,7 @@ public class IdlePoolTest {
 	public void shouldFillThePoolConcurrently() throws InterruptedException {
 		
 		int N = 5;
-		IdlePool pool = IdlePool.getCleanInstance(N, cp);
+		IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
 		pool.createExtraVMs(1);
 		Thread.sleep(100);
 		for (int i=0; i<3; i++) {
@@ -94,7 +97,7 @@ public class IdlePoolTest {
 	public void multipleClientsShouldNotRetrieveTheSameNode() throws InterruptedException {
 		
 		int N = 5;
-		IdlePool pool = IdlePool.getCleanInstance(N, cp);
+		IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
 		pool.fillPool();
 		Thread.sleep(100);
 		List<PoolClient> clients = new ArrayList<PoolClient>();
@@ -122,7 +125,7 @@ public class IdlePoolTest {
 	public void multipleRequestsShouldLeaveThePoolFull() throws InterruptedException {
 
 		int N = 5;
-		IdlePool pool = IdlePool.getCleanInstance(N, cp);
+		IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
 		pool.fillPool();
 		Thread.sleep(100);
 		for (int i=0; i<3; i++) {
@@ -141,7 +144,7 @@ public class IdlePoolTest {
 	public void shouldRetrieveANodeEvenWithAnEmptyPool() throws NodeNotCreatedException {
 		
 		int N = 5;
-		IdlePool pool = IdlePool.getCleanInstance(N, cp);
+		IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
 		Node node = pool.retriveNode();
 		assertNotNull(node);
 		assertNotNull(node.getId());
@@ -152,7 +155,7 @@ public class IdlePoolTest {
 	public void multipleClientsShouldRetrieveNodesEvenWithAnEmptyPool() throws InterruptedException {
 		
 		int N = 5;
-		IdlePool pool = IdlePool.getCleanInstance(N, cp);
+		IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
 		List<PoolClient> clients = new ArrayList<PoolClient>();
 		for (int i=0; i<3; i++) {
 			PoolClient client = new PoolClient(pool);

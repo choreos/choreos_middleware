@@ -18,11 +18,11 @@ public class NPMImplTest {
 		reg.clear();
 
 		CloudProvider cp = CloudProviderMocks.getGoodMock();
+		NodeCreator creator = new NodeCreator(cp, false, true);
 		int N = cp.getNodes().size();
-		IdlePool pool = IdlePool.getCleanInstance(N, cp);
+		IdlePool pool = IdlePool.getCleanInstance(N, creator);
 
-		NodeCreator creator = new NodeCreator(pool, false, true);
-		NodePoolManager npm = new NPMImpl(cp, creator);
+		NodePoolManager npm = new NPMImpl(cp, pool);
 		
 		Node createdNode = npm.createNode(new Node(), null);
 		assertTrue(isNodeOK(createdNode));
@@ -38,10 +38,11 @@ public class NPMImplTest {
 		reg.clear();
 
 		CloudProvider cp = CloudProviderMocks.getGoodMock();
+		NodeCreator creator = new NodeCreator(cp, false, true);
 		int N = cp.getNodes().size();
-		IdlePool pool = IdlePool.getCleanInstance(N, cp);
-		NodeCreator creator = new NodeCreator(pool, false, true);
-		NodePoolManager npm = new NPMImpl(cp, creator);
+		IdlePool pool = IdlePool.getCleanInstance(N, creator);
+
+		NodePoolManager npm = new NPMImpl(cp, pool);
 		
 		Node createdNode = npm.createNode(new Node(), null);
 		assertTrue(isNodeOK(createdNode));
@@ -60,20 +61,20 @@ public class NPMImplTest {
 		reg.clear();
 
 		CloudProvider cp1 = CloudProviderMocks.getGoodMock();
+		NodeCreator creator1 = new NodeCreator(cp1, false, true);
 		int N = cp1.getNodes().size();
-		IdlePool pool1 = IdlePool.getCleanInstance(N, cp1);
-		NodeCreator creator1 = new NodeCreator(pool1, false, true);
-		NodePoolManager npm1 = new NPMImpl(cp1, creator1);
+		IdlePool pool1 = IdlePool.getCleanInstance(N, creator1);
+		NodePoolManager npm1 = new NPMImpl(cp1, pool1);
 		
 		Node createdNode = npm1.createNode(new Node(), null);
 		assertTrue(isNodeOK(createdNode));
 
 		CloudProvider cp2 = CloudProviderMocks.getGoodMock();
+		NodeCreator creator2 = new NodeCreator(cp2, false, true);
 		N = cp2.getNodes().size();
-		IdlePool pool2 = IdlePool.getInstance(N, cp2);
-		NodeCreator creator2 = new NodeCreator(pool2, false, true);
-		NodePoolManager npm2 = new NPMImpl(cp2, creator2);
-
+		IdlePool pool2 = IdlePool.getCleanInstance(N, creator2);
+		NodePoolManager npm2 = new NPMImpl(cp2, pool2);
+		
 		Node fromOtherNPM = npm2.getNode(createdNode.getId());
 		assertTrue(isNodeOK(fromOtherNPM));
 		assertEquals(fromOtherNPM, createdNode);
