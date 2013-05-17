@@ -18,7 +18,7 @@ public class ChefScripts {
 	private static final String KNIFE_NODE_CREATE = "knife node create -d $nodeName -c $knifeFile";
 	private static final String KNIFE_CLIENT_DELETE = "knife client delete $clientName -c $knifeFile -y";
 	private static final String KNIFE_COOKBOOK_UPLOAD = "knife cookbook upload $cookbookName -o $cookbookParentFolder -c $knifeFile";
-	private static final String KNIFE_COOKBOOK_DELETE = "knife cookbook delete $cookbookName -y -c $knifeFile";
+	private static final String KNIFE_COOKBOOK_DELETE = "knife cookbook delete $cookbookName -a -y -c $knifeFile";
 	private static final String KNIFE_COOKBOOK_LIST = "knife cookbook list -c $knifeFile";
 
 	private String config;
