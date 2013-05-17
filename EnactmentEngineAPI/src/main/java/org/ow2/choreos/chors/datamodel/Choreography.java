@@ -16,11 +16,11 @@ public class Choreography {
 	private List<ChoreographyService> choreographyServices;
 	private ChoreographySpec requestedChoreographySpec = null;
 	
-	public ChoreographyService getDeployedChoreographyServiceByChoreographyServiceUID(
+	public ChoreographyService getServiceByChorServiceSpecName(
 			String choreographyServiceUID) {
 
-		List<ChoreographyService> deployedServices = getChoreographyServices();
-		for (ChoreographyService svc : deployedServices) {
+		List<ChoreographyService> services = getChoreographyServices();
+		for (ChoreographyService svc : services) {
 			if (choreographyServiceUID.equals(svc.getChoreographyServiceSpec()
 					.getName()))
 				return svc;

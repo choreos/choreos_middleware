@@ -64,9 +64,9 @@ public class ChorEnactmentWithBusTest {
 		Choreography chor = ee.enactChoreography(chorId);
 
 		ChoreographyService travel = chor
-				.getDeployedChoreographyServiceByChoreographyServiceUID(ModelsForTest.TRAVEL_AGENCY);
+				.getServiceByChorServiceSpecName(ModelsForTest.TRAVEL_AGENCY);
 		ServiceInstance airlineInstance = ((DeployableService) chor
-				.getDeployedChoreographyServiceByChoreographyServiceUID(
+				.getServiceByChorServiceSpecName(
 						ModelsForTest.AIRLINE).getService()).getInstances()
 				.get(0);
 		ServiceInstance travelInstance = ((DeployableService) travel.getService())

@@ -285,7 +285,7 @@ public class Deployer {
 			logger.debug("Requesting update of " + serviceSpec);
 
 			ChoreographyService chorService = chor
-					.getDeployedChoreographyServiceByChoreographyServiceUID(serviceSpec
+					.getServiceByChorServiceSpecName(serviceSpec
 							.getKey());
 			
 			ChoreographyServiceSpec tmp = serviceSpec.getValue();

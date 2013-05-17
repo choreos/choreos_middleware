@@ -70,9 +70,9 @@ public class VerticalScalingTest {
 		Choreography chor = ee.enactChoreography(chorId);
 
 		ChoreographyService airline = chor
-				.getDeployedChoreographyServiceByChoreographyServiceUID(ModelsForTest.AIRLINE);
+				.getServiceByChorServiceSpecName(ModelsForTest.AIRLINE);
 		ChoreographyService travel = chor
-				.getDeployedChoreographyServiceByChoreographyServiceUID(ModelsForTest.TRAVEL_AGENCY);
+				.getServiceByChorServiceSpecName(ModelsForTest.TRAVEL_AGENCY);
 
 		WSClient client = new WSClient(travel.getService().getUris().get(0)
 				+ "?wsdl");
@@ -90,9 +90,9 @@ public class VerticalScalingTest {
 		Thread.sleep(4000);
 
 		airline = chor
-				.getDeployedChoreographyServiceByChoreographyServiceUID(ModelsForTest.AIRLINE);
+				.getServiceByChorServiceSpecName(ModelsForTest.AIRLINE);
 		travel = chor
-				.getDeployedChoreographyServiceByChoreographyServiceUID(ModelsForTest.TRAVEL_AGENCY);
+				.getServiceByChorServiceSpecName(ModelsForTest.TRAVEL_AGENCY);
 
 		client = new WSClient(travel.getService().getUris().get(0) + "?wsdl");
 

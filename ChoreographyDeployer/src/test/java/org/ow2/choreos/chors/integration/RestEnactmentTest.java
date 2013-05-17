@@ -114,7 +114,7 @@ public class RestEnactmentTest {
 		System.out.println("A chor: " + chor);
 
 		String uri =
-				((DeployableService) chor.getDeployedChoreographyServiceByChoreographyServiceUID(
+				((DeployableService) chor.getServiceByChorServiceSpecName(
 						ModelsForTest.TRAVEL_AGENCY).getService()).getInstances().get(0).getNativeUri();
 		WSClient client = new WSClient(uri + "?wsdl");
 		Item response = client.request("buyTrip");
