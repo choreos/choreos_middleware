@@ -28,8 +28,15 @@ if not node['CHOReOSData']['serviceData']['$NAME']['deactivate']
 	end
 end
 
+file "#{node['tomcat']['webapp_dir']}/$NAME.war" do
+	action :nothing
+end
+
 if node['CHOReOSData']['serviceData']['$NAME']['deactivate']
-	file "#{node['tomcat']['webapp_dir']}/$NAME.war" do
-		action :delete
+	ruby_block "remove-service-$NAME" do
+		block do
+			i=0
+		end
+		notifies :delete, "file[#{node['tomcat']['webapp_dir']}/$NAME.war]"
 	end
 end
