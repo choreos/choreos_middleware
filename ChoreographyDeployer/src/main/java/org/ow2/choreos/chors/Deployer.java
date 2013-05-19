@@ -14,19 +14,17 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.chors.Configuration.Option;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographyService;
 import org.ow2.choreos.chors.datamodel.ChoreographyServiceSpec;
+import org.ow2.choreos.chors.rest.RESTClientsRetriever;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.client.NodesClient;
 import org.ow2.choreos.services.ServiceNotDeployedException;
 import org.ow2.choreos.services.ServiceNotModifiedException;
 import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.UnhandledModificationException;
-import org.ow2.choreos.services.client.ServicesClient;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
@@ -35,8 +33,6 @@ import org.ow2.choreos.services.datamodel.ServiceInstance;
 public class Deployer {
 
 	private Logger logger = Logger.getLogger(Deployer.class);
-	private volatile ServicesManager servicesManager = new ServicesClient(
-			Configuration.get(Option.DEPLOYMENT_MANAGER_URI));
 
 	/**
 	 * 
@@ -159,15 +155,16 @@ public class Deployer {
 
 			deployedServices.put(deployed.getChoreographyServiceSpec()
 					.getName(), deployed);
-
+			String owner = deployed.getChoreographyServiceSpec().getOwner();
+			
 			if (((DeployableServiceSpec) deployed.getChoreographyServiceSpec().getServiceSpec())
 					.getPackageType() != PackageType.LEGACY) {
 				for (ServiceInstance instance : ((DeployableService) deployed
 						.getService()).getInstances()) {
+					
 					String nodeId = instance.getNode().getId();
-					NodeUpgrader upgrader = new NodeUpgrader(nodeId);
+					NodeUpgrader upgrader = new NodeUpgrader(nodeId, owner);
 					executor.submit(upgrader);
-
 				}
 			}
 		}
@@ -335,6 +332,11 @@ public class Deployer {
 
 		@Override
 		public ChoreographyService call() throws Exception {
+			
+			String owner = choreographyServiceSpec.getOwner();
+			RESTClientsRetriever retriever = new RESTClientsRetriever();
+			ServicesManager servicesManager = retriever.getServicesClient(owner);
+			
 			try {
 				DeployableService deployed = servicesManager
 						.createService((DeployableServiceSpec) choreographyServiceSpec
@@ -365,6 +367,11 @@ public class Deployer {
 		@Override
 		public ChoreographyService call() throws ServiceNotModifiedException,
 				UnhandledModificationException {
+			
+			String owner = choreographyService.getChoreographyServiceSpec().getOwner();
+			RESTClientsRetriever retriever = new RESTClientsRetriever();
+			ServicesManager servicesManager = retriever.getServicesClient(owner);
+
 			try {				
 				DeployableService a = servicesManager.updateService(
 								(DeployableServiceSpec) choreographyService.getChoreographyServiceSpec().getServiceSpec());
@@ -383,16 +390,19 @@ public class Deployer {
 
 	private class NodeUpgrader implements Runnable {
 
-		NodePoolManager npm = new NodesClient(
-				Configuration.get(Option.DEPLOYMENT_MANAGER_URI));
-		String nodeId;
+		String nodeId, owner;
 
-		public NodeUpgrader(String nodeId) {
+		public NodeUpgrader(String nodeId, String owner) {
 			this.nodeId = nodeId;
+			this.owner = owner;
 		}
 
 		@Override
 		public void run() {
+			
+			RESTClientsRetriever retriever = new RESTClientsRetriever();
+			NodePoolManager npm = retriever.getNodesClient(owner);
+
 			try {
 				npm.upgradeNode(nodeId);
 			} catch (NodeNotUpgradedException e) {
