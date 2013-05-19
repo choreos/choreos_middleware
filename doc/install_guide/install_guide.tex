@@ -50,7 +50,7 @@
 \newcommand{\cd}{Choreography Deployer}
 \newcommand{\dm}{Deployment Manager}
 
-\title{CHOReOS \ee\ Installation Guide \\ {\normalsize Version 1.2}}
+\title{CHOReOS \ee\ Installation Guide \\ {\normalsize Version 1.3}}
 \author{Leonardo Leite (IME - USP)}
 
 \begin{document}
@@ -201,7 +201,7 @@ After installing Maven 3, open the terminal at the \texttt{choreos\_middleware} 
 
 \section{Configuration}
 
-Open the folder \texttt{DeploymentManager/src/main/resources}, and create a \texttt{deployment.properties} file by copying the \texttt{deployment.properties.template} file. The new properties file must be created in the same folder. Open the just created properties file and edit it following instructions on the template file. The Listing~\ref{lst:deployment_properties} shows an example. Do the same process to the template properties file in \texttt{ChoreographyDeployer/src/main/resources}.
+Open the folder \texttt{DeploymentManager/src/main/resources}, and create a \texttt{deployment.properties} file by copying the \texttt{deployment.properties.template} file. The new properties file must be created in the same folder. Open the just created properties file and edit it following instructions on the template file. The Listing~\ref{lst:deployment_properties} shows an example. Do the same process to the template properties file \texttt{ChoreographyDeployer/src/main/resources/deployment.properties}.
 
 \lstset{
 numbers=left
@@ -242,6 +242,8 @@ Options to NODE\_SELECTOR: ALWAYS\_CREATE (a new VM is created to each deployed 
 The IDLE\_POOL\_SIZE makes the Deployment Manager operate with a pool of idle nodes, which makes the node retrieval to be faster when necessary. The use of this pool makes the deployment process more scalable, however the trade-off is the cost of some more VMs created by the infrastructure provider. 
 
 Other options are explained in the \texttt{deployment.properties.template} file.
+
+In the \texttt{ChoreographyDeployer} project you must also generate the file \texttt{owners.properties} based on the \texttt{owners.properties.template} file. If you are going to use only one cloud infrastructure, the template file do not need to be changed, only renamed. If you are going to use multiple cloud environments, you need to configure one Deployment Manager to each cloud infrastructure. So, you must configure the \texttt{owners.properties} file to give a name to each available Deployment Manager. These names will be compared with the \texttt{owner} attribute in the choreography service specifications, so the service can be deployed by the matched Deployment Manager. If there is no match, the DEFAULT value declared on \texttt{owners.properties} will be used.
 
 \section{Execution}
 
