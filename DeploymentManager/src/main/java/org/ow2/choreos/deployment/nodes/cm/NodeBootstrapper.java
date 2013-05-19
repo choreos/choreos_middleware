@@ -63,7 +63,9 @@ public class NodeBootstrapper {
 		
 		NodeChecker checker = new NodeChecker();
 		if (!checker.checkNodeOnNodesList(node)) {
-			throw new NodeNotBootstrappedException("Node " + node.getId() + " not bootstrapped");
+			String msg = "Node " + node.getId() + " not bootstrapped";
+			logger.error(msg);
+			throw new NodeNotBootstrappedException(msg);
 		}
     }
 
