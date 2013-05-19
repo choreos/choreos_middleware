@@ -2,6 +2,7 @@ package org.ow2.choreos.chors.datamodel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -20,16 +21,17 @@ public class ChoreographySpec {
 			this.choreographyServiceSpecs.add(spec);
 	}
 
-	public ChoreographyServiceSpec getChoreographyServiceSpecByChoreographyServiceUID(
-			String choreographyServiceUID) {
+	public ChoreographyServiceSpec getChoreographyServiceSpecByName(
+			String choreographyServiceSpecName) {
 		
-		for (ChoreographyServiceSpec svc: choreographyServiceSpecs) {
-			if (choreographyServiceUID.equals(svc.getName()))
-				return svc;
+		for (ChoreographyServiceSpec svcSpec: choreographyServiceSpecs) {
+			if (choreographyServiceSpecName.equals(svcSpec.getName()))
+				return svcSpec;
 		}
-		return null;
+		throw new NoSuchElementException("Service spec named "
+				+ choreographyServiceSpecName + " does not exist");
 	}
-	
+
 	public void addChoreographyServiceSpec(ChoreographyServiceSpec choreographyServiceSpec) {
 		this.choreographyServiceSpecs.add(choreographyServiceSpec);
 	}
