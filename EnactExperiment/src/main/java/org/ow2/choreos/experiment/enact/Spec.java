@@ -1,9 +1,10 @@
 package org.ow2.choreos.experiment.enact;
 
-import org.ow2.choreos.chors.datamodel.ChorSpec;
-import org.ow2.choreos.deployment.services.datamodel.PackageType;
-import org.ow2.choreos.deployment.services.datamodel.ServiceDependency;
-import org.ow2.choreos.deployment.services.datamodel.ServiceSpec;
+import org.ow2.choreos.chors.datamodel.ChoreographyServiceDependency;
+import org.ow2.choreos.chors.datamodel.ChoreographyServiceSpec;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
+import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
+import org.ow2.choreos.services.datamodel.PackageType;
 
 public class Spec {
 
@@ -14,31 +15,35 @@ public class Spec {
 	private static final int AIRLINE_PORT = 1234;
 	private static final int TRAVEL_AGENCY_PORT = 1235;	
 	
-	public static ChorSpec getSpec() {
+	public static ChoreographySpec getSpec() {
 		
-		ChorSpec chorSpec = new ChorSpec(); 
+		ChoreographySpec choreographySpec = new ChoreographySpec(); 
 		
-		ServiceSpec airline = new ServiceSpec();
-		airline.setName(AIRLINE);
-		airline.setPackageUri(AIRLINE_JAR);
-		airline.setEndpointName(AIRLINE);
-		airline.setPort(AIRLINE_PORT);
-		airline.setPackageType(PackageType.COMMAND_LINE);
-		airline.getRoles().add(AIRLINE);
-		chorSpec.addServiceSpec(airline);
+		ChoreographyServiceSpec airlineChorServiceSpec = new ChoreographyServiceSpec();
+		airlineChorServiceSpec.setName(AIRLINE);
+		airlineChorServiceSpec.getRoles().add(AIRLINE);
+		DeployableServiceSpec airlineServiceSpec = new DeployableServiceSpec(); 
+		airlineServiceSpec.setPackageUri(AIRLINE_JAR);
+		airlineServiceSpec.setEndpointName(AIRLINE);
+		airlineServiceSpec.setPort(AIRLINE_PORT);
+		airlineServiceSpec.setPackageType(PackageType.COMMAND_LINE);
+		airlineChorServiceSpec.setServiceSpec(airlineServiceSpec);
+		choreographySpec.addChoreographyServiceSpec(airlineChorServiceSpec);
 		
-		ServiceSpec travel = new ServiceSpec();
-		travel.setName(TRAVEL_AGENCY);
-		travel.setPackageUri(TRAVEL_AGENCY_JAR);
-		travel.setEndpointName(TRAVEL_AGENCY);
-		travel.setPort(TRAVEL_AGENCY_PORT);
-		travel.setPackageType(PackageType.COMMAND_LINE);
-		travel.getRoles().add(TRAVEL_AGENCY);
-		ServiceDependency dep = new ServiceDependency(AIRLINE, AIRLINE);
-		travel.getDependencies().add(dep);
-		chorSpec.addServiceSpec(travel);
+		ChoreographyServiceSpec travelChorServiceSpec = new ChoreographyServiceSpec();
+		travelChorServiceSpec.setName(TRAVEL_AGENCY);
+		travelChorServiceSpec.getRoles().add(TRAVEL_AGENCY);
+		ChoreographyServiceDependency dep = new ChoreographyServiceDependency(AIRLINE, AIRLINE);
+		travelChorServiceSpec.getDependencies().add(dep);
+		DeployableServiceSpec travelServiceSpec = new DeployableServiceSpec();
+		travelServiceSpec.setPackageUri(TRAVEL_AGENCY_JAR);
+		travelServiceSpec.setEndpointName(TRAVEL_AGENCY);
+		travelServiceSpec.setPort(TRAVEL_AGENCY_PORT);
+		travelServiceSpec.setPackageType(PackageType.COMMAND_LINE);
+		travelChorServiceSpec.setServiceSpec(travelServiceSpec);
+		choreographySpec.addChoreographyServiceSpec(travelChorServiceSpec);
 		
-		return chorSpec;
+		return choreographySpec;
 	}
 
 }

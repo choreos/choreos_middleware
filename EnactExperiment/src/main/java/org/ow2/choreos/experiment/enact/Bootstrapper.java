@@ -3,10 +3,10 @@ package org.ow2.choreos.experiment.enact;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ow2.choreos.deployment.nodes.NodeNotCreatedException;
-import org.ow2.choreos.deployment.nodes.NodePoolManager;
-import org.ow2.choreos.deployment.nodes.datamodel.Node;
-import org.ow2.choreos.deployment.nodes.rest.NodesClient;
+import org.ow2.choreos.nodes.NodeNotCreatedException;
+import org.ow2.choreos.nodes.NodePoolManager;
+import org.ow2.choreos.nodes.client.NodesClient;
+import org.ow2.choreos.nodes.datamodel.Node;
 
 public class Bootstrapper {
 

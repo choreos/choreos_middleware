@@ -6,11 +6,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.deployment.nodes.NodeNotDestroyed;
-import org.ow2.choreos.deployment.nodes.NodeNotFoundException;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory.CloudProviderType;
+import org.ow2.choreos.nodes.NodeNotDestroyed;
+import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.utils.Concurrency;
 

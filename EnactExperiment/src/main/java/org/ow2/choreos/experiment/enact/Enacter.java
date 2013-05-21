@@ -7,24 +7,25 @@ import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.ChoreographyNotFoundException;
 import org.ow2.choreos.chors.EnactmentException;
 import org.ow2.choreos.chors.client.ChorDeployerClient;
-import org.ow2.choreos.chors.datamodel.ChorSpec;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.deployment.services.datamodel.Service;
+import org.ow2.choreos.chors.datamodel.ChoreographyService;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
+import org.ow2.choreos.services.datamodel.DeployableService;
 
 public class Enacter implements Runnable {
 	
 	private static final String ENACTMENT_ENGINE_HOST = "http://localhost:9102/choreographydeployer";
 	private static final String TRAVEL_AGENCY = "travelagency";	
 
-	ChorSpec chorSpec; // input
+	ChoreographySpec ChoreographySpec; // input
 	int idx; // input
 	String travelWSDL = null; // result: deployed travel agency service WSDL
 	long duration; // result: enactment duration in milliseconds
 	boolean ok = true;
 	Report report;
 	
-	public Enacter(ChorSpec chorSpec, int idx, Report report) {
-		this.chorSpec = chorSpec;
+	public Enacter(ChoreographySpec ChoreographySpec, int idx, Report report) {
+		this.ChoreographySpec = ChoreographySpec;
 		this.idx = idx;
 		this.report = report;
 	}
@@ -36,10 +37,10 @@ public class Enacter implements Runnable {
 		
 		long t0 = System.currentTimeMillis();
 		ChoreographyDeployer enacter = new ChorDeployerClient(ENACTMENT_ENGINE_HOST);
-		String chorId = enacter.createChoreography(chorSpec);
+		String chorId = enacter.createChoreography(ChoreographySpec);
 		Choreography chor = null;
 		try {
-			chor = enacter.enact(chorId);
+			chor = enacter.enactChoreography(chorId);
 		} catch (EnactmentException e) {
 			System.out.println(Utils.getTimeStamp() + "Enactment #" + idx + " has failed (chorId=" + chorId +")");
 			ok = false;
@@ -51,8 +52,9 @@ public class Enacter implements Runnable {
 		}
 		long tf = System.currentTimeMillis();
 		duration = tf - t0;
-		Service travelService = chor.getDeployedServiceByName(TRAVEL_AGENCY);
-		travelWSDL = travelService.getInstances().get(0).getNativeUri() + "?wsdl";
+		ChoreographyService travelService = chor.getServiceByChorServiceSpecName(TRAVEL_AGENCY);
+		
+		travelWSDL = travelService.getService().getUris().get(0) + "?wsdl";
 		
 		System.out.println(Utils.getTimeStamp() + "Choreography #" + idx + " enacted in " + duration + " miliseconds");
 		report.addChorEnactmentTime(duration);
@@ -66,7 +68,9 @@ public class Enacter implements Runnable {
 	private List<String> getMachinesFromChor(Choreography chor) {
 		
 		List<String> machines = new ArrayList<String>();
-		for (Service svc: chor.getDeployedServices()) {
+		for (ChoreographyService chorSvc: chor.getChoreographyServices()) {
+			
+			DeployableService svc = ((DeployableService) chorSvc.getService()); 
 			String nodeId = svc.getInstances().get(0).getNode().getId();
 			String nodeIp = svc.getInstances().get(0).getNode().getIp();
 			String machine = nodeIp + " (" + nodeId + ")";

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ow2.choreos.chors.datamodel.ChorSpec;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 
 /**
  * Before run the experiment:
@@ -69,7 +69,7 @@ public class Experiment {
 		System.out.println(Utils.getTimeStamp() + "Starting enactment");
 		
 		long t0 = System.currentTimeMillis();
-		ChorSpec chorSpec = Spec.getSpec();
+		ChoreographySpec chorSpec = Spec.getSpec();
 		List<Enacter> enacts = new ArrayList<Enacter>();
 		List<Thread> trds = new ArrayList<Thread>();
 		for (int i=0; i<this.chorsQty; i++) {
