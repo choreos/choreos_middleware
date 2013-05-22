@@ -72,7 +72,7 @@ public class ServicesManagerImpl implements ServicesManager {
 		}
 
 		if (serviceSpec.getPackageType() != PackageType.LEGACY) {
-			service = deployService(service);
+			service = createDeployableService(service);
 		}
 
 		registry.addService(serviceSpec.getUUID(), service);
@@ -80,19 +80,20 @@ public class ServicesManagerImpl implements ServicesManager {
 
 	}
 
-	private DeployableService deployService(DeployableService service)
+	private DeployableService createDeployableService(DeployableService service)
 			throws ServiceNotDeployedException {
 
-		prepareDeployment(service);
-		logger.debug("prepare deployment complete");
-		executeDeployment(service, service.getSpec().getNumberOfInstances());
-		logger.debug("execute deployment complete");
+		createAndUploadRecipes(service);
+		logger.debug("recipes uploaded");
+		applyRecipe(service, service.getSpec().getNumberOfInstances());
+		logger.debug("creation of service " + service.getSpec().getUUID() + " completed");
 
 		return service;
 	}
 
-	private void prepareDeployment(DeployableService service)
+	private void createAndUploadRecipes(DeployableService service)
 			throws ServiceNotDeployedException {
+		
 		for (int i = 0; i < 5;) {
 			try {
 				this.uploadRecipes(this.createRecipes(service));
@@ -153,7 +154,7 @@ public class ServicesManagerImpl implements ServicesManager {
 		logger.debug(result);
 	}
 
-	private void executeDeployment(DeployableService service,
+	private void applyRecipe(DeployableService service,
 			int numberOfNewInstances) {
 
 		RecipeBundle serviceRecipe = service.getRecipeBundle();
@@ -170,10 +171,10 @@ public class ServicesManagerImpl implements ServicesManager {
 			nodes = npm.applyConfig(config);
 		} catch (ConfigNotAppliedException e) {
 			logger.error("Service " + service.getSpec().getUUID()
-					+ " not deployed: " + e.getMessage());
+					+ " not created: " + e.getMessage());
 		} catch (Exception e) {
 			logger.error("Service " + service.getSpec().getUUID()
-					+ " not deployed: " + e.getMessage());
+					+ " not created: " + e.getMessage());
 		}
 
 		for (Node node : nodes) {
@@ -183,7 +184,7 @@ public class ServicesManagerImpl implements ServicesManager {
 						+ "; node IP=" + node.getIp());
 				service.addInstance(new ServiceInstance(node));
 			} else {
-				logger.debug("request to create a node with no IP or hostname!");
+				logger.debug("I cannot process a request to create a node with no IP or hostname!");
 			}
 		}
 
@@ -371,7 +372,7 @@ public class ServicesManagerImpl implements ServicesManager {
 	private void migrateServiceInstances(DeployableService currentService)
 			throws UnhandledModificationException {
 		try {
-			deployService(currentService);
+			createDeployableService(currentService);
 		} catch (ServiceNotDeployedException e) {
 			throw new UnhandledModificationException();
 		}
@@ -390,8 +391,8 @@ public class ServicesManagerImpl implements ServicesManager {
 	}
 
 	private void addServiceInstances(DeployableService current, int amount) {
-		logger.info("Requesting to execute deploy of " + amount
+		logger.info("Requesting to execute creation of " + amount
 				+ " replicas for" + current);
-		executeDeployment(current, amount);
+		applyRecipe(current, amount);
 	}
 }
