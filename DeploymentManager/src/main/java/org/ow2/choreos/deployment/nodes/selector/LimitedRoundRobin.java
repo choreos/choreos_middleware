@@ -11,14 +11,23 @@ import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
 
-public class NodePoolSelector implements NodeSelector {
-	private Logger logger = Logger.getLogger(NodePoolSelector.class);
+/**
+ * An hybrid between Always Create and Round Robin, with a limit on the number of VMs.
+ * The initial behavior is Always Create.
+ * When the limit of instances is reached, it acts as Round Robin.
+ * The VM limit is defined by the property VM_LIMIT in the config file. 
+ * 
+ * @author alessio
+ *
+ */
+public class LimitedRoundRobin implements NodeSelector {
+	private Logger logger = Logger.getLogger(LimitedRoundRobin.class);
 
 	private int vm_limit = 1;
 	private AtomicInteger counter = null;
 	private NodeSelectorMapper mapper = null;
 
-	public NodePoolSelector() {
+	public LimitedRoundRobin() {
 		vm_limit = Integer.parseInt(Configuration.get("VM_LIMIT"));
 		mapper = new NodeSelectorMapper(Configuration.get("MAPPER_POLICY"));
 		counter = new AtomicInteger();

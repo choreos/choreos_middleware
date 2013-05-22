@@ -42,7 +42,7 @@ public class NodeSelectorFactory {
 			return demoSelector;
 			
 		case NODE_POOL:
-			return new NodePoolSelector();			
+			return new LimitedRoundRobin();			
 			
 		default:
 			throw new IllegalStateException("Could not choose NodeSelector");
