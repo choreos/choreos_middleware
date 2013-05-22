@@ -14,6 +14,8 @@ import org.ow2.choreos.nodes.datamodel.Node;
  * Implementing classes must receive a NodePoolManager to retrieve nodes OR create new nodes
  * (the use of other operations of NodePoolManager are not allowed).
  * 
+ * Obs: NodeSelectors are always accessed as singletons.
+ * 
  * @author leonardo
  *
  */

@@ -1,52 +1,84 @@
 package org.ow2.choreos.deployment.nodes.selector;
 
+import java.io.IOException;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.Configuration;
 
 public class NodeSelectorFactory {
+	
+	private static final String CLASS_MAPPING_FILE = "node_selector.properties";
 
-	public enum NodeSelectorType {
-		ALWAYS_CREATE, ROUND_ROBIN, DEMO, NODE_POOL
-	};
+	private static Map<String, NodeSelector> selectors = new ConcurrentHashMap<String, NodeSelector>();
 
-	// singleton
-	private static NodeSelector roundRobinSelector, demoSelector;
+	private static Logger logger = Logger.getLogger(NodeSelectorFactory.class);
 	
 	public static NodeSelector getInstance() {
 
-		String selector = Configuration.get("NODE_SELECTOR");
-		NodeSelectorType type = null;
-		try {
-			type = NodeSelectorType.valueOf(selector);
-		} catch (IllegalArgumentException e) {
-			throw new IllegalStateException(
-					"Invalid NODE_SELECTOR in properties file: " + selector);
+		String nodeSelectorType = Configuration.get("NODE_SELECTOR");
+		if (nodeSelectorType == null) {
+			logger.error("NODE_SELECTOR property not set on properties file!");
+			throw new IllegalArgumentException();
 		}
-		return getNodeSelectorInstance(type);
+		return getInstance(nodeSelectorType);
 	}
 
-	private static NodeSelector getNodeSelectorInstance(NodeSelectorType nodeSelectorType) {
-
-		switch (nodeSelectorType) {
-
-		case ALWAYS_CREATE:
-			return new AlwaysCreateSelector();
-
-		case ROUND_ROBIN:
-			if (roundRobinSelector == null)
-				roundRobinSelector = new RoundRobinSelector();
-			return roundRobinSelector;
-			
-		case DEMO:
-			if (demoSelector == null)
-				demoSelector = new DemoSelector();
-			return demoSelector;
-			
-		case NODE_POOL:
-			return new LimitedRoundRobin();			
-			
-		default:
-			throw new IllegalStateException("Could not choose NodeSelector");
+	/**
+	 * 
+	 * @param nodeSelectorType
+	 * @returnarg0
+	 * @throws IllegalArgumentException if could not rearg0trieve NodeSelector
+	 */
+	public static NodeSelector getInstance(String nodeSelectorType) {
+		
+		NodeSelector nodeSelector = null;
+		if (selectors.containsKey(nodeSelectorType)) {
+			nodeSelector = selectors.get(nodeSelectorType);
+		} else {
+			nodeSelector = newInstance(nodeSelectorType);
+			selectors.put(nodeSelectorType, nodeSelector);
 		}
+		return nodeSelector;
+	}
+	
+	private static NodeSelector newInstance(String nodeSelectorType) {
+		
+		Properties classMap = getClassMap();
+		String className = classMap.getProperty(nodeSelectorType);
+		NodeSelector nodeSelector = null;
+		try {
+			@SuppressWarnings("unchecked") // catches handle the problem
+			Class<NodeSelector> clazz = (Class<NodeSelector>) Class.forName(className);
+			nodeSelector = clazz.newInstance();
+		} catch (ClassNotFoundException e) {
+			logger.error("invalid NODE_SELECTOR type!");
+			throw new IllegalArgumentException();
+		} catch (InstantiationException e) {
+			logger.error("invalid NODE_SELECTOR type!");
+			throw new IllegalArgumentException();
+		} catch (IllegalAccessException e) {
+			logger.error("invalid NODE_SELECTOR type!");
+			throw new IllegalArgumentException();
+		} catch (ClassCastException e) {
+			logger.error("invalid NODE_SELECTOR type!");
+			throw new IllegalArgumentException();
+		}
+		return nodeSelector;		
+	}
+	
+	private static Properties getClassMap() {
+		
+		Properties classMap = new Properties();
+        final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        try {
+        	classMap.load(loader.getResourceAsStream(CLASS_MAPPING_FILE));
+        } catch (IOException e) {
+            logger.error("Could not load " + CLASS_MAPPING_FILE);
+        }
+        return classMap;
 	}
 
 }
