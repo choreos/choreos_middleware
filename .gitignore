@@ -5,6 +5,7 @@ bin/
 .classpath
 */.metadata
 .metadata/*
+.pmd
 .project
 .settings/
 target/
