@@ -3,6 +3,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/jax-ws/ri/runtime http://java.sun.com/webservices/docs/2.0/jaxws/sun-jaxws.xsd"
 	version="2.0">
-	<endpoint name="Tracker" implementation="br.usp.ime.arranger.service.TrackerImpl"
+	<endpoint name="Tracker" implementation="org.ow2.choreos.tracker.TrackerImpl"
 		url-pattern="/endpoint" />
 </endpoints>

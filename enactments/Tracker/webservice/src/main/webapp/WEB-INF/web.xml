@@ -11,7 +11,7 @@ Inc.//DTD Web Application 2.3//EN"
 	</listener>
 
 	<servlet>
-		<servlet-name>Performer</servlet-name>
+		<servlet-name>Tracker</servlet-name>
 		<servlet-class>
 			com.sun.xml.ws.transport.http.servlet.WSServlet
 		</servlet-class>
