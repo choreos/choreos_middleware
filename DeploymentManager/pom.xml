@@ -21,9 +21,7 @@
 		<dependency>
 			<groupId>org.jclouds</groupId>
 			<artifactId>jclouds-all</artifactId>
-			<version>1.5.0-beta.9</version>
-			<type>jar</type>
-			<scope>compile</scope>
+			<version>1.6.0</version>
 		</dependency>
 		<dependency>
         	<groupId>org.ow2.choreos</groupId>

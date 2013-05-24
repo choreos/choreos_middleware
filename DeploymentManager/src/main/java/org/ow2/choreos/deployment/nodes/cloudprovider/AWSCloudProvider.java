@@ -8,12 +8,12 @@ import java.util.Set;
 
 import org.apache.cxf.common.util.StringUtils;
 import org.apache.log4j.Logger;
+import org.jclouds.ContextBuilder;
 import org.jclouds.aws.ec2.compute.AWSEC2ComputeService;
 import org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions;
 import org.jclouds.aws.ec2.reference.AWSEC2Constants;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
-import org.jclouds.compute.ComputeServiceContextFactory;
 import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.NodeMetadata;
@@ -26,11 +26,8 @@ import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import com.google.inject.Module;
 
-@SuppressWarnings("deprecation")
 public class AWSCloudProvider implements CloudProvider {
 	
 	private Logger logger = Logger.getLogger(AWSCloudProvider.class);
@@ -50,11 +47,10 @@ public class AWSCloudProvider implements CloudProvider {
 		overrides.setProperty(AWSEC2Constants.PROPERTY_EC2_AMI_QUERY,
 				"image-id=" + image);
 		
-		ComputeServiceContext context = new ComputeServiceContextFactory()
-		.createContext(PROVIDER,
+		ComputeServiceContext context = ContextBuilder.newBuilder(PROVIDER).credentials(
 				Configuration.get("AMAZON_ACCESS_KEY_ID"),
-				Configuration.get("AMAZON_SECRET_KEY"),
-				ImmutableSet.<Module> of(), overrides);
+				Configuration.get("AMAZON_SECRET_KEY"))
+				.overrides(overrides).buildView(ComputeServiceContext.class);
 		
 		return context.getComputeService();
 	}
@@ -143,7 +139,7 @@ public class AWSCloudProvider implements CloudProvider {
 		node.setSo(cloudNode.getOperatingSystem().getName());
 		node.setId(cloudNode.getId());
 		node.setImage(cloudNode.getImageId());
-		node.setState(cloudNode.getState().ordinal());
+		node.setState(cloudNode.getStatus().ordinal());
 		node.setUser(DEFAULT_USER);
 		node.setPrivateKey(Configuration.get("AMAZON_PRIVATE_SSH_KEY"));
 	}

@@ -15,7 +15,7 @@ import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.compute.domain.NodeState;
+import org.jclouds.compute.domain.NodeMetadata.Status;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
@@ -29,7 +29,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.inject.Module;
 
-@SuppressWarnings("deprecation")
 public class OpenStackKeystoneCloudProvider implements CloudProvider {
 
     public String getProviderName() {
@@ -78,7 +77,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
 
         try {
             createdNodes = client.createNodesInGroup("default", 1,
-                    getTemplate(client, getImages().get(0).getId()));
+                    getTemplate(client, getImages().get(1).getId()));
         } catch (org.jclouds.rest.AuthorizationException e) {
             System.out
                     .println(">OpenStack: Authorization failed. Provided user doesn't have authorization to create a new node.");
@@ -184,7 +183,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
     public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException {
     	for (Node n : getNodes()) {
 			if (n.getImage().equals(node.getImage())
-					&& NodeState.RUNNING.ordinal() == n.getState()) {
+					&& Status.RUNNING.ordinal() == n.getState()) {
 				return n;
 			}
 		}
@@ -194,10 +193,10 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
     private Template getTemplate(ComputeService client, String imageId) {
 
         if (imageId.isEmpty()) {
-            imageId = getImages().get(0).getId();
+            imageId = getImages().get(1).getId();
         }
 
-        String hardwareId = getHardwareProfiles().get(0).getId();
+        String hardwareId = getHardwareProfiles().get(1).getId();
 
         System.out.println("	Creating Template with:");
         System.out.println("	Image ID: " + imageId);
@@ -220,7 +219,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
         node.setSo(cloudNode.getOperatingSystem().getName());
         node.setId(cloudNode.getId());
         node.setImage(cloudNode.getImageId());
-        node.setState(cloudNode.getState().ordinal());
+        node.setState(cloudNode.getStatus().ordinal());
         node.setUser("ubuntu");
         node.setPrivateKeyFile(Configuration.get("OPENSTACK_PRIVATE_SSH_KEY"));
     }

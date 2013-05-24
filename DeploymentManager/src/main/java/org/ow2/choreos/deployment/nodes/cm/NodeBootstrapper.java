@@ -57,8 +57,9 @@ public class NodeBootstrapper {
     	logger.info("Bootstrapping " + this.node.getIp());
     	Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
 		String bootstrapLog = knife.bootstrap(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile(), DefaultRecipes.getDefaultRecipes());
+		logger.debug("remote Bootstrap log: " + bootstrapLog);
 		saveLogOnNode(bootstrapLog);
-		logger.info("Bootstrap completed at" + this.node);
+		logger.info("Bootstrap completed at " + this.node);
 		this.retrieveAndSetChefName(bootstrapLog);
 		
 		NodeChecker checker = new NodeChecker();
