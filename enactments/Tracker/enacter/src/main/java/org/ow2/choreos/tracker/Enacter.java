@@ -71,8 +71,7 @@ public class Enacter {
 	private Tracker getTracker(final int trackerNumber)
 			throws MalformedURLException {
 		final String wsdl = getTrackerWsdl(trackerNumber);
-		final ProxyCreator proxyCreator = new ProxyCreator();
-		return proxyCreator.getProxy(wsdl);
+		return CxfProxyCreator.getTracker(wsdl);
 	}
 
 	private String getTrackerWsdl(final int trackerNumber) {
