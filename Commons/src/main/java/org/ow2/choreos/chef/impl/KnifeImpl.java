@@ -3,6 +3,7 @@ package org.ow2.choreos.chef.impl;
 import java.io.File;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeClient;
 import org.ow2.choreos.chef.KnifeCookbook;
@@ -14,6 +15,7 @@ import org.ow2.choreos.utils.CommandLineException;
 public class KnifeImpl implements Knife {
 
 	private static final String EXIT_STATUS_ERROR_MESSAGE = "Knife exit status > 0";
+	private static Logger logger = Logger.getLogger(KnifeImpl.class);
 	
 	private ChefScripts scripts;
 	private KnifeNode knifeNode;
@@ -79,6 +81,7 @@ public class KnifeImpl implements Knife {
 		try {
 			return CommandLine.run(command, chefRepo, verbose);
 		} catch (CommandLineException e) {
+			logger.error("Knife command error: " + command);
 			throw new KnifeException(EXIT_STATUS_ERROR_MESSAGE, command);
 		}
 	}
