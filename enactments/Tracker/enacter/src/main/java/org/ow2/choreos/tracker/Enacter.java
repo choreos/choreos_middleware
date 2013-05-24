@@ -1,40 +1,35 @@
 package org.ow2.choreos.tracker;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 
-import org.apache.xmlbeans.XmlException;
-import org.apache.xpath.functions.WrongNumberArgsException;
-import org.ow2.choreos.chors.ChoreographyDeployer;
-import org.ow2.choreos.chors.ChoreographyDeployerImpl;
 import org.ow2.choreos.chors.ChoreographyNotFoundException;
 import org.ow2.choreos.chors.EnactmentException;
+import org.ow2.choreos.chors.client.ChorDeployerClient;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
-
-import eu.choreos.vv.exceptions.FrameworkException;
-import eu.choreos.vv.exceptions.WSDLException;
 
 public class Enacter {
 
 	private static transient int chorSizeArg;
 	private static transient String warFileArg;
+	private static final String CHOR_DEPLOYER = "http://localhost:9102/choreographydeployer/";
 
 	private transient int chorSize;
 	private transient Choreography choreography;
 
 	public static void main(final String[] args) throws EnactmentException,
-			ChoreographyNotFoundException, WSDLException, XmlException,
-			IOException, FrameworkException, WrongNumberArgsException {
+			ChoreographyNotFoundException, IllegalArgumentException,
+			MalformedURLException {
 		readArgs(args);
 		final Enacter enacter = new Enacter();
-		enacter.enactAndVerify(warFileArg, chorSizeArg);
+		enacter.enact(warFileArg, chorSizeArg);
+		enacter.verifyAnswer();
 	}
 
 	private static void readArgs(final String[] args)
-			throws WrongNumberArgsException {
+			throws IllegalArgumentException {
 		if (args.length < 2) {
-			throw new WrongNumberArgsException(
+			throw new IllegalArgumentException(
 					"2 args expected: war file, number of services.");
 		}
 
@@ -42,7 +37,7 @@ public class Enacter {
 		chorSizeArg = Integer.parseInt(args[1]);
 	}
 
-	private void enactAndVerify(final String warFile, final int chorSize)
+	private void enact(final String warFile, final int chorSize)
 			throws EnactmentException, ChoreographyNotFoundException,
 			MalformedURLException {
 		ChorSpecCreator.setWarFile(warFile);
@@ -50,7 +45,6 @@ public class Enacter {
 
 		this.choreography = getChoreography();
 		setLastServiceId();
-		verifyAnswer();
 	}
 
 	private Choreography getChoreography() throws EnactmentException,
@@ -62,7 +56,8 @@ public class Enacter {
 
 	private Choreography deployChoreography(final ChoreographySpec chorSpec)
 			throws EnactmentException, ChoreographyNotFoundException {
-		final ChoreographyDeployer deployer = new ChoreographyDeployerImpl();
+		final ChorDeployerClient deployer = new ChorDeployerClient(
+				CHOR_DEPLOYER);
 		final String chorId = deployer.createChoreography(chorSpec);
 		return deployer.enactChoreography(chorId);
 	}
@@ -86,8 +81,8 @@ public class Enacter {
 		return trackerInfo.getWsdl(trackerNumber);
 	}
 
-	private void verifyAnswer() throws MalformedURLException,
-			EnactmentException {
+	private void verifyAnswer() throws EnactmentException,
+			MalformedURLException {
 		final Tracker firstTracker = getTracker(0);
 		final String actual = firstTracker.getPathIds();
 		final String expected = getExpectedPathIds();

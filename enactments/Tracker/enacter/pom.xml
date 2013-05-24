@@ -45,11 +45,6 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>org.ow2.choreos</groupId>
-			<artifactId>ChoreographyDeployer</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
 			<groupId>org.ow2.choreos.tracker</groupId>
 			<artifactId>webservice</artifactId>
 			<version>1.0</version>
