@@ -11,7 +11,7 @@ public class TrackerInfo {
 	public static final String ROLE = "tracker";
 	private static final String SERVICE_NAME_PRE = "tracker";
 	private transient Choreography chor = null;
-	
+
 	public void setChoreography(final Choreography chor) {
 		this.chor = chor;
 	}
@@ -42,11 +42,16 @@ public class TrackerInfo {
 
 	public String getExpectedPathIds(final int chorSize) {
 		final StringBuffer answer = new StringBuffer();
+
 		for (int i = 0; i < chorSize; i++) {
 			answer.append(i);
 			answer.append(' ');
 		}
-		answer.deleteCharAt(answer.length() - 1);
+
+		if (answer.length() > 0) {
+			answer.deleteCharAt(answer.length() - 1);
+		}
+
 		return answer.toString();
 	}
 }
