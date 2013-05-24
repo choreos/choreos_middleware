@@ -13,7 +13,7 @@ import org.ow2.choreos.services.datamodel.ServiceType;
 
 public class ChorSpecCreator {
 
-	private static final String WAR_FILE = "http://wherever/file.war";
+	private static final String WAR_FILE = "http://valinhos.ime.usp.br:54080/services/tracker.war";
 	private static final String ENDPOINT = "endpoint";
 	private static final int INSTANCES = 1;
 
