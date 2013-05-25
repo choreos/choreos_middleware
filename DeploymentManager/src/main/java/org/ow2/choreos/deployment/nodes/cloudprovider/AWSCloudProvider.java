@@ -21,16 +21,14 @@ import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.ec2.domain.InstanceType;
 import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.nodes.NodeRegistry;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import com.google.inject.Module;
 
-@SuppressWarnings("deprecation")
 public class AWSCloudProvider implements CloudProvider {
 	
 	private Logger logger = Logger.getLogger(AWSCloudProvider.class);
