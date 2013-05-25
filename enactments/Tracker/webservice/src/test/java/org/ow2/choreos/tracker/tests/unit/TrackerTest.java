@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.ow2.choreos.tracker.Tracker;
 import org.ow2.choreos.tracker.TrackerImpl;
 
-
 public class TrackerTest {
 
 	private transient Tracker tracker;

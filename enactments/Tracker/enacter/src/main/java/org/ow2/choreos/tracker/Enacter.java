@@ -37,7 +37,7 @@ public class Enacter {
 		chorSizeArg = Integer.parseInt(args[1]);
 	}
 
-	private void enact(final String warFile, final int chorSize)
+	public void enact(final String warFile, final int chorSize)
 			throws EnactmentException, ChoreographyNotFoundException,
 			MalformedURLException {
 		ChorSpecCreator.setWarFile(warFile);
@@ -71,8 +71,7 @@ public class Enacter {
 	private Tracker getTracker(final int trackerNumber)
 			throws MalformedURLException {
 		final String wsdl = getTrackerWsdl(trackerNumber);
-		final ProxyCreator proxyCreator = new ProxyCreator();
-		return proxyCreator.getProxy(wsdl);
+		return CxfProxyCreator.getTracker(wsdl);
 	}
 
 	private String getTrackerWsdl(final int trackerNumber) {
@@ -81,8 +80,7 @@ public class Enacter {
 		return trackerInfo.getWsdl(trackerNumber);
 	}
 
-	private void verifyAnswer() throws EnactmentException,
-			MalformedURLException {
+	public void verifyAnswer() throws EnactmentException, MalformedURLException {
 		final Tracker firstTracker = getTracker(0);
 		final String actual = firstTracker.getPathIds();
 		final String expected = getExpectedPathIds();
