@@ -14,6 +14,7 @@ import org.ow2.choreos.deployment.nodes.selector.NodeNotSelectedException;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelector;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelectorFactory;
 import org.ow2.choreos.nodes.ConfigNotAppliedException;
+import org.ow2.choreos.nodes.NPMException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
@@ -55,9 +56,10 @@ public class NPMImpl implements NodePoolManager {
 		idlePool = IdlePool.getInstance(poolSize, nodeCreator);
 	}
 	
-	public NPMImpl(CloudProvider provider, IdlePool pool) {
+	public NPMImpl(CloudProvider provider, NodeCreator creator, IdlePool pool) {
 		cloudProvider = provider;
 		nodeRegistry = NodeRegistry.getInstance();
+		nodeCreator = creator;
 		idlePool = pool;
 	}
 
@@ -66,11 +68,24 @@ public class NPMImpl implements NodePoolManager {
 			throws NodeNotCreatedException {
 
 		try {
-			node = idlePool.retriveNode();
-			idlePool.fillPool();
+			
+			node = nodeCreator.create(node, resourceImpact);
 			nodeRegistry.putNode(node);
-		} catch (NodeNotCreatedException e) {
-			throw new NodeNotCreatedException(node.getId());
+			idlePool.fillPool(); // we want the pool to be always filled whenever requests are coming
+		} catch (NPMException e1) {
+			 
+			// if node creation has failed, let's retrieve a node from the pool
+			// wait for a new node would take too much time!
+			// TODO: maybe the failed node only took too much time to be ready
+			// in such situation, this node could go to the pool!
+			try {
+				node = idlePool.retriveNode();
+				nodeRegistry.putNode(node);
+				idlePool.fillPool();
+			} catch (NodeNotCreatedException e2) {
+				// OK, now we give up =/
+				throw new NodeNotCreatedException(node.getId());
+			}
 		}
 
 		return node;
