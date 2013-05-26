@@ -2,6 +2,7 @@ package org.ow2.choreos.tracker;
 
 import java.net.MalformedURLException;
 
+import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.ChoreographyNotFoundException;
 import org.ow2.choreos.chors.EnactmentException;
 import org.ow2.choreos.chors.client.ChorDeployerClient;
@@ -14,14 +15,17 @@ public class Enacter {
 	private static transient String warFileArg;
 	private static final String CHOR_DEPLOYER = "http://localhost:9102/choreographydeployer/";
 
+	private int enacterId;
 	private transient int chorSize;
 	private transient Choreography choreography;
 
+	private Logger logger = Logger.getLogger(Enacter.class);
+	
 	public static void main(final String[] args) throws EnactmentException,
 			ChoreographyNotFoundException, IllegalArgumentException,
 			MalformedURLException {
 		readArgs(args);
-		final Enacter enacter = new Enacter();
+		final Enacter enacter = new Enacter(1);
 		enacter.enact(warFileArg, chorSizeArg);
 		enacter.verifyAnswer();
 	}
@@ -35,6 +39,14 @@ public class Enacter {
 
 		warFileArg = args[0];
 		chorSizeArg = Integer.parseInt(args[1]);
+	}
+	
+	public Enacter(int id) {
+		this.enacterId = id;
+	}
+	
+	public int getId() {
+		return this.enacterId;
 	}
 
 	public void enact(final String warFile, final int chorSize)
@@ -80,15 +92,17 @@ public class Enacter {
 		return trackerInfo.getWsdl(trackerNumber);
 	}
 
-	public void verifyAnswer() throws EnactmentException, MalformedURLException {
+	public boolean verifyAnswer() throws MalformedURLException {
 		final Tracker firstTracker = getTracker(0);
 		final String actual = firstTracker.getPathIds();
 		final String expected = getExpectedPathIds();
 
-		if (!expected.equals(actual)) {
-			throw new EnactmentException(String.format(
-					"Expected '%s' but got '%s'.", expected, actual));
+		boolean ok = expected.equals(actual);
+		if (!ok) {
+			logger.error(String.format(
+					"Expected '%s' but got '%s' at Enacter#'%d'.", expected, actual, this.enacterId));
 		}
+		return ok;
 	}
 
 	private String getExpectedPathIds() {
