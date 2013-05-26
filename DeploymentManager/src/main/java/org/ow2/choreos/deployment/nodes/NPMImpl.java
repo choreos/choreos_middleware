@@ -68,17 +68,16 @@ public class NPMImpl implements NodePoolManager {
 			throws NodeNotCreatedException {
 
 		try {
-			
 			node = nodeCreator.create(node, resourceImpact);
 			nodeRegistry.putNode(node);
 			idlePool.fillPool(); // we want the pool to be always filled whenever requests are coming
 		} catch (NPMException e1) {
-			 
 			// if node creation has failed, let's retrieve a node from the pool
 			// wait for a new node would take too much time!
 			// TODO: maybe the failed node only took too much time to be ready
 			// in such situation, this node could go to the pool!
 			try {
+				logger.warn("*** Node creation failed, let's retrieve a node from the pool ***");
 				node = idlePool.retriveNode();
 				nodeRegistry.putNode(node);
 				idlePool.fillPool();
@@ -87,7 +86,6 @@ public class NPMImpl implements NodePoolManager {
 				throw new NodeNotCreatedException(node.getId());
 			}
 		}
-
 		return node;
 	}
 
