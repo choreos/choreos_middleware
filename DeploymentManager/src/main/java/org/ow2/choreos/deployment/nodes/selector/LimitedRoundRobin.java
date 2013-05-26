@@ -24,13 +24,13 @@ public class LimitedRoundRobin implements NodeSelector {
 	private Logger logger = Logger.getLogger(LimitedRoundRobin.class);
 
 	private int vmLimit = 1;
-	private AtomicInteger counter = null;
+	private AtomicInteger counter = new AtomicInteger();
+	private AtomicInteger nodesBeenCreated = new AtomicInteger();
 	private NodeSelectorMapper mapper = null;
 
 	public LimitedRoundRobin() {
 		vmLimit = Integer.parseInt(Configuration.get("VM_LIMIT"));
 		mapper = new NodeSelectorMapper(Configuration.get("MAPPER_POLICY"));
-		counter = new AtomicInteger();
 	}
 
 	@Override
@@ -39,14 +39,24 @@ public class LimitedRoundRobin implements NodeSelector {
 		int numberOfInstances = config.getNumberOfInstances();
 		List<Node> allNodes = npm.getNodes();
 		
-		if (allNodes.size() < vmLimit) { // creation state
-
-			int maximumNewAllowed = vmLimit - allNodes.size();
-			int newQty = numberOfInstances;
-			if (newQty > maximumNewAllowed) {
-				newQty = maximumNewAllowed;
+		boolean creationState = false;
+		int newQty = 0;
+		synchronized (this) {
+			if (allNodes.size() + nodesBeenCreated.get() < vmLimit) {
+				creationState = true;
+				int maximumNewAllowed = vmLimit - allNodes.size();
+				newQty = numberOfInstances;
+				if (newQty > maximumNewAllowed) {
+					newQty = maximumNewAllowed;
+				}
+				nodesBeenCreated.addAndGet(newQty);				
 			}
+		}
+		
+		if (creationState) { 
+			
 			List<Node> result = createNodes(newQty, config, npm);
+			nodesBeenCreated.set(nodesBeenCreated.get() - newQty);
 			
 			if (result.size() < numberOfInstances) {
 				int diff = numberOfInstances = result.size();
@@ -79,6 +89,15 @@ public class LimitedRoundRobin implements NodeSelector {
 	
 	private List<Node> makeRoundRobin(int numberOfInstances, Config config, NodePoolManager npm) {
 	
+		// if nodes are yet been created, we have to wait
+		while (npm.getNodes().size() < numberOfInstances) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				logger.error("Exception while waiting nodes be ready");
+			}
+		}
+		
 		List<Node> allNodes = npm.getNodes();
 		List<Node> resultList = new ArrayList<Node>();
 		int i = 0, j = 0;

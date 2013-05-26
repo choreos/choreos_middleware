@@ -85,6 +85,11 @@ public class NPMMocks {
 					throws NodeNotCreatedException {
 
 				Node n = new Node();
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					System.out.println("Exception at sleeping");
+				}
 				String id = Integer.toString(counter.getAndIncrement());
 				n.setId(id);
 				nodes.add(n);
