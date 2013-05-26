@@ -3,8 +3,8 @@ DEPLOYMENT_MANAGER_PORT=9100
 # set a list of recipes to be applied on bootstrap (ganglia,harakiri,...)
 DEFAULT_RECIPES=harakiri
 
-NODE_SELECTOR=ALWAYS_CREATE
-# others: ROUND_ROBIN and DEMO
+NODE_SELECTOR=ALWAYS_CREATE # others: ROUND_ROBIN, LIMITED_ROUND_ROBIN, or DEMO
+VM_LIMIT=0 # set if using LIMITED_ROUND_ROBIN
 
 CLOUD_PROVIDER=FIXED
 # others: AWS and OPEN_STACK
