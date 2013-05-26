@@ -16,13 +16,13 @@ import org.ow2.choreos.utils.LogConfigurator;
 
 public class Experiment {
 	
-	private static final int CHORS_QTY = 3;
+	private static final int CHORS_QTY = 2;
 	private static final int CHORS_SIZE = 4;
 	private static final int RUN = 1;
 	private static final String TRACKER_WAR_URL = "http://valinhos.ime.usp.br:54080/services/tracker.war";
 
 	private static final int ENACTMENT_TIMEOUT = 20;
-	private static final int VERIFY_TIMEOUT = 1;
+	private static final int VERIFY_TIMEOUT = 3;
 	
 	private static Logger logger = Logger.getLogger(Experiment.class);
 	
@@ -91,7 +91,7 @@ public class Experiment {
 
 		Enacter enacter;
 		Report report;
-		boolean ok = true;
+		boolean ok = false;
 		
 		RunnableEnacter(Enacter enacter, Report report) {
 			this.enacter = enacter;
@@ -106,6 +106,7 @@ public class Experiment {
 				enacter.enact(TRACKER_WAR_URL, CHORS_SIZE);
 				long tf = System.nanoTime();
 				report.addChorEnactmentTime(tf-t0);
+				ok = true;
 			} catch (MalformedURLException e) {
 				failed();
 			} catch (EnactmentException e) {
@@ -126,7 +127,7 @@ public class Experiment {
 
 		Enacter enacter;
 		Report report;
-		boolean ok = true;
+		boolean ok = false;
 		
 		RunnableVerifier(Enacter enacter, Report report) {
 			this.enacter = enacter;

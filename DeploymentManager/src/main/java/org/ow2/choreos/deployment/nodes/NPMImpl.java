@@ -117,6 +117,7 @@ public class NPMImpl implements NodePoolManager {
 		List<Node> nodes = null;
 		try {
 			nodes = selector.selectNodes(config, restrictedNPM);
+			logger.info("Selected nodes to " + config.getName() + ": " + nodes);
 		} catch (NodeNotSelectedException e) {
 			throw new ConfigNotAppliedException(config.getName());
 		}

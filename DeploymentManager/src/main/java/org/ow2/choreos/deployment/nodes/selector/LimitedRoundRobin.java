@@ -75,8 +75,9 @@ public class LimitedRoundRobin implements NodeSelector {
 	
 		Node nodeSpec = new Node();
 		List<Node> newNodes = new ArrayList<Node>();
-		for (int i=0; i<nodesNeeded; i++) {
+		for (int i=0; i<nodesNeeded; i++) { // TODO: make it concurrently
 			try {
+				logger.debug("Creating node");
 				Node createdNode = npm.createNode(nodeSpec,
 						config.getResourceImpact());
 				newNodes.add(createdNode);
@@ -89,14 +90,21 @@ public class LimitedRoundRobin implements NodeSelector {
 	
 	private List<Node> makeRoundRobin(int numberOfInstances, Config config, NodePoolManager npm) {
 	
-		// if nodes are yet been created, we have to wait
-		while (npm.getNodes().size() < numberOfInstances) {
+		// if nodes are still been created, we have to wait
+		logger.debug("Waiting nodes to be ready");
+		int c = 0;
+		while (nodesBeenCreated.get() > 0) {
 			try {
-				Thread.sleep(100);
+				if (c<10)
+					Thread.sleep(100);
+				else
+					Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				logger.error("Exception while waiting nodes be ready");
 			}
+			c++;
 		}
+		logger.debug("Waiting no more nodes to be ready");
 		
 		List<Node> allNodes = npm.getNodes();
 		List<Node> resultList = new ArrayList<Node>();

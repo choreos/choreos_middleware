@@ -86,7 +86,7 @@ public class NPMMocks {
 
 				Node n = new Node();
 				try {
-					Thread.sleep(100);
+					Thread.sleep(200);
 				} catch (InterruptedException e) {
 					System.out.println("Exception at sleeping");
 				}

@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.deployment.Configuration;
 import org.ow2.choreos.deployment.nodes.NPMMocks;
@@ -19,9 +20,14 @@ import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
 import org.ow2.choreos.utils.Concurrency;
+import org.ow2.choreos.utils.LogConfigurator;
 
 public class LimitedRoundRobinTest {
 
+	@BeforeClass
+	public static void setUpClass() {
+		LogConfigurator.configLog();
+	}
 
 	@Test
 	public void shouldCreateSomeVMsAndAfterRoundRobin() throws NPMException, NodeNotSelectedException  {
