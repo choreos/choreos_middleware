@@ -67,7 +67,7 @@ public class NodeBootstrapper {
     	//configureHarakiri("http://172.16.239.10:9100/deploymentmanager/", this.node.getChefName());
     	
 		String bootstrapLog = knife.bootstrap(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile(), DefaultRecipes.getDefaultRecipes());
-		logger.debug("remote Bootstrap log: " + bootstrapLog);
+//		logger.debug("remote Bootstrap log: " + bootstrapLog);
 		saveLogOnNode(bootstrapLog);
 		logger.info("Bootstrap completed at" + this.node);
 		this.retrieveAndSetChefName(bootstrapLog);
