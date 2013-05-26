@@ -36,7 +36,7 @@ public class Experiment {
 	public void run() {
 		
 		logger.info("Running " + RUN);
-		Report report = new Report(RUN);
+		Report report = new Report(RUN, CHORS_QTY, CHORS_SIZE);
 		
 		long t0_total = System.nanoTime();
 		

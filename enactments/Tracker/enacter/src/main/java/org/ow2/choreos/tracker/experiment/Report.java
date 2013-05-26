@@ -38,8 +38,10 @@ public class Report {
 	
 	double totalTime;
 	
-	public Report(int run) {
+	public Report(int run, int chorsQty, int chorsSize) {
 		this.run = run;
+		this.chorsQty = chorsQty;
+		this.chorsSize = chorsSize;
 	}
 	
 	public void setChorsQuantity(int chorsQty) {
