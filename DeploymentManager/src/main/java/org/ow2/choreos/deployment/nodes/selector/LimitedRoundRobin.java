@@ -2,14 +2,19 @@ package org.ow2.choreos.deployment.nodes.selector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.Configuration;
-import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.utils.Concurrency;
 
 /**
  * An hybrid between Always Create and Round Robin, with a limit on the number of VMs.
@@ -21,6 +26,9 @@ import org.ow2.choreos.nodes.datamodel.Node;
  *
  */
 public class LimitedRoundRobin implements NodeSelector {
+	
+	private static final int TIMEOUT_TO_VM_CREATION = 5;
+
 	private Logger logger = Logger.getLogger(LimitedRoundRobin.class);
 
 	private int vmLimit = 1;
@@ -74,18 +82,48 @@ public class LimitedRoundRobin implements NodeSelector {
 	private List<Node> createNodes(int nodesNeeded, Config config, NodePoolManager npm) {
 	
 		Node nodeSpec = new Node();
+		List<Future<Node>> futures = new ArrayList<Future<Node>>();
+		ExecutorService executor = Executors.newFixedThreadPool(nodesNeeded);
+		for (int i=0; i<nodesNeeded; i++) {
+			RunnableCreator runnable = new RunnableCreator(nodeSpec, config, npm);
+			Future<Node> f = executor.submit(runnable);
+			futures.add(f);
+		}
+		
+		Concurrency.waitExecutor(executor, TIMEOUT_TO_VM_CREATION);
+		
 		List<Node> newNodes = new ArrayList<Node>();
-		for (int i=0; i<nodesNeeded; i++) { // TODO: make it concurrently
+		for (Future<Node> f: futures) {
 			try {
-				logger.debug("Creating node");
-				Node createdNode = npm.createNode(nodeSpec,
-						config.getResourceImpact());
-				newNodes.add(createdNode);
-			} catch (NodeNotCreatedException e) {
+				Node newNode = Concurrency.checkFuture(f);
+				newNodes.add(newNode);
+			} catch (ExecutionException e) {
 				logger.error("Failed to create new node");
 			}
 		}
 		return newNodes;
+	}
+	
+	private class RunnableCreator implements Callable<Node> {
+
+		Node nodeSpec;
+		Config config;
+		NodePoolManager npm;
+		
+		RunnableCreator(Node nodeSpec, Config config, NodePoolManager npm) {
+			this.nodeSpec = nodeSpec;
+			this.config = config;
+			this.npm = npm;
+		}
+		
+		@Override
+		public Node call() throws Exception {
+			logger.debug("Creating node");
+			Node createdNode = npm.createNode(nodeSpec,
+					config.getResourceImpact());
+			return createdNode;
+		}
+		
 	}
 	
 	private List<Node> makeRoundRobin(int numberOfInstances, Config config, NodePoolManager npm) {
