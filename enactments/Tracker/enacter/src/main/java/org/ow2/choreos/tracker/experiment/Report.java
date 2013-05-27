@@ -16,6 +16,7 @@ import java.util.List;
  */
 public class Report {
 
+	private static final int VM_LIMIT = 10;
 	private static final double CONVERSOR = 1000000000.0;
 	
 	public int run;
@@ -107,7 +108,8 @@ public class Report {
 	public void toFile() throws IOException {
 		
 		String report = this.toString();
-		File file = new File("results/" + chorsQty + "x" + chorsSize + "_" + run + "run.txt");
+		File file = new File("results/chor" + chorsQty + "x" + chorsSize + "_" 
+				+ VM_LIMIT + "vms_" + run + "run.txt");
 		Writer w = new FileWriter(file);
 		w.append(report + "\n");
 		w.close();
@@ -120,6 +122,7 @@ public class Report {
 				+ "\n // tuples are (mean, std dev)"
 				+ "\n // times in seconds"
 				+ "\n " + run + "/10 with " + chorsQty + " chors of size " + chorsSize + "; " + (new Date()).toString()
+				+ "VM_LIMIT = " + VM_LIMIT
 				+ "\n How many choreographies to enact = " + chorsQty
 				+ "\n How many choreographies enacted = " + chorsEnactmentTimes.size()
 				+ "\n Time to enact choreographies = " + chorsEnactmentTimes
