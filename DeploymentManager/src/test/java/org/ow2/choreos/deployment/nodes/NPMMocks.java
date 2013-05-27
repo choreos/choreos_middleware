@@ -5,13 +5,23 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.lang.NotImplementedException;
+import org.ow2.choreos.nodes.ConfigNotAppliedException;
+import org.ow2.choreos.nodes.NPMException;
+import org.ow2.choreos.nodes.NodeNotCreatedException;
+import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
+import org.ow2.choreos.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.nodes.NodePoolManager;
+import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.services.datamodel.ResourceImpact;
 
 public class NPMMocks {
-
+	
 	public static NodePoolManager getMock() throws NodeNotFoundException {
 		
 		Node node1 = createNode("1", "192.168.122.14", "choreos1", "SMALL");
@@ -31,6 +41,71 @@ public class NPMMocks {
 		return npmMock;
 	}
 	
+	public static NodePoolManager getDynamicMock() throws NPMException  {
+		
+		NodePoolManager npmMock = new NodePoolManager() {
+			
+			AtomicInteger counter = new AtomicInteger();
+			List<Node> nodes = new ArrayList<Node>();
+			
+			@Override
+			public void upgradeNode(String nodeId) throws NodeNotUpgradedException,
+					NodeNotFoundException {
+				throw new NotImplementedException();
+			}
+			
+			@Override
+			public List<Node> getNodes() {
+				return nodes;
+			}
+			
+			@Override
+			public Node getNode(String nodeId) throws NodeNotFoundException {
+				for (Node node: nodes) {
+					if (nodeId.equals(node.getId())) {
+						return node;
+					}
+				}
+				throw new NoSuchElementException();
+			}
+			
+			@Override
+			public void destroyNodes() throws NodeNotDestroyed {
+				throw new NotImplementedException();
+			}
+			
+			@Override
+			public void destroyNode(String nodeId) throws NodeNotDestroyed,
+					NodeNotFoundException {
+				throw new NotImplementedException();
+			}
+			
+			@Override
+			public Node createNode(Node node, ResourceImpact resourceImpact)
+					throws NodeNotCreatedException {
+
+				Node n = new Node();
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					System.out.println("Exception at sleeping");
+				}
+				String id = Integer.toString(counter.getAndIncrement());
+				n.setId(id);
+				nodes.add(n);
+				return n;
+			}
+			
+			@Override
+			public List<Node> applyConfig(Config config)
+					throws ConfigNotAppliedException {
+				throw new NotImplementedException();
+			}
+		};
+		
+		return npmMock;
+	}
+
 	private static Node createNode(String id, String ip, String host, String type) {
 		
 		Node node = new Node();

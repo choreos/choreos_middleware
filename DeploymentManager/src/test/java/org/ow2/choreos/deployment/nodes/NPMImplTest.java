@@ -18,11 +18,11 @@ public class NPMImplTest {
 		reg.clear();
 
 		CloudProvider cp = CloudProviderMocks.getGoodMock();
-		NodeCreator creator = new NodeCreator(cp, false, true);
+		NodeCreator creator = new NodeCreator(cp, false);
 		int N = cp.getNodes().size();
 		IdlePool pool = IdlePool.getCleanInstance(N, creator);
-
-		NodePoolManager npm = new NPMImpl(cp, pool);
+		
+		NodePoolManager npm = new NPMImpl(cp, creator, pool);
 		
 		Node createdNode = npm.createNode(new Node(), null);
 		assertTrue(isNodeOK(createdNode));
@@ -38,11 +38,11 @@ public class NPMImplTest {
 		reg.clear();
 
 		CloudProvider cp = CloudProviderMocks.getGoodMock();
-		NodeCreator creator = new NodeCreator(cp, false, true);
+		NodeCreator creator = new NodeCreator(cp, false);
 		int N = cp.getNodes().size();
 		IdlePool pool = IdlePool.getCleanInstance(N, creator);
 
-		NodePoolManager npm = new NPMImpl(cp, pool);
+		NodePoolManager npm = new NPMImpl(cp, creator, pool);
 		
 		Node createdNode = npm.createNode(new Node(), null);
 		assertTrue(isNodeOK(createdNode));
@@ -61,19 +61,19 @@ public class NPMImplTest {
 		reg.clear();
 
 		CloudProvider cp1 = CloudProviderMocks.getGoodMock();
-		NodeCreator creator1 = new NodeCreator(cp1, false, true);
+		NodeCreator creator1 = new NodeCreator(cp1, false);
 		int N = cp1.getNodes().size();
 		IdlePool pool1 = IdlePool.getCleanInstance(N, creator1);
-		NodePoolManager npm1 = new NPMImpl(cp1, pool1);
+		NodePoolManager npm1 = new NPMImpl(cp1, creator1, pool1);
 		
 		Node createdNode = npm1.createNode(new Node(), null);
 		assertTrue(isNodeOK(createdNode));
 
 		CloudProvider cp2 = CloudProviderMocks.getGoodMock();
-		NodeCreator creator2 = new NodeCreator(cp2, false, true);
+		NodeCreator creator2 = new NodeCreator(cp2, false);
 		N = cp2.getNodes().size();
 		IdlePool pool2 = IdlePool.getCleanInstance(N, creator2);
-		NodePoolManager npm2 = new NPMImpl(cp2, pool2);
+		NodePoolManager npm2 = new NPMImpl(cp2, creator2, pool2);
 		
 		Node fromOtherNPM = npm2.getNode(createdNode.getId());
 		assertTrue(isNodeOK(fromOtherNPM));

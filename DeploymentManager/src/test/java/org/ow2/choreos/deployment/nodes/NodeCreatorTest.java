@@ -16,7 +16,7 @@ public class NodeCreatorTest {
 		
 		CloudProvider goodCP = CloudProviderMocks.getGoodMock();
 		
-		NodeCreator nodeCreator = new NodeCreator(goodCP, false, false);
+		NodeCreator nodeCreator = new NodeCreator(goodCP, false);
 		Node createdNode = nodeCreator.create(new Node(), new ResourceImpact());
 		assertTrue(this.isNodeOK(createdNode));
 	}
@@ -26,22 +26,12 @@ public class NodeCreatorTest {
 		return (node != null) && (node.getId() != null) && (!node.getId().isEmpty());
 	}
 
-	@Test
-	public void shouldCreateNodeAndRegistryItEvenWithOneCPFailure() throws Exception {
-		
-		CloudProvider intermitentCP = CloudProviderMocks.getIntermitentMock();
-
-		NodeCreator nodeCreator = new NodeCreator(intermitentCP, false, true);
-		Node createdNode = nodeCreator.create(new Node(), new ResourceImpact());
-		assertTrue(this.isNodeOK(createdNode));
-	}
-
 	@Test(expected=NodeNotCreatedException.class)
 	public void shouldNotCreateNode() throws Exception {
 		
 		CloudProvider badCP = CloudProviderMocks.getBadMock();
 
-		NodeCreator nodeCreator = new NodeCreator(badCP, false, true);
+		NodeCreator nodeCreator = new NodeCreator(badCP, false);
 		nodeCreator.create(new Node(), new ResourceImpact());
 	}
 

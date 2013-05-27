@@ -25,10 +25,13 @@ public class CloudProviderMocks {
 		
 		Node node1 = new Node();
 		node1.setId("1");
+		node1.setIp("192.168.0.11");
 		Node node2 = new Node();
 		node2.setId("2");
+		node2.setIp("192.168.0.12");
 		Node node3 = new Node();
 		node3.setId("3");
+		node3.setIp("192.168.0.13");
 		
 		List<Node> initialNodes = new ArrayList<Node>();
 		initialNodes.add(node1);
@@ -57,8 +60,10 @@ public class CloudProviderMocks {
 		
 		Node node1 = new Node();
 		node1.setId("1");
+		node1.setIp("192.168.0.11");
 		Node node2 = new Node();
 		node2.setId("2");
+		node2.setIp("192.168.0.12");
 		
 		List<Node> initialNodes = new ArrayList<Node>();
 		initialNodes.add(node1);
@@ -88,10 +93,13 @@ public class CloudProviderMocks {
 		
 		Node node1 = new Node();
 		node1.setId("1");
+		node1.setIp("192.168.0.11");
 		Node node2 = new Node();
 		node2.setId("2");
+		node2.setIp("192.168.0.12");
 		Node node3 = new Node();
 		node3.setId("3");
+		node3.setIp("192.168.0.13");
 		
 		List<Node> initialNodes = new ArrayList<Node>();
 		initialNodes.add(node1);

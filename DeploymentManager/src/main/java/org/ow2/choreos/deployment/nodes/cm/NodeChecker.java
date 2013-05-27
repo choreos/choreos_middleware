@@ -34,7 +34,7 @@ public class NodeChecker {
     	if (node.getChefName() == null || node.getChefName().isEmpty()) {
     		BootstrapChecker checker = new BootstrapChecker(); 
     		if (!checker.isBootstrapped(node)) {
-    			logger.debug("Node "+ node.getIp() +" not bootstrapped yet. Going to bootstrap it.");
+    			logger.warn("Node "+ node.getIp() +" not bootstrapped yet. Going to bootstrap it.");
 				NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
 				try {
 					bootstrapper.bootstrapNode();

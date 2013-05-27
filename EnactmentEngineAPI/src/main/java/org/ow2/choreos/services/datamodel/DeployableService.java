@@ -50,8 +50,10 @@ public class DeployableService extends Service {
 	}
 
 	public void addInstance(ServiceInstance instance) {
-		if (serviceInstances == null) {
-			serviceInstances = new ArrayList<ServiceInstance>();
+		synchronized(this) {
+			if (serviceInstances == null) {
+				serviceInstances = new ArrayList<ServiceInstance>();
+			}
 		}
 		serviceInstances.add(instance);
 		instance.setServiceSpec(this.getSpec());
@@ -59,10 +61,14 @@ public class DeployableService extends Service {
 
 	@Override
 	public List<String> getUris() {
+		
 		List<String> uris = new ArrayList<String>();
-		for (ServiceInstance service : serviceInstances) {
-			uris.add(service.getNativeUri());
-		}
+		
+		if (serviceInstances != null) {
+			for (ServiceInstance service : serviceInstances) {
+				uris.add(service.getNativeUri());
+			}
+		} 
 		return uris;
 	}
 

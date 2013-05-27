@@ -43,6 +43,7 @@ public class Deployer {
 	 */
 	public Map<String, ChoreographyService> deployChoreographyServices(
 			Choreography chor) throws EnactmentException {
+		
 		logger.info("Starting to deploy services of choreography "
 				+ chor.getId());
 		logger.info("Request to configure nodes; creating services; setting up Chef");
@@ -60,7 +61,7 @@ public class Deployer {
 		}
 		logger.info("Nodes are configured to run chef-client");
 		logger.info("Requested to run chef-client on nodes");
-		Map<String, ChoreographyService> deployedServices = runChefClient(choreographyServices);
+		Map<String, ChoreographyService> deployedServices = runChefClient(choreographyServices, chor.getId());
 		if (deployedServices == null) {
 			logger.info("Deployed service list became null after run chef-client");
 			throw new EnactmentException(
@@ -87,7 +88,7 @@ public class Deployer {
 	private List<ChoreographyService> deployNewServices(
 			List<ChoreographyServiceSpec> list) {
 
-		final int TIMEOUT = 8; // it may encompasses bootstrap time
+		final int TIMEOUT = 30; // it may encompasses bootstrap time
 		final int N = list.size();
 
 		ExecutorService executor = Executors.newFixedThreadPool(N);
@@ -115,7 +116,6 @@ public class Deployer {
 			} catch (Exception e) {
 				logger.error("Could not get service from future: "
 						+ e.getMessage());
-				e.printStackTrace();
 			}
 		}
 
@@ -140,12 +140,15 @@ public class Deployer {
 		return result;
 	}
 
-	// chef-client
 	private Map<String, ChoreographyService> runChefClient(
-			List<ChoreographyService> services) {
+			List<ChoreographyService> services, String chorId) {
 
 		final int TIMEOUT = 10; // chef-client may take a long time
 		final int N = services.size();
+		if (N <= 0) {
+			logger.error(N + " services within chor " + chorId + "!");
+			throw new IllegalStateException();
+		}
 		ExecutorService executor = Executors.newFixedThreadPool(N);
 		Map<String, ChoreographyService> deployedServices = new HashMap<String, ChoreographyService>(); // key
 																										// is
@@ -159,12 +162,17 @@ public class Deployer {
 			
 			if (((DeployableServiceSpec) deployed.getChoreographyServiceSpec().getServiceSpec())
 					.getPackageType() != PackageType.LEGACY) {
-				for (ServiceInstance instance : ((DeployableService) deployed
-						.getService()).getInstances()) {
-					
-					String nodeId = instance.getNode().getId();
-					NodeUpgrader upgrader = new NodeUpgrader(nodeId, owner);
-					executor.submit(upgrader);
+				List<ServiceInstance> instances = ((DeployableService) deployed
+						.getService()).getInstances();
+				if (instances != null) {
+					for (ServiceInstance instance : instances) {
+						
+						String nodeId = instance.getNode().getId();
+						NodeUpgrader upgrader = new NodeUpgrader(nodeId, owner);
+						executor.submit(upgrader);
+					}
+				} else {
+					logger.warn("No services intances to chor " + chorId + "!" );
 				}
 			}
 		}

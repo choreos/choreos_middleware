@@ -1,0 +1,15 @@
+########Report:########## 
+ // tuples are (mean, std dev)
+ // times in seconds
+ 1/10 with 3 chors of size 4; Sun May 26 11:35:09 BRT 2013
+ How many choreographies to enact = 3
+ How many choreographies enacted = 3
+ Time to enact choreographies = [571.392213843, 628.172569283, 631.332565586]
+ Mean time to enact a choreography = (610.2991162373334, 33.73139019667553)
+ Total time to enact choreographies = 631.339265257
+ Time to check choreographies = [1.82593294, 1.82855689, 1.907196404]
+ Mean time to check a choreography = (1.8538954113333332, 0.04617865462353432)
+ Total time to check choreographies = 1.91214876
+ How many choreographies working = 3
+ Total time = 633.253717774
+

@@ -9,11 +9,13 @@ import org.ow2.choreos.deployment.nodes.chef.ConfigToChef;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpgrader;
+import org.ow2.choreos.deployment.nodes.cm.NodeUpgraderFactory;
 import org.ow2.choreos.deployment.nodes.cm.RecipeApplier;
 import org.ow2.choreos.deployment.nodes.selector.NodeNotSelectedException;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelector;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelectorFactory;
 import org.ow2.choreos.nodes.ConfigNotAppliedException;
+import org.ow2.choreos.nodes.NPMException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
@@ -23,8 +25,6 @@ import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
 import org.ow2.choreos.utils.Concurrency;
-
-import com.jcraft.jsch.JSchException;
 
 /**
  * 
@@ -55,9 +55,10 @@ public class NPMImpl implements NodePoolManager {
 		idlePool = IdlePool.getInstance(poolSize, nodeCreator);
 	}
 	
-	public NPMImpl(CloudProvider provider, IdlePool pool) {
+	public NPMImpl(CloudProvider provider, NodeCreator creator, IdlePool pool) {
 		cloudProvider = provider;
 		nodeRegistry = NodeRegistry.getInstance();
+		nodeCreator = creator;
 		idlePool = pool;
 	}
 
@@ -66,13 +67,24 @@ public class NPMImpl implements NodePoolManager {
 			throws NodeNotCreatedException {
 
 		try {
-			node = idlePool.retriveNode();
-			idlePool.fillPool();
+			node = nodeCreator.create(node, resourceImpact);
 			nodeRegistry.putNode(node);
-		} catch (NodeNotCreatedException e) {
-			throw new NodeNotCreatedException(node.getId());
+			idlePool.fillPool(); // we want the pool to be always filled whenever requests are coming
+		} catch (NPMException e1) {
+			// if node creation has failed, let's retrieve a node from the pool
+			// wait for a new node would take too much time!
+			// TODO: maybe the failed node only took too much time to be ready
+			// in such situation, this node could go to the pool!
+			try {
+				logger.warn("*** Node creation failed, let's retrieve a node from the pool ***");
+				node = idlePool.retriveNode();
+				nodeRegistry.putNode(node);
+				idlePool.fillPool();
+			} catch (NodeNotCreatedException e2) {
+				// OK, now we give up =/
+				throw new NodeNotCreatedException(node.getId());
+			}
 		}
-
 		return node;
 	}
 
@@ -104,6 +116,7 @@ public class NPMImpl implements NodePoolManager {
 		List<Node> nodes = null;
 		try {
 			nodes = selector.selectNodes(config, restrictedNPM);
+			logger.info("Selected nodes to " + config.getName() + ": " + nodes);
 		} catch (NodeNotSelectedException e) {
 			throw new ConfigNotAppliedException(config.getName());
 		}
@@ -155,14 +168,8 @@ public class NPMImpl implements NodePoolManager {
 			NodeNotFoundException {
 
 		Node node = this.getNode(nodeId);
-		NodeUpgrader upgrader = new NodeUpgrader();
-
-		try {
-			upgrader.upgradeNodeConfiguration(node);
-		} catch (JSchException e) {
-			throw new NodeNotUpgradedException(node.getId(),
-					"Could not connect through ssh");
-		}
+		NodeUpgrader upgrader = NodeUpgraderFactory.getInstance(nodeId);
+		upgrader.upgradeNodeConfiguration(node);
 	}
 
 	@Override
