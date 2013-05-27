@@ -25,7 +25,8 @@ import com.jcraft.jsch.JSchException;
  */
 public class NodeUpgrader {
 
-	private static final int UPGRADE_TIMEOUT = 10;
+	// it is not the time to one upgrade, but also the time waiting in the queue
+	private static final int UPGRADE_TIMEOUT = 30;
 	
 	private Logger logger = Logger.getLogger(NodeUpgrader.class);
 
@@ -50,9 +51,13 @@ public class NodeUpgrader {
 		
 		try {
 			Future<Boolean> taskCompleted = myExecutor.poll(UPGRADE_TIMEOUT, TimeUnit.MINUTES);
-			boolean ok = taskCompleted.get().booleanValue();
-			if (ok) {
-				logger.debug("Node " + node.getId() + " upgraded");
+			if (taskCompleted != null) {
+				Boolean ok = taskCompleted.get();
+				if (ok != null && ok.booleanValue()) {
+					logger.debug("Node " + node.getId() + " upgraded");
+				} else {
+					fail(node);
+				}
 			} else {
 				fail(node);
 			}

@@ -16,12 +16,13 @@ import org.ow2.choreos.utils.LogConfigurator;
 
 public class Experiment {
 	
-	private static final int CHORS_QTY = 4;
-	private static final int CHORS_SIZE = 5;
 	private static final int RUN = 1;
+	private static final int CHORS_SIZE = 25;
+	private static final int VM_LIMIT = 10;
+	private static final int CHORS_QTY = 4;
 	private static final String TRACKER_WAR_URL = "http://valinhos.ime.usp.br:54080/services/tracker.war";
 
-	private static final int ENACTMENT_TIMEOUT = 20;
+	private static final int ENACTMENT_TIMEOUT = 30;
 	private static final int VERIFY_TIMEOUT = 3;
 	
 	private static Logger logger = Logger.getLogger(Experiment.class);
@@ -36,7 +37,7 @@ public class Experiment {
 	public void run() {
 		
 		logger.info("Running " + RUN);
-		Report report = new Report(RUN, CHORS_QTY, CHORS_SIZE);
+		Report report = new Report(RUN, CHORS_QTY, CHORS_SIZE, VM_LIMIT);
 		
 		long t0_total = System.nanoTime();
 		

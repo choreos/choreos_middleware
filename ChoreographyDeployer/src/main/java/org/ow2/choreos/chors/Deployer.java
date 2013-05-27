@@ -88,7 +88,7 @@ public class Deployer {
 	private List<ChoreographyService> deployNewServices(
 			List<ChoreographyServiceSpec> list) {
 
-		final int TIMEOUT = 8; // it may encompasses bootstrap time
+		final int TIMEOUT = 30; // it may encompasses bootstrap time
 		final int N = list.size();
 
 		ExecutorService executor = Executors.newFixedThreadPool(N);
@@ -116,7 +116,6 @@ public class Deployer {
 			} catch (Exception e) {
 				logger.error("Could not get service from future: "
 						+ e.getMessage());
-				e.printStackTrace();
 			}
 		}
 
