@@ -9,6 +9,7 @@ import org.ow2.choreos.deployment.nodes.chef.ConfigToChef;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpgrader;
+import org.ow2.choreos.deployment.nodes.cm.NodeUpgraderFactory;
 import org.ow2.choreos.deployment.nodes.cm.RecipeApplier;
 import org.ow2.choreos.deployment.nodes.selector.NodeNotSelectedException;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelector;
@@ -24,8 +25,6 @@ import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
 import org.ow2.choreos.utils.Concurrency;
-
-import com.jcraft.jsch.JSchException;
 
 /**
  * 
@@ -169,14 +168,8 @@ public class NPMImpl implements NodePoolManager {
 			NodeNotFoundException {
 
 		Node node = this.getNode(nodeId);
-		NodeUpgrader upgrader = new NodeUpgrader();
-
-		try {
-			upgrader.upgradeNodeConfiguration(node);
-		} catch (JSchException e) {
-			throw new NodeNotUpgradedException(node.getId(),
-					"Could not connect through ssh");
-		}
+		NodeUpgrader upgrader = NodeUpgraderFactory.getInstance(nodeId);
+		upgrader.upgradeNodeConfiguration(node);
 	}
 
 	@Override
