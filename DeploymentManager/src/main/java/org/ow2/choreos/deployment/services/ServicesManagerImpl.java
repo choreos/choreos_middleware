@@ -3,6 +3,8 @@ package org.ow2.choreos.deployment.services;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chef.Knife;
@@ -30,6 +32,7 @@ import org.ow2.choreos.services.datamodel.Recipe;
 import org.ow2.choreos.services.datamodel.RecipeBundle;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceSpec;
+import org.ow2.choreos.utils.Concurrency;
 
 public class ServicesManagerImpl implements ServicesManager {
 
@@ -39,7 +42,7 @@ public class ServicesManagerImpl implements ServicesManager {
 			.getInstance();
 	private NodePoolManager npm;
 	private Knife knife;
-
+	
 	public ServicesManagerImpl(NodePoolManager npm) {
 
 		final String CHEF_REPO = Configuration.get("CHEF_REPO");
@@ -148,11 +151,43 @@ public class ServicesManagerImpl implements ServicesManager {
 
 	private void uploadServiceRecipe(RecipeBundle serviceRecipeBundle,
 			String dir) throws KnifeException {
+		
+		final int COOKBOOK_UPLOAD_TIMEOUT = 4;
 		logger.debug("Uploading service recipe "
 				+ serviceRecipeBundle.getServiceRecipe().getCookbookName());
-		String result = this.knife.cookbook().upload(
-				serviceRecipeBundle.getServiceRecipe().getCookbookName(), dir);
-		logger.debug(result);
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		CookbookUploader cookbookUploader = new CookbookUploader(serviceRecipeBundle, dir);
+		executor.submit(cookbookUploader);
+		Concurrency.waitExecutor(executor, COOKBOOK_UPLOAD_TIMEOUT);
+		if (!cookbookUploader.ok) {
+			throw new KnifeException("cookbook not upload", "cookbook not upload");
+		}
+	}
+	
+	private class CookbookUploader implements Runnable {
+
+		RecipeBundle serviceRecipeBundle;
+		String dir;
+		boolean ok = false;
+		
+		CookbookUploader(RecipeBundle serviceRecipeBundle,
+				String dir) {
+			this.serviceRecipeBundle = serviceRecipeBundle;
+			this.dir = dir;
+		}
+		
+		@Override
+		public void run() {
+			String result;
+			try {
+				result = knife.cookbook().upload(
+						serviceRecipeBundle.getServiceRecipe().getCookbookName(), dir);
+				logger.debug(result);
+				ok = true;
+			} catch (KnifeException e) {
+				ok = false;
+			}
+		}
 	}
 
 	private void applyRecipe(DeployableService service,
