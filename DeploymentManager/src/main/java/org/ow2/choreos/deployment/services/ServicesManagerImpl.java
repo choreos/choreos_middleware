@@ -3,8 +3,12 @@ package org.ow2.choreos.deployment.services;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chef.Knife;
@@ -32,7 +36,6 @@ import org.ow2.choreos.services.datamodel.Recipe;
 import org.ow2.choreos.services.datamodel.RecipeBundle;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceSpec;
-import org.ow2.choreos.utils.Concurrency;
 
 public class ServicesManagerImpl implements ServicesManager {
 
@@ -42,6 +45,10 @@ public class ServicesManagerImpl implements ServicesManager {
 			.getInstance();
 	private NodePoolManager npm;
 	private Knife knife;
+	
+	// used to limit the amount of knife running at the same time,
+	// since each knife instance consumes ~ 30 Mb of RAM
+	private static ExecutorService cookbookUploadExecutor = Executors.newFixedThreadPool(30);
 	
 	public ServicesManagerImpl(NodePoolManager npm) {
 
@@ -155,12 +162,17 @@ public class ServicesManagerImpl implements ServicesManager {
 		final int COOKBOOK_UPLOAD_TIMEOUT = 4;
 		logger.debug("Uploading service recipe "
 				+ serviceRecipeBundle.getServiceRecipe().getCookbookName());
-		ExecutorService executor = Executors.newSingleThreadExecutor();
+		CompletionService<Callable<CookbookUploader>> completionService = new ExecutorCompletionService<Callable<CookbookUploader>>(cookbookUploadExecutor);
 		CookbookUploader cookbookUploader = new CookbookUploader(serviceRecipeBundle, dir);
-		executor.submit(cookbookUploader);
-		Concurrency.waitExecutor(executor, COOKBOOK_UPLOAD_TIMEOUT);
+		completionService.submit(cookbookUploader, null);
+		try {
+			completionService.poll(COOKBOOK_UPLOAD_TIMEOUT, TimeUnit.MINUTES);
+		} catch (InterruptedException e) {
+			throw new KnifeException("cookbook not uploaded", "cookbook not uploaded");
+		}
+		
 		if (!cookbookUploader.ok) {
-			throw new KnifeException("cookbook not upload", "cookbook not upload");
+			throw new KnifeException("cookbook not uploaded", "cookbook not uploaded");
 		}
 	}
 	
