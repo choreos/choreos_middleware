@@ -318,8 +318,11 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
 
 		try {
 			try {
-				createdNodes = client.createNodesInGroup("default", 1,
-						getTemplate(client, getImages().get(0).getId()));
+				createdNodes = client.createNodesInGroup(
+						"default",
+						1,
+						getTemplate(client, getImages().get(0).getId())
+				);
 			} catch (RunNodesException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -382,7 +385,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
 	}
 
 	public List<Image> getImages() {
-		logger.info("List Images.");
+		logger.info("Getting image info...");
 		ComputeService client = getClient("");
 		Set<? extends Image> images = client.listImages();
 
@@ -392,14 +395,14 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
 			imageList.add(image);
 		}
 
-		logger.info("Image List obtained successfully.");
+		logger.info("Images: "+ imageList.toString());
 
 		return imageList;
 
 	}
 
 	public List<Hardware> getHardwareProfiles() {
-		logger.info("List Hardware Profiles.");
+		logger.info("getting hardware profile info...");
 		ComputeService client = getClient("");
 		Set<? extends Hardware> profiles = client.listHardwareProfiles();
 
@@ -408,8 +411,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
 		for (Hardware profile : profiles) {
 			hardwareList.add(profile);
 		}
-
-		logger.info("Hardware Profiles obtained successfully.");
+		logger.info(hardwareList.toString());
 
 		return hardwareList;
 
