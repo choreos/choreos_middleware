@@ -53,7 +53,7 @@ when true
     iplist = search(:node, "*:*").map {|node| node.ipaddress}
 	if iplist.empty? 
 		# This should not happen, at least this node should be found
-    	iplist = ["127.0.0.1"]
+    	iplist = ["127.0.0.1","10.0.0.8"] # The last ip is hardcoded for now, but it must be set by deployment manager
     end
     variables( :cluster_name => node[:ganglia][:cluster_name],
                :iplist => iplist,

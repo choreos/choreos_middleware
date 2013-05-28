@@ -9,7 +9,8 @@ when "ubuntu", "debian"
     notifies :restart, "service[apache2]"
   end
 
-service "apache2" do
-  supports :status => true, :restart => true, :reload => true
-  action [ :enable, :start ]
+  service "apache2" do
+    supports :status => true, :restart => true, :reload => true
+    action [ :enable, :start ]
+  end
 end

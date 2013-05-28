@@ -15,3 +15,4 @@ chef-repo/clean-chefices.sh
 smartbuild.sh
 .project
 .settings/*
+chef-repo/cookbooks/harakiri*
