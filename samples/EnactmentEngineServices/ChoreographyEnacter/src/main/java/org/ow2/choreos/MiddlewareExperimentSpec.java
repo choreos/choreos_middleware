@@ -17,6 +17,8 @@ public class MiddlewareExperimentSpec {
 	public static final String AIRLINE = "airline";
 	public static final String TRAVEL_AGENCY = "travelagency";	
 	public static final String AIRLINE_WAR = "http://valinhos.ime.usp.br:54080/enact_test/middleware/airline.war";
+	//public static final String AIRLINE_WAR = "http://valinhos.ime.usp.br:54080/enact_test/v2-2/airline.war";
+	//public static final String TRAVEL_AGENCY_WAR = "http://valinhos.ime.usp.br:54080/enact_test/v2-2/travelagency.war";
 	public static final String TRAVEL_AGENCY_WAR = "http://valinhos.ime.usp.br:54080/enact_test/middleware/travelagency.war";
 	
 	private ChoreographySpec spec = null;

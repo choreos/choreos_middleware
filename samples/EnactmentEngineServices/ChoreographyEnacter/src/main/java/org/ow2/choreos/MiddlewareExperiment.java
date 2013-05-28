@@ -71,10 +71,15 @@ public class MiddlewareExperiment {
 
 		@Override
 		public void run() {
-			
+			runTravelrequest();
+		}
+
+		private void runTravelrequest() {
+			logger.info("Acquiring client");
 			WSClient client = getTravelAgencyClient(travel);
 			Item response = null;
 			try {
+				logger.info("Getting response from buyTrip");
 				response = client.request("buyTrip");
 			} catch (InvalidOperationNameException e1) {
 				e1.printStackTrace();
