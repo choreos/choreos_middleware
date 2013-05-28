@@ -17,9 +17,9 @@ import org.ow2.choreos.utils.LogConfigurator;
 public class Experiment {
 	
 	private static final int RUN = 1;
-	private static final int CHORS_SIZE = 25;
+	private static final int CHORS_SIZE = 8;
 	private static final int VM_LIMIT = 10;
-	private static final int CHORS_QTY = 4;
+	private static final int CHORS_QTY = 5;
 	private static final String TRACKER_WAR_URL = "http://valinhos.ime.usp.br:54080/services/tracker.war";
 
 	private static final int ENACTMENT_TIMEOUT = 30;
