@@ -3,6 +3,7 @@ package org.ow2.choreos.deployment.nodes.cm;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
@@ -64,13 +65,25 @@ public class NodeBootstrapper {
     	logger.info("Bootstrapping " + this.node.getIp());
     	Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
     	
-    	//configureHarakiri("http://172.16.239.10:9100/deploymentmanager/", this.node.getChefName());
     	
-		String bootstrapLog = knife.bootstrap(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile(), DefaultRecipes.getDefaultRecipes());
-//		logger.debug("remote Bootstrap log: " + bootstrapLog);
-		saveLogOnNode(bootstrapLog);
-		logger.info("Bootstrap completed at" + this.node);
-		this.retrieveAndSetChefName(bootstrapLog);
+    	logger.info("Going to create harakiri for node chefnamed: " + this.node.getId());
+    	configureHarakiri("http://192.168.48.115:9100/deploymentmanager/", this.node.getId());
+    	List<String> defaultRecipes = DefaultRecipes.getDefaultRecipes();
+    	defaultRecipes.add("harakiri" +this.node.getId().replace("/", "-"));
+    	
+    	for(String recipeName: defaultRecipes) {
+    		logger.info("Uploading default recipe " + recipeName);    		
+    		String res = knife.cookbook().upload(recipeName, CHEF_REPO+"/cookbooks");
+    		logger.info("Upload recipes finished: " + res);
+    	}
+		String bootstrapLog = knife.bootstrap(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile(), defaultRecipes);
+		logger.debug("remote Bootstrap log: " + bootstrapLog);
+		
+    	saveLogOnNode(bootstrapLog);
+
+    	logger.info("Bootstrap completed at" + this.node);
+		
+    	this.retrieveAndSetChefName(bootstrapLog);
 		
 		NodeChecker checker = new NodeChecker();
 		if (!checker.checkNodeOnNodesList(node)) {
@@ -84,7 +97,6 @@ public class NodeBootstrapper {
     	String chefRepoPath = copyTemplate(nodeId.replace("/", "-"));
     	
     	Map<String,String> replacementItems = new HashMap<String, String>();
-    	
     	// replace content of attributes/default.rb
     	replacementItems.put("$DEPLOYMENT_MANAGER_URL", deploymentManagerURL);
     	replacementItems.put("$NODE_ID", nodeId);
