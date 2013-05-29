@@ -78,7 +78,7 @@ public class NodeBootstrapper {
     	}
 		String bootstrapLog = knife.bootstrap(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile(), defaultRecipes);
 		
-    	saveLogOnNode(bootstrapLog);
+//    	saveLogOnNode(bootstrapLog);
 
     	logger.info("Bootstrap completed at" + this.node);
 		
