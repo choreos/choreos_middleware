@@ -13,7 +13,7 @@ public class ChorDeployerServer {
 
     static {
     	String port = Configuration.get(Option.CHOR_DEPLOYER_PORT);
-    	URL = "http://localhost:" + port + "/choreographydeployer/";
+    	URL = "http://0.0.0.0:" + port + "/choreographydeployer/";
     }
     
     public ChorDeployerServer() {
