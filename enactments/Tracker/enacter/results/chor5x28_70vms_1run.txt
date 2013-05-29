@@ -1,0 +1,19 @@
+########Report:########## 
+ // tuples are (mean, std dev)
+ // times in seconds
+ 1/10 with 5 chors of size 28; Wed May 29 07:09:24 BRT 2013VM_LIMIT = 70
+ How many choreographies to enact = 5
+ How many choreographies enacted = 2
+ Time to enact choreographies = [1692.31987951, 1706.585384665]
+ Mean time to enact a choreography = (1699.4526320875, 10.08723543215217)
+ Total time to enact choreographies = 1708.563871314
+ Time to check choreographies = [0.659491242, 0.666007918, 0.697577417]
+ Mean time to check a choreography = (0.6743588590000001, 0.02037014588120975)
+ Total time to check choreographies = 0.701743401
+ How many choreographies working = 0
+ Total time = 1709.278743251
+
+Problems:
+Could not upload recipe - 97x
+chef-client returned an error exit status on node - 4x
+Could not deploy service - 97x

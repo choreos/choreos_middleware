@@ -46,9 +46,7 @@ public class ServicesManagerImpl implements ServicesManager {
 	private NodePoolManager npm;
 	private Knife knife;
 	
-	// used to limit the amount of knife running at the same time,
-	// since each knife instance consumes ~ 30 Mb of RAM
-	private static ExecutorService cookbookUploadExecutor = Executors.newFixedThreadPool(30);
+	private static ExecutorService cookbookUploadExecutor = Executors.newCachedThreadPool();
 	
 	public ServicesManagerImpl(NodePoolManager npm) {
 
@@ -116,7 +114,7 @@ public class ServicesManagerImpl implements ServicesManager {
 							.getUUID());
 				} else {
 					try {
-						Thread.sleep(1000);
+						Thread.sleep(500);
 					} catch (InterruptedException e1) {
 					}
 					continue;
