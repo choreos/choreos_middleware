@@ -65,13 +65,14 @@ public class NodeBootstrapper {
     	logger.info("Bootstrapping " + this.node.getIp());
     	Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
     	
-    	
-    	logger.info("Going to create harakiri for node chefnamed: " + this.node.getId());
-    	configureHarakiri("http://192.168.48.115:9100/deploymentmanager/", this.node.getId());
     	List<String> defaultRecipes = DefaultRecipes.getDefaultRecipes();
     	String harakiriRecipeName = "harakiri" +this.node.getId().replace("/", "-");
-		defaultRecipes.add(harakiriRecipeName);
-    	
+    	if (Boolean.parseBoolean(Configuration.get("HARAKIRI"))) {
+    		logger.info("Going to create harakiri for node chefnamed: " + this.node.getId());
+    		configureHarakiri("http://192.168.48.115:9100/deploymentmanager/", this.node.getId());
+			defaultRecipes.add(harakiriRecipeName);
+    	}
+		
     	for(String recipeName: defaultRecipes) {
     		logger.info("Uploading default recipe " + recipeName);    		
     		String res = knife.cookbook().upload(recipeName, CHEF_REPO+"/cookbooks");
@@ -85,7 +86,8 @@ public class NodeBootstrapper {
 		
     	this.retrieveAndSetChefName(bootstrapLog);
     	
-    	knife.node().runListAdd(this.node.getChefName(), harakiriRecipeName);
+    	if(Boolean.parseBoolean(Configuration.get("HARAKIRI"))) 
+    		knife.node().runListAdd(this.node.getChefName(), harakiriRecipeName);
 		
 		NodeChecker checker = new NodeChecker();
 		if (!checker.checkNodeOnNodesList(node)) {
