@@ -2,7 +2,8 @@
 #                                                                        #
 #                IMPORTANT DEVELOPMENT NOTICE:                           #
 #                                                                        #
-# All ocurrences of $NAME must be replaced with the actual service name  #
+# Ocurrences of $DEPLOYMENT_MANAGER_URL and $NODE_ID must be replaced    #
+#      with the deployment manager url and the id of this node in EE     #
 #            before uploading the recipe to the chef-server              #
 #                                                                        #
 ##########################################################################
