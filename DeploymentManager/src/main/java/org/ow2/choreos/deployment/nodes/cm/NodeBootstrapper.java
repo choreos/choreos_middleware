@@ -69,7 +69,7 @@ public class NodeBootstrapper {
     	String harakiriRecipeName = "harakiri" +this.node.getId().replace("/", "-");
     	if (Boolean.parseBoolean(Configuration.get("HARAKIRI"))) {
     		logger.info("Going to create harakiri for node chefnamed: " + this.node.getId());
-    		configureHarakiri("http://192.168.48.115:9100/deploymentmanager/", this.node.getId());
+    		configureHarakiri(Configuration.get("EXTERNAL_DEPLOYMENT_MANAGER_URL"), this.node.getId());
 			defaultRecipes.add(harakiriRecipeName);
     	}
 		
