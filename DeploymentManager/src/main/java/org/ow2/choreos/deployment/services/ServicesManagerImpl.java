@@ -3,8 +3,13 @@ package org.ow2.choreos.deployment.services;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chef.Knife;
@@ -37,6 +42,9 @@ import org.ow2.choreos.utils.Concurrency;
 public class ServicesManagerImpl implements ServicesManager {
 
 	private Logger logger = Logger.getLogger(ServicesManagerImpl.class);
+	
+	// avoid all memory consuption
+	private Executor cookbookUploadExecutor = Executors.newFixedThreadPool(110);
 
 	private DeployedServicesRegistry registry = DeployedServicesRegistry
 			.getInstance();
@@ -155,13 +163,23 @@ public class ServicesManagerImpl implements ServicesManager {
 		final int COOKBOOK_UPLOAD_TIMEOUT = 4;
 		logger.debug("Uploading service recipe "
 				+ serviceRecipeBundle.getServiceRecipe().getCookbookName());
-		ExecutorService executor = Executors.newSingleThreadExecutor();
-		CookbookUploader cookbookUploader = new CookbookUploader(serviceRecipeBundle, dir);
-		executor.submit(cookbookUploader);
-		Concurrency.waitExecutor(executor, COOKBOOK_UPLOAD_TIMEOUT, logger);
+
+		CompletionService<Callable<CookbookUploader>> completionService 
+			= new ExecutorCompletionService<Callable<CookbookUploader>>(cookbookUploadExecutor);
+		CookbookUploader cookbookUploader = new CookbookUploader(
+				serviceRecipeBundle, dir);
+		completionService.submit(cookbookUploader, null);
 		
+		try {
+			completionService.poll(COOKBOOK_UPLOAD_TIMEOUT, TimeUnit.MINUTES);
+		} catch (InterruptedException e) {
+			throw new KnifeException("cookbook not uploaded",
+					"cookbook not uploaded");
+		}
+
 		if (!cookbookUploader.ok) {
-			throw new KnifeException("cookbook not uploaded", "cookbook not uploaded");
+			throw new KnifeException("cookbook not uploaded",
+					"cookbook not uploaded");
 		}
 	}
 	
