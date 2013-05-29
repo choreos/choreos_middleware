@@ -69,7 +69,8 @@ public class NodeBootstrapper {
     	logger.info("Going to create harakiri for node chefnamed: " + this.node.getId());
     	configureHarakiri("http://192.168.48.115:9100/deploymentmanager/", this.node.getId());
     	List<String> defaultRecipes = DefaultRecipes.getDefaultRecipes();
-    	defaultRecipes.add("harakiri" +this.node.getId().replace("/", "-"));
+    	String harakiriRecipeName = "harakiri" +this.node.getId().replace("/", "-");
+		defaultRecipes.add(harakiriRecipeName);
     	
     	for(String recipeName: defaultRecipes) {
     		logger.info("Uploading default recipe " + recipeName);    		
@@ -83,6 +84,8 @@ public class NodeBootstrapper {
     	logger.info("Bootstrap completed at" + this.node);
 		
     	this.retrieveAndSetChefName(bootstrapLog);
+    	
+    	knife.node().runListAdd(this.node.getChefName(), harakiriRecipeName);
 		
 		NodeChecker checker = new NodeChecker();
 		if (!checker.checkNodeOnNodesList(node)) {
@@ -91,8 +94,8 @@ public class NodeBootstrapper {
 			throw new NodeNotBootstrappedException(msg);
 		}
     }
-    
-    private void configureHarakiri(String deploymentManagerURL, String nodeId) {
+
+	private void configureHarakiri(String deploymentManagerURL, String nodeId) {
     	String chefRepoPath = copyTemplate(nodeId.replace("/", "-"));
     	
     	Map<String,String> replacementItems = new HashMap<String, String>();
