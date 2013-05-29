@@ -16,14 +16,14 @@ import org.ow2.choreos.utils.LogConfigurator;
 
 public class Experiment {
 	
-	private static final int RUN = 1;
-	private static final int CHORS_SIZE = 8;
-	private static final int VM_LIMIT = 10;
-	private static final int CHORS_QTY = 5;
+	private static final int RUN = Integer.parseInt(ExperimentConfiguration.get("RUN"));
+	private static final int CHORS_SIZE = Integer.parseInt(ExperimentConfiguration.get("CHORS_SIZE"));
+	private static final int VM_LIMIT = Integer.parseInt(ExperimentConfiguration.get("VM_LIMIT"));
+	private static final int CHORS_QTY = Integer.parseInt(ExperimentConfiguration.get("CHORS_QTY"));
 	private static final String TRACKER_WAR_URL = "http://valinhos.ime.usp.br:54080/services/tracker.war";
 
-	private static final int ENACTMENT_TIMEOUT = 30;
-	private static final int VERIFY_TIMEOUT = 3;
+	private static final int ENACTMENT_TIMEOUT = 40;
+	private static final int VERIFY_TIMEOUT = 5;
 	
 	private static Logger logger = Logger.getLogger(Experiment.class);
 	

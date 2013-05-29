@@ -78,9 +78,8 @@ public class NodeBootstrapper {
     		logger.info("Upload recipes finished: " + res);
     	}
 		String bootstrapLog = knife.bootstrap(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile(), defaultRecipes);
-		logger.debug("remote Bootstrap log: " + bootstrapLog);
 		
-    	saveLogOnNode(bootstrapLog);
+//    	saveLogOnNode(bootstrapLog);
 
     	logger.info("Bootstrap completed at" + this.node);
 		
