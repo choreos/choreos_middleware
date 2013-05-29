@@ -21,7 +21,7 @@ public class ChefNodeNameRetriever {
 	
     private String getScript() {
     	
-    	URL scriptFile = ClassLoader.getSystemResource(CHEF_NAME_SCRIPT);
+    	URL scriptFile = this.getClass().getClassLoader().getResource(CHEF_NAME_SCRIPT);
     	String command = null;
 		try {
 			command = FileUtils.readFileToString(new File(scriptFile.getFile()));
