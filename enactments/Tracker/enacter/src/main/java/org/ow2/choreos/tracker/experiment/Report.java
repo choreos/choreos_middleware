@@ -39,11 +39,14 @@ public class Report {
 	
 	double totalTime;
 	
+	String header;
+	
 	public Report(int run, int chorsQty, int chorsSize, int vmLimit) {
 		this.run = run;
 		this.chorsQty = chorsQty;
 		this.chorsSize = chorsSize;
 		this.vmLimit = vmLimit;
+		this.header = run + "/10 with " + chorsQty + " chors of size " + chorsSize + "; " + (new Date()).toString();
 	}
 	
 	public void setChorsQuantity(int chorsQty) {
@@ -122,8 +125,8 @@ public class Report {
 		return "########Report:########## "
 				+ "\n // tuples are (mean, std dev)"
 				+ "\n // times in seconds"
-				+ "\n " + run + "/10 with " + chorsQty + " chors of size " + chorsSize + "; " + (new Date()).toString()
-				+ "VM_LIMIT = " + vmLimit
+				+ "\n " + header
+				+ "\n VM_LIMIT = " + vmLimit
 				+ "\n How many choreographies to enact = " + chorsQty
 				+ "\n How many choreographies enacted = " + chorsEnactmentTimes.size()
 				+ "\n Time to enact choreographies = " + chorsEnactmentTimes
