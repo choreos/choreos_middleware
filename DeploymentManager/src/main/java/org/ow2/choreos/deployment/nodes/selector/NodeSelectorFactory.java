@@ -34,14 +34,16 @@ public class NodeSelectorFactory {
 	 */
 	public static NodeSelector getInstance(String nodeSelectorType) {
 		
-		NodeSelector nodeSelector = null;
-		if (selectors.containsKey(nodeSelectorType)) {
-			nodeSelector = selectors.get(nodeSelectorType);
-		} else {
-			nodeSelector = newInstance(nodeSelectorType);
-			selectors.put(nodeSelectorType, nodeSelector);
-		}
-		return nodeSelector;
+		if (!selectors.containsKey(nodeSelectorType)) {
+			synchronized(NodeSelectorFactory.class) {
+				if (!selectors.containsKey(nodeSelectorType)) {
+					NodeSelector nodeSelector = newInstance(nodeSelectorType);
+					selectors.put(nodeSelectorType, nodeSelector);
+				}
+			}
+		} 
+		
+		return selectors.get(nodeSelectorType);
 	}
 	
 	private static NodeSelector newInstance(String nodeSelectorType) {
