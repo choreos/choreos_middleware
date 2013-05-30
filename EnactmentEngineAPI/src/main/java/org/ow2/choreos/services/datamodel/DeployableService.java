@@ -40,16 +40,13 @@ public class DeployableService extends Service {
 	}
 
 	public List<ServiceInstance> getInstances() {
-		synchronized(this) {
-			if (serviceInstances == null) {
-				serviceInstances = new ArrayList<ServiceInstance>();
-			}
-		}
+		checkServiceInstances();
 		return serviceInstances;
 	}
 
 	public void setInstances(List<ServiceInstance> instances) {
-		if (instances != null) {
+		checkServiceInstances();
+		synchronized (serviceInstances) {
 			for (ServiceInstance ins: instances) {
 				addInstance(ins);
 			}
@@ -57,32 +54,34 @@ public class DeployableService extends Service {
 	}
 
 	public void addInstance(ServiceInstance instance) {
-		synchronized(this) {
-			if (serviceInstances == null) {
-				serviceInstances = new ArrayList<ServiceInstance>();
-			}
+		checkServiceInstances();
+		synchronized (serviceInstances) {
+			serviceInstances.add(instance);
 		}
-		serviceInstances.add(instance);
 		instance.setServiceSpec(this.getSpec());
 	}
 
 	@Override
 	public List<String> getUris() {
 		
+		checkServiceInstances();
 		List<String> uris = new ArrayList<String>();
-		
-		if (serviceInstances != null) {
+
+		synchronized (serviceInstances) {
 			for (ServiceInstance service : serviceInstances) {
 				uris.add(service.getNativeUri());
 			}
-		} 
+		}
 		return uris;
 	}
 
 	public ServiceInstance getInstance(String instanceId) {
-		for(ServiceInstance instance: serviceInstances) {
-			if(instance.getInstanceId().equals(instanceId))
-				return instance;
+		checkServiceInstances();
+		synchronized(serviceInstances) {
+			for(ServiceInstance instance: serviceInstances) {
+				if(instance.getInstanceId().equals(instanceId))
+					return instance;
+			}
 		}
 		throw new IllegalArgumentException("getSpec().getUUID() " + " / " + instanceId);
 	}
@@ -93,5 +92,16 @@ public class DeployableService extends Service {
 
 	public void setRecipeBundle(RecipeBundle recipeBundle) {
 		this.recipeBundle = recipeBundle;
+	}
+	
+	private void checkServiceInstances() {
+		
+		if (serviceInstances == null) {
+			synchronized (this) {
+				if (serviceInstances == null) {
+					serviceInstances = new ArrayList<ServiceInstance>();
+				}
+			}
+		}
 	}
 }
