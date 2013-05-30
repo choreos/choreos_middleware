@@ -7,7 +7,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -37,14 +36,13 @@ import org.ow2.choreos.services.datamodel.Recipe;
 import org.ow2.choreos.services.datamodel.RecipeBundle;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceSpec;
-import org.ow2.choreos.utils.Concurrency;
 
 public class ServicesManagerImpl implements ServicesManager {
 
 	private Logger logger = Logger.getLogger(ServicesManagerImpl.class);
 	
-	// avoid all memory consuption
-	private Executor cookbookUploadExecutor = Executors.newFixedThreadPool(110);
+	// avoid all memory consumption
+	private static Executor cookbookUploadExecutor = Executors.newFixedThreadPool(100);
 
 	private DeployedServicesRegistry registry = DeployedServicesRegistry
 			.getInstance();
