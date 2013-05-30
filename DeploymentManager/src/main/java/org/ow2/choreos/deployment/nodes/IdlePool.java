@@ -161,7 +161,7 @@ public class IdlePool {
 					idleNodes.add(node);
 				}
 			} catch (NPMException e) {
-				logger.error("Could not create one of the extra VMs to the pool");
+				logger.error("Could not create a VM by the pool");
 				ok = false;
 			}
 		}

@@ -83,6 +83,7 @@ public class AWSCloudProvider implements CloudProvider {
 			setNodeProperties(node, cloudNode);
 			client.getContext().close();
 		} catch(RunNodesException e) {
+			logger.error("Node creation failed: " + e.getMessage());
 			throw new NodeNotCreatedException(node.getId());
 		}
 
