@@ -44,6 +44,10 @@ public class DeployableService extends Service {
 		return serviceInstances;
 	}
 
+	public void setServiceInstances(List<ServiceInstance> instances) {
+		this.serviceInstances = instances;
+	}
+
 	public void setInstances(List<ServiceInstance> instances) {
 		checkServiceInstances();
 		synchronized (serviceInstances) {
@@ -51,10 +55,6 @@ public class DeployableService extends Service {
 				addInstance(ins);
 			}
 		}
-	}
-
-	public void setServiceInstances(List<ServiceInstance> instances) {
-		this.serviceInstances = instances;
 	}
 	
 	public void addInstance(ServiceInstance instance) {
