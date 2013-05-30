@@ -40,6 +40,11 @@ public class DeployableService extends Service {
 	}
 
 	public List<ServiceInstance> getInstances() {
+		synchronized(this) {
+			if (serviceInstances == null) {
+				serviceInstances = new ArrayList<ServiceInstance>();
+			}
+		}
 		return serviceInstances;
 	}
 
