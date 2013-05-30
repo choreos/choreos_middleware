@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 import java.util.Set;
 
 import org.apache.cxf.common.util.StringUtils;
@@ -37,6 +38,11 @@ public class AWSCloudProvider implements CloudProvider {
 	private static String DEFAULT_IMAGE= "us-east-1/ami-3b4ff252";
 //	private static String DEFAULT_IMAGE= "us-east-1/ami-ccf405a5";
 	
+	// only threads with the creationToken can create new instances
+	// we use this token to implement the 1 req/sec rule
+	private static boolean creationToken = true; 
+	private static Random random = new Random();
+	
 	public String getProviderName() {
 		return PROVIDER;
 	}
@@ -58,6 +64,8 @@ public class AWSCloudProvider implements CloudProvider {
 	public Node createNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException {
 		
 		long t0 = System.currentTimeMillis(); 
+		
+		oneRequestPerSecondRule();
 		logger.debug("Creating node...");
 
 		String imageId = node.getImage();
@@ -85,7 +93,38 @@ public class AWSCloudProvider implements CloudProvider {
 		return node;
 	}
 
+	private void oneRequestPerSecondRule() {
 
+		while (!getToken()) {
+			final int DELAY = 10;
+			final int DELTA = random.nextInt(10);
+			try {
+				Thread.sleep(DELAY + DELTA);
+			} catch (InterruptedException e) {
+				logger.error("Exception at sleeping =/");
+			}
+		}
+		
+		final int ONE_SECOND = 1000;
+		try {
+			Thread.sleep(ONE_SECOND);
+		} catch (InterruptedException e) {
+			logger.error("Exception at sleeping =/");
+		}
+		
+		creationToken = true; // releases the token
+	}
+	
+	private boolean getToken() {
+		boolean ok = false;
+		synchronized (AWSCloudProvider.class) {
+			ok = creationToken;
+			if (ok) {
+				creationToken = false;
+			}
+		}
+		return ok;
+	}
 
 	public Node getNode(String nodeId) throws NodeNotFoundException {
 
