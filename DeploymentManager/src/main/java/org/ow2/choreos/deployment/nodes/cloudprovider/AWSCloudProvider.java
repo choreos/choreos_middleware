@@ -105,9 +105,9 @@ public class AWSCloudProvider implements CloudProvider {
 			}
 		}
 		
-		final int ONE_SECOND = 1500;
+		final int TWO_SECONDS = 2000;
 		try {
-			Thread.sleep(ONE_SECOND);
+			Thread.sleep(TWO_SECONDS);
 		} catch (InterruptedException e) {
 			logger.error("Exception at sleeping =/");
 		}

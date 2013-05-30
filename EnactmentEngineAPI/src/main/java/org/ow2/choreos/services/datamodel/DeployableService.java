@@ -49,8 +49,10 @@ public class DeployableService extends Service {
 	}
 
 	public void setInstances(List<ServiceInstance> instances) {
-		for (ServiceInstance ins: instances) {
-			addInstance(ins);
+		if (instances != null) {
+			for (ServiceInstance ins: instances) {
+				addInstance(ins);
+			}
 		}
 	}
 
