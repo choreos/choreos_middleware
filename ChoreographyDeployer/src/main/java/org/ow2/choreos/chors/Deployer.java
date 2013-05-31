@@ -60,7 +60,7 @@ public class Deployer {
 					+ "Deployer got a null list of choreography services");
 		}
 		logger.info("Nodes are configured to run chef-client");
-		logger.info("Requested to run chef-client on nodes");
+		logger.info("Requested to run chef-client on nodes chorId=" + chor.getId());
 		Map<String, ChoreographyService> deployedServices = runChefClient(choreographyServices, chor.getId());
 		if (deployedServices == null) {
 			logger.info("Deployed service list became null after run chef-client");
@@ -71,7 +71,7 @@ public class Deployer {
 			throw new EnactmentException(
 					"eployed service list became empty after run chef-client");
 		}
-		logger.info("Deployement finished");
+		logger.info("Deployement finished chorId=" + chor.getId());
 		return deployedServices;
 	}
 
@@ -143,16 +143,16 @@ public class Deployer {
 	private Map<String, ChoreographyService> runChefClient(
 			List<ChoreographyService> services, String chorId) {
 
-		final int TIMEOUT = 10; // chef-client may take a long time
+		final int TIMEOUT = 30; // chef-client may take a long time
 		final int N = services.size();
 		if (N <= 0) {
 			logger.error(N + " services within chor " + chorId + "!");
 			throw new IllegalStateException();
 		}
+
+		logger.debug("Going to update " + services.size() + " services");																								// serviceName
 		ExecutorService executor = Executors.newFixedThreadPool(N);
 		Map<String, ChoreographyService> deployedServices = new HashMap<String, ChoreographyService>(); // key
-																										// is
-																										// serviceName
 
 		for (ChoreographyService deployed : services) {
 
