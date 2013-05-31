@@ -141,7 +141,7 @@ public class ServicesManagerImpl implements ServicesManager {
 		File folder = new File(serviceRecipeBundle.getCookbookFolder());
 		String dir = folder.getAbsolutePath();
 		uploadServiceRecipe(serviceRecipeBundle, dir);
-		uploadDeactivateRecipe(serviceRecipeBundle, dir);
+		//uploadDeactivateRecipe(serviceRecipeBundle, dir);
 	}
 
 	private void uploadDeactivateRecipe(RecipeBundle serviceRecipeBundle,
