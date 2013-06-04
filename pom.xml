@@ -14,8 +14,8 @@
 
 	<licenses>
 		<license>
-			<name>GNU LESSER GENERAL PUBLIC LICENSE</name>
-			<url>http://www.gnu.org/licenses/lgpl.html</url>
+			<name>Mozilla Public License, Version 2.0</name>
+			<url>http://www.mozilla.org/MPL/2.0/</url>
 		</license>
 	</licenses>
 
@@ -32,15 +32,15 @@
 
 	<developers>
 		<developer>
-			<id>daniel.cukier</id>
-			<name>Daniel cukier</name>
-			<email>danicuki@ime.usp.br</email>
+			<id>thiago.furtado</id>
+			<name>Thiago Furtado</name>
+			<email>tfurtado@ime.usp.br</email>
 			<organization>IME-USP</organization>
 		</developer>
 		<developer>
-			<id>thiago.colucci</id>
-			<name>Thiago Colucci</name>
-			<email>colucci@ime.usp.br</email>
+			<id>nelson.lago</id>
+			<name>Nelson Lago</name>
+			<email>lago@ime.usp.br</email>
 			<organization>IME-USP</organization>
 		</developer>
 		<developer>
@@ -361,27 +361,8 @@
 					<updateJBIXml>true</updateJBIXml>
 				</configuration>
 			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<version>2.8</version>
-				<executions>
-					<execution>
-						<phase>install</phase>
-						<goals>
-							<goal>eclipse</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<downloadSources>true</downloadSources>
-					<useProjectReferences>false</useProjectReferences>
-				</configuration>
-			</plugin>
-
-
 		</plugins>
+
 		<pluginManagement>
 			<plugins>
 				<!--This plugin's configuration is used to store Eclipse m2e settings 
