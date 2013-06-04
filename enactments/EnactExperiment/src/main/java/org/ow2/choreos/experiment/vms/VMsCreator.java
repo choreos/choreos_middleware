@@ -40,7 +40,6 @@ public class VMsCreator {
 		for (int i=0; i<N; i++) {
 			Future<Long> future = executor.submit(new VMCreator(cp));
 			futures.add(future);
-			awsOneRequestPerSecondRuleSleep(); // EC2 1 second rule
 		}
 		
 		Concurrency.waitExecutor(executor, TIMEOUT);
@@ -75,14 +74,6 @@ public class VMsCreator {
 			logger.info("VM not created (CancellationException)");
 		}
 		return time;
-	}
-
-	private void awsOneRequestPerSecondRuleSleep() {
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			logger.error("Exception at sleeping! Shoult not happen!");
-		}
 	}
 
 	private class VMCreator implements Callable<Long> {
