@@ -5,17 +5,16 @@ import java.util.List;
 public interface Selector<T,R> {
 
 	/**
-	 * Selects objects from a given list according to the requirements,
+	 * Selects objects from a given list according to the requirements.
 	 * If necessary, creates new objects using a given factory.
 	 * 
 	 * @param objects
-	 * @param objectFactory
 	 * @param requirements
 	 * @param objectsQuantity
 	 * @return the selected objects
 	 * @throws NotSelectedException
 	 */
-	public List<T> select(List<T> objects, ObjectFactory<T> objectFactory,
-			R requirements, int objectsQuantity) throws NotSelectedException;
+	public List<T> select(List<T> objects, R requirements, int objectsQuantity) 
+			throws NotSelectedException;
 
 }
