@@ -6,13 +6,27 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RoundRobinSelector<T, R> implements Selector<T, R> {
 
+	private ObjectRetriever<T> objectRetriever;
+	private ObjectFilter<T, R> objectFilter;
 	private AtomicInteger counter = new AtomicInteger();
 
+	public RoundRobinSelector(ObjectRetriever<T> objectRetriever) {
+		ObjectFilters<T, R> filters = new ObjectFilters<T, R>(); 
+		this.objectFilter = filters.getNoFilter();
+		this.objectRetriever = objectRetriever;
+	}
+
+	public RoundRobinSelector(ObjectRetriever<T> objectRetriever, ObjectFilter<T, R> objectFilter) {
+		this.objectRetriever = objectRetriever;
+		this.objectFilter = objectFilter;
+	}
+
 	@Override
-	public List<T> select(List<T> objects, R requirements, int objectsQuantity)
+	public List<T> select(R requirements, int objectsQuantity)
 			throws NotSelectedException {
 
-		List<T> compatibleObjects = this.filterCompatibleObjects(objects, requirements);
+		List<T> objects = this.objectRetriever.retrieveObjects();
+		List<T> compatibleObjects = this.objectFilter.filter(objects, requirements);
 		
 		if(compatibleObjects.size() < objectsQuantity) {
 			throw new NotSelectedException();
@@ -29,12 +43,4 @@ public class RoundRobinSelector<T, R> implements Selector<T, R> {
 		return selectedObjects;
 	}
 
-	/**
-	 * This method is intended to be overridden by subclasses.
-	 */
-	public List<T> filterCompatibleObjects(List<T> objects, R requirements) {
-		
-		return objects;
-	}
-	
 }

@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
@@ -14,29 +13,29 @@ import org.ow2.choreos.selectors.RoundRobinSelector;
 
 public class RoundRobinSelectorTest {
 	
-	private List<String> obejcts;
+	private StringRetriever retriever;
 	
 	@Before
 	public void setup() {
 
-		this.obejcts = new ArrayList<String>();
-		this.obejcts.add("Object1");
-		this.obejcts.add("Object2");
-		this.obejcts.add("Object3");
+		this.retriever = new StringRetriever();
+		this.retriever.addObject("Object1");
+		this.retriever.addObject("Object2");
+		this.retriever.addObject("Object3");
 	}
 	
 	@Test
 	public void shouldApplyRoundRobin() throws NotSelectedException {
 		
-		RoundRobinSelector<String, String> rr = new RoundRobinSelector<String, String>();
+		RoundRobinSelector<String, String> rr = new RoundRobinSelector<String, String>(retriever);
 		
 		String requirements = "requirements";
 		
 		int quantity = 1;
-		List<String> a = rr.select(this.obejcts, requirements, quantity);
-		List<String> b = rr.select(this.obejcts, requirements, quantity);
-		List<String> c = rr.select(this.obejcts, requirements, quantity);
-		List<String> d = rr.select(this.obejcts, requirements, quantity);
+		List<String> a = rr.select(requirements, quantity);
+		List<String> b = rr.select(requirements, quantity);
+		List<String> c = rr.select(requirements, quantity);
+		List<String> d = rr.select(requirements, quantity);
 		
 		assertEquals(quantity, a.size());
 		assertEquals(quantity, b.size());
@@ -50,8 +49,8 @@ public class RoundRobinSelectorTest {
 		assertTrue(a.get(0).equals(d.get(0)));
 		
 		quantity = 2;
-		List<String> aa = rr.select(this.obejcts, requirements, quantity);
-		List<String> bb = rr.select(this.obejcts, requirements, quantity);
+		List<String> aa = rr.select(requirements, quantity);
+		List<String> bb = rr.select(requirements, quantity);
 		
 		assertEquals(quantity, aa.size());
 		assertEquals(quantity, bb.size());
@@ -65,11 +64,11 @@ public class RoundRobinSelectorTest {
 	@Test(expected=NotSelectedException.class)
 	public void shouldNotSelect() throws NotSelectedException {
 		
-		RoundRobinSelector<String, String> rr = new RoundRobinSelector<String, String>();
+		RoundRobinSelector<String, String> rr = new RoundRobinSelector<String, String>(retriever);
 
 		String requirements = "requirements";
 		int tooLargeQuantity = 5;
-		rr.select(this.obejcts, requirements, tooLargeQuantity); 
+		rr.select(requirements, tooLargeQuantity); 
 	}
 
 }
