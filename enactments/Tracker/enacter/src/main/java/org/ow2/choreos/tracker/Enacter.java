@@ -13,7 +13,7 @@ public class Enacter {
 
 	private static transient int chorSizeArg;
 	private static transient String warFileArg;
-	private static final String CHOR_DEPLOYER = "http://localhost:9102/choreographydeployer/";
+	private static final String CHOR_DEPLOYER = "http://10.0.0.2:9102/choreographydeployer/";
 
 	private int enacterId;
 	private transient int chorSize;
