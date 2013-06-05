@@ -39,53 +39,50 @@ import eu.choreos.vv.clientgenerator.WSClient;
 @Category(IntegrationTest.class)
 public class ProxifyServiceTest {
 
-	ModelsForTest models = new ModelsForTest(ServiceType.SOAP,
-			PackageType.COMMAND_LINE);
+    ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
 
-	@BeforeClass
-	public static void configureLog() {
-		LogConfigurator.configLog();
+    @BeforeClass
+    public static void configureLog() {
+	LogConfigurator.configLog();
+    }
+
+    @Test
+    public void shouldProxifyAService() throws Exception {
+
+	String host = Configuration.get(Option.DEPLOYMENT_MANAGER_URI);
+	NodePoolManager npm = new NodesClient(host);
+	ServicesManager sd = new ServicesClient(host);
+
+	ServiceSpec airlineSpec = models.getAirlineSpec();
+	ServiceInstance service = sd.createService((DeployableServiceSpec) airlineSpec).getInstances().get(0);
+	Node node = service.getNode();
+	npm.upgradeNode(node.getId());
+
+	BusHandler busHandler = new SingleBusHandler(npm);
+	EasyESBNode esbNode = busHandler.retrieveBusNode();
+
+	ServiceInstanceProxifier proxifier = new ServiceInstanceProxifier();
+	String url = null;
+	try {
+	    url = proxifier.proxify(service, esbNode);
+	} catch (ManagementException e) {
+	    System.out.println(e);
+	    fail();
 	}
 
-	@Test
-	public void shouldProxifyAService() throws Exception {
+	// check WSDL is online
+	String wsdl = url + "?wsdl";
+	System.out.println("Accessing " + wsdl);
+	WebClient client = WebClient.create(wsdl);
+	Response response = client.get();
+	assertEquals(200, response.getStatus());
 
-		String host = Configuration.get(Option.DEPLOYMENT_MANAGER_URI);
-		NodePoolManager npm = new NodesClient(host);
-		ServicesManager sd = new ServicesClient(host);
-
-		ServiceSpec airlineSpec = models.getAirlineSpec();
-		ServiceInstance service = sd
-				.createService((DeployableServiceSpec) airlineSpec)
-				.getInstances().get(0);
-		Node node = service.getNode();
-		npm.upgradeNode(node.getId());
-
-		BusHandler busHandler = new SingleBusHandler(npm);
-		EasyESBNode esbNode = busHandler.retrieveBusNode();
-
-		ServiceInstanceProxifier proxifier = new ServiceInstanceProxifier();
-		String url = null;
-		try {
-			url = proxifier.proxify(service, esbNode);
-		} catch (ManagementException e) {
-			System.out.println(e);
-			fail();
-		}
-
-		// check WSDL is online
-		String wsdl = url + "?wsdl";
-		System.out.println("Accessing " + wsdl);
-		WebClient client = WebClient.create(wsdl);
-		Response response = client.get();
-		assertEquals(200, response.getStatus());
-
-		// invoke the service
-		WSClient wsClient = new WSClient(wsdl);
-		wsClient.setEndpoint(url);
-		System.out.println("Accessing buyFlight of " + wsdl);
-		Item responseItem = wsClient.request("buyFlight");
-		String ticketNumber = responseItem.getChild("return").getContent();
-		assertTrue(ticketNumber.startsWith("33"));
-	}
+	// invoke the service
+	WSClient wsClient = new WSClient(wsdl);
+	wsClient.setEndpoint(url);
+	System.out.println("Accessing buyFlight of " + wsdl);
+	Item responseItem = wsClient.request("buyFlight");
+	String ticketNumber = responseItem.getChild("return").getContent();
+	assertTrue(ticketNumber.startsWith("33"));
+    }
 }

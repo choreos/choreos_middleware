@@ -7,18 +7,18 @@ import esstar.petalslink.com.service.management._1_0.ManagementException;
 
 public class ServiceInstanceProxifier {
 
-	public String proxify(ServiceInstance serviceInstance, EasyESBNode esbNode) throws ManagementException {
+    public String proxify(ServiceInstance serviceInstance, EasyESBNode esbNode) throws ManagementException {
 
-		ServiceType type = serviceInstance.getServiceSpec().getType();
-		if (type != ServiceType.SOAP) {
-			throw new IllegalArgumentException("We can bind only SOAP services, not " + type);
-		}
-		
-		String url = serviceInstance.getNativeUri();
-		url = url.replaceAll("/$", "");
-		String wsdl = url + "?wsdl";
-		
-		return esbNode.proxifyService(url, wsdl);
+	ServiceType type = serviceInstance.getServiceSpec().getType();
+	if (type != ServiceType.SOAP) {
+	    throw new IllegalArgumentException("We can bind only SOAP services, not " + type);
 	}
+
+	String url = serviceInstance.getNativeUri();
+	url = url.replaceAll("/$", "");
+	String wsdl = url + "?wsdl";
+
+	return esbNode.proxifyService(url, wsdl);
+    }
 
 }

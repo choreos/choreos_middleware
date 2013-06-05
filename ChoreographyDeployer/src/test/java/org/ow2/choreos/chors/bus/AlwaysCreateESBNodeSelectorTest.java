@@ -22,55 +22,48 @@ import org.ow2.choreos.utils.LogConfigurator;
 
 public class AlwaysCreateESBNodeSelectorTest {
 
-	private static final String ESB_ADMIN_ENDPOINT1 = "http://192.168.56.101:8180/services/adminExternalEndpoint";
-	private static final String ESB_ADMIN_ENDPOINT2 = "http://192.168.56.102:8180/services/adminExternalEndpoint";
+    private static final String ESB_ADMIN_ENDPOINT1 = "http://192.168.56.101:8180/services/adminExternalEndpoint";
+    private static final String ESB_ADMIN_ENDPOINT2 = "http://192.168.56.102:8180/services/adminExternalEndpoint";
 
-	private Choreography chor;
-	private int serviceInstancesN;
-	private BusHandler busHandler;
+    private Choreography chor;
+    private int serviceInstancesN;
+    private BusHandler busHandler;
 
-	@BeforeClass
-	public static void tearDownAfterClass() throws Exception {
-		LogConfigurator.configLog();
+    @BeforeClass
+    public static void tearDownAfterClass() throws Exception {
+	LogConfigurator.configLog();
+    }
+
+    @Before
+    public void setUp() throws NoBusAvailableException {
+
+	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
+	this.chor = models.getChoreography();
+	this.serviceInstancesN = 0;
+	for (ChoreographyService svc : this.chor.getChoreographyServices()) {
+	    this.serviceInstancesN += ((DeployableService) svc.getService()).getInstances().size();
 	}
 
-	@Before
-	public void setUp() throws NoBusAvailableException {
+	EasyESBNode esbNode1 = new EasyESBNodeImpl(ESB_ADMIN_ENDPOINT1);
+	EasyESBNode esbNode2 = new EasyESBNodeImpl(ESB_ADMIN_ENDPOINT2);
+	this.busHandler = mock(BusHandler.class);
+	when(this.busHandler.retrieveBusNode()).thenReturn(esbNode1).thenReturn(esbNode2);
+    }
 
-		ModelsForTest models = new ModelsForTest(ServiceType.SOAP,
-				PackageType.COMMAND_LINE);
-		this.chor = models.getChoreography();
-		this.serviceInstancesN = 0;
-		for (ChoreographyService svc : this.chor.getChoreographyServices()) {
-			this.serviceInstancesN += ((DeployableService) svc.getService())
-					.getInstances().size();
-		}
+    @Test
+    public void shouldSelectDifferentNodes() {
 
-		EasyESBNode esbNode1 = new EasyESBNodeImpl(ESB_ADMIN_ENDPOINT1);
-		EasyESBNode esbNode2 = new EasyESBNodeImpl(ESB_ADMIN_ENDPOINT2);
-		this.busHandler = mock(BusHandler.class);
-		when(this.busHandler.retrieveBusNode()).thenReturn(esbNode1)
-				.thenReturn(esbNode2);
-	}
+	ESBNodesSelector selector = new AlwaysCreateESBNodeSelector(this.busHandler);
+	Map<ServiceInstance, EasyESBNode> nodes = selector.selectESBNodes(this.chor);
 
-	@Test
-	public void shouldSelectDifferentNodes() {
+	assertEquals(serviceInstancesN, nodes.size());
 
-		ESBNodesSelector selector = new AlwaysCreateESBNodeSelector(
-				this.busHandler);
-		Map<ServiceInstance, EasyESBNode> nodes = selector
-				.selectESBNodes(this.chor);
+	Iterator<ServiceInstance> it = nodes.keySet().iterator();
+	String firstAdminEndpoint = nodes.get(it.next()).getAdminEndpoint();
+	assertTrue(firstAdminEndpoint.contains(":8180/services/adminExternalEndpoint"));
 
-		assertEquals(serviceInstancesN, nodes.size());
-
-		Iterator<ServiceInstance> it = nodes.keySet().iterator();
-		String firstAdminEndpoint = nodes.get(it.next()).getAdminEndpoint();
-		assertTrue(firstAdminEndpoint
-				.contains(":8180/services/adminExternalEndpoint"));
-
-		String secondAdminEndpoint = nodes.get(it.next()).getAdminEndpoint();
-		assertTrue(secondAdminEndpoint
-				.contains(":8180/services/adminExternalEndpoint"));
-		assertTrue(!firstAdminEndpoint.equals(secondAdminEndpoint));
-	}
+	String secondAdminEndpoint = nodes.get(it.next()).getAdminEndpoint();
+	assertTrue(secondAdminEndpoint.contains(":8180/services/adminExternalEndpoint"));
+	assertTrue(!firstAdminEndpoint.equals(secondAdminEndpoint));
+    }
 }

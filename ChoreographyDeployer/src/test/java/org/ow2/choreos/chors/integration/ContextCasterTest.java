@@ -41,63 +41,60 @@ import eu.choreos.vv.exceptions.WSDLException;
 @Category(IntegrationTest.class)
 public class ContextCasterTest {
 
-	private static final String AIRLINE = ModelsForTest.AIRLINE;
-	private static final String TRAVEL_AGENCY = ModelsForTest.TRAVEL_AGENCY;
-	private static final String TRAVEL_AGENCY_URI = "http://localhost:1235/travelagency";
+    private static final String AIRLINE = ModelsForTest.AIRLINE;
+    private static final String TRAVEL_AGENCY = ModelsForTest.TRAVEL_AGENCY;
+    private static final String TRAVEL_AGENCY_URI = "http://localhost:1235/travelagency";
 
-	private ChoreographySpec chorSpec;
-	private Map<String, ChoreographyService> deployedServices;
-	private ModelsForTest models;
+    private ChoreographySpec chorSpec;
+    private Map<String, ChoreographyService> deployedServices;
+    private ModelsForTest models;
 
-	@BeforeClass
-	public static void configLog() {
-		LogConfigurator.configLog();
-	}
+    @BeforeClass
+    public static void configLog() {
+	LogConfigurator.configLog();
+    }
 
-	@Before
-	public void setUp() {
+    @Before
+    public void setUp() {
 
-		models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
+	models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
 
-		chorSpec = models.getChorSpec();
+	chorSpec = models.getChorSpec();
 
-		deployedServices = new HashMap<String, ChoreographyService>();
+	deployedServices = new HashMap<String, ChoreographyService>();
 
-		deployedServices.put(AIRLINE, models.getAirlineChoreographyService());
+	deployedServices.put(AIRLINE, models.getAirlineChoreographyService());
 
-		deployedServices.put(TRAVEL_AGENCY,
-				models.getTravelChoreographyService());
-	}
+	deployedServices.put(TRAVEL_AGENCY, models.getTravelChoreographyService());
+    }
 
-	@Test
-	public void test() throws WSDLException, XmlException, IOException,
-			FrameworkException, InvalidOperationNameException,
-			NoSuchFieldException {
+    @Test
+    public void test() throws WSDLException, XmlException, IOException, FrameworkException,
+	    InvalidOperationNameException, NoSuchFieldException {
 
-		checkPreCondition();
+	checkPreCondition();
 
-		ContextSenderFactory fac = new ContextSenderFactory();
-		@SuppressWarnings("static-access")
-		ContextSender sender = fac.getInstance(ServiceType.SOAP);
-		ContextCaster caster = new ContextCaster(sender);
-		caster.cast(chorSpec, deployedServices);
+	ContextSenderFactory fac = new ContextSenderFactory();
+	@SuppressWarnings("static-access")
+	ContextSender sender = fac.getInstance(ServiceType.SOAP);
+	ContextCaster caster = new ContextCaster(sender);
+	caster.cast(chorSpec, deployedServices);
 
-		WSClient travel = new WSClient(TRAVEL_AGENCY_URI + "?wsdl");
-		Item response = travel.request("buyTrip");
-		String codes = response.getChild("return").getContent();
+	WSClient travel = new WSClient(TRAVEL_AGENCY_URI + "?wsdl");
+	Item response = travel.request("buyTrip");
+	String codes = response.getChild("return").getContent();
 
-		assertEquals("33--22", codes);
-	}
+	assertEquals("33--22", codes);
+    }
 
-	private void checkPreCondition() throws WSDLException, XmlException,
-			IOException, FrameworkException, InvalidOperationNameException,
-			NoSuchFieldException {
+    private void checkPreCondition() throws WSDLException, XmlException, IOException, FrameworkException,
+	    InvalidOperationNameException, NoSuchFieldException {
 
-		WSClient travel = new WSClient(TRAVEL_AGENCY_URI + "?wsdl");
-		Item response = travel.request("buyTrip");
-		String codes = response.getChild("return").getContent();
+	WSClient travel = new WSClient(TRAVEL_AGENCY_URI + "?wsdl");
+	Item response = travel.request("buyTrip");
+	String codes = response.getChild("return").getContent();
 
-		assertEquals("Not possible to buy now", codes);
-	}
+	assertEquals("Not possible to buy now", codes);
+    }
 
 }

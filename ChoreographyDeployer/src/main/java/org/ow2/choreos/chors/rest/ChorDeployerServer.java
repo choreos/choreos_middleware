@@ -7,36 +7,35 @@ import org.ow2.choreos.utils.LogConfigurator;
 
 public class ChorDeployerServer {
 
-	public final String NAME = "Choreography Deployer";	
-	public static String URL;
-	private RESTServer restServer;
+    public final String NAME = "Choreography Deployer";
+    public static String URL;
+    private RESTServer restServer;
 
     static {
-    	String port = Configuration.get(Option.CHOR_DEPLOYER_PORT);
-    	URL = "http://0.0.0.0:" + port + "/choreographydeployer/";
+	String port = Configuration.get(Option.CHOR_DEPLOYER_PORT);
+	URL = "http://0.0.0.0:" + port + "/choreographydeployer/";
     }
-    
+
     public ChorDeployerServer() {
-    	
-    	this.restServer = new RESTServer(NAME, URL, new Class[]{ChorResource.class});
+
+	this.restServer = new RESTServer(NAME, URL, new Class[] { ChorResource.class });
 
     }
-    
-	public void start() {
-		
-		this.restServer.start();
-	}
 
-	public void stop() {
-		
-		this.restServer.stop();
-	}
+    public void start() {
 
-	public static void main(String[] args) throws InterruptedException {
-		
-    	LogConfigurator.configLog();
-		ChorDeployerServer server = new ChorDeployerServer();
-		server.start();
-	}
+	this.restServer.start();
+    }
+
+    public void stop() {
+
+	this.restServer.stop();
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+
+	LogConfigurator.configLog();
+	ChorDeployerServer server = new ChorDeployerServer();
+	server.start();
+    }
 }
-

@@ -19,29 +19,29 @@ import org.ow2.choreos.utils.LogConfigurator;
  * Before run the test, start the deployment manager
  * 
  * @author leonardo
- *
+ * 
  */
 @Category(IntegrationTest.class)
 public class BusHandlerTest {
 
-	@BeforeClass
-	public static void configureLog() {
-		LogConfigurator.configLog();
-	}
+    @BeforeClass
+    public static void configureLog() {
+	LogConfigurator.configLog();
+    }
 
-	@Test
-	public void sholdRetrieveBusEndpoint() throws NoBusAvailableException {
+    @Test
+    public void sholdRetrieveBusEndpoint() throws NoBusAvailableException {
 
-		String host = Configuration.get(Option.DEPLOYMENT_MANAGER_URI);
-		NodePoolManager npm = new NodesClient(host);
-		BusHandler busHandler = new SingleBusHandler(npm);
-		
-		String endpoint = busHandler.retrieveBusNode().getAdminEndpoint();
-		String url = endpoint + "?wsdl";
-		System.out.println("Acessando " + url);
-		WebClient client = WebClient.create(url);
-		Response response = client.get();
-		assertEquals(200, response.getStatus());
-	}
+	String host = Configuration.get(Option.DEPLOYMENT_MANAGER_URI);
+	NodePoolManager npm = new NodesClient(host);
+	BusHandler busHandler = new SingleBusHandler(npm);
+
+	String endpoint = busHandler.retrieveBusNode().getAdminEndpoint();
+	String url = endpoint + "?wsdl";
+	System.out.println("Acessando " + url);
+	WebClient client = WebClient.create(url);
+	Response response = client.get();
+	assertEquals(200, response.getStatus());
+    }
 
 }

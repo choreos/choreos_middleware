@@ -2,20 +2,18 @@ package org.ow2.choreos.chors.context;
 
 import org.ow2.choreos.services.datamodel.ServiceType;
 
-
-
 public class ContextSenderFactory {
 
-	public static ContextSender getInstance(ServiceType serviceType) {
-		
-		switch (serviceType) {
+    public static ContextSender getInstance(ServiceType serviceType) {
 
-		case SOAP:
-			return new SoapContextSender();
+	switch (serviceType) {
 
-		default:
-			throw new IllegalArgumentException(serviceType + " not supported");
-		}
+	case SOAP:
+	    return new SoapContextSender();
+
+	default:
+	    throw new IllegalArgumentException(serviceType + " not supported");
 	}
-	
+    }
+
 }

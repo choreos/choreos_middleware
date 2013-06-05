@@ -40,87 +40,78 @@ import eu.choreos.vv.clientgenerator.WSClient;
 @Category(IntegrationTest.class)
 public class RestEnactmentTest {
 
-	private static final String AIRLINE = ModelsForTest.AIRLINE;
-	private static final String TRAVEL_AGENCY = ModelsForTest.TRAVEL_AGENCY;
+    private static final String AIRLINE = ModelsForTest.AIRLINE;
+    private static final String TRAVEL_AGENCY = ModelsForTest.TRAVEL_AGENCY;
 
-	private static ChorDeployerServer server;
-	private ChoreographySpec chorSpec;
+    private static ChorDeployerServer server;
+    private ChoreographySpec chorSpec;
 
-	private ModelsForTest models;
+    private ModelsForTest models;
 
-	@BeforeClass
-	public static void startServers() {
-		LogConfigurator.configLog();
-		server = new ChorDeployerServer();
-		server.start();
-	}
+    @BeforeClass
+    public static void startServers() {
+	LogConfigurator.configLog();
+	server = new ChorDeployerServer();
+	server.start();
+    }
 
-	@AfterClass
-	public static void shutDownServers() {
-		server.stop();
-	}
+    @AfterClass
+    public static void shutDownServers() {
+	server.stop();
+    }
 
-	@Before
-	public void setUp() {
+    @Before
+    public void setUp() {
 
-		Configuration.set(Option.BUS, "false");
-		models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-		chorSpec = new ChoreographySpec();
-		chorSpec.addChoreographyServiceSpec(models
-				.getAirlineChoreographyServiceSpec());
-		chorSpec.addChoreographyServiceSpec(models
-				.getTravelAgencyChoreographyServiceSpec());
-	}
+	Configuration.set(Option.BUS, "false");
+	models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
+	chorSpec = new ChoreographySpec();
+	chorSpec.addChoreographyServiceSpec(models.getAirlineChoreographyServiceSpec());
+	chorSpec.addChoreographyServiceSpec(models.getTravelAgencyChoreographyServiceSpec());
+    }
 
-	@Test
-	public void shouldConfigureAChoreography() throws Exception {
+    @Test
+    public void shouldConfigureAChoreography() throws Exception {
 
-		String host = ChorDeployerServer.URL;
-		ChoreographyDeployer ee = new ChorDeployerClient(host);
-		String chorId = ee.createChoreography(chorSpec);
+	String host = ChorDeployerServer.URL;
+	ChoreographyDeployer ee = new ChorDeployerClient(host);
+	String chorId = ee.createChoreography(chorSpec);
 
-		assertEquals("1", chorId);
-	}
+	assertEquals("1", chorId);
+    }
 
-	@Test
-	public void shouldRetrieveChoreographySpec() throws Exception {
+    @Test
+    public void shouldRetrieveChoreographySpec() throws Exception {
 
-		String host = ChorDeployerServer.URL;
-		ChoreographyDeployer ee = new ChorDeployerClient(host);
-		String chorId = ee.createChoreography(chorSpec);
-		Choreography chor = ee.getChoreography(chorId);
+	String host = ChorDeployerServer.URL;
+	ChoreographyDeployer ee = new ChorDeployerClient(host);
+	String chorId = ee.createChoreography(chorSpec);
+	Choreography chor = ee.getChoreography(chorId);
 
-		ChoreographyServiceSpec travel = chor.getRequestedChoreographySpec()
-				.getChoreographyServiceSpecByName(
-						TRAVEL_AGENCY);
-		assertEquals(
-				chorSpec.getChoreographyServiceSpecByName(TRAVEL_AGENCY),
-				travel);
+	ChoreographyServiceSpec travel = chor.getRequestedChoreographySpec().getChoreographyServiceSpecByName(
+		TRAVEL_AGENCY);
+	assertEquals(chorSpec.getChoreographyServiceSpecByName(TRAVEL_AGENCY), travel);
 
-		ChoreographyServiceSpec airline = chor.getRequestedChoreographySpec()
-				.getChoreographyServiceSpecByName(AIRLINE);
-		assertEquals(
-				chorSpec.getChoreographyServiceSpecByName(AIRLINE),
-				airline);
-	}
+	ChoreographyServiceSpec airline = chor.getRequestedChoreographySpec().getChoreographyServiceSpecByName(AIRLINE);
+	assertEquals(chorSpec.getChoreographyServiceSpecByName(AIRLINE), airline);
+    }
 
-	@Test
-	public void shouldEnactChoreography() throws Exception {
+    @Test
+    public void shouldEnactChoreography() throws Exception {
 
-		String host = ChorDeployerServer.URL;
-		ChoreographyDeployer ee = new ChorDeployerClient(host);
-		String chorId = ee.createChoreography(chorSpec);
-		Choreography chor = ee.enactChoreography(chorId);
-		System.out.println("A chor: " + chor);
+	String host = ChorDeployerServer.URL;
+	ChoreographyDeployer ee = new ChorDeployerClient(host);
+	String chorId = ee.createChoreography(chorSpec);
+	Choreography chor = ee.enactChoreography(chorId);
+	System.out.println("A chor: " + chor);
 
-		String uri =
-				((DeployableService) chor.getServiceByChorServiceSpecName(
-						ModelsForTest.TRAVEL_AGENCY).getService()).getInstances().get(0).getNativeUri();
-		WSClient client = new WSClient(uri + "?wsdl");
-		Item response = client.request("buyTrip");
-		String codes = response.getChild("return").getContent();
+	String uri = ((DeployableService) chor.getServiceByChorServiceSpecName(ModelsForTest.TRAVEL_AGENCY)
+		.getService()).getInstances().get(0).getNativeUri();
+	WSClient client = new WSClient(uri + "?wsdl");
+	Item response = client.request("buyTrip");
+	String codes = response.getChild("return").getContent();
 
-		assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
-	}
+	assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
+    }
 
 }

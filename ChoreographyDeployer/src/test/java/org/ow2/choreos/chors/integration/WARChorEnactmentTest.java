@@ -1,6 +1,5 @@
 package org.ow2.choreos.chors.integration;
 
-
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Category;
@@ -24,19 +23,18 @@ import org.ow2.choreos.utils.LogConfigurator;
 @Category(IntegrationTest.class)
 public class WARChorEnactmentTest extends SimpleChorEnactmentTest {
 
-	@BeforeClass
-	public static void startServers() {
-		LogConfigurator.configLog();
-	}
+    @BeforeClass
+    public static void startServers() {
+	LogConfigurator.configLog();
+    }
 
-	@Before
-	@Override
-	public void setUp() {
+    @Before
+    @Override
+    public void setUp() {
 
-		Configuration.set(Option.BUS, "false");
-		ModelsForTest models = new ModelsForTest(ServiceType.SOAP,
-				PackageType.TOMCAT);
-		super.chorSpec = models.getChorSpec();
-	}
+	Configuration.set(Option.BUS, "false");
+	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT);
+	super.chorSpec = models.getChorSpec();
+    }
 
 }

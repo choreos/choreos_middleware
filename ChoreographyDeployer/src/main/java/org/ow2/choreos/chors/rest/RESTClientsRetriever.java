@@ -6,23 +6,25 @@ import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.client.ServicesClient;
 
 /**
- * Retrieve DeploymentManager clients using the URIs configured on owners.properties.
+ * Retrieve DeploymentManager clients using the URIs configured on
+ * owners.properties.
+ * 
  * @author leonardo
- *
+ * 
  */
 public class RESTClientsRetriever {
 
-	public ServicesManager getServicesClient(String owner) {
+    public ServicesManager getServicesClient(String owner) {
 
-		String uri = Owners.get(owner);
-		ServicesManager client = new ServicesClient(uri);
-		return client;
-	}
-	
-	public NodePoolManager getNodesClient(String owner) {
-		
-		String uri = Owners.get(owner);
-		NodePoolManager client = new NodesClient(uri);
-		return client;
-	}
+	String uri = Owners.get(owner);
+	ServicesManager client = new ServicesClient(uri);
+	return client;
+    }
+
+    public NodePoolManager getNodesClient(String owner) {
+
+	String uri = Owners.get(owner);
+	NodePoolManager client = new NodesClient(uri);
+	return client;
+    }
 }

@@ -10,25 +10,25 @@ public class Locations {
     private static Locations INSTANCE = new Locations();
 
     private Properties getProperties() {
-        return properties;
+	return properties;
     }
 
     public static String get(String key) {
-        return INSTANCE.getProperties().getProperty(key);
+	return INSTANCE.getProperties().getProperty(key);
     }
 
     public static void set(String key, String value) {
-        INSTANCE.getProperties().setProperty(key, value);
+	INSTANCE.getProperties().setProperty(key, value);
     }
 
     private Locations() {
-        final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+	final ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
-        try {
-            properties.load(loader.getResourceAsStream("locations.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+	try {
+	    properties.load(loader.getResourceAsStream("locations.properties"));
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
     }
 
 }

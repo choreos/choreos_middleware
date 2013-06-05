@@ -13,24 +13,23 @@ import org.ow2.choreos.services.datamodel.ServiceType;
  */
 public class ChorDeployerTest {
 
-	/**
-	 * Sometimes we run the ChoreographyDeployer missing to start before the
-	 * DeploymentManager. This test tests if the ChoreographyDeployer will fail
-	 * fast in this situation.
-	 * 
-	 * @throws ChoreographyNotFoundException
-	 * @throws EnactmentException
-	 */
-	@Test(expected = EnactmentException.class)
-	public void shouldThrowExceptionWhenDeploymentManagerIsNotAvailable()
-			throws EnactmentException, ChoreographyNotFoundException {
+    /**
+     * Sometimes we run the ChoreographyDeployer missing to start before the
+     * DeploymentManager. This test tests if the ChoreographyDeployer will fail
+     * fast in this situation.
+     * 
+     * @throws ChoreographyNotFoundException
+     * @throws EnactmentException
+     */
+    @Test(expected = EnactmentException.class)
+    public void shouldThrowExceptionWhenDeploymentManagerIsNotAvailable() throws EnactmentException,
+	    ChoreographyNotFoundException {
 
-		ChoreographyDeployer chorDeployer = new ChoreographyDeployerImpl();
-		ModelsForTest models = new ModelsForTest(ServiceType.SOAP,
-				PackageType.COMMAND_LINE);
-		ChoreographySpec chorSpec = models.getChorSpec();
-		String id = chorDeployer.createChoreography(chorSpec);
-		chorDeployer.enactChoreography(id);
-	}
+	ChoreographyDeployer chorDeployer = new ChoreographyDeployerImpl();
+	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
+	ChoreographySpec chorSpec = models.getChorSpec();
+	String id = chorDeployer.createChoreography(chorSpec);
+	chorDeployer.enactChoreography(id);
+    }
 
 }

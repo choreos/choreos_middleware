@@ -30,130 +30,125 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 
-public class SoapContextSender implements ContextSender {	
+public class SoapContextSender implements ContextSender {
 
-	private String parseNamespace(final String endpoint)
-			throws XMLStreamException, IOException {		
-		final String wsdl = getWsdl(endpoint);		
-		final URL url = new URL(wsdl);
-		final InputStreamReader streamReader = new InputStreamReader(
-				url.openStream());
-		final BufferedReader wsdlInputStream = new BufferedReader(streamReader);
-		final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-		final XMLEventReader reader = xmlInputFactory
-				.createXMLEventReader(wsdlInputStream);
+    private String parseNamespace(final String endpoint) throws XMLStreamException, IOException {
+	
+	final String wsdl = getWsdl(endpoint);
+	final URL url = new URL(wsdl);
+	final InputStreamReader streamReader = new InputStreamReader(url.openStream());
+	final BufferedReader wsdlInputStream = new BufferedReader(streamReader);
+	final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+	final XMLEventReader reader = xmlInputFactory.createXMLEventReader(wsdlInputStream);
 
-		String elementName, namespace = "";
-		XMLEvent event;
-		StartElement element;
+	String elementName, namespace = "";
+	XMLEvent event;
+	StartElement element;
 
-		while (reader.hasNext()) {
-			event = reader.nextEvent();
-			if (event.isStartElement()) {
-				element = event.asStartElement();
-				elementName = element.getName().getLocalPart();
-				if ("definitions".equals(elementName)) {
-					final QName qname = new QName("targetNamespace"); // NOPMD
-					namespace = element.getAttributeByName(qname).getValue();
-					break;
-				}
-			}
+	while (reader.hasNext()) {
+	    event = reader.nextEvent();
+	    if (event.isStartElement()) {
+		element = event.asStartElement();
+		elementName = element.getName().getLocalPart();
+		if ("definitions".equals(elementName)) {
+		    final QName qname = new QName("targetNamespace"); // NOPMD
+		    namespace = element.getAttributeByName(qname).getValue();
+		    break;
 		}
-
-		reader.close();
-
-		return namespace;
+	    }
 	}
 
-	private String getWsdl(final String endpoint) {
-		String slashLess;
-		if (endpoint.endsWith("/")) {
-			slashLess = endpoint.substring(0, endpoint.length() - 1);
-		} else {
-			slashLess = endpoint;
-		}
+	reader.close();
 
-		return slashLess + "?wsdl";
+	return namespace;
+    }
+
+    private String getWsdl(final String endpoint) {
+	String slashLess;
+	if (endpoint.endsWith("/")) {
+	    slashLess = endpoint.substring(0, endpoint.length() - 1);
+	} else {
+	    slashLess = endpoint;
 	}
 
+	return slashLess + "?wsdl";
+    }
 
-	@Override
-	public void sendContext(String serviceEndpoint, String partnerRole, String partnerName,
-			List<String> partnerEndpoints) throws ContextNotSentException {
+    @Override
+    public void sendContext(String serviceEndpoint, String partnerRole, String partnerName,
+	    List<String> partnerEndpoints) throws ContextNotSentException {
 
-		try {
+	try {
 
-			SOAPConnectionFactory sfc = SOAPConnectionFactory.newInstance();
-			SOAPConnection connection = sfc.createConnection();
+	    SOAPConnectionFactory sfc = SOAPConnectionFactory.newInstance();
+	    SOAPConnection connection = sfc.createConnection();
 
-			MessageFactory mf = MessageFactory.newInstance();
-			SOAPMessage sm = mf.createMessage();
+	    MessageFactory mf = MessageFactory.newInstance();
+	    SOAPMessage sm = mf.createMessage();
 
-			SOAPEnvelope envelope = sm.getSOAPPart().getEnvelope();
-			String namespace = parseNamespace(serviceEndpoint);
-			envelope.addNamespaceDeclaration("pre", namespace);
+	    SOAPEnvelope envelope = sm.getSOAPPart().getEnvelope();
+	    String namespace = parseNamespace(serviceEndpoint);
+	    envelope.addNamespaceDeclaration("pre", namespace);
 
-			SOAPHeader sh = sm.getSOAPHeader();
-			SOAPBody sb = sm.getSOAPBody();
-			sh.detachNode();
-			QName bodyName = new QName("setInvocationAddress");
-			SOAPBodyElement bodyElement = sb.addBodyElement(bodyName);
-			bodyElement.setPrefix("pre");
+	    SOAPHeader sh = sm.getSOAPHeader();
+	    SOAPBody sb = sm.getSOAPBody();
+	    sh.detachNode();
+	    QName bodyName = new QName("setInvocationAddress");
+	    SOAPBodyElement bodyElement = sb.addBodyElement(bodyName);
+	    bodyElement.setPrefix("pre");
 
-			QName role = new QName("arg0");
-			SOAPElement quotation1 = bodyElement.addChildElement(role);
-			quotation1.addTextNode(partnerRole);
-			
-			QName name = new QName("arg1");
-			SOAPElement quotation2 = bodyElement.addChildElement(name);
-			quotation2.addTextNode(partnerName);
+	    QName role = new QName("arg0");
+	    SOAPElement quotation1 = bodyElement.addChildElement(role);
+	    quotation1.addTextNode(partnerRole);
 
-			for(String partnerEndpoint: partnerEndpoints) {
-				QName address = new QName("arg2");
-				SOAPElement quotation3 = bodyElement.addChildElement(address);
-				quotation3.addTextNode(partnerEndpoint);
-			}
-			if (serviceEndpoint.trim().endsWith("/"))
-				serviceEndpoint = serviceEndpoint.substring(0,
-						serviceEndpoint.length() - 1);
+	    QName name = new QName("arg1");
+	    SOAPElement quotation2 = bodyElement.addChildElement(name);
+	    quotation2.addTextNode(partnerName);
 
-			URL endpoint = new URL(serviceEndpoint);
-			//@SuppressWarnings("unused")
-			//this.printSOAPMessage(sm);
-			
-			connection.call(sm, endpoint);
-			
-			//this.printSOAPMessage(msg);
-			
+	    for (String partnerEndpoint : partnerEndpoints) {
+		QName address = new QName("arg2");
+		SOAPElement quotation3 = bodyElement.addChildElement(address);
+		quotation3.addTextNode(partnerEndpoint);
+	    }
+	    if (serviceEndpoint.trim().endsWith("/"))
+		serviceEndpoint = serviceEndpoint.substring(0, serviceEndpoint.length() - 1);
 
-		} catch (Exception e) {
-			throw new ContextNotSentException(serviceEndpoint, partnerRole, partnerName, partnerEndpoints);
-		}
-		
+	    URL endpoint = new URL(serviceEndpoint);
+	    // @SuppressWarnings("unused")
+	    // this.printSOAPMessage(sm);
+
+	    connection.call(sm, endpoint);
+
+	    // this.printSOAPMessage(msg);
+
+	} catch (Exception e) {
+	    throw new ContextNotSentException(serviceEndpoint, partnerRole, partnerName, partnerEndpoints);
 	}
 
-	@SuppressWarnings("unused")
-	private void printSOAPMessage(SOAPMessage sm) {
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();  
-		Transformer transformer;
-		Source sourceContent;
-		StreamResult result = new StreamResult(System.out);  
-		try {
-			transformer = transformerFactory.newTransformer();
-			
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-			
-			sourceContent = sm.getSOAPPart().getContent();
-			transformer.transform(sourceContent, result);
-		} catch (TransformerConfigurationException e) {
-			e.printStackTrace();
-		} catch (SOAPException e) {
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			e.printStackTrace();
-		}  
-		System.out.println();  
+    }
+
+    @SuppressWarnings("unused")
+    private void printSOAPMessage(SOAPMessage sm) {
+	TransformerFactory transformerFactory = TransformerFactory.newInstance();
+	Transformer transformer;
+	Source sourceContent;
+	StreamResult result = new StreamResult(System.out);
+	try {
+	    transformer = transformerFactory.newTransformer();
+
+	    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+	    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
+	    sourceContent = sm.getSOAPPart().getContent();
+	    transformer.transform(sourceContent, result);
+	} catch (TransformerConfigurationException e) {
+	    e.printStackTrace();
+	} catch (SOAPException e) {
+	    e.printStackTrace();
+	} catch (TransformerException e) {
+	    e.printStackTrace();
 	}
+	System.out.println();
+    }
 
 }
