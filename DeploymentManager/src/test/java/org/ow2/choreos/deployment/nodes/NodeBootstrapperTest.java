@@ -15,7 +15,7 @@ import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.cm.BootstrapChecker;
 import org.ow2.choreos.deployment.nodes.cm.NodeBootstrapper;
 import org.ow2.choreos.nodes.datamodel.Node;
-import org.ow2.choreos.services.datamodel.ResourceImpact;
+import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -47,7 +47,7 @@ public class NodeBootstrapperTest {
     public void shouldLeaveNodeBootstraped() throws Exception {
 
 	CloudProvider cp = CloudProviderFactory.getInstance(DeploymentManagerConfiguration.get("CLOUD_PROVIDER"));
-	node = cp.createOrUseExistingNode(new Node(), new ResourceImpact());
+	node = cp.createOrUseExistingNode(new NodeSpec());
 	System.out.println(node);
 
 	BootstrapChecker checker = new BootstrapChecker();

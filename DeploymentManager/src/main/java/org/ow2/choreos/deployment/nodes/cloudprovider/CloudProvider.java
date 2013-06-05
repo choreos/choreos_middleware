@@ -10,7 +10,7 @@ import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
-import org.ow2.choreos.services.datamodel.ResourceImpact;
+import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 /**
  * Provides access to cloud service functions to create nodes on the cloud
@@ -25,7 +25,7 @@ public interface CloudProvider {
 
     public String getProviderName();
 
-    public Node createNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException;
+    public Node createNode(NodeSpec nodeSpec) throws NodeNotCreatedException;
 
     public Node getNode(String nodeId) throws NodeNotFoundException;
 
@@ -33,6 +33,6 @@ public interface CloudProvider {
 
     public void destroyNode(String id) throws NodeNotDestroyed, NodeNotFoundException;
 
-    public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException;
+    public Node createOrUseExistingNode(NodeSpec nodeSpec) throws NodeNotCreatedException;
 
 }

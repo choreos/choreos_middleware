@@ -8,20 +8,19 @@ import java.util.List;
 
 import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
-import org.ow2.choreos.services.datamodel.ResourceImpact;
+import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 public interface NodePoolManager {
 
     /**
      * Create a node on the cloud infrastructure.
      * 
-     * @param node
-     *            used as node specification
+     * @param nodeSpec
      * @return the representation of the created node
      * @throws NodeNotCreatedException
      *             if node was not created
      */
-    public Node createNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException;
+    public Node createNode(NodeSpec nodeSpec) throws NodeNotCreatedException;
 
     /**
      * Retrieve information about all the nodes managed by this Node Pool

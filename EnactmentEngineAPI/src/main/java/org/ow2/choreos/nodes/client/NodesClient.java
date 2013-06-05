@@ -23,14 +23,13 @@ import org.ow2.choreos.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
-import org.ow2.choreos.nodes.datamodel.NodeCreationRequestSpec;
 import org.ow2.choreos.nodes.datamodel.NodeRestRepresentation;
-import org.ow2.choreos.services.datamodel.ResourceImpact;
+import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 /**
  * Access Node Pool Manager functionalities through the REST API.
  * 
- * The user of <code>NPMClient</code> does not need to worry with the REST
+ * The user of NPMClient does not need to worry with the REST
  * communication.
  * 
  * @author leonardo
@@ -67,18 +66,17 @@ public class NodesClient implements NodePoolManager {
     }
 
     @Override
-    public Node createNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException {
+    public Node createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
 
 	WebClient client = setupClient();
 	client.path("nodes");
 	client.type(MediaType.APPLICATION_XML);
-	NodeCreationRequestSpec request = new NodeCreationRequestSpec(node, resourceImpact);
 	NodeRestRepresentation nodeRest = null;
 
 	try {
-	    nodeRest = client.post(request, NodeRestRepresentation.class);
+	    nodeRest = client.post(nodeSpec, NodeRestRepresentation.class);
 	} catch (WebApplicationException e) {
-	    throw new NodeNotCreatedException(node.getId());
+	    throw new NodeNotCreatedException();
 	}
 
 	return new Node(nodeRest);

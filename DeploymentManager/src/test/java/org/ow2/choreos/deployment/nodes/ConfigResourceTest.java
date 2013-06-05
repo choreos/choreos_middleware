@@ -22,6 +22,7 @@ import org.ow2.choreos.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.SshCommandFailed;
 import org.ow2.choreos.utils.SshUtil;
@@ -50,7 +51,7 @@ public class ConfigResourceTest extends BaseTest {
 	String RECIPE_NAME = "getting-started";
 	String CREATED_FILE = "chef-getting-started.txt";
 	CloudProvider cp = new FixedCloudProvider();
-	Node node = cp.createOrUseExistingNode(null, null);
+	Node node = cp.createOrUseExistingNode(new NodeSpec());
 
 	NodePoolManager npm = new NPMImpl(cp);
 	int num_replicas = 1;

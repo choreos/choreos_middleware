@@ -8,25 +8,25 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryTypes;
+import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
 public class ResourceImpact {
 
-    private MemoryTypes memory;
+    private MemoryType memory;
 
     private String cpu;
 
-    private String io;
+    private String storage;
 
-    private String region;
+    private String network;
 
-    public MemoryTypes getMemory() {
+    public MemoryType getMemory() {
 	return memory;
     }
 
-    public void setMemory(MemoryTypes memory) {
+    public void setMemory(MemoryType memory) {
 	this.memory = memory;
     }
 
@@ -38,20 +38,20 @@ public class ResourceImpact {
 	this.cpu = cpu;
     }
 
-    public String getIo() {
-	return io;
+    public String getStorage() {
+	return storage;
     }
 
-    public void setIo(String io) {
-	this.io = io;
+    public void setStorage(String storage) {
+	this.storage = storage;
     }
 
-    public String getRegion() {
-	return region;
+    public String getNetwork() {
+	return network;
     }
 
-    public void setRegion(String region) {
-	this.region = region;
+    public void setNetwork(String network) {
+	this.network = network;
     }
 
     @Override
@@ -59,9 +59,9 @@ public class ResourceImpact {
 	final int prime = 31;
 	int result = 1;
 	result = prime * result + ((cpu == null) ? 0 : cpu.hashCode());
-	result = prime * result + ((io == null) ? 0 : io.hashCode());
+	result = prime * result + ((storage == null) ? 0 : storage.hashCode());
 	result = prime * result + ((memory == null) ? 0 : memory.hashCode());
-	result = prime * result + ((region == null) ? 0 : region.hashCode());
+	result = prime * result + ((network == null) ? 0 : network.hashCode());
 	return result;
     }
 
@@ -79,27 +79,24 @@ public class ResourceImpact {
 		return false;
 	} else if (!cpu.equals(other.cpu))
 	    return false;
-	if (io == null) {
-	    if (other.io != null)
+	if (storage == null) {
+	    if (other.storage != null)
 		return false;
-	} else if (!io.equals(other.io))
+	} else if (!storage.equals(other.storage))
 	    return false;
-	if (memory == null) {
-	    if (other.memory != null)
-		return false;
-	} else if (!memory.equals(other.memory))
+	if (memory != other.memory)
 	    return false;
-	if (region == null) {
-	    if (other.region != null)
+	if (network == null) {
+	    if (other.network != null)
 		return false;
-	} else if (!region.equals(other.region))
+	} else if (!network.equals(other.network))
 	    return false;
 	return true;
     }
 
     @Override
     public String toString() {
-	return "ResourceImpact [memory=" + memory + ", cpu=" + cpu + ", io=" + io + ", region=" + region + "]";
+	return "ResourceImpact [memory=" + memory + ", cpu=" + cpu + ", io=" + storage + ", network=" + network + "]";
     }
 
 }

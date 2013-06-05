@@ -32,9 +32,8 @@ import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Node;
-import org.ow2.choreos.nodes.datamodel.NodeCreationRequestSpec;
 import org.ow2.choreos.nodes.datamodel.NodeRestRepresentation;
-import org.ow2.choreos.services.datamodel.ResourceImpact;
+import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 @Path("nodes")
 public class NodesResource {
@@ -61,14 +60,13 @@ public class NodesResource {
      */
     @POST
     @Consumes(MediaType.APPLICATION_XML)
-    public Response createNode(NodeCreationRequestSpec requestSpec, @Context UriInfo uriInfo) throws URISyntaxException {
+    public Response createNode(NodeSpec nodeSpec, @Context UriInfo uriInfo) throws URISyntaxException {
 
 	logger.debug("Request to create node");
 
-	Node node = requestSpec.getNode();
-	ResourceImpact resourceImpact = requestSpec.getResourceImpact();
+	Node node = null;
 	try {
-	    npm.createNode(node, resourceImpact);
+	    node = npm.createNode(nodeSpec);
 	} catch (NodeNotCreatedException e) {
 	    logger.warn("Node not created", e);
 	    return Response.status(Status.INTERNAL_SERVER_ERROR).build();

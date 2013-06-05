@@ -44,7 +44,7 @@ public class RecipeApplier {
 	try {
 	    checker.checkAndPrepareNode(node);
 	} catch (NodeNotOKException e) {
-	    throw new ConfigNotAppliedException(recipeFullName, node.getId());
+	    throw new ConfigNotAppliedException(recipeFullName);
 	}
 
 	Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
@@ -56,13 +56,13 @@ public class RecipeApplier {
 	    try {
 		knife.node().runListAdd(node.getChefName(), recipeFullName);
 	    } catch (KnifeException e) {
-		throw new ConfigNotAppliedException(recipeFullName, node.getId());
+		throw new ConfigNotAppliedException(recipeFullName);
 	    }
 	}
 
 	boolean ok = verifyRecipeInRunList(knife, node.getChefName(), cookbook, recipe);
 	if (!ok) {
-	    throw new ConfigNotAppliedException(recipeFullName, node.getId());
+	    throw new ConfigNotAppliedException(recipeFullName);
 	}
     }
 

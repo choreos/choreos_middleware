@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.ow2.choreos.nodes.ConfigNotAppliedException;
-import org.ow2.choreos.nodes.NPMException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
@@ -22,7 +21,7 @@ import org.ow2.choreos.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
-import org.ow2.choreos.services.datamodel.ResourceImpact;
+import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 public class NPMMocks {
 
@@ -45,7 +44,7 @@ public class NPMMocks {
 	return npmMock;
     }
 
-    public static NodePoolManager getDynamicMock() throws NPMException {
+    public static NodePoolManager getDynamicMock() throws NodeNotCreatedException {
 
 	NodePoolManager npmMock = new NodePoolManager() {
 
@@ -83,7 +82,7 @@ public class NPMMocks {
 	    }
 
 	    @Override
-	    public Node createNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException {
+	    public Node createNode(NodeSpec NodeSpec) throws NodeNotCreatedException {
 
 		Node n = new Node();
 		try {

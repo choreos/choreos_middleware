@@ -14,7 +14,7 @@ import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
-import org.ow2.choreos.services.datamodel.ResourceImpact;
+import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 /**
  * Handles a fixed pool of machines
@@ -95,7 +95,7 @@ public class FixedCloudProvider implements CloudProvider {
     }
 
     @Override
-    public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException {
+    public Node createOrUseExistingNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
 
 	if (nodes != null && !nodes.keySet().isEmpty()) {
 	    Iterator<String> it = nodes.keySet().iterator();
@@ -124,7 +124,7 @@ public class FixedCloudProvider implements CloudProvider {
     }
 
     @Override
-    public Node createNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException {
+    public Node createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
 
 	throw new UnsupportedOperationException("FixedCloudProvider cannot create new nodes");
     }

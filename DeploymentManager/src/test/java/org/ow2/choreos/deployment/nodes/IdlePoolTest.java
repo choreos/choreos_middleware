@@ -22,10 +22,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.stubbing.OngoingStubbing;
-import org.ow2.choreos.nodes.NPMException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.datamodel.Node;
-import org.ow2.choreos.services.datamodel.ResourceImpact;
+import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.utils.LogConfigurator;
 
 public class IdlePoolTest {
@@ -38,11 +37,11 @@ public class IdlePoolTest {
     }
 
     @Before
-    public void setUp() throws NPMException {
+    public void setUp() throws NodeNotCreatedException  {
 
 	int N = 10;
 	nodeCreator = mock(NodeCreator.class);
-	OngoingStubbing<Node> ongoingStubbing = when(nodeCreator.create(any(Node.class), any(ResourceImpact.class)));
+	OngoingStubbing<Node> ongoingStubbing = when(nodeCreator.create(any(NodeSpec.class)));
 	for (int i = 0; i < N; i++) {
 	    Node node = new Node();
 	    node.setId("node" + i);

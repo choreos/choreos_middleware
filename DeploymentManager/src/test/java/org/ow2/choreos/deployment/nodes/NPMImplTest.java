@@ -4,7 +4,8 @@
 
 package org.ow2.choreos.deployment.nodes;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
@@ -12,6 +13,7 @@ import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderMocks;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 public class NPMImplTest {
 
@@ -28,7 +30,7 @@ public class NPMImplTest {
 
 	NodePoolManager npm = new NPMImpl(cp, creator, pool);
 
-	Node createdNode = npm.createNode(new Node(), null);
+	Node createdNode = npm.createNode(new NodeSpec());
 	assertTrue(isNodeOK(createdNode));
 	Node fromRegNode = reg.getNode(createdNode.getId());
 	assertTrue(isNodeOK(fromRegNode));
@@ -48,7 +50,7 @@ public class NPMImplTest {
 
 	NodePoolManager npm = new NPMImpl(cp, creator, pool);
 
-	Node createdNode = npm.createNode(new Node(), null);
+	Node createdNode = npm.createNode(new NodeSpec());
 	assertTrue(isNodeOK(createdNode));
 	Node fromRegNode = reg.getNode(createdNode.getId());
 	assertTrue(isNodeOK(fromRegNode));
@@ -70,7 +72,7 @@ public class NPMImplTest {
 	IdlePool pool1 = IdlePool.getCleanInstance(N, creator1);
 	NodePoolManager npm1 = new NPMImpl(cp1, creator1, pool1);
 
-	Node createdNode = npm1.createNode(new Node(), null);
+	Node createdNode = npm1.createNode(new NodeSpec());
 	assertTrue(isNodeOK(createdNode));
 
 	CloudProvider cp2 = CloudProviderMocks.getGoodMock();

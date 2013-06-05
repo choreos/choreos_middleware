@@ -13,7 +13,7 @@ import java.util.List;
 
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.datamodel.Node;
-import org.ow2.choreos.services.datamodel.ResourceImpact;
+import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 public class CloudProviderMocks {
 
@@ -47,8 +47,8 @@ public class CloudProviderMocks {
 	when(cpMock.getNodes()).thenReturn(initialNodes);
 	when(cpMock.getNode("1")).thenReturn(node1);
 	when(cpMock.getNode("2")).thenReturn(node1);
-	when(cpMock.createNode(any(Node.class), any(ResourceImpact.class))).thenReturn(node3);
-	when(cpMock.createOrUseExistingNode(any(Node.class), any(ResourceImpact.class))).thenReturn(node1);
+	when(cpMock.createNode(any(NodeSpec.class))).thenReturn(node3);
+	when(cpMock.createOrUseExistingNode(any(NodeSpec.class))).thenReturn(node1);
 
 	return cpMock;
     }
@@ -78,8 +78,8 @@ public class CloudProviderMocks {
 	when(cpMock.getNodes()).thenReturn(initialNodes);
 	when(cpMock.getNode("1")).thenReturn(node1);
 	when(cpMock.getNode("2")).thenReturn(node1);
-	when(cpMock.createNode(any(Node.class), any(ResourceImpact.class))).thenThrow(new NodeNotCreatedException("3"));
-	when(cpMock.createOrUseExistingNode(any(Node.class), any(ResourceImpact.class))).thenReturn(node1);
+	when(cpMock.createNode(any(NodeSpec.class))).thenThrow(new NodeNotCreatedException("3"));
+	when(cpMock.createOrUseExistingNode(any(NodeSpec.class))).thenReturn(node1);
 
 	return cpMock;
     }
@@ -113,9 +113,9 @@ public class CloudProviderMocks {
 	when(cpMock.getNodes()).thenReturn(initialNodes);
 	when(cpMock.getNode("1")).thenReturn(node1);
 	when(cpMock.getNode("2")).thenReturn(node1);
-	when(cpMock.createNode(any(Node.class), any(ResourceImpact.class))).thenThrow(new NodeNotCreatedException("3"))
+	when(cpMock.createNode(any(NodeSpec.class))).thenThrow(new NodeNotCreatedException("3"))
 		.thenReturn(node3);
-	when(cpMock.createOrUseExistingNode(any(Node.class), any(ResourceImpact.class))).thenReturn(node1);
+	when(cpMock.createOrUseExistingNode(any(NodeSpec.class))).thenReturn(node1);
 
 	return cpMock;
     }

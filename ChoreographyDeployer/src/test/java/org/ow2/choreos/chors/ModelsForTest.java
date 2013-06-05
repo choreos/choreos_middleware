@@ -22,7 +22,7 @@ import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
-import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryTypes;
+import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryType;
 import org.ow2.choreos.services.datamodel.Service;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceSpec;
@@ -254,7 +254,7 @@ public class ModelsForTest {
 	System.out.println(models.getChoreographyXML());
     }
 
-    public ChoreographySpec getChorSpecWithResourceImpact(MemoryTypes type) {
+    public ChoreographySpec getChorSpecWithResourceImpact(MemoryType type) {
 
 	ChoreographySpec spec = new ChoreographySpec();
 

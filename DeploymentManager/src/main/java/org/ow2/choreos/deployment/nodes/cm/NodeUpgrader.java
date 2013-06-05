@@ -68,7 +68,7 @@ public class NodeUpgrader {
 	} catch (InterruptedException e) {
 	    String message = "chef-client timed out on node " + node.toString();
 	    logger.error(message);
-	    throw new NodeNotUpgradedException(node.getId(), message);
+	    throw new NodeNotUpgradedException(node.getId());
 	} catch (ExecutionException e) {
 	    fail(node);
 	}
@@ -77,7 +77,7 @@ public class NodeUpgrader {
     private void fail(Node node) throws NodeNotUpgradedException {
 	String message = "chef-client returned an error exit status on node " + node.toString();
 	logger.error(message);
-	throw new NodeNotUpgradedException(node.getId(), message);
+	throw new NodeNotUpgradedException(node.getId());
     }
 
     /**

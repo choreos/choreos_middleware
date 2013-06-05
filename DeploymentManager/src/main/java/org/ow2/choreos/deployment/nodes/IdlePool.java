@@ -12,9 +12,9 @@ import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
-import org.ow2.choreos.nodes.NPMException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.utils.Concurrency;
 
 /**
@@ -160,12 +160,12 @@ public class IdlePool {
 	@Override
 	public void run() {
 	    try {
-		Node node = nodeCreator.create(new Node(), null);
+		Node node = nodeCreator.create(new NodeSpec());
 		ok = true;
 		synchronized (IdlePool.this) {
 		    idleNodes.add(node);
 		}
-	    } catch (NPMException e) {
+	    } catch (NodeNotCreatedException e) {
 		logger.error("Could not create a VM by the pool");
 		ok = false;
 	    }

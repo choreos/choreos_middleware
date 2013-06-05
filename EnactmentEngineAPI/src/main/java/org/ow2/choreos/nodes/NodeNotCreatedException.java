@@ -4,22 +4,16 @@
 
 package org.ow2.choreos.nodes;
 
-public class NodeNotCreatedException extends NPMException {
+public class NodeNotCreatedException extends Exception {
 
     private static final long serialVersionUID = -3018510520455978938L;
 
-    public NodeNotCreatedException(String nodeId) {
-	super(nodeId);
+    public NodeNotCreatedException() {
+	super();
     }
 
-    public NodeNotCreatedException(String nodeId, String message) {
-	super(nodeId, message);
+    public NodeNotCreatedException(String message) {
+	super(message);
     }
 
-    public String toString() {
-	String result = "Could not create a node like " + super.getNodeId();
-	if (super.getMessage() != null)
-	    result += ". Reason:" + super.getMessage();
-	return result;
-    }
 }

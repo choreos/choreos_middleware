@@ -56,8 +56,8 @@ public class VerticalScalingTest {
     public void setUp() {
 
 	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-	smallSpec = models.getChorSpecWithResourceImpact(ResourceImpactDefs.MemoryTypes.SMALL);
-	mediumSpec = models.getChorSpecWithResourceImpact(ResourceImpactDefs.MemoryTypes.MEDIUM);
+	smallSpec = models.getChorSpecWithResourceImpact(ResourceImpactDefs.MemoryType.SMALL);
+	mediumSpec = models.getChorSpecWithResourceImpact(ResourceImpactDefs.MemoryType.MEDIUM);
 
     }
 

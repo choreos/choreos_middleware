@@ -17,6 +17,7 @@ import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.utils.LogConfigurator;
 
 public class FixedCloudProviderTest {
@@ -36,7 +37,7 @@ public class FixedCloudProviderTest {
 	DeploymentManagerConfiguration.set("FIXED_VM_TYPES", "SMALL");
 	DeploymentManagerConfiguration.set("MAPPER_POLICY", "ANY_FIT");
 	CloudProvider cp = new FixedCloudProvider();
-	Node node = cp.createOrUseExistingNode(null, null);
+	Node node = cp.createOrUseExistingNode(new NodeSpec());
 
 	assertTrue(node.getHostname() != null && !node.getHostname().isEmpty());
 

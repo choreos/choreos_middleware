@@ -4,14 +4,14 @@
 
 package org.ow2.choreos.deployment.nodes;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderMocks;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.datamodel.Node;
-import org.ow2.choreos.services.datamodel.ResourceImpact;
+import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 public class NodeCreatorTest {
 
@@ -21,7 +21,7 @@ public class NodeCreatorTest {
 	CloudProvider goodCP = CloudProviderMocks.getGoodMock();
 
 	NodeCreator nodeCreator = new NodeCreator(goodCP, false);
-	Node createdNode = nodeCreator.create(new Node(), new ResourceImpact());
+	Node createdNode = nodeCreator.create(new NodeSpec());
 	assertTrue(this.isNodeOK(createdNode));
     }
 
@@ -36,7 +36,7 @@ public class NodeCreatorTest {
 	CloudProvider badCP = CloudProviderMocks.getBadMock();
 
 	NodeCreator nodeCreator = new NodeCreator(badCP, false);
-	nodeCreator.create(new Node(), new ResourceImpact());
+	nodeCreator.create(new NodeSpec());
     }
 
 }

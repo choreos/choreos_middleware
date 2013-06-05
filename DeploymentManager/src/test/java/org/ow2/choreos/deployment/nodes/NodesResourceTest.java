@@ -15,6 +15,7 @@ import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.client.NodesClient;
 import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.tests.IntegrationTest;
 
 @Category(IntegrationTest.class)
@@ -24,7 +25,7 @@ public class NodesResourceTest extends BaseTest {
     public void getNode() throws Exception {
 
 	CloudProvider cp = new FixedCloudProvider();
-	Node node = cp.createOrUseExistingNode(null, null);
+	Node node = cp.createOrUseExistingNode(new NodeSpec());
 
 	NodePoolManager npm = new NodesClient(nodePoolManagerHost);
 	Node returnedNode = npm.getNode(node.getId());

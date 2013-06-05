@@ -18,7 +18,7 @@ import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.RecipeBundle;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
-import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryTypes;
+import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryType;
 
 public class RecipeBuilderTest {
 
@@ -38,9 +38,8 @@ public class RecipeBuilderTest {
 	deleteDirectory();
 
 	impact.setCpu("low");
-	impact.setIo("low");
-	impact.setMemory(MemoryTypes.SMALL);
-	impact.setRegion("BR");
+	impact.setStorage("low");
+	impact.setMemory(MemoryType.SMALL);
 
 	serviceSpec = new DeployableServiceSpec();
 	id = serviceSpec.getUUID();

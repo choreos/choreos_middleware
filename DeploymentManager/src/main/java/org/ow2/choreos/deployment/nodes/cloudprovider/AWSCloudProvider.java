@@ -11,7 +11,6 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 
-import org.apache.cxf.common.util.StringUtils;
 import org.apache.log4j.Logger;
 import org.jclouds.ContextBuilder;
 import org.jclouds.aws.ec2.compute.AWSEC2ComputeService;
@@ -29,6 +28,7 @@ import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
 
 import com.google.common.collect.Iterables;
@@ -63,15 +63,17 @@ public class AWSCloudProvider implements CloudProvider {
 	return context.getComputeService();
     }
 
-    public Node createNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException {
+    public Node createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
 
 	long t0 = System.currentTimeMillis();
 
+	Node node = new Node();
+	
 	oneRequestPerSecondRule();
 	logger.debug("Creating node...");
 
-	String imageId = node.getImage();
-	if (StringUtils.isEmpty(imageId)) {
+	String imageId = nodeSpec.getImage();
+	if (imageId == null || imageId.isEmpty()) {
 	    imageId = DEFAULT_IMAGE;
 	}
 	String image = imageId.substring(imageId.indexOf('/') + 1);
@@ -79,7 +81,7 @@ public class AWSCloudProvider implements CloudProvider {
 	ComputeService client = getClient(image);
 	try {
 	    Set<? extends NodeMetadata> createdNodes = client.createNodesInGroup("default", 1,
-		    getTemplate(client, imageId, resourceImpact));
+		    getTemplate(client, imageId, nodeSpec.getResourceImpact()));
 	    NodeMetadata cloudNode = Iterables.get(createdNodes, 0);
 
 	    setNodeProperties(node, cloudNode);
@@ -230,13 +232,13 @@ public class AWSCloudProvider implements CloudProvider {
 	return defaultImage;
     }
 
-    public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException {
+    public Node createOrUseExistingNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
 
 	List<Node> nodes = this.getNodes();
 	if (nodes.size() > 0)
 	    return nodes.get(0);
 	else
-	    return createNode(node, resourceImpact);
+	    return createNode(nodeSpec);
     }
 
 }

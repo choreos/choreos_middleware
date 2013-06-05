@@ -10,7 +10,7 @@ import java.util.List;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
-import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryTypes;
+import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryType;
 
 enum NodeSelectorMapperPolicy {
     ANY_FIT, EXACT_FIT
@@ -51,7 +51,7 @@ public class NodeSelectorMapper {
 	return false;
     }
 
-    private int getBaseMemoryFromType(MemoryTypes memory) {
+    private int getBaseMemoryFromType(MemoryType memory) {
 	switch (memory) {
 	case SMALL:
 	    return 256;
