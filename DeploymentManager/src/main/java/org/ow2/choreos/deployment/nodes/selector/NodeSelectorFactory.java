@@ -15,16 +15,22 @@ import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 public class NodeSelectorFactory {
 
     private static final String CLASS_MAPPING_FILE = "node_selector.properties";
+    private static final String NODE_SELECTOR_PROPERTY = "NODE_SELECTOR";
 
     private static Map<String, NodeSelector> selectors = new ConcurrentHashMap<String, NodeSelector>();
 
     private static Logger logger = Logger.getLogger(NodeSelectorFactory.class);
 
+    /**
+     * 
+     * @return
+     * @throws IllegalArgumentException
+     *             if could not retrieve NodeSelector
+     */
     public static NodeSelector getInstance() {
-
-	String nodeSelectorType = DeploymentManagerConfiguration.get("NODE_SELECTOR");
+	String nodeSelectorType = DeploymentManagerConfiguration.get(NODE_SELECTOR_PROPERTY);
 	if (nodeSelectorType == null) {
-	    logger.error("NODE_SELECTOR property not set on properties file!");
+	    logger.error(NODE_SELECTOR_PROPERTY + " property not set on properties file!");
 	    throw new IllegalArgumentException();
 	}
 	return getInstance(nodeSelectorType);
@@ -33,12 +39,11 @@ public class NodeSelectorFactory {
     /**
      * 
      * @param nodeSelectorType
-     * @returnarg0
+     * @return
      * @throws IllegalArgumentException
-     *             if could not rearg0trieve NodeSelector
+     *             if could not retrieve NodeSelector
      */
     public static NodeSelector getInstance(String nodeSelectorType) {
-
 	if (!selectors.containsKey(nodeSelectorType)) {
 	    synchronized (NodeSelectorFactory.class) {
 		if (!selectors.containsKey(nodeSelectorType)) {
@@ -47,18 +52,15 @@ public class NodeSelectorFactory {
 		}
 	    }
 	}
-
 	return selectors.get(nodeSelectorType);
     }
 
     private static NodeSelector newInstance(String nodeSelectorType) {
-
 	Properties classMap = getClassMap();
 	String className = classMap.getProperty(nodeSelectorType);
 	NodeSelector nodeSelector = null;
 	try {
-	    @SuppressWarnings("unchecked")
-	    // catches handle the problem
+	    @SuppressWarnings("unchecked") // catches handle the problem
 	    Class<NodeSelector> clazz = (Class<NodeSelector>) Class.forName(className);
 	    nodeSelector = clazz.newInstance();
 	} catch (ClassNotFoundException e) {
@@ -78,7 +80,6 @@ public class NodeSelectorFactory {
     }
 
     private static Properties getClassMap() {
-
 	Properties classMap = new Properties();
 	final ClassLoader loader = Thread.currentThread().getContextClassLoader();
 	try {

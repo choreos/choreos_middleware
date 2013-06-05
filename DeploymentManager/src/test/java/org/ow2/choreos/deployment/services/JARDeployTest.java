@@ -14,9 +14,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.datamodel.DeployableService;
@@ -31,8 +29,7 @@ public class JARDeployTest {
 
     public static final String JAR_LOCATION = "http://valinhos.ime.usp.br:54080/services/airline-service.jar";
 
-    private String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
-    private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
+    private NodePoolManager npm = NPMImpl.getNewInstance();
     private ServicesManager deployer = new ServicesManagerImpl(npm);
 
     private WebClient client;

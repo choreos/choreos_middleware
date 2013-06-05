@@ -11,11 +11,11 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.chef.ConfigToChef;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
+import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpgrader;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpgraderFactory;
 import org.ow2.choreos.deployment.nodes.cm.RecipeApplier;
-import org.ow2.choreos.deployment.nodes.selector.NodeNotSelectedException;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelector;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelectorFactory;
 import org.ow2.choreos.nodes.ConfigNotAppliedException;
@@ -27,6 +27,7 @@ import org.ow2.choreos.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.selectors.NotSelectedException;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
 import org.ow2.choreos.utils.Concurrency;
 
@@ -43,6 +44,17 @@ public class NPMImpl implements NodePoolManager {
     private NodeRegistry nodeRegistry;
     private NodeCreator nodeCreator;
     private IdlePool idlePool;
+    
+    /**
+     * The CloudProvider used is the one configured in the properties file
+     * 
+     * @return
+     */
+    public static NodePoolManager getNewInstance() {
+	
+	String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
+	return new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
+    }
 
     public NPMImpl(CloudProvider provider) {
 
@@ -114,13 +126,12 @@ public class NPMImpl implements NodePoolManager {
     @Override
     public List<Node> applyConfig(Config config) throws ConfigNotAppliedException {
 
-	NodePoolManager restrictedNPM = new RestrictedNPM(this);
 	NodeSelector selector = NodeSelectorFactory.getInstance();
 	List<Node> nodes = null;
 	try {
-	    nodes = selector.selectNodes(config, restrictedNPM);
+	    nodes = selector.select(config, config.getNumberOfInstances());
 	    logger.info("Selected nodes to " + config.getName() + ": " + nodes);
-	} catch (NodeNotSelectedException e) {
+	} catch (NotSelectedException e) {
 	    throw new ConfigNotAppliedException(config.getName());
 	}
 
