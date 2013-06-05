@@ -16,94 +16,95 @@ import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 /**
  * Access Service Deployer functionalities through the REST API.
  * 
- * The user of <code>ServiceDeployerClient</code> does not need to worry with the REST communication.
+ * The user of <code>ServiceDeployerClient</code> does not need to worry with
+ * the REST communication.
  * 
  * @author leonardo
- *
+ * 
  */
 public class ServicesClient implements ServicesManager {
 
-	private String host;
+    private String host;
 
-	/**
-	 * 
-	 * @param host ex: 'http://localhost:9101/deploymentmanager'
-	 * 
-	 */
-	public ServicesClient(String host) {
-		this.host = host;
+    /**
+     * 
+     * @param host
+     *            ex: 'http://localhost:9101/deploymentmanager'
+     * 
+     */
+    public ServicesClient(String host) {
+	this.host = host;
+    }
+
+    private WebClient setupClient() {
+
+	WebClient client = WebClient.create(host);
+
+	// remove time out
+	// not proud of it!
+	HTTPConduit http = (HTTPConduit) WebClient.getConfig(client).getConduit();
+	HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
+	httpClientPolicy.setConnectionTimeout(0);// indefined
+	httpClientPolicy.setReceiveTimeout(0);// indefined
+	http.setClient(httpClientPolicy);
+
+	return client;
+    }
+
+    // TODO: review this methods for new client path
+    @Override
+    public DeployableService createService(DeployableServiceSpec serviceSpec) throws ServiceNotDeployedException {
+
+	WebClient client = setupClient();
+	client.path("services");
+	DeployableService service = null;
+	try {
+	    service = client.post(serviceSpec, DeployableService.class);
+	} catch (WebApplicationException e) {
+	    throw new ServiceNotDeployedException(serviceSpec.getUUID());
 	}
 
-	private WebClient setupClient() {
+	return service;
+    }
 
-		WebClient client = WebClient.create(host);
-
-		// remove time out
-		// not proud of it!
-		HTTPConduit http = (HTTPConduit)WebClient.getConfig(client).getConduit();
-		HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
-		httpClientPolicy.setConnectionTimeout(0);//indefined
-		httpClientPolicy.setReceiveTimeout(0);//indefined
-		http.setClient(httpClientPolicy);
-
-		return client;
+    @Override
+    public DeployableService getService(String uuid) throws ServiceNotFoundException {
+	WebClient client = setupClient();
+	client.path("services").path(uuid);
+	DeployableService service = null;
+	try {
+	    service = client.get(null);
+	} catch (WebApplicationException e) {
+	    // throw new ServiceNotFoundException(uuid);
 	}
 
-	// TODO: review this methods for new client path
-	@Override
-	public DeployableService createService(DeployableServiceSpec serviceSpec) throws ServiceNotDeployedException {
+	return service;
+    }
 
-		WebClient client = setupClient();
-		client.path("services");
-		DeployableService service = null;
-		try {
-			service = client.post(serviceSpec, DeployableService.class);
-		} catch (WebApplicationException e) {
-			throw new ServiceNotDeployedException(serviceSpec.getUUID());
-		}
+    @Override
+    public void deleteService(String uuid) throws ServiceNotDeletedException {
 
-		return service;
+	WebClient client = setupClient();
+	client.path("services").path(uuid);
+
+	try {
+	    client.delete();
+	} catch (WebApplicationException e) {
+	    throw new ServiceNotDeletedException(uuid);
 	}
+    }
 
-	@Override
-	public DeployableService getService(String uuid) throws ServiceNotFoundException  {
-		WebClient client = setupClient();
-		client.path("services").path(uuid);
-		DeployableService service = null;
-		try {
-			service = client.get(null);
-		} catch (WebApplicationException e) {
-//			throw new ServiceNotFoundException(uuid);
-		}
-
-		return service;
+    @Override
+    public DeployableService updateService(DeployableServiceSpec serviceSpec) throws ServiceNotModifiedException {
+	WebClient client = setupClient();
+	client.path("services").path(serviceSpec.getUUID());
+	DeployableService service = null;
+	try {
+	    service = client.post(serviceSpec, DeployableService.class);
+	} catch (WebApplicationException e) {
+	    throw new ServiceNotModifiedException(serviceSpec.getUUID(), e.getMessage());
 	}
-
-	@Override
-	public void deleteService(String uuid) throws ServiceNotDeletedException {
-		
-		WebClient client = setupClient();
-		client.path("services").path(uuid);
-		
-		try {
-			client.delete();
-		} catch (WebApplicationException e) {
-			throw new ServiceNotDeletedException(uuid);
-		}
-	}
-
-	@Override
-	public DeployableService updateService(DeployableServiceSpec serviceSpec)
-			throws ServiceNotModifiedException {
-		WebClient client = setupClient();
-		client.path("services").path(serviceSpec.getUUID());
-		DeployableService service = null;
-		try {
-			service = client.post(serviceSpec, DeployableService.class);
-		} catch (WebApplicationException e) {
-			throw new ServiceNotModifiedException(serviceSpec.getUUID(), e.getMessage());
-		}
-		return service;
-	}
+	return service;
+    }
 
 }

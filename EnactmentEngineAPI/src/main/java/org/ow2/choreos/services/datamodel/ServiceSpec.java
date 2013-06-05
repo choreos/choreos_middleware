@@ -8,60 +8,61 @@ import org.ow2.choreos.chors.datamodel.LegacyServiceSpec;
 
 @XmlSeeAlso({ DeployableServiceSpec.class, LegacyServiceSpec.class })
 public abstract class ServiceSpec {
-	protected ServiceType serviceType; 
-	private String uuid;
-	
-	public ServiceSpec() {
-		
-	}
-	
-	protected ServiceSpec(ServiceType serviceType) {
-		uuid = UUID.randomUUID().toString();
-		this.serviceType = serviceType;
-	}
-	
-	public String getUUID() {
-		return uuid;
-	}
-	
-	/**
-	 * Use it carefully. Should be used only when updating a existing service
-	 * @return
-	 */
-	public void setUUID(String uuid) {
-		this.uuid = uuid;
-	}
-	
-	public ServiceType getType() {
-		return serviceType;
-	}
+    
+    protected ServiceType serviceType;
+    private String uuid;
 
-	public void setType(ServiceType type) {
-		this.serviceType = type;
-	}
-	
-	public abstract int getNumberOfInstances();
-	public abstract void setNumberOfInstances(int numberOfInstances);
+    public ServiceSpec() {
 
-	@Override
-	public boolean equals(Object obj) { 
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+    }
 
-		ServiceSpec other = (ServiceSpec) obj;
+    protected ServiceSpec(ServiceType serviceType) {
+	uuid = UUID.randomUUID().toString();
+	this.serviceType = serviceType;
+    }
 
-		
+    public String getUUID() {
+	return uuid;
+    }
+
+    /**
+     * Use it carefully. Should be used only when updating a existing service
+     * 
+     * @return
+     */
+    public void setUUID(String uuid) {
+	this.uuid = uuid;
+    }
+
+    public ServiceType getType() {
+	return serviceType;
+    }
+
+    public void setType(ServiceType type) {
+	this.serviceType = type;
+    }
+
+    public abstract int getNumberOfInstances();
+
+    public abstract void setNumberOfInstances(int numberOfInstances);
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+
+	ServiceSpec other = (ServiceSpec) obj;
+
 	if (serviceType == null) {
-		if (other.serviceType != null)
-			return false;
-	} else if (!serviceType.equals(other.serviceType))
+	    if (other.serviceType != null)
 		return false;
-	
+	} else if (!serviceType.equals(other.serviceType))
+	    return false;
 
 	return true;
-	}
+    }
 }

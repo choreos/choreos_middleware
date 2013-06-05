@@ -18,79 +18,76 @@ import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.w3c.dom.Document;
 
-
 public class SchemaGenerator {
-	
-	private Logger logger = Logger.getLogger(SchemaGenerator.class);
-	
-	public String generateChorSpecSchema() {
-		
-		try {
-			return this.generateSchema(ChoreographySpec.class);
-		} catch (JAXBException e) {
-			logger.error("It should never happen");
-			return null;
-		} catch (IOException e) {
-			logger.error("It should never happen");
-			return null;
-		}
-	}
-	
-	public String generateChoreographySchema() {
-		
-		try {
-			return this.generateSchema(Choreography.class);
-		} catch (JAXBException e) {
-			logger.error("It should never happen");
-			return null;
-		} catch (IOException e) {
-			logger.error("It should never happen");
-			return null;
-		}
-	}
-	
-	// based on http://arthur.gonigberg.com/2010/04/26/jaxb-generating-schema-from-object-model/
-	private String generateSchema(Class<?> clazz) throws JAXBException, IOException {
-		
-	    // grab the context
-	    JAXBContext context = JAXBContext.newInstance(clazz);
 
-	    final List<DOMResult> results = new ArrayList<DOMResult>();
+    private Logger logger = Logger.getLogger(SchemaGenerator.class);
 
-	    // generate the schema
-	    context.generateSchema(
-	            // need to define a SchemaOutputResolver to store to
-	            new SchemaOutputResolver()
-	            {
-	                @Override
-	                public Result createOutput( String ns, String file )
-	                        throws IOException
-	                {
-	                    // save the schema to the list
-	                    DOMResult result = new DOMResult();
-	                    result.setSystemId( file );
-	                    results.add( result );
-	                    return result;
-	                }
-	            } );
+    public String generateChorSpecSchema() {
 
-	    // output schema via System.out
-	    DOMResult domResult = results.get( 0 );
-	    Document doc = (Document) domResult.getNode();
-	    OutputFormat format = new OutputFormat(doc);
-	    format.setIndenting(true);
-	    StringWriter writer = new StringWriter();
-	    XMLSerializer serializer = new XMLSerializer(writer, format);
-	    serializer.serialize(doc);
-	    return writer.toString();
+	try {
+	    return this.generateSchema(ChoreographySpec.class);
+	} catch (JAXBException e) {
+	    logger.error("It should never happen");
+	    return null;
+	} catch (IOException e) {
+	    logger.error("It should never happen");
+	    return null;
 	}
+    }
 
-	public static void main(String[] args) {
-		
-		SchemaGenerator gen = new SchemaGenerator();
-		System.out.println("ChorSpec XSD:");
-		System.out.println(gen.generateChorSpecSchema());
-		System.out.println("\nChoreography XSD:");
-		System.out.println(gen.generateChoreographySchema());
+    public String generateChoreographySchema() {
+
+	try {
+	    return this.generateSchema(Choreography.class);
+	} catch (JAXBException e) {
+	    logger.error("It should never happen");
+	    return null;
+	} catch (IOException e) {
+	    logger.error("It should never happen");
+	    return null;
 	}
+    }
+
+    // based on
+    // http://arthur.gonigberg.com/2010/04/26/jaxb-generating-schema-from-object-model/
+    private String generateSchema(Class<?> clazz) throws JAXBException, IOException {
+
+	// grab the context
+	JAXBContext context = JAXBContext.newInstance(clazz);
+
+	final List<DOMResult> results = new ArrayList<DOMResult>();
+
+	// generate the schema
+	context.generateSchema(
+	// need to define a SchemaOutputResolver to store to
+	new SchemaOutputResolver() {
+	    @Override
+	    public Result createOutput(String ns, String file) throws IOException {
+		// save the schema to the list
+		DOMResult result = new DOMResult();
+		result.setSystemId(file);
+		results.add(result);
+		return result;
+	    }
+	});
+
+	// output schema via System.out
+	DOMResult domResult = results.get(0);
+	Document doc = (Document) domResult.getNode();
+	OutputFormat format = new OutputFormat(doc);
+	format.setIndenting(true);
+	StringWriter writer = new StringWriter();
+	XMLSerializer serializer = new XMLSerializer(writer, format);
+	serializer.serialize(doc);
+	return writer.toString();
+    }
+
+    public static void main(String[] args) {
+
+	SchemaGenerator gen = new SchemaGenerator();
+	System.out.println("ChorSpec XSD:");
+	System.out.println(gen.generateChorSpecSchema());
+	System.out.println("\nChoreography XSD:");
+	System.out.println(gen.generateChoreographySchema());
+    }
 }

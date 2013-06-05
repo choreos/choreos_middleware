@@ -6,182 +6,174 @@ import java.util.List;
 import org.ow2.choreos.services.datamodel.ServiceSpec;
 
 public class ChoreographyServiceSpec {
-	private ServiceSpec serviceSpec;
+    private ServiceSpec serviceSpec;
 
-	private String name;
-	private String owner;
-	private String group;
-	private List<String> roles;
-	private List<ChoreographyServiceDependency> dependencies;
-	
-	public ChoreographyServiceSpec() {
-		
-	}
+    private String name;
+    private String owner;
+    private String group;
+    private List<String> roles;
+    private List<ChoreographyServiceDependency> dependencies;
 
-	public ChoreographyServiceSpec(ServiceSpec serviceSpec, String owner,
-			String group, List<String> roles, String choreographyServiceUID) {
-		this.serviceSpec = serviceSpec;
-		this.owner = owner;
-		this.group = group;
-		this.roles = roles;
-		this.name = choreographyServiceUID;
-	}
+    public ChoreographyServiceSpec() {
 
-	public ChoreographyServiceSpec(ServiceSpec serviceSpec, String owner,
-			String group, List<String> roles,
-			List<ChoreographyServiceDependency> dependencies,
-			String name) {
-		this.serviceSpec = serviceSpec;
-		this.owner = owner;
-		this.group = group;
-		this.roles = roles;
-		this.dependencies = dependencies;
-		this.name = name;
-	}
+    }
 
-	public ServiceSpec getServiceSpec() {
-		return serviceSpec;
-	}
+    public ChoreographyServiceSpec(ServiceSpec serviceSpec, String owner, String group, List<String> roles,
+	    String choreographyServiceUID) {
+	this.serviceSpec = serviceSpec;
+	this.owner = owner;
+	this.group = group;
+	this.roles = roles;
+	this.name = choreographyServiceUID;
+    }
 
-	public void setServiceSpec(ServiceSpec serviceSpec) {
-		this.serviceSpec = serviceSpec;
-	}
+    public ChoreographyServiceSpec(ServiceSpec serviceSpec, String owner, String group, List<String> roles,
+	    List<ChoreographyServiceDependency> dependencies, String name) {
+	this.serviceSpec = serviceSpec;
+	this.owner = owner;
+	this.group = group;
+	this.roles = roles;
+	this.dependencies = dependencies;
+	this.name = name;
+    }
 
-	public String getOwner() {
-		return owner;
-	}
+    public ServiceSpec getServiceSpec() {
+	return serviceSpec;
+    }
 
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
+    public void setServiceSpec(ServiceSpec serviceSpec) {
+	this.serviceSpec = serviceSpec;
+    }
 
-	public String getGroup() {
-		return group;
-	}
+    public String getOwner() {
+	return owner;
+    }
 
-	public void setGroup(String group) {
-		this.group = group;
-	}
+    public void setOwner(String owner) {
+	this.owner = owner;
+    }
 
-	public List<String> getRoles() {
-		return roles;
-	}
+    public String getGroup() {
+	return group;
+    }
 
-	public void setRoles(List<String> roles) {
-		this.roles = roles;
-	}
+    public void setGroup(String group) {
+	this.group = group;
+    }
 
-	public void addRole(String role) {
-		if (this.roles == null)
-			this.roles = new ArrayList<String>();
-		roles.add(role);
-	}
+    public List<String> getRoles() {
+	return roles;
+    }
 
-	public void addAllRoles(List<String> roles) {
-		if (this.roles == null)
-			this.roles = new ArrayList<String>();
-		roles.addAll(roles);
-	}
+    public void setRoles(List<String> roles) {
+	this.roles = roles;
+    }
 
-	public List<ChoreographyServiceDependency> getDependencies() {
-		return dependencies;
-	}
+    public void addRole(String role) {
+	if (this.roles == null)
+	    this.roles = new ArrayList<String>();
+	roles.add(role);
+    }
 
-	public void setDependencies(List<ChoreographyServiceDependency> dependencies) {
-		this.dependencies = dependencies;
-	}
+    public void addAllRoles(List<String> roles) {
+	if (this.roles == null)
+	    this.roles = new ArrayList<String>();
+	roles.addAll(roles);
+    }
 
-	public void addDependency(ChoreographyServiceDependency dependency) {
-		if (this.dependencies == null)
-			this.dependencies = new ArrayList<ChoreographyServiceDependency>();
-		this.dependencies.add(dependency);
-	}
+    public List<ChoreographyServiceDependency> getDependencies() {
+	return dependencies;
+    }
 
-	public void addDependencies(List<ChoreographyServiceDependency> dependencies) {
-		if (this.dependencies == null)
-			this.dependencies = new ArrayList<ChoreographyServiceDependency>();
-		this.dependencies.addAll(dependencies);
-	}
+    public void setDependencies(List<ChoreographyServiceDependency> dependencies) {
+	this.dependencies = dependencies;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void addDependency(ChoreographyServiceDependency dependency) {
+	if (this.dependencies == null)
+	    this.dependencies = new ArrayList<ChoreographyServiceDependency>();
+	this.dependencies.add(dependency);
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void addDependencies(List<ChoreographyServiceDependency> dependencies) {
+	if (this.dependencies == null)
+	    this.dependencies = new ArrayList<ChoreographyServiceDependency>();
+	this.dependencies.addAll(dependencies);
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime
-				* result
-				+ ((name == null) ? 0
-						: name.hashCode());
-		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
-		result = prime * result + ((group == null) ? 0 : group.hashCode());
-		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
-		result = prime * result
-				+ ((dependencies == null) ? 0 : dependencies.hashCode());
-		result = prime * result + ((serviceSpec == null) ? 0 : serviceSpec.hashCode());
-		return result;
-	}
+    public String getName() {
+	return name;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ChoreographyServiceSpec other = (ChoreographyServiceSpec) obj;
+    public void setName(String name) {
+	this.name = name;
+    }
 
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((name == null) ? 0 : name.hashCode());
+	result = prime * result + ((owner == null) ? 0 : owner.hashCode());
+	result = prime * result + ((group == null) ? 0 : group.hashCode());
+	result = prime * result + ((roles == null) ? 0 : roles.hashCode());
+	result = prime * result + ((dependencies == null) ? 0 : dependencies.hashCode());
+	result = prime * result + ((serviceSpec == null) ? 0 : serviceSpec.hashCode());
+	return result;
+    }
 
-		if (owner == null) {
-			if (other.owner != null)
-				return false;
-		} else if (!owner.equals(other.owner))
-			return false;
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	ChoreographyServiceSpec other = (ChoreographyServiceSpec) obj;
 
-		if (group == null) {
-			if (other.group != null)
-				return false;
-		} else if (!group.equals(other.group))
-			return false;
+	if (name == null) {
+	    if (other.name != null)
+		return false;
+	} else if (!name.equals(other.name))
+	    return false;
 
-		if (roles == null) {
-			if (other.roles != null)
-				return false;
-		} else if (!roles.equals(other.roles))
-			return false;
+	if (owner == null) {
+	    if (other.owner != null)
+		return false;
+	} else if (!owner.equals(other.owner))
+	    return false;
 
-		if (dependencies == null) {
-			if (other.dependencies != null)
-				return false;
-		} else if (!dependencies.equals(other.dependencies))
-			return false;
-		
-		if (serviceSpec == null) {
-			if(other.serviceSpec != null)
-				return false;
-		} else if (!serviceSpec.equals(other.serviceSpec))
-			return false;
+	if (group == null) {
+	    if (other.group != null)
+		return false;
+	} else if (!group.equals(other.group))
+	    return false;
 
-		return true;
-	}
+	if (roles == null) {
+	    if (other.roles != null)
+		return false;
+	} else if (!roles.equals(other.roles))
+	    return false;
 
-	@Override
-	public String toString() {
-		return "ChoreographyServiceSpec [name=" + name
-				+ ", owner=" + owner + ", group=" + group + ", roles=" + roles
-				+ ", dependencies=" + dependencies + ", serviceSpec="
-				+ serviceSpec;
-	}
+	if (dependencies == null) {
+	    if (other.dependencies != null)
+		return false;
+	} else if (!dependencies.equals(other.dependencies))
+	    return false;
+
+	if (serviceSpec == null) {
+	    if (other.serviceSpec != null)
+		return false;
+	} else if (!serviceSpec.equals(other.serviceSpec))
+	    return false;
+
+	return true;
+    }
+
+    @Override
+    public String toString() {
+	return "ChoreographyServiceSpec [name=" + name + ", owner=" + owner + ", group=" + group + ", roles=" + roles
+		+ ", dependencies=" + dependencies + ", serviceSpec=" + serviceSpec;
+    }
 }

@@ -4,36 +4,34 @@ import org.ow2.choreos.services.datamodel.Service;
 
 public class ChoreographyService {
 
-	private ChoreographyServiceSpec choreographyServiceSpec;
-	private Service service;
-	
-	public ChoreographyService() {
-	}
-	
-	public ChoreographyService(ChoreographyServiceSpec choreographyServiceSpec) {
-		this.choreographyServiceSpec = choreographyServiceSpec;
-	}
+    private ChoreographyServiceSpec choreographyServiceSpec;
+    private Service service;
 
-	public ChoreographyServiceSpec getChoreographyServiceSpec() {
-		return choreographyServiceSpec;
-	}
+    public ChoreographyService() {
+    }
 
-	public void setChoreographyServiceSpec(
-			ChoreographyServiceSpec choreographyServiceSpec) {
-		this.choreographyServiceSpec = choreographyServiceSpec;
-	}
+    public ChoreographyService(ChoreographyServiceSpec choreographyServiceSpec) {
+	this.choreographyServiceSpec = choreographyServiceSpec;
+    }
 
-	public Service getService() {
-		return service;
-	}
+    public ChoreographyServiceSpec getChoreographyServiceSpec() {
+	return choreographyServiceSpec;
+    }
 
-	public void setService(Service service) {
-		this.service = service;
-	}
+    public void setChoreographyServiceSpec(ChoreographyServiceSpec choreographyServiceSpec) {
+	this.choreographyServiceSpec = choreographyServiceSpec;
+    }
 
-	@Override
-	public String toString() {
-		return "ChoreographyService [choreographyServiceSpec="
-				+ choreographyServiceSpec + ", service=" + service;
-	}
+    public Service getService() {
+	return service;
+    }
+
+    public void setService(Service service) {
+	this.service = service;
+    }
+
+    @Override
+    public String toString() {
+	return "ChoreographyService [choreographyServiceSpec=" + choreographyServiceSpec + ", service=" + service;
+    }
 }

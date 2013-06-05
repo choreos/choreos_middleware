@@ -5,218 +5,216 @@ import java.util.regex.Pattern;
 
 public class Node {
 
-	private String id;
-	private Integer cpus;
-	private Integer ram;
-	private Integer storage;
-	private String so;
-	private String zone;
-	private String ip;
-	private String hostname;
-	private String user;
-	private String privateKeyFile;
-	private String image;
-	private Integer state;
-	private String chefName; // nos comandos do chef é o NODE_NAME
+    private String id;
+    private Integer cpus;
+    private Integer ram;
+    private Integer storage;
+    private String so;
+    private String zone;
+    private String ip;
+    private String hostname;
+    private String user;
+    private String privateKeyFile;
+    private String image;
+    private Integer state;
+    private String chefName; // nos comandos do chef é o NODE_NAME
 
-	public Node() {
-	}
+    public Node() {
+    }
 
-	public Node(NodeRestRepresentation rest) {
-		cpus = rest.cpus;
-		hostname = rest.hostname;
-		id = rest.id;
-		image = rest.image;
-		ip = rest.ip;
-		ram = rest.ram;
-		storage = rest.storage;
-		so = rest.so;
-		zone = rest.zone;
-		state = rest.state;
-	}
+    public Node(NodeRestRepresentation rest) {
+	cpus = rest.cpus;
+	hostname = rest.hostname;
+	id = rest.id;
+	image = rest.image;
+	ip = rest.ip;
+	ram = rest.ram;
+	storage = rest.storage;
+	so = rest.so;
+	zone = rest.zone;
+	state = rest.state;
+    }
 
-	public NodeRestRepresentation getRestRepresentation() {
-		NodeRestRepresentation rest = new NodeRestRepresentation();
+    public NodeRestRepresentation getRestRepresentation() {
+	NodeRestRepresentation rest = new NodeRestRepresentation();
 
-		rest.cpus = cpus;
-		rest.hostname = hostname;
-		rest.id = id;
-		rest.image = image;
-		rest.ip = ip;
-		rest.ram = ram;
-		rest.storage = storage;
-		rest.so = so;
-		rest.zone = zone;
-		rest.state = state;
-		
-		return rest;
-	}
+	rest.cpus = cpus;
+	rest.hostname = hostname;
+	rest.id = id;
+	rest.image = image;
+	rest.ip = ip;
+	rest.ram = ram;
+	rest.storage = storage;
+	rest.so = so;
+	rest.zone = zone;
+	rest.state = state;
 
-	static Pattern IP_PATTERN = Pattern.compile("(\\d{1,4}\\.){3}\\d{1,4}");
-	public boolean hasIp() {
-		if (ip == null || ip.isEmpty())
-			return false;
-    	Matcher matcher = IP_PATTERN.matcher(ip);
-    	return matcher.matches();
-	}
-	
-	public String getChefName() {
-		return chefName;
-	}
+	return rest;
+    }
 
-	public void setChefName(String chefName) {
-		this.chefName = chefName;
-	}
+    static Pattern IP_PATTERN = Pattern.compile("(\\d{1,4}\\.){3}\\d{1,4}");
 
-	public void setPrivateKeyFile(String privateKeyFile) {
-		this.privateKeyFile = privateKeyFile;
-	}
+    public boolean hasIp() {
+	if (ip == null || ip.isEmpty())
+	    return false;
+	Matcher matcher = IP_PATTERN.matcher(ip);
+	return matcher.matches();
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getChefName() {
+	return chefName;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setChefName(String chefName) {
+	this.chefName = chefName;
+    }
 
-	public Integer getCpus() {
-		return cpus;
-	}
+    public void setPrivateKeyFile(String privateKeyFile) {
+	this.privateKeyFile = privateKeyFile;
+    }
 
-	public void setCpus(Integer cpus) {
-		this.cpus = cpus;
-	}
+    public String getId() {
+	return id;
+    }
 
-	public Integer getRam() {
-		return ram;
-	}
+    public void setId(String id) {
+	this.id = id;
+    }
 
-	public void setRam(Integer ram) {
-		this.ram = ram;
-	}
+    public Integer getCpus() {
+	return cpus;
+    }
 
-	public Integer getStorage() {
-		return storage;
-	}
+    public void setCpus(Integer cpus) {
+	this.cpus = cpus;
+    }
 
-	public void setStorage(Integer storage) {
-		this.storage = storage;
-	}
+    public Integer getRam() {
+	return ram;
+    }
 
-	public String getSo() {
-		return so;
-	}
+    public void setRam(Integer ram) {
+	this.ram = ram;
+    }
 
-	public void setSo(String so) {
-		this.so = so;
-	}
+    public Integer getStorage() {
+	return storage;
+    }
 
-	public String getZone() {
-		return zone;
-	}
+    public void setStorage(Integer storage) {
+	this.storage = storage;
+    }
 
-	public void setZone(String zone) {
-		this.zone = zone;
-	}
+    public String getSo() {
+	return so;
+    }
 
-	public String getIp() {
-		return ip;
-	}
+    public void setSo(String so) {
+	this.so = so;
+    }
 
-	public void setIp(String ip) {
-		this.ip = ip;
-	}
+    public String getZone() {
+	return zone;
+    }
 
-	public String getHostname() {
-		return hostname;
-	}
+    public void setZone(String zone) {
+	this.zone = zone;
+    }
 
-	public void setHostname(String hostname) {
-		this.hostname = hostname;
-	}
+    public String getIp() {
+	return ip;
+    }
 
-	public String getUser() {
-		return user;
-	}
+    public void setIp(String ip) {
+	this.ip = ip;
+    }
 
-	public void setUser(String user) {
-		this.user = user;
-	}
+    public String getHostname() {
+	return hostname;
+    }
 
-	public String getPrivateKeyFile() {
-		return privateKeyFile;
-	}
+    public void setHostname(String hostname) {
+	this.hostname = hostname;
+    }
 
-	public void setPrivateKey(String privateKeyFile) {
-		this.privateKeyFile = privateKeyFile;
-	}
+    public String getUser() {
+	return user;
+    }
 
-	public String getImage() {
-		return image;
-	}
+    public void setUser(String user) {
+	this.user = user;
+    }
 
-	public void setImage(String image) {
-		this.image = image;
-	}
+    public String getPrivateKeyFile() {
+	return privateKeyFile;
+    }
 
-	public Integer getState() {
-		return state;
-	}
+    public void setPrivateKey(String privateKeyFile) {
+	this.privateKeyFile = privateKeyFile;
+    }
 
-	public void setState(Integer state) {
-		this.state = state;
-	}
+    public String getImage() {
+	return image;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((chefName == null) ? 0 : chefName.hashCode());
-		result = prime * result
-				+ ((hostname == null) ? 0 : hostname.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((ip == null) ? 0 : ip.hashCode());
-		return result;
-	}
+    public void setImage(String image) {
+	this.image = image;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Node other = (Node) obj;
-		if (chefName == null) {
-			if (other.chefName != null)
-				return false;
-		} else if (!chefName.equals(other.chefName))
-			return false;
-		if (hostname == null) {
-			if (other.hostname != null)
-				return false;
-		} else if (!hostname.equals(other.hostname))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (ip == null) {
-			if (other.ip != null)
-				return false;
-		} else if (!ip.equals(other.ip))
-			return false;
-		return true;
-	}
+    public Integer getState() {
+	return state;
+    }
 
-	@Override
-	public String toString() {
-		return "Node [id=" + id + ", ip=" + ip + ", hostname=" + hostname
-				+ ", chefName=" + chefName + "]";
-	}
-	
+    public void setState(Integer state) {
+	this.state = state;
+    }
+
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((chefName == null) ? 0 : chefName.hashCode());
+	result = prime * result + ((hostname == null) ? 0 : hostname.hashCode());
+	result = prime * result + ((id == null) ? 0 : id.hashCode());
+	result = prime * result + ((ip == null) ? 0 : ip.hashCode());
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Node other = (Node) obj;
+	if (chefName == null) {
+	    if (other.chefName != null)
+		return false;
+	} else if (!chefName.equals(other.chefName))
+	    return false;
+	if (hostname == null) {
+	    if (other.hostname != null)
+		return false;
+	} else if (!hostname.equals(other.hostname))
+	    return false;
+	if (id == null) {
+	    if (other.id != null)
+		return false;
+	} else if (!id.equals(other.id))
+	    return false;
+	if (ip == null) {
+	    if (other.ip != null)
+		return false;
+	} else if (!ip.equals(other.ip))
+	    return false;
+	return true;
+    }
+
+    @Override
+    public String toString() {
+	return "Node [id=" + id + ", ip=" + ip + ", hostname=" + hostname + ", chefName=" + chefName + "]";
+    }
+
 }

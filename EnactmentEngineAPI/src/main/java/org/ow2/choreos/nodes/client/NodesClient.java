@@ -1,6 +1,5 @@
 package org.ow2.choreos.nodes.client;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,127 +23,125 @@ import org.ow2.choreos.nodes.datamodel.NodeCreationRequestSpec;
 import org.ow2.choreos.nodes.datamodel.NodeRestRepresentation;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
 
-
 /**
  * Access Node Pool Manager functionalities through the REST API.
  * 
- * The user of <code>NPMClient</code> does not need to worry with the REST communication.
+ * The user of <code>NPMClient</code> does not need to worry with the REST
+ * communication.
  * 
  * @author leonardo
- *
+ * 
  */
 public class NodesClient implements NodePoolManager {
 
-	private String host; 
+    private String host;
 
-	/**
-	 * 
-	 * @param host ex: 'http://localhost:9100/deploymentmanager'
-	 * 
-	 */
-	public NodesClient(String host) {
-		
-		this.host = host;
+    /**
+     * 
+     * @param host
+     *            ex: 'http://localhost:9100/deploymentmanager'
+     * 
+     */
+    public NodesClient(String host) {
+
+	this.host = host;
+    }
+
+    private WebClient setupClient() {
+
+	WebClient client = WebClient.create(host);
+
+	// remove time out
+	// not proud of it!
+	HTTPConduit http = (HTTPConduit) WebClient.getConfig(client).getConduit();
+	HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
+	httpClientPolicy.setConnectionTimeout(0);// indefined
+	httpClientPolicy.setReceiveTimeout(0);// indefined
+	http.setClient(httpClientPolicy);
+
+	return client;
+    }
+
+    @Override
+    public Node createNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException {
+
+	WebClient client = setupClient();
+	client.path("nodes");
+	client.type(MediaType.APPLICATION_XML);
+	NodeCreationRequestSpec request = new NodeCreationRequestSpec(node, resourceImpact);
+	NodeRestRepresentation nodeRest = null;
+
+	try {
+	    nodeRest = client.post(request, NodeRestRepresentation.class);
+	} catch (WebApplicationException e) {
+	    throw new NodeNotCreatedException(node.getId());
 	}
 
-	private WebClient setupClient() {
-		
-		WebClient client = WebClient.create(host);
-		
-		// remove time out
-		// not proud of it!
-		HTTPConduit http = (HTTPConduit)WebClient.getConfig(client).getConduit();
-		HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
-		httpClientPolicy.setConnectionTimeout(0);//indefined
-		httpClientPolicy.setReceiveTimeout(0);//indefined
-		http.setClient(httpClientPolicy);
-		
-		return client;
-	}
-	
-	@Override
-	public Node createNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException {
+	return new Node(nodeRest);
+    }
 
-		WebClient client = setupClient();
-		client.path("nodes");   	
-		client.type(MediaType.APPLICATION_XML);
-		NodeCreationRequestSpec request = new NodeCreationRequestSpec(node, resourceImpact);
-		NodeRestRepresentation nodeRest = null;
+    @Override
+    public List<Node> getNodes() {
+	throw new NotImplementedException();
+    }
 
-        try {
-        	nodeRest = client.post(request, NodeRestRepresentation.class);
-        } catch (WebApplicationException e) {
-        	throw new NodeNotCreatedException(node.getId());
-        }
-        
-        return new Node(nodeRest);
-	}
-	
+    @Override
+    public Node getNode(String nodeId) throws NodeNotFoundException {
 
-	
-	@Override
-	public List<Node> getNodes() {
-		throw new NotImplementedException();
+	WebClient client = setupClient();
+	client.path("nodes/" + nodeId);
+	NodeRestRepresentation nodeRest = null;
+
+	try {
+	    nodeRest = client.get(NodeRestRepresentation.class);
+	} catch (WebApplicationException e) {
+	    throw new NodeNotFoundException(nodeId);
 	}
 
-	@Override
-	public Node getNode(String nodeId) throws NodeNotFoundException {
+	return new Node(nodeRest);
+    }
 
-		WebClient client = setupClient();
-		client.path("nodes/" + nodeId);
-		NodeRestRepresentation nodeRest = null;
-		
-		try {
-			nodeRest = client.get(NodeRestRepresentation.class);
-		} catch (WebApplicationException e) {
-			throw new NodeNotFoundException(nodeId);
-		}
-		
-		return new Node(nodeRest);
+    @Override
+    public void destroyNode(String nodeId) throws NodeNotDestroyed, NodeNotFoundException {
+
+	throw new NotImplementedException();
+    }
+
+    @Override
+    public void upgradeNode(String nodeId) throws NodeNotUpgradedException {
+	WebClient client = setupClient();
+	client.path("nodes");
+	client.path(nodeId);
+	client.path("upgrade");
+	Response response = client.post(null);
+
+	if (response.getStatus() != 200) {
+	    throw new NodeNotUpgradedException(nodeId);
+	}
+    }
+
+    @Override
+    public List<Node> applyConfig(Config config) throws ConfigNotAppliedException {
+
+	WebClient client = setupClient();
+	client.path("nodes/configs");
+	NodeRestRepresentation nodeRest = null;
+
+	try {
+	    nodeRest = client.post(config, NodeRestRepresentation.class);
+	} catch (WebApplicationException e) {
+	    throw new ConfigNotAppliedException(config.getName());
 	}
 
-	@Override
-	public void destroyNode(String nodeId) throws NodeNotDestroyed,
-			NodeNotFoundException {
+	List<Node> resultList = new ArrayList<Node>();
+	resultList.add(new Node(nodeRest));
+	return resultList;
+    }
 
-		throw new NotImplementedException();
-	}
-	
-	@Override
-	public void upgradeNode(String nodeId) throws NodeNotUpgradedException {
-		WebClient client = setupClient();
-        client.path("nodes");
-        client.path(nodeId);
-        client.path("upgrade");
-        Response response = client.post(null);
+    @Override
+    public void destroyNodes() throws NodeNotDestroyed {
 
-        if (response.getStatus() != 200) {
-        	throw new NodeNotUpgradedException(nodeId);
-        }
-	}
-	
-	@Override
-	public List<Node> applyConfig(Config config) throws ConfigNotAppliedException {
-
-		WebClient client = setupClient();
-		client.path("nodes/configs");   	
-    	NodeRestRepresentation nodeRest = null;
-    	
-    	try {
-    		nodeRest = client.post(config, NodeRestRepresentation.class);
-    	} catch (WebApplicationException e) {
-    		throw new ConfigNotAppliedException(config.getName());
-    	}
-
-    	List<Node> resultList = new ArrayList<Node>();
-    	resultList.add(new Node(nodeRest));
-        return resultList;
-	}
-
-	@Override
-	public void destroyNodes() throws NodeNotDestroyed {
-		
-		throw new NotImplementedException();
-	}
+	throw new NotImplementedException();
+    }
 
 }
