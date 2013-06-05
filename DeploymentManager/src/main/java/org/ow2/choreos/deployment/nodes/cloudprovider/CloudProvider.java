@@ -8,28 +8,27 @@ import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
 
-
 /**
- * Provides access to cloud service functions to create nodes on the cloud 
+ * Provides access to cloud service functions to create nodes on the cloud
  * 
- * Each specific provider (e.g. AmazonWS) must have an implementing class 
- * of this interface.
+ * Each specific provider (e.g. AmazonWS) must have an implementing class of
+ * this interface.
  * 
  * @author leonardo, felps, furtado
  * 
  */
 public interface CloudProvider {
 
-	public String getProviderName();
-	
-	public Node createNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException;
+    public String getProviderName();
 
-	public Node getNode(String nodeId) throws NodeNotFoundException;
+    public Node createNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException;
 
-	public List<Node> getNodes();
+    public Node getNode(String nodeId) throws NodeNotFoundException;
 
-	public void destroyNode(String id) throws NodeNotDestroyed, NodeNotFoundException;
+    public List<Node> getNodes();
 
-	public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException;
+    public void destroyNode(String id) throws NodeNotDestroyed, NodeNotFoundException;
+
+    public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException;
 
 }

@@ -7,7 +7,6 @@ import org.ow2.choreos.deployment.services.rest.ServicesResource;
 import org.ow2.choreos.rest.RESTServer;
 import org.ow2.choreos.utils.LogConfigurator;
 
-
 /**
  * Stand alone server that makes the REST API available to clients.
  * 
@@ -16,36 +15,36 @@ import org.ow2.choreos.utils.LogConfigurator;
  */
 public class DeploymentManagerServer {
 
-	public final String NAME = "Deployment Manager";
-	public static String URL;
-	private RESTServer restServer;
-	
+    public final String NAME = "Deployment Manager";
+    public static String URL;
+    private RESTServer restServer;
+
     static {
-    	String port = Configuration.get("DEPLOYMENT_MANAGER_PORT");
-    	URL = "http://0.0.0.0:" + port + "/deploymentmanager/";
-    	System.out.println(URL);
+	String port = Configuration.get("DEPLOYMENT_MANAGER_PORT");
+	URL = "http://0.0.0.0:" + port + "/deploymentmanager/";
+	System.out.println(URL);
     }
 
     public DeploymentManagerServer() {
-    
-    	this.restServer = new RESTServer(NAME, URL, new Class[]{
-    			NodesResource.class, ConfigsResource.class, ServicesResource.class});
+
+	this.restServer = new RESTServer(NAME, URL, new Class[] { NodesResource.class, ConfigsResource.class,
+		ServicesResource.class });
     }
-    
+
     public void start() {
-    	
-    	this.restServer.start();
+
+	this.restServer.start();
     }
-    
+
     public void stop() {
-    	
-    	this.restServer.stop();
+
+	this.restServer.stop();
     }
-    
-	public static void main(String[] args) {
-		
-    	LogConfigurator.configLog();
-    	DeploymentManagerServer server = new DeploymentManagerServer();
-    	server.start();
-	}
+
+    public static void main(String[] args) {
+
+	LogConfigurator.configLog();
+	DeploymentManagerServer server = new DeploymentManagerServer();
+	server.start();
+    }
 }

@@ -17,44 +17,45 @@ import org.ow2.choreos.utils.LogConfigurator;
 
 @Category(IntegrationTest.class)
 public class BaseTest {
-	
-	protected static String nodePoolManagerHost;
-	private static DeploymentManagerServer server;
-	
+
+    protected static String nodePoolManagerHost;
+    private static DeploymentManagerServer server;
+
     @BeforeClass
     public static void startServer() throws Exception {
-    	
-    	LogConfigurator.configLog();
-		server = new DeploymentManagerServer();
-		server.start();
-        nodePoolManagerHost = DeploymentManagerServer.URL;
+
+	LogConfigurator.configLog();
+	server = new DeploymentManagerServer();
+	server.start();
+	nodePoolManagerHost = DeploymentManagerServer.URL;
     }
 
     @AfterClass
     public static void stopServer() throws UnsupportedEncodingException {
-    	
-    	server.stop();
+
+	server.stop();
     }
 
     protected static NodeRestRepresentation getNodeFromResponse(Response response) {
-    	
-        String location = (String) response.getMetadata().get("Location").get(0);
-        WebClient webClient = WebClient.create(location);
-        return webClient.get(NodeRestRepresentation.class);
+
+	String location = (String) response.getMetadata().get("Location").get(0);
+	WebClient webClient = WebClient.create(location);
+	return webClient.get(NodeRestRepresentation.class);
     }
-    
+
     /**
      * Verify if <code>uri</code> matches http://localhost:port/nodes/.+
+     * 
      * @param uri
      * @return
      */
     protected boolean isNodeLocation(String uri) {
-    	
-    	String regex = DeploymentManagerServer.URL + "nodes/.+";
-    	Pattern pattern = Pattern.compile(regex);
-    	Matcher matcher = pattern.matcher(uri);
-    	
-    	return matcher.matches();
+
+	String regex = DeploymentManagerServer.URL + "nodes/.+";
+	Pattern pattern = Pattern.compile(regex);
+	Matcher matcher = pattern.matcher(uri);
+
+	return matcher.matches();
     }
 
 }

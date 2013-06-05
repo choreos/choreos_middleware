@@ -18,169 +18,156 @@ import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryTypes;
 
 public class RecipeBuilderTest {
 
-	private static String RECIPES_FOLDER = "chef/recipes";
+    private static String RECIPES_FOLDER = "chef/recipes";
 
-	private RecipeBuilderImpl recipeBuilder;
-	private static DeployableServiceSpec serviceSpec;
-	private static String id;
-	private static String codeLocationURI = "https://github.com/downloads/choreos/choreos_middleware/myServletWAR.war";
-	private static ResourceImpact impact = new ResourceImpact();
-	
-	private static final File DEST_DIR = new File(
-			"src/main/resources/chef/recipes");
+    private RecipeBuilderImpl recipeBuilder;
+    private static DeployableServiceSpec serviceSpec;
+    private static String id;
+    private static String codeLocationURI = "https://github.com/downloads/choreos/choreos_middleware/myServletWAR.war";
+    private static ResourceImpact impact = new ResourceImpact();
 
-	@BeforeClass
-	public static void setUpBeforeClass() {
+    private static final File DEST_DIR = new File("src/main/resources/chef/recipes");
 
-		deleteDirectory();
+    @BeforeClass
+    public static void setUpBeforeClass() {
 
-		impact.setCpu("low");
-		impact.setIo("low");
-		impact.setMemory(MemoryTypes.SMALL);
-		impact.setRegion("BR");
+	deleteDirectory();
 
-		serviceSpec = new DeployableServiceSpec();
-		id = serviceSpec.getUUID();
-		serviceSpec.setPackageUri(codeLocationURI);
-		serviceSpec.setPackageType(PackageType.TOMCAT);
-		serviceSpec.setResourceImpact(impact);
-	}
+	impact.setCpu("low");
+	impact.setIo("low");
+	impact.setMemory(MemoryTypes.SMALL);
+	impact.setRegion("BR");
 
-	@Before
-	public void setUp() {
-		recipeBuilder = new RecipeBuilderImpl("war");
-	}
+	serviceSpec = new DeployableServiceSpec();
+	id = serviceSpec.getUUID();
+	serviceSpec.setPackageUri(codeLocationURI);
+	serviceSpec.setPackageType(PackageType.TOMCAT);
+	serviceSpec.setResourceImpact(impact);
+    }
 
-	private static File getResource(String resource) {
+    @Before
+    public void setUp() {
+	recipeBuilder = new RecipeBuilderImpl("war");
+    }
 
-		String resourcesPath = "src/main/resources/";
-		return new File(resourcesPath + resource);
-	}
+    private static File getResource(String resource) {
 
-	@Test
-	public void shouldCreateACopyOfTheFilesInTheTemplate() throws IOException {
+	String resourcesPath = "src/main/resources/";
+	return new File(resourcesPath + resource);
+    }
 
-		File srcFolder = new File("src/main/resources/chef/"
-				+ "service-deploy-recipe-template");
+    @Test
+    public void shouldCreateACopyOfTheFilesInTheTemplate() throws IOException {
 
-		String destPath = DEST_DIR.getAbsolutePath() + "/service"
-				+ serviceSpec.getUUID();
+	File srcFolder = new File("src/main/resources/chef/" + "service-deploy-recipe-template");
 
-		File destFolder = new File(destPath);
-		
-		recipeBuilder.copyRecipeTemplate(srcFolder, destFolder);
-		assertTemplateFolderWasCopied();
-	}
+	String destPath = DEST_DIR.getAbsolutePath() + "/service" + serviceSpec.getUUID();
 
-	private void assertTemplateFolderWasCopied() {
+	File destFolder = new File(destPath);
 
-		String[] extensions = { "rb" };
-		File directory = getResource(RECIPES_FOLDER + "/service" + id);
-		assertTrue((FileUtils.listFiles(directory, extensions, false)).size() > 0);
-	}
+	recipeBuilder.copyRecipeTemplate(srcFolder, destFolder);
+	assertTemplateFolderWasCopied();
+    }
 
-	@Test
-	public void shouldReplaceOcurrencesInMetadataRb() throws IOException {
+    private void assertTemplateFolderWasCopied() {
 
-		recipeBuilder.changeMetadataRb(serviceSpec,
-				"/service" + serviceSpec.getUUID() + "/metadata.rb");
-		assertAllOcurrencesInMetadataRbWereReplaced();
-	}
+	String[] extensions = { "rb" };
+	File directory = getResource(RECIPES_FOLDER + "/service" + id);
+	assertTrue((FileUtils.listFiles(directory, extensions, false)).size() > 0);
+    }
 
-	private void assertAllOcurrencesInMetadataRbWereReplaced()
-			throws IOException {
+    @Test
+    public void shouldReplaceOcurrencesInMetadataRb() throws IOException {
 
-		File fileLocation = getResource(RECIPES_FOLDER + "/service" + id
-				+ "/metadata.rb");
-		String fileData = FileUtils.readFileToString(fileLocation);
+	recipeBuilder.changeMetadataRb(serviceSpec, "/service" + serviceSpec.getUUID() + "/metadata.rb");
+	assertAllOcurrencesInMetadataRbWereReplaced();
+    }
 
-		assertTrue(fileData.contains("depends \"tomcat\""));
-		assertFalse(fileData.contains("$NAME"));
+    private void assertAllOcurrencesInMetadataRbWereReplaced() throws IOException {
 
-		// Ensures the remainder of the file is left untouched
-		assertTrue(fileData.contains("version"));
-	}
+	File fileLocation = getResource(RECIPES_FOLDER + "/service" + id + "/metadata.rb");
+	String fileData = FileUtils.readFileToString(fileLocation);
 
-	@Test
-	public void shouldReplaceOcurrencesInAttributesServerRb() throws Exception {
+	assertTrue(fileData.contains("depends \"tomcat\""));
+	assertFalse(fileData.contains("$NAME"));
 
-		recipeBuilder.changeAttributesDefaultRb(serviceSpec, "/service"
-				+ serviceSpec.getUUID() + "/attributes/default.rb");
-		assertAllOcurrencesWereReplacedInDefaultRb();
-	}
+	// Ensures the remainder of the file is left untouched
+	assertTrue(fileData.contains("version"));
+    }
 
-	private void assertAllOcurrencesWereReplacedInDefaultRb()
-			throws IOException {
-		File fileLocation = getResource(RECIPES_FOLDER + "/service" + id
-				+ "/attributes/default.rb");
-		String fileData = FileUtils.readFileToString(fileLocation);
+    @Test
+    public void shouldReplaceOcurrencesInAttributesServerRb() throws Exception {
 
-		// Ensure the ocurrences of $NAME were replaced with the service ID
-		assertTrue(fileData.contains(id));
-		assertFalse(fileData.contains("$NAME"));
+	recipeBuilder.changeAttributesDefaultRb(serviceSpec, "/service" + serviceSpec.getUUID()
+		+ "/attributes/default.rb");
+	assertAllOcurrencesWereReplacedInDefaultRb();
+    }
 
-		// Ensure the ocurrences of $WARFILE were replaced with war file name
-		String warFile = serviceSpec.getFileName();
-		assertTrue(fileData.contains(warFile));
-		assertFalse(fileData.contains("$WARFILE"));
+    private void assertAllOcurrencesWereReplacedInDefaultRb() throws IOException {
+	File fileLocation = getResource(RECIPES_FOLDER + "/service" + id + "/attributes/default.rb");
+	String fileData = FileUtils.readFileToString(fileLocation);
 
-		// Ensure the ocurrences of $URL were replaced with the code location
-		assertTrue(fileData.contains(codeLocationURI));
-		assertFalse(fileData.contains("$URL"));
+	// Ensure the ocurrences of $NAME were replaced with the service ID
+	assertTrue(fileData.contains(id));
+	assertFalse(fileData.contains("$NAME"));
 
-		// Ensures the remainder of the file is left untouched
-		assertTrue(fileData.contains("IMPORTANT DEVELOPMENT NOTICE:"));
-	}
+	// Ensure the ocurrences of $WARFILE were replaced with war file name
+	String warFile = serviceSpec.getFileName();
+	assertTrue(fileData.contains(warFile));
+	assertFalse(fileData.contains("$WARFILE"));
 
-	private void assertAllOcurrencesWereReplacedInDefaultRecipe()
-			throws IOException {
+	// Ensure the ocurrences of $URL were replaced with the code location
+	assertTrue(fileData.contains(codeLocationURI));
+	assertFalse(fileData.contains("$URL"));
 
-		File fileLocation = getResource(RECIPES_FOLDER + "/service" + id
-				+ "/recipes/war.rb");
-		String fileData = FileUtils.readFileToString(fileLocation);
+	// Ensures the remainder of the file is left untouched
+	assertTrue(fileData.contains("IMPORTANT DEVELOPMENT NOTICE:"));
+    }
 
-		// Ensure the ocurrences of $UUID were replaced with THIS_IS_A_TEST
-		assertTrue(fileData.contains(id));
-		assertFalse(fileData.contains("$NAME"));
+    private void assertAllOcurrencesWereReplacedInDefaultRecipe() throws IOException {
 
-		// Ensures the remainder of the file is left untouched
-		assertTrue(fileData.contains(" IMPORTANT DEVELOPMENT NOTICE:"));
-	}
+	File fileLocation = getResource(RECIPES_FOLDER + "/service" + id + "/recipes/war.rb");
+	String fileData = FileUtils.readFileToString(fileLocation);
 
-	@Test
-	public void shouldCreateFullRecipe() throws Exception {
-		deleteDirectory();
+	// Ensure the ocurrences of $UUID were replaced with THIS_IS_A_TEST
+	assertTrue(fileData.contains(id));
+	assertFalse(fileData.contains("$NAME"));
 
-		RecipeBundle recipe = recipeBuilder
-				.createServiceRecipeBundle(serviceSpec);
+	// Ensures the remainder of the file is left untouched
+	assertTrue(fileData.contains(" IMPORTANT DEVELOPMENT NOTICE:"));
+    }
 
-		assertTemplateFolderWasCopied();
-		assertAllOcurrencesInMetadataRbWereReplaced();
-		assertAllOcurrencesWereReplacedInDefaultRb();
-		assertAllOcurrencesWereReplacedInDefaultRecipe();
-		assertFilesAreAvailableInFolder(recipe);
-	}
+    @Test
+    public void shouldCreateFullRecipe() throws Exception {
+	deleteDirectory();
 
-	private void assertFilesAreAvailableInFolder(RecipeBundle recipe)
-			throws IOException {
+	RecipeBundle recipe = recipeBuilder.createServiceRecipeBundle(serviceSpec);
 
-		String fileData = FileUtils.readFileToString(new File(recipe
-				.getCookbookFolder() + "/" + recipe.getServiceRecipe().getCookbookName() + "/attributes/default.rb"));
+	assertTemplateFolderWasCopied();
+	assertAllOcurrencesInMetadataRbWereReplaced();
+	assertAllOcurrencesWereReplacedInDefaultRb();
+	assertAllOcurrencesWereReplacedInDefaultRecipe();
+	assertFilesAreAvailableInFolder(recipe);
+    }
 
+    private void assertFilesAreAvailableInFolder(RecipeBundle recipe) throws IOException {
 
-		// Ensure the ocurrences of $UUID were replaced with THIS_IS_A_TEST
-		assertTrue(fileData.contains(id));
-		assertFalse(fileData.contains("$NAME"));
+	String fileData = FileUtils.readFileToString(new File(recipe.getCookbookFolder() + "/"
+		+ recipe.getServiceRecipe().getCookbookName() + "/attributes/default.rb"));
 
-		// Ensures the remainder of the file is left untouched
-		assertTrue(fileData.contains(" IMPORTANT DEVELOPMENT NOTICE:"));
+	// Ensure the ocurrences of $UUID were replaced with THIS_IS_A_TEST
+	assertTrue(fileData.contains(id));
+	assertFalse(fileData.contains("$NAME"));
 
-	}
+	// Ensures the remainder of the file is left untouched
+	assertTrue(fileData.contains(" IMPORTANT DEVELOPMENT NOTICE:"));
 
-	private static void deleteDirectory() {
-		File fileLocation = getResource(RECIPES_FOLDER + "/service" + id);
-		if (fileLocation != null)
-			FileUtils.deleteQuietly(fileLocation);
-	}
+    }
+
+    private static void deleteDirectory() {
+	File fileLocation = getResource(RECIPES_FOLDER + "/service" + id);
+	if (fileLocation != null)
+	    FileUtils.deleteQuietly(fileLocation);
+    }
 
 }

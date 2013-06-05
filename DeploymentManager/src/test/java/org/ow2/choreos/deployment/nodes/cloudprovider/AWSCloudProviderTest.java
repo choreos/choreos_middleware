@@ -15,29 +15,29 @@ import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.CommandLineException;
 import org.ow2.choreos.utils.LogConfigurator;
 
-
 @Category(IntegrationTest.class)
 public class AWSCloudProviderTest {
-	
-	private final CloudProvider infra = new AWSCloudProvider();
+
+    private final CloudProvider infra = new AWSCloudProvider();
     private Node node = new Node();
     private ResourceImpact resourceImpact = new ResourceImpact();
 
     @Before
     public void SetUp() {
-    	LogConfigurator.configLog();
-        node.setImage("us-east-1/ami-ccf405a5");
-        Configuration.set("DEFAULT_PROVIDER", "");
+	LogConfigurator.configLog();
+	node.setImage("us-east-1/ami-ccf405a5");
+	Configuration.set("DEFAULT_PROVIDER", "");
     }
 
-	@Test
-    public void shouldCreateAndDeleteNode() throws NodeNotCreatedException, NodeNotDestroyed, NodeNotFoundException, CommandLineException, InterruptedException  {
-        
-        Node created = infra.createNode(node, resourceImpact);
-        System.out.println("created " + created);
-        assertTrue(created != null);
-        
-        infra.destroyNode(created.getId());
+    @Test
+    public void shouldCreateAndDeleteNode() throws NodeNotCreatedException, NodeNotDestroyed, NodeNotFoundException,
+	    CommandLineException, InterruptedException {
+
+	Node created = infra.createNode(node, resourceImpact);
+	System.out.println("created " + created);
+	assertTrue(created != null);
+
+	infra.destroyNode(created.getId());
     }
 
 }

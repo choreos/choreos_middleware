@@ -25,123 +25,120 @@ import com.jcraft.jsch.JSchException;
  */
 public class NodeUpgrader {
 
-	// it is not the time to one upgrade, but also the time waiting in the queue
-	private static final int UPGRADE_TIMEOUT = 30;
-	
-	private Logger logger = Logger.getLogger(NodeUpgrader.class);
+    // it is not the time to one upgrade, but also the time waiting in the queue
+    private static final int UPGRADE_TIMEOUT = 30;
 
-	// this executor is shared among multiple upgrade invocations to the same node
-	private ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+    private Logger logger = Logger.getLogger(NodeUpgrader.class);
 
-	/**
-	 * Runs chef-client in a given node
-	 * 
-	 * @param node
-	 * @throws NodeNotUpgradedException
-	 *             if chef-client ends in error or
-	 *             if could not connect into the node
-	 */
-	public void upgradeNodeConfiguration(Node node) throws NodeNotUpgradedException {
+    // this executor is shared among multiple upgrade invocations to the same
+    // node
+    private ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
 
-		SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-		ChefClientRunner runner = new ChefClientRunner(ssh, node.getId());
-		CompletionService<Boolean> myExecutor = 
-				new ExecutorCompletionService<Boolean>(singleThreadExecutor);
-		myExecutor.submit(runner);
-		
+    /**
+     * Runs chef-client in a given node
+     * 
+     * @param node
+     * @throws NodeNotUpgradedException
+     *             if chef-client ends in error or if could not connect into the
+     *             node
+     */
+    public void upgradeNodeConfiguration(Node node) throws NodeNotUpgradedException {
+
+	SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
+	ChefClientRunner runner = new ChefClientRunner(ssh, node.getId());
+	CompletionService<Boolean> myExecutor = new ExecutorCompletionService<Boolean>(singleThreadExecutor);
+	myExecutor.submit(runner);
+
+	try {
+	    Future<Boolean> taskCompleted = myExecutor.poll(UPGRADE_TIMEOUT, TimeUnit.MINUTES);
+	    if (taskCompleted != null) {
+		Boolean ok = taskCompleted.get();
+		if (ok != null && ok.booleanValue()) {
+		    logger.debug("Node " + node.getId() + " upgraded");
+		} else {
+		    fail(node);
+		}
+	    } else {
+		fail(node);
+	    }
+	} catch (InterruptedException e) {
+	    String message = "chef-client timed out on node " + node.toString();
+	    logger.error(message);
+	    throw new NodeNotUpgradedException(node.getId(), message);
+	} catch (ExecutionException e) {
+	    fail(node);
+	}
+    }
+
+    private void fail(Node node) throws NodeNotUpgradedException {
+	String message = "chef-client returned an error exit status on node " + node.toString();
+	logger.error(message);
+	throw new NodeNotUpgradedException(node.getId(), message);
+    }
+
+    /**
+     * Try to run chef client 5 times
+     * 
+     * This strategy is carried out since sometimes we try to ssh the VM when it
+     * is not ready yet.
+     * 
+     */
+    private class ChefClientRunner implements Callable<Boolean> {
+
+	SshUtil ssh;
+	String nodeId;
+	boolean ok = false;
+
+	public ChefClientRunner(SshUtil ssh, String nodeId) {
+	    this.ssh = ssh;
+	    this.nodeId = nodeId;
+	}
+
+	@Override
+	public Boolean call() throws Exception {
+
+	    logger.debug("upgrading node " + nodeId);
+
+	    String logFile = Configuration.get("CHEF_CLIENT_LOG");
+	    if (logFile == null || logFile.isEmpty()) {
+		logFile = "/tmp/chef-client.log";
+	    }
+
+	    final String CHEF_CLIENT_COMMAND = "sudo chef-client --logfile " + logFile;
+	    final int MAX_TRIALS = 5;
+	    final int SLEEPING_TIME = 5000;
+	    int trials = 0;
+	    ok = false;
+	    boolean stop = false;
+
+	    while (!ok && !stop) {
 		try {
-			Future<Boolean> taskCompleted = myExecutor.poll(UPGRADE_TIMEOUT, TimeUnit.MINUTES);
-			if (taskCompleted != null) {
-				Boolean ok = taskCompleted.get();
-				if (ok != null && ok.booleanValue()) {
-					logger.debug("Node " + node.getId() + " upgraded");
-				} else {
-					fail(node);
-				}
-			} else {
-				fail(node);
-			}
-		} catch (InterruptedException e) {
-			String message = "chef-client timed out on node "
-					+ node.toString();
-			logger.error(message);
-			throw new NodeNotUpgradedException(node.getId(), message);
-		} catch (ExecutionException e) {
-			fail(node);
+		    trials++;
+		    ssh.runCommand(CHEF_CLIENT_COMMAND);
+		    ok = true;
+		} catch (JSchException e) {
+		    if (trials >= MAX_TRIALS) {
+			stop = true;
+		    }
+		    sleep(SLEEPING_TIME);
+		} catch (SshCommandFailed e) {
+		    if (trials >= MAX_TRIALS) {
+			stop = true;
+		    }
+		    sleep(SLEEPING_TIME);
 		}
+	    }
+
+	    return ok;
 	}
 
-	private void fail(Node node) throws NodeNotUpgradedException {
-		String message = "chef-client returned an error exit status on node "
-				+ node.toString();
-		logger.error(message);
-		throw new NodeNotUpgradedException(node.getId(), message);
+	private void sleep(long time) {
+	    try {
+		Thread.sleep(time);
+	    } catch (InterruptedException e1) {
+		logger.error("Exception at sleeping, should not happen");
+	    }
 	}
-
-	/**
-	 * Try to run chef client 5 times
-	 * 
-	 * This strategy is carried out since sometimes we try to ssh the VM when it
-	 * is not ready yet.
-	 * 
-	 */
-	private class ChefClientRunner implements Callable<Boolean> {
-
-		SshUtil ssh;
-		String nodeId;
-		boolean ok = false;
-
-		public ChefClientRunner(SshUtil ssh, String nodeId) {
-			this.ssh = ssh;
-			this.nodeId = nodeId;
-		}
-
-		@Override
-		public Boolean call() throws Exception {
-			
-			logger.debug("upgrading node " + nodeId);
-
-			String logFile = Configuration.get("CHEF_CLIENT_LOG");
-			if (logFile == null || logFile.isEmpty()) {
-				logFile = "/tmp/chef-client.log";
-			}
-
-			final String CHEF_CLIENT_COMMAND = "sudo chef-client --logfile "
-					+ logFile;
-			final int MAX_TRIALS = 5;
-			final int SLEEPING_TIME = 5000;
-			int trials = 0;
-			ok = false;
-			boolean stop = false;
-
-			while (!ok && !stop) {
-				try {
-					trials++;
-					ssh.runCommand(CHEF_CLIENT_COMMAND);
-					ok = true;
-				} catch (JSchException e) {
-					if (trials >= MAX_TRIALS) {
-						stop = true;
-					}
-					sleep(SLEEPING_TIME);
-				} catch (SshCommandFailed e) {
-					if (trials >= MAX_TRIALS) {
-						stop = true;
-					}
-					sleep(SLEEPING_TIME);
-				}
-			}
-			
-			return ok;
-		}
-
-		private void sleep(long time) {
-			try {
-				Thread.sleep(time);
-			} catch (InterruptedException e1) {
-				logger.error("Exception at sleeping, should not happen");
-			}
-		}
-	}
+    }
 
 }

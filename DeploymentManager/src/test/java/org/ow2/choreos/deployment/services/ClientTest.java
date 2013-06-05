@@ -23,70 +23,69 @@ import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
 /**
- * This is the same that JARDeployTest,
- * but now using the REST API.
+ * This is the same that JARDeployTest, but now using the REST API.
  * 
  * @author leonardo
- *
+ * 
  */
 @Category(IntegrationTest.class)
 public class ClientTest {
 
-	public static final String JAR_LOCATION = "https://github.com/downloads/choreos/choreos_middleware/simplews.jar";
-	
-	private static String deploymentManagerHost;
-	private static DeploymentManagerServer server;
-	
-	private NodePoolManager npm;
-	private ServicesManager servicesManager;
+    public static final String JAR_LOCATION = "https://github.com/downloads/choreos/choreos_middleware/simplews.jar";
 
-	private WebClient client;
-	private DeployableServiceSpec spec = new DeployableServiceSpec();
+    private static String deploymentManagerHost;
+    private static DeploymentManagerServer server;
 
-	@BeforeClass
-	public static void configureLog() throws InterruptedException {
-		
-		LogConfigurator.configLog();
-		server = new DeploymentManagerServer();
-		server.start();
-        deploymentManagerHost = DeploymentManagerServer.URL;
-	}
-	
-	@Before
-	public void setUp() throws Exception {
-		
-		Configuration.set("BUS", "false");
-		
-		npm = new NodesClient(deploymentManagerHost);
-		servicesManager = new ServicesClient(deploymentManagerHost);
-		
-		spec.setPackageUri(JAR_LOCATION);
-		spec.setPackageType(PackageType.COMMAND_LINE);
-		spec.setEndpointName("");
-		spec.setPort(8042);
-	}
-	
-	@AfterClass
-	public static void stopServer() {
-		server.stop();
-	}
+    private NodePoolManager npm;
+    private ServicesManager servicesManager;
 
-	@Test
-	public void shouldDeployAWarServiceInANode() throws Exception {
+    private WebClient client;
+    private DeployableServiceSpec spec = new DeployableServiceSpec();
 
-		Service service = servicesManager.createService(spec);
-		
-		// now get the first instance
-		ServiceInstance instance = ((DeployableService) service).getInstances().get(0);
-		
-		String url = instance.getNativeUri();
-		System.out.println("Service at " + url);
-		npm.upgradeNode(instance.getNode().getId());
-		Thread.sleep(1000);
-		client = WebClient.create(url);
-		String body = client.get(String.class);
-		String excerpt = "hello, world";
-		assertTrue(body.contains(excerpt));
-	}
+    @BeforeClass
+    public static void configureLog() throws InterruptedException {
+
+	LogConfigurator.configLog();
+	server = new DeploymentManagerServer();
+	server.start();
+	deploymentManagerHost = DeploymentManagerServer.URL;
+    }
+
+    @Before
+    public void setUp() throws Exception {
+
+	Configuration.set("BUS", "false");
+
+	npm = new NodesClient(deploymentManagerHost);
+	servicesManager = new ServicesClient(deploymentManagerHost);
+
+	spec.setPackageUri(JAR_LOCATION);
+	spec.setPackageType(PackageType.COMMAND_LINE);
+	spec.setEndpointName("");
+	spec.setPort(8042);
+    }
+
+    @AfterClass
+    public static void stopServer() {
+	server.stop();
+    }
+
+    @Test
+    public void shouldDeployAWarServiceInANode() throws Exception {
+
+	Service service = servicesManager.createService(spec);
+
+	// now get the first instance
+	ServiceInstance instance = ((DeployableService) service).getInstances().get(0);
+
+	String url = instance.getNativeUri();
+	System.out.println("Service at " + url);
+	npm.upgradeNode(instance.getNode().getId());
+	Thread.sleep(1000);
+	client = WebClient.create(url);
+	String body = client.get(String.class);
+	String excerpt = "hello, world";
+	assertTrue(body.contains(excerpt));
+    }
 
 }

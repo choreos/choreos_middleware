@@ -32,176 +32,170 @@ import org.ow2.choreos.utils.Concurrency;
  * 
  */
 public class NPMImpl implements NodePoolManager {
-	
-	private Logger logger = Logger.getLogger(NPMImpl.class);
 
-	private CloudProvider cloudProvider;
-	private NodeRegistry nodeRegistry;
-	private NodeCreator nodeCreator;
-	private IdlePool idlePool;
+    private Logger logger = Logger.getLogger(NPMImpl.class);
 
-	public NPMImpl(CloudProvider provider) {
-		
-		int poolSize = 0;
+    private CloudProvider cloudProvider;
+    private NodeRegistry nodeRegistry;
+    private NodeCreator nodeCreator;
+    private IdlePool idlePool;
+
+    public NPMImpl(CloudProvider provider) {
+
+	int poolSize = 0;
+	try {
+	    poolSize = Integer.parseInt(Configuration.get("IDLE_POOL_SIZE"));
+	} catch (NumberFormatException e) {
+	    ; // no problem, poolSize is zero
+	}
+
+	cloudProvider = provider;
+	nodeRegistry = NodeRegistry.getInstance();
+	nodeCreator = new NodeCreator(cloudProvider, true);
+	idlePool = IdlePool.getInstance(poolSize, nodeCreator);
+    }
+
+    public NPMImpl(CloudProvider provider, NodeCreator creator, IdlePool pool) {
+	cloudProvider = provider;
+	nodeRegistry = NodeRegistry.getInstance();
+	nodeCreator = creator;
+	idlePool = pool;
+    }
+
+    @Override
+    public Node createNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException {
+
+	try {
+	    node = nodeCreator.create(node, resourceImpact);
+	    nodeRegistry.putNode(node);
+	    idlePool.fillPool(); // we want the pool to be always filled
+				 // whenever requests are coming
+	} catch (NPMException e1) {
+	    // if node creation has failed, let's retrieve a node from the pool
+	    // wait for a new node would take too much time!
+	    // TODO: maybe the failed node only took too much time to be ready
+	    // in such situation, this node could go to the pool!
+	    try {
+		logger.warn("*** Node creation failed, let's retrieve a node from the pool ***");
+		node = idlePool.retriveNode();
+		nodeRegistry.putNode(node);
+		idlePool.fillPool();
+	    } catch (NodeNotCreatedException e2) {
+		// OK, now we give up =/
+		throw new NodeNotCreatedException(node.getId());
+	    }
+	}
+	return node;
+    }
+
+    @Override
+    public List<Node> getNodes() {
+
+	if (this.cloudProvider.getProviderName() == FixedCloudProvider.FIXED_CLOUD_PROVIDER) {
+	    return this.cloudProvider.getNodes();
+	} else {
+	    return nodeRegistry.getNodes();
+	}
+    }
+
+    @Override
+    public Node getNode(String nodeId) throws NodeNotFoundException {
+	if (this.cloudProvider.getProviderName() == FixedCloudProvider.FIXED_CLOUD_PROVIDER) {
+	    return this.cloudProvider.getNode(nodeId);
+	} else {
+	    return nodeRegistry.getNode(nodeId);
+	}
+    }
+
+    @Override
+    public List<Node> applyConfig(Config config) throws ConfigNotAppliedException {
+
+	NodePoolManager restrictedNPM = new RestrictedNPM(this);
+	NodeSelector selector = NodeSelectorFactory.getInstance();
+	List<Node> nodes = null;
+	try {
+	    nodes = selector.selectNodes(config, restrictedNPM);
+	    logger.info("Selected nodes to " + config.getName() + ": " + nodes);
+	} catch (NodeNotSelectedException e) {
+	    throw new ConfigNotAppliedException(config.getName());
+	}
+
+	if (nodes == null || nodes.isEmpty()) {
+	    throw new ConfigNotAppliedException(config.getName());
+	}
+
+	String cookbook = ConfigToChef.getCookbookNameFromConfigName(config.getName());
+
+	String recipe = ConfigToChef.getRecipeNameFromConfigName(config.getName());
+
+	for (Node node : nodes) {
+	    applyConfig(config, node, cookbook, recipe);
+	}
+
+	return nodes;
+    }
+
+    private void applyConfig(Config config, Node node, String cookbook, String recipe) throws ConfigNotAppliedException {
+	final int TRIALS = 3;
+	final int SLEEP_TIME = 1000;
+	int step = 0;
+	boolean ok = false;
+
+	while (!ok) {
+	    try {
+		RecipeApplier recipeApplyer = new RecipeApplier();
+		recipeApplyer.applyRecipe(node, cookbook, recipe);
+		ok = true;
+	    } catch (ConfigNotAppliedException e) {
 		try {
-			poolSize = Integer.parseInt(Configuration.get("IDLE_POOL_SIZE"));
-		} catch (NumberFormatException e) {
-			; // no problem, poolSize is zero
+		    Thread.sleep(SLEEP_TIME);
+		} catch (InterruptedException e1) {
+		    logger.error("Exception at sleeping!", e1);
 		}
-		
-		cloudProvider = provider;
-		nodeRegistry = NodeRegistry.getInstance();
-		nodeCreator = new NodeCreator(cloudProvider, true);
-		idlePool = IdlePool.getInstance(poolSize, nodeCreator);
+		step++;
+		if (step > TRIALS)
+		    throw new ConfigNotAppliedException(config.getName());
+	    }
 	}
-	
-	public NPMImpl(CloudProvider provider, NodeCreator creator, IdlePool pool) {
-		cloudProvider = provider;
-		nodeRegistry = NodeRegistry.getInstance();
-		nodeCreator = creator;
-		idlePool = pool;
-	}
+    }
 
-	@Override
-	public Node createNode(Node node, ResourceImpact resourceImpact)
-			throws NodeNotCreatedException {
+    @Override
+    public void upgradeNode(String nodeId) throws NodeNotUpgradedException, NodeNotFoundException {
 
-		try {
-			node = nodeCreator.create(node, resourceImpact);
-			nodeRegistry.putNode(node);
-			idlePool.fillPool(); // we want the pool to be always filled whenever requests are coming
-		} catch (NPMException e1) {
-			// if node creation has failed, let's retrieve a node from the pool
-			// wait for a new node would take too much time!
-			// TODO: maybe the failed node only took too much time to be ready
-			// in such situation, this node could go to the pool!
-			try {
-				logger.warn("*** Node creation failed, let's retrieve a node from the pool ***");
-				node = idlePool.retriveNode();
-				nodeRegistry.putNode(node);
-				idlePool.fillPool();
-			} catch (NodeNotCreatedException e2) {
-				// OK, now we give up =/
-				throw new NodeNotCreatedException(node.getId());
-			}
-		}
-		return node;
+	Node node = this.getNode(nodeId);
+	NodeUpgrader upgrader = NodeUpgraderFactory.getInstance(nodeId);
+	upgrader.upgradeNodeConfiguration(node);
+    }
+
+    @Override
+    public void destroyNode(String nodeId) throws NodeNotDestroyed, NodeNotFoundException {
+
+	this.cloudProvider.destroyNode(nodeId);
+	this.nodeRegistry.deleteNode(nodeId);
+    }
+
+    @Override
+    public void destroyNodes() throws NodeNotDestroyed {
+
+	List<Thread> trds = new ArrayList<Thread>();
+	List<NodeDestroyer> destroyers = new ArrayList<NodeDestroyer>();
+
+	for (Node node : this.getNodes()) {
+	    NodeDestroyer destroyer = new NodeDestroyer(node, this.cloudProvider);
+	    Thread trd = new Thread(destroyer);
+	    destroyers.add(destroyer);
+	    trds.add(trd);
+	    trd.start();
 	}
 
-	@Override
-	public List<Node> getNodes() {
-		
-		if (this.cloudProvider.getProviderName() == FixedCloudProvider.FIXED_CLOUD_PROVIDER) {
-			return this.cloudProvider.getNodes();
-		} else {
-			return nodeRegistry.getNodes();
-		}
+	Concurrency.waitThreads(trds);
+
+	for (NodeDestroyer destroyer : destroyers) {
+	    if (destroyer.isOK()) {
+		this.nodeRegistry.deleteNode(destroyer.getNode().getId());
+	    } else {
+		throw new NodeNotDestroyed(destroyer.getNode().getId());
+	    }
 	}
-
-	@Override
-	public Node getNode(String nodeId) throws NodeNotFoundException {
-		if (this.cloudProvider.getProviderName() == FixedCloudProvider.FIXED_CLOUD_PROVIDER) {
-			return this.cloudProvider.getNode(nodeId);
-		} else {
-			return nodeRegistry.getNode(nodeId);
-		}
-	}
-
-	@Override
-	public List<Node> applyConfig(Config config)
-			throws ConfigNotAppliedException {
-
-		NodePoolManager restrictedNPM = new RestrictedNPM(this);
-		NodeSelector selector = NodeSelectorFactory.getInstance();
-		List<Node> nodes = null;
-		try {
-			nodes = selector.selectNodes(config, restrictedNPM);
-			logger.info("Selected nodes to " + config.getName() + ": " + nodes);
-		} catch (NodeNotSelectedException e) {
-			throw new ConfigNotAppliedException(config.getName());
-		}
-
-		if (nodes == null || nodes.isEmpty()) {
-			throw new ConfigNotAppliedException(config.getName());
-		}
-
-		String cookbook = ConfigToChef.getCookbookNameFromConfigName(config
-				.getName());
-		
-		String recipe = ConfigToChef.getRecipeNameFromConfigName(config
-				.getName());
-
-		for (Node node : nodes) {
-			applyConfig(config, node, cookbook, recipe);
-		}
-
-		return nodes;
-	}
-
-	private void applyConfig(Config config, Node node, String cookbook,
-			String recipe) throws ConfigNotAppliedException {
-		final int TRIALS = 3;
-		final int SLEEP_TIME = 1000;
-		int step = 0;
-		boolean ok = false;
-
-		while (!ok) {
-			try {
-				RecipeApplier recipeApplyer = new RecipeApplier();
-				recipeApplyer.applyRecipe(node, cookbook, recipe);
-				ok = true;
-			} catch (ConfigNotAppliedException e) {
-				try {
-					Thread.sleep(SLEEP_TIME);
-				} catch (InterruptedException e1) {
-					logger.error("Exception at sleeping!", e1);
-				}
-				step++;
-				if (step > TRIALS)
-					throw new ConfigNotAppliedException(config.getName());
-			}
-		}
-	}
-
-	@Override
-	public void upgradeNode(String nodeId) throws NodeNotUpgradedException,
-			NodeNotFoundException {
-
-		Node node = this.getNode(nodeId);
-		NodeUpgrader upgrader = NodeUpgraderFactory.getInstance(nodeId);
-		upgrader.upgradeNodeConfiguration(node);
-	}
-
-	@Override
-	public void destroyNode(String nodeId) throws NodeNotDestroyed,
-			NodeNotFoundException {
-
-		this.cloudProvider.destroyNode(nodeId);
-		this.nodeRegistry.deleteNode(nodeId);
-	}
-
-	@Override
-	public void destroyNodes() throws NodeNotDestroyed {
-
-		List<Thread> trds = new ArrayList<Thread>();
-		List<NodeDestroyer> destroyers = new ArrayList<NodeDestroyer>();
-
-		for (Node node : this.getNodes()) {
-			NodeDestroyer destroyer = new NodeDestroyer(node, this.cloudProvider);
-			Thread trd = new Thread(destroyer);
-			destroyers.add(destroyer);
-			trds.add(trd);
-			trd.start();
-		}
-
-		Concurrency.waitThreads(trds);
-
-		for (NodeDestroyer destroyer : destroyers) {
-			if (destroyer.isOK()) {
-				this.nodeRegistry.deleteNode(destroyer.getNode().getId());
-			} else {
-				throw new NodeNotDestroyed(destroyer.getNode().getId());
-			}
-		}
-	}
+    }
 }

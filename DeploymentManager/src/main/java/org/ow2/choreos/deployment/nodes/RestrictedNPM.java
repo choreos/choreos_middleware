@@ -16,60 +16,56 @@ import org.ow2.choreos.services.datamodel.ResourceImpact;
  * Allows only the createNode, getNodes, and getNode operations.
  * 
  * @author leonardo
- *
+ * 
  */
 public class RestrictedNPM implements NodePoolManager {
 
-	public NodePoolManager npm;
-	
-	public RestrictedNPM(NodePoolManager npm) {
-		this.npm = npm;
-	}
-	
-	@Override
-	public Node createNode(Node node, ResourceImpact resourceImpact)
-			throws NodeNotCreatedException {
+    public NodePoolManager npm;
 
-		return this.npm.createNode(node, resourceImpact);
-	}
+    public RestrictedNPM(NodePoolManager npm) {
+	this.npm = npm;
+    }
 
-	@Override
-	public List<Node> getNodes() {
+    @Override
+    public Node createNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException {
 
-		return this.npm.getNodes();
-	}
+	return this.npm.createNode(node, resourceImpact);
+    }
 
-	@Override
-	public Node getNode(String nodeId) throws NodeNotFoundException {
+    @Override
+    public List<Node> getNodes() {
 
-		return this.npm.getNode(nodeId);
-	}
+	return this.npm.getNodes();
+    }
 
-	@Override
-	public void destroyNode(String nodeId) throws NodeNotDestroyed,
-			NodeNotFoundException {
+    @Override
+    public Node getNode(String nodeId) throws NodeNotFoundException {
 
-		throw new UnsupportedOperationException();
-	}
+	return this.npm.getNode(nodeId);
+    }
 
-	@Override
-	public void destroyNodes() throws NodeNotDestroyed {
+    @Override
+    public void destroyNode(String nodeId) throws NodeNotDestroyed, NodeNotFoundException {
 
-		throw new UnsupportedOperationException();
-	}
+	throw new UnsupportedOperationException();
+    }
 
-	@Override
-	public void upgradeNode(String nodeId) throws NodeNotUpgradedException,
-			NodeNotFoundException {
+    @Override
+    public void destroyNodes() throws NodeNotDestroyed {
 
-		throw new UnsupportedOperationException();
-	}
+	throw new UnsupportedOperationException();
+    }
 
-	@Override
-	public List<Node> applyConfig(Config config)
-			throws ConfigNotAppliedException {
-		
-		throw new UnsupportedOperationException();
-	}
-	
+    @Override
+    public void upgradeNode(String nodeId) throws NodeNotUpgradedException, NodeNotFoundException {
+
+	throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public List<Node> applyConfig(Config config) throws ConfigNotAppliedException {
+
+	throw new UnsupportedOperationException();
+    }
+
 }

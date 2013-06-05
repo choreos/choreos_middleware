@@ -26,43 +26,43 @@ import org.ow2.choreos.utils.LogConfigurator;
 @Category(IntegrationTest.class)
 public class JARWithBusDeployTest {
 
-	public static final String JAR_LOCATION = "http://valinhos.ime.usp.br:54080/services/airline-service.jar";
-	
-	private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
-	private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-	private ServicesManager servicesManager = new ServicesManagerImpl(npm);
+    public static final String JAR_LOCATION = "http://valinhos.ime.usp.br:54080/services/airline-service.jar";
 
-	private WebClient client;
-	private DeployableServiceSpec spec = new DeployableServiceSpec();
-	
-	@BeforeClass
-	public static void configureLog() {
-		LogConfigurator.configLog();
-	}
-	
-	@Before
-	public void setUp() {
-		
-		spec.setPackageUri(JAR_LOCATION);
-		spec.setPackageType(PackageType.COMMAND_LINE);
-		spec.setEndpointName("airline");
-		spec.setPort(1234);
-	}
+    private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
+    private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
+    private ServicesManager servicesManager = new ServicesManagerImpl(npm);
 
-	@Test
-	public void shouldDeployAJarServiceInANode() throws Exception {
+    private WebClient client;
+    private DeployableServiceSpec spec = new DeployableServiceSpec();
 
-		DeployableService service = servicesManager.createService(spec);
-		ServiceInstance instance = service.getInstances().get(0);
-		npm.upgradeNode(instance.getNode().getId());
-		Thread.sleep(1000);
+    @BeforeClass
+    public static void configureLog() {
+	LogConfigurator.configLog();
+    }
 
-		String proxified = instance.getBusUri(ServiceType.SOAP);
-		assertNotNull(proxified);
-		System.out.println("Profixified at " + proxified);
-		String wsdl = proxified.replaceAll("/$", "").concat("?wsdl");
-		client = WebClient.create(wsdl);
-		Response response = client.get();
-		assertEquals(200, response.getStatus());
-	}
+    @Before
+    public void setUp() {
+
+	spec.setPackageUri(JAR_LOCATION);
+	spec.setPackageType(PackageType.COMMAND_LINE);
+	spec.setEndpointName("airline");
+	spec.setPort(1234);
+    }
+
+    @Test
+    public void shouldDeployAJarServiceInANode() throws Exception {
+
+	DeployableService service = servicesManager.createService(spec);
+	ServiceInstance instance = service.getInstances().get(0);
+	npm.upgradeNode(instance.getNode().getId());
+	Thread.sleep(1000);
+
+	String proxified = instance.getBusUri(ServiceType.SOAP);
+	assertNotNull(proxified);
+	System.out.println("Profixified at " + proxified);
+	String wsdl = proxified.replaceAll("/$", "").concat("?wsdl");
+	client = WebClient.create(wsdl);
+	Response response = client.get();
+	assertEquals(200, response.getStatus());
+    }
 }

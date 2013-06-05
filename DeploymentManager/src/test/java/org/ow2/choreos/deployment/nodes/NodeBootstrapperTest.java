@@ -15,49 +15,47 @@ import org.ow2.choreos.services.datamodel.ResourceImpact;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
-
 /**
  * Before run this test, restore your VM to a snapshot before the bootstrap
  * 
- * If the machine is already bootstrapped the test must still pass,
- * but it will not properly test the system
+ * If the machine is already bootstrapped the test must still pass, but it will
+ * not properly test the system
  * 
  * @author leonardo
- *
+ * 
  */
 @Category(IntegrationTest.class)
 public class NodeBootstrapperTest {
-    
-	protected Node node;
-	
-	@Before
-	public void setUp() {
-		LogConfigurator.configLog();
-	}
-	
-	/**
-	 * Beware, this test will leave the node bootstrapped
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void shouldLeaveNodeBootstraped() throws Exception {
 
-		CloudProvider cp = CloudProviderFactory.getInstance(Configuration.get("CLOUD_PROVIDER"));
-		node = cp.createOrUseExistingNode(new Node(), new ResourceImpact());
-		System.out.println(node);
+    protected Node node;
 
-		BootstrapChecker checker = new BootstrapChecker(); 
-		if (!checker.isBootstrapped(node)) {
-			System.out.println("Going to bootstrap the node");
-			NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
-			bootstrapper.bootstrapNode();
-			System.out.println("Checking if bootstrap was OK");
-			assertTrue(checker.isBootstrapped(node));
-		} else {
-			System.out.println("Node was already bootstrapped");
-		}
+    @Before
+    public void setUp() {
+	LogConfigurator.configLog();
+    }
+
+    /**
+     * Beware, this test will leave the node bootstrapped
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void shouldLeaveNodeBootstraped() throws Exception {
+
+	CloudProvider cp = CloudProviderFactory.getInstance(Configuration.get("CLOUD_PROVIDER"));
+	node = cp.createOrUseExistingNode(new Node(), new ResourceImpact());
+	System.out.println(node);
+
+	BootstrapChecker checker = new BootstrapChecker();
+	if (!checker.isBootstrapped(node)) {
+	    System.out.println("Going to bootstrap the node");
+	    NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
+	    bootstrapper.bootstrapNode();
+	    System.out.println("Checking if bootstrap was OK");
+	    assertTrue(checker.isBootstrapped(node));
+	} else {
+	    System.out.println("Node was already bootstrapped");
 	}
-        
-    
+    }
+
 }

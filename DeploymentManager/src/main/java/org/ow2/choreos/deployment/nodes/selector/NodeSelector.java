@@ -9,17 +9,18 @@ import org.ow2.choreos.nodes.datamodel.Node;
 /**
  * Selects a node to apply a given configuration
  * 
- * The selection can consider functional requirements, which is provided by <code>config.name</code>
- * and non-functional requirements, which is provided by <config>config.resourceImpact</code>
- * Implementing classes must receive a NodePoolManager to retrieve nodes OR create new nodes
- * (the use of other operations of NodePoolManager are not allowed).
- * NodeSelectors are always accessed as singletons.
- * Implementing class must consider concurrent access to the selectNodes method.
+ * The selection can consider functional requirements, which is provided by
+ * <code>config.name</code> and non-functional requirements, which is provided
+ * by <config>config.resourceImpact</code> Implementing classes must receive a
+ * NodePoolManager to retrieve nodes OR create new nodes (the use of other
+ * operations of NodePoolManager are not allowed). NodeSelectors are always
+ * accessed as singletons. Implementing class must consider concurrent access to
+ * the selectNodes method.
  * 
  * @author leonardo
- *
+ * 
  */
 public interface NodeSelector {
-	
-	public List<Node> selectNodes(Config config, NodePoolManager npm) throws NodeNotSelectedException;
+
+    public List<Node> selectNodes(Config config, NodePoolManager npm) throws NodeNotSelectedException;
 }

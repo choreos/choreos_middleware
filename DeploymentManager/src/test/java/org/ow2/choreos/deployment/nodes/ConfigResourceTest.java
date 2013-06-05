@@ -26,46 +26,49 @@ import com.jcraft.jsch.JSchException;
 
 @Category(IntegrationTest.class)
 public class ConfigResourceTest extends BaseTest {
-	
+
     /**
-     * This test supposes the "getting-started" recipe is already available on the chef server 
-     * This recipe must create the getting-started.txt file on home directory
-     * @throws RunNodesException 
-     * @throws ConfigNotAppliedException 
-     * @throws JSchException 
-     * @throws SshCommandFailed 
+     * This test supposes the "getting-started" recipe is already available on
+     * the chef server This recipe must create the getting-started.txt file on
+     * home directory
      * 
-     * @throws Exception 
+     * @throws RunNodesException
+     * @throws ConfigNotAppliedException
+     * @throws JSchException
+     * @throws SshCommandFailed
+     * 
+     * @throws Exception
      */
     @Test
-    public void shouldApplyValidCookbook() throws NodeNotCreatedException, ConfigNotAppliedException, JSchException, SshCommandFailed {
-    	
-    	String RECIPE_NAME = "getting-started";
-    	String CREATED_FILE = "chef-getting-started.txt";
-		CloudProvider cp = new FixedCloudProvider();
-		Node node = cp.createOrUseExistingNode(null, null);
-    	
-    	NodePoolManager npm = new NPMImpl(cp);
-    	int num_replicas = 1;
-    	Config config = new Config(RECIPE_NAME, null, num_replicas);
-    	
-    	List<Node> returnedNodes = npm.applyConfig(config);
-    	assertTrue(returnedNodes != null);
-        assertTrue(returnedNodes.get(0).hasIp());
-        assertEquals(node.getIp(), returnedNodes.get(0).getIp());
+    public void shouldApplyValidCookbook() throws NodeNotCreatedException, ConfigNotAppliedException, JSchException,
+	    SshCommandFailed {
 
-        try {
-			npm.upgradeNode(node.getId());
-		} catch (NodeNotUpgradedException e) {
-			fail();
-		} catch (NodeNotFoundException e) {
-			fail();
-		}
-        
-        // verify if the file getting-started is actually there
-        SshUtil ssh = new SshUtil(returnedNodes.get(0).getIp(), node.getUser(), node.getPrivateKeyFile());
-    	String returnText = ssh.runCommand("ls " + CREATED_FILE, true);
-    	assertTrue(returnText.trim().equals(CREATED_FILE));
+	String RECIPE_NAME = "getting-started";
+	String CREATED_FILE = "chef-getting-started.txt";
+	CloudProvider cp = new FixedCloudProvider();
+	Node node = cp.createOrUseExistingNode(null, null);
+
+	NodePoolManager npm = new NPMImpl(cp);
+	int num_replicas = 1;
+	Config config = new Config(RECIPE_NAME, null, num_replicas);
+
+	List<Node> returnedNodes = npm.applyConfig(config);
+	assertTrue(returnedNodes != null);
+	assertTrue(returnedNodes.get(0).hasIp());
+	assertEquals(node.getIp(), returnedNodes.get(0).getIp());
+
+	try {
+	    npm.upgradeNode(node.getId());
+	} catch (NodeNotUpgradedException e) {
+	    fail();
+	} catch (NodeNotFoundException e) {
+	    fail();
+	}
+
+	// verify if the file getting-started is actually there
+	SshUtil ssh = new SshUtil(returnedNodes.get(0).getIp(), node.getUser(), node.getPrivateKeyFile());
+	String returnText = ssh.runCommand("ls " + CREATED_FILE, true);
+	assertTrue(returnText.trim().equals(CREATED_FILE));
     }
-    
+
 }

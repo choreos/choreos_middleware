@@ -233,8 +233,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
     }
 
 }
-*/
-
+ */
 
 package org.ow2.choreos.deployment.nodes.cloudprovider;
 
@@ -269,216 +268,206 @@ import com.google.inject.Module;
 
 public class OpenStackKeystoneCloudProvider implements CloudProvider {
 
-	Logger logger = Logger.getLogger(OpenStackKeystoneCloudProvider.class);
+    Logger logger = Logger.getLogger(OpenStackKeystoneCloudProvider.class);
 
-	public String getProviderName() {
-		return "OpenStack Keystone Provider";
+    public String getProviderName() {
+	return "OpenStack Keystone Provider";
+    }
+
+    private static String OP_AUTHURL = Configuration.get("OPENSTACK_IP");
+    private static String OP_TENANT = Configuration.get("OPENSTACK_TENANT");
+    private static String OP_USER = Configuration.get("OPENSTACK_USER");
+    private static String OP_PASS = Configuration.get("OPENSTACK_PASSWORD");
+
+    private ComputeService getClient(String imageId) {
+	logger.info("Obtaining Client");
+
+	String provider = "openstack-nova";
+	String identity = OP_TENANT + ":" + OP_USER;
+	String credential = OP_PASS;
+
+	Properties properties = new Properties();
+	properties.setProperty(Constants.PROPERTY_ENDPOINT, OP_AUTHURL);
+
+	// example of injecting a ssh implementation
+	Iterable<Module> modules = ImmutableSet.<Module> of(new SLF4JLoggingModule());
+
+	ContextBuilder builder = ContextBuilder.newBuilder(provider).credentials(identity, credential).modules(modules)
+		.overrides(properties);
+
+	logger.info("Initializing Client With Data: " + builder.getApiMetadata());
+
+	ComputeService srv = builder.buildView(ComputeServiceContext.class).getComputeService();
+
+	logger.info("Client obtained successfully.");
+
+	return srv;
+    }
+
+    @Override
+    public Node createNode(Node node, ResourceImpact resourceImpact) {
+	System.out.println(">OpenStack: Create new Node.");
+
+	// TODO: resource impact changes
+
+	ComputeService client = getClient("");
+	Set<? extends NodeMetadata> createdNodes = null;
+
+	try {
+	    try {
+		createdNodes = client.createNodesInGroup("default", 1, getTemplate(client, getImages().get(0).getId()));
+	    } catch (RunNodesException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	    }
+	} catch (org.jclouds.rest.AuthorizationException e) {
+	    logger.error("Authorization failed. Provided user doesn't have authorization to create a new node.");
+	    throw e;
 	}
 
-	private static String OP_AUTHURL = Configuration.get("OPENSTACK_IP");
-	private static String OP_TENANT = Configuration.get("OPENSTACK_TENANT");
-	private static String OP_USER = Configuration.get("OPENSTACK_USER");
-	private static String OP_PASS = Configuration.get("OPENSTACK_PASSWORD");
+	NodeMetadata cloudNode = Iterables.get(createdNodes, 0);
 
-	private ComputeService getClient(String imageId) {
-		logger.info("Obtaining Client");
+	setNodeProperties(node, cloudNode);
+	client.getContext().close();
 
-		String provider = "openstack-nova";
-		String identity = OP_TENANT + ":" + OP_USER;
-		String credential = OP_PASS;
+	logger.info("Node created successfully.");
+	return node;
+    }
 
-		Properties properties = new Properties();
-		properties.setProperty(Constants.PROPERTY_ENDPOINT, OP_AUTHURL);
+    @Override
+    public Node getNode(String nodeId) throws NodeNotFoundException {
+	ComputeService client = getClient("");
 
-		// example of injecting a ssh implementation
-		Iterable<Module> modules = ImmutableSet.<Module> of(new SLF4JLoggingModule());
+	Node node = new Node();
 
-		ContextBuilder builder = ContextBuilder.newBuilder(provider)
-				.credentials(identity, credential).modules(modules)
-				.overrides(properties);
-
-		logger.info("Initializing Client With Data: "+builder.getApiMetadata());
-
-		ComputeService srv = builder.buildView(ComputeServiceContext.class)
-				.getComputeService();
-
-		logger.info("Client obtained successfully."); 
-
-		return srv;
+	try {
+	    NodeMetadata cloudNode = client.getNodeMetadata(nodeId);
+	    setNodeProperties(node, cloudNode);
+	} catch (Exception e) {
+	    throw new NodeNotFoundException(nodeId);
 	}
 
-	@Override
-	public Node createNode(Node node, ResourceImpact resourceImpact) {
-		System.out.println(">OpenStack: Create new Node.");
+	return node;
+    }
 
-		// TODO: resource impact changes
+    @Override
+    public List<Node> getNodes() {
+	List<Node> nodeList = new ArrayList<Node>();
+	Node node;
+	ComputeService client = getClient("");
 
-		ComputeService client = getClient("");
-		Set<? extends NodeMetadata> createdNodes = null;
+	logger.info("Getting list of nodes");
+	Set<? extends ComputeMetadata> cloudNodes = client.listNodes();
+	logger.debug("Got: " + cloudNodes);
+	for (ComputeMetadata computeMetadata : cloudNodes) {
+	    NodeMetadata cloudNode = client.getNodeMetadata(computeMetadata.getId());
+	    node = new Node();
 
-		try {
-			try {
-				createdNodes = client.createNodesInGroup(
-						"default",
-						1,
-						getTemplate(client, getImages().get(0).getId())
-				);
-			} catch (RunNodesException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} catch (org.jclouds.rest.AuthorizationException e) {
-			logger.error("Authorization failed. Provided user doesn't have authorization to create a new node.");
-			throw e;
-		}
-
-		NodeMetadata cloudNode = Iterables.get(createdNodes, 0);
-
-		setNodeProperties(node, cloudNode);
-		client.getContext().close();
-
-		logger.info("Node created successfully.");
-		return node;
+	    setNodeProperties(node, cloudNode);
+	    if (node.getState() != 1) {
+		nodeList.add(node);
+	    }
 	}
 
-	@Override
-	public Node getNode(String nodeId) throws NodeNotFoundException {
-		ComputeService client = getClient("");
+	client.getContext().close();
 
-		Node node = new Node();
+	logger.info("Node List obtained successfully.");
 
-		try {
-			NodeMetadata cloudNode = client.getNodeMetadata(nodeId);
-			setNodeProperties(node, cloudNode);
-		} catch (Exception e) {
-			throw new NodeNotFoundException(nodeId);
-		}
+	return nodeList;
+    }
 
-		return node;
+    public List<Image> getImages() {
+	logger.info("Getting image info...");
+	ComputeService client = getClient("");
+	Set<? extends Image> images = client.listImages();
+
+	List<Image> imageList = new ArrayList<Image>();
+
+	for (Image image : images) {
+	    imageList.add(image);
 	}
 
-	@Override
-	public List<Node> getNodes() {
-		List<Node> nodeList = new ArrayList<Node>();
-		Node node;
-		ComputeService client = getClient("");
+	logger.info("Images: " + imageList.toString());
 
-		logger.info("Getting list of nodes");
-		Set<? extends ComputeMetadata> cloudNodes = client.listNodes();
-		logger.debug("Got: " + cloudNodes);
-		for (ComputeMetadata computeMetadata : cloudNodes) {
-			NodeMetadata cloudNode = client.getNodeMetadata(computeMetadata
-					.getId());
-			node = new Node();
+	return imageList;
 
-			setNodeProperties(node, cloudNode);
-			if (node.getState() != 1) {
-				nodeList.add(node);
-			}
-		}
+    }
 
-		client.getContext().close();
+    public List<Hardware> getHardwareProfiles() {
+	logger.info("getting hardware profile info...");
+	ComputeService client = getClient("");
+	Set<? extends Hardware> profiles = client.listHardwareProfiles();
 
-		logger.info("Node List obtained successfully.");
+	List<Hardware> hardwareList = new ArrayList<Hardware>();
 
-		return nodeList;
+	for (Hardware profile : profiles) {
+	    hardwareList.add(profile);
+	}
+	logger.info(hardwareList.toString());
+
+	return hardwareList;
+
+    }
+
+    @Override
+    public void destroyNode(String id) {
+	logger.info("Destroy Node.");
+	ComputeService client = getClient("");
+	client.destroyNode(id);
+	client.getContext().close();
+	logger.info("Node destroyed successfully.");
+    }
+
+    @Override
+    public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact) {
+	for (Node n : getNodes()) {
+	    if (n.getImage().equals(node.getImage()) && NodeMetadata.Status.RUNNING.ordinal() == n.getState()) {
+		return n;
+	    }
+	}
+	Node i = null;
+	i = createNode(node, resourceImpact);
+	return i;
+    }
+
+    private Template getTemplate(ComputeService client, String imageId) {
+
+	if (imageId.isEmpty()) {
+	    imageId = getImages().get(0).getId();
 	}
 
-	public List<Image> getImages() {
-		logger.info("Getting image info...");
-		ComputeService client = getClient("");
-		Set<? extends Image> images = client.listImages();
+	String hardwareId = getHardwareProfiles().get(0).getId();
 
-		List<Image> imageList = new ArrayList<Image>();
+	logger.info("Creating Template with image ID: " + imageId + "; hardware ID: " + hardwareId);
 
-		for (Image image : images) {
-			imageList.add(image);
-		}
+	TemplateBuilder builder = client.templateBuilder().imageId(imageId);
+	builder.hardwareId(hardwareId);
+	logger.info("Building Template...");
+	Template template = builder.build();
+	NovaTemplateOptions options = template.getOptions().as(NovaTemplateOptions.class);
+	options.keyPairName(Configuration.get("OPENSTACK_KEY_PAIR"));
+	options.securityGroupNames("default");
+	logger.info("	Template built successfully!");
+	return template;
+    }
 
-		logger.info("Images: "+ imageList.toString());
+    private void setNodeProperties(Node node, NodeMetadata cloudNode) {
+	setNodeIp(node, cloudNode);
+	node.setHostname(cloudNode.getName());
+	node.setSo(cloudNode.getOperatingSystem().getName());
+	node.setId(cloudNode.getId());
+	node.setImage(cloudNode.getImageId());
+	node.setState(cloudNode.getStatus().ordinal());
+	node.setUser("ubuntu");
+	node.setPrivateKeyFile(Configuration.get("OPENSTACK_PRIVATE_SSH_KEY"));
+    }
 
-		return imageList;
+    private void setNodeIp(Node node, NodeMetadata cloudNode) {
+	Iterator<String> publicAddresses = cloudNode.getPrivateAddresses().iterator();
 
+	if (publicAddresses != null && publicAddresses.hasNext()) {
+	    node.setIp(publicAddresses.next());
 	}
-
-	public List<Hardware> getHardwareProfiles() {
-		logger.info("getting hardware profile info...");
-		ComputeService client = getClient("");
-		Set<? extends Hardware> profiles = client.listHardwareProfiles();
-
-		List<Hardware> hardwareList = new ArrayList<Hardware>();
-
-		for (Hardware profile : profiles) {
-			hardwareList.add(profile);
-		}
-		logger.info(hardwareList.toString());
-
-		return hardwareList;
-
-	}
-
-	@Override
-	public void destroyNode(String id) {
-		logger.info("Destroy Node.");
-		ComputeService client = getClient("");
-		client.destroyNode(id);
-		client.getContext().close();
-		logger.info("Node destroyed successfully.");
-	}
-
-	@Override
-	public Node createOrUseExistingNode(Node node, ResourceImpact resourceImpact) {
-		for (Node n : getNodes()) {
-			if (n.getImage().equals(node.getImage())
-					&& NodeMetadata.Status.RUNNING.ordinal() == n.getState()) {
-				return n;
-			}
-		}
-		Node i = null;
-		i = createNode(node, resourceImpact);
-		return i;
-	}
-
-	private Template getTemplate(ComputeService client, String imageId) {
-
-		if (imageId.isEmpty()) {
-			imageId = getImages().get(0).getId();
-		}
-
-		String hardwareId = getHardwareProfiles().get(0).getId();
-
-		logger.info("Creating Template with image ID: " + imageId +"; hardware ID: " + hardwareId);
-
-		TemplateBuilder builder = client.templateBuilder().imageId(imageId);
-		builder.hardwareId(hardwareId);
-		logger.info("Building Template...");
-		Template template = builder.build();
-		NovaTemplateOptions options = template.getOptions().as(
-				NovaTemplateOptions.class);
-		options.keyPairName(Configuration.get("OPENSTACK_KEY_PAIR"));
-		options.securityGroupNames("default");
-		logger.info("	Template built successfully!");
-		return template;
-	}
-
-	private void setNodeProperties(Node node, NodeMetadata cloudNode) {
-		setNodeIp(node, cloudNode);
-		node.setHostname(cloudNode.getName());
-		node.setSo(cloudNode.getOperatingSystem().getName());
-		node.setId(cloudNode.getId());
-		node.setImage(cloudNode.getImageId());
-		node.setState(cloudNode.getStatus().ordinal());
-		node.setUser("ubuntu");
-		node.setPrivateKeyFile(Configuration.get("OPENSTACK_PRIVATE_SSH_KEY"));
-	}
-
-	private void setNodeIp(Node node, NodeMetadata cloudNode) {
-		Iterator<String> publicAddresses = cloudNode.getPrivateAddresses()
-				.iterator();
-
-		if (publicAddresses != null && publicAddresses.hasNext()) {
-			node.setIp(publicAddresses.next());
-		}
-	}
+    }
 
 }

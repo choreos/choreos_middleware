@@ -8,35 +8,35 @@ import org.ow2.choreos.services.datamodel.DeployableService;
 
 public class DeployedServicesRegistry {
 
-	private ConcurrentMap<String, DeployableService> availableServices = new ConcurrentHashMap<String, DeployableService>();
+    private ConcurrentMap<String, DeployableService> availableServices = new ConcurrentHashMap<String, DeployableService>();
 
-	public void addService(String serviceId, DeployableService service) {
-		availableServices.put(serviceId, service);
-	}
-	
-	public DeployableService getService(String serviceId) {
-		return availableServices.get(serviceId);
-	}
+    public void addService(String serviceId, DeployableService service) {
+	availableServices.put(serviceId, service);
+    }
 
-	public Collection<DeployableService> getServices() {
-		return availableServices.values();
-	}
+    public DeployableService getService(String serviceId) {
+	return availableServices.get(serviceId);
+    }
 
-	public void deleteService(String serviceId) {
-		if (availableServices.remove(serviceId) == null)
-			throw new IllegalArgumentException("Service " + serviceId + " not registered");
-	}
-	
-	private DeployedServicesRegistry() {
-		
-	}
-	
-	private static DeployedServicesRegistry INSTANCE = null;
+    public Collection<DeployableService> getServices() {
+	return availableServices.values();
+    }
 
-	public static DeployedServicesRegistry getInstance() {
-		if(INSTANCE == null)
-			INSTANCE = new DeployedServicesRegistry();
-		return INSTANCE;
-	}
+    public void deleteService(String serviceId) {
+	if (availableServices.remove(serviceId) == null)
+	    throw new IllegalArgumentException("Service " + serviceId + " not registered");
+    }
+
+    private DeployedServicesRegistry() {
+
+    }
+
+    private static DeployedServicesRegistry INSTANCE = null;
+
+    public static DeployedServicesRegistry getInstance() {
+	if (INSTANCE == null)
+	    INSTANCE = new DeployedServicesRegistry();
+	return INSTANCE;
+    }
 
 }

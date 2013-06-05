@@ -21,113 +21,110 @@ import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
 
 public class NPMMocks {
-	
-	public static NodePoolManager getMock() throws NodeNotFoundException {
-		
-		Node node1 = createNode("1", "192.168.122.14", "choreos1", "SMALL");
-		Node node2 = createNode("2", "192.168.122.160", "choreos2", "SMALL");
-		Node node3 = createNode("3", "192.168.122.182", "choreos3", "MEDIUM");
-		
-		List<Node> nodes = new ArrayList<Node>();
-		nodes.add(node1);
-		nodes.add(node2);
-		nodes.add(node3);
-		
-		NodePoolManager npmMock = mock(NodePoolManager.class);
-		when(npmMock.getNodes()).thenReturn(nodes);
-		when(npmMock.getNode("1")).thenReturn(node1);
-		when(npmMock.getNode("2")).thenReturn(node2);
-		when(npmMock.getNode("3")).thenReturn(node3);
-		return npmMock;
-	}
-	
-	public static NodePoolManager getDynamicMock() throws NPMException  {
-		
-		NodePoolManager npmMock = new NodePoolManager() {
-			
-			AtomicInteger counter = new AtomicInteger();
-			List<Node> nodes = new ArrayList<Node>();
-			
-			@Override
-			public void upgradeNode(String nodeId) throws NodeNotUpgradedException,
-					NodeNotFoundException {
-				throw new NotImplementedException();
-			}
-			
-			@Override
-			public List<Node> getNodes() {
-				return nodes;
-			}
-			
-			@Override
-			public Node getNode(String nodeId) throws NodeNotFoundException {
-				for (Node node: nodes) {
-					if (nodeId.equals(node.getId())) {
-						return node;
-					}
-				}
-				throw new NoSuchElementException();
-			}
-			
-			@Override
-			public void destroyNodes() throws NodeNotDestroyed {
-				throw new NotImplementedException();
-			}
-			
-			@Override
-			public void destroyNode(String nodeId) throws NodeNotDestroyed,
-					NodeNotFoundException {
-				throw new NotImplementedException();
-			}
-			
-			@Override
-			public Node createNode(Node node, ResourceImpact resourceImpact)
-					throws NodeNotCreatedException {
 
-				Node n = new Node();
-				try {
-					Thread.sleep(200);
-				} catch (InterruptedException e) {
-					System.out.println("Exception at sleeping");
-				}
-				String id = Integer.toString(counter.getAndIncrement());
-				n.setId(id);
-				nodes.add(n);
-				return n;
-			}
-			
-			@Override
-			public List<Node> applyConfig(Config config)
-					throws ConfigNotAppliedException {
-				throw new NotImplementedException();
-			}
-		};
-		
-		return npmMock;
-	}
+    public static NodePoolManager getMock() throws NodeNotFoundException {
 
-	private static Node createNode(String id, String ip, String host, String type) {
-		
-		Node node = new Node();
-		node.setId(id);
-		node.setIp(ip);
-		node.setHostname(host);
-		node.setPrivateKey("choreos.pem");
-		node.setCpus(1);
-		node.setRam(memFromType(type));
-		node.setSo("Ubuntu server 10.04");
-		node.setStorage(10000);
-		node.setZone("BR");
-		return node;
-	}
-	
-	private static int memFromType(String type) {
-		if(type.compareTo("SMALL") == 0) {
-			return 256;
-		} else if(type.compareTo("MEDIUM") == 0) {
-			return 512;
-		} else if(type.compareTo("LARGE") == 0) {
-			return 768;
-		} else return 256;
-	}
+	Node node1 = createNode("1", "192.168.122.14", "choreos1", "SMALL");
+	Node node2 = createNode("2", "192.168.122.160", "choreos2", "SMALL");
+	Node node3 = createNode("3", "192.168.122.182", "choreos3", "MEDIUM");
+
+	List<Node> nodes = new ArrayList<Node>();
+	nodes.add(node1);
+	nodes.add(node2);
+	nodes.add(node3);
+
+	NodePoolManager npmMock = mock(NodePoolManager.class);
+	when(npmMock.getNodes()).thenReturn(nodes);
+	when(npmMock.getNode("1")).thenReturn(node1);
+	when(npmMock.getNode("2")).thenReturn(node2);
+	when(npmMock.getNode("3")).thenReturn(node3);
+	return npmMock;
+    }
+
+    public static NodePoolManager getDynamicMock() throws NPMException {
+
+	NodePoolManager npmMock = new NodePoolManager() {
+
+	    AtomicInteger counter = new AtomicInteger();
+	    List<Node> nodes = new ArrayList<Node>();
+
+	    @Override
+	    public void upgradeNode(String nodeId) throws NodeNotUpgradedException, NodeNotFoundException {
+		throw new NotImplementedException();
+	    }
+
+	    @Override
+	    public List<Node> getNodes() {
+		return nodes;
+	    }
+
+	    @Override
+	    public Node getNode(String nodeId) throws NodeNotFoundException {
+		for (Node node : nodes) {
+		    if (nodeId.equals(node.getId())) {
+			return node;
+		    }
+		}
+		throw new NoSuchElementException();
+	    }
+
+	    @Override
+	    public void destroyNodes() throws NodeNotDestroyed {
+		throw new NotImplementedException();
+	    }
+
+	    @Override
+	    public void destroyNode(String nodeId) throws NodeNotDestroyed, NodeNotFoundException {
+		throw new NotImplementedException();
+	    }
+
+	    @Override
+	    public Node createNode(Node node, ResourceImpact resourceImpact) throws NodeNotCreatedException {
+
+		Node n = new Node();
+		try {
+		    Thread.sleep(200);
+		} catch (InterruptedException e) {
+		    System.out.println("Exception at sleeping");
+		}
+		String id = Integer.toString(counter.getAndIncrement());
+		n.setId(id);
+		nodes.add(n);
+		return n;
+	    }
+
+	    @Override
+	    public List<Node> applyConfig(Config config) throws ConfigNotAppliedException {
+		throw new NotImplementedException();
+	    }
+	};
+
+	return npmMock;
+    }
+
+    private static Node createNode(String id, String ip, String host, String type) {
+
+	Node node = new Node();
+	node.setId(id);
+	node.setIp(ip);
+	node.setHostname(host);
+	node.setPrivateKey("choreos.pem");
+	node.setCpus(1);
+	node.setRam(memFromType(type));
+	node.setSo("Ubuntu server 10.04");
+	node.setStorage(10000);
+	node.setZone("BR");
+	return node;
+    }
+
+    private static int memFromType(String type) {
+	if (type.compareTo("SMALL") == 0) {
+	    return 256;
+	} else if (type.compareTo("MEDIUM") == 0) {
+	    return 512;
+	} else if (type.compareTo("LARGE") == 0) {
+	    return 768;
+	} else
+	    return 256;
+    }
 }

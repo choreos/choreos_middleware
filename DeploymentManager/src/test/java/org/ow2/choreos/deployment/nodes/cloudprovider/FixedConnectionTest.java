@@ -20,22 +20,21 @@ import org.ow2.choreos.utils.SshUtil;
 @Category(IntegrationTest.class)
 public class FixedConnectionTest {
 
-	@BeforeClass
-	public static void setupClass() {
-		LogConfigurator.configLog();
-	}
-	
-	@Test
-	public void shouldConnectToTheNode() throws NodeNotCreatedException {
+    @BeforeClass
+    public static void setupClass() {
+	LogConfigurator.configLog();
+    }
 
-		CloudProvider cp = new FixedCloudProvider();
-		Node node = cp.createOrUseExistingNode(new Node(), new ResourceImpact());
+    @Test
+    public void shouldConnectToTheNode() throws NodeNotCreatedException {
 
-		SshUtil ssh = null;
-		ssh = new SshUtil(node.getIp(), node.getUser(),
-				node.getPrivateKeyFile());
-		assertTrue(ssh.isAccessible());
-		ssh.disconnect();
-	}
+	CloudProvider cp = new FixedCloudProvider();
+	Node node = cp.createOrUseExistingNode(new Node(), new ResourceImpact());
+
+	SshUtil ssh = null;
+	ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
+	assertTrue(ssh.isAccessible());
+	ssh.disconnect();
+    }
 
 }

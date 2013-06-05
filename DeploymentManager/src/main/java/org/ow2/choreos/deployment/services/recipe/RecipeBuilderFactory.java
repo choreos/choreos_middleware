@@ -4,18 +4,17 @@ import org.ow2.choreos.services.datamodel.PackageType;
 
 public class RecipeBuilderFactory {
 
-	public static RecipeBuilder getRecipeBuilderInstance(PackageType serviceType) {
+    public static RecipeBuilder getRecipeBuilderInstance(PackageType serviceType) {
 
-		switch (serviceType) {
-		case TOMCAT:
-			return new RecipeBuilderImpl("war");
-		case COMMAND_LINE:
-			return new RecipeBuilderImpl("jar");
-		case EASY_ESB:
-			return new CDRecipeBuilder();
-		default:
-			throw new IllegalArgumentException("Service type " + serviceType
-					+ " not supported");
-		}
+	switch (serviceType) {
+	case TOMCAT:
+	    return new RecipeBuilderImpl("war");
+	case COMMAND_LINE:
+	    return new RecipeBuilderImpl("jar");
+	case EASY_ESB:
+	    return new CDRecipeBuilder();
+	default:
+	    throw new IllegalArgumentException("Service type " + serviceType + " not supported");
 	}
+    }
 }
