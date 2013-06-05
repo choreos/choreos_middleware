@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
@@ -30,7 +30,7 @@ public class AWSCloudProviderTest {
     public void SetUp() {
 	LogConfigurator.configLog();
 	node.setImage("us-east-1/ami-ccf405a5");
-	Configuration.set("DEFAULT_PROVIDER", "");
+	DeploymentManagerConfiguration.set("DEFAULT_PROVIDER", "");
     }
 
     @Test

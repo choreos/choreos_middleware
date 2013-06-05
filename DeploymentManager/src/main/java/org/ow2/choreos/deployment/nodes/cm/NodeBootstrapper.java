@@ -16,7 +16,7 @@ import org.ow2.choreos.chef.ChefNodeNameRetriever;
 import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.chef.impl.KnifeImpl;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.services.recipe.BaseRecipeBuilder;
 import org.ow2.choreos.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.nodes.datamodel.Node;
@@ -36,8 +36,8 @@ import com.jcraft.jsch.JSchException;
 public class NodeBootstrapper {
 
     public static final int SSH_TIMEOUT_IN_SECONDS = 250;
-    private static final String CHEF_REPO = Configuration.get("CHEF_REPO");
-    private static final String CHEF_CONFIG_FILE = Configuration.get("CHEF_CONFIG_FILE");
+    private static final String CHEF_REPO = DeploymentManagerConfiguration.get("CHEF_REPO");
+    private static final String CHEF_CONFIG_FILE = DeploymentManagerConfiguration.get("CHEF_CONFIG_FILE");
     private static final String BOOTSTRAP_LOG_FILE_LOCATION = "/tmp/bootstrap.log";
 
     private int sshTimeoutInSeconds;
@@ -71,9 +71,9 @@ public class NodeBootstrapper {
 
 	List<String> defaultRecipes = DefaultRecipes.getDefaultRecipes();
 	String harakiriRecipeName = "harakiri" + this.node.getId().replace("/", "-");
-	if (Boolean.parseBoolean(Configuration.get("HARAKIRI"))) {
+	if (Boolean.parseBoolean(DeploymentManagerConfiguration.get("HARAKIRI"))) {
 	    logger.info("Going to create harakiri for node chefnamed: " + this.node.getId());
-	    configureHarakiri(Configuration.get("EXTERNAL_DEPLOYMENT_MANAGER_URL"), this.node.getId());
+	    configureHarakiri(DeploymentManagerConfiguration.get("EXTERNAL_DEPLOYMENT_MANAGER_URL"), this.node.getId());
 	    defaultRecipes.add(harakiriRecipeName);
 	}
 
@@ -91,7 +91,7 @@ public class NodeBootstrapper {
 
 	this.retrieveAndSetChefName(bootstrapLog);
 
-	if (Boolean.parseBoolean(Configuration.get("HARAKIRI")))
+	if (Boolean.parseBoolean(DeploymentManagerConfiguration.get("HARAKIRI")))
 	    knife.node().runListAdd(this.node.getChefName(), harakiriRecipeName);
 
 	NodeChecker checker = new NodeChecker();

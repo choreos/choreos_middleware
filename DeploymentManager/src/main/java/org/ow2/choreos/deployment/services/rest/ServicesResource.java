@@ -21,7 +21,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.services.ServicesManagerImpl;
@@ -50,7 +50,7 @@ public class ServicesResource {
     protected ServicesManager servicesManager;
 
     public ServicesResource() {
-	String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
+	String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
 	NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
 	ServicesManager servicesManager = new ServicesManagerImpl(npm);
 	this.fakeConstructor(npm, servicesManager);

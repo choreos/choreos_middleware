@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.Locations;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
@@ -35,7 +35,7 @@ public class WARDeployTest {
     public static String WAR_LOCATION = Locations.get("AIRLINE_WAR");
     public static String ENDPOINT_NAME = "airline";
 
-    private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
+    private String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
     private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
     private ServicesManager deployer = new ServicesManagerImpl(npm);
 

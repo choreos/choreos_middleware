@@ -14,7 +14,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.utils.SshCommandFailed;
@@ -103,7 +103,7 @@ public class NodeUpgrader {
 
 	    logger.debug("upgrading node " + nodeId);
 
-	    String logFile = Configuration.get("CHEF_CLIENT_LOG");
+	    String logFile = DeploymentManagerConfiguration.get("CHEF_CLIENT_LOG");
 	    if (logFile == null || logFile.isEmpty()) {
 		logFile = "/tmp/chef-client.log";
 	    }

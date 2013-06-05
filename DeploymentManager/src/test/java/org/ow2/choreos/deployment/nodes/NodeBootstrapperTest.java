@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.cm.BootstrapChecker;
@@ -46,7 +46,7 @@ public class NodeBootstrapperTest {
     @Test
     public void shouldLeaveNodeBootstraped() throws Exception {
 
-	CloudProvider cp = CloudProviderFactory.getInstance(Configuration.get("CLOUD_PROVIDER"));
+	CloudProvider cp = CloudProviderFactory.getInstance(DeploymentManagerConfiguration.get("CLOUD_PROVIDER"));
 	node = cp.createOrUseExistingNode(new Node(), new ResourceImpact());
 	System.out.println(node);
 

@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.Locations;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
@@ -33,7 +33,7 @@ public class CDDeployTest {
     // a known CD configuration file
     public static String CD_LOCATION = Locations.get("CD_WEATHER_LOCATION");
 
-    private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
+    private String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
     private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
     private ServicesManager deployer = new ServicesManagerImpl(npm);
 
@@ -48,7 +48,7 @@ public class CDDeployTest {
     @Before
     public void setUp() throws Exception {
 
-	Configuration.set("BUS", "false");
+	DeploymentManagerConfiguration.set("BUS", "false");
 	spec.setPackageUri(CD_LOCATION);
 	spec.setPackageType(PackageType.EASY_ESB);
 	spec.setEndpointName("CDWeatherForecastServicePort"); // configured in

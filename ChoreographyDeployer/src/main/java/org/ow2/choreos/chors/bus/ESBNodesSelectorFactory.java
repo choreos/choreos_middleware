@@ -5,13 +5,13 @@
 package org.ow2.choreos.chors.bus;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.chors.Configuration;
-import org.ow2.choreos.chors.Configuration.Option;
+import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.client.NodesClient;
 
 public class ESBNodesSelectorFactory {
 
+    private static final String DEPLOYMENT_MANAGER_URI_PROPERTY = "DEPLOYMENT_MANAGER_URI";
     private static Logger logger = Logger.getLogger(ESBNodesSelectorFactory.class);
 
     private static enum SelectorType {
@@ -31,11 +31,10 @@ public class ESBNodesSelectorFactory {
 
     private static ESBNodesSelector getInstance(SelectorType type) {
 
-	String host = Configuration.get(Option.DEPLOYMENT_MANAGER_URI);
+	String host = ChoreographyDeployerConfiguration.get(DEPLOYMENT_MANAGER_URI_PROPERTY);
 	NodePoolManager npm = new NodesClient(host);
 
 	switch (type) {
-
 	case SINGLE_NODE:
 	    return new SingleESBNodeSelector(npm);
 

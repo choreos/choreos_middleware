@@ -9,7 +9,7 @@ import org.ow2.choreos.chef.ChefNode;
 import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.chef.impl.KnifeImpl;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.ConfigNotAppliedException;
 import org.ow2.choreos.nodes.datamodel.Node;
 
@@ -17,8 +17,8 @@ public class RecipeApplier {
 
     private Logger logger = Logger.getLogger(RecipeApplier.class);
 
-    private static final String CHEF_REPO = Configuration.get("CHEF_REPO");
-    private static final String CHEF_CONFIG_FILE = Configuration.get("CHEF_CONFIG_FILE");
+    private static final String CHEF_REPO = DeploymentManagerConfiguration.get("CHEF_REPO");
+    private static final String CHEF_CONFIG_FILE = DeploymentManagerConfiguration.get("CHEF_CONFIG_FILE");
 
     /**
      * Uses the default recipe

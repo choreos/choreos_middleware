@@ -11,7 +11,7 @@ import org.ow2.choreos.chef.ChefNodeNameRetriever;
 import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.chef.impl.KnifeImpl;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.utils.SshCommandFailed;
@@ -22,8 +22,8 @@ public class NodeChecker {
 
     private Logger logger = Logger.getLogger(NodeChecker.class);
 
-    private static final String CHEF_REPO = Configuration.get("CHEF_REPO");
-    private static final String CHEF_CONFIG_FILE = Configuration.get("CHEF_CONFIG_FILE");
+    private static final String CHEF_REPO = DeploymentManagerConfiguration.get("CHEF_REPO");
+    private static final String CHEF_CONFIG_FILE = DeploymentManagerConfiguration.get("CHEF_CONFIG_FILE");
 
     /**
      * Verify if node is ready to be used. If not, try to provide preconditions:

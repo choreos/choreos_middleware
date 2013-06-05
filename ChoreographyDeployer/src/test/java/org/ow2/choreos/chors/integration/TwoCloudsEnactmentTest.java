@@ -7,8 +7,7 @@ package org.ow2.choreos.chors.integration;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.chors.Configuration;
-import org.ow2.choreos.chors.Configuration.Option;
+import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.datamodel.ChoreographyServiceSpec;
 import org.ow2.choreos.chors.rest.Owners;
@@ -29,6 +28,8 @@ import org.ow2.choreos.utils.LogConfigurator;
  */
 @Category(IntegrationTest.class)
 public class TwoCloudsEnactmentTest extends SimpleChorEnactmentTest {
+    
+    private static final String BUS_PROPERTY = "BUS";
 
     private static final String DEPLOYER1 = "Deployer1";
     private static final String DEPLOYER2 = "Deployer2";
@@ -44,7 +45,7 @@ public class TwoCloudsEnactmentTest extends SimpleChorEnactmentTest {
     @Override
     public void setUp() {
 
-	Configuration.set(Option.BUS, "false");
+	ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "false");
 	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
 	super.chorSpec = models.getChorSpec();
 	ChoreographyServiceSpec airlineSpec = super.chorSpec.getChoreographyServiceSpecByName(ModelsForTest.AIRLINE);

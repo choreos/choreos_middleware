@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.tests.IntegrationTest;
 
 @Category(IntegrationTest.class)
@@ -21,7 +21,7 @@ public class NodeBootstrapperWithBusTest extends NodeBootstrapperTest {
     @Override
     public void shouldLeaveNodeBootstraped() throws Exception {
 
-	Configuration.set("BUS", "true");
+	DeploymentManagerConfiguration.set("BUS", "true");
 	super.shouldLeaveNodeBootstraped();
 	String adminEndpoint = "http://" + super.node.getIp() + ":8180/services/adminExternalEndpoint";
 	System.out.println("bus at " + adminEndpoint);

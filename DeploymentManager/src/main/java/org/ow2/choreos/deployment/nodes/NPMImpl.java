@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.chef.ConfigToChef;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
@@ -48,7 +48,7 @@ public class NPMImpl implements NodePoolManager {
 
 	int poolSize = 0;
 	try {
-	    poolSize = Integer.parseInt(Configuration.get("IDLE_POOL_SIZE"));
+	    poolSize = Integer.parseInt(DeploymentManagerConfiguration.get("IDLE_POOL_SIZE"));
 	} catch (NumberFormatException e) {
 	    ; // no problem, poolSize is zero
 	}

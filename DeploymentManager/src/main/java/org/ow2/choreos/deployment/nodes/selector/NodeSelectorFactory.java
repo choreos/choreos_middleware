@@ -10,7 +10,7 @@ import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 
 public class NodeSelectorFactory {
 
@@ -22,7 +22,7 @@ public class NodeSelectorFactory {
 
     public static NodeSelector getInstance() {
 
-	String nodeSelectorType = Configuration.get("NODE_SELECTOR");
+	String nodeSelectorType = DeploymentManagerConfiguration.get("NODE_SELECTOR");
 	if (nodeSelectorType == null) {
 	    logger.error("NODE_SELECTOR property not set on properties file!");
 	    throw new IllegalArgumentException();

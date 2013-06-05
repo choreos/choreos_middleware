@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.chef.impl.KnifeImpl;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.cm.RecipeApplier;
 import org.ow2.choreos.deployment.services.diff.UpdateAction;
 import org.ow2.choreos.deployment.services.recipe.RecipeBuilder;
@@ -54,8 +54,8 @@ public class ServicesManagerImpl implements ServicesManager {
 
     public ServicesManagerImpl(NodePoolManager npm) {
 
-	final String CHEF_REPO = Configuration.get("CHEF_REPO");
-	final String CHEF_CONFIG_FILE = Configuration.get("CHEF_CONFIG_FILE");
+	final String CHEF_REPO = DeploymentManagerConfiguration.get("CHEF_REPO");
+	final String CHEF_CONFIG_FILE = DeploymentManagerConfiguration.get("CHEF_CONFIG_FILE");
 	Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
 	fakeConstructor(npm, knife);
     }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Config;
@@ -34,8 +34,8 @@ public class LimitedRoundRobin implements NodeSelector {
     private NodeSelectorMapper mapper = null;
 
     public LimitedRoundRobin() {
-	vmLimit = Integer.parseInt(Configuration.get("VM_LIMIT"));
-	mapper = new NodeSelectorMapper(Configuration.get("MAPPER_POLICY"));
+	vmLimit = Integer.parseInt(DeploymentManagerConfiguration.get("VM_LIMIT"));
+	mapper = new NodeSelectorMapper(DeploymentManagerConfiguration.get("MAPPER_POLICY"));
     }
 
     @Override

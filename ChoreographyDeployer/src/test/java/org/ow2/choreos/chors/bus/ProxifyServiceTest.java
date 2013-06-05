@@ -14,8 +14,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.chors.Configuration;
-import org.ow2.choreos.chors.Configuration.Option;
+import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.client.NodesClient;
@@ -43,6 +42,7 @@ import eu.choreos.vv.clientgenerator.WSClient;
 @Category(IntegrationTest.class)
 public class ProxifyServiceTest {
 
+    private static final String DEPLOYMENT_MANAGER_URI_PROPERTY = "DEPLOYMENT_MANAGER_URI";
     ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
 
     @BeforeClass
@@ -53,7 +53,7 @@ public class ProxifyServiceTest {
     @Test
     public void shouldProxifyAService() throws Exception {
 
-	String host = Configuration.get(Option.DEPLOYMENT_MANAGER_URI);
+	String host = ChoreographyDeployerConfiguration.get(DEPLOYMENT_MANAGER_URI_PROPERTY);
 	NodePoolManager npm = new NodesClient(host);
 	ServicesManager sd = new ServicesClient(host);
 

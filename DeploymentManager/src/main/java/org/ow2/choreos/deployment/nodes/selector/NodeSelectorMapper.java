@@ -7,7 +7,7 @@ package org.ow2.choreos.deployment.nodes.selector;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
 import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryTypes;
@@ -18,7 +18,7 @@ enum NodeSelectorMapperPolicy {
 
 public class NodeSelectorMapper {
 
-    private static final String[] NODE_TYPES = Configuration.getMultiple("NODE_TYPES");
+    private static final String[] NODE_TYPES = DeploymentManagerConfiguration.getMultiple("NODE_TYPES");
     private NodeSelectorMapperPolicy policy = null;
 
     public NodeSelectorMapper(String policy) {

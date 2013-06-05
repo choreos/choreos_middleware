@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 
 /**
  * Recipes to be applied on bootstrap
@@ -19,7 +19,7 @@ import org.ow2.choreos.deployment.Configuration;
 public class DefaultRecipes {
 
     public static List<String> getDefaultRecipes() {
-	return new ArrayList<String>(Arrays.asList(Configuration.getMultiple("DEFAULT_RECIPES")));
+	return new ArrayList<String>(Arrays.asList(DeploymentManagerConfiguration.getMultiple("DEFAULT_RECIPES")));
     }
 
 }

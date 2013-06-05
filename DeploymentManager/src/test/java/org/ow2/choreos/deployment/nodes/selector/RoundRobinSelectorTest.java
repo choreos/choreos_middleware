@@ -12,7 +12,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.NPMMocks;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodePoolManager;
@@ -32,12 +32,12 @@ public class RoundRobinSelectorTest {
 	String[] users = { "choreos", "choreos", "choreos" };
 	String[] keys = { "choreos.pem", "choreos.pem", "choreos.pem" };
 	String[] types = { "SMALL", "SMALL", "MEDIUM" };
-	Configuration.set("MAPPER_POLICY", "EXACT_FIT");
-	Configuration.set("FIXED_VM_IPS", ips);
-	Configuration.set("FIXED_VM_HOSTNAMES", hosts);
-	Configuration.set("FIXED_VM_USERS", users);
-	Configuration.set("FIXED_VM_PRIVATE_SSH_KEYS", keys);
-	Configuration.set("FIXED_VM_TYPES", types);
+	DeploymentManagerConfiguration.set("MAPPER_POLICY", "EXACT_FIT");
+	DeploymentManagerConfiguration.set("FIXED_VM_IPS", ips);
+	DeploymentManagerConfiguration.set("FIXED_VM_HOSTNAMES", hosts);
+	DeploymentManagerConfiguration.set("FIXED_VM_USERS", users);
+	DeploymentManagerConfiguration.set("FIXED_VM_PRIVATE_SSH_KEYS", keys);
+	DeploymentManagerConfiguration.set("FIXED_VM_TYPES", types);
 
 	npm1 = NPMMocks.getMock();
 	npm2 = NPMMocks.getMock();
@@ -82,7 +82,7 @@ public class RoundRobinSelectorTest {
     @Test
     public void shouldWorkWithTwoSelectors() throws NodeNotSelectedException {
 
-	Configuration.set("NODE_SELECTOR", "ROUND_ROBIN");
+	DeploymentManagerConfiguration.set("NODE_SELECTOR", "ROUND_ROBIN");
 	NodeSelector rr = NodeSelectorFactory.getInstance();
 	NodeSelector rr2 = NodeSelectorFactory.getInstance();
 	// r1 and rr2 are the same instance
@@ -148,7 +148,7 @@ public class RoundRobinSelectorTest {
     @Test(expected = NodeNotSelectedException.class)
     public void shouldNotSelectNode() throws NodeNotSelectedException {
 
-	Configuration.set("NODE_SELECTOR", "ROUND_ROBIN");
+	DeploymentManagerConfiguration.set("NODE_SELECTOR", "ROUND_ROBIN");
 	NodeSelector rr = NodeSelectorFactory.getInstance();
 
 	ResourceImpact res_imp3 = new ResourceImpact();

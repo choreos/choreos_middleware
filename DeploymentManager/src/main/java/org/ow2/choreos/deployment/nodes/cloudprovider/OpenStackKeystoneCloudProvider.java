@@ -257,7 +257,7 @@ import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
@@ -274,10 +274,10 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
 	return "OpenStack Keystone Provider";
     }
 
-    private static String OP_AUTHURL = Configuration.get("OPENSTACK_IP");
-    private static String OP_TENANT = Configuration.get("OPENSTACK_TENANT");
-    private static String OP_USER = Configuration.get("OPENSTACK_USER");
-    private static String OP_PASS = Configuration.get("OPENSTACK_PASSWORD");
+    private static String OP_AUTHURL = DeploymentManagerConfiguration.get("OPENSTACK_IP");
+    private static String OP_TENANT = DeploymentManagerConfiguration.get("OPENSTACK_TENANT");
+    private static String OP_USER = DeploymentManagerConfiguration.get("OPENSTACK_USER");
+    private static String OP_PASS = DeploymentManagerConfiguration.get("OPENSTACK_PASSWORD");
 
     private ComputeService getClient(String imageId) {
 	logger.info("Obtaining Client");
@@ -445,7 +445,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
 	logger.info("Building Template...");
 	Template template = builder.build();
 	NovaTemplateOptions options = template.getOptions().as(NovaTemplateOptions.class);
-	options.keyPairName(Configuration.get("OPENSTACK_KEY_PAIR"));
+	options.keyPairName(DeploymentManagerConfiguration.get("OPENSTACK_KEY_PAIR"));
 	options.securityGroupNames("default");
 	logger.info("	Template built successfully!");
 	return template;
@@ -459,7 +459,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
 	node.setImage(cloudNode.getImageId());
 	node.setState(cloudNode.getStatus().ordinal());
 	node.setUser("ubuntu");
-	node.setPrivateKeyFile(Configuration.get("OPENSTACK_PRIVATE_SSH_KEY"));
+	node.setPrivateKeyFile(DeploymentManagerConfiguration.get("OPENSTACK_PRIVATE_SSH_KEY"));
     }
 
     private void setNodeIp(Node node, NodeMetadata cloudNode) {

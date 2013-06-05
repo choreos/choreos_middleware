@@ -7,8 +7,7 @@ package org.ow2.choreos.chors.integration;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.chors.Configuration;
-import org.ow2.choreos.chors.Configuration.Option;
+import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceType;
@@ -26,6 +25,8 @@ import org.ow2.choreos.utils.LogConfigurator;
  */
 @Category(IntegrationTest.class)
 public class WARChorEnactmentTest extends SimpleChorEnactmentTest {
+    
+    private static final String BUS_PROPERTY = "BUS";
 
     @BeforeClass
     public static void startServers() {
@@ -36,7 +37,7 @@ public class WARChorEnactmentTest extends SimpleChorEnactmentTest {
     @Override
     public void setUp() {
 
-	Configuration.set(Option.BUS, "false");
+	ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "false");
 	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT);
 	super.chorSpec = models.getChorSpec();
     }

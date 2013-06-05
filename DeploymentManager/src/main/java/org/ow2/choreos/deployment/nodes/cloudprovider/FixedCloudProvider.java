@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
@@ -35,11 +35,11 @@ public class FixedCloudProvider implements CloudProvider {
 
 	nodes = new HashMap<String, Node>();
 
-	String[] ips = Configuration.getMultiple("FIXED_VM_IPS");
-	String[] hosts = Configuration.getMultiple("FIXED_VM_HOSTNAMES");
-	String[] users = Configuration.getMultiple("FIXED_VM_USERS");
-	String[] keys = Configuration.getMultiple("FIXED_VM_PRIVATE_SSH_KEYS");
-	String[] types = Configuration.getMultiple("FIXED_VM_TYPES");
+	String[] ips = DeploymentManagerConfiguration.getMultiple("FIXED_VM_IPS");
+	String[] hosts = DeploymentManagerConfiguration.getMultiple("FIXED_VM_HOSTNAMES");
+	String[] users = DeploymentManagerConfiguration.getMultiple("FIXED_VM_USERS");
+	String[] keys = DeploymentManagerConfiguration.getMultiple("FIXED_VM_PRIVATE_SSH_KEYS");
+	String[] types = DeploymentManagerConfiguration.getMultiple("FIXED_VM_TYPES");
 
 	if ((ips.length == hosts.length) && (ips.length == users.length) && (ips.length == keys.length)
 		&& (types.length == ips.length)) {

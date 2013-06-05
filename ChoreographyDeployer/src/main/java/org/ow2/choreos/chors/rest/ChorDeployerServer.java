@@ -4,19 +4,21 @@
 
 package org.ow2.choreos.chors.rest;
 
-import org.ow2.choreos.chors.Configuration;
-import org.ow2.choreos.chors.Configuration.Option;
+import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.rest.RESTServer;
 import org.ow2.choreos.utils.LogConfigurator;
 
 public class ChorDeployerServer {
 
-    public final String NAME = "Choreography Deployer";
+    public static final String NAME = "Choreography Deployer";
     public static String URL;
+
+    private static final String CHOR_DEPLOYER_PORT_PROPERTY = "CHOR_DEPLOYER_PORT";
+    
     private RESTServer restServer;
 
     static {
-	String port = Configuration.get(Option.CHOR_DEPLOYER_PORT);
+	String port = ChoreographyDeployerConfiguration.get(CHOR_DEPLOYER_PORT_PROPERTY);
 	URL = "http://0.0.0.0:" + port + "/choreographydeployer/";
     }
 

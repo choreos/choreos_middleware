@@ -25,7 +25,7 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.ec2.domain.InstanceType;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
@@ -57,7 +57,7 @@ public class AWSCloudProvider implements CloudProvider {
 	overrides.setProperty(AWSEC2Constants.PROPERTY_EC2_AMI_QUERY, "image-id=" + image);
 
 	ComputeServiceContext context = ContextBuilder.newBuilder(PROVIDER)
-		.credentials(Configuration.get("AMAZON_ACCESS_KEY_ID"), Configuration.get("AMAZON_SECRET_KEY"))
+		.credentials(DeploymentManagerConfiguration.get("AMAZON_ACCESS_KEY_ID"), DeploymentManagerConfiguration.get("AMAZON_SECRET_KEY"))
 		.overrides(overrides).buildView(ComputeServiceContext.class);
 
 	return context.getComputeService();
@@ -183,7 +183,7 @@ public class AWSCloudProvider implements CloudProvider {
 	node.setImage(cloudNode.getImageId());
 	node.setState(cloudNode.getStatus().ordinal());
 	node.setUser(DEFAULT_USER);
-	node.setPrivateKey(Configuration.get("AMAZON_PRIVATE_SSH_KEY"));
+	node.setPrivateKey(DeploymentManagerConfiguration.get("AMAZON_PRIVATE_SSH_KEY"));
     }
 
     private void setNodeIp(Node node, NodeMetadata cloudNode) {
@@ -204,7 +204,7 @@ public class AWSCloudProvider implements CloudProvider {
 	    Template template = builder.build();
 	    AWSEC2TemplateOptions options = template.getOptions().as(AWSEC2TemplateOptions.class);
 	    options.securityGroups("default");
-	    options.keyPair(Configuration.get("AMAZON_KEY_PAIR"));
+	    options.keyPair(DeploymentManagerConfiguration.get("AMAZON_KEY_PAIR"));
 	    return template;
 	}
 

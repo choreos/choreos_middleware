@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
@@ -29,12 +29,12 @@ public class FixedCloudProviderTest {
     @Test
     public void shouldReturnNodeInfo() throws NodeNotCreatedException {
 
-	Configuration.set("FIXED_VM_IPS", "192.168.56.101");
-	Configuration.set("FIXED_VM_HOSTNAMES", "choreos");
-	Configuration.set("FIXED_VM_PRIVATE_SSH_KEYS", "key");
-	Configuration.set("FIXED_VM_USERS", "choreos");
-	Configuration.set("FIXED_VM_TYPES", "SMALL");
-	Configuration.set("MAPPER_POLICY", "ANY_FIT");
+	DeploymentManagerConfiguration.set("FIXED_VM_IPS", "192.168.56.101");
+	DeploymentManagerConfiguration.set("FIXED_VM_HOSTNAMES", "choreos");
+	DeploymentManagerConfiguration.set("FIXED_VM_PRIVATE_SSH_KEYS", "key");
+	DeploymentManagerConfiguration.set("FIXED_VM_USERS", "choreos");
+	DeploymentManagerConfiguration.set("FIXED_VM_TYPES", "SMALL");
+	DeploymentManagerConfiguration.set("MAPPER_POLICY", "ANY_FIT");
 	CloudProvider cp = new FixedCloudProvider();
 	Node node = cp.createOrUseExistingNode(null, null);
 
@@ -48,12 +48,12 @@ public class FixedCloudProviderTest {
     @Test
     public void shouldReturnAvalableVMs() {
 
-	Configuration.set("FIXED_VM_IPS", "192.168.56.101, 192.168.56.102");
-	Configuration.set("FIXED_VM_HOSTNAMES", "choreos, choreos");
-	Configuration.set("FIXED_VM_PRIVATE_SSH_KEYS", "key, samekey");
-	Configuration.set("FIXED_VM_USERS", "choreos, choreos");
-	Configuration.set("FIXED_VM_TYPES", "SMALL, SMALL");
-	Configuration.set("MAPPER_POLICY", "ANY_FIT");
+	DeploymentManagerConfiguration.set("FIXED_VM_IPS", "192.168.56.101, 192.168.56.102");
+	DeploymentManagerConfiguration.set("FIXED_VM_HOSTNAMES", "choreos, choreos");
+	DeploymentManagerConfiguration.set("FIXED_VM_PRIVATE_SSH_KEYS", "key, samekey");
+	DeploymentManagerConfiguration.set("FIXED_VM_USERS", "choreos, choreos");
+	DeploymentManagerConfiguration.set("FIXED_VM_TYPES", "SMALL, SMALL");
+	DeploymentManagerConfiguration.set("MAPPER_POLICY", "ANY_FIT");
 
 	CloudProvider cp = new FixedCloudProvider();
 	List<Node> nodes = cp.getNodes();
@@ -74,10 +74,10 @@ public class FixedCloudProviderTest {
     @Test(expected = NodeNotFoundException.class)
     public void shouldNotFindVMs() throws NodeNotFoundException {
 
-	Configuration.set("FIXED_VM_IPS", "192.168.56.101; 192.168.56.102 ");
-	Configuration.set("FIXED_VM_HOSTNAMES", "choreos, choreos");
-	Configuration.set("FIXED_VM_PRIVATE_SSH_KEYS", "key, samekey");
-	Configuration.set("FIXED_VM_USERS", "choreos, choreos");
+	DeploymentManagerConfiguration.set("FIXED_VM_IPS", "192.168.56.101; 192.168.56.102 ");
+	DeploymentManagerConfiguration.set("FIXED_VM_HOSTNAMES", "choreos, choreos");
+	DeploymentManagerConfiguration.set("FIXED_VM_PRIVATE_SSH_KEYS", "key, samekey");
+	DeploymentManagerConfiguration.set("FIXED_VM_USERS", "choreos, choreos");
 	CloudProvider cp = new FixedCloudProvider();
 	cp.getNode("2");
     }

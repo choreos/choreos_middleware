@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NPMException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.datamodel.Node;
@@ -50,7 +50,7 @@ public class IdlePool {
 
 	int poolSize = 0;
 	try {
-	    poolSize = Integer.parseInt(Configuration.get("POOL_SIZE"));
+	    poolSize = Integer.parseInt(DeploymentManagerConfiguration.get("POOL_SIZE"));
 	} catch (NumberFormatException e) {
 	    String msg = "You should set POOL_SIZE on the property files";
 	    logger.error(msg);

@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.nodes.NodePoolManager;
@@ -32,7 +32,7 @@ public class JARWithBusDeployTest {
 
     public static final String JAR_LOCATION = "http://valinhos.ime.usp.br:54080/services/airline-service.jar";
 
-    private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
+    private String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
     private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
     private ServicesManager servicesManager = new ServicesManagerImpl(npm);
 

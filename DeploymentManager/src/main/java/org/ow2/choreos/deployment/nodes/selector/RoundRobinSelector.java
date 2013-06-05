@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
@@ -27,7 +27,7 @@ public class RoundRobinSelector implements NodeSelector {
 
     private Logger logger = Logger.getLogger(RoundRobinSelector.class);
 
-    private NodeSelectorMapper mapper = new NodeSelectorMapper(Configuration.get("MAPPER_POLICY"));
+    private NodeSelectorMapper mapper = new NodeSelectorMapper(DeploymentManagerConfiguration.get("MAPPER_POLICY"));
 
     private AtomicInteger counter = new AtomicInteger();
 

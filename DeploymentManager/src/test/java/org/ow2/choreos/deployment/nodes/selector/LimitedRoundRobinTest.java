@@ -16,7 +16,7 @@ import java.util.concurrent.Future;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.NPMMocks;
 import org.ow2.choreos.nodes.NPMException;
 import org.ow2.choreos.nodes.NodePoolManager;
@@ -36,7 +36,7 @@ public class LimitedRoundRobinTest {
     @Test
     public void shouldCreateSomeVMsAndAfterRoundRobin() throws NPMException, NodeNotSelectedException {
 
-	Configuration.set("VM_LIMIT", "3");
+	DeploymentManagerConfiguration.set("VM_LIMIT", "3");
 	NodePoolManager npm = NPMMocks.getDynamicMock();
 	LimitedRoundRobin selector = new LimitedRoundRobin();
 	Config conf = new Config("config", new ResourceImpact(), 1);
@@ -53,7 +53,7 @@ public class LimitedRoundRobinTest {
     public void shouldCreateSomeVMsAndAfterRoundRobinWithDoubleInstances() throws NPMException,
 	    NodeNotSelectedException {
 
-	Configuration.set("VM_LIMIT", "3");
+	DeploymentManagerConfiguration.set("VM_LIMIT", "3");
 	NodePoolManager npm = NPMMocks.getDynamicMock();
 	LimitedRoundRobin selector = new LimitedRoundRobin();
 	Config conf = new Config("config", new ResourceImpact(), 2);
@@ -69,7 +69,7 @@ public class LimitedRoundRobinTest {
     public void shouldCreateSomeVMsAndAfterRoundRobinConcurrently() throws InterruptedException, ExecutionException,
 	    NPMException {
 
-	Configuration.set("VM_LIMIT", "3");
+	DeploymentManagerConfiguration.set("VM_LIMIT", "3");
 	NodePoolManager npm = NPMMocks.getDynamicMock();
 	LimitedRoundRobin limitedRRSelector = new LimitedRoundRobin();
 	Config conf = new Config("config", new ResourceImpact(), 1);

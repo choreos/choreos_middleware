@@ -19,7 +19,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.deployment.Configuration;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.nodes.ConfigNotAppliedException;
@@ -32,7 +32,7 @@ import org.ow2.choreos.nodes.datamodel.NodeRestRepresentation;
 public class ConfigsResource {
 
     private Logger logger = Logger.getLogger(ConfigsResource.class);
-    private String cloudProviderType = Configuration.get("CLOUD_PROVIDER");
+    private String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
     private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
 
     /**

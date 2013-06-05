@@ -12,9 +12,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.ChoreographyDeployer;
+import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.chors.ChoreographyDeployerImpl;
-import org.ow2.choreos.chors.Configuration;
-import org.ow2.choreos.chors.Configuration.Option;
 import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographyService;
@@ -42,6 +41,8 @@ import eu.choreos.vv.clientgenerator.WSClient;
  */
 @Category(IntegrationTest.class)
 public class ChorEnactmentWithBusTest {
+    
+    private static final String BUS_PROPERTY = "BUS";
 
     private ChoreographySpec chorSpec;
 
@@ -53,7 +54,7 @@ public class ChorEnactmentWithBusTest {
     @Before
     public void setUp() {
 
-	Configuration.set(Option.BUS, "true");
+	ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "true");
 	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
 	chorSpec = models.getChorSpec();
     }
