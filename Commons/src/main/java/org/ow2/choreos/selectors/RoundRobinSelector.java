@@ -6,41 +6,40 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RoundRobinSelector<T, R> implements Selector<T, R> {
 
-	private ObjectRetriever<T> objectRetriever;
-	private ObjectFilter<T, R> objectFilter;
-	private AtomicInteger counter = new AtomicInteger();
+    private ObjectRetriever<T> objectRetriever;
+    private ObjectFilter<T, R> objectFilter;
+    private AtomicInteger counter = new AtomicInteger();
 
-	public RoundRobinSelector(ObjectRetriever<T> objectRetriever) {
-		ObjectFilters<T, R> filters = new ObjectFilters<T, R>(); 
-		this.objectFilter = filters.getNoFilter();
-		this.objectRetriever = objectRetriever;
+    public RoundRobinSelector(ObjectRetriever<T> objectRetriever) {
+	ObjectFilters<T, R> filters = new ObjectFilters<T, R>();
+	this.objectFilter = filters.getNoFilter();
+	this.objectRetriever = objectRetriever;
+    }
+
+    public RoundRobinSelector(ObjectRetriever<T> objectRetriever, ObjectFilter<T, R> objectFilter) {
+	this.objectRetriever = objectRetriever;
+	this.objectFilter = objectFilter;
+    }
+
+    @Override
+    public List<T> select(R requirements, int objectsQuantity) throws NotSelectedException {
+
+	List<T> objects = this.objectRetriever.retrieveObjects();
+	List<T> compatibleObjects = this.objectFilter.filter(objects, requirements);
+
+	if (compatibleObjects.size() < objectsQuantity) {
+	    throw new NotSelectedException();
 	}
 
-	public RoundRobinSelector(ObjectRetriever<T> objectRetriever, ObjectFilter<T, R> objectFilter) {
-		this.objectRetriever = objectRetriever;
-		this.objectFilter = objectFilter;
+	List<T> selectedObjects = new ArrayList<T>();
+
+	for (int i = 0; i < objectsQuantity; i++) {
+	    int idx = counter.getAndIncrement();
+	    idx = idx % compatibleObjects.size();
+	    T selected = compatibleObjects.get(idx);
+	    selectedObjects.add(selected);
 	}
-
-	@Override
-	public List<T> select(R requirements, int objectsQuantity)
-			throws NotSelectedException {
-
-		List<T> objects = this.objectRetriever.retrieveObjects();
-		List<T> compatibleObjects = this.objectFilter.filter(objects, requirements);
-		
-		if(compatibleObjects.size() < objectsQuantity) {
-			throw new NotSelectedException();
-		}
-
-		List<T> selectedObjects = new ArrayList<T>();
-		
-		for (int i=0; i < objectsQuantity; i++) {
-			int idx = counter.getAndIncrement();
-			idx = idx % compatibleObjects.size();
-			T selected = compatibleObjects.get(idx);
-			selectedObjects.add(selected);
-		}
-		return selectedObjects;
-	}
+	return selectedObjects;
+    }
 
 }

@@ -7,12 +7,11 @@ import org.ow2.choreos.selectors.ObjectFactory;
 
 public class StringFactory implements ObjectFactory<String> {
 
-	private AtomicInteger counter = new AtomicInteger();
-	
-	@Override
-	public String createNewInstance() throws ObjectCreationException {
-		
-		return Integer.toString(counter.getAndIncrement());
-	}
-}
+    private AtomicInteger counter = new AtomicInteger();
 
+    @Override
+    public String createNewInstance() throws ObjectCreationException {
+
+	return Integer.toString(counter.getAndIncrement());
+    }
+}

@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface ObjectRetriever<T> {
 
-	public List<T> retrieveObjects();
+    public List<T> retrieveObjects();
 }

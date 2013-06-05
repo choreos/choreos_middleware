@@ -8,18 +8,18 @@ import org.ow2.choreos.selectors.ObjectRetriever;
 
 public class StringRetriever implements ObjectRetriever<String> {
 
-	private List<String> objects = new ArrayList<String>();
-	
-	@Override
-	public List<String> retrieveObjects() {
-		
-		return Collections.unmodifiableList(this.objects);
-	}
+    private List<String> objects = new ArrayList<String>();
 
-	public void addObject(String obj) {
-		
-		if (!this.objects.contains(obj))
-			this.objects.add(obj);
-	}
-	
+    @Override
+    public List<String> retrieveObjects() {
+
+	return Collections.unmodifiableList(this.objects);
+    }
+
+    public void addObject(String obj) {
+
+	if (!this.objects.contains(obj))
+	    this.objects.add(obj);
+    }
+
 }
