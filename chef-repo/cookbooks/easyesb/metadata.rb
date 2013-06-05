@@ -7,5 +7,4 @@ maintainer_email "ccsl@ime.usp.br"
 version          "0.0.1"
 
 depends "apt"
-depends "tomcat"
-
+depends "java"
