@@ -126,7 +126,7 @@ public class NPMImpl implements NodePoolManager {
     @Override
     public List<Node> applyConfig(Config config) throws ConfigNotAppliedException {
 
-	NodeSelector selector = NodeSelectorFactory.getInstance();
+	NodeSelector selector = NodeSelectorFactory.getFactoryInstance().getNodeSelectorInstance();
 	List<Node> nodes = null;
 	try {
 	    nodes = selector.select(config, config.getNumberOfInstances());
