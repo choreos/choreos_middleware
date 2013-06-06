@@ -7,7 +7,7 @@ import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.selectors.ObjectCreationException;
 import org.ow2.choreos.selectors.ObjectFactory;
 
-public class NodeFactory implements ObjectFactory<Node> {
+class NodeFactory implements ObjectFactory<Node> {
 
     private NodePoolManager npm;
 

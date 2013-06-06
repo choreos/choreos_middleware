@@ -9,10 +9,8 @@ import org.ow2.choreos.nodes.datamodel.Config;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.selectors.LimitedRoundRobinSelector;
 import org.ow2.choreos.selectors.NotSelectedException;
-import org.ow2.choreos.selectors.ObjectFilter;
-import org.ow2.choreos.selectors.ObjectFilters;
 
-public class LimitedRoundRobinNodeSelector implements NodeSelector {
+class LimitedRoundRobinNodeSelector implements NodeSelector {
 
     private static final String VM_LIMIT_PROPERTY = "VM_LIMIT";
     
@@ -23,8 +21,7 @@ public class LimitedRoundRobinNodeSelector implements NodeSelector {
 	NodePoolManager npm = NPMImpl.getNewInstance();
 	NodeFactory factory = new NodeFactory(npm);
 	NodeRetriever retriever = new NodeRetriever(npm);
-	ObjectFilters<Node, Config> filters = new ObjectFilters<Node, Config>();
-	ObjectFilter<Node, Config> filter = filters.getNoFilter(); // TODO use real filter
+	NodeFilter filter = new NodeFilter(); 
 	this.selector = new LimitedRoundRobinSelector<Node, Config>(nodeLimit, retriever, factory, filter);
     }
 

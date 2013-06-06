@@ -19,6 +19,11 @@ public class DeploymentManagerConfiguration {
 
     private static DeploymentManagerConfiguration INSTANCE = new DeploymentManagerConfiguration();
 
+    private DeploymentManagerConfiguration() {
+
+	this.configuration = new Configuration(FILE_PATH);
+    }
+
     public static String get(String key) {
 
 	return INSTANCE.configuration.get(key);
@@ -37,11 +42,6 @@ public class DeploymentManagerConfiguration {
     public static void set(String key, String[] values) {
 
 	INSTANCE.configuration.set(key, values);
-    }
-
-    private DeploymentManagerConfiguration() {
-
-	this.configuration = new Configuration(FILE_PATH);
     }
 
 }

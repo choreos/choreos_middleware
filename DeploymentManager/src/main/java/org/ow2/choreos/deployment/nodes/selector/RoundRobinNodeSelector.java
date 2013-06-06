@@ -9,18 +9,20 @@ import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.selectors.NotSelectedException;
 import org.ow2.choreos.selectors.RoundRobinSelector;
 
-public class RoundRobinNodeSelector implements NodeSelector {
+class RoundRobinNodeSelector implements NodeSelector {
 
     private RoundRobinSelector<Node, Config> selector;
 
     public RoundRobinNodeSelector() {
 	NodePoolManager npm = NPMImpl.getNewInstance();
 	NodeRetriever retriever = new NodeRetriever(npm);
-	this.selector = new RoundRobinSelector<Node, Config>(retriever);
+	NodeFilter filter = new NodeFilter(); 
+	this.selector = new RoundRobinSelector<Node, Config>(retriever, filter);
     }
 
     @Override
     public List<Node> select(Config requirements, int objectsQuantity) throws NotSelectedException {
 	return this.selector.select(requirements, objectsQuantity);
     }
+    
 }

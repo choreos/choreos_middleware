@@ -6,7 +6,7 @@ import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.selectors.ObjectRetriever;
 
-public class NodeRetriever implements ObjectRetriever<Node> {
+class NodeRetriever implements ObjectRetriever<Node> {
 
     private NodePoolManager npm;
 

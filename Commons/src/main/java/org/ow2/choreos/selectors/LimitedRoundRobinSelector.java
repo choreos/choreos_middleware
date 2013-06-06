@@ -7,6 +7,14 @@ package org.ow2.choreos.selectors;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * An hybrid between Always Create and Round Robin, with a limit on the number
+ * of objects created. The initial behavior is Always Create. When the limit of
+ * objects is reached, it acts as Round Robin.
+ * 
+ * @author leonardo
+ * 
+ */
 public class LimitedRoundRobinSelector<T, R> implements Selector<T, R> {
 
     private int limit = 1;

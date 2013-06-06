@@ -7,6 +7,14 @@ package org.ow2.choreos.selectors;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This selector will always return a new object.
+ * 
+ * @author leonardo
+ *
+ * @param <T>
+ * @param <R>
+ */
 public class AlwaysCreateSelector<T, R> implements Selector<T, R> {
 
     private ObjectFactory<T> objectFactory;

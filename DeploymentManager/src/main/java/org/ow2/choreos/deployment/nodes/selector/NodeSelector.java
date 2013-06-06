@@ -13,10 +13,10 @@ import org.ow2.choreos.selectors.Selector;
  * 
  * The selection can consider functional requirements, which is provided by
  * config.name and non-functional requirements, which is provided by
- * config.resourceImpact Implementing classes must receive a NodePoolManager to
- * retrieve nodes OR create new nodes (the use of other operations of
+ * config.resourceImpact. Implementing classes must use the NodePoolManager to
+ * retrieve nodes AND/OR create new nodes (the use of other operations of
  * NodePoolManager are not allowed). NodeSelectors are always accessed as
- * singletons. Implementing class must consider concurrent access to the
+ * singletons. Implementing classes must consider concurrent access to the
  * selectNodes method.
  * 
  * @author leonardo

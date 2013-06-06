@@ -8,6 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * This selector will always use existing objects, it will never create a new
+ * object. The existing objects are selected in a round robin order.
+ * 
+ * @author leonardo
+ * 
+ * @param <T>
+ * @param <R>
+ */
 public class RoundRobinSelector<T, R> implements Selector<T, R> {
 
     private ObjectRetriever<T> objectRetriever;

@@ -4,9 +4,7 @@
 
 package org.ow2.choreos.deployment.nodes.selector;
 
-import java.io.IOException;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
@@ -14,7 +12,6 @@ import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 
 public class NodeSelectorFactory {
 
-    private static final String CLASS_MAPPING_FILE = "node_selector.properties";
     private static final String NODE_SELECTOR_PROPERTY = "NODE_SELECTOR";
 
     private static Map<String, NodeSelector> selectors = new ConcurrentHashMap<String, NodeSelector>();
@@ -56,8 +53,7 @@ public class NodeSelectorFactory {
     }
 
     private static NodeSelector newInstance(String nodeSelectorType) {
-	Properties classMap = getClassMap();
-	String className = classMap.getProperty(nodeSelectorType);
+	String className = SelectorClassMap.getClassName(nodeSelectorType);
 	NodeSelector nodeSelector = null;
 	try {
 	    @SuppressWarnings("unchecked") // catches handle the problem
@@ -77,17 +73,6 @@ public class NodeSelectorFactory {
 	    throw new IllegalArgumentException();
 	}
 	return nodeSelector;
-    }
-
-    private static Properties getClassMap() {
-	Properties classMap = new Properties();
-	final ClassLoader loader = Thread.currentThread().getContextClassLoader();
-	try {
-	    classMap.load(loader.getResourceAsStream(CLASS_MAPPING_FILE));
-	} catch (IOException e) {
-	    logger.error("Could not load " + CLASS_MAPPING_FILE);
-	}
-	return classMap;
     }
 
 }
