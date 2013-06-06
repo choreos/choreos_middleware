@@ -24,9 +24,9 @@ import org.ow2.choreos.deployment.services.diff.UpdateAction;
 import org.ow2.choreos.deployment.services.recipe.RecipeBuilder;
 import org.ow2.choreos.deployment.services.recipe.RecipeBuilderFactory;
 import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
-import org.ow2.choreos.nodes.ConfigNotAppliedException;
+import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.datamodel.Config;
+import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.ServiceNotDeletedException;
 import org.ow2.choreos.services.ServiceNotDeployedException;
@@ -198,13 +198,13 @@ public class ServicesManagerImpl implements ServicesManager {
 	String configName = serviceRecipe.getServiceRecipe().getCookbookName() + "::"
 		+ serviceRecipe.getServiceRecipe().getName();
 
-	Config config = new Config(configName, service.getSpec().getResourceImpact(), numberOfNewInstances);
+	DeploymentRequest config = new DeploymentRequest(configName, service.getSpec().getResourceImpact(), numberOfNewInstances);
 
 	// TODO: throw exception
 	List<Node> nodes = new ArrayList<Node>();
 	try {
-	    nodes = npm.applyConfig(config);
-	} catch (ConfigNotAppliedException e) {
+	    nodes = npm.prepareDeployment(config);
+	} catch (PrepareDeploymentFailedException e) {
 	    logger.error("Service " + service.getSpec().getUUID() + " not created: " + e.getMessage());
 	} catch (Exception e) {
 	    logger.error("Service " + service.getSpec().getUUID() + " not created: " + e.getMessage());
@@ -271,7 +271,7 @@ public class ServicesManagerImpl implements ServicesManager {
 	RecipeApplier recipeApplyer = new RecipeApplier();
 	try {
 	    recipeApplyer.applyRecipe(instance.getNode(), deactivateRecipe.getCookbookName(), "");
-	} catch (ConfigNotAppliedException e) {
+	} catch (PrepareDeploymentFailedException e) {
 	    e.printStackTrace();
 	}
     }

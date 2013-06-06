@@ -66,7 +66,7 @@ public class WARDeployTest {
 
 	String url = instance.getNativeUri();
 	logger.info("Service at " + url);
-	npm.upgradeNode(instance.getNode().getId());
+	npm.updateNode(instance.getNode().getId());
 	Thread.sleep(1000);
 
 	if (url.trim().endsWith("/"))

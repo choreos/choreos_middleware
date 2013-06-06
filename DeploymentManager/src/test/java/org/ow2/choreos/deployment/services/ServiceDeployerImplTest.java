@@ -18,9 +18,9 @@ import org.junit.Test;
 import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeCookbook;
 import org.ow2.choreos.chef.KnifeException;
-import org.ow2.choreos.nodes.ConfigNotAppliedException;
+import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.datamodel.Config;
+import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.ServiceNotDeployedException;
 import org.ow2.choreos.services.ServicesManager;
@@ -39,14 +39,14 @@ public class ServiceDeployerImplTest {
     private DeployableServiceSpec serviceSpec;
 
     @Before
-    public void setUp() throws ConfigNotAppliedException, KnifeException {
+    public void setUp() throws PrepareDeploymentFailedException, KnifeException {
 
 	LogConfigurator.configLog();
 	setUpNPM();
 	setUpServiceDeployer();
     }
 
-    private void setUpNPM() throws ConfigNotAppliedException {
+    private void setUpNPM() throws PrepareDeploymentFailedException {
 
 	selectedNode = new Node();
 	selectedNode.setId("1");
@@ -57,7 +57,7 @@ public class ServiceDeployerImplTest {
 	selectedNodes.add(selectedNode);
 
 	npm = mock(NodePoolManager.class);
-	when(npm.applyConfig(any(Config.class))).thenReturn(selectedNodes);
+	when(npm.prepareDeployment(any(DeploymentRequest.class))).thenReturn(selectedNodes);
     }
 
     private void setUpServiceDeployer() throws KnifeException {
@@ -78,7 +78,7 @@ public class ServiceDeployerImplTest {
     }
 
     @Test
-    public void shouldReturnAValidService() throws ConfigNotAppliedException, ServiceNotDeployedException {
+    public void shouldReturnAValidService() throws PrepareDeploymentFailedException, ServiceNotDeployedException {
 
 	final String EXPECTED_URI = "http://" + selectedNode.getIp() + ":" + serviceSpec.getPort() + "/"
 		+ serviceSpec.getEndpointName() + "/";
@@ -92,7 +92,7 @@ public class ServiceDeployerImplTest {
 	assertEquals(selectedNode.getId(), instance.getNode().getId());
 	assertEquals(EXPECTED_URI, instance.getNativeUri());
 
-	verify(npm).applyConfig(any(Config.class));
+	verify(npm).prepareDeployment(any(DeploymentRequest.class));
     }
 
 }

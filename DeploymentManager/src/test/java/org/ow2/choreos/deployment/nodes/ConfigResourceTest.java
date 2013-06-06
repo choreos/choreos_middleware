@@ -15,12 +15,12 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
-import org.ow2.choreos.nodes.ConfigNotAppliedException;
+import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.datamodel.Config;
+import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.tests.IntegrationTest;
@@ -38,14 +38,14 @@ public class ConfigResourceTest extends BaseTest {
      * home directory
      * 
      * @throws RunNodesException
-     * @throws ConfigNotAppliedException
+     * @throws PrepareDeploymentFailedException
      * @throws JSchException
      * @throws SshCommandFailed
      * 
      * @throws Exception
      */
     @Test
-    public void shouldApplyValidCookbook() throws NodeNotCreatedException, ConfigNotAppliedException, JSchException,
+    public void shouldApplyValidCookbook() throws NodeNotCreatedException, PrepareDeploymentFailedException, JSchException,
 	    SshCommandFailed {
 
 	String RECIPE_NAME = "getting-started";
@@ -55,15 +55,15 @@ public class ConfigResourceTest extends BaseTest {
 
 	NodePoolManager npm = new NPMImpl(cp);
 	int num_replicas = 1;
-	Config config = new Config(RECIPE_NAME, null, num_replicas);
+	DeploymentRequest config = new DeploymentRequest(RECIPE_NAME, null, num_replicas);
 
-	List<Node> returnedNodes = npm.applyConfig(config);
+	List<Node> returnedNodes = npm.prepareDeployment(config);
 	assertTrue(returnedNodes != null);
 	assertTrue(returnedNodes.get(0).hasIp());
 	assertEquals(node.getIp(), returnedNodes.get(0).getIp());
 
 	try {
-	    npm.upgradeNode(node.getId());
+	    npm.updateNode(node.getId());
 	} catch (NodeNotUpgradedException e) {
 	    fail();
 	} catch (NodeNotFoundException e) {

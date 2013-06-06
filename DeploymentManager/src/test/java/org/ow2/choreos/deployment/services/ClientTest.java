@@ -84,7 +84,7 @@ public class ClientTest {
 
 	String url = instance.getNativeUri();
 	System.out.println("Service at " + url);
-	npm.upgradeNode(instance.getNode().getId());
+	npm.updateNode(instance.getNode().getId());
 	Thread.sleep(1000);
 	client = WebClient.create(url);
 	String body = client.get(String.class);

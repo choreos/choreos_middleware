@@ -6,7 +6,7 @@ package org.ow2.choreos.nodes;
 
 import java.util.List;
 
-import org.ow2.choreos.nodes.datamodel.Config;
+import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
@@ -46,7 +46,7 @@ public interface NodePoolManager {
      * @param nodeId
      *            the id of the node to be destroyed
      * @throws NodeNotDestroyed
-     *             if could not destry node
+     *             if could not destroy node
      * @throws NodeNotFoundException
      *             if the node does not exist
      */
@@ -56,7 +56,7 @@ public interface NodePoolManager {
      * Destroys all the Virtual Machine nodes
      * 
      * @throws NodeNotDestroyed
-     *             if could not destry some node
+     *             if could not destroy some node
      */
     public void destroyNodes() throws NodeNotDestroyed;
 
@@ -73,17 +73,16 @@ public interface NodePoolManager {
      * @throws NodeNotFoundException
      *             if the node does not exist
      */
-    public void upgradeNode(String nodeId) throws NodeNotUpgradedException, NodeNotFoundException;
+    public void updateNode(String nodeId) throws NodeNotUpgradedException, NodeNotFoundException;
 
     /**
-     * Updates the configuration of a node, but not apply the configuration.
      * 
-     * @param config
+     * @param deploymentRequest
      *            what must be deployed
      * @return the representation of the node where the configuration will be
      *         applied,
-     * @throws if
-     *             it was not possible to allocate any node
+     * @throws PrepareDeploymentFailedException
+     *             if it was not possible to allocate any node
      */
-    public List<Node> applyConfig(Config config) throws ConfigNotAppliedException;
+    public List<Node> prepareDeployment(DeploymentRequest deploymentRequest) throws PrepareDeploymentFailedException;
 }

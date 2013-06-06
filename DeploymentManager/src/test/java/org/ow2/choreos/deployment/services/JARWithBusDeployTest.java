@@ -58,7 +58,7 @@ public class JARWithBusDeployTest {
 
 	DeployableService service = servicesManager.createService(spec);
 	ServiceInstance instance = service.getInstances().get(0);
-	npm.upgradeNode(instance.getNode().getId());
+	npm.updateNode(instance.getNode().getId());
 	Thread.sleep(1000);
 
 	String proxified = instance.getBusUri(ServiceType.SOAP);

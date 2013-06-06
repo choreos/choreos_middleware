@@ -15,13 +15,13 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
-import org.ow2.choreos.nodes.ConfigNotAppliedException;
+import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.datamodel.Config;
+import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.nodes.datamodel.NodeRestRepresentation;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
@@ -110,7 +110,7 @@ public class NodesClient implements NodePoolManager {
     }
 
     @Override
-    public void upgradeNode(String nodeId) throws NodeNotUpgradedException {
+    public void updateNode(String nodeId) throws NodeNotUpgradedException {
 	WebClient client = setupClient();
 	client.path("nodes");
 	client.path(nodeId);
@@ -123,7 +123,7 @@ public class NodesClient implements NodePoolManager {
     }
 
     @Override
-    public List<Node> applyConfig(Config config) throws ConfigNotAppliedException {
+    public List<Node> prepareDeployment(DeploymentRequest config) throws PrepareDeploymentFailedException {
 
 	WebClient client = setupClient();
 	client.path("nodes/configs");
@@ -132,7 +132,7 @@ public class NodesClient implements NodePoolManager {
 	try {
 	    nodeRest = client.post(config, NodeRestRepresentation.class);
 	} catch (WebApplicationException e) {
-	    throw new ConfigNotAppliedException(config.getName());
+	    throw new PrepareDeploymentFailedException(config.getRecipeName());
 	}
 
 	List<Node> resultList = new ArrayList<Node>();

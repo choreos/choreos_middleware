@@ -18,13 +18,13 @@ import org.ow2.choreos.deployment.nodes.cm.NodeUpgraderFactory;
 import org.ow2.choreos.deployment.nodes.cm.RecipeApplier;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelector;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelectorFactory;
-import org.ow2.choreos.nodes.ConfigNotAppliedException;
+import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.datamodel.Config;
+import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.selectors.NotSelectedException;
@@ -124,24 +124,24 @@ public class NPMImpl implements NodePoolManager {
     }
 
     @Override
-    public List<Node> applyConfig(Config config) throws ConfigNotAppliedException {
+    public List<Node> prepareDeployment(DeploymentRequest config) throws PrepareDeploymentFailedException {
 
 	NodeSelector selector = NodeSelectorFactory.getFactoryInstance().getNodeSelectorInstance();
 	List<Node> nodes = null;
 	try {
 	    nodes = selector.select(config, config.getNumberOfInstances());
-	    logger.info("Selected nodes to " + config.getName() + ": " + nodes);
+	    logger.info("Selected nodes to " + config.getRecipeName() + ": " + nodes);
 	} catch (NotSelectedException e) {
-	    throw new ConfigNotAppliedException(config.getName());
+	    throw new PrepareDeploymentFailedException(config.getRecipeName());
 	}
 
 	if (nodes == null || nodes.isEmpty()) {
-	    throw new ConfigNotAppliedException(config.getName());
+	    throw new PrepareDeploymentFailedException(config.getRecipeName());
 	}
 
-	String cookbook = ConfigToChef.getCookbookNameFromConfigName(config.getName());
+	String cookbook = ConfigToChef.getCookbookNameFromConfigName(config.getRecipeName());
 
-	String recipe = ConfigToChef.getRecipeNameFromConfigName(config.getName());
+	String recipe = ConfigToChef.getRecipeNameFromConfigName(config.getRecipeName());
 
 	for (Node node : nodes) {
 	    applyConfig(config, node, cookbook, recipe);
@@ -150,7 +150,7 @@ public class NPMImpl implements NodePoolManager {
 	return nodes;
     }
 
-    private void applyConfig(Config config, Node node, String cookbook, String recipe) throws ConfigNotAppliedException {
+    private void applyConfig(DeploymentRequest config, Node node, String cookbook, String recipe) throws PrepareDeploymentFailedException {
 	final int TRIALS = 3;
 	final int SLEEP_TIME = 1000;
 	int step = 0;
@@ -161,7 +161,7 @@ public class NPMImpl implements NodePoolManager {
 		RecipeApplier recipeApplyer = new RecipeApplier();
 		recipeApplyer.applyRecipe(node, cookbook, recipe);
 		ok = true;
-	    } catch (ConfigNotAppliedException e) {
+	    } catch (PrepareDeploymentFailedException e) {
 		try {
 		    Thread.sleep(SLEEP_TIME);
 		} catch (InterruptedException e1) {
@@ -169,13 +169,13 @@ public class NPMImpl implements NodePoolManager {
 		}
 		step++;
 		if (step > TRIALS)
-		    throw new ConfigNotAppliedException(config.getName());
+		    throw new PrepareDeploymentFailedException(config.getRecipeName());
 	    }
 	}
     }
 
     @Override
-    public void upgradeNode(String nodeId) throws NodeNotUpgradedException, NodeNotFoundException {
+    public void updateNode(String nodeId) throws NodeNotUpgradedException, NodeNotFoundException {
 
 	Node node = this.getNode(nodeId);
 	NodeUpgrader upgrader = NodeUpgraderFactory.getInstance(nodeId);

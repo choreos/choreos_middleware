@@ -200,7 +200,7 @@ public class NodesResource {
 
 	Response response;
 	try {
-	    npm.upgradeNode(nodeId);
+	    npm.updateNode(nodeId);
 	    logger.info("Node " + nodeId + " upgraded");
 	    response = Response.status(Status.OK).build();
 	} catch (NodeNotUpgradedException e) {

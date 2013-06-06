@@ -22,9 +22,9 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
-import org.ow2.choreos.nodes.ConfigNotAppliedException;
+import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.datamodel.Config;
+import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.nodes.datamodel.NodeRestRepresentation;
 
@@ -58,17 +58,17 @@ public class ConfigsResource {
      */
     @POST
     @Consumes(MediaType.APPLICATION_XML)
-    public Response applyConfig(Config config, @Context UriInfo uriInfo) throws URISyntaxException {
+    public Response applyConfig(DeploymentRequest config, @Context UriInfo uriInfo) throws URISyntaxException {
 
-	logger.debug("Request to apply " + config.getName());
+	logger.debug("Request to apply " + config.getRecipeName());
 
-	if (config == null || config.getName() == null || config.getName().isEmpty())
+	if (config == null || config.getRecipeName() == null || config.getRecipeName().isEmpty())
 	    return Response.status(Status.BAD_REQUEST).build();
 
 	List<Node> nodes;
 	try {
-	    nodes = npm.applyConfig(config);
-	} catch (ConfigNotAppliedException e) {
+	    nodes = npm.prepareDeployment(config);
+	} catch (PrepareDeploymentFailedException e) {
 	    logger.error("Config not applied", e);
 	    return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 	}

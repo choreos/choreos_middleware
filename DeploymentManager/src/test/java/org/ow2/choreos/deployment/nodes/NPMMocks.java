@@ -13,13 +13,13 @@ import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.ow2.choreos.nodes.ConfigNotAppliedException;
+import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.datamodel.Config;
+import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
@@ -52,7 +52,7 @@ public class NPMMocks {
 	    List<Node> nodes = new ArrayList<Node>();
 
 	    @Override
-	    public void upgradeNode(String nodeId) throws NodeNotUpgradedException, NodeNotFoundException {
+	    public void updateNode(String nodeId) throws NodeNotUpgradedException, NodeNotFoundException {
 		throw new NotImplementedException();
 	    }
 
@@ -97,7 +97,7 @@ public class NPMMocks {
 	    }
 
 	    @Override
-	    public List<Node> applyConfig(Config config) throws ConfigNotAppliedException {
+	    public List<Node> prepareDeployment(DeploymentRequest config) throws PrepareDeploymentFailedException {
 		throw new NotImplementedException();
 	    }
 	};

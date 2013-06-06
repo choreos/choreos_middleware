@@ -111,7 +111,7 @@ public class ParallelDeployTest {
 	@Override
 	public void run() {
 	    try {
-		npm.upgradeNode(this.testDeployer.nodeId);
+		npm.updateNode(this.testDeployer.nodeId);
 	    } catch (NodeNotUpgradedException e) {
 		e.printStackTrace();
 	    } catch (NodeNotFoundException e) {

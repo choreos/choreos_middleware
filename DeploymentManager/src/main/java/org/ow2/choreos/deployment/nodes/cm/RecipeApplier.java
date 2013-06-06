@@ -10,7 +10,7 @@ import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.chef.impl.KnifeImpl;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
-import org.ow2.choreos.nodes.ConfigNotAppliedException;
+import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.Node;
 
 public class RecipeApplier {
@@ -26,13 +26,13 @@ public class RecipeApplier {
      * @param node
      * @param cookbook
      * @return
-     * @throws ConfigNotAppliedException
+     * @throws PrepareDeploymentFailedException
      */
-    public void applyRecipe(Node node, String cookbook) throws ConfigNotAppliedException {
+    public void applyRecipe(Node node, String cookbook) throws PrepareDeploymentFailedException {
 	this.applyRecipe(node, cookbook, "");
     }
 
-    public void applyRecipe(Node node, String cookbook, String recipe) throws ConfigNotAppliedException {
+    public void applyRecipe(Node node, String cookbook, String recipe) throws PrepareDeploymentFailedException {
 
 	String recipeFullName;
 	if (recipe.equals(""))
@@ -44,7 +44,7 @@ public class RecipeApplier {
 	try {
 	    checker.checkAndPrepareNode(node);
 	} catch (NodeNotOKException e) {
-	    throw new ConfigNotAppliedException(recipeFullName);
+	    throw new PrepareDeploymentFailedException(recipeFullName);
 	}
 
 	Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
@@ -56,13 +56,13 @@ public class RecipeApplier {
 	    try {
 		knife.node().runListAdd(node.getChefName(), recipeFullName);
 	    } catch (KnifeException e) {
-		throw new ConfigNotAppliedException(recipeFullName);
+		throw new PrepareDeploymentFailedException(recipeFullName);
 	    }
 	}
 
 	boolean ok = verifyRecipeInRunList(knife, node.getChefName(), cookbook, recipe);
 	if (!ok) {
-	    throw new ConfigNotAppliedException(recipeFullName);
+	    throw new PrepareDeploymentFailedException(recipeFullName);
 	}
     }
 

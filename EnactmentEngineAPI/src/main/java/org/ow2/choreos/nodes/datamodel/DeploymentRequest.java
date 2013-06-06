@@ -4,39 +4,37 @@
 
 package org.ow2.choreos.nodes.datamodel;
 
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.ow2.choreos.services.datamodel.ResourceImpact;
 
 @XmlRootElement
-public class Config {
+public class DeploymentRequest {
 
-    private String name;
+    private String recipeName;
     private ResourceImpact resourceImpact;
     private int numberOfInstances = 1;
 
-    public Config() {
+    public DeploymentRequest() {
 
     }
 
-    public Config(String name) {
-	this.name = name;
+    public DeploymentRequest(String recipeName) {
+	this.recipeName = recipeName;
     }
 
-    public Config(String name, ResourceImpact resourceImpact, int numberOfInstances) {
-	this.name = name;
+    public DeploymentRequest(String recipeName, ResourceImpact resourceImpact, int numberOfInstances) {
+	this.recipeName = recipeName;
 	this.numberOfInstances = numberOfInstances;
 	this.resourceImpact = resourceImpact;
     }
 
-    @XmlElement(required = true)
-    public String getName() {
-	return name;
+    public String getRecipeName() {
+	return recipeName;
     }
 
-    public void setName(String value) {
-	this.name = value;
+    public void setRecipeName(String recipeName) {
+	this.recipeName = recipeName;
     }
 
     public ResourceImpact getResourceImpact() {
@@ -59,7 +57,7 @@ public class Config {
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
-	result = prime * result + ((name == null) ? 0 : name.hashCode());
+	result = prime * result + ((recipeName == null) ? 0 : recipeName.hashCode());
 	result = prime * result + numberOfInstances;
 	result = prime * result + ((resourceImpact == null) ? 0 : resourceImpact.hashCode());
 	return result;
@@ -73,11 +71,11 @@ public class Config {
 	    return false;
 	if (getClass() != obj.getClass())
 	    return false;
-	Config other = (Config) obj;
-	if (name == null) {
-	    if (other.name != null)
+	DeploymentRequest other = (DeploymentRequest) obj;
+	if (recipeName == null) {
+	    if (other.recipeName != null)
 		return false;
-	} else if (!name.equals(other.name))
+	} else if (!recipeName.equals(other.recipeName))
 	    return false;
 	if (numberOfInstances != other.numberOfInstances)
 	    return false;
@@ -91,8 +89,8 @@ public class Config {
 
     @Override
     public String toString() {
-	return "Config [name=" + name + ", resourceImpact=" + resourceImpact + ", numberOfInstances="
-		+ numberOfInstances + "]";
+	return "DeploymentRequest [recipeName=" + recipeName + ", resourceImpact=" + resourceImpact
+		+ ", numberOfInstances=" + numberOfInstances + "]";
     }
 
 }

@@ -45,7 +45,7 @@ import javax.xml.bind.annotation.XmlType;
 public class Configs {
 
     @XmlElement(namespace = "http://choreos.ime.usp.br/NodePoolManager/")
-    protected List<Config> config;
+    protected List<DeploymentRequest> config;
 
     /**
      * Gets the value of the config property.
@@ -65,13 +65,13 @@ public class Configs {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link Config }
+     * {@link DeploymentRequest }
      * 
      * 
      */
-    public List<Config> getConfig() {
+    public List<DeploymentRequest> getConfig() {
         if (config == null) {
-            config = new ArrayList<Config>();
+            config = new ArrayList<DeploymentRequest>();
         }
         return this.config;
     }

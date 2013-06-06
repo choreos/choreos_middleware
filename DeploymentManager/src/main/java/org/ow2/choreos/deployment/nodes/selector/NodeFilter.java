@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
-import org.ow2.choreos.nodes.datamodel.Config;
+import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.selectors.ObjectFilter;
 import org.ow2.choreos.services.datamodel.ResourceImpact;
@@ -21,7 +21,7 @@ import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryType;
  * @author leonardo
  * 
  */
-class NodeFilter implements ObjectFilter<Node, Config> {
+class NodeFilter implements ObjectFilter<Node, DeploymentRequest> {
 
     private enum MapperPolicy {
 	ANY_FIT, EXACT_FIT
@@ -53,7 +53,7 @@ class NodeFilter implements ObjectFilter<Node, Config> {
     }
 
     @Override
-    public List<Node> filter(List<Node> nodes, Config config) {
+    public List<Node> filter(List<Node> nodes, DeploymentRequest config) {
 	List<Node> filtered = new ArrayList<Node>();
 	for (Node node : nodes) {
 	    if (isAcceptable(config.getResourceImpact(), node)) {

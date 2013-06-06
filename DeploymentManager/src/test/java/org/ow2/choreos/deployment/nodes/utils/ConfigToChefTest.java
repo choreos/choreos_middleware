@@ -8,25 +8,25 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.ow2.choreos.deployment.nodes.chef.ConfigToChef;
-import org.ow2.choreos.nodes.datamodel.Config;
+import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 
 public class ConfigToChefTest {
 
     @Test
     public void shouldGetCookBookAndRecipeName() {
-	Config config = new Config();
-	config.setName("getting-started::default");
+	DeploymentRequest config = new DeploymentRequest();
+	config.setRecipeName("getting-started::default");
 
-	assertEquals(ConfigToChef.getCookbookNameFromConfigName(config.getName()), "getting-started");
-	assertEquals(ConfigToChef.getRecipeNameFromConfigName(config.getName()), "default");
+	assertEquals(ConfigToChef.getCookbookNameFromConfigName(config.getRecipeName()), "getting-started");
+	assertEquals(ConfigToChef.getRecipeNameFromConfigName(config.getRecipeName()), "default");
     }
 
     @Test
     public void shouldGetCookBookAndRecipeNameWithoutRecipeName() {
-	Config config = new Config();
-	config.setName("getting-started");
+	DeploymentRequest config = new DeploymentRequest();
+	config.setRecipeName("getting-started");
 
-	assertEquals(ConfigToChef.getCookbookNameFromConfigName(config.getName()), "getting-started");
-	assertEquals(ConfigToChef.getRecipeNameFromConfigName(config.getName()), "default");
+	assertEquals(ConfigToChef.getCookbookNameFromConfigName(config.getRecipeName()), "getting-started");
+	assertEquals(ConfigToChef.getRecipeNameFromConfigName(config.getRecipeName()), "default");
     }
 }

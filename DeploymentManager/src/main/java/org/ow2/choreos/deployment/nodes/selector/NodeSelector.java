@@ -4,7 +4,7 @@
 
 package org.ow2.choreos.deployment.nodes.selector;
 
-import org.ow2.choreos.nodes.datamodel.Config;
+import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.selectors.Selector;
 
@@ -22,6 +22,6 @@ import org.ow2.choreos.selectors.Selector;
  * @author leonardo
  * 
  */
-public interface NodeSelector extends Selector<Node, Config> {
+public interface NodeSelector extends Selector<Node, DeploymentRequest> {
 
 }

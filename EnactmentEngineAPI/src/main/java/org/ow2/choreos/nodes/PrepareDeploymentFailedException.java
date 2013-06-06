@@ -4,11 +4,11 @@
 
 package org.ow2.choreos.nodes;
 
-public class ConfigNotAppliedException extends Exception {
+public class PrepareDeploymentFailedException extends Exception {
 
     private static final long serialVersionUID = -3910285345563830341L;
 
-    public ConfigNotAppliedException(String configName) {
-	super("Config " + configName + " not applied");
+    public PrepareDeploymentFailedException(String recipeName) {
+	super("Recipe " + recipeName + " not applied");
     }
 }
