@@ -13,7 +13,7 @@ import com.ebmwebsourcing.easycommons.research.util.jaxb.SOAJAXBContext;
  * @author leonardo
  * 
  */
-public class EasyAPILoader {
+class EasyAPILoader {
 
     private static boolean loaded = false;
 

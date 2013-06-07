@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.bus.ESBNodesSelector;
-import org.ow2.choreos.chors.bus.ESBNodesSelectorFactory;
 import org.ow2.choreos.chors.bus.EasyESBNode;
 import org.ow2.choreos.chors.bus.ServiceInstancesProxifier;
 import org.ow2.choreos.chors.context.ContextCaster;
@@ -23,7 +22,6 @@ import org.ow2.choreos.services.datamodel.ServiceType;
 
 public class ChoreographyDeployerImpl implements ChoreographyDeployer {
 
-    private static final String BUS_POLICY_PROPERTY = "BUS_POLICY";
     private static final String BUS_PROPERTY = "BUS";
 
     private ChorRegistry reg = ChorRegistry.getInstance();
@@ -61,7 +59,6 @@ public class ChoreographyDeployerImpl implements ChoreographyDeployer {
 	logger.info("Deployed services=" + deployedMap);
 	boolean useTheBus = Boolean.parseBoolean(ChoreographyDeployerConfiguration.get(BUS_PROPERTY));
 	if (useTheBus) {
-	    logger.info("Resquested to proxify depoloyed services");
 	    this.proxifyServices(chor);
 	}
 	ContextSender sender = ContextSenderFactory.getInstance(ServiceType.SOAP);
@@ -97,16 +94,8 @@ public class ChoreographyDeployerImpl implements ChoreographyDeployer {
     }
 
     private void proxifyServices(Choreography choreography) {
-
-	ESBNodesSelector selector = null;
-	try {
-	    String esbSelectorType = ChoreographyDeployerConfiguration.get(BUS_POLICY_PROPERTY);
-	    selector = ESBNodesSelectorFactory.getInstance(esbSelectorType);
-	} catch (IllegalArgumentException e) {
-	    logger.error("Not going to proxify services because invalid ESBNodesSelector type.");
-	    return;
-	}
-
+	logger.info("Resquested to proxify depoloyed services");
+	ESBNodesSelector selector = new ESBNodesSelector();
 	Map<ServiceInstance, EasyESBNode> instancesNodesMap = selector.selectESBNodes(choreography);
 	ServiceInstancesProxifier proxifier = new ServiceInstancesProxifier();
 	proxifier.proxify(instancesNodesMap);

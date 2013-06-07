@@ -19,7 +19,7 @@ public class ServiceInstancesProxifier {
     /**
      * Proxifies all the instances.
      * 
-     * Collateral effect: the proxified address is set on the esbUris(SOAP)
+     * Side effect: the proxified address is set on the esbUris(SOAP)
      * property on the instance object. If a instance can be not proxified, an
      * error message is logged.
      * 

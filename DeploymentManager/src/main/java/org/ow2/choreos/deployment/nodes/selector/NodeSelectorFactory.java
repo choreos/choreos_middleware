@@ -7,6 +7,7 @@ package org.ow2.choreos.deployment.nodes.selector;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.utils.Configuration;
+import org.ow2.choreos.utils.LogConfigurator;
 import org.ow2.choreos.utils.SingletonsFactory;
 
 public class NodeSelectorFactory extends SingletonsFactory<NodeSelector> {
@@ -30,6 +31,7 @@ public class NodeSelectorFactory extends SingletonsFactory<NodeSelector> {
 
     private static void createNewInstance() {
 	Configuration conf = new Configuration(CLASS_MAP_FILE_PATH);
+	System.out.println(conf.get("LIMITED_ROUND_ROBIN"));
 	INSTANCE = new NodeSelectorFactory(conf);
     }
 
@@ -44,6 +46,12 @@ public class NodeSelectorFactory extends SingletonsFactory<NodeSelector> {
 	    throw new IllegalArgumentException();
 	}
 	return getInstance(nodeSelectorType);
+    }
+    
+    public static void main(String[] args) {
+	LogConfigurator.configLog();
+	System.out.println(DeploymentManagerConfiguration.get("NODE_SELECTOR"));
+	NodeSelectorFactory.getFactoryInstance().getInstance("LIMITED_ROUND_ROBIN");
     }
 
 }

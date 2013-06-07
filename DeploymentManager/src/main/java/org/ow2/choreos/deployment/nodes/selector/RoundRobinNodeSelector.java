@@ -9,7 +9,7 @@ import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.selectors.NotSelectedException;
 import org.ow2.choreos.selectors.RoundRobinSelector;
 
-class RoundRobinNodeSelector implements NodeSelector {
+public class RoundRobinNodeSelector implements NodeSelector {
 
     private RoundRobinSelector<Node, DeploymentRequest> selector;
 

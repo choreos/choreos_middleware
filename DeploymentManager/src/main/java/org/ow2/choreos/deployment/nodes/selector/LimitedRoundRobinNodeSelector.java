@@ -10,7 +10,7 @@ import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.selectors.LimitedRoundRobinSelector;
 import org.ow2.choreos.selectors.NotSelectedException;
 
-class LimitedRoundRobinNodeSelector implements NodeSelector {
+public class LimitedRoundRobinNodeSelector implements NodeSelector {
 
     private static final String VM_LIMIT_PROPERTY = "VM_LIMIT";
     

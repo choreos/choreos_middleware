@@ -1,4 +1,3 @@
 CHOR_DEPLOYER_PORT=9102
-# Binds and exposes services using EasyESB. Values: True or False
-BUS=False
-BUS_POLICY=SINGLE_NODE # Values: SINGLE_NODE or ALWAYS_CREATE 
+BUS=False # Binds and exposes services using EasyESB. Values: True or False
+BUS_POLICY=SINGLE_NODE # Values in bus_policies 

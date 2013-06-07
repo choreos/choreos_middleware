@@ -9,7 +9,7 @@ import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.selectors.AlwaysCreateSelector;
 import org.ow2.choreos.selectors.NotSelectedException;
 
-class AlwaysCreateNodeSelector implements NodeSelector {
+public class AlwaysCreateNodeSelector implements NodeSelector {
 
     private AlwaysCreateSelector<Node, DeploymentRequest> selector;
 

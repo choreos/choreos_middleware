@@ -378,7 +378,7 @@ public class Deployer {
 	    NodePoolManager npm = retriever.getNodesClient(owner);
 
 	    try {
-		npm.upgradeNode(nodeId);
+		npm.updateNode(nodeId);
 	    } catch (NodeNotUpgradedException e) {
 		logger.error("Bad response from /nodes/" + nodeId + "/upgrade; maybe some service is not deployed");
 	    } catch (NodeNotFoundException e) {
