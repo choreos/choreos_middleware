@@ -2,12 +2,13 @@ package org.ow2.choreos.chors.bus.selector;
 
 import java.util.List;
 
+import org.ow2.choreos.chors.bus.ESBRegister;
 import org.ow2.choreos.chors.bus.EasyESBNode;
 import org.ow2.choreos.chors.bus.EasyESBNodeImpl;
-import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpgradedException;
 import org.ow2.choreos.nodes.NodePoolManager;
+import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.selectors.ObjectCreationException;
@@ -27,7 +28,9 @@ public class ESBNodeFactory implements ObjectFactory<EasyESBNode> {
     @Override
     public EasyESBNode createNewInstance() throws ObjectCreationException {
 	try {
-	    return createNewESBNode();
+	    EasyESBNode esbNode = createNewESBNode();
+	    ESBRegister.addEsbNode(esbNode);
+	    return esbNode;
 	} catch (PrepareDeploymentFailedException e) {
 	    throw new ObjectCreationException();
 	} catch (NodeNotUpgradedException e) {

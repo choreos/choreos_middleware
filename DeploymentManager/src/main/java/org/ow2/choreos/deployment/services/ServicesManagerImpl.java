@@ -24,8 +24,8 @@ import org.ow2.choreos.deployment.services.diff.UpdateAction;
 import org.ow2.choreos.deployment.services.recipe.RecipeBuilder;
 import org.ow2.choreos.deployment.services.recipe.RecipeBuilderFactory;
 import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
-import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.NodePoolManager;
+import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.ServiceNotDeletedException;
@@ -210,16 +210,24 @@ public class ServicesManagerImpl implements ServicesManager {
 	    logger.error("Service " + service.getSpec().getUUID() + " not created: " + e.getMessage());
 	}
 
+	List<ServiceInstance> instances = new ArrayList<ServiceInstance>();
 	for (Node node : nodes) {
-	    if (!((node.getHostname() == null || node.getHostname().isEmpty()) && (node.getIp() == null || node.getIp()
-		    .isEmpty()))) {
-		logger.debug("nodeLocation= " + node.getHostname() + "; node IP=" + node.getIp());
-		service.addInstance(new ServiceInstance(node));
-	    } else {
-		logger.debug("I cannot process a request to create a node with no IP or hostname!");
-	    }
+	    if (isNodeValid(node)) {
+		ServiceInstance instance = new ServiceInstance(node);
+		instance.setServiceSpec(service.getSpec());
+		instances.add(instance);
+	    } 
 	}
-
+	service.setServiceInstances(instances);
+    }
+    
+    private boolean isNodeValid(Node node) {
+	if (node == null || node.getIp() == null || node.getIp().isEmpty()) {
+	    logger.error("Invalid node (no ip): " + node);
+	    return false;
+	} else {
+	    return true;
+	}
     }
 
     @Override

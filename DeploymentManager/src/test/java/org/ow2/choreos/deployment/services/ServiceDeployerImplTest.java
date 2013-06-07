@@ -33,7 +33,7 @@ import org.ow2.choreos.utils.LogConfigurator;
 public class ServiceDeployerImplTest {
 
     private NodePoolManager npm;
-    private ServicesManager serviceDeployer;
+    private ServicesManager servicesManager;
 
     private Node selectedNode;
     private DeployableServiceSpec serviceSpec;
@@ -74,7 +74,7 @@ public class ServiceDeployerImplTest {
 	String cookbookUploadResult = "Cookbook 'uploaded' by mock";
 	when(knifeCookbbok.upload(any(String.class), any(String.class))).thenReturn(cookbookUploadResult);
 
-	serviceDeployer = new ServicesManagerImpl(npm, knife);
+	servicesManager = new ServicesManagerImpl(npm, knife);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class ServiceDeployerImplTest {
 	final String EXPECTED_URI = "http://" + selectedNode.getIp() + ":" + serviceSpec.getPort() + "/"
 		+ serviceSpec.getEndpointName() + "/";
 
-	DeployableService service = serviceDeployer.createService(serviceSpec);
+	DeployableService service = servicesManager.createService(serviceSpec);
 
 	ServiceInstance instance = service.getInstances().get(0);
 
