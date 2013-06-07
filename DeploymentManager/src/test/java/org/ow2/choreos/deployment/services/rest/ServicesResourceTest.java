@@ -11,6 +11,8 @@ import static org.mockito.Mockito.when;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.List;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -55,7 +57,8 @@ public class ServicesResourceTest {
 	ServiceInstance instance = new ServiceInstance();
 	instance.setInstanceId("1");
 	instance.setNativeUri("http://hostname:1234/airline");
-	airline.addInstance(instance);
+	List<ServiceInstance> instances = Collections.singletonList(instance);
+	airline.setServiceInstances(instances);
 	return airline;
     }
 

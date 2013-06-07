@@ -44,28 +44,24 @@ public class DeployableService extends Service {
     }
 
     public List<ServiceInstance> getInstances() {
-	checkServiceInstances();
-	return serviceInstances;
+	if (serviceInstances != null) 
+	    return serviceInstances;
+	else
+	    return new ArrayList<ServiceInstance>();
     }
 
     public void setServiceInstances(List<ServiceInstance> instances) {
 	this.serviceInstances = instances;
     }
 
-    public void addInstance(ServiceInstance instance) {
-	checkServiceInstances();
-	synchronized (serviceInstances) {
-	    serviceInstances.add(instance);
-	}
-	instance.setServiceSpec(this.getSpec());
-    }
-
     @Override
     public List<String> getUris() {
 
-	checkServiceInstances();
+	if (serviceInstances == null) {
+	    return new ArrayList<String>();
+	}
+	
 	List<String> uris = new ArrayList<String>();
-
 	synchronized (serviceInstances) {
 	    for (ServiceInstance service : serviceInstances) {
 		uris.add(service.getNativeUri());
@@ -75,8 +71,7 @@ public class DeployableService extends Service {
     }
 
     public ServiceInstance getInstance(String instanceId) {
-	checkServiceInstances();
-	synchronized (serviceInstances) {
+	if (serviceInstances != null) {
 	    for (ServiceInstance instance : serviceInstances) {
 		if (instance.getInstanceId().equals(instanceId))
 		    return instance;
@@ -93,14 +88,4 @@ public class DeployableService extends Service {
 	this.recipeBundle = recipeBundle;
     }
 
-    private void checkServiceInstances() {
-
-	if (serviceInstances == null) {
-	    synchronized (this) {
-		if (serviceInstances == null) {
-		    serviceInstances = new ArrayList<ServiceInstance>();
-		}
-	    }
-	}
-    }
 }

@@ -6,6 +6,7 @@ package org.ow2.choreos.chors;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
@@ -159,7 +160,10 @@ public class ModelsForTest {
 	Node node = createTestNode("2", TRAVEL_AGENCY_IP, "choreos-node");
 	travelAgencyService = new DeployableService((DeployableServiceSpec) this.travelSpec);
 
-	((DeployableService) travelAgencyService).addInstance(new ServiceInstance(node));
+	ServiceInstance instance = new ServiceInstance(node);
+	instance.setServiceSpec((DeployableServiceSpec) this.travelSpec);
+	List<ServiceInstance> instances = Collections.singletonList(instance);
+	((DeployableService) travelAgencyService).setServiceInstances(instances);
 	travelChoreographyService = new ChoreographyService(travelAgencyChoreographyServiceSpec);
 	travelChoreographyService.setService(getTravelService());
     }
@@ -167,7 +171,10 @@ public class ModelsForTest {
     public void initAirlineServices() {
 	Node node = createTestNode("1", AIRLINE_IP, "choreos-node");
 	airlineService = new DeployableService((DeployableServiceSpec) this.airlineSpec);
-	((DeployableService) airlineService).addInstance(new ServiceInstance(node));
+	ServiceInstance instance = new ServiceInstance(node);
+	instance.setServiceSpec((DeployableServiceSpec) this.airlineSpec);
+	List<ServiceInstance> instances = Collections.singletonList(instance);
+	((DeployableService) airlineService).setServiceInstances(instances);
 	airlineChoreographyService = new ChoreographyService(airlineChoreographyServiceSpec);
 	airlineChoreographyService.setService(getAirlineService());
     }
