@@ -48,6 +48,10 @@ public class DeployableService extends Service {
 	return serviceInstances;
     }
 
+    public List<ServiceInstance> getServiceInstances() {
+	return serviceInstances;
+    }
+
     public void setServiceInstances(List<ServiceInstance> instances) {
 	this.serviceInstances = instances;
     }
