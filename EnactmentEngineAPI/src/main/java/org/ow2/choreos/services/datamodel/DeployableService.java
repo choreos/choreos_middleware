@@ -103,4 +103,13 @@ public class DeployableService extends Service {
 	    }
 	}
     }
+
+    @Override
+    public String toString() {
+	String repr = "DeployableService [uuid=" + super.getSpec().getUUID();
+	repr += ", spec={" + super.getSpec() + "}";
+	repr += ", instances={" + this.getInstances() + "}";
+	repr += (getUris() != null) ? repr += ", uri=" + getUris().toString() + "]" : "]";
+	return repr;
+    }
 }
