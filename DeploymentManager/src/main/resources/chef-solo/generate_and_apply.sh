@@ -45,17 +45,53 @@ function prepare_node() {
 		# remove duplicate lines (http://sed.sourceforge.net/sed1line.txt)
 		# but i do not know how it works, :-)
 		sed '$!N; /^\(.*\)\n\1$/!P; D' -i solo.rb
-	else
-		# TODO: only update node.json
 	fi
+}
+
+function write_war_json() {
+
+echo '{
+	"run_list" : [
+		"recipe[apt]",
+		"recipe[java]",
+		"recipe[tomcat]"
+}' >> node.json
+
 }
 
 function install_war() {
         prepare_node
+	cd $HOME/chef-solo
+	if [ -f node.json ]; then
+		# add service recipe json entry
+		echo "not implemented"	
+	else
+		# create json for first service
+		write_war_json
+	fi
+}
+
+function write_jar_json() {
+
+echo '{
+        "run_list" : [
+                "recipe[apt]",
+                "recipe[java]"
+        ]
+}' >> node.json
+
 }
 
 function install_jar() {
         prepare_node
+	cd $HOME/chef-solo
+	if [ -f node.json ]; then
+		# add service recipe json entry
+		echo "not implemented"
+	else
+		# create json for first service
+		write_jar_json
+	fi
 }
 
 case "$1" in
@@ -69,4 +105,5 @@ case "$1" in
                 echo "Usage: generate_and_apply [-jar|-war]"
                 ;;
 esac
+sudo chef-solo -c $HOME/chef-solo/solo.rb
 
