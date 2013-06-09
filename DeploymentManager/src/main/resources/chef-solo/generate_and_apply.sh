@@ -56,6 +56,7 @@ echo '{
 		"recipe[apt]",
 		"recipe[java]",
 		"recipe[tomcat]"
+	]
 }' >> node.json
 
 }
