@@ -1,5 +1,6 @@
 #! /bin/bash
 
+
 function install_chef_solo() {
 	if which chef-solo >/dev/null; then
 		echo "Chef-solo already installed."
@@ -16,7 +17,7 @@ function install_chef_solo() {
 	
 		# install chef quietly and with no chef installation prompt
 		sudo apt-get update
-		echo "chef chef/chef_server_url string none" | sudo debconf-set-selections && sudo apt-get install chef -y
+		echo "chq::ef chef/chef_server_url string none" | sudo debconf-set-selections && sudo apt-get install chef -y
 	
 		# remove chef-client from run level
 		sudo update-rc.d -f chef-client remove
@@ -59,16 +60,20 @@ echo '{
 
 }
 
+function add_war_service() {
+        cd $HOME/chef-solo
+        s_name=`uuidgen`
+        cp -ra cookbooks/war cookbooks/$s_name
+	edit_recipe $1 $2 $s_name
+}  
+
 function install_war() {
         prepare_node
 	cd $HOME/chef-solo
-	if [ -f node.json ]; then
-		# add service recipe json entry
-		echo "not implemented"	
-	else
-		# create json for first service
+	if [ ! -f node.json ]; then
 		write_war_json
 	fi
+	add_war_service $1 $2
 }
 
 function write_jar_json() {
@@ -82,24 +87,46 @@ echo '{
 
 }
 
+function edit_recipe() {
+	 # edit recipe ($PackageURL , $NAME, $DeploymentManagerURL, $WARFILE)
+        cd cookbooks/$3
+
+        sed -i '/\$PackageURL/ s##'"$1"'#g' attributes/default.rb
+        sed -i '/\$NAME/ s##'"$3"'#g' attributes/default.rb
+        sed -i '/\$DeploymentManagerURL/ s##'"$2"'#g' attributes/default.rb
+        sed -i '/\$WARFILE/ s##'"$3"'#g' attributes/default.rb
+
+        sed -i '/\$NAME/ s##'"$3"'#g' recipes/default.rb
+
+        cd $HOME/chef-solo
+        # edit node.json (add new service recipe)
+        sed -i -r -e 's/.*\"recipe\[apt\]\",/\t\t\"recipe[apt]\",\n\t\t\"recipe\['"$3"']\",/g' node.json
+}
+
+# AIRLINE_JAR=http://valinhos.ime.usp.br:54080/enact_test/v2-2/airline-service.jar
+# AIRLINE_WAR=http://valinhos.ime.usp.br:54080/enact_test/v2-2/airline.war
+function add_jar_service() {
+	cd $HOME/chef-solo
+	s_name=`uuidgen`
+	cp -ra cookbooks/jar cookbooks/$s_name
+	edit_recipe $1 $2 $s_name
+}
+
 function install_jar() {
         prepare_node
 	cd $HOME/chef-solo
-	if [ -f node.json ]; then
-		# add service recipe json entry
-		echo "not implemented"
-	else
-		# create json for first service
+	if [ ! -f node.json ];then
 		write_jar_json
 	fi
+	add_jar_service $1 $2
 }
 
 case "$1" in
         -war)
-                install_war
+                install_war $2 $3
                 ;;
         -jar)   
-                install_jar
+                install_jar $2 $3
                 ;;
         *)      
                 echo "Usage: generate_and_apply [-jar|-war]"
