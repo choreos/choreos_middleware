@@ -21,6 +21,7 @@ function install_chef_solo() {
 	
 		# remove chef-client from run level
 		sudo update-rc.d -f chef-client remove
+		sudo service chef-client stop
 	fi
 }
 
@@ -133,5 +134,5 @@ case "$1" in
                 echo "Usage: generate_and_apply [-jar|-war]"
                 ;;
 esac
-sudo chef-solo -c $HOME/chef-solo/solo.rb
+#sudo chef-solo -c $HOME/chef-solo/solo.rb
 

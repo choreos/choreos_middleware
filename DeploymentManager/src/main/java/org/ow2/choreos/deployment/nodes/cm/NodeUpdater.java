@@ -49,7 +49,7 @@ public class NodeUpdater {
     public void update(Node node) throws NodeNotUpdatedException {
 
 	SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-	ChefClientRunner runner = new ChefClientRunner(ssh, node.getId());
+	ChefSoloRunner runner = new ChefSoloRunner(ssh, node.getId());
 	CompletionService<Boolean> myExecutor = new ExecutorCompletionService<Boolean>(singleThreadExecutor);
 	myExecutor.submit(runner);
 
@@ -66,7 +66,7 @@ public class NodeUpdater {
 		fail(node);
 	    }
 	} catch (InterruptedException e) {
-	    String message = "chef-client timed out on node " + node.toString();
+	    String message = "chef-solo timed out on node " + node.toString();
 	    logger.error(message);
 	    throw new NodeNotUpdatedException(node.getId());
 	} catch (ExecutionException e) {
@@ -87,13 +87,13 @@ public class NodeUpdater {
      * is not ready yet.
      * 
      */
-    private class ChefClientRunner implements Callable<Boolean> {
+    private class ChefSoloRunner implements Callable<Boolean> {
 
 	SshUtil ssh;
 	String nodeId;
 	boolean ok = false;
 
-	public ChefClientRunner(SshUtil ssh, String nodeId) {
+	public ChefSoloRunner(SshUtil ssh, String nodeId) {
 	    this.ssh = ssh;
 	    this.nodeId = nodeId;
 	}
@@ -105,10 +105,11 @@ public class NodeUpdater {
 
 	    String logFile = DeploymentManagerConfiguration.get("CHEF_CLIENT_LOG");
 	    if (logFile == null || logFile.isEmpty()) {
-		logFile = "/tmp/chef-client.log";
+		logFile = "/tmp/chef-solo.log";
 	    }
 
-	    final String CHEF_CLIENT_COMMAND = "sudo chef-client --logfile " + logFile;
+	    final String CHEF_SOLO_COMMAND = "sudo nohup bash -c 'chef-solo -c $HOME/chef-solo/solo.rb " + logFile
+		    + "'";
 	    final int MAX_TRIALS = 5;
 	    final int SLEEPING_TIME = 5000;
 	    int trials = 0;
@@ -118,7 +119,7 @@ public class NodeUpdater {
 	    while (!ok && !stop) {
 		try {
 		    trials++;
-		    ssh.runCommand(CHEF_CLIENT_COMMAND);
+		    ssh.runCommand(CHEF_SOLO_COMMAND);
 		    ok = true;
 		} catch (JSchException e) {
 		    if (trials >= MAX_TRIALS) {
