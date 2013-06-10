@@ -34,15 +34,14 @@ public class BootstrapChecker {
 
 	String result = "";
 	try {
-	    result = ssh.runCommand("ls /etc/chef");
+	    result = ssh.runCommand("ls $HOME/chef-solo");
 	} catch (JSchException e) {
 	    return false;
 	} catch (SshCommandFailed e) {
 	    return false;
 	}
 
-	if (result.contains("client.pem") && result.contains("client.rb") && result.contains("first-boot.json")
-		&& result.contains("validation.pem")) {
+	if (result.contains("solo.rb") && result.contains("node.json") && result.contains("cookbooks")) {
 	    return true;
 	} else {
 	    return false;

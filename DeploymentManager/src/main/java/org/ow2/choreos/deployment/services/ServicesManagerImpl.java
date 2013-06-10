@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
-import org.ow2.choreos.deployment.nodes.cm.RecipeApplier;
 import org.ow2.choreos.deployment.services.diff.UpdateAction;
 import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
 import org.ow2.choreos.nodes.NodePoolManager;
@@ -155,12 +154,12 @@ public class ServicesManagerImpl implements ServicesManager {
     }
 
     private void executeServiceInstanceUndeployment(Recipe deactivateRecipe, ServiceInstance instance) {
-	RecipeApplier recipeApplyer = new RecipeApplier();
-	try {
-	    recipeApplyer.applyRecipe(instance.getNode(), deactivateRecipe.getCookbookName(), "");
-	} catch (PrepareDeploymentFailedException e) {
-	    e.printStackTrace();
-	}
+	/*
+	 * RecipeApplier recipeApplyer = new RecipeApplier(); try {
+	 * recipeApplyer.applyRecipe(instance.getNode(),
+	 * deactivateRecipe.getCookbookName(), ""); } catch
+	 * (PrepareDeploymentFailedException e) { e.printStackTrace(); }
+	 */
     }
 
     @Override

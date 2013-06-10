@@ -9,7 +9,7 @@ import org.ow2.choreos.selectors.ObjectFactory;
 
 class NodeFactory implements ObjectFactory<Node> {
 
-    private static final int TIMEOUT_SECONDS = 5*60; 
+    private static final int TIMEOUT_SECONDS = 5 * 60;
     private NodePoolManager npm;
 
     public NodeFactory(NodePoolManager npm) {
