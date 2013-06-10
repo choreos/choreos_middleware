@@ -1,12 +1,6 @@
 DEPLOYMENT_MANAGER_PORT=9100
 
-# set a list of recipes to be applied on bootstrap (ganglia,harakiri,...)
-DEFAULT_RECIPES=harakiri
-HARAKIRI=false
 EXTERNAL_DEPLOYMENT_MANAGER_URL=http://192.168.48.115:9100/deploymentmanager
-
-# This is a temporary configuration param
-USE_CHEF_SOLO=false
 
 NODE_SELECTOR=ALWAYS_CREATE # Values in node_selector.properties
 VM_LIMIT=0 # set if using LIMITED_ROUND_ROBIN
