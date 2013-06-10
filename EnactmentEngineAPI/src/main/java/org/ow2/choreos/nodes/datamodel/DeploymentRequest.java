@@ -6,26 +6,17 @@ package org.ow2.choreos.nodes.datamodel;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.ResourceImpact;
+
 @XmlRootElement
 public class DeploymentRequest {
 
-    private String recipeName;
+    private DeployableService service;
     private ResourceImpact resourceImpact;
     private int numberOfInstances = 1;
-
-    public DeploymentRequest() {
-
-    }
-
-    public DeploymentRequest(String recipeName) {
-	this.recipeName = recipeName;
-    }
-
-    public DeploymentRequest(String recipeName, ResourceImpact resourceImpact, int numberOfInstances) {
-	this.recipeName = recipeName;
-	this.numberOfInstances = numberOfInstances;
-	this.resourceImpact = resourceImpact;
-    }
+    private String recipeName;
+    private String deploymentManagerURL;
 
     public String getRecipeName() {
 	return recipeName;
@@ -33,6 +24,30 @@ public class DeploymentRequest {
 
     public void setRecipeName(String recipeName) {
 	this.recipeName = recipeName;
+    }
+
+    public DeploymentRequest() {
+
+    }
+
+    public DeploymentRequest(String recipeName, ResourceImpact resourceImpact, int numberOfInstances) {
+	this.numberOfInstances = numberOfInstances;
+	this.resourceImpact = resourceImpact;
+	this.recipeName = recipeName;
+    }
+
+    public DeploymentRequest(DeployableService service) {
+	this.service = service;
+	this.resourceImpact = service.getSpec().getResourceImpact();
+	this.numberOfInstances = service.getSpec().getNumberOfInstances();
+    }
+
+    public DeploymentRequest(String recipeName) {
+	this.recipeName = recipeName;
+    }
+
+    public DeployableService getService() {
+	return this.service;
     }
 
     public ResourceImpact getResourceImpact() {
@@ -55,7 +70,6 @@ public class DeploymentRequest {
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
-	result = prime * result + ((recipeName == null) ? 0 : recipeName.hashCode());
 	result = prime * result + numberOfInstances;
 	result = prime * result + ((resourceImpact == null) ? 0 : resourceImpact.hashCode());
 	return result;
@@ -70,11 +84,6 @@ public class DeploymentRequest {
 	if (getClass() != obj.getClass())
 	    return false;
 	DeploymentRequest other = (DeploymentRequest) obj;
-	if (recipeName == null) {
-	    if (other.recipeName != null)
-		return false;
-	} else if (!recipeName.equals(other.recipeName))
-	    return false;
 	if (numberOfInstances != other.numberOfInstances)
 	    return false;
 	if (resourceImpact == null) {
@@ -87,8 +96,15 @@ public class DeploymentRequest {
 
     @Override
     public String toString() {
-	return "DeploymentRequest [recipeName=" + recipeName + ", resourceImpact=" + resourceImpact
-		+ ", numberOfInstances=" + numberOfInstances + "]";
+	return "DeploymentRequest [resourceImpact=" + resourceImpact + ", numberOfInstances=" + numberOfInstances + "]";
+    }
+
+    public String getDeploymentManagerURL() {
+	return this.deploymentManagerURL;
+    }
+
+    public void setDeploymentManagerURL(String deploymentManagerURL) {
+	this.deploymentManagerURL = deploymentManagerURL;
     }
 
 }
