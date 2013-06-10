@@ -53,7 +53,7 @@ public class MiddlewareExperiment {
 		Timer timer = new Timer();
 		MiddlewareExperimentTimerTask middlewareExperimentTimerTask = new MiddlewareExperimentTimerTask();
 		
-		timer.schedule(middlewareExperimentTimerTask, 0, 1000);
+		timer.schedule(middlewareExperimentTimerTask, 0, 10);
 	}
 
 	public static void main(String[] args) {
@@ -87,6 +87,7 @@ public class MiddlewareExperiment {
 				e1.printStackTrace();
 			}
 			try {
+				@SuppressWarnings("unused")
 				String codes = response.getChild("return").getContent();
 			} catch (NoSuchFieldException e1) {
 				e1.printStackTrace();
