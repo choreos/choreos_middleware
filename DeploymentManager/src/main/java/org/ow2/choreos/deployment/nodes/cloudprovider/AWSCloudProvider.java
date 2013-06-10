@@ -56,9 +56,11 @@ public class AWSCloudProvider implements CloudProvider {
 	Properties overrides = new Properties();
 	overrides.setProperty(AWSEC2Constants.PROPERTY_EC2_AMI_QUERY, "image-id=" + image);
 
-	ComputeServiceContext context = ContextBuilder.newBuilder(PROVIDER)
-		.credentials(DeploymentManagerConfiguration.get("AMAZON_ACCESS_KEY_ID"), DeploymentManagerConfiguration.get("AMAZON_SECRET_KEY"))
-		.overrides(overrides).buildView(ComputeServiceContext.class);
+	ComputeServiceContext context = ContextBuilder
+		.newBuilder(PROVIDER)
+		.credentials(DeploymentManagerConfiguration.get("AMAZON_ACCESS_KEY_ID"),
+			DeploymentManagerConfiguration.get("AMAZON_SECRET_KEY")).overrides(overrides)
+		.buildView(ComputeServiceContext.class);
 
 	return context.getComputeService();
     }
@@ -68,7 +70,7 @@ public class AWSCloudProvider implements CloudProvider {
 	long t0 = System.currentTimeMillis();
 
 	Node node = new Node();
-	
+
 	oneRequestPerSecondRule();
 	logger.debug("Creating node...");
 

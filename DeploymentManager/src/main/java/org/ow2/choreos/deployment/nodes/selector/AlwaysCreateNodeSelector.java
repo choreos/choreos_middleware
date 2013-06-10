@@ -23,5 +23,5 @@ public class AlwaysCreateNodeSelector implements NodeSelector {
     public List<Node> select(DeploymentRequest requirements, int objectsQuantity) throws NotSelectedException {
 	return this.selector.select(requirements, objectsQuantity);
     }
-    
+
 }
