@@ -194,14 +194,14 @@ public class NPMImpl implements NodePoolManager {
 	return "nohup bash -c" + " 'wget http://valinhos.ime.usp.br:54080/choreos/generate_and_apply.tgz;"
 		+ "tar xf generate_and_apply.tgz;" + ". generate_and_apply.sh " + "-jar "
 		+ deploymentRequest.getService().getSpec().getPackageUri() + " "
-		+ deploymentRequest.getDeploymentManagerURL() + "'";
+		+ deploymentRequest.getDeploymentManagerURL() + "' &";
     }
 
     private String getWarCommand(DeploymentRequest deploymentRequest) {
 	return "nohup bash -c" + " 'wget http://valinhos.ime.usp.br:54080/choreos/generate_and_apply.tgz;"
 		+ "tar xf generate_and_apply.tgz;" + ". generate_and_apply.sh " + "-war "
 		+ deploymentRequest.getService().getSpec().getPackageUri() + " "
-		+ deploymentRequest.getDeploymentManagerURL() + "'";
+		+ deploymentRequest.getDeploymentManagerURL() + "' &";
     }
 
     @Override
