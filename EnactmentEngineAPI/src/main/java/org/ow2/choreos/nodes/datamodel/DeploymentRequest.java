@@ -5,8 +5,9 @@
 package org.ow2.choreos.nodes.datamodel;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
 import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.ResourceImpact;
+
 @XmlRootElement
 public class DeploymentRequest {
 

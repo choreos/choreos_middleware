@@ -134,6 +134,6 @@ case "$1" in
                 echo "Usage: generate_and_apply [-jar|-war]"
                 ;;
 esac
-echo $s_name
+echo $s_name | tr -d '\n'
 #sudo chef-solo -c $HOME/chef-solo/solo.rb
 

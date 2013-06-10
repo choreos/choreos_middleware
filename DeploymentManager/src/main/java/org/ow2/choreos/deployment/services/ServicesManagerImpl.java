@@ -73,7 +73,7 @@ public class ServicesManagerImpl implements ServicesManager {
 
     }
 
-    private void runGenerateAndApplyScript(DeployableService service) throws ServiceNotDeployedException {
+    private void runGenerateAndApplyScript(DeployableService service) throws ServiceNotCreatedException {
 
 	DeploymentRequest deploymentRequest = new DeploymentRequest(service);
 	deploymentRequest
