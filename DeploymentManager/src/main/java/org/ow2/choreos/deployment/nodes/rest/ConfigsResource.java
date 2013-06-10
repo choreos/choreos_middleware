@@ -22,8 +22,8 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
-import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.NodePoolManager;
+import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.nodes.datamodel.NodeRestRepresentation;
@@ -60,9 +60,9 @@ public class ConfigsResource {
     @Consumes(MediaType.APPLICATION_XML)
     public Response applyConfig(DeploymentRequest config, @Context UriInfo uriInfo) throws URISyntaxException {
 
-	logger.debug("Request to apply " + config.getRecipeName());
+	logger.debug("Request to apply " + config.getService().toString());
 
-	if (config == null || config.getRecipeName() == null || config.getRecipeName().isEmpty())
+	if (config == null || config.getService() == null)
 	    return Response.status(Status.BAD_REQUEST).build();
 
 	List<Node> nodes;

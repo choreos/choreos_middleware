@@ -4,25 +4,15 @@
 
 package org.ow2.choreos.deployment.services;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.chef.KnifeException;
-import org.ow2.choreos.chef.impl.KnifeImpl;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.cm.RecipeApplier;
 import org.ow2.choreos.deployment.services.diff.UpdateAction;
-import org.ow2.choreos.deployment.services.recipe.RecipeBuilder;
-import org.ow2.choreos.deployment.services.recipe.RecipeBuilderFactory;
 import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
@@ -45,18 +35,11 @@ public class ServicesManagerImpl implements ServicesManager {
 
     private Logger logger = Logger.getLogger(ServicesManagerImpl.class);
 
-    // avoid all memory consumption
-    private static Executor cookbookUploadExecutor = Executors.newFixedThreadPool(100);
-
     private DeployedServicesRegistry registry = DeployedServicesRegistry.getInstance();
     private NodePoolManager npm;
     private Knife knife;
 
     public ServicesManagerImpl(NodePoolManager npm) {
-
-	final String CHEF_REPO = DeploymentManagerConfiguration.get("CHEF_REPO");
-	final String CHEF_CONFIG_FILE = DeploymentManagerConfiguration.get("CHEF_CONFIG_FILE");
-	Knife knife = new KnifeImpl(CHEF_CONFIG_FILE, CHEF_REPO);
 	fakeConstructor(npm, knife);
     }
 
@@ -83,7 +66,7 @@ public class ServicesManagerImpl implements ServicesManager {
 	}
 
 	if (serviceSpec.getPackageType() != PackageType.LEGACY) {
-	    service = createDeployableService(service);
+	    runGenerateAndApplyScript(service);
 	}
 
 	registry.addService(serviceSpec.getUUID(), service);
@@ -91,119 +74,15 @@ public class ServicesManagerImpl implements ServicesManager {
 
     }
 
-    private DeployableService createDeployableService(DeployableService service) throws ServiceNotDeployedException {
+    private void runGenerateAndApplyScript(DeployableService service) throws ServiceNotDeployedException {
 
-	createAndUploadRecipes(service);
-	logger.debug("recipes uploaded");
-	applyRecipe(service, service.getSpec().getNumberOfInstances());
-	logger.debug("creation of service " + service.getSpec().getUUID() + " completed");
-
-	return service;
-    }
-
-    private void createAndUploadRecipes(DeployableService service) throws ServiceNotDeployedException {
-
-	for (int i = 0; i < 5;) {
-	    try {
-		this.uploadRecipes(this.createRecipes(service));
-	    } catch (KnifeException e) {
-		i++;
-		if (i >= 4) {
-		    logger.error("Could not upload recipe: " + e.getMessage());
-		    throw new ServiceNotDeployedException(service.getSpec().getUUID());
-		} else {
-		    try {
-			Thread.sleep(500);
-		    } catch (InterruptedException e1) {
-		    }
-		    continue;
-		}
-	    }
-	    break;
-	}
-    }
-
-    private RecipeBundle createRecipes(DeployableService service) {
-	PackageType type = service.getSpec().getPackageType();
-	RecipeBuilder builder = RecipeBuilderFactory.getRecipeBuilderInstance(type);
-	RecipeBundle bundle = builder.createServiceRecipeBundle(service.getSpec());
-	service.setRecipeBundle(bundle);
-	return bundle;
-    }
-
-    private void uploadRecipes(RecipeBundle serviceRecipeBundle) throws KnifeException {
-
-	File folder = new File(serviceRecipeBundle.getCookbookFolder());
-	String dir = folder.getAbsolutePath();
-	uploadServiceRecipe(serviceRecipeBundle, dir);
-	// uploadDeactivateRecipe(serviceRecipeBundle, dir);
-    }
-
-    private void uploadDeactivateRecipe(RecipeBundle serviceRecipeBundle, String dir) throws KnifeException {
-	String result;
-	logger.debug("Uploading deactivate recipe " + serviceRecipeBundle.getServiceRecipe().getCookbookName());
-	result = this.knife.cookbook().upload(serviceRecipeBundle.getDeactivateRecipe().getCookbookName(), dir);
-	logger.debug(result);
-    }
-
-    private void uploadServiceRecipe(RecipeBundle serviceRecipeBundle, String dir) throws KnifeException {
-
-	final int COOKBOOK_UPLOAD_TIMEOUT = 4;
-	logger.debug("Uploading service recipe " + serviceRecipeBundle.getServiceRecipe().getCookbookName());
-
-	CompletionService<Callable<CookbookUploader>> completionService = new ExecutorCompletionService<Callable<CookbookUploader>>(
-		cookbookUploadExecutor);
-	CookbookUploader cookbookUploader = new CookbookUploader(serviceRecipeBundle, dir);
-	completionService.submit(cookbookUploader, null);
-
-	try {
-	    completionService.poll(COOKBOOK_UPLOAD_TIMEOUT, TimeUnit.MINUTES);
-	} catch (InterruptedException e) {
-	    throw new KnifeException("cookbook not uploaded", "cookbook not uploaded");
-	}
-
-	if (!cookbookUploader.ok) {
-	    throw new KnifeException("cookbook not uploaded", "cookbook not uploaded");
-	}
-    }
-
-    private class CookbookUploader implements Runnable {
-
-	RecipeBundle serviceRecipeBundle;
-	String dir;
-	boolean ok = false;
-
-	CookbookUploader(RecipeBundle serviceRecipeBundle, String dir) {
-	    this.serviceRecipeBundle = serviceRecipeBundle;
-	    this.dir = dir;
-	}
-
-	@Override
-	public void run() {
-	    String result;
-	    try {
-		result = knife.cookbook().upload(serviceRecipeBundle.getServiceRecipe().getCookbookName(), dir);
-		logger.debug(result);
-		ok = true;
-	    } catch (KnifeException e) {
-		ok = false;
-	    }
-	}
-    }
-
-    private void applyRecipe(DeployableService service, int numberOfNewInstances) {
-
-	RecipeBundle serviceRecipe = service.getRecipeBundle();
-
-	String configName = serviceRecipe.getServiceRecipe().getCookbookName() + "::"
-		+ serviceRecipe.getServiceRecipe().getName();
-
-	DeploymentRequest config = new DeploymentRequest(configName, service.getSpec().getResourceImpact(), numberOfNewInstances);
-
-	// TODO: throw exception
+	DeploymentRequest deploymentRequest = new DeploymentRequest(service);
+	deploymentRequest
+		.setDeploymentManagerURL(DeploymentManagerConfiguration.get("EXTERNAL_DEPLOYMENT_MANAGER_URL"));
 	List<Node> nodes = new ArrayList<Node>();
+
 	try {
-	    nodes = npm.prepareDeployment(config);
+	    nodes = npm.prepareDeployment(deploymentRequest);
 	} catch (PrepareDeploymentFailedException e) {
 	    logger.error("Service " + service.getSpec().getUUID() + " not created: " + e.getMessage());
 	} catch (Exception e) {
@@ -216,11 +95,11 @@ public class ServicesManagerImpl implements ServicesManager {
 		ServiceInstance instance = new ServiceInstance(node);
 		instance.setServiceSpec(service.getSpec());
 		instances.add(instance);
-	    } 
+	    }
 	}
 	service.setServiceInstances(instances);
     }
-    
+
     private boolean isNodeValid(Node node) {
 	if (node == null || node.getIp() == null || node.getIp().isEmpty()) {
 	    logger.error("Invalid node (no ip): " + node);
@@ -396,7 +275,7 @@ public class ServicesManagerImpl implements ServicesManager {
 
     private void migrateServiceInstances(DeployableService currentService) throws UnhandledModificationException {
 	try {
-	    createDeployableService(currentService);
+	    runGenerateAndApplyScript(currentService);
 	} catch (ServiceNotDeployedException e) {
 	    throw new UnhandledModificationException();
 	}
@@ -421,6 +300,6 @@ public class ServicesManagerImpl implements ServicesManager {
 
     private void addServiceInstances(DeployableService current, int amount) {
 	logger.info("Requesting to execute creation of " + amount + " replicas for" + current);
-	applyRecipe(current, amount);
+	// applyRecipe(current, amount);
     }
 }
