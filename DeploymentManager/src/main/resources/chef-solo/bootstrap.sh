@@ -8,7 +8,7 @@ function install_chef_solo() {
 		echo "Chef-solo not installed (going to install it)."
 		# install lsb-core to get release with lsb_release
 		sudo apt-get update
-		sudo apt-get -q -y install lsb-core 
+		#sudo apt-get -q -y install lsb-core 
 	
 		# add opscode apt repository and opscode key
 		echo "deb http://apt.opscode.com/ `lsb_release -cs`-0.10 main" | sudo tee /etc/apt/sources.list.d/opscode.list
@@ -17,7 +17,7 @@ function install_chef_solo() {
 	
 		# install chef quietly and with no chef installation prompt
 		sudo apt-get update
-		echo "chq::ef chef/chef_server_url string none" | sudo debconf-set-selections && sudo apt-get install chef -y
+		echo "chef chef/chef_server_url string none" | sudo debconf-set-selections && sudo apt-get install chef -y
 	
 		# remove chef-client from run level
 		sudo update-rc.d -f chef-client remove

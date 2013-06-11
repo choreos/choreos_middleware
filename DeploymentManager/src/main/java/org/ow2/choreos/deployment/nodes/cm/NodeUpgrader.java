@@ -103,13 +103,12 @@ public class NodeUpgrader {
 
 	    logger.debug("upgrading node " + nodeId);
 
-	    String logFile = DeploymentManagerConfiguration.get("CHEF_CLIENT_LOG");
+	    String logFile = DeploymentManagerConfiguration.get("CHEF_SOLO_LOG");
 	    if (logFile == null || logFile.isEmpty()) {
 		logFile = "/tmp/chef-solo.log";
 	    }
 
-	    final String CHEF_SOLO_COMMAND = "sudo nohup bash -c 'chef-solo -c $HOME/chef-solo/solo.rb " + logFile
-		    + "'";
+	    final String CHEF_SOLO_COMMAND = "sudo bash -c 'chef-solo -c $HOME/chef-solo/solo.rb " + logFile + "' ";
 	    final int MAX_TRIALS = 5;
 	    final int SLEEPING_TIME = 5000;
 	    int trials = 0;
