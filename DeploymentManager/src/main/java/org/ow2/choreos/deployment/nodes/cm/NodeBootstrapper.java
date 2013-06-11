@@ -35,11 +35,6 @@ public class NodeBootstrapper {
 	this.sshTimeoutInSeconds = SSH_TIMEOUT_IN_SECONDS;
     }
 
-    NodeBootstrapper(Node node, int sshTimeoutInSeconds) {
-	this.node = node;
-	this.sshTimeoutInSeconds = sshTimeoutInSeconds;
-    }
-
     public void bootstrapNode() throws NodeNotAccessibleException, KnifeException, NodeNotBootstrappedException {
 
 	SshWaiter sshWaiter = new SshWaiter();
@@ -52,8 +47,8 @@ public class NodeBootstrapper {
 
 	logger.info("Bootstrapping " + this.node.getIp());
 
-	String bootstrapCommand = "nohup bash -c " + "'wget http://valinhos.ime.usp.br:54080/choreos/bootstrap.tgz; "
-		+ "tar xf bootstrap.tgz; " + ". bootstrap.sh' &";
+	String bootstrapCommand = "bash -c " + "'wget http://valinhos.ime.usp.br:54080/choreos/bootstrap.tgz; "
+		+ "tar xf bootstrap.tgz; " + ". bootstrap.sh' ";
 	SshUtil ssh = new SshUtil(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile());
 	try {
 	    ssh.runCommand(bootstrapCommand);

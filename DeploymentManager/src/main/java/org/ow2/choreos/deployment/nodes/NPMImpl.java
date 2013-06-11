@@ -160,7 +160,9 @@ public class NPMImpl implements NodePoolManager {
 	    switch (deploymentRequest.getService().getSpec().getPackageType()) {
 	    case COMMAND_LINE:
 		try {
-		    ssh.runCommand(getJarCommand(deploymentRequest));
+		    String serviceUUID = ssh.runCommand(getJarCommand(deploymentRequest));
+		    logger.info("Got service UUID: " + serviceUUID);
+		    deploymentRequest.getService().getSpec().setUUID(serviceUUID);
 		} catch (JSchException e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
@@ -172,8 +174,9 @@ public class NPMImpl implements NodePoolManager {
 	    case TOMCAT:
 
 		try {
-		    String r = ssh.runCommand(getWarCommand(deploymentRequest));
-		    logger.info("returned ssh res " + r);
+		    String serviceUUID = ssh.runCommand(getWarCommand(deploymentRequest));
+		    logger.info("Got service UUID: " + serviceUUID);
+		    deploymentRequest.getService().getSpec().setUUID(serviceUUID);
 		} catch (JSchException e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
@@ -191,17 +194,17 @@ public class NPMImpl implements NodePoolManager {
     }
 
     private String getJarCommand(DeploymentRequest deploymentRequest) {
-	return "nohup bash -c" + " 'wget http://valinhos.ime.usp.br:54080/choreos/generate_and_apply.tgz;"
+	return "bash -c" + " 'wget http://valinhos.ime.usp.br:54080/choreos/generate_and_apply.tgz;"
 		+ "tar xf generate_and_apply.tgz;" + ". generate_and_apply.sh " + "-jar "
 		+ deploymentRequest.getService().getSpec().getPackageUri() + " "
-		+ deploymentRequest.getDeploymentManagerURL() + "' &";
+		+ deploymentRequest.getDeploymentManagerURL() + "' ";
     }
 
     private String getWarCommand(DeploymentRequest deploymentRequest) {
-	return "nohup bash -c" + " 'wget http://valinhos.ime.usp.br:54080/choreos/generate_and_apply.tgz;"
+	return "bash -c" + " 'wget http://valinhos.ime.usp.br:54080/choreos/generate_and_apply.tgz;"
 		+ "tar xf generate_and_apply.tgz;" + ". generate_and_apply.sh " + "-war "
 		+ deploymentRequest.getService().getSpec().getPackageUri() + " "
-		+ deploymentRequest.getDeploymentManagerURL() + "' &";
+		+ deploymentRequest.getDeploymentManagerURL() + "' ";
     }
 
     @Override

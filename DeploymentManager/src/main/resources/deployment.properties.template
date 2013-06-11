@@ -34,11 +34,7 @@ OPENSTACK_PASSWORD=secret
 OPENSTACK_KEY_PAIR=keyname
 OPENSTACK_PRIVATE_SSH_KEY=/path/to/keyname.pem
 
-CHEF_CONFIG_FILE=/home/leonardo/chef/chef-repo/.chef/knife.rb
-# CHEF_REPO contains "cookbooks" folder
-CHEF_REPO=/home/alfonso777/chef-repo
-
-CHEF_CLIENT_LOG=/tmp/chef-client.log # log written on chef nodes
+CHEF_SOLO_LOG=/tmp/chef-solo.log # log written on chef nodes
 
 # If RECIPES_CACHE=True recipes are not overwritten in DeploymentManager/src/main/resources/chef/recipes/
 # It is recommended if you are going to deploy the same recipe several times,
