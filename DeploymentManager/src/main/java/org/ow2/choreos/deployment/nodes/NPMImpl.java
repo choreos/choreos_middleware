@@ -12,7 +12,7 @@ import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
-import org.ow2.choreos.deployment.nodes.cm.NodeUpdater;
+import org.ow2.choreos.deployment.nodes.cm.NodeUpgrader;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpgraderFactory;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelector;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelectorFactory;
@@ -176,7 +176,7 @@ public class NPMImpl implements NodePoolManager {
 		try {
 		    String serviceUUID = ssh.runCommand(getWarCommand(deploymentRequest));
 		    logger.info("Got service UUID: " + serviceUUID);
-		    deploymentRequest.getService().getSpec().setUuid(serviceUUID);
+		    deploymentRequest.getService().getSpec().setUUID(serviceUUID);
 		} catch (JSchException e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
@@ -211,8 +211,8 @@ public class NPMImpl implements NodePoolManager {
     public void updateNode(String nodeId) throws NodeNotUpgradedException, NodeNotFoundException {
 
 	Node node = this.getNode(nodeId);
-	NodeUpdater upgrader = NodeUpgraderFactory.getInstance(nodeId);
-	upgrader.update(node);
+	NodeUpgrader upgrader = NodeUpgraderFactory.getInstance(nodeId);
+	upgrader.upgradeNodeConfiguration(node);
     }
 
     @Override

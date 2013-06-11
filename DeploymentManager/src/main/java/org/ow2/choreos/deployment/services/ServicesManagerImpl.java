@@ -98,7 +98,7 @@ public class ServicesManagerImpl implements ServicesManager {
 	}
 	service.setServiceInstances(instances);
     }
-
+    
     private boolean isNodeValid(Node node) {
 	if (node == null || node.getIp() == null || node.getIp().isEmpty()) {
 	    logger.error("Invalid node (no ip): " + node);
@@ -213,9 +213,9 @@ public class ServicesManagerImpl implements ServicesManager {
 	}
 	logger.info("Setting the new service spec for service " + currentService);
 
-	String uuid = currentService.getSpec().getUuid();
+	String uuid = currentService.getSpec().getUUID();
 	currentService.setSpec(requestedSpec);
-	registry.addService(currentService.getSpec().getUuid(), currentService);
+	registry.addService(currentService.getSpec().getUUID(), currentService);
 	registry.deleteService(uuid);
     }
 
@@ -254,14 +254,12 @@ public class ServicesManagerImpl implements ServicesManager {
     }
 
     private void requestToDecreaseNumberOfInstances(DeployableService currentService, ServiceSpec requestedSpec) {
-	int decreaseAmount = currentService.getSpec().getNumberOfInstances()
-		- ((DeployableServiceSpec) requestedSpec).getNumberOfInstances();
+	int decreaseAmount = currentService.getSpec().getNumberOfInstances() - requestedSpec.getNumberOfInstances();
 	removeServiceInstances(currentService, decreaseAmount);
     }
 
     private void requestToIncreaseNumberOfInstances(DeployableService currentService, ServiceSpec requestedSpec) {
-	int increaseAmount = ((DeployableServiceSpec) requestedSpec).getNumberOfInstances()
-		- currentService.getSpec().getNumberOfInstances();
+	int increaseAmount = requestedSpec.getNumberOfInstances() - currentService.getSpec().getNumberOfInstances();
 
 	logger.info("requestToIncreaseNumberOfInstances: Increase amount = " + increaseAmount);
 	addServiceInstances(currentService, increaseAmount);

@@ -7,6 +7,7 @@ package org.ow2.choreos.nodes.datamodel;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.ResourceImpact;
 
 @XmlRootElement
 public class DeploymentRequest {
@@ -69,6 +70,7 @@ public class DeploymentRequest {
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
+	result = prime * result + ((recipeName == null) ? 0 : recipeName.hashCode());
 	result = prime * result + numberOfInstances;
 	result = prime * result + ((resourceImpact == null) ? 0 : resourceImpact.hashCode());
 	return result;
@@ -83,6 +85,11 @@ public class DeploymentRequest {
 	if (getClass() != obj.getClass())
 	    return false;
 	DeploymentRequest other = (DeploymentRequest) obj;
+	if (recipeName == null) {
+	    if (other.recipeName != null)
+		return false;
+	} else if (!recipeName.equals(other.recipeName))
+	    return false;
 	if (numberOfInstances != other.numberOfInstances)
 	    return false;
 	if (resourceImpact == null) {
