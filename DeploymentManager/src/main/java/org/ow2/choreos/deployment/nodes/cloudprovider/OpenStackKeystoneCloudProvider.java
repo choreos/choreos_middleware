@@ -201,7 +201,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
 	    imageId = getImages().get(0).getId();
 	}
 
-	String hardwareId = getHardwareProfiles().get(2).getId();
+	String hardwareId = getHardwareProfiles().get(1).getId();
 
 	logger.info("Creating Template with image ID: " + imageId + "; hardware ID: " + hardwareId);
 

@@ -35,11 +35,6 @@ public class NodeBootstrapper {
 	this.sshTimeoutInSeconds = SSH_TIMEOUT_IN_SECONDS;
     }
 
-    NodeBootstrapper(Node node, int sshTimeoutInSeconds) {
-	this.node = node;
-	this.sshTimeoutInSeconds = sshTimeoutInSeconds;
-    }
-
     public void bootstrapNode() throws NodeNotAccessibleException, KnifeException, NodeNotBootstrappedException {
 
 	SshWaiter sshWaiter = new SshWaiter();

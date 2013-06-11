@@ -174,8 +174,9 @@ public class NPMImpl implements NodePoolManager {
 	    case TOMCAT:
 
 		try {
-		    String r = ssh.runCommand(getWarCommand(deploymentRequest));
-		    logger.info("returned ssh res " + r);
+		    String serviceUUID = ssh.runCommand(getWarCommand(deploymentRequest));
+		    logger.info("Got service UUID: " + serviceUUID);
+		    deploymentRequest.getService().getSpec().setUUID(serviceUUID);
 		} catch (JSchException e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
