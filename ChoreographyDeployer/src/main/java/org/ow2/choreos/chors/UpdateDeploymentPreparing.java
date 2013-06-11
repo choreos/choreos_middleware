@@ -13,7 +13,6 @@ import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.chors.rest.RESTClientsRetriever;
 import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServiceNotModifiedException;
@@ -23,25 +22,19 @@ import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.utils.Concurrency;
 
-public class DeploymentPreparing {
+public class UpdateDeploymentPreparing {
 
     private Choreography chor;
 
-    private Logger logger = Logger.getLogger(DeploymentPreparing.class);
+    private Logger logger = Logger.getLogger(UpdateDeploymentPreparing.class);
 
-    public DeploymentPreparing(Choreography chor) {
+    public UpdateDeploymentPreparing(Choreography chor) {
 	this.chor = chor;
     }
 
     public List<DeployableService> prepare() throws EnactmentException {
 	logger.info("Request to configure nodes; creating services; setting up Chef");
-	List<DeployableService> choreographyServices = null;
-	if (isFirstDeployment(chor)) {
-	    ChoreographySpec requestedChorSpec = chor.getRequestedChoreographySpec();
-	    choreographyServices = configureNodesForNewServices(requestedChorSpec.getDeployableServiceSpecs());
-	} else {
-	    choreographyServices = updateAndDeployServices(chor);
-	}
+	List<DeployableService> choreographyServices = updateAndDeployServices(chor);
 	if (choreographyServices == null) {
 	    logger.info("Deployer got a null list of choreography services; " + "Verify if the DeploymentManager is up");
 	    throw new EnactmentException("Probably DeploymentManager is off. "
@@ -54,10 +47,6 @@ public class DeploymentPreparing {
 	}
 	logger.info("Nodes are configured to run chef-client");
 	return choreographyServices;
-    }
-
-    private boolean isFirstDeployment(Choreography chor) {
-	return (chor.getServices() == null) || (chor.getServices().isEmpty());
     }
 
     private List<DeployableService> configureNodesForNewServices(List<DeployableServiceSpec> list) {

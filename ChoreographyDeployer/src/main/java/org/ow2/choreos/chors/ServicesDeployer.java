@@ -21,12 +21,21 @@ public class ServicesDeployer {
     }
 
     public List<DeployableService> deployServices() throws EnactmentException {
-	DeploymentPreparing preparer = new DeploymentPreparing(chor);
-	List<DeployableService> configuredServices = preparer.prepare();
+	List<DeployableService> configuredServices = null;
+	if (isFirstDeployment(chor)) {
+	    NewDeploymentPreparing preparer = new NewDeploymentPreparing(chor);
+	    configuredServices = preparer.prepare();
+	} else {
+	    UpdateDeploymentPreparing preparer = new UpdateDeploymentPreparing(chor);
+	    configuredServices = preparer.prepare();
+	}
 	NodesUpdater nodesUpdater = new NodesUpdater(configuredServices, chor.getId());
 	List<DeployableService> deployedServices = nodesUpdater.updateNodes();
 	logger.info("Deployement finished chorId=" + chor.getId());
 	return deployedServices;
     }
-
+    
+    private boolean isFirstDeployment(Choreography chor) {
+	return (chor.getServices() == null) || (chor.getServices().isEmpty());
+    }
 }
