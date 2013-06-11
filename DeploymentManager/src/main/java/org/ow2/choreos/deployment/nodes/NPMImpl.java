@@ -162,7 +162,7 @@ public class NPMImpl implements NodePoolManager {
 		try {
 		    String serviceUUID = ssh.runCommand(getJarCommand(deploymentRequest));
 		    logger.info("Got service UUID: " + serviceUUID);
-		    deploymentRequest.getService().getSpec().setUUID(serviceUUID);
+		    deploymentRequest.getService().getSpec().setUuid(serviceUUID);
 		} catch (JSchException e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
@@ -176,7 +176,7 @@ public class NPMImpl implements NodePoolManager {
 		try {
 		    String serviceUUID = ssh.runCommand(getWarCommand(deploymentRequest));
 		    logger.info("Got service UUID: " + serviceUUID);
-		    deploymentRequest.getService().getSpec().setUUID(serviceUUID);
+		    deploymentRequest.getService().getSpec().setUuid(serviceUUID);
 		} catch (JSchException e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
