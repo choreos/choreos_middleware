@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceType;
+import org.ow2.choreos.tests.ModelsForTest;
 
 /**
  * To run this test, the DeploymentManager must be off

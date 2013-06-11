@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.Service;
+import org.ow2.choreos.services.datamodel.ServiceInstance;
 
 @XmlRootElement
 public class Choreography {
@@ -78,6 +79,18 @@ public class Choreography {
 	    }
 	}
 	return map;
+    }
+    
+    public void removeServiceInstance(ServiceInstance instance) {
+	if (instance == null || instance.getServiceSpec() == null)
+	    throw new IllegalArgumentException();
+	if (deployableServices != null) {
+	    for (DeployableService service: deployableServices) {
+		if (instance.getServiceSpec().equals(service.getSpec())) {
+		    service.removeInstance(instance);
+		}
+	    }
+	}
     }
 
     public String getId() {

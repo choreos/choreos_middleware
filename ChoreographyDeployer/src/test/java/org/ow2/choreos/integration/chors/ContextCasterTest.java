@@ -15,7 +15,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.context.ContextCaster;
 import org.ow2.choreos.chors.context.ContextSenderFactory;
 import org.ow2.choreos.chors.datamodel.Choreography;
@@ -23,6 +22,7 @@ import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
+import org.ow2.choreos.tests.ModelsForTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
 import eu.choreos.vv.clientgenerator.Item;

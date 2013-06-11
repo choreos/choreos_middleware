@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
-import org.ow2.choreos.nodes.NodeNotUpgradedException;
+import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.utils.SshCommandFailed;
 import org.ow2.choreos.utils.SshUtil;
@@ -42,11 +42,11 @@ public class NodeUpdater {
      * Runs chef-client in a given node
      * 
      * @param node
-     * @throws NodeNotUpgradedException
+     * @throws NodeNotUpdatedException
      *             if chef-client ends in error or if could not connect into the
      *             node
      */
-    public void update(Node node) throws NodeNotUpgradedException {
+    public void update(Node node) throws NodeNotUpdatedException {
 
 	SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
 	ChefClientRunner runner = new ChefClientRunner(ssh, node.getId());
@@ -68,16 +68,16 @@ public class NodeUpdater {
 	} catch (InterruptedException e) {
 	    String message = "chef-client timed out on node " + node.toString();
 	    logger.error(message);
-	    throw new NodeNotUpgradedException(node.getId());
+	    throw new NodeNotUpdatedException(node.getId());
 	} catch (ExecutionException e) {
 	    fail(node);
 	}
     }
 
-    private void fail(Node node) throws NodeNotUpgradedException {
+    private void fail(Node node) throws NodeNotUpdatedException {
 	String message = "chef-client returned an error exit status on node " + node.toString();
 	logger.error(message);
-	throw new NodeNotUpgradedException(node.getId());
+	throw new NodeNotUpdatedException(node.getId());
     }
 
     /**

@@ -29,7 +29,7 @@ import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
-import org.ow2.choreos.nodes.NodeNotUpgradedException;
+import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.nodes.datamodel.NodeRestRepresentation;
@@ -203,7 +203,7 @@ public class NodesResource {
 	    npm.updateNode(nodeId);
 	    logger.info("Node " + nodeId + " upgraded");
 	    response = Response.status(Status.OK).build();
-	} catch (NodeNotUpgradedException e) {
+	} catch (NodeNotUpdatedException e) {
 	    logger.error("Node " + nodeId + " not upgraded", e);
 	    response = Response.status(Status.NOT_FOUND).build();
 	} catch (NodeNotFoundException e) {

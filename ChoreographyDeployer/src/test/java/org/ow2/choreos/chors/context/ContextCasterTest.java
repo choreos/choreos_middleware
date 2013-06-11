@@ -18,12 +18,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.services.ServiceInstanceNotFoundException;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceType;
+import org.ow2.choreos.tests.ModelsForTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
 /**

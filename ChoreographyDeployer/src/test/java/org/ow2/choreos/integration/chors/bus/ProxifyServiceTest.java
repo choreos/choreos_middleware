@@ -19,12 +19,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
-import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.bus.EasyESBNode;
 import org.ow2.choreos.chors.bus.ServiceInstanceProxifier;
 import org.ow2.choreos.chors.bus.selector.ESBNodeFactory;
 import org.ow2.choreos.nodes.NodeNotFoundException;
-import org.ow2.choreos.nodes.NodeNotUpgradedException;
+import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.client.NodesClient;
 import org.ow2.choreos.nodes.datamodel.Node;
@@ -38,6 +37,7 @@ import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceSpec;
 import org.ow2.choreos.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
+import org.ow2.choreos.tests.ModelsForTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
 import esstar.petalslink.com.service.management._1_0.ManagementException;
@@ -89,7 +89,7 @@ public class ProxifyServiceTest {
 	invokeService();
     }
 
-    private void deployService() throws ServiceNotDeployedException, NodeNotUpgradedException, NodeNotFoundException {
+    private void deployService() throws ServiceNotDeployedException, NodeNotUpdatedException, NodeNotFoundException {
 	ServiceSpec airlineSpec = models.getAirlineSpec();
 	serviceInstance = sd.createService((DeployableServiceSpec) airlineSpec).getInstances().get(0);
 	Node node = serviceInstance.getNode();

@@ -68,12 +68,12 @@ public interface NodePoolManager {
      * 
      * @param nodeId
      *            the id of the node to be upgraded
-     * @throws NodeNotUpgradedException
+     * @throws NodeNotUpdatedException
      *             if could not upgrade the node
      * @throws NodeNotFoundException
      *             if the node does not exist
      */
-    public void updateNode(String nodeId) throws NodeNotUpgradedException, NodeNotFoundException;
+    public void updateNode(String nodeId) throws NodeNotUpdatedException, NodeNotFoundException;
 
     /**
      * 

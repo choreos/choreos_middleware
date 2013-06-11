@@ -18,7 +18,7 @@ import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
-import org.ow2.choreos.nodes.NodeNotUpgradedException;
+import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
@@ -65,7 +65,7 @@ public class ConfigResourceTest extends BaseTest {
 
 	try {
 	    npm.updateNode(node.getId());
-	} catch (NodeNotUpgradedException e) {
+	} catch (NodeNotUpdatedException e) {
 	    fail();
 	} catch (NodeNotFoundException e) {
 	    fail();

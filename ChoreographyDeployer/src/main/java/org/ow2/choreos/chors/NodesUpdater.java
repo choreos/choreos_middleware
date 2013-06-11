@@ -1,14 +1,19 @@
 package org.ow2.choreos.chors;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.rest.RESTClientsRetriever;
 import org.ow2.choreos.nodes.NodeNotFoundException;
-import org.ow2.choreos.nodes.NodeNotUpgradedException;
+import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
@@ -20,6 +25,10 @@ public class NodesUpdater {
 
     private List<DeployableService> services;
     private String chorId;
+    private RESTClientsRetriever npmRetriever = new RESTClientsRetriever();
+    private ExecutorService executor;
+    private Map<ServiceInstance, NodeUpdater> updaters;
+    private List<DeployableService> deployedServices;
 
     private Logger logger = Logger.getLogger(NodesUpdater.class);
 
@@ -28,32 +37,68 @@ public class NodesUpdater {
 	this.chorId = chorId;
     }
 
+    public NodesUpdater(List<DeployableService> services, String chorId, RESTClientsRetriever npmRetriever) {
+	this.services = services;
+	this.chorId = chorId;
+	this.npmRetriever = npmRetriever;
+    }
+
     public List<DeployableService> updateNodes() throws EnactmentException {
 	logger.info("Going to run chef-client on nodes of choreography " + chorId);
+	submitUpdates();
+	waitUpdates();
+	retrieveDeployedServices();
+	return deployedServices;
+    }
+
+    private void submitUpdates() {
 	final int N = services.size();
-	ExecutorService executor = Executors.newFixedThreadPool(N);
-	List<DeployableService> deployedServices = new ArrayList<DeployableService>();
+	executor = Executors.newFixedThreadPool(N);
+	updaters = new HashMap<ServiceInstance, NodeUpdater>();
 	for (DeployableService deployable : services) {
-	    deployedServices.add(deployable); // TODO do it only if update was OK
 	    String owner = deployable.getSpec().getOwner();
 	    List<ServiceInstance> instances = deployable.getServiceInstances();
 	    if (instances != null) {
 		for (ServiceInstance instance : instances) {
 		    String nodeId = instance.getNode().getId();
-		    NodeUpdater upgrader = new NodeUpdater(nodeId, owner);
-		    executor.submit(upgrader);
+		    NodeUpdater updater = new NodeUpdater(nodeId, owner);
+		    updaters.put(instance, updater);
+		    executor.submit(updater);
 		}
 	    } else {
 		logger.warn("No services intances to choreography " + chorId + "!");
 	    }
 	}
+    }
+
+    private void waitUpdates() {
 	Concurrency.waitExecutor(executor, TIMEOUT);
-	return deployedServices;
+    }
+
+    private void retrieveDeployedServices() {
+	Set<DeployableService> deployedServicesSet = new HashSet<DeployableService>();
+	for (ServiceInstance instance : updaters.keySet()) {
+	    if (updaters.get(instance).ok) {
+		String uuid = instance.getServiceSpec().getUuid();
+		DeployableService service = findDeployableServiceBySpecUUID(uuid, services);
+		deployedServicesSet.add(service);
+	    }
+	}
+	deployedServices = new ArrayList<DeployableService>(deployedServicesSet);
+    }
+    
+    private DeployableService findDeployableServiceBySpecUUID(String specUUID, List<DeployableService> services) {
+	for (DeployableService service: services) {
+	    if (specUUID.equals(service.getSpec().getUuid()))
+		return service;
+	}
+	throw new NoSuchElementException();
     }
 
     private class NodeUpdater implements Runnable {
 
 	String nodeId, owner;
+	boolean ok = false;
 
 	public NodeUpdater(String nodeId, String owner) {
 	    this.nodeId = nodeId;
@@ -62,17 +107,22 @@ public class NodesUpdater {
 
 	@Override
 	public void run() {
-	    RESTClientsRetriever retriever = new RESTClientsRetriever();
-	    NodePoolManager npm = retriever.getNodesClient(owner);
+	    NodePoolManager npm = npmRetriever.getNodesClient(owner);
 	    try {
 		npm.updateNode(nodeId);
-	    } catch (NodeNotUpgradedException e) {
-		logger.error("Bad response from /nodes/" + nodeId + "/upgrade; maybe some service is not deployed");
+		ok = true;
+	    } catch (NodeNotUpdatedException e) {
+		fail();
 	    } catch (NodeNotFoundException e) {
-		logger.error("Bad response from /nodes/" + nodeId + "/upgrade; maybe some service is not deployed");
+		fail();
 	    } catch (org.apache.cxf.interceptor.Fault e) {
-		throw e;
+		fail();
 	    }
+	}
+
+	private void fail() {
+	    logger.error("Bad response from updating node " + nodeId + "; maybe some service is not deployed");
+	    ok = false;
 	}
     }
 

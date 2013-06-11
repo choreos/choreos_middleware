@@ -41,6 +41,10 @@ public class DeployableService extends Service {
     public List<ServiceInstance> getInstances() {
 	return serviceInstances;
     }
+    
+    public void removeInstance(ServiceInstance instance) {
+	serviceInstances.remove(instance);
+    }
 
     public List<ServiceInstance> getServiceInstances() {
 	return serviceInstances;

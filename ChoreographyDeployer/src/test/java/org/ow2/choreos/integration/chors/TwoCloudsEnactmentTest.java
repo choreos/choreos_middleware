@@ -8,12 +8,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
-import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.rest.Owners;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
+import org.ow2.choreos.tests.ModelsForTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
 /**

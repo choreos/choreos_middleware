@@ -18,7 +18,7 @@ import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.services.ServicesManagerImpl;
 import org.ow2.choreos.nodes.NodeNotFoundException;
-import org.ow2.choreos.nodes.NodeNotUpgradedException;
+import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.services.ServiceNotDeployedException;
 import org.ow2.choreos.services.ServicesManager;
@@ -66,7 +66,7 @@ public class ParallelDeployTest {
     }
 
     @Test
-    public void shouldMakeParallelDeploys() throws InterruptedException, NodeNotUpgradedException,
+    public void shouldMakeParallelDeploys() throws InterruptedException, NodeNotUpdatedException,
 	    NodeNotFoundException {
 
 	Thread[] ts = new Thread[2];
@@ -113,7 +113,7 @@ public class ParallelDeployTest {
 	public void run() {
 	    try {
 		npm.updateNode(this.testDeployer.nodeId);
-	    } catch (NodeNotUpgradedException e) {
+	    } catch (NodeNotUpdatedException e) {
 		e.printStackTrace();
 	    } catch (NodeNotFoundException e) {
 		e.printStackTrace();

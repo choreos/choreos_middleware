@@ -6,7 +6,7 @@ import org.ow2.choreos.chors.bus.ESBRegister;
 import org.ow2.choreos.chors.bus.EasyESBNode;
 import org.ow2.choreos.chors.bus.EasyESBNodeImpl;
 import org.ow2.choreos.nodes.NodeNotFoundException;
-import org.ow2.choreos.nodes.NodeNotUpgradedException;
+import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
@@ -33,14 +33,14 @@ public class ESBNodeFactory implements ObjectFactory<EasyESBNode> {
 	    return esbNode;
 	} catch (PrepareDeploymentFailedException e) {
 	    throw new ObjectCreationException();
-	} catch (NodeNotUpgradedException e) {
+	} catch (NodeNotUpdatedException e) {
 	    throw new ObjectCreationException();
 	} catch (NodeNotFoundException e) {
 	    throw new ObjectCreationException();
 	}
     }
     
-    private EasyESBNode createNewESBNode() throws PrepareDeploymentFailedException, NodeNotUpgradedException, NodeNotFoundException {
+    private EasyESBNode createNewESBNode() throws PrepareDeploymentFailedException, NodeNotUpdatedException, NodeNotFoundException {
 	    List<Node> nodes = this.npm.prepareDeployment(new DeploymentRequest(EASY_ESB_RECIPE));
 	    this.npm.updateNode(nodes.get(0).getId()); // TODO set time out
 	    String endpoint = this.getEndpoint(nodes.get(0).getIp());

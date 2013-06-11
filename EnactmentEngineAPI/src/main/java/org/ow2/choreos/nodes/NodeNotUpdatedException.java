@@ -4,12 +4,12 @@
 
 package org.ow2.choreos.nodes;
 
-public class NodeNotUpgradedException extends Exception {
+public class NodeNotUpdatedException extends Exception {
 
     private static final long serialVersionUID = 4566523788212445328L;
 
-    public NodeNotUpgradedException(String nodeId) {
-	super("Could not upgrade node " + nodeId);
+    public NodeNotUpdatedException(String nodeId) {
+	super("Could not update node " + nodeId);
     }
 
 }

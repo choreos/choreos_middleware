@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-package org.ow2.choreos.chors;
+package org.ow2.choreos.tests;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,10 +28,10 @@ public class ModelsForTest {
 
     public static final String AIRLINE = "airline";
     public static final String TRAVEL_AGENCY = "travelagency";
-    public static final String AIRLINE_JAR = Locations.get("AIRLINE_JAR");
-    public static final String TRAVEL_AGENCY_JAR = Locations.get("TRAVEL_AGENCY_JAR");
-    public static final String AIRLINE_WAR = Locations.get("AIRLINE_WAR");
-    public static final String TRAVEL_AGENCY_WAR = Locations.get("TRAVEL_AGENCY_WAR");
+    public static final String AIRLINE_JAR = "http://valinhos.ime.usp.br:54080/enact_test/v2-2/airline-service.jar";
+    public static final String TRAVEL_AGENCY_JAR = "http://valinhos.ime.usp.br:54080/enact_test/v2-2/travel-agency-service.jar";
+    public static final String AIRLINE_WAR = "http://valinhos.ime.usp.br:54080/enact_test/v2-2/airline.war";
+    public static final String TRAVEL_AGENCY_WAR = "http://valinhos.ime.usp.br:54080/enact_test/v2-2/travelagency.war";
 
     public static final String AIRLINE_IP = "192.168.56.101";
     public static final String TRAVEL_AGENCY_IP = "192.168.56.102";

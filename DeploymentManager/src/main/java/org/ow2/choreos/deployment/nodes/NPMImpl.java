@@ -21,7 +21,7 @@ import org.ow2.choreos.deployment.nodes.selector.NodeSelectorFactory;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
-import org.ow2.choreos.nodes.NodeNotUpgradedException;
+import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
@@ -175,7 +175,7 @@ public class NPMImpl implements NodePoolManager {
     }
 
     @Override
-    public void updateNode(String nodeId) throws NodeNotUpgradedException, NodeNotFoundException {
+    public void updateNode(String nodeId) throws NodeNotUpdatedException, NodeNotFoundException {
 
 	Node node = this.getNode(nodeId);
 	NodeUpdater upgrader = NodeUpgraderFactory.getInstance(nodeId);
