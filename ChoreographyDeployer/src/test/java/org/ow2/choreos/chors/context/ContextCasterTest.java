@@ -81,7 +81,7 @@ public class ContextCasterTest {
 	ContextSenderFactory factory = mock(ContextSenderFactory.class);
 	when(factory.getNewInstance(any(ServiceType.class))).thenReturn(sender);
 	ContextCaster caster = new ContextCaster(factory);
-	caster.cast(models.getChorSpec(), deployedServices);
+	caster.cast(models.getChoreography());
 
 	List<String> expectedAirlineUrisList = new ArrayList<String>();
 	expectedAirlineUrisList.add(AIRLINE_PROXIFIED_URI);
@@ -96,7 +96,7 @@ public class ContextCasterTest {
 	ContextSenderFactory factory = mock(ContextSenderFactory.class);
 	when(factory.getNewInstance(any(ServiceType.class))).thenReturn(sender);
 	ContextCaster caster = new ContextCaster(factory);
-	caster.cast(models.getChorSpec(), deployedServices);
+	caster.cast(models.getChoreography());
 
 	List<String> expectedAirlineUrisList = new ArrayList<String>();
 	expectedAirlineUrisList.add(AIRLINE_URI);

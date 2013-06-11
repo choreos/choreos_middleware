@@ -18,7 +18,7 @@ import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.context.ContextCaster;
 import org.ow2.choreos.chors.context.ContextSenderFactory;
-import org.ow2.choreos.chors.datamodel.ChoreographySpec;
+import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceType;
@@ -48,7 +48,7 @@ public class ContextCasterTest {
     private static final String TRAVEL_AGENCY = ModelsForTest.TRAVEL_AGENCY;
     private static final String TRAVEL_AGENCY_URI = "http://localhost:1235/travelagency";
 
-    private ChoreographySpec chorSpec;
+    private Choreography chor;
     private Map<String, DeployableService> deployedServices;
     private ModelsForTest models;
 
@@ -60,7 +60,7 @@ public class ContextCasterTest {
     @Before
     public void setUp() {
 	models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-	chorSpec = models.getChorSpec();
+	chor = models.getChoreography();
 	deployedServices = new HashMap<String, DeployableService>();
 	deployedServices.put(AIRLINE, models.getAirlineService());
 	deployedServices.put(TRAVEL_AGENCY, models.getTravelService());
@@ -74,7 +74,7 @@ public class ContextCasterTest {
 
 	ContextSenderFactory factory = new ContextSenderFactory();
 	ContextCaster caster = new ContextCaster(factory);
-	caster.cast(chorSpec, deployedServices);
+	caster.cast(chor);
 
 	WSClient travel = new WSClient(TRAVEL_AGENCY_URI + "?wsdl");
 	Item response = travel.request("buyTrip");

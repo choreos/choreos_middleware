@@ -5,7 +5,9 @@
 package org.ow2.choreos.chors.datamodel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -62,6 +64,20 @@ public class Choreography {
 	    }
 	}
 	return services;
+    }
+    
+    /**
+     * 
+     * @return a map whose keys are service specs and values are the respective deployable services
+     */
+    public Map<String, DeployableService> getMapOfDeployableServicesBySpecNames() {
+	Map<String, DeployableService> map = new HashMap<String, DeployableService>();
+	if (deployableServices != null) {
+	    for (DeployableService svc: deployableServices) {
+		map.put(svc.getSpec().getName(), svc);
+	    }
+	}
+	return map;
     }
 
     public String getId() {

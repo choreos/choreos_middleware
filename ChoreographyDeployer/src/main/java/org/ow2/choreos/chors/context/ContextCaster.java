@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.chors.datamodel.ChoreographySpec;
+import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.Service;
 import org.ow2.choreos.services.datamodel.ServiceDependency;
@@ -29,10 +29,9 @@ public class ContextCaster {
 	this.senderFactory = senderFactory;
     }
 
-    public void cast(ChoreographySpec chor, Map<String, DeployableService> deployedServices) {
-
-	logger.info("Passing context to deployed services");
-
+    public void cast(Choreography chor) {
+	logger.info("Passing context to deployed services on choreograghy " + chor.getId());
+	Map<String, DeployableService> deployedServices = chor.getMapOfDeployableServicesBySpecNames();
 	for (Map.Entry<String, DeployableService> entry : deployedServices.entrySet()) {
 	    Service deployed = entry.getValue();
 	    castContext(deployedServices, deployed);

@@ -1,7 +1,6 @@
 package org.ow2.choreos.chors;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.bus.ServicesProxifier;
@@ -13,7 +12,6 @@ import org.ow2.choreos.services.datamodel.DeployableService;
 public class ChoreographyEnacter {
 
     private Choreography chor;
-    private Map<String, DeployableService> deployedMap;
 
     private Logger logger = Logger.getLogger(ChoreographyEnacter.class);
 
@@ -38,11 +36,10 @@ public class ChoreographyEnacter {
 	    logger.info("Starting enactment for requested update; chorId= " + chor.getId());
     }
 
-    private Map<String, DeployableService> deploy() throws EnactmentException {
-	Deployer deployer = new Deployer();
-	deployedMap = deployer.deployServices(chor);
-	chor.setDeployableServices(new ArrayList<DeployableService>(deployedMap.values()));
-	return deployedMap;
+    private void deploy() throws EnactmentException {
+	ServicesDeployer deployer = new ServicesDeployer(chor);
+	List<DeployableService> deployedServices = deployer.deployServices();
+	chor.setDeployableServices(deployedServices);
     }
 
     private void proxifyServices(Choreography choreography) {
@@ -53,7 +50,7 @@ public class ChoreographyEnacter {
     private void castContext() {
 	ContextSenderFactory factory = new ContextSenderFactory(); 
 	ContextCaster caster = new ContextCaster(factory);
-	caster.cast(chor.getRequestedChoreographySpec(), deployedMap);
+	caster.cast(chor);
     }
 
     private void logEnd() {
