@@ -61,14 +61,14 @@ public class ServicesManagerImpl implements ServicesManager {
 	} catch (IllegalArgumentException e) {
 	    String message = "Invalid service spec";
 	    logger.error(message, e);
-	    throw new ServiceNotDeployedException(serviceSpec.getUUID(), message);
+	    throw new ServiceNotDeployedException(serviceSpec.getUuid(), message);
 	}
 
 	if (serviceSpec.getPackageType() != PackageType.LEGACY) {
 	    runGenerateAndApplyScript(service);
 	}
 
-	registry.addService(serviceSpec.getUUID(), service);
+	registry.addService(serviceSpec.getUuid(), service);
 	return service;
 
     }
@@ -83,9 +83,9 @@ public class ServicesManagerImpl implements ServicesManager {
 	try {
 	    nodes = npm.prepareDeployment(deploymentRequest);
 	} catch (PrepareDeploymentFailedException e) {
-	    logger.error("Service " + service.getSpec().getUUID() + " not created: " + e.getMessage());
+	    logger.error("Service " + service.getSpec().getUuid() + " not created: " + e.getMessage());
 	} catch (Exception e) {
-	    logger.error("Service " + service.getSpec().getUUID() + " not created: " + e.getMessage());
+	    logger.error("Service " + service.getSpec().getUuid() + " not created: " + e.getMessage());
 	}
 
 	List<ServiceInstance> instances = new ArrayList<ServiceInstance>();
@@ -165,14 +165,14 @@ public class ServicesManagerImpl implements ServicesManager {
     @Override
     public DeployableService updateService(DeployableServiceSpec serviceSpec) throws UnhandledModificationException {
 
-	logger.info("Requested to update service " + serviceSpec.getUUID() + " with spec " + serviceSpec);
+	logger.info("Requested to update service " + serviceSpec.getUuid() + " with spec " + serviceSpec);
 	DeployableService current;
 	try {
-	    logger.info("Trying to get service with id " + serviceSpec.getUUID() + " from \n" + registry.getServices());
-	    current = getService(serviceSpec.getUUID());
+	    logger.info("Trying to get service with id " + serviceSpec.getUuid() + " from \n" + registry.getServices());
+	    current = getService(serviceSpec.getUuid());
 	    logger.info("getService got " + current);
 	} catch (ServiceNotFoundException e) {
-	    logger.info("ServiceNotFoundException happened when trying to get service with id " + serviceSpec.getUUID());
+	    logger.info("ServiceNotFoundException happened when trying to get service with id " + serviceSpec.getUuid());
 	    logger.info("Exception message " + e.getMessage());
 	    throw new UnhandledModificationException();
 	}
@@ -213,9 +213,9 @@ public class ServicesManagerImpl implements ServicesManager {
 	}
 	logger.info("Setting the new service spec for service " + currentService);
 
-	String uuid = currentService.getSpec().getUUID();
+	String uuid = currentService.getSpec().getUuid();
 	currentService.setSpec(requestedSpec);
-	registry.addService(currentService.getSpec().getUUID(), currentService);
+	registry.addService(currentService.getSpec().getUuid(), currentService);
 	registry.deleteService(uuid);
     }
 
@@ -254,12 +254,14 @@ public class ServicesManagerImpl implements ServicesManager {
     }
 
     private void requestToDecreaseNumberOfInstances(DeployableService currentService, ServiceSpec requestedSpec) {
-	int decreaseAmount = currentService.getSpec().getNumberOfInstances() - requestedSpec.getNumberOfInstances();
+	int decreaseAmount = currentService.getSpec().getNumberOfInstances()
+		- ((DeployableServiceSpec) requestedSpec).getNumberOfInstances();
 	removeServiceInstances(currentService, decreaseAmount);
     }
 
     private void requestToIncreaseNumberOfInstances(DeployableService currentService, ServiceSpec requestedSpec) {
-	int increaseAmount = requestedSpec.getNumberOfInstances() - currentService.getSpec().getNumberOfInstances();
+	int increaseAmount = ((DeployableServiceSpec) requestedSpec).getNumberOfInstances()
+		- currentService.getSpec().getNumberOfInstances();
 
 	logger.info("requestToIncreaseNumberOfInstances: Increase amount = " + increaseAmount);
 	addServiceInstances(currentService, increaseAmount);
@@ -289,7 +291,7 @@ public class ServicesManagerImpl implements ServicesManager {
 	    }
 	} else if (amount < currentService.getInstances().size()) {
 	    try {
-		this.deleteService(currentService.getSpec().getUUID());
+		this.deleteService(currentService.getSpec().getUuid());
 	    } catch (ServiceNotDeletedException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
