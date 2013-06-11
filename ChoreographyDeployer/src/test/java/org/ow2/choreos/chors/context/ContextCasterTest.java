@@ -4,8 +4,10 @@
 
 package org.ow2.choreos.chors.context;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,7 +78,9 @@ public class ContextCasterTest {
 	this.setUpBusUris();
 
 	ContextSender sender = mock(ContextSender.class);
-	ContextCaster caster = new ContextCaster(sender);
+	ContextSenderFactory factory = mock(ContextSenderFactory.class);
+	when(factory.getNewInstance(any(ServiceType.class))).thenReturn(sender);
+	ContextCaster caster = new ContextCaster(factory);
 	caster.cast(models.getChorSpec(), deployedServices);
 
 	List<String> expectedAirlineUrisList = new ArrayList<String>();
@@ -89,7 +93,9 @@ public class ContextCasterTest {
     public void shouldPassAirlineNativeUriToTravelAgency() throws ContextNotSentException {
 
 	ContextSender sender = mock(ContextSender.class);
-	ContextCaster caster = new ContextCaster(sender);
+	ContextSenderFactory factory = mock(ContextSenderFactory.class);
+	when(factory.getNewInstance(any(ServiceType.class))).thenReturn(sender);
+	ContextCaster caster = new ContextCaster(factory);
 	caster.cast(models.getChorSpec(), deployedServices);
 
 	List<String> expectedAirlineUrisList = new ArrayList<String>();

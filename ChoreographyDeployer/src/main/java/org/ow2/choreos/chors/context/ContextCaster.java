@@ -23,10 +23,10 @@ public class ContextCaster {
     private static final int MAX_TRIALS = 5;
     private static final int DELAY_BETWEEN_TRIALS = 30000;
 
-    private ContextSender sender;
+    private ContextSenderFactory senderFactory;
 
-    public ContextCaster(ContextSender sender) {
-	this.sender = sender;
+    public ContextCaster(ContextSenderFactory senderFactory) {
+	this.senderFactory = senderFactory;
     }
 
     public void cast(ChoreographySpec chor, Map<String, DeployableService> deployedServices) {
@@ -97,6 +97,8 @@ public class ContextCaster {
 	for (String serviceUri : consumerServiceInstanceUris) {
 	    while (trial < MAX_TRIALS) {
 		try {
+		    ServiceType serviceType = consumerServiceSpec.getServiceType();
+		    ContextSender sender = senderFactory.getNewInstance(serviceType);
 		    sender.sendContext(serviceUri, consumerServiceDependency.getServiceSpecRole(),
 			    consumerServiceDependency.getServiceSpecName(), providerUris);
 		    logger.debug(consumerServiceSpec.getName() + " has received "

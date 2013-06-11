@@ -8,15 +8,12 @@ import org.ow2.choreos.services.datamodel.ServiceType;
 
 public class ContextSenderFactory {
 
-    public static ContextSender getInstance(ServiceType serviceType) {
-
+    public ContextSender getNewInstance(ServiceType serviceType) {
 	switch (serviceType) {
-
 	case SOAP:
 	    return new SoapContextSender();
-
 	default:
-	    throw new IllegalArgumentException(serviceType + " not supported");
+	    throw new IllegalArgumentException("Service type " + serviceType + " not supported");
 	}
     }
 

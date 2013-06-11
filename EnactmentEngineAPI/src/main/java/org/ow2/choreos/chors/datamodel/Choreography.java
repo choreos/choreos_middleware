@@ -103,7 +103,7 @@ public class Choreography {
 	this.legacyServices = legacyServices;
     }
 
-    public void finishChoreographyEnactment() {
+    public void enactmentFinished() {
 	this.choreographySpec = this.requestedChoreographySpec;
     }
 

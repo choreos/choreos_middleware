@@ -17,7 +17,6 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.context.ContextCaster;
-import org.ow2.choreos.chors.context.ContextSender;
 import org.ow2.choreos.chors.context.ContextSenderFactory;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.services.datamodel.DeployableService;
@@ -73,10 +72,8 @@ public class ContextCasterTest {
 
 	checkPreCondition();
 
-	ContextSenderFactory fac = new ContextSenderFactory();
-	@SuppressWarnings("static-access")
-	ContextSender sender = fac.getInstance(ServiceType.SOAP);
-	ContextCaster caster = new ContextCaster(sender);
+	ContextSenderFactory factory = new ContextSenderFactory();
+	ContextCaster caster = new ContextCaster(factory);
 	caster.cast(chorSpec, deployedServices);
 
 	WSClient travel = new WSClient(TRAVEL_AGENCY_URI + "?wsdl");

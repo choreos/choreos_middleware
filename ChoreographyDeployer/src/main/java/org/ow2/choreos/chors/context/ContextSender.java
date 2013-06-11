@@ -9,11 +9,9 @@ import java.util.List;
 public interface ContextSender {
 
     /**
-     * Calls setInvokationAddress operation on service in the
-     * <code>serviceEndpoint</code>. So, the service in <code>endpoint</code>
-     * will know that its partner named <code>partnerName</code> with
-     * <code>partnerRole</code> is realized by instances in
-     * <code>partnerEndpoints</code>.
+     * Calls setInvokationAddress operation on service in the serviceEndpoint.
+     * So, the service in endpoint will know that its partner named partnerName
+     * with partnerRole is realized by instances in partnerEndpoints.
      * 
      * @param serviceEndpoint
      * @param partnerRole

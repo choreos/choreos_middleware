@@ -21,7 +21,7 @@ import org.ow2.choreos.chors.datamodel.ChoreographySpec;
  */
 public class ChorRegistry {
 
-    private static ChorRegistry instance = new ChorRegistry();;
+    private static ChorRegistry instance = new ChorRegistry();
 
     private Map<String, Choreography> chors = new ConcurrentHashMap<String, Choreography>();
     private AtomicInteger counter = new AtomicInteger();
@@ -31,7 +31,6 @@ public class ChorRegistry {
     }
 
     public static ChorRegistry getInstance() {
-
 	return instance;
     }
 
@@ -41,19 +40,20 @@ public class ChorRegistry {
      * @return the just registred choreography ID
      */
     public String create(ChoreographySpec chorSpec) {
-
 	String id = Integer.toString(counter.incrementAndGet());
-
 	Choreography chor = new Choreography();
 	chor.setId(id);
 	chor.setChoreographySpec(chorSpec);
 	chors.put(id, chor);
-
 	return id;
     }
 
     public Choreography get(String chorId) {
-
 	return chors.get(chorId);
     }
+
+    public boolean contains(String chorId) {
+	return chors.containsKey(chorId);
+    }
+
 }

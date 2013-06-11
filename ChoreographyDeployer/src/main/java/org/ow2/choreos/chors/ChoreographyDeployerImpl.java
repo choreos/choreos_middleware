@@ -4,25 +4,11 @@
 
 package org.ow2.choreos.chors;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 import org.apache.log4j.Logger;
-import org.ow2.choreos.chors.bus.ESBNodesSelector;
-import org.ow2.choreos.chors.bus.EasyESBNode;
-import org.ow2.choreos.chors.bus.ServiceInstancesProxifier;
-import org.ow2.choreos.chors.context.ContextCaster;
-import org.ow2.choreos.chors.context.ContextSender;
-import org.ow2.choreos.chors.context.ContextSenderFactory;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
-import org.ow2.choreos.services.datamodel.DeployableService;
-import org.ow2.choreos.services.datamodel.ServiceInstance;
-import org.ow2.choreos.services.datamodel.ServiceType;
 
 public class ChoreographyDeployerImpl implements ChoreographyDeployer {
-
-    private static final String BUS_PROPERTY = "BUS";
 
     private ChorRegistry reg = ChorRegistry.getInstance();
     
@@ -43,32 +29,12 @@ public class ChoreographyDeployerImpl implements ChoreographyDeployer {
 
     @Override
     public Choreography enactChoreography(String chorId) throws EnactmentException, ChoreographyNotFoundException {
-	logger.info("Requested to enact choreography " + chorId);
-	Choreography chor = reg.get(chorId);
-	if (chor == null) {
-	    logger.info("Could not get choreography with ID = " + chorId);
+	if (!reg.contains(chorId)) {
 	    throw new ChoreographyNotFoundException(chorId);
 	}
-	if (chor.getChoreographySpec() == chor.getRequestedChoreographySpec())
-	    logger.info("Starting enactment; chorId= " + chorId);
-	else if (chor.getChoreographySpec() == chor.getRequestedChoreographySpec())
-	    logger.info("Starting enactment for requested update; chorId= " + chorId);
-	Deployer deployer = new Deployer();
-	Map<String, DeployableService> deployedMap = deployer.deployServices(chor);
-	chor.setDeployableServices(new ArrayList<DeployableService>(deployedMap.values()));
-	logger.info("Deployed services=" + deployedMap);
-	boolean useTheBus = Boolean.parseBoolean(ChoreographyDeployerConfiguration.get(BUS_PROPERTY));
-	if (useTheBus) {
-	    this.proxifyServices(chor);
-	}
-	ContextSender sender = ContextSenderFactory.getInstance(ServiceType.SOAP);
-	ContextCaster caster = new ContextCaster(sender);
-	logger.info("Resquested to cast service context");
-	caster.cast(chor.getRequestedChoreographySpec(), deployedMap);
-	logger.info("Going to set choreography " + chorId + " as deployed");
-	chor.finishChoreographyEnactment();
-	logger.info("Enactment completed; chorId=" + chorId);
-	return chor;
+	Choreography chor = reg.get(chorId);
+	ChoreographyEnacter enacter = new ChoreographyEnacter(chor); 
+	return enacter.enact();
     }
 
     @Override
@@ -93,12 +59,4 @@ public class ChoreographyDeployerImpl implements ChoreographyDeployer {
 	return;
     }
 
-    private void proxifyServices(Choreography choreography) {
-	logger.info("Resquested to proxify depoloyed services");
-	ESBNodesSelector selector = new ESBNodesSelector();
-	Map<ServiceInstance, EasyESBNode> instancesNodesMap = selector.selectESBNodes(choreography);
-	ServiceInstancesProxifier proxifier = new ServiceInstancesProxifier();
-	proxifier.proxify(instancesNodesMap);
-	// TODO: should PUT /services/ (a registry would resolve...)
-    }
 }
