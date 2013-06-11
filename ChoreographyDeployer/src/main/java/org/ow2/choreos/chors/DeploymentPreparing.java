@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.chors.rest.RESTClientsRetriever;
-import org.ow2.choreos.services.ServiceNotDeployedException;
+import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServiceNotModifiedException;
 import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.UnhandledModificationException;
@@ -111,7 +111,7 @@ public class DeploymentPreparing {
 	    try {
 		DeployableService deployedService = servicesManager.createService(serviceSpec);
 		return deployedService;
-	    } catch (ServiceNotDeployedException e) {
+	    } catch (ServiceNotCreatedException e) {
 		logger.error("Maybe DeploymentManager is off");
 		throw e;
 	    }

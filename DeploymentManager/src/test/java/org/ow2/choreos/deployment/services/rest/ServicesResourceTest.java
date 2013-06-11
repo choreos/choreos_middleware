@@ -23,7 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.services.ServiceInstanceNotFoundException;
-import org.ow2.choreos.services.ServiceNotDeployedException;
+import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
@@ -41,7 +41,7 @@ public class ServicesResourceTest {
     private DeployableServiceSpec serviceSpec;
 
     @Before
-    public void setUp() throws ServiceNotDeployedException {
+    public void setUp() throws ServiceNotCreatedException {
 	this.serviceSpec = getSpec();
 	NodePoolManager npmMock = mock(NodePoolManager.class);
 	ServicesManager servicesManagerMock = mock(ServicesManager.class);

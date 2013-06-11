@@ -29,7 +29,7 @@ import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.ServiceNotDeletedException;
-import org.ow2.choreos.services.ServiceNotDeployedException;
+import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServiceNotFoundException;
 import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.UnhandledModificationException;
@@ -71,7 +71,7 @@ public class ServicesManagerImpl implements ServicesManager {
     }
 
     @Override
-    public DeployableService createService(DeployableServiceSpec serviceSpec) throws ServiceNotDeployedException {
+    public DeployableService createService(DeployableServiceSpec serviceSpec) throws ServiceNotCreatedException {
 
 	DeployableService service = null;
 	try {
@@ -79,7 +79,7 @@ public class ServicesManagerImpl implements ServicesManager {
 	} catch (IllegalArgumentException e) {
 	    String message = "Invalid service spec";
 	    logger.error(message, e);
-	    throw new ServiceNotDeployedException(serviceSpec.getUuid(), message);
+	    throw new ServiceNotCreatedException(serviceSpec.getUuid(), message);
 	}
 
 	if (serviceSpec.getPackageType() != PackageType.LEGACY) {
@@ -91,7 +91,7 @@ public class ServicesManagerImpl implements ServicesManager {
 
     }
 
-    private DeployableService createDeployableService(DeployableService service) throws ServiceNotDeployedException {
+    private DeployableService createDeployableService(DeployableService service) throws ServiceNotCreatedException {
 
 	createAndUploadRecipes(service);
 	logger.debug("recipes uploaded");
@@ -101,7 +101,7 @@ public class ServicesManagerImpl implements ServicesManager {
 	return service;
     }
 
-    private void createAndUploadRecipes(DeployableService service) throws ServiceNotDeployedException {
+    private void createAndUploadRecipes(DeployableService service) throws ServiceNotCreatedException {
 
 	for (int i = 0; i < 5;) {
 	    try {
@@ -110,7 +110,7 @@ public class ServicesManagerImpl implements ServicesManager {
 		i++;
 		if (i >= 4) {
 		    logger.error("Could not upload recipe: " + e.getMessage());
-		    throw new ServiceNotDeployedException(service.getSpec().getUuid());
+		    throw new ServiceNotCreatedException(service.getSpec().getUuid());
 		} else {
 		    try {
 			Thread.sleep(500);
@@ -397,7 +397,7 @@ public class ServicesManagerImpl implements ServicesManager {
     private void migrateServiceInstances(DeployableService currentService) throws UnhandledModificationException {
 	try {
 	    createDeployableService(currentService);
-	} catch (ServiceNotDeployedException e) {
+	} catch (ServiceNotCreatedException e) {
 	    throw new UnhandledModificationException();
 	}
     }

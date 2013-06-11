@@ -10,7 +10,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.ow2.choreos.services.ServiceNotDeletedException;
-import org.ow2.choreos.services.ServiceNotDeployedException;
+import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServiceNotFoundException;
 import org.ow2.choreos.services.ServiceNotModifiedException;
 import org.ow2.choreos.services.ServicesManager;
@@ -56,14 +56,14 @@ public class ServicesClient implements ServicesManager {
     }
 
     @Override
-    public DeployableService createService(DeployableServiceSpec serviceSpec) throws ServiceNotDeployedException {
+    public DeployableService createService(DeployableServiceSpec serviceSpec) throws ServiceNotCreatedException {
 	WebClient client = setupClient();
 	client.path("services");
 	DeployableService service = null;
 	try {
 	    service = client.post(serviceSpec, DeployableService.class);
 	} catch (WebApplicationException e) {
-	    throw new ServiceNotDeployedException(serviceSpec.getUuid());
+	    throw new ServiceNotCreatedException(serviceSpec.getUuid());
 	}
 	return service;
     }

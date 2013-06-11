@@ -20,7 +20,7 @@ import org.ow2.choreos.deployment.services.ServicesManagerImpl;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.services.ServiceNotDeployedException;
+import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
@@ -137,7 +137,7 @@ public class ParallelDeployTest {
 	    DeployableService service = null;
 	    try {
 		service = deployer.createService(spec);
-	    } catch (ServiceNotDeployedException e) {
+	    } catch (ServiceNotCreatedException e) {
 		e.printStackTrace();
 	    }
 	    ServiceInstance instance = service.getInstances().get(0);

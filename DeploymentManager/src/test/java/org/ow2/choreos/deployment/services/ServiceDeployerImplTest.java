@@ -22,7 +22,7 @@ import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
-import org.ow2.choreos.services.ServiceNotDeployedException;
+import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
@@ -78,7 +78,7 @@ public class ServiceDeployerImplTest {
     }
 
     @Test
-    public void shouldReturnAValidService() throws PrepareDeploymentFailedException, ServiceNotDeployedException {
+    public void shouldReturnAValidService() throws PrepareDeploymentFailedException, ServiceNotCreatedException {
 
 	final String EXPECTED_URI = "http://" + selectedNode.getIp() + ":" + serviceSpec.getPort() + "/"
 		+ serviceSpec.getEndpointName() + "/";

@@ -14,10 +14,10 @@ public interface ServicesManager {
      * @param service
      *            specification
      * @return information about how the service was deployed.
-     * @throws ServiceNotDeployedException
+     * @throws ServiceNotCreatedException
      *             if deploy was not possible.
      */
-    public DeployableService createService(DeployableServiceSpec serviceSpec) throws ServiceNotDeployedException;
+    public DeployableService createService(DeployableServiceSpec serviceSpec) throws ServiceNotCreatedException;
 
     /**
      * 
@@ -43,7 +43,7 @@ public interface ServicesManager {
      *            specification
      * @return information about how the service was deployed.
      * @throws UnhandledModificationException
-     * @throws ServiceNotDeployedException
+     * @throws ServiceNotCreatedException
      *             if deploy was not possible.
      */
     public DeployableService updateService(DeployableServiceSpec newServiceSpec) throws ServiceNotModifiedException,

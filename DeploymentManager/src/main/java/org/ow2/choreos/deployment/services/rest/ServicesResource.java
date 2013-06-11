@@ -27,7 +27,7 @@ import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.services.ServicesManagerImpl;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.services.ServiceNotDeletedException;
-import org.ow2.choreos.services.ServiceNotDeployedException;
+import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServiceNotFoundException;
 import org.ow2.choreos.services.ServiceNotModifiedException;
 import org.ow2.choreos.services.ServicesManager;
@@ -89,7 +89,7 @@ public class ServicesResource {
 	DeployableService service;
 	try {
 	    service = servicesManager.createService(serviceSpec);
-	} catch (ServiceNotDeployedException e) {
+	} catch (ServiceNotCreatedException e) {
 	    return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 	}
 
