@@ -2,24 +2,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-package org.ow2.choreos.services.datamodel;
+package org.ow2.choreos.nodes.datamodel;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
 public class ResourceImpact {
 
     private MemoryType memory;
-
     private String cpu;
-
     private String storage;
-
     private String network;
 
     public MemoryType getMemory() {

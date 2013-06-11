@@ -13,9 +13,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 public class DeployableService extends Service {
 
-    /**
-     * The list of all instances of the service
-     */
     private List<ServiceInstance> serviceInstances;
 
     @XmlTransient
@@ -34,20 +31,15 @@ public class DeployableService extends Service {
 	return (DeployableServiceSpec) super.getSpec();
     }
 
-    /**
-     * This method seems to be necessary to JAXB set the super class attribute
-     * when doing unmarshalling
-     */
     @Override
     public void setSpec(ServiceSpec spec) {
+	// This method seems to be necessary to JAXB set the super class
+	// attribute when doing unmarshalling
 	super.setSpec((DeployableServiceSpec) spec);
     }
 
     public List<ServiceInstance> getInstances() {
-	if (serviceInstances != null) 
-	    return serviceInstances;
-	else
-	    return new ArrayList<ServiceInstance>();
+	return serviceInstances;
     }
 
     public List<ServiceInstance> getServiceInstances() {
@@ -64,7 +56,7 @@ public class DeployableService extends Service {
 	if (serviceInstances == null) {
 	    return new ArrayList<String>();
 	}
-	
+
 	List<String> uris = new ArrayList<String>();
 	synchronized (serviceInstances) {
 	    for (ServiceInstance service : serviceInstances) {
@@ -74,7 +66,7 @@ public class DeployableService extends Service {
 	return uris;
     }
 
-    public ServiceInstance getInstance(String instanceId) {
+    public ServiceInstance getInstanceById(String instanceId) {
 	if (serviceInstances != null) {
 	    for (ServiceInstance instance : serviceInstances) {
 		if (instance.getInstanceId().equals(instanceId))
@@ -93,12 +85,37 @@ public class DeployableService extends Service {
     }
 
     @Override
-    public String toString() {
-	String repr = "DeployableService [uuid=" + super.getSpec().getUUID();
-	repr += ", spec={" + super.getSpec() + "}";
-	repr += ", instances={" + this.getInstances() + "}";
-	repr += (getUris() != null) ? repr += ", uri=" + getUris().toString() + "]" : "]";
-	return repr;
+    public int hashCode() {
+	final int prime = 31;
+	int result = super.hashCode();
+	result = prime * result + ((serviceInstances == null) ? 0 : serviceInstances.hashCode());
+	return result;
     }
-    
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (!super.equals(obj))
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	DeployableService other = (DeployableService) obj;
+	if (serviceInstances == null) {
+	    if (other.serviceInstances != null)
+		return false;
+	} else if (!serviceInstances.equals(other.serviceInstances))
+	    return false;
+	return true;
+    }
+
+    @Override
+    public String toString() {
+	StringBuilder uris = new StringBuilder();
+	for (String uri: getUris()) {
+	    uris.append(uri + "; ");
+	}
+	return "DeployableService [recipeBundle=" + recipeBundle + ", serviceInstances=" + uris + "]";
+    }
+
 }

@@ -21,6 +21,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.services.ServiceInstanceNotFoundException;
 import org.ow2.choreos.services.ServiceNotDeployedException;
 import org.ow2.choreos.services.ServicesManager;
@@ -33,27 +34,31 @@ import org.ow2.choreos.services.datamodel.ServiceType;
 
 public class ServicesResourceTest {
 
+    private static final String AIRLINE = "airline";
+
     private ServicesResource servicesResources;
     private String expectedServiceUUID;
+    private DeployableServiceSpec serviceSpec;
 
     @Before
     public void setUp() throws ServiceNotDeployedException {
-
+	this.serviceSpec = getSpec();
+	NodePoolManager npmMock = mock(NodePoolManager.class);
 	ServicesManager servicesManagerMock = mock(ServicesManager.class);
-	when(servicesManagerMock.createService(getSpec())).thenReturn(getService());
-
-	this.servicesResources = new ServicesResource(null, servicesManagerMock);
+	when(servicesManagerMock.createService(serviceSpec)).thenReturn(getService());
+	this.servicesResources = new ServicesResource(npmMock, servicesManagerMock);
     }
 
     private DeployableServiceSpec getSpec() {
-	return new DeployableServiceSpec(ServiceType.SOAP, PackageType.COMMAND_LINE, null, null,
-		"http://choreos.eu/airilne.jar", 1234, "airline", 1);
+	DeployableServiceSpec serviceSpec = new DeployableServiceSpec(AIRLINE, ServiceType.SOAP,
+		PackageType.COMMAND_LINE, null, null, "http://choreos.eu/airilne.jar", 1234, "airline", 1);
+	return serviceSpec;
     }
 
     private DeployableService getService() {
 
-	DeployableService airline = new DeployableService(getSpec());
-	expectedServiceUUID = airline.getSpec().getUUID();
+	DeployableService airline = new DeployableService(serviceSpec);
+	expectedServiceUUID = airline.getSpec().getUuid();
 	ServiceInstance instance = new ServiceInstance();
 	instance.setInstanceId("1");
 	instance.setNativeUri("http://hostname:1234/airline");
@@ -74,14 +79,14 @@ public class ServicesResourceTest {
 	when(uriBuilder.path(any(String.class))).thenReturn(uriBuilder);
 	when(uriBuilder.build()).thenReturn(new URI(uri));
 
-	Response response = this.servicesResources.deployService(getSpec(), uriInfo);
+	Response response = this.servicesResources.deployService(serviceSpec, uriInfo);
 
 	assertEquals(201, response.getStatus());
 	Service entity = (Service) response.getEntity();
-	assertEquals(expectedServiceUUID, entity.getSpec().getUUID());
-	assertEquals(getSpec(), entity.getSpec());
+	assertEquals(expectedServiceUUID, entity.getSpec().getUuid());
+	assertEquals(serviceSpec, entity.getSpec());
 	assertEquals(1, ((DeployableService) entity).getInstances().size());
-	assertEquals(getService().getInstance("1"), ((DeployableService) entity).getInstance("1"));
+	assertEquals(getService().getInstanceById("1"), ((DeployableService) entity).getInstanceById("1"));
 	assertEquals(uri, response.getMetadata().get("location").get(0));
     }
 

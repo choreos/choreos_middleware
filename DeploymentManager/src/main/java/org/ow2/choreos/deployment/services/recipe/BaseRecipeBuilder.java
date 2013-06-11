@@ -69,7 +69,7 @@ public abstract class BaseRecipeBuilder implements RecipeBuilder {
     private Recipe createDeactivateRecipe(DeployableServiceSpec serviceSpec) throws IOException {
 	Recipe activateRecipe = new Recipe();
 	activateRecipe.setName("deactivate-service" + this.recipeName);
-	activateRecipe.setCookbookName("deactivate-service" + serviceSpec.getUUID());
+	activateRecipe.setCookbookName("deactivate-service" + serviceSpec.getUuid());
 	this.recipeFile = "deactivate-" + this.recipeName + ".rb";
 
 	File srcFolder = null;
@@ -83,14 +83,14 @@ public abstract class BaseRecipeBuilder implements RecipeBuilder {
 	    return null; // It must return null for now.
 	// TODO: If the node has easy esb, it should be removed with harakiri
 
-	String destPath = DEST_DIR.getAbsolutePath() + "/deactivate-service" + serviceSpec.getUUID();
+	String destPath = DEST_DIR.getAbsolutePath() + "/deactivate-service" + serviceSpec.getUuid();
 
 	File destFolder = new File(destPath);
 
 	copyRecipeTemplate(srcFolder, destFolder);
-	changeMetadataRb(serviceSpec, "/deactivate-service" + serviceSpec.getUUID() + "/metadata.rb");
-	changeAttributesDefaultRb(serviceSpec, "/deactivate-service" + serviceSpec.getUUID() + "/attributes/default.rb");
-	changeRecipeRb(serviceSpec, "/deactivate-service" + serviceSpec.getUUID() + "/recipes/default.rb");
+	changeMetadataRb(serviceSpec, "/deactivate-service" + serviceSpec.getUuid() + "/metadata.rb");
+	changeAttributesDefaultRb(serviceSpec, "/deactivate-service" + serviceSpec.getUuid() + "/attributes/default.rb");
+	changeRecipeRb(serviceSpec, "/deactivate-service" + serviceSpec.getUuid() + "/recipes/default.rb");
 
 	return activateRecipe;
     }
@@ -98,20 +98,20 @@ public abstract class BaseRecipeBuilder implements RecipeBuilder {
     private Recipe createServiceRecipe(DeployableServiceSpec serviceSpec) throws IOException {
 	Recipe serviceRecipe = new Recipe();
 	serviceRecipe.setName(this.recipeName);
-	serviceRecipe.setCookbookName("service" + serviceSpec.getUUID());
+	serviceRecipe.setCookbookName("service" + serviceSpec.getUuid());
 	this.recipeFile = this.recipeName + ".rb";
 
 	File srcFolder = new File(this.templateDir + "service-deploy-recipe-template");
 
-	String destPath = DEST_DIR.getAbsolutePath() + "/service" + serviceSpec.getUUID();
+	String destPath = DEST_DIR.getAbsolutePath() + "/service" + serviceSpec.getUuid();
 
 	File destFolder = new File(destPath);
 
 	copyRecipeTemplate(srcFolder, destFolder);
-	changeMetadataRb(serviceSpec, "/service" + serviceSpec.getUUID() + "/metadata.rb");
-	changeAttributesDefaultRb(serviceSpec, "/service" + serviceSpec.getUUID() + "/attributes/default.rb");
+	changeMetadataRb(serviceSpec, "/service" + serviceSpec.getUuid() + "/metadata.rb");
+	changeAttributesDefaultRb(serviceSpec, "/service" + serviceSpec.getUuid() + "/attributes/default.rb");
 
-	changeRecipeRb(serviceSpec, "/service" + serviceSpec.getUUID() + "/recipes/" + this.recipeFile);
+	changeRecipeRb(serviceSpec, "/service" + serviceSpec.getUuid() + "/recipes/" + this.recipeFile);
 
 	return serviceRecipe;
     }

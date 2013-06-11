@@ -15,9 +15,9 @@ import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.chors.ChoreographyDeployerImpl;
 import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.chors.datamodel.ChoreographyService;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.services.datamodel.PackageType;
+import org.ow2.choreos.services.datamodel.Service;
 import org.ow2.choreos.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -62,8 +62,8 @@ public class SimpleChorEnactmentTest {
 	String chorId = ee.createChoreography(chorSpec);
 	Choreography chor = ee.enactChoreography(chorId);
 
-	ChoreographyService travel = chor.getServiceByChorServiceSpecName(ModelsForTest.TRAVEL_AGENCY);
-	WSClient client = new WSClient(travel.getService().getUris().get(0) + "?wsdl");
+	Service travel = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
+	WSClient client = new WSClient(travel.getUris().get(0) + "?wsdl");
 	Item response = client.request("buyTrip");
 	String codes = response.getChild("return").getContent();
 

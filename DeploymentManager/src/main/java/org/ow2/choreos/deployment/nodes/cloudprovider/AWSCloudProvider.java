@@ -29,7 +29,7 @@ import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
-import org.ow2.choreos.services.datamodel.ResourceImpact;
+import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 
 import com.google.common.collect.Iterables;
 

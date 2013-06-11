@@ -14,11 +14,11 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.ow2.choreos.nodes.datamodel.MemoryType;
+import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.RecipeBundle;
-import org.ow2.choreos.services.datamodel.ResourceImpact;
-import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryType;
 
 public class RecipeBuilderTest {
 
@@ -42,7 +42,7 @@ public class RecipeBuilderTest {
 	impact.setMemory(MemoryType.SMALL);
 
 	serviceSpec = new DeployableServiceSpec();
-	id = serviceSpec.getUUID();
+	id = serviceSpec.getUuid();
 	serviceSpec.setPackageUri(codeLocationURI);
 	serviceSpec.setPackageType(PackageType.TOMCAT);
 	serviceSpec.setResourceImpact(impact);
@@ -64,7 +64,7 @@ public class RecipeBuilderTest {
 
 	File srcFolder = new File("src/main/resources/chef/" + "service-deploy-recipe-template");
 
-	String destPath = DEST_DIR.getAbsolutePath() + "/service" + serviceSpec.getUUID();
+	String destPath = DEST_DIR.getAbsolutePath() + "/service" + serviceSpec.getUuid();
 
 	File destFolder = new File(destPath);
 
@@ -82,7 +82,7 @@ public class RecipeBuilderTest {
     @Test
     public void shouldReplaceOcurrencesInMetadataRb() throws IOException {
 
-	recipeBuilder.changeMetadataRb(serviceSpec, "/service" + serviceSpec.getUUID() + "/metadata.rb");
+	recipeBuilder.changeMetadataRb(serviceSpec, "/service" + serviceSpec.getUuid() + "/metadata.rb");
 	assertAllOcurrencesInMetadataRbWereReplaced();
     }
 
@@ -101,7 +101,7 @@ public class RecipeBuilderTest {
     @Test
     public void shouldReplaceOcurrencesInAttributesServerRb() throws Exception {
 
-	recipeBuilder.changeAttributesDefaultRb(serviceSpec, "/service" + serviceSpec.getUUID()
+	recipeBuilder.changeAttributesDefaultRb(serviceSpec, "/service" + serviceSpec.getUuid()
 		+ "/attributes/default.rb");
 	assertAllOcurrencesWereReplacedInDefaultRb();
     }

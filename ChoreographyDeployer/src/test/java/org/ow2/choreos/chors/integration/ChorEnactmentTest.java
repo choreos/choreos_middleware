@@ -17,9 +17,9 @@ import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.chors.ChoreographyDeployerImpl;
 import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.chors.datamodel.ChoreographyService;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.services.datamodel.PackageType;
+import org.ow2.choreos.services.datamodel.Service;
 import org.ow2.choreos.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -52,8 +52,8 @@ public class ChorEnactmentTest {
     public void setUp() {
 
 	ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "false");
-	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-	spec = models.getChorSpecWithReplicas(2);
+	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE, 2);
+	spec = models.getChorSpec();
     }
 
     @Test
@@ -64,16 +64,16 @@ public class ChorEnactmentTest {
 	String chorId = ee.createChoreography(spec);
 	Choreography chor = ee.enactChoreography(chorId);
 
-	ChoreographyService airline = chor.getServiceByChorServiceSpecName(ModelsForTest.AIRLINE);
-	assertEquals(2, airline.getService().getUris().size());
+	Service airline = chor.getDeployableServiceBySpecName(ModelsForTest.AIRLINE);
+	assertEquals(2, airline.getUris().size());
 
-	ChoreographyService travel = chor.getServiceByChorServiceSpecName(ModelsForTest.TRAVEL_AGENCY);
-	WSClient client = new WSClient(travel.getService().getUris().get(0) + "?wsdl");
+	Service travel = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
+	WSClient client = new WSClient(travel.getUris().get(0) + "?wsdl");
 	Item response = client.request("buyTrip");
 	String codes = response.getChild("return").getContent();
 	assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
 
-	WSClient client2 = new WSClient(travel.getService().getUris().get(0) + "?wsdl");
+	WSClient client2 = new WSClient(travel.getUris().get(0) + "?wsdl");
 	Item response2 = client2.request("buyTrip");
 	String codes2 = response2.getChild("return").getContent();
 	assertTrue(codes2.startsWith("33") && codes2.endsWith("--22"));

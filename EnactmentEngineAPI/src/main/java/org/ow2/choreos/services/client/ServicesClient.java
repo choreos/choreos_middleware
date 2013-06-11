@@ -20,7 +20,7 @@ import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 /**
  * Access Service Deployer functionalities through the REST API.
  * 
- * The user of <code>ServiceDeployerClient</code> does not need to worry with
+ * The user of ServiceDeployerClient does not need to worry with
  * the REST communication.
  * 
  * @author leonardo
@@ -55,19 +55,16 @@ public class ServicesClient implements ServicesManager {
 	return client;
     }
 
-    // TODO: review this methods for new client path
     @Override
     public DeployableService createService(DeployableServiceSpec serviceSpec) throws ServiceNotDeployedException {
-
 	WebClient client = setupClient();
 	client.path("services");
 	DeployableService service = null;
 	try {
 	    service = client.post(serviceSpec, DeployableService.class);
 	} catch (WebApplicationException e) {
-	    throw new ServiceNotDeployedException(serviceSpec.getUUID());
+	    throw new ServiceNotDeployedException(serviceSpec.getUuid());
 	}
-
 	return service;
     }
 
@@ -79,18 +76,15 @@ public class ServicesClient implements ServicesManager {
 	try {
 	    service = client.get(null);
 	} catch (WebApplicationException e) {
-	    // throw new ServiceNotFoundException(uuid);
+	    throw new ServiceNotFoundException(uuid);
 	}
-
 	return service;
     }
 
     @Override
     public void deleteService(String uuid) throws ServiceNotDeletedException {
-
 	WebClient client = setupClient();
 	client.path("services").path(uuid);
-
 	try {
 	    client.delete();
 	} catch (WebApplicationException e) {
@@ -101,12 +95,12 @@ public class ServicesClient implements ServicesManager {
     @Override
     public DeployableService updateService(DeployableServiceSpec serviceSpec) throws ServiceNotModifiedException {
 	WebClient client = setupClient();
-	client.path("services").path(serviceSpec.getUUID());
+	client.path("services").path(serviceSpec.getUuid());
 	DeployableService service = null;
 	try {
 	    service = client.post(serviceSpec, DeployableService.class);
 	} catch (WebApplicationException e) {
-	    throw new ServiceNotModifiedException(serviceSpec.getUUID(), e.getMessage());
+	    throw new ServiceNotModifiedException(serviceSpec.getUuid(), e.getMessage());
 	}
 	return service;
     }

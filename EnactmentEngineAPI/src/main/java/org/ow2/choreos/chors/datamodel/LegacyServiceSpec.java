@@ -9,20 +9,11 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.ow2.choreos.services.datamodel.ServiceSpec;
-import org.ow2.choreos.services.datamodel.ServiceType;
 
 @XmlRootElement
 public class LegacyServiceSpec extends ServiceSpec {
 
     List<String> nativeURIs;
-
-    protected LegacyServiceSpec(ServiceType serviceType) {
-	super(serviceType);
-    }
-
-    public LegacyServiceSpec() {
-	super();
-    }
 
     public List<String> getNativeURIs() {
 	return nativeURIs;
@@ -61,15 +52,4 @@ public class LegacyServiceSpec extends ServiceSpec {
 	return true;
     }
 
-    @Override
-    public int getNumberOfInstances() {
-	// TODO Auto-generated method stub
-	return 0;
-    }
-
-    @Override
-    public void setNumberOfInstances(int number) {
-	// TODO Auto-generated method stub
-
-    }
 }

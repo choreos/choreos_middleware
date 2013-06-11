@@ -31,7 +31,7 @@ public class ServiceInstancesProxifier {
 
 	    EasyESBNode esbNode = instancesNodesMap.get(instance);
 	    ServiceInstanceProxifier proxifier = new ServiceInstanceProxifier();
-	    String svcName = instance.getServiceSpec().getUUID();
+	    String svcName = instance.getServiceSpec().getUuid();
 	    try {
 		String proxifiedAddress = proxifier.proxify(instance, esbNode);
 		instance.setBusUri(ServiceType.SOAP, proxifiedAddress);

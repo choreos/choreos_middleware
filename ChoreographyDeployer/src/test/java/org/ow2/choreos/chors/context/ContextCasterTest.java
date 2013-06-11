@@ -17,7 +17,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.chors.ModelsForTest;
-import org.ow2.choreos.chors.datamodel.ChoreographyService;
 import org.ow2.choreos.services.ServiceInstanceNotFoundException;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.PackageType;
@@ -39,11 +38,11 @@ public class ContextCasterTest {
     private static final String TRAVEL_AGENCY_URI = ModelsForTest.TRAVEL_AGENCY_URI;
     private static final String TRAVEL_AGENCY_PROXIFIED_URI = "http://localhost:8180/services/TravelAgencyServicePortClientProxyEndpoint";
 
-    private Map<String, ChoreographyService> deployedServices;
+    private Map<String, DeployableService> deployedServices;
 
     ModelsForTest models;
-    private ChoreographyService travelChoreographyService;
-    private ChoreographyService airlineChoreographyService;
+    private DeployableService travelService;
+    private DeployableService airlineService;
 
     @BeforeClass
     public static void configLog() {
@@ -53,21 +52,20 @@ public class ContextCasterTest {
     @Before
     public void setUp() {
 	models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-	travelChoreographyService = models.getTravelChoreographyService();
-	airlineChoreographyService = models.getAirlineChoreographyService();
+	travelService = models.getTravelService();
+	airlineService = models.getAirlineService();
 
-	this.deployedServices = new HashMap<String, ChoreographyService>();
-	this.deployedServices.put(AIRLINE, airlineChoreographyService);
-	this.deployedServices.put(TRAVEL_AGENCY, travelChoreographyService);
+	this.deployedServices = new HashMap<String, DeployableService>();
+	this.deployedServices.put(AIRLINE, airlineService);
+	this.deployedServices.put(TRAVEL_AGENCY, travelService);
     }
 
     private void setUpBusUris() throws ServiceInstanceNotFoundException {
 
-	ServiceInstance airlineInstance = ((DeployableService) (deployedServices.get(AIRLINE).getService()))
+	ServiceInstance airlineInstance = ((DeployableService) (deployedServices.get(AIRLINE)))
 		.getInstances().get(0);
 	airlineInstance.setBusUri(ServiceType.SOAP, AIRLINE_PROXIFIED_URI);
-	ServiceInstance travelInstance = ((DeployableService) (deployedServices.get(TRAVEL_AGENCY).getService()))
-		.getInstances().get(0);
+	ServiceInstance travelInstance = deployedServices.get(TRAVEL_AGENCY).getInstances().get(0);
 	travelInstance.setBusUri(ServiceType.SOAP, TRAVEL_AGENCY_PROXIFIED_URI);
     }
 

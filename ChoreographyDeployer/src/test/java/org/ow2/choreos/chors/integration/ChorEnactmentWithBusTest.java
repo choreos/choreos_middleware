@@ -16,7 +16,6 @@ import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.chors.ChoreographyDeployerImpl;
 import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.chors.datamodel.ChoreographyService;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.PackageType;
@@ -41,7 +40,7 @@ import eu.choreos.vv.clientgenerator.WSClient;
  */
 @Category(IntegrationTest.class)
 public class ChorEnactmentWithBusTest {
-    
+
     private static final String BUS_PROPERTY = "BUS";
 
     private ChoreographySpec chorSpec;
@@ -67,10 +66,10 @@ public class ChorEnactmentWithBusTest {
 	String chorId = ee.createChoreography(chorSpec);
 	Choreography chor = ee.enactChoreography(chorId);
 
-	ChoreographyService travel = chor.getServiceByChorServiceSpecName(ModelsForTest.TRAVEL_AGENCY);
-	ServiceInstance airlineInstance = ((DeployableService) chor.getServiceByChorServiceSpecName(
-		ModelsForTest.AIRLINE).getService()).getInstances().get(0);
-	ServiceInstance travelInstance = ((DeployableService) travel.getService()).getInstances().get(0);
+	DeployableService airlineService = chor.getDeployableServiceBySpecName(ModelsForTest.AIRLINE);
+	DeployableService travelService = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
+	ServiceInstance airlineInstance = airlineService.getInstances().get(0);
+	ServiceInstance travelInstance = travelService.getInstances().get(0);
 	String airlineProxifiedUri = airlineInstance.getBusUri(ServiceType.SOAP);
 	String travelProxifiedUri = travelInstance.getBusUri(ServiceType.SOAP);
 	System.out.println("airline proxified: " + airlineProxifiedUri);

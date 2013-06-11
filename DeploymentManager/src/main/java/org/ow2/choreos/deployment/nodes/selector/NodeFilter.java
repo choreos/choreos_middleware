@@ -9,10 +9,10 @@ import java.util.List;
 
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
+import org.ow2.choreos.nodes.datamodel.MemoryType;
 import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.selectors.ObjectFilter;
-import org.ow2.choreos.services.datamodel.ResourceImpact;
-import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryType;
 
 /**
  * Filter nodes that match requirements. The filter policy is extracted from

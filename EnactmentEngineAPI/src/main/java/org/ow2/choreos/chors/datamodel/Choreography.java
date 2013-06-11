@@ -9,26 +9,59 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.Service;
 
 @XmlRootElement
 public class Choreography {
 
     private String id;
-    private ChoreographySpec choreographySpec = null;
+    private ChoreographySpec choreographySpec;
 
     // For some mysterious reason, this cannot be initialized here
     // nor at any constructor (JAXB weirdness)
-    private List<ChoreographyService> choreographyServices;
-    private ChoreographySpec requestedChoreographySpec = null;
+    private List<DeployableService> deployableServices;
+    private List<LegacyService> legacyServices;
 
-    public ChoreographyService getServiceByChorServiceSpecName(String choreographyServiceSpecName) {
+    @XmlTransient
+    private ChoreographySpec requestedChoreographySpec;
 
-	List<ChoreographyService> services = getChoreographyServices();
-	for (ChoreographyService svc : services) {
-	    if (choreographyServiceSpecName.equals(svc.getChoreographyServiceSpec().getName()))
+    public DeployableService getDeployableServiceBySpecName(String specName) {
+	List<DeployableService> services = getDeployableServices();
+	for (DeployableService svc : services) {
+	    if (specName.equals(svc.getSpec().getName()))
 		return svc;
 	}
-	throw new NoSuchElementException("Service named " + choreographyServiceSpecName + " does not exist");
+	throw new NoSuchElementException("Service named " + specName + " does not exist");
+    }
+
+    public void addService(DeployableService deployableService) {
+	if (deployableServices == null)
+	    deployableServices = new ArrayList<DeployableService>();
+	deployableServices.add(deployableService);
+    }
+
+    public void addService(LegacyService legacyService) {
+	if (legacyServices == null)
+	    legacyServices = new ArrayList<LegacyService>();
+	legacyServices.add(legacyService);
+    }
+
+    public List<Service> getServices() {
+	List<Service> services = new ArrayList<Service>();
+	if (deployableServices != null) {
+	    for (Service svc : deployableServices) {
+		services.add(svc);
+	    }
+	}
+	if (legacyServices != null) {
+	    for (Service svc : legacyServices) {
+		services.add(svc);
+	    }
+	}
+	return services;
     }
 
     public String getId() {
@@ -54,15 +87,24 @@ public class Choreography {
 	this.requestedChoreographySpec = spec;
     }
 
-    public void finishChoreographyEnactment() {
-	this.choreographySpec = this.requestedChoreographySpec;
+    public List<DeployableService> getDeployableServices() {
+	return deployableServices;
     }
 
-    public List<ChoreographyService> getChoreographyServices() {
-	if (choreographyServices == null) {
-	    this.choreographyServices = new ArrayList<ChoreographyService>();
-	}
-	return choreographyServices;
+    public void setDeployableServices(List<DeployableService> deployableServices) {
+	this.deployableServices = deployableServices;
+    }
+
+    public List<LegacyService> getLegacyServices() {
+	return legacyServices;
+    }
+
+    public void setLegacyServices(List<LegacyService> legacyServices) {
+	this.legacyServices = legacyServices;
+    }
+
+    public void finishChoreographyEnactment() {
+	this.choreographySpec = this.requestedChoreographySpec;
     }
 
     @Override
@@ -90,23 +132,4 @@ public class Choreography {
 	return true;
     }
 
-    @Override
-    public String toString() {
-	return "Choreography [id=" + id + ", chorSpec=" + choreographySpec + ", deployedServices="
-		+ getChoreographyServices() + ", requestedChorSpec=" + requestedChoreographySpec + "]";
-    }
-
-    public void addChoreographyService(ChoreographyService choreographyService) {
-	getChoreographyServices().add(choreographyService);
-    }
-
-    public void setChoreographyServices(List<ChoreographyService> choreographyServices) {
-
-	// This does not work, thanks to JAXB...
-	/*
-	 * getChoreographyServices().clear(); for (ChoreographyService service :
-	 * choreographyServices) { this.choreographyServices.add(service); }
-	 */
-	this.choreographyServices = choreographyServices;
-    }
 }

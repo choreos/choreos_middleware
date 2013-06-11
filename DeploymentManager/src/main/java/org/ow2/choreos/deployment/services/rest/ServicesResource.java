@@ -93,10 +93,10 @@ public class ServicesResource {
 	    return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 	}
 
-	logger.info(service.getSpec().getUUID() + " configured to be deployed on " + service.getUris());
+	logger.info(service.getSpec().getUuid() + " configured to be deployed on " + service.getUris());
 
 	UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-	uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getSpec().getUUID());
+	uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getSpec().getUuid());
 	URI location = uriBuilder.build();
 
 	return Response.created(location).entity(service).build();
@@ -153,7 +153,7 @@ public class ServicesResource {
 	    return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 	}
 
-	return Response.ok(service.getInstances()).build();
+	return Response.ok(service.getServiceInstances()).build();
     }
 
     /**
@@ -179,7 +179,7 @@ public class ServicesResource {
 	ServiceInstance instance;
 	try {
 	    service = servicesManager.getService(uuid);
-	    instance = service.getInstance(instanceId);
+	    instance = service.getInstanceById(instanceId);
 	} catch (ServiceNotFoundException e) {
 	    return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 	} catch (IllegalArgumentException e) {
@@ -252,7 +252,7 @@ public class ServicesResource {
 	logger.info(uuid + " updated. Running on " + service.getUris());
 
 	UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-	uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getSpec().getUUID());
+	uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getSpec().getUuid());
 
 	Response build = Response.ok(service).build();
 	return build;

@@ -55,7 +55,7 @@ public class ChorResource {
     @Consumes(MediaType.APPLICATION_XML)
     public Response create(ChoreographySpec chor, @Context UriInfo uriInfo) {
 
-	if (chor == null || chor.getChoreographyServiceSpecs() == null || chor.getChoreographyServiceSpecs().isEmpty()) {
+	if (chor == null || chor.getDeployableServiceSpecs() == null || chor.getDeployableServiceSpecs().isEmpty()) {
 	    return Response.status(Status.BAD_REQUEST).build();
 	}
 

@@ -16,7 +16,7 @@ public class RecipeBuilderImpl extends BaseRecipeBuilder {
 
     @Override
     public String replace(String content, DeployableServiceSpec serviceSpec) {
-	content = content.replace("$NAME", serviceSpec.getUUID());
+	content = content.replace("$NAME", serviceSpec.getUuid());
 	content = content.replace("$PackageURL", serviceSpec.getPackageUri());
 	content = content.replace("$WARFILE", serviceSpec.getFileName());
 	return content;

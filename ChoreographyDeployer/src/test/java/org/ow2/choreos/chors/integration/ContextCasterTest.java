@@ -19,8 +19,8 @@ import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.context.ContextCaster;
 import org.ow2.choreos.chors.context.ContextSender;
 import org.ow2.choreos.chors.context.ContextSenderFactory;
-import org.ow2.choreos.chors.datamodel.ChoreographyService;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
+import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
@@ -50,7 +50,7 @@ public class ContextCasterTest {
     private static final String TRAVEL_AGENCY_URI = "http://localhost:1235/travelagency";
 
     private ChoreographySpec chorSpec;
-    private Map<String, ChoreographyService> deployedServices;
+    private Map<String, DeployableService> deployedServices;
     private ModelsForTest models;
 
     @BeforeClass
@@ -60,16 +60,11 @@ public class ContextCasterTest {
 
     @Before
     public void setUp() {
-
 	models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-
 	chorSpec = models.getChorSpec();
-
-	deployedServices = new HashMap<String, ChoreographyService>();
-
-	deployedServices.put(AIRLINE, models.getAirlineChoreographyService());
-
-	deployedServices.put(TRAVEL_AGENCY, models.getTravelChoreographyService());
+	deployedServices = new HashMap<String, DeployableService>();
+	deployedServices.put(AIRLINE, models.getAirlineService());
+	deployedServices.put(TRAVEL_AGENCY, models.getTravelService());
     }
 
     @Test

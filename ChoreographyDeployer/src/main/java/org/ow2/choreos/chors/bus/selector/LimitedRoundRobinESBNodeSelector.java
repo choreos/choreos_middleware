@@ -6,9 +6,9 @@ import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.chors.bus.EasyESBNode;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.client.NodesClient;
+import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.selectors.LimitedRoundRobinSelector;
 import org.ow2.choreos.selectors.NotSelectedException;
-import org.ow2.choreos.services.datamodel.ResourceImpact;
 
 public class LimitedRoundRobinESBNodeSelector implements ESBNodeSelector {
 

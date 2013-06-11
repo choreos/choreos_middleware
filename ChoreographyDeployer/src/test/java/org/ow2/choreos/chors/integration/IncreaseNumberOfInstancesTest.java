@@ -16,9 +16,9 @@ import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.ChoreographyDeployerImpl;
 import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.chors.datamodel.ChoreographyService;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.services.datamodel.PackageType;
+import org.ow2.choreos.services.datamodel.Service;
 import org.ow2.choreos.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -49,9 +49,10 @@ public class IncreaseNumberOfInstancesTest {
     @Before
     public void setUp() {
 
-	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-	spec = models.getChorSpecWithReplicas(2);
-	newSpec = models.getChorSpecWithReplicas(3);
+	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE, 2);
+	spec = models.getChorSpec();
+	ModelsForTest newModels = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE, 3);
+	newSpec = newModels.getChorSpec();
     }
 
     @Test
@@ -62,10 +63,10 @@ public class IncreaseNumberOfInstancesTest {
 	String chorId = ee.createChoreography(spec);
 	Choreography chor = ee.enactChoreography(chorId);
 
-	ChoreographyService airline = chor.getServiceByChorServiceSpecName(ModelsForTest.AIRLINE);
+	Service airline = chor.getDeployableServiceBySpecName(ModelsForTest.AIRLINE);
 
-	ChoreographyService travel = chor.getServiceByChorServiceSpecName(ModelsForTest.TRAVEL_AGENCY);
-	WSClient client = new WSClient(travel.getService().getUris().get(0) + "?wsdl");
+	Service travel = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
+	WSClient client = new WSClient(travel.getUris().get(0) + "?wsdl");
 
 	String codes, codes2, codes3 = "";
 
@@ -74,7 +75,7 @@ public class IncreaseNumberOfInstancesTest {
 	response = client.request("buyTrip");
 	codes2 = response.getChild("return").getContent();
 
-	assertEquals(2, airline.getService().getUris().size());
+	assertEquals(2, airline.getUris().size());
 	assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
 	assertTrue(codes2.startsWith("33") && codes2.endsWith("--22"));
 	assertFalse(codes.equals(codes2));
@@ -84,11 +85,11 @@ public class IncreaseNumberOfInstancesTest {
 
 	Thread.sleep(4000);
 
-	airline = chor.getServiceByChorServiceSpecName(ModelsForTest.AIRLINE);
+	airline = chor.getDeployableServiceBySpecName(ModelsForTest.AIRLINE);
 
-	travel = chor.getServiceByChorServiceSpecName(ModelsForTest.TRAVEL_AGENCY);
+	travel = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
 
-	client = new WSClient(travel.getService().getUris().get(0) + "?wsdl");
+	client = new WSClient(travel.getUris().get(0) + "?wsdl");
 
 	response = client.request("buyTrip");
 	codes = response.getChild("return").getContent();
@@ -97,7 +98,7 @@ public class IncreaseNumberOfInstancesTest {
 	response = client.request("buyTrip");
 	codes3 = response.getChild("return").getContent();
 
-	assertEquals(3, airline.getService().getUris().size());
+	assertEquals(3, airline.getUris().size());
 	assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
 	assertTrue(codes2.startsWith("33") && codes2.endsWith("--22"));
 	assertTrue(codes3.startsWith("33") && codes3.endsWith("--22"));

@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.chors.datamodel.ChoreographyService;
-import org.ow2.choreos.chors.datamodel.ChoreographyServiceDependency;
-import org.ow2.choreos.chors.datamodel.ChoreographyServiceSpec;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.Service;
+import org.ow2.choreos.services.datamodel.ServiceDependency;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
+import org.ow2.choreos.services.datamodel.ServiceSpec;
 import org.ow2.choreos.services.datamodel.ServiceType;
 
 public class ContextCaster {
@@ -29,30 +29,30 @@ public class ContextCaster {
 	this.sender = sender;
     }
 
-    public void cast(ChoreographySpec chor, Map<String, ChoreographyService> deployedServices) {
+    public void cast(ChoreographySpec chor, Map<String, DeployableService> deployedServices) {
 
 	logger.info("Passing context to deployed services");
 
-	for (Map.Entry<String, ChoreographyService> entry : deployedServices.entrySet()) {
-	    ChoreographyService deployed = entry.getValue();
+	for (Map.Entry<String, DeployableService> entry : deployedServices.entrySet()) {
+	    Service deployed = entry.getValue();
 	    castContext(deployedServices, deployed);
 	}
     }
 
-    private void castContext(Map<String, ChoreographyService> deployedServices, ChoreographyService deployed) {
+    private void castContext(Map<String, DeployableService> deployedServices, Service deployed) {
 
-	ChoreographyServiceSpec spec = deployed.getChoreographyServiceSpec();
+	ServiceSpec spec = deployed.getSpec();
 	if (spec.getDependencies() == null)
 	    return;
 
-	List<String> serviceUris = deployed.getService().getUris();
+	List<String> serviceUris = deployed.getUris();
 
-	for (ChoreographyServiceDependency dep : spec.getDependencies()) {
+	for (ServiceDependency dep : spec.getDependencies()) {
 
-	    ChoreographyService providerService = deployedServices.get(dep.getChoreographyServiceSpecName());
+	    Service providerService = deployedServices.get(dep.getServiceSpecName());
 
 	    if (providerService == null) {
-		logger.error("Service " + dep.getChoreographyServiceSpecName() + " (" + spec.getName()
+		logger.error("Service " + dep.getServiceSpecName() + " (" + spec.getName()
 			+ "dependency) not deployed. Not goint to pass this context to " + spec.getName());
 	    } else {
 		try {
@@ -73,10 +73,10 @@ public class ContextCaster {
      * @param providerService
      * @return
      */
-    private List<String> getUris(ChoreographyService providerService) {
+    private List<String> getUris(Service providerService) {
 
 	List<String> uris = new ArrayList<String>();
-	for (ServiceInstance instance : ((DeployableService) providerService.getService()).getInstances()) {
+	for (ServiceInstance instance : ((DeployableService) providerService).getInstances()) {
 	    String proxifiedUri = instance.getBusUri(ServiceType.SOAP);
 	    if (proxifiedUri != null) {
 		uris.add(proxifiedUri);
@@ -86,9 +86,9 @@ public class ContextCaster {
 	}
 	return uris;
     }
-
-    private void trySendContext(ChoreographyServiceSpec consumerServiceSpec, List<String> consumerServiceInstanceUris,
-	    ChoreographyServiceDependency consumerServiceDependency, ChoreographyService providerService)
+    
+    private void trySendContext(ServiceSpec consumerServiceSpec, List<String> consumerServiceInstanceUris,
+	    ServiceDependency consumerServiceDependency, Service providerService)
 	    throws ContextNotSentException {
 
 	List<String> providerUris = this.getUris(providerService);
@@ -97,27 +97,27 @@ public class ContextCaster {
 	for (String serviceUri : consumerServiceInstanceUris) {
 	    while (trial < MAX_TRIALS) {
 		try {
-		    sender.sendContext(serviceUri, consumerServiceDependency.getChoreographyServiceSpecRole(),
-			    consumerServiceDependency.getChoreographyServiceSpecName(), providerUris);
+		    sender.sendContext(serviceUri, consumerServiceDependency.getServiceSpecRole(),
+			    consumerServiceDependency.getServiceSpecName(), providerUris);
 		    logger.debug(consumerServiceSpec.getName() + " has received "
-			    + consumerServiceDependency.getChoreographyServiceSpecName() + " as "
-			    + consumerServiceDependency.getChoreographyServiceSpecRole() + ": " + providerUris);
+			    + consumerServiceDependency.getServiceSpecName() + " as "
+			    + consumerServiceDependency.getServiceSpecRole() + ": " + providerUris);
 		    return;
 		} catch (ContextNotSentException e) {
 		    trial = tryRecoveryNotSentContext(consumerServiceSpec, consumerServiceDependency, trial);
 		    logger.error("Trial=" + trial);
 		}
 	    }
-	    throw new ContextNotSentException(serviceUri, consumerServiceDependency.getChoreographyServiceSpecRole(),
-		    consumerServiceDependency.getChoreographyServiceSpecName(), providerUris);
+	    throw new ContextNotSentException(serviceUri, consumerServiceDependency.getServiceSpecRole(),
+		    consumerServiceDependency.getServiceSpecName(), providerUris);
 	}
     }
 
-    private int tryRecoveryNotSentContext(ChoreographyServiceSpec spec, ChoreographyServiceDependency dep, int trial) {
+    private int tryRecoveryNotSentContext(ServiceSpec spec, ServiceDependency dep, int trial) {
 	trial++;
 	if (trial == MAX_TRIALS) {
-	    logger.error("Could not set " + dep.getChoreographyServiceSpecName() + " as "
-		    + dep.getChoreographyServiceSpecRole() + " to " + spec.getName());
+	    logger.error("Could not set " + dep.getServiceSpecName() + " as "
+		    + dep.getServiceSpecRole() + " to " + spec.getName());
 	}
 	try {
 	    Thread.sleep(DELAY_BETWEEN_TRIALS);

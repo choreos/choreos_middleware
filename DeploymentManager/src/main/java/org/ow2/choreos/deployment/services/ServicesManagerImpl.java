@@ -79,14 +79,14 @@ public class ServicesManagerImpl implements ServicesManager {
 	} catch (IllegalArgumentException e) {
 	    String message = "Invalid service spec";
 	    logger.error(message, e);
-	    throw new ServiceNotDeployedException(serviceSpec.getUUID(), message);
+	    throw new ServiceNotDeployedException(serviceSpec.getUuid(), message);
 	}
 
 	if (serviceSpec.getPackageType() != PackageType.LEGACY) {
 	    service = createDeployableService(service);
 	}
 
-	registry.addService(serviceSpec.getUUID(), service);
+	registry.addService(serviceSpec.getUuid(), service);
 	return service;
 
     }
@@ -96,7 +96,7 @@ public class ServicesManagerImpl implements ServicesManager {
 	createAndUploadRecipes(service);
 	logger.debug("recipes uploaded");
 	applyRecipe(service, service.getSpec().getNumberOfInstances());
-	logger.debug("creation of service " + service.getSpec().getUUID() + " completed");
+	logger.debug("creation of service " + service.getSpec().getUuid() + " completed");
 
 	return service;
     }
@@ -110,7 +110,7 @@ public class ServicesManagerImpl implements ServicesManager {
 		i++;
 		if (i >= 4) {
 		    logger.error("Could not upload recipe: " + e.getMessage());
-		    throw new ServiceNotDeployedException(service.getSpec().getUUID());
+		    throw new ServiceNotDeployedException(service.getSpec().getUuid());
 		} else {
 		    try {
 			Thread.sleep(500);
@@ -205,9 +205,9 @@ public class ServicesManagerImpl implements ServicesManager {
 	try {
 	    nodes = npm.prepareDeployment(config);
 	} catch (PrepareDeploymentFailedException e) {
-	    logger.error("Service " + service.getSpec().getUUID() + " not created: " + e.getMessage());
+	    logger.error("Service " + service.getSpec().getUuid() + " not created: " + e.getMessage());
 	} catch (Exception e) {
-	    logger.error("Service " + service.getSpec().getUUID() + " not created: " + e.getMessage());
+	    logger.error("Service " + service.getSpec().getUuid() + " not created: " + e.getMessage());
 	}
 
 	List<ServiceInstance> instances = new ArrayList<ServiceInstance>();
@@ -261,7 +261,7 @@ public class ServicesManagerImpl implements ServicesManager {
 	Recipe deactivateRecipe = recipeBundle.getDeactivateRecipe();
 
 	// deactivate service instances and
-	for (ServiceInstance instance : service.getInstances()) {
+	for (ServiceInstance instance : service.getServiceInstances()) {
 	    executeServiceInstanceUndeployment(deactivateRecipe, instance);
 	}
 
@@ -287,14 +287,14 @@ public class ServicesManagerImpl implements ServicesManager {
     @Override
     public DeployableService updateService(DeployableServiceSpec serviceSpec) throws UnhandledModificationException {
 
-	logger.info("Requested to update service " + serviceSpec.getUUID() + " with spec " + serviceSpec);
+	logger.info("Requested to update service " + serviceSpec.getUuid() + " with spec " + serviceSpec);
 	DeployableService current;
 	try {
-	    logger.info("Trying to get service with id " + serviceSpec.getUUID() + " from \n" + registry.getServices());
-	    current = getService(serviceSpec.getUUID());
+	    logger.info("Trying to get service with id " + serviceSpec.getUuid() + " from \n" + registry.getServices());
+	    current = getService(serviceSpec.getUuid());
 	    logger.info("getService got " + current);
 	} catch (ServiceNotFoundException e) {
-	    logger.info("ServiceNotFoundException happened when trying to get service with id " + serviceSpec.getUUID());
+	    logger.info("ServiceNotFoundException happened when trying to get service with id " + serviceSpec.getUuid());
 	    logger.info("Exception message " + e.getMessage());
 	    throw new UnhandledModificationException();
 	}
@@ -335,9 +335,9 @@ public class ServicesManagerImpl implements ServicesManager {
 	}
 	logger.info("Setting the new service spec for service " + currentService);
 
-	String uuid = currentService.getSpec().getUUID();
+	String uuid = currentService.getSpec().getUuid();
 	currentService.setSpec(requestedSpec);
-	registry.addService(currentService.getSpec().getUUID(), currentService);
+	registry.addService(currentService.getSpec().getUuid(), currentService);
 	registry.deleteService(uuid);
     }
 
@@ -375,12 +375,12 @@ public class ServicesManagerImpl implements ServicesManager {
 	return actions;
     }
 
-    private void requestToDecreaseNumberOfInstances(DeployableService currentService, ServiceSpec requestedSpec) {
+    private void requestToDecreaseNumberOfInstances(DeployableService currentService, DeployableServiceSpec requestedSpec) {
 	int decreaseAmount = currentService.getSpec().getNumberOfInstances() - requestedSpec.getNumberOfInstances();
 	removeServiceInstances(currentService, decreaseAmount);
     }
 
-    private void requestToIncreaseNumberOfInstances(DeployableService currentService, ServiceSpec requestedSpec) {
+    private void requestToIncreaseNumberOfInstances(DeployableService currentService, DeployableServiceSpec requestedSpec) {
 	int increaseAmount = requestedSpec.getNumberOfInstances() - currentService.getSpec().getNumberOfInstances();
 
 	logger.info("requestToIncreaseNumberOfInstances: Increase amount = " + increaseAmount);
@@ -390,7 +390,7 @@ public class ServicesManagerImpl implements ServicesManager {
     private void requestToMigrateServiceInstances(DeployableService currentService, ServiceSpec requestedSpec)
 	    throws UnhandledModificationException {
 	currentService.setSpec(requestedSpec);
-	currentService.getInstances().clear();
+	currentService.getServiceInstances().clear();
 	migrateServiceInstances(currentService);
     }
 
@@ -403,15 +403,15 @@ public class ServicesManagerImpl implements ServicesManager {
     }
 
     private void removeServiceInstances(DeployableService currentService, int amount) {
-	if (amount < currentService.getInstances().size()) {
+	if (amount < currentService.getServiceInstances().size()) {
 	    for (int i = 0; i < amount; i++) {
 		executeServiceInstanceUndeployment(currentService.getRecipeBundle().getDeactivateRecipe(),
-			currentService.getInstances().get(0));
-		currentService.getInstances().remove(0);
+			currentService.getServiceInstances().get(0));
+		currentService.getServiceInstances().remove(0);
 	    }
-	} else if (amount < currentService.getInstances().size()) {
+	} else if (amount < currentService.getServiceInstances().size()) {
 	    try {
-		this.deleteService(currentService.getSpec().getUUID());
+		this.deleteService(currentService.getSpec().getUuid());
 	    } catch (ServiceNotDeletedException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();

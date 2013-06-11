@@ -12,8 +12,8 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.bus.selector.ESBNodeSelector;
 import org.ow2.choreos.chors.bus.selector.ESBNodeSelectorFactory;
 import org.ow2.choreos.chors.datamodel.Choreography;
+import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.selectors.NotSelectedException;
-import org.ow2.choreos.services.datamodel.ResourceImpact;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 
 /**
@@ -39,7 +39,7 @@ public class ESBNodesSelector {
 	Map<ServiceInstance, EasyESBNode> selectedESBNodes = new HashMap<ServiceInstance, EasyESBNode>();
 	ESBNodeSelector selector = ESBNodeSelectorFactory.getFactoryInstance().getNodeSelectorInstance();
 	InstancesFilter filter = new InstancesFilter();
-	List<ServiceInstance> instancesToBeProxified = filter.filter(choreography.getChoreographyServices());
+	List<ServiceInstance> instancesToBeProxified = filter.filter(choreography.getServices());
 	for (ServiceInstance serviceInstance : instancesToBeProxified) {
 	    ResourceImpact resourceImpact = serviceInstance.getServiceSpec().getResourceImpact();
 	    try {
@@ -47,7 +47,7 @@ public class ESBNodesSelector {
 		selectedESBNodes.put(serviceInstance, esbNode);
 	    } catch (NotSelectedException e) {
 		logger.error("Could not select ESB node to an instance of "
-			+ serviceInstance.getServiceSpec().getUUID());
+			+ serviceInstance.getServiceSpec().getUuid());
 	    }
 	}
 	return selectedESBNodes;

@@ -19,7 +19,7 @@ public class LimitedRoundRobinSelector<T, R> implements Selector<T, R> {
 
     private int limit = 1;
     private ObjectRetriever<T> objectRetriever;
-    private AtomicInteger objectsBeenCreated = new AtomicInteger();
+    private AtomicInteger objectsBeenCreated = new AtomicInteger(); // TODO replace by Semaphore
 
     private Selector<T, R> alwaysCreatorSelector, roundRobinSelector;
 

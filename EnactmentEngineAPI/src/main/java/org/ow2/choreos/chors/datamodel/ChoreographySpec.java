@@ -10,46 +10,62 @@ import java.util.NoSuchElementException;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
+import org.ow2.choreos.services.datamodel.ServiceSpec;
+
 @XmlRootElement
 public class ChoreographySpec {
 
-    protected List<ChoreographyServiceSpec> choreographyServiceSpecs = new ArrayList<ChoreographyServiceSpec>();
+    private List<DeployableServiceSpec> deployableServiceSpecs = new ArrayList<DeployableServiceSpec>();
+    private List<LegacyServiceSpec> legacyServiceSpecs = new ArrayList<LegacyServiceSpec>();
 
     public ChoreographySpec() {
 
     }
 
-    public ChoreographySpec(ChoreographyServiceSpec... choreographyServiceSpecs) {
-	for (ChoreographyServiceSpec spec : choreographyServiceSpecs)
-	    this.choreographyServiceSpecs.add(spec);
+    public ChoreographySpec(DeployableServiceSpec... serviceSpecs) {
+	for (DeployableServiceSpec spec : serviceSpecs)
+	    this.deployableServiceSpecs.add(spec);
     }
 
-    public ChoreographyServiceSpec getChoreographyServiceSpecByName(String choreographyServiceSpecName) {
+    public ServiceSpec getServiceSpecByName(String ServiceSpecName) {
 
-	for (ChoreographyServiceSpec svcSpec : choreographyServiceSpecs) {
-	    if (choreographyServiceSpecName.equals(svcSpec.getName()))
+	for (ServiceSpec svcSpec : deployableServiceSpecs) {
+	    if (ServiceSpecName.equals(svcSpec.getName()))
 		return svcSpec;
 	}
-	throw new NoSuchElementException("Service spec named " + choreographyServiceSpecName + " does not exist");
+	throw new NoSuchElementException("Service spec named " + ServiceSpecName + " does not exist");
     }
 
-    public void addChoreographyServiceSpec(ChoreographyServiceSpec choreographyServiceSpec) {
-	this.choreographyServiceSpecs.add(choreographyServiceSpec);
+    public void addServiceSpec(DeployableServiceSpec serviceSpec) {
+	this.deployableServiceSpecs.add(serviceSpec);
     }
 
-    public List<ChoreographyServiceSpec> getChoreographyServiceSpecs() {
-	return choreographyServiceSpecs;
+    public void addServiceSpec(LegacyServiceSpec serviceSpec) {
+	this.legacyServiceSpecs.add(serviceSpec);
     }
 
-    public void setChoreographyServiceSpecs(List<ChoreographyServiceSpec> choreographyServiceSpecs) {
-	this.choreographyServiceSpecs = choreographyServiceSpecs;
+    public List<DeployableServiceSpec> getDeployableServiceSpecs() {
+	return deployableServiceSpecs;
+    }
+
+    public void setDeployableServiceSpecs(List<DeployableServiceSpec> serviceSpecs) {
+	this.deployableServiceSpecs = serviceSpecs;
+    }
+
+    public List<LegacyServiceSpec> getLegacyServiceSpecs() {
+        return legacyServiceSpecs;
+    }
+
+    public void setLegacyServiceSpecs(List<LegacyServiceSpec> legacyServiceSpecs) {
+        this.legacyServiceSpecs = legacyServiceSpecs;
     }
 
     @Override
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
-	result = prime * result + ((choreographyServiceSpecs == null) ? 0 : choreographyServiceSpecs.hashCode());
+	result = prime * result + ((deployableServiceSpecs == null) ? 0 : deployableServiceSpecs.hashCode());
 	return result;
     }
 
@@ -62,17 +78,18 @@ public class ChoreographySpec {
 	if (getClass() != obj.getClass())
 	    return false;
 	ChoreographySpec other = (ChoreographySpec) obj;
-	if (choreographyServiceSpecs == null) {
-	    if (other.choreographyServiceSpecs != null)
+	if (deployableServiceSpecs == null) {
+	    if (other.deployableServiceSpecs != null)
 		return false;
-	} else if (!choreographyServiceSpecs.equals(other.choreographyServiceSpecs))
+	} else if (!deployableServiceSpecs.equals(other.deployableServiceSpecs))
 	    return false;
 	return true;
     }
 
     @Override
     public String toString() {
-	return "ChorSpec [chorServiceSpecs=" + choreographyServiceSpecs + "]";
+	return "ChoreographySpec [deployableServiceSpecs=" + deployableServiceSpecs + ", legacyServiceSpecs="
+		+ legacyServiceSpecs + "]";
     }
 
 }

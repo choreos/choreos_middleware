@@ -15,8 +15,8 @@ import org.ow2.choreos.chors.context.ContextCaster;
 import org.ow2.choreos.chors.context.ContextSender;
 import org.ow2.choreos.chors.context.ContextSenderFactory;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.chors.datamodel.ChoreographyService;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
+import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceType;
 
@@ -54,8 +54,8 @@ public class ChoreographyDeployerImpl implements ChoreographyDeployer {
 	else if (chor.getChoreographySpec() == chor.getRequestedChoreographySpec())
 	    logger.info("Starting enactment for requested update; chorId= " + chorId);
 	Deployer deployer = new Deployer();
-	Map<String, ChoreographyService> deployedMap = deployer.deployChoreographyServices(chor);
-	chor.setChoreographyServices(new ArrayList<ChoreographyService>(deployedMap.values()));
+	Map<String, DeployableService> deployedMap = deployer.deployServices(chor);
+	chor.setDeployableServices(new ArrayList<DeployableService>(deployedMap.values()));
 	logger.info("Deployed services=" + deployedMap);
 	boolean useTheBus = Boolean.parseBoolean(ChoreographyDeployerConfiguration.get(BUS_PROPERTY));
 	if (useTheBus) {

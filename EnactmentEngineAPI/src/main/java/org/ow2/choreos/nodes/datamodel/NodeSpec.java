@@ -6,81 +6,19 @@ package org.ow2.choreos.nodes.datamodel;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.ow2.choreos.services.datamodel.ResourceImpact;
-import org.ow2.choreos.services.datamodel.ResourceImpactDefs.MemoryType;
-
 @XmlRootElement
 public class NodeSpec {
 
-    private MemoryType memoryImpact;
-    private String cpuImpact;
-    private String storageImpact;
-    private String networkImpact;
-    private String regionImpact;
-
-    private String so;
-    private String zone;
     private String image;
+    private String zone;
+    private ResourceImpact resourceImpact;
 
     public NodeSpec() {
 
     }
 
     public ResourceImpact getResourceImpact() {
-	ResourceImpact impact = new ResourceImpact();
-	impact.setCpu(cpuImpact);
-	impact.setStorage(storageImpact);
-	impact.setMemory(memoryImpact);
-	impact.setNetwork(networkImpact);
-	return impact;
-    }
-
-    public MemoryType getMemoryImpact() {
-        return memoryImpact;
-    }
-
-    public void setMemoryImpact(MemoryType memoryImpact) {
-        this.memoryImpact = memoryImpact;
-    }
-
-    public String getCpuImpact() {
-        return cpuImpact;
-    }
-
-    public void setCpuImpact(String cpuImpact) {
-        this.cpuImpact = cpuImpact;
-    }
-
-    public String getStorageImpact() {
-        return storageImpact;
-    }
-
-    public void setStorageImpact(String storageImpact) {
-        this.storageImpact = storageImpact;
-    }
-
-    public String getNetworkImpact() {
-        return networkImpact;
-    }
-
-    public void setNetworkImpact(String networkImpact) {
-        this.networkImpact = networkImpact;
-    }
-
-    public String getRegionImpact() {
-        return regionImpact;
-    }
-
-    public void setRegionImpact(String regionImpact) {
-        this.regionImpact = regionImpact;
-    }
-
-    public String getSo() {
-        return so;
-    }
-
-    public void setSo(String so) {
-        this.so = so;
+	return this.resourceImpact;
     }
 
     public String getZone() {
@@ -103,13 +41,8 @@ public class NodeSpec {
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
-	result = prime * result + ((cpuImpact == null) ? 0 : cpuImpact.hashCode());
 	result = prime * result + ((image == null) ? 0 : image.hashCode());
-	result = prime * result + ((memoryImpact == null) ? 0 : memoryImpact.hashCode());
-	result = prime * result + ((networkImpact == null) ? 0 : networkImpact.hashCode());
-	result = prime * result + ((regionImpact == null) ? 0 : regionImpact.hashCode());
-	result = prime * result + ((so == null) ? 0 : so.hashCode());
-	result = prime * result + ((storageImpact == null) ? 0 : storageImpact.hashCode());
+	result = prime * result + ((resourceImpact == null) ? 0 : resourceImpact.hashCode());
 	result = prime * result + ((zone == null) ? 0 : zone.hashCode());
 	return result;
     }
@@ -123,37 +56,15 @@ public class NodeSpec {
 	if (getClass() != obj.getClass())
 	    return false;
 	NodeSpec other = (NodeSpec) obj;
-	if (cpuImpact == null) {
-	    if (other.cpuImpact != null)
-		return false;
-	} else if (!cpuImpact.equals(other.cpuImpact))
-	    return false;
 	if (image == null) {
 	    if (other.image != null)
 		return false;
 	} else if (!image.equals(other.image))
 	    return false;
-	if (memoryImpact != other.memoryImpact)
-	    return false;
-	if (networkImpact == null) {
-	    if (other.networkImpact != null)
+	if (resourceImpact == null) {
+	    if (other.resourceImpact != null)
 		return false;
-	} else if (!networkImpact.equals(other.networkImpact))
-	    return false;
-	if (regionImpact == null) {
-	    if (other.regionImpact != null)
-		return false;
-	} else if (!regionImpact.equals(other.regionImpact))
-	    return false;
-	if (so == null) {
-	    if (other.so != null)
-		return false;
-	} else if (!so.equals(other.so))
-	    return false;
-	if (storageImpact == null) {
-	    if (other.storageImpact != null)
-		return false;
-	} else if (!storageImpact.equals(other.storageImpact))
+	} else if (!resourceImpact.equals(other.resourceImpact))
 	    return false;
 	if (zone == null) {
 	    if (other.zone != null)
@@ -165,10 +76,7 @@ public class NodeSpec {
 
     @Override
     public String toString() {
-	return "NodeSpec [memoryImpact=" + memoryImpact + ", cpuImpact=" + cpuImpact + ", storageImpact="
-		+ storageImpact + ", networkImpact=" + networkImpact + ", regionImpact=" + regionImpact + ", so=" + so
-		+ ", zone=" + zone + ", image=" + image + "]";
+	return "NodeSpec [image=" + image + ", zone=" + zone + ", resourceImpact=" + resourceImpact + "]";
     }
-
 
 }

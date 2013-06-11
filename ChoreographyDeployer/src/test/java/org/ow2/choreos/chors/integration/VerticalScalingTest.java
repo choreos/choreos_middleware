@@ -19,10 +19,11 @@ import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.ChoreographyDeployerImpl;
 import org.ow2.choreos.chors.ModelsForTest;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.chors.datamodel.ChoreographyService;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
+import org.ow2.choreos.nodes.datamodel.MemoryType;
+import org.ow2.choreos.nodes.datamodel.ResourceImpact;
+import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.PackageType;
-import org.ow2.choreos.services.datamodel.ResourceImpactDefs;
 import org.ow2.choreos.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -55,10 +56,15 @@ public class VerticalScalingTest {
     @Before
     public void setUp() {
 
-	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-	smallSpec = models.getChorSpecWithResourceImpact(ResourceImpactDefs.MemoryType.SMALL);
-	mediumSpec = models.getChorSpecWithResourceImpact(ResourceImpactDefs.MemoryType.MEDIUM);
+	ResourceImpact smallImpact = new ResourceImpact();
+	smallImpact.setMemory(MemoryType.SMALL);
+	ModelsForTest smallModels = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE, smallImpact);
+	smallSpec = smallModels.getChorSpec();
 
+	ResourceImpact mediumImpact = new ResourceImpact();
+	smallImpact.setMemory(MemoryType.MEDIUM);
+	ModelsForTest mediumModels = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE, mediumImpact);
+	mediumSpec = mediumModels.getChorSpec();
     }
 
     @Test
@@ -69,35 +75,35 @@ public class VerticalScalingTest {
 	String chorId = ee.createChoreography(smallSpec);
 	Choreography chor = ee.enactChoreography(chorId);
 
-	ChoreographyService airline = chor.getServiceByChorServiceSpecName(ModelsForTest.AIRLINE);
-	ChoreographyService travel = chor.getServiceByChorServiceSpecName(ModelsForTest.TRAVEL_AGENCY);
+	DeployableService airline = chor.getDeployableServiceBySpecName(ModelsForTest.AIRLINE);
+	DeployableService travel = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
 
-	WSClient client = new WSClient(travel.getService().getUris().get(0) + "?wsdl");
+	WSClient client = new WSClient(travel.getUris().get(0) + "?wsdl");
 
 	String codes = "";
 
 	Item response = client.request("buyTrip");
 	codes = response.getChild("return").getContent();
 
-	assertEquals(1, airline.getService().getUris().size());
+	assertEquals(1, airline.getUris().size());
 	assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
 
 	ee.updateChoreography(chorId, mediumSpec);
 	chor = ee.enactChoreography(chorId);
 	Thread.sleep(4000);
 
-	airline = chor.getServiceByChorServiceSpecName(ModelsForTest.AIRLINE);
-	travel = chor.getServiceByChorServiceSpecName(ModelsForTest.TRAVEL_AGENCY);
+	airline = chor.getDeployableServiceBySpecName(ModelsForTest.AIRLINE);
+	travel = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
 
-	client = new WSClient(travel.getService().getUris().get(0) + "?wsdl");
+	client = new WSClient(travel.getUris().get(0) + "?wsdl");
 
 	response = client.request("buyTrip");
 	codes = response.getChild("return").getContent();
 
-	assertEquals(1, airline.getService().getUris().size());
+	assertEquals(1, airline.getUris().size());
 	assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
 
-	String actualIp = airline.getService().getUris().get(0);
+	String actualIp = airline.getUris().get(0);
 
 	Matcher m = Pattern.compile("(\\d{1,3}\\.){3}\\d{1,3}").matcher(actualIp);
 	if (m.find()) {

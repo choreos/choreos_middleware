@@ -6,20 +6,63 @@ package org.ow2.choreos.services.datamodel;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.ow2.choreos.nodes.datamodel.ResourceImpact;
+
 @XmlRootElement
 public class DeployableServiceSpec extends ServiceSpec {
 
-    protected ResourceImpact resourceImpact;
-    protected String version;
-
-    protected String packageUri;
-    protected int port;
-    protected String endpointName;
+    private String packageUri;
+    private PackageType packageType;
+    private String endpointName;
+    private int port;
+    private String owner;
+    private String group;
     private int numberOfInstances = 1;
-    protected PackageType packageType;
-
+    private ResourceImpact resourceImpact;
+    private String version;
+    
     public DeployableServiceSpec() {
-	super(null);
+	
+    }
+
+    public DeployableServiceSpec(String name, ServiceType serviceType, PackageType packageType, ResourceImpact resourceImpact,
+	    String version, String packageUri, int port, String endpointName, int numberOfInstances) {
+	super.name = name;
+	super.serviceType = serviceType;
+	this.packageType = packageType;
+	this.resourceImpact = resourceImpact;
+	this.version = version;
+	this.packageUri = packageUri;
+	this.port = port;
+	this.endpointName = endpointName;
+	this.numberOfInstances = numberOfInstances;
+    }
+
+    public DeployableServiceSpec(String name, ServiceType serviceType, PackageType packageType, ResourceImpact resourceImpact,
+	    String version, String packageUri, String endpointName, int numberOfInstances) {
+	super.name = name;
+	super.serviceType = serviceType;
+	this.packageType = packageType;
+	this.resourceImpact = resourceImpact;
+	this.version = version;
+	this.packageUri = packageUri;
+	this.endpointName = endpointName;
+	this.numberOfInstances = numberOfInstances;
+    }
+
+    public void setNumberOfInstances(int numberOfInstances) {
+	if (numberOfInstances > 0)
+	    this.numberOfInstances = numberOfInstances;
+	else
+	    this.numberOfInstances = 1;
+    }
+
+    public String getPackageUri() {
+	return packageUri;
+    }
+
+    public void setPackageUri(String packageUri) {
+	this.packageUri = packageUri;
     }
 
     public PackageType getPackageType() {
@@ -30,55 +73,28 @@ public class DeployableServiceSpec extends ServiceSpec {
 	this.packageType = packageType;
     }
 
-    /**
-     * @param serviceType
-     * @param packageType
-     * @param resourceImpact
-     * @param version
-     * @param packageUri
-     * @param port
-     *            Sets the port for run a JAR package
-     * @param endpointName
-     * @param numberOfInstances
-     */
-    public DeployableServiceSpec(ServiceType serviceType, PackageType packageType, ResourceImpact resourceImpact,
-	    String version, String packageUri, int port, String endpointName, int numberOfInstances) {
-	super(serviceType);
-	this.packageType = packageType;
-	this.resourceImpact = resourceImpact;
-	this.version = version;
-	this.packageUri = packageUri;
-	this.port = port;
+    public String getEndpointName() {
+	return endpointName;
+    }
+
+    public void setEndpointName(String endpointName) {
 	this.endpointName = endpointName;
-	this.numberOfInstances = numberOfInstances;
     }
 
-    /**
-     * @param serviceType
-     * @param packageType
-     * @param resourceImpact
-     * @param version
-     * @param packageUri
-     * @param endpointName
-     * @param numberOfInstances
-     */
-    public DeployableServiceSpec(ServiceType serviceType, PackageType packageType, ResourceImpact resourceImpact,
-	    String version, String packageUri, String endpointName, int numberOfInstances) {
-	super(serviceType);
-	this.packageType = packageType;
-	this.resourceImpact = resourceImpact;
-	this.version = version;
-	this.packageUri = packageUri;
-	this.endpointName = endpointName;
-	this.numberOfInstances = numberOfInstances;
+    public String getOwner() {
+	return owner;
     }
 
-    public String getPackageUri() {
-	return packageUri;
+    public void setOwner(String owner) {
+	this.owner = owner;
     }
 
-    public void setPackageUri(String uri) {
-	this.packageUri = uri;
+    public String getGroup() {
+	return group;
+    }
+
+    public void setGroup(String group) {
+	this.group = group;
     }
 
     public ResourceImpact getResourceImpact() {
@@ -89,14 +105,6 @@ public class DeployableServiceSpec extends ServiceSpec {
 	this.resourceImpact = resourceImpact;
     }
 
-    public String getEndpointName() {
-	return endpointName;
-    }
-
-    public void setEndpointName(String name) {
-	this.endpointName = name;
-    }
-
     public String getVersion() {
 	return version;
     }
@@ -105,122 +113,39 @@ public class DeployableServiceSpec extends ServiceSpec {
 	this.version = version;
     }
 
-    public String getFileName() {
-
-	// We assume that the codeLocationURI ends with "/fileName.[war,jar]
-	String fileName = "";
-	String extension = this.packageType.getExtension();
-	String[] urlPieces = this.getPackageUri().split("/");
-	if (urlPieces[urlPieces.length - 1].contains("." + extension)) {
-	    fileName = urlPieces[urlPieces.length - 1];
-	}
-	return fileName;
-    }
-
-    public int getPort() {
-
-	int effectivePort = port;
-
-	if (notDefinedPort()) {
-	    if (packageType == PackageType.TOMCAT)
-		effectivePort = 8080;
-	    if (packageType == PackageType.EASY_ESB)
-		effectivePort = 8180;
-	}
-
-	return effectivePort;
-    }
-
-    private boolean notDefinedPort() {
-	return this.port == 0;
+    public int getNumberOfInstances() {
+	return numberOfInstances;
     }
 
     public void setPort(int port) {
 	this.port = port;
     }
 
-    @Override
-    public int getNumberOfInstances() {
-	return numberOfInstances;
+    public String getFileName() {
+	FileNameRetriever retriever = new FileNameRetriever(this);
+	return retriever.getFileName();
     }
 
-    @Override
-    public void setNumberOfInstances(int numberOfInstances) {
-	if (numberOfInstances > 0)
-	    this.numberOfInstances = numberOfInstances;
-	else
-	    this.numberOfInstances = 1;
+    public int getPort() {
+	int effectivePort = port;
+	if (portIsNotDefined()) {
+	    PortRetriever portRetriever = new PortRetriever();
+	    effectivePort = portRetriever.getPortByPackageType(packageType);
+	}
+	return effectivePort;
     }
 
-    @Override
-    public int hashCode() {
-	final int prime = 31;
-	int result = super.hashCode();
-	result = prime * result + ((resourceImpact == null) ? 0 : resourceImpact.hashCode());
-	result = prime * result + ((version == null) ? 0 : version.hashCode());
-	result = prime * result + ((packageUri == null) ? 0 : packageUri.hashCode());
-	result = prime * result + ((endpointName == null) ? 0 : endpointName.hashCode());
-	result = prime * result + ((packageType == null) ? 0 : packageType.hashCode());
-	result = prime * result + (port);
-	return result;
+    private boolean portIsNotDefined() {
+	return this.port == 0;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	if (!super.equals(obj))
-	    return false;
-
-	DeployableServiceSpec other = (DeployableServiceSpec) obj;
-
-	if (resourceImpact == null) {
-	    if (other.resourceImpact != null)
-		return false;
-	} else if (!resourceImpact.equals(other.resourceImpact))
-	    return false;
-
-	if (version == null) {
-	    if (other.version != null)
-		return false;
-	} else if (!version.equals(other.version))
-	    return false;
-
-	if (packageUri == null) {
-	    if (other.packageUri != null)
-		return false;
-	} else if (!packageUri.equals(other.packageUri))
-	    return false;
-
-	if (endpointName == null) {
-	    if (other.endpointName != null)
-		return false;
-	} else if (!endpointName.equals(other.endpointName))
-	    return false;
-
-	if (packageType == null) {
-	    if (other.packageType != null)
-		return false;
-	} else if (!packageType.equals(other.packageType))
-	    return false;
-
-	if (!(port == other.port))
-	    return false;
-
-	if (!(numberOfInstances == other.numberOfInstances))
-	    return false;
-
-	return true;
-    }
+    // equals and hash code are used from ServiceSpec
 
     @Override
     public String toString() {
-	return "ServiceSpec [type=" + serviceType + ", artifactType=" + packageType + ", packageUri=" + packageUri
-		+ ", port=" + port + ", endpointName=" + endpointName + ", version=" + version + ", #instances="
-		+ numberOfInstances + "]";
+	return "DeployableServiceSpec [packageUri=" + packageUri + ", packageType=" + packageType + ", endpointName="
+		+ endpointName + ", port=" + port + ", owner=" + owner + ", group=" + group + ", numberOfInstances="
+		+ numberOfInstances + ", version=" + version + "]";
     }
+
 }

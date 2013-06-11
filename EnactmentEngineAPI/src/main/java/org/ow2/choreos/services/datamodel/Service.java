@@ -15,14 +15,15 @@ public abstract class Service {
 
     private ServiceSpec spec;
 
+    public Service() {
+
+    }
+    
     public Service(ServiceSpec serviceSpec) {
-	if (serviceSpec == null)
-	    throw new IllegalArgumentException();
-	setSpec(serviceSpec);
+	this.spec = serviceSpec;
     }
 
-    public Service() {
-    }
+    public abstract List<String> getUris();
 
     public ServiceSpec getSpec() {
 	return spec;
@@ -31,8 +32,6 @@ public abstract class Service {
     public void setSpec(ServiceSpec spec) {
 	this.spec = spec;
     }
-
-    public abstract List<String> getUris();
 
     @Override
     public int hashCode() {
@@ -64,9 +63,10 @@ public abstract class Service {
 
     @Override
     public String toString() {
-	String repr = "Service [uuid=" + spec.getUUID();
+	String repr = "Service [uuid=" + spec.getUuid();
 	repr += ", spec={" + spec + "}";
 	repr += (getUris() != null) ? repr += ", uri=" + getUris().toString() + "]" : "]";
 	return repr;
     }
+
 }

@@ -59,8 +59,8 @@ public class JARDeployTest {
 
 	String url = instance.getNativeUri();
 	assertNotNull(url);
-	System.out.println("Service at " + url);
 	String wsdl = url.replaceAll("/$", "").concat("?wsdl");
+	System.out.println("Service at " + wsdl);
 	client = WebClient.create(wsdl);
 	Response response = client.get();
 	assertEquals(200, response.getStatus());

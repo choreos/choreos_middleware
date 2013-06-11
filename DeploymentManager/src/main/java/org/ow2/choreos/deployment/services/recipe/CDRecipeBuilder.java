@@ -17,7 +17,7 @@ public class CDRecipeBuilder extends BaseRecipeBuilder {
 
     @Override
     public String replace(String content, DeployableServiceSpec serviceSpec) {
-	content = content.replace("$NAME", serviceSpec.getUUID());
+	content = content.replace("$NAME", serviceSpec.getUuid());
 	content = content.replace("$CD_URL", serviceSpec.getPackageUri());
 	return content;
     }
