@@ -13,7 +13,7 @@ import org.ow2.choreos.deployment.nodes.chef.ConfigToChef;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
-import org.ow2.choreos.deployment.nodes.cm.NodeUpgrader;
+import org.ow2.choreos.deployment.nodes.cm.NodeUpdater;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpgraderFactory;
 import org.ow2.choreos.deployment.nodes.cm.RecipeApplier;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelector;
@@ -178,8 +178,8 @@ public class NPMImpl implements NodePoolManager {
     public void updateNode(String nodeId) throws NodeNotUpgradedException, NodeNotFoundException {
 
 	Node node = this.getNode(nodeId);
-	NodeUpgrader upgrader = NodeUpgraderFactory.getInstance(nodeId);
-	upgrader.upgradeNodeConfiguration(node);
+	NodeUpdater upgrader = NodeUpgraderFactory.getInstance(nodeId);
+	upgrader.update(node);
     }
 
     @Override

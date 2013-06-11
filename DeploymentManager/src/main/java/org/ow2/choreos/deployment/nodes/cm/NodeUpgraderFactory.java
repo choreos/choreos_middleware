@@ -10,13 +10,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NodeUpgraderFactory {
 
     // the key is the node id
-    private static Map<String, NodeUpgrader> upgraders = new ConcurrentHashMap<String, NodeUpgrader>();
+    private static Map<String, NodeUpdater> upgraders = new ConcurrentHashMap<String, NodeUpdater>();
 
-    public static NodeUpgrader getInstance(String nodeId) {
+    public static NodeUpdater getInstance(String nodeId) {
 
 	synchronized (NodeUpgraderFactory.class) {
 	    if (!upgraders.containsKey(nodeId)) {
-		NodeUpgrader upgrader = new NodeUpgrader();
+		NodeUpdater upgrader = new NodeUpdater();
 		upgraders.put(nodeId, upgrader);
 	    }
 	}

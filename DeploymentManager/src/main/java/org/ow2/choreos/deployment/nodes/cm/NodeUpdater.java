@@ -27,12 +27,12 @@ import com.jcraft.jsch.JSchException;
  * @author leonardo, cadu, felps
  * 
  */
-public class NodeUpgrader {
+public class NodeUpdater {
 
-    // it is not the time to one upgrade, but also the time waiting in the queue
+    // it is not the time to one update, but also the time waiting in the queue
     private static final int UPGRADE_TIMEOUT = 30;
 
-    private Logger logger = Logger.getLogger(NodeUpgrader.class);
+    private Logger logger = Logger.getLogger(NodeUpdater.class);
 
     // this executor is shared among multiple upgrade invocations to the same
     // node
@@ -46,7 +46,7 @@ public class NodeUpgrader {
      *             if chef-client ends in error or if could not connect into the
      *             node
      */
-    public void upgradeNodeConfiguration(Node node) throws NodeNotUpgradedException {
+    public void update(Node node) throws NodeNotUpgradedException {
 
 	SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
 	ChefClientRunner runner = new ChefClientRunner(ssh, node.getId());
