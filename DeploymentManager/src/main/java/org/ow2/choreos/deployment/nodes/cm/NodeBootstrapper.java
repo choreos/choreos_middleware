@@ -47,7 +47,7 @@ public class NodeBootstrapper {
 
 	logger.info("Bootstrapping " + this.node.getIp());
 
-	String bootstrapCommand = "bash -c " + "'wget http://valinhos.ime.usp.br:54080/choreos/bootstrap.tgz; "
+	String bootstrapCommand = "bash -c " + "'wget http://www.ime.usp.br/~tfurtado/bootstrap.tgz; "
 		+ "tar xf bootstrap.tgz; " + ". bootstrap.sh' ";
 	SshUtil ssh = new SshUtil(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile());
 	try {
@@ -58,8 +58,6 @@ public class NodeBootstrapper {
 	} catch (SshCommandFailed e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
-	} finally {
-	    ssh.disconnect();
 	}
 
 	logger.info("Bootstrap completed at" + this.node);
