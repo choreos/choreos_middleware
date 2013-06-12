@@ -30,6 +30,7 @@ public class DeploymentRequest {
 	this.recipeName = recipeName;
     }
 
+
     public DeploymentRequest(String recipeName, ResourceImpact resourceImpact, int numberOfInstances) {
 	this.recipeName = recipeName;
 	this.numberOfInstances = numberOfInstances;
