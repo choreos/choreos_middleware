@@ -10,7 +10,7 @@
 \newcommand{\ee}{CHOReOS Enactment Engine}
 
 
-\title{\ee\ REST API \\ {\normalsize Version 2.1}}
+\title{\ee\ REST API \\ {\normalsize Version 2.2}}
 \author{Leonardo Leite, Thiago Furtado, Nelson Lago (IME - USP)}
 
 \begin{document}
@@ -44,53 +44,46 @@ We proceed with a brief explanation about each class:
 \begin{description}
 \item [ChoreographySpec:] represents what the middleware needs to know to enact a choreography;
 \item [ServiceSpec:] a super class for common data of \verb!DeployableServiceSpec! and \verb!LegacyServiceSpec!;
-\item [DeployableServiceSpec:] represents what the middleware needs to know to deploy a service (with one or more instances for load balancing); 
 \item [LegacyServiceSpec:] represents an already existing service to used by the choreography;
-\item [ChoreographyServiceSpec:] represents a service specification along with its role within the choreography;
-\item [ChoreographyServiceDependency:] represents dependencies among services (if \verb!service A! invokes \verb!service B!, we say \verb!service A! depends on \verb!service B!);
+\item [DeployableServiceSpec:] represents what the middleware needs to know to deploy a service (with one or more instances for load balancing); 
+\item [ServiceDependency:] represents dependencies among services (if \verb!service A! invokes \verb!service B!, we say \verb!service A! depends on \verb!service B!);
 \item [Choreography:] provides information about a choreography instance;
-\item [ChoreographyService:] wraps information from a \verb!Service! and a \verb!ChoreographyServiceSpec! together;
 \item [Service:] a super class for common data of \verb!DeployableService! and \verb!LegacyService!;
-\item [DeployableService:] provides information about a deployed service (such as the list of URIs);
 \item [LegacyService:] provides information about a legacy service;
+\item [DeployableService:] provides information about a deployed service;
 \item [ServiceInstance:] provides information about a specific instance, also called replica, of a deployed service (URI, node data etc.). 
 \item [Node:] information about the node, including IP address, where a service instance is running.
 \end{description}
 
-To request a choreography enactment, it is important to understand very well the \verb!ChoreographyServiceSpec!, \verb!ServiceSpec!, \verb!DeployableServiceSpec!, and the \verb!LegacyServiceSpec! classes. Therefore, the description of them follows:
+To request a choreography enactment, it is important to understand very well the \verb!ServiceSpec!, \verb!DeployableServiceSpec!, and the \verb!LegacyServiceSpec! classes. Therefore, the description of them follows:
 
 \begin{enumerate}
 
-\item \verb!ChoreographyServiceSpec! 
-	\begin{description}
-		\item [name:] a unique character sequence within the choreography specification;
-		\item [owner:] the organization that holds the infrastructure where the service must be deployed (not implemented, for now a single cloud per \ee\ instance is supported);
-		\item [group:] services in the same group will be deployed in the same cloud node (not implemented);
-		\item [roles:] list of roles implemented by the service;
-		\item [dependencies:] list of \verb!ChoreographyServiceDependency! entries; each entry describes the name of the dependency (matching the \verb!name! attribute), and the the role provided by the dependency;
-		\item [serviceSpec:] the specification of the service (to be deployed or already existing) that will take this role in the choreography.
-	\end{description}
-
 \item \verb!ServiceSpec!
 	\begin{description}
-		\item [type:] whether the service is a SOAP service or a REST service. More types can be added as necessary.
+		\item [name:] a unique character sequence within the choreography specification;
 		\item [UUID:] A randomly-generated unique identifier for the service
+		\item [type:] whether the service is a SOAP service or a REST service. More types can be added as necessary.
+		\item [roles:] list of roles implemented by the service;
+		\item [dependencies:] list of \verb!ServiceDependency! entries; each entry describes the name of the dependency (matching the \verb!name! attribute), and the the role provided by the dependency;
 	\end{description}
 
 \item \verb!DeployableServiceSpec!
 	\begin{description}
 		\item [packageUri:] the location of the binary file to be deployed;
-		\item [port:] the TCP port used by the service. Note that multiple replicas of a single service will all use the same port. Mandatory if type is COMMAND\_LINE;
-		\item [endpointName:] the endpoint suffix after deployment. For example, if the service will be deployed as \verb!http://<some_ip>/choreos/service!, the endpoint name is \verb!choreos/service!. Note that multiple replicas of a single service will all use the same endpoint;
-		\item [version:] the service version, which is used by the \ee\ to define which services must be redeployed in a choreography update (not used currently);
-		\item [numberOfInstances:] How many instances of the service should be deployed (onto different virtual machines) in order to allow the load to be distributed;
-		\item [resourceImpact:] General information regarding the expected type of machine needed to run the service (see \emph{Resource impact specification});
 		\item [packageType:] the type of the deployable artifact, according to the \verb!PackageType! enumeration\footnote{When the package type i    s COMMAND\_LINE the service will be executed by the ``java -jar'' command.}.
+		\item [endpointName:] the endpoint suffix after deployment. For example, if the service will be deployed as \verb!http://<some_ip>/choreos/service!, the endpoint name is \verb!choreos/service!. Note that multiple replicas of a single service will all use the same endpoint;
+		\item [port:] the TCP port used by the service. Note that multiple replicas of a single service will all use the same port. Mandatory if type is COMMAND\_LINE;
+		\item [owner:] the organization that holds the infrastructure where the service must be deployed (a configuration file maps owners to Deployment Manager instances);
+		\item [group:] services in the same group will be deployed in the same cloud node (not implemented);
+		\item [numberOfInstances:] How many instances of the service should be deployed (onto different virtual machines) in order to allow the load to be distributed;
+		\item [version:] the service version, which is used by the \ee\ to define which services must be redeployed in a choreography update (not used currently);
+		\item [resourceImpact:] General information regarding the expected type of machine needed to run the service (see \emph{Resource impact specification});
 	\end{description}
 
 \item \verb!LegacyServiceSpec!
 	\begin{description}
-		\item [nativeUris:] The URIs for the various replicas of the service.
+		\item [URIs:] The URIs for the various replicas of the service.
 	\end{description}
 
 \end{enumerate}
