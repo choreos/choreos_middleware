@@ -31,7 +31,7 @@ import com.google.inject.Module;
 
 public class OpenStackKeystoneCloudProvider implements CloudProvider {
 
-    Logger logger = Logger.getLogger(OpenStackKeystoneCloudProvider.class);
+    private Logger logger = Logger.getLogger(OpenStackKeystoneCloudProvider.class);
 
     public String getProviderName() {
 	return "OpenStack Keystone Provider";

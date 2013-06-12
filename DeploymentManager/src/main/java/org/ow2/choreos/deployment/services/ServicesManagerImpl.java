@@ -68,6 +68,8 @@ public class ServicesManagerImpl implements ServicesManager {
 	    runGenerateAndApplyScript(service);
 	}
 
+	System.out.println(">>> Service created: " + service);
+
 	registry.addService(serviceSpec.getUuid(), service);
 	return service;
 
