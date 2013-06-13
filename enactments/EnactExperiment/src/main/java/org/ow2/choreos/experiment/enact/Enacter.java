@@ -8,9 +8,9 @@ import org.ow2.choreos.chors.ChoreographyNotFoundException;
 import org.ow2.choreos.chors.EnactmentException;
 import org.ow2.choreos.chors.client.ChorDeployerClient;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.chors.datamodel.ChoreographyService;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.Service;
 
 public class Enacter implements Runnable {
 	
@@ -52,9 +52,9 @@ public class Enacter implements Runnable {
 		}
 		long tf = System.currentTimeMillis();
 		duration = tf - t0;
-		ChoreographyService travelService = chor.getServiceByChorServiceSpecName(TRAVEL_AGENCY);
+		Service travelService = chor.getDeployableServiceBySpecName(TRAVEL_AGENCY);
 		
-		travelWSDL = travelService.getService().getUris().get(0) + "?wsdl";
+		travelWSDL = travelService.getUris().get(0) + "?wsdl";
 		
 		System.out.println(Utils.getTimeStamp() + "Choreography #" + idx + " enacted in " + duration + " miliseconds");
 		report.addChorEnactmentTime(duration);
@@ -68,9 +68,7 @@ public class Enacter implements Runnable {
 	private List<String> getMachinesFromChor(Choreography chor) {
 		
 		List<String> machines = new ArrayList<String>();
-		for (ChoreographyService chorSvc: chor.getChoreographyServices()) {
-			
-			DeployableService svc = ((DeployableService) chorSvc.getService()); 
+		for (DeployableService svc: chor.getDeployableServices()) {
 			String nodeId = svc.getInstances().get(0).getNode().getId();
 			String nodeIp = svc.getInstances().get(0).getNode().getIp();
 			String machine = nodeIp + " (" + nodeId + ")";

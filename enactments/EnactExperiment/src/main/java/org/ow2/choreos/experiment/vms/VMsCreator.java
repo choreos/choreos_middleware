@@ -16,6 +16,7 @@ import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory.CloudProviderType;
 import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.utils.Concurrency;
 
 public class VMsCreator { 
@@ -94,7 +95,7 @@ public class VMsCreator {
 		public Long call() throws Exception {
 
 			long t0 = System.currentTimeMillis();
-			Node node = cp.createNode(new Node(), null);
+			Node node = cp.createNode(new NodeSpec());
 			VMChecker ssh = new VMChecker();
 			ssh.check(node.getIp());
 			long tf = System.currentTimeMillis();					

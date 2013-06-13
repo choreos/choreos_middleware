@@ -7,6 +7,7 @@ import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.client.NodesClient;
 import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 public class Bootstrapper {
 
@@ -56,13 +57,13 @@ public class Bootstrapper {
 
 					long t0 = System.currentTimeMillis();
 					NodePoolManager npm = new NodesClient(NPM_HOST);
-					Node req = new Node();
+					NodeSpec nodeSpec = new NodeSpec();
 					Node vm = null;
 					boolean created = false;
 					
 					while (!created) {
 						try {
-							vm = npm.createNode(req, null);
+							vm = npm.createNode(nodeSpec);
 							created = true;
 						} catch (NodeNotCreatedException e) {
 							System.out.println(Utils.getTimeStamp() + "VM #" + idx + " not created!");
