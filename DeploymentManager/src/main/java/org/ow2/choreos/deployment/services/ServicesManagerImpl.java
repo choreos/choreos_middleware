@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.services.diff.UpdateAction;
 import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
@@ -32,20 +31,9 @@ public class ServicesManagerImpl implements ServicesManager {
 
     private DeployedServicesRegistry registry = DeployedServicesRegistry.getInstance();
     private NodePoolManager npm;
-    private Knife knife;
 
     public ServicesManagerImpl(NodePoolManager npm) {
-	fakeConstructor(npm, knife);
-    }
-
-    // constructor created to mock knife in tests
-    public ServicesManagerImpl(NodePoolManager npm, Knife knife) {
-	fakeConstructor(npm, knife);
-    }
-
-    private void fakeConstructor(NodePoolManager npm, Knife knife) {
 	this.npm = npm;
-	this.knife = knife;
     }
 
     @Override
