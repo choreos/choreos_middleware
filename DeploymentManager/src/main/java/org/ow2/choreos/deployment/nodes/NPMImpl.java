@@ -26,6 +26,7 @@ import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.selectors.NotSelectedException;
+import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.utils.Concurrency;
 import org.ow2.choreos.utils.SshCommandFailed;
 import org.ow2.choreos.utils.SshNotConnected;
@@ -143,54 +144,72 @@ public class NPMImpl implements NodePoolManager {
 	    throw new PrepareDeploymentFailedException(deploymentRequest.getService().toString());
 	}
 
+	List<ServiceInstance> instances = new ArrayList<ServiceInstance>();
+
 	for (Node node : nodes) {
-	    // ssh to generate recipe
-	    logger.info("Going to copy and run script into node " + node);
-	    SshWaiter sshWaiter = new SshWaiter();
-	    try {
-		sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), 60);
-	    } catch (SshNotConnected e) {
-		e.printStackTrace();
-		;// throw new NodeNotAccessibleException(node.getIp() +
-		 // " not accessible");
-	    }
+	    waitForSshAccess(node);
 
 	    SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-	    logger.info("SSHzando...");
+	    String serviceInstanceId = "";
+
 	    switch (deploymentRequest.getService().getSpec().getPackageType()) {
 	    case COMMAND_LINE:
-		try {
-		    String serviceUUID = ssh.runCommand(getJarCommand(deploymentRequest));
-		    logger.info("Got service UUID: " + serviceUUID);
-		    deploymentRequest.getService().getSpec().setUuid(serviceUUID);
-		} catch (JSchException e) {
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
-		} catch (SshCommandFailed e) {
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
-		}
+		serviceInstanceId = installJar(deploymentRequest, ssh, serviceInstanceId);
 		break;
 	    case TOMCAT:
-
-		try {
-		    String serviceUUID = ssh.runCommand(getWarCommand(deploymentRequest));
-		    logger.info("Got service UUID: " + serviceUUID);
-		    deploymentRequest.getService().getSpec().setUuid(serviceUUID);
-		} catch (JSchException e) {
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
-		} catch (SshCommandFailed e) {
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
-		}
+		serviceInstanceId = installWar(deploymentRequest, ssh, serviceInstanceId);
+		break;
+	    case EASY_ESB:
 		break;
 	    default:
 		break;
 	    }
+
+	    ServiceInstance instance = new ServiceInstance(node);
+	    instance.setServiceSpec(deploymentRequest.getService().getSpec());
+	    instance.setInstanceId(serviceInstanceId);
+	    instances.add(instance);
 	}
 
+	deploymentRequest.getService().setServiceInstances(instances);
 	return nodes;
+    }
+
+    private String installWar(DeploymentRequest deploymentRequest, SshUtil ssh, String serviceInstanceId) {
+	try {
+	    serviceInstanceId = ssh.runCommand(getWarCommand(deploymentRequest));
+	} catch (JSchException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} catch (SshCommandFailed e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	return serviceInstanceId;
+    }
+
+    private String installJar(DeploymentRequest deploymentRequest, SshUtil ssh, String serviceInstanceId) {
+	try {
+	    serviceInstanceId = ssh.runCommand(getJarCommand(deploymentRequest));
+	} catch (JSchException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} catch (SshCommandFailed e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	return serviceInstanceId;
+    }
+
+    private void waitForSshAccess(Node node) {
+	SshWaiter sshWaiter = new SshWaiter();
+	try {
+	    sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), 60);
+	} catch (SshNotConnected e) {
+	    e.printStackTrace();
+	    ;// throw new NodeNotAccessibleException(node.getIp() +
+	     // " not accessible");
+	}
     }
 
     private String getJarCommand(DeploymentRequest deploymentRequest) {

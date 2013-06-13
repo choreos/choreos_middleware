@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chef.Knife;
-import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.services.diff.UpdateAction;
 import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
@@ -17,16 +16,14 @@ import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
-import org.ow2.choreos.services.ServiceNotDeletedException;
 import org.ow2.choreos.services.ServiceNotCreatedException;
+import org.ow2.choreos.services.ServiceNotDeletedException;
 import org.ow2.choreos.services.ServiceNotFoundException;
 import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.UnhandledModificationException;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
-import org.ow2.choreos.services.datamodel.Recipe;
-import org.ow2.choreos.services.datamodel.RecipeBundle;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceSpec;
 
@@ -68,8 +65,6 @@ public class ServicesManagerImpl implements ServicesManager {
 	    runGenerateAndApplyScript(service);
 	}
 
-	System.out.println(">>> Service created: " + service);
-
 	registry.addService(serviceSpec.getUuid(), service);
 	return service;
 
@@ -90,24 +85,14 @@ public class ServicesManagerImpl implements ServicesManager {
 	    logger.error("Service " + service.getSpec().getUuid() + " not created: " + e.getMessage());
 	}
 
-	List<ServiceInstance> instances = new ArrayList<ServiceInstance>();
-	for (Node node : nodes) {
-	    if (isNodeValid(node)) {
-		ServiceInstance instance = new ServiceInstance(node);
-		instance.setServiceSpec(service.getSpec());
-		instances.add(instance);
-	    }
-	}
-	service.setServiceInstances(instances);
-    }
-
-    private boolean isNodeValid(Node node) {
-	if (node == null || node.getIp() == null || node.getIp().isEmpty()) {
-	    logger.error("Invalid node (no ip): " + node);
-	    return false;
-	} else {
-	    return true;
-	}
+	// nodes should be valid nodes before create any instance
+	/*
+	 * List<ServiceInstance> instances = new ArrayList<ServiceInstance>();
+	 * for (Node node : nodes) { if (isNodeValid(node)) { ServiceInstance
+	 * instance = new ServiceInstance(node);
+	 * instance.setServiceSpec(service.getSpec()); instances.add(instance);
+	 * } } service.setServiceInstances(instances);
+	 */
     }
 
     @Override
@@ -137,31 +122,13 @@ public class ServicesManagerImpl implements ServicesManager {
     }
 
     private void executeUndeployment(DeployableService service) {
-	RecipeBundle recipeBundle = service.getRecipeBundle();
-	Recipe deactivateRecipe = recipeBundle.getDeactivateRecipe();
-
-	// deactivate service instances and
-	for (ServiceInstance instance : service.getServiceInstances()) {
-	    executeServiceInstanceUndeployment(deactivateRecipe, instance);
-	}
-
-	// remove cookbooks from chef-server
-	try {
-	    this.knife.cookbook().delete(deactivateRecipe.getCookbookName());
-	    this.knife.cookbook().delete(recipeBundle.getServiceRecipe().getCookbookName());
-	} catch (KnifeException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
+	for (ServiceInstance instance : service.getServiceInstances())
+	    executeServiceInstanceUndeployment(instance);
     }
 
-    private void executeServiceInstanceUndeployment(Recipe deactivateRecipe, ServiceInstance instance) {
-	/*
-	 * RecipeApplier recipeApplyer = new RecipeApplier(); try {
-	 * recipeApplyer.applyRecipe(instance.getNode(),
-	 * deactivateRecipe.getCookbookName(), ""); } catch
-	 * (PrepareDeploymentFailedException e) { e.printStackTrace(); }
-	 */
+    private void executeServiceInstanceUndeployment(ServiceInstance instance) {
+	// ssh to execute (cd $HOME/chef-solo; sed -i
+	// '/300b87ed-cca9-4858-8779-6987da782b18/d' ./node.json)
     }
 
     @Override
@@ -255,12 +222,14 @@ public class ServicesManagerImpl implements ServicesManager {
 	return actions;
     }
 
-    private void requestToDecreaseNumberOfInstances(DeployableService currentService, DeployableServiceSpec requestedSpec) {
+    private void requestToDecreaseNumberOfInstances(DeployableService currentService,
+	    DeployableServiceSpec requestedSpec) {
 	int decreaseAmount = currentService.getSpec().getNumberOfInstances() - requestedSpec.getNumberOfInstances();
 	removeServiceInstances(currentService, decreaseAmount);
     }
 
-    private void requestToIncreaseNumberOfInstances(DeployableService currentService, DeployableServiceSpec requestedSpec) {
+    private void requestToIncreaseNumberOfInstances(DeployableService currentService,
+	    DeployableServiceSpec requestedSpec) {
 	int increaseAmount = requestedSpec.getNumberOfInstances() - currentService.getSpec().getNumberOfInstances();
 
 	logger.info("requestToIncreaseNumberOfInstances: Increase amount = " + increaseAmount);
@@ -285,8 +254,7 @@ public class ServicesManagerImpl implements ServicesManager {
     private void removeServiceInstances(DeployableService currentService, int amount) {
 	if (amount < currentService.getServiceInstances().size()) {
 	    for (int i = 0; i < amount; i++) {
-		executeServiceInstanceUndeployment(currentService.getRecipeBundle().getDeactivateRecipe(),
-			currentService.getServiceInstances().get(0));
+		executeServiceInstanceUndeployment(currentService.getServiceInstances().get(0));
 		currentService.getServiceInstances().remove(0);
 	    }
 	} else if (amount < currentService.getServiceInstances().size()) {
@@ -302,5 +270,6 @@ public class ServicesManagerImpl implements ServicesManager {
     private void addServiceInstances(DeployableService current, int amount) {
 	logger.info("Requesting to execute creation of " + amount + " replicas for" + current);
 	// applyRecipe(current, amount);
+
     }
 }

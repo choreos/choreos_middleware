@@ -6,10 +6,12 @@ public class NativeUriRetriever {
 
     private Node node;
     private DeployableServiceSpec spec;
+    private String instanceId;
 
     public NativeUriRetriever(ServiceInstance instance) {
 	this.node = instance.getNode();
 	this.spec = instance.getServiceSpec();
+	this.instanceId = instance.getInstanceId();
     }
 
     public String getDefaultnativeUri() {
@@ -24,7 +26,7 @@ public class NativeUriRetriever {
     private String getUriContext() {
 	switch (spec.getPackageType()) {
 	case TOMCAT:
-	    return spec.getUuid() + "/" + spec.getEndpointName();
+	    return instanceId + "/" + spec.getEndpointName();
 	case COMMAND_LINE:
 	    return spec.getEndpointName() + "/";
 	case EASY_ESB:
