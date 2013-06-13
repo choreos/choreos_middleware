@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -30,6 +31,8 @@ import org.ow2.choreos.utils.LogConfigurator;
 public class IdlePoolTest {
 
     private NodeCreator nodeCreator;
+    
+    private static Logger logger = Logger.getLogger(IdlePoolTest.class);
 
     @BeforeClass
     public static void setUpClass() {
@@ -69,6 +72,7 @@ public class IdlePoolTest {
 	int N = 3;
 	IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
 	pool.createExtraVMs(1);
+	logger.info("Request to fill the pool");
 	pool.fillPool();
 
 	while (true) {
