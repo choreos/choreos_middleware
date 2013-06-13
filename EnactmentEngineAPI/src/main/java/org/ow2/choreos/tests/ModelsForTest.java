@@ -4,17 +4,12 @@
 
 package org.ow2.choreos.tests;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
-import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
-import org.ow2.choreos.chors.datamodel.xml.ChorXmlWriter;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.services.datamodel.DeployableService;
@@ -57,8 +52,6 @@ public class ModelsForTest {
 
     private DeployableService airlineService;
     private DeployableService travelService;
-
-    private Logger logger = Logger.getLogger(ModelsForTest.class);
 
     public ModelsForTest(ServiceType serviceType, PackageType packageType) {
 	this.packageType = packageType;
@@ -186,38 +179,6 @@ public class ModelsForTest {
 	node1.setIp(ip);
 	node1.setHostname(hostname);
 	return node1;
-    }
-
-    private String getChorSpecXML() {
-	ChorXmlWriter writer = new ChorXmlWriter();
-	try {
-	    return writer.getChorSpecXML(this.chorSpec);
-	} catch (JAXBException e) {
-	    logger.error("It should never happen");
-	    return null;
-	}
-    }
-
-    private String getChoreographyXML() {
-	ChorXmlWriter writer = new ChorXmlWriter();
-	try {
-	    return writer.getChoreographyXML(this.chor);
-	} catch (JAXBException e) {
-	    logger.error("It should never happen");
-	    return null;
-	}
-    }
-
-    /**
-     * Prints ChorSpec and Choreography XML representations
-     * 
-     */
-    public static void main(String[] args) throws JAXBException, IOException {
-	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-	System.out.println("ChorSpec XML representation:");
-	System.out.println(models.getChorSpecXML());
-	System.out.println("\nChoreography XML representation:");
-	System.out.println(models.getChoreographyXML());
     }
 
 }
