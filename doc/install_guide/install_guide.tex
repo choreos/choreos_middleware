@@ -51,7 +51,7 @@
 \newcommand{\cd}{Choreography Deployer}
 \newcommand{\dm}{Deployment Manager}
 
-\title{CHOReOS \ee\ Installation Guide \\ {\normalsize Version 1.3}}
+\title{CHOReOS \ee\ Installation Guide \\ {\normalsize Version 1.4}}
 \author{Leonardo Leite (IME - USP)}
 
 \begin{document}
@@ -73,7 +73,7 @@ We will describe now each one of the \ee\ components, that are pictured in the F
 
 \begin{description}
 
-\item [Cloud Gateway] creates and destroys virtual machines (also called \emph{nodes}) in a cloud computing environment. This component is used by the \dm, that decides when create or destroy the nodes. Currently, only Amazon EC2 and OpenStack are supported as Cloud Gateways, but the \dm\ may be extended to support other virtualization technologies.
+\item [Cloud Gateway] creates and destroys virtual machines (also called \emph{nodes}) in a cloud computing environment. This component is used by the \dm, that decides when to create or to destroy the nodes. Currently, only Amazon EC2 and OpenStack are supported as Cloud Gateways, but the \dm\ may be extended to support other virtualization technologies.
 
 \item [Chef Server:] in an environment managed by Chef, nodes software configuration are specified by ``recipes'', that are scripts written in a Ruby-like Domain Specific Language. In the \ee, recipes implement the process of configuring operational system, installing required middleware, and finally deploying the services. The recipes and the association between recipes and nodes are stored on Chef Server.
 
@@ -105,7 +105,7 @@ Before you run \ee, you will need:
 
 A \textsf{CloudProvider} is an \ee\ interface that specifies methods to CRUD virtual machines. It is expected that a \textsf{Cloud Provider} implementations will act just as a client of some Cloud Gateway. In this section we describe the currently available \textsf{CloudProvider} implementations and how to use them. New \textsf{CloudProvider}s may be implemented to support other virtualization tools. One example would be creating a \textsf{VirtualBoxCloudProvider} to create VMs using VirtualBox.
 
-Whatever the cloud provider you choose, ensure that the required TCP ports of the created VMs are unblocked. Required ports: 22 to SSH, 8080 to Tomcat, the Chef Server port (for us it is 4000), the ports used by your JAR services, and the port 8180 to EasyESB.
+Whatever the cloud provider you choose, ensure that the required TCP ports of the created VMs are unblocked. Required ports: 22 to SSH, 8080 to Tomcat, the Chef Server port (for us it is 40000), the ports used by your JAR services, and the port 8180 to EasyESB.
 
 \subsection{Amazon EC2}
 
@@ -117,8 +117,8 @@ Some hints:
 \item Request credits to education purposes: \url{http://aws.amazon.com/grants/}. The first of us earned \$500, but the others \$100. Maybe it depends on your research project description.
 \item Initially there is a limit of 20 VMs that you can run simultaneously.
 \item Request to increase Amazon EC2 instance limit: \url{http://aws.amazon.com/contact-us/ec2-request/}. At USP we got a 50 VMs limit.
-\item Pay attention to the ``one-second rule'': \\ \url{http://www.a2sdeveloper.com/page-working-with-the-one-second-rule.html}.
-\item As we are charged per hour, don't forget to shutdown/stop unused VMs.
+\item If you are going to use the EC2 API directly, pay attention to the ``one-second rule'': \\ \url{http://www.a2sdeveloper.com/page-working-with-the-one-second-rule.html}. Nonetheless, \ee\ already implements this rule.
+\item As you will be charged per hour, don't forget to shutdown/stop unused VMs.
 \item You can use the Amazon EC2 web console to unblock TCP ports necessary to the choreography execution.
 \item You can also use the \texttt{ec2} command line tools to manage your VMs.
 \item The \ee\ creates VMs in the ``US East'' Amazon datacenter.
@@ -139,7 +139,7 @@ Some hints:
 
 \subsection{Fixed cloud provider}
 
-If you are learning how to use the \ee\ and want just to experiment it, the \textsf{FixedCloudProvider} may be best possible to you. With it you are responsible to manually crating and setting virtual machines and telling to \ee\ which machines must be used by it. This avoids the overhead of dealing with a cloud environment. 
+If you are learning how to use the \ee\ and want just to experiment it, the \textsf{FixedCloudProvider} may be the most suitable option to you. With it you are responsible to manually crating and setting virtual machines and telling to \ee\ which machines must be used by it. This avoids the overhead of dealing with a cloud environment. 
 
 When creating a virtual machine to be used by the \ee, be sure:
 \begin{itemize}
@@ -170,20 +170,21 @@ Make sure your \texttt{knife.rb} file be something like the example on Listing~\
 
 {\footnotesize
 \begin{lstlisting}[caption=knife.rb example,label=lst:kniferb] 
-log_level                :info 
-log_location             STDOUT 
-node_name                "lleite" 
-client_key               "#{current_dir}/lleite.pem" 
-validation_client_name   "choreos-verao-validator" 
-validation_key           "#{current_dir}/choreos-verao-validator.pem" 
-chef_server_url          "https://api.opscode.com/organizations/choreos-verao" 
-cache_type               'BasicFile' 
-cache_options( :path => "#{ENV['HOME']}/.chef/checksums" ) 
-cookbook_path            ["#{current_dir}/../cookbooks"] 
+current_dir = File.dirname(__FILE__)
+log_level                :info
+log_location             STDOUT
+node_name                'leofl'
+client_key               "#{current_dir}/leofl.pem"
+validation_client_name   'chef-validator'
+validation_key           "#{current_dir}/chef-validator.pem"
+chef_server_url          'http://aguia1.ime.usp.br:40000'
+cache_type               'BasicFile'
+cache_options( :path => "#{current_dir}/checksums" )
+cookbook_path            ["#{current_dir}/../cookbooks"]
 \end{lstlisting}
 }
 
-Here, the ``node\_name'' corresponds to my \emph{client} name. Make sure your client is marked as ``admin'', what can be accomplished by using the Chef Server web interface.  The  ``choreos-verao" is the organization name configured on the Chef Server. In the Chef terminology, your computer, from where you control Chef, is the \emph{workstation}. To more details about how to set up your workstation, refer to \url{http://wiki.opscode.com}. You will also need to upload to your Chef Server all the cookbooks from our cookbook folder: \texttt{chef-repo/cookbooks}.
+Here, the ``node\_name'' corresponds to my \emph{client} name. Make sure your client is marked as ``admin'', what can be accomplished by using the Chef Server web interface. In the Chef terminology, your computer, from where you control Chef, is the \emph{workstation}. To more details about how to set up your workstation, refer to \url{http://wiki.opscode.com}. You will also need to upload to your Chef Server all the cookbooks from our cookbook folder: \texttt{chef-repo/cookbooks}.
 
 \section{EasyESB}
 
@@ -191,7 +192,8 @@ The \ee\ enables the usage of a Distributed Service Bus, EasyESB~\footnote{\url{
 
 \begin{description}
 \item [SINGLE\_NODE:] \ee\ creates only a single EasyESB node, and all the deployed services are exposed by this esb node.
-\item [ALWAYS\_CREATE:] each deployed service has a different associated EasyESB node. Since \ee\ deploys only one EasyESB node per virtual machine, an EasyESB node may manage different services if there are more services than available virtual machines.
+\item [ALWAYS\_CREATE:] each deployed service has a different associated EasyESB node. 
+\item [LIMITED\_ROUND\_ROBIN:] initially new ESB nodes are created as in the ALWAYS\_CREATE policy. After a limit is reached, new proxifications are distributed to the existing ESB nodes in a round robin sequence. The limit is defined by the ESB\_NODES\_LIMIT property on \texttt{chordeployed.properties}
 \end{description}
 
 \section{Checkout and Compilation}
@@ -211,28 +213,32 @@ numbers=left
 {\footnotesize
 \begin{lstlisting}[caption=deployment.properties example,label=lst:deployment_properties] 
 DEPLOYMENT_MANAGER_PORT=9100
-NODE_SELECTOR=ROUND_ROBIN
 CLOUD_PROVIDER=AWS
+NODE_SELECTOR=LIMITED_ROUND_ROBIN
+VM_LIMIT=70
+
 FIXED_VM_IPS=192.168.122.160, 192.168.122.91, 192.168.122.14, 192.168.122.182
 FIXED_VM_HOSTNAMES=debian32, debian32doB, debian64, debian64doB
 FIXED_VM_PRIVATE_SSH_KEYS=/path/to/id_rsa, /path/to/id_rsa, /path/to/id_rsa
 FIXED_VM_USERS=choreos, choreos, choreos, choreos
 FIXED_VM_TYPES=LARGE, SMALL, MEDIUM, SMALL
-AMAZON_ACCESS_KEY_ID=AKIAIIT2fsdfISddSECRETEFJH6Q
-AMAZON_SECRET_KEY=N+KzHQITaALSOwzfdsAj9MiSECRETE0UPuwyD
+
+AMAZON_ACCESS_KEY_ID=secret
+AMAZON_SECRET_KEY=secret
 AMAZON_KEY_PAIR=leofl
-AMAZON_PRIVATE_SSH_KEY=/home/leonardo/.ssh/leofl.pem
-OPENSTACK_IP=http://198.55.33.14:5000/v2.0
-OPENSTACK_TENANT=Choreos
-OPENSTACK_USER=secret
+AMAZON_PRIVATE_SSH_KEY=/path/to/leofl.pem
+
+OPENSTACK_KEY_PAIR=leof
+OPENSTACK_PRIVATE_SSH_KEY=/path/to/nopass
+OS_NO_CACHE=1
+OPENSTACK_TENANT=CHOReOS_Sandbox
+OPENSTACK_USER=leonardo
 OPENSTACK_PASSWORD=secret
-OPENSTACK_KEY_PAIR=keyname
-OPENSTACK_PRIVATE_SSH_KEY=/path/to/keyname.pem
-CHEF_CONFIG_FILE=/home/leonardo/chef/chef-repo/.chef/knife.rb
-CHEF_REPO=/home/leonardo/chef/chef-repo
+OPENSTACK_IP="http://172.16.239.1:5000/v2.0/"
+
+CHEF_CONFIG_FILE=/path/to/chef-repo/.chef/knife.rb
+CHEF_REPO=/path/to/chef-repo
 CHEF_CLIENT_LOG=/tmp/chef-client.log 
-RECIPES_CACHE=False
-IDLE_POOL_SIZE=0
 \end{lstlisting}
 }
 
@@ -246,11 +252,11 @@ The options to NODE\_SELECTOR are:
 \item [LIMITED\_ROUND\_ROBIN:] initially the \textsf{NodeSelector} behaves like the ALWAYS\_CREATE, until a limit of created VMs is reached (VM\_LIMIT). After this limit, the selector behaves like the ROUND\_ROBIN. When using this selector, it is necessary to declare the integer VM\_LIMIT property in the configuration file.
 \end{description}
 
-The IDLE\_POOL\_SIZE makes the Deployment Manager operate with a pool of idle nodes, which makes the node retrieval to be faster when necessary. The use of this pool makes the deployment process more scalable, however the trade-off is the cost of some more VMs created by the infrastructure provider. 
+The IDLE\_POOL\_SIZE makes the Deployment Manager operate with a pool of idle nodes, which makes the node retrieval to be faster when some IaaS fault occurs. The use of this pool makes the deployment process more scalable, however the trade-off is the cost of some more VMs created by the infrastructure provider. 
 
 Other options are explained in the \texttt{deployment.properties.template} file.
 
-In the \texttt{ChoreographyDeployer} project you must also generate the file \texttt{owners.properties} based on the \texttt{owners.properties.template} file. If you are going to use only one cloud infrastructure, the template file do not need to be changed, only renamed. If you are going to use multiple cloud environments, you need to configure one Deployment Manager to each cloud infrastructure. So, you must configure the \texttt{owners.properties} file to give a name to each available Deployment Manager. These names will be compared with the \texttt{owner} attribute in the choreography service specifications, so the service can be deployed by the matched Deployment Manager. If there is no match, the DEFAULT value declared on \texttt{owners.properties} will be used.
+In the \texttt{ChoreographyDeployer} project you may also edit the file \texttt{owners.properties}. If you are going to use only one cloud infrastructure, and the default \ee\ configuration\footnote{Choreography Deployer and Deployment Manager on the same machine, and both using their respective default ports.}, the file do not need to be changed. If you are going to use multiple cloud environments, you need to configure one Deployment Manager to each cloud infrastructure. So, you must configure the \texttt{owners.properties} file to give a name to each available Deployment Manager. These names will be compared with the \texttt{owner} attribute in the  service specifications, so the service can be deployed by the matched Deployment Manager. If there is no match, the DEFAULT value declared on \texttt{owners.properties} will be used.
 
 \section{Execution}
 
