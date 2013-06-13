@@ -15,7 +15,6 @@ import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
-import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServiceNotDeletedException;
 import org.ow2.choreos.services.ServiceNotFoundException;
@@ -62,7 +61,7 @@ public class ServicesManagerImpl implements ServicesManager {
 	}
 
 	if (serviceSpec.getPackageType() != PackageType.LEGACY) {
-	    runGenerateAndApplyScript(service);
+	    runGenerateAndApplyScript(service, service.getSpec().getNumberOfInstances());
 	}
 
 	registry.addService(serviceSpec.getUuid(), service);
@@ -70,29 +69,20 @@ public class ServicesManagerImpl implements ServicesManager {
 
     }
 
-    private void runGenerateAndApplyScript(DeployableService service) throws ServiceNotCreatedException {
+    private void runGenerateAndApplyScript(DeployableService service, int numberOfInstances)
+	    throws ServiceNotCreatedException {
 
 	DeploymentRequest deploymentRequest = new DeploymentRequest(service);
 	deploymentRequest
 		.setDeploymentManagerURL(DeploymentManagerConfiguration.get("EXTERNAL_DEPLOYMENT_MANAGER_URL"));
-	List<Node> nodes = new ArrayList<Node>();
 
 	try {
-	    nodes = npm.prepareDeployment(deploymentRequest);
+	    npm.prepareDeployment(deploymentRequest);
 	} catch (PrepareDeploymentFailedException e) {
 	    logger.error("Service " + service.getSpec().getUuid() + " not created: " + e.getMessage());
 	} catch (Exception e) {
 	    logger.error("Service " + service.getSpec().getUuid() + " not created: " + e.getMessage());
 	}
-
-	// nodes should be valid nodes before create any instance
-	/*
-	 * List<ServiceInstance> instances = new ArrayList<ServiceInstance>();
-	 * for (Node node : nodes) { if (isNodeValid(node)) { ServiceInstance
-	 * instance = new ServiceInstance(node);
-	 * instance.setServiceSpec(service.getSpec()); instances.add(instance);
-	 * } } service.setServiceInstances(instances);
-	 */
     }
 
     @Override
@@ -245,7 +235,7 @@ public class ServicesManagerImpl implements ServicesManager {
 
     private void migrateServiceInstances(DeployableService currentService) throws UnhandledModificationException {
 	try {
-	    runGenerateAndApplyScript(currentService);
+	    runGenerateAndApplyScript(currentService, currentService.getSpec().getNumberOfInstances());
 	} catch (ServiceNotCreatedException e) {
 	    throw new UnhandledModificationException();
 	}
@@ -269,7 +259,11 @@ public class ServicesManagerImpl implements ServicesManager {
 
     private void addServiceInstances(DeployableService current, int amount) {
 	logger.info("Requesting to execute creation of " + amount + " replicas for" + current);
-	// applyRecipe(current, amount);
-
+	try {
+	    runGenerateAndApplyScript(current, amount);
+	} catch (ServiceNotCreatedException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
     }
 }

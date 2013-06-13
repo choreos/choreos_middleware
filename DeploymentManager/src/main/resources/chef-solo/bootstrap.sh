@@ -17,7 +17,7 @@ function install_chef_solo() {
 	
 		# install chef quietly and with no chef installation prompt
 		sudo apt-get update
-		echo "chef chef/chef_server_url string none" | sudo debconf-set-selections && sudo apt-get install chef -y
+		echo "chef chef/chef_server_url string none" | sudo debconf-set-selections && sudo apt-get --no-install-recommends install chef -y
 	
 		# remove chef-client from run level
 		sudo update-rc.d -f chef-client remove

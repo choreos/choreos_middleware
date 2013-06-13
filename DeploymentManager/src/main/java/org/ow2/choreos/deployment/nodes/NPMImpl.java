@@ -144,7 +144,8 @@ public class NPMImpl implements NodePoolManager {
 	    throw new PrepareDeploymentFailedException(deploymentRequest.getService().toString());
 	}
 
-	List<ServiceInstance> instances = new ArrayList<ServiceInstance>();
+	List<ServiceInstance> instances = (deploymentRequest.getService().getServiceInstances() != null) ? deploymentRequest
+		.getService().getServiceInstances() : new ArrayList<ServiceInstance>();
 
 	for (Node node : nodes) {
 	    waitForSshAccess(node);
