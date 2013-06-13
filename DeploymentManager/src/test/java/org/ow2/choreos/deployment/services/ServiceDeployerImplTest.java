@@ -15,8 +15,6 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.ow2.choreos.chef.Knife;
-import org.ow2.choreos.chef.KnifeCookbook;
 import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
@@ -27,7 +25,6 @@ import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
-import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.utils.LogConfigurator;
 
 public class ServiceDeployerImplTest {
@@ -68,30 +65,13 @@ public class ServiceDeployerImplTest {
 	serviceSpec.setEndpointName("airline");
 	serviceSpec.setPort(8042);
 
-	Knife knife = mock(Knife.class);
-	KnifeCookbook knifeCookbbok = mock(KnifeCookbook.class);
-	when(knife.cookbook()).thenReturn(knifeCookbbok);
-	String cookbookUploadResult = "Cookbook 'uploaded' by mock";
-	when(knifeCookbbok.upload(any(String.class), any(String.class))).thenReturn(cookbookUploadResult);
-
-	servicesManager = new ServicesManagerImpl(npm, knife);
+	servicesManager = new ServicesManagerImpl(npm);
     }
 
     @Test
     public void shouldReturnAValidService() throws PrepareDeploymentFailedException, ServiceNotCreatedException {
-
-	final String EXPECTED_URI = "http://" + selectedNode.getIp() + ":" + serviceSpec.getPort() + "/"
-		+ serviceSpec.getEndpointName() + "/";
-
 	DeployableService service = servicesManager.createService(serviceSpec);
-
-	ServiceInstance instance = service.getInstances().get(0);
-
-	assertEquals(selectedNode.getHostname(), instance.getNode().getHostname());
-	assertEquals(selectedNode.getIp(), instance.getNode().getIp());
-	assertEquals(selectedNode.getId(), instance.getNode().getId());
-	assertEquals(EXPECTED_URI, instance.getNativeUri());
-
+	assertEquals(serviceSpec.getUuid(), service.getSpec().getUuid());
 	verify(npm).prepareDeployment(any(DeploymentRequest.class));
     }
 

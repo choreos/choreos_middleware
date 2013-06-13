@@ -8,14 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.chef.Knife;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.services.diff.UpdateAction;
 import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
-import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServiceNotDeletedException;
 import org.ow2.choreos.services.ServiceNotFoundException;
@@ -33,20 +31,9 @@ public class ServicesManagerImpl implements ServicesManager {
 
     private DeployedServicesRegistry registry = DeployedServicesRegistry.getInstance();
     private NodePoolManager npm;
-    private Knife knife;
 
     public ServicesManagerImpl(NodePoolManager npm) {
-	fakeConstructor(npm, knife);
-    }
-
-    // constructor created to mock knife in tests
-    public ServicesManagerImpl(NodePoolManager npm, Knife knife) {
-	fakeConstructor(npm, knife);
-    }
-
-    private void fakeConstructor(NodePoolManager npm, Knife knife) {
 	this.npm = npm;
-	this.knife = knife;
     }
 
     @Override
@@ -75,10 +62,10 @@ public class ServicesManagerImpl implements ServicesManager {
 	DeploymentRequest deploymentRequest = new DeploymentRequest(service);
 	deploymentRequest
 		.setDeploymentManagerURL(DeploymentManagerConfiguration.get("EXTERNAL_DEPLOYMENT_MANAGER_URL"));
-	List<Node> nodes = new ArrayList<Node>();
+//	List<Node> nodes = new ArrayList<Node>();
 
 	try {
-	    nodes = npm.prepareDeployment(deploymentRequest);
+	    npm.prepareDeployment(deploymentRequest);
 	} catch (PrepareDeploymentFailedException e) {
 	    logger.error("Service " + service.getSpec().getUuid() + " not created: " + e.getMessage());
 	} catch (Exception e) {
