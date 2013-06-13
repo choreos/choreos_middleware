@@ -179,7 +179,6 @@ public class IdlePool {
 
 	    logger.info("Filling the pool");
 	    int extra = poolSize - idleNodes.size();
-	    logger.info("Going to create " + extra + " extra VMs on the idle pool");
 	    if (extra > 0) {
 		ExecutorService executor = Executors.newFixedThreadPool(extra);
 		for (int i = 0; i < extra; i++) {
@@ -188,7 +187,6 @@ public class IdlePool {
 		}
 		Concurrency.waitExecutor(executor, FILLING_POOL_TIMEOUT_MINUTES);
 	    }
-	    logger.info("Pool filled");
 	}
     }
 }
