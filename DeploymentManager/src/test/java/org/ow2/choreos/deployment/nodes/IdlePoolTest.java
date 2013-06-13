@@ -63,7 +63,7 @@ public class IdlePoolTest {
 	assertEquals(howManyVMs, idlePool.size());
     }
 
-    @Test(timeout=1000)
+    @Test(timeout=5000)
     public void shouldFillThePool() throws InterruptedException {
 
 	int N = 3;
@@ -79,7 +79,7 @@ public class IdlePoolTest {
 	}
     }
 
-    @Test(timeout=1000)
+    @Test(timeout=5000)
     public void shouldFillThePoolConcurrently() throws InterruptedException {
 
 	int N = 5;
@@ -128,7 +128,7 @@ public class IdlePoolTest {
 	}
     }
 
-    @Test(timeout=1000)
+    @Test(timeout=5000)
     public void multipleRequestsShouldLeaveThePoolFull() throws InterruptedException {
 
 	int N = 5;
