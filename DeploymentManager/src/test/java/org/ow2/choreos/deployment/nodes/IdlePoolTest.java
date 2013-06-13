@@ -63,21 +63,23 @@ public class IdlePoolTest {
 	assertEquals(howManyVMs, idlePool.size());
     }
 
-    @Test
+    @Test(timeout=1000)
     public void shouldFillThePool() throws InterruptedException {
 
 	int N = 3;
 	IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
 	pool.createExtraVMs(1);
-	Thread.sleep(100);
 	pool.fillPool();
-	Thread.sleep(100);
 
-	Set<Node> idlePool = pool.getIdleNodes();
-	assertEquals(N, idlePool.size());
+	while (true) {
+	    Set<Node> idlePool = pool.getIdleNodes();
+	    if (N == idlePool.size())
+		break; // pas the test
+	    Thread.sleep(50);
+	}
     }
 
-    @Test
+    @Test(timeout=1000)
     public void shouldFillThePoolConcurrently() throws InterruptedException {
 
 	int N = 5;
@@ -90,10 +92,12 @@ public class IdlePoolTest {
 	    thrd.start();
 	}
 
-	Thread.sleep(100);
-
-	Set<Node> idlePool = pool.getIdleNodes();
-	assertEquals(N, idlePool.size());
+	while (true) {
+	    Set<Node> idlePool = pool.getIdleNodes();
+	    if (N == idlePool.size())
+		break; // pas the test
+	    Thread.sleep(50);
+	}
     }
 
     @Test
@@ -124,7 +128,7 @@ public class IdlePoolTest {
 	}
     }
 
-    @Test
+    @Test(timeout=1000)
     public void multipleRequestsShouldLeaveThePoolFull() throws InterruptedException {
 
 	int N = 5;
@@ -137,10 +141,12 @@ public class IdlePoolTest {
 	    thrd.start();
 	}
 
-	Thread.sleep(300);
-
-	int poolSize = pool.getIdleNodes().size();
-	assertEquals(N, poolSize);
+	while (true) {
+	    Set<Node> idlePool = pool.getIdleNodes();
+	    if (N == idlePool.size())
+		break; // pas the test
+	    Thread.sleep(50);
+	}
     }
 
     @Test
