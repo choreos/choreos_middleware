@@ -22,10 +22,10 @@ public class AirlineService implements Airline {
 	@WebMethod
 	@Override
 	public String buyFlight() {
-		logger.info("Filling a 12500000 int array (50MB)");
-        int [] vec = new int[12500000];
+		logger.info("Filling array");
+        int [] vec = new int[Integer.MAX_VALUE];
         Random r = new Random();
-        for(int i=0; i < 12500000; i++) {
+        for(int i=0; i < Integer.MAX_VALUE; i++) {
                 vec[i] = r.nextInt();
         }
         try {
@@ -33,7 +33,7 @@ public class AirlineService implements Airline {
         } catch (InterruptedException e) {
                 e.printStackTrace();
         }
-        String result = "Flight number: " + vec[r.nextInt(12500000)] + "; (Thread ID: " + ManagementFactory.getRuntimeMXBean().getName() + ")";
+        String result = "Flight number: " + vec[r.nextInt(Integer.MAX_VALUE)] + "; (Thread ID: " + ManagementFactory.getRuntimeMXBean().getName() + ")";
         logger.info("Request to buy flight; response: " + result);
         return result;
 	}

@@ -6,7 +6,6 @@ package org.ow2.choreos.services.datamodel;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.ow2.choreos.nodes.datamodel.Node;
 
@@ -29,7 +28,6 @@ public class ServiceInstance {
 
     public ServiceInstance(Node node) {
 	this.setNode(node);
-	this.setInstanceId(UUID.randomUUID().toString());
     }
 
     public Map<ServiceType, String> getBusUris() {

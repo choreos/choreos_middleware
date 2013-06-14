@@ -9,13 +9,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
-import org.ow2.choreos.deployment.nodes.chef.ConfigToChef;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpdater;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpgraderFactory;
-import org.ow2.choreos.deployment.nodes.cm.RecipeApplier;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelector;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelectorFactory;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
@@ -28,7 +26,14 @@ import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.selectors.NotSelectedException;
+import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.utils.Concurrency;
+import org.ow2.choreos.utils.SshCommandFailed;
+import org.ow2.choreos.utils.SshNotConnected;
+import org.ow2.choreos.utils.SshUtil;
+import org.ow2.choreos.utils.SshWaiter;
+
+import com.jcraft.jsch.JSchException;
 
 /**
  * 
@@ -43,14 +48,14 @@ public class NPMImpl implements NodePoolManager {
     private NodeRegistry nodeRegistry;
     private NodeCreator nodeCreator;
     private IdlePool idlePool;
-    
+
     /**
      * The CloudProvider used is the one configured in the properties file
      * 
      * @return
      */
     public static NodePoolManager getNewInstance() {
-	
+
 	String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
 	return new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
     }
@@ -124,54 +129,102 @@ public class NPMImpl implements NodePoolManager {
     }
 
     @Override
-    public List<Node> prepareDeployment(DeploymentRequest config) throws PrepareDeploymentFailedException {
+    public List<Node> prepareDeployment(DeploymentRequest deploymentRequest) throws PrepareDeploymentFailedException {
 
 	NodeSelector selector = NodeSelectorFactory.getFactoryInstance().getNodeSelectorInstance();
 	List<Node> nodes = null;
 	try {
-	    nodes = selector.select(config, config.getNumberOfInstances());
-	    logger.info("Selected nodes to " + config.getRecipeName() + ": " + nodes);
+	    nodes = selector.select(deploymentRequest, deploymentRequest.getNumberOfInstances());
+	    logger.info("Selected nodes to " + deploymentRequest.getService().toString() + ": " + nodes);
 	} catch (NotSelectedException e) {
-	    throw new PrepareDeploymentFailedException(config.getRecipeName());
+	    throw new PrepareDeploymentFailedException(deploymentRequest.getService().toString());
 	}
 
 	if (nodes == null || nodes.isEmpty()) {
-	    throw new PrepareDeploymentFailedException(config.getRecipeName());
+	    throw new PrepareDeploymentFailedException(deploymentRequest.getService().toString());
 	}
 
-	String cookbook = ConfigToChef.getCookbookNameFromConfigName(config.getRecipeName());
-
-	String recipe = ConfigToChef.getRecipeNameFromConfigName(config.getRecipeName());
+	List<ServiceInstance> instances = (deploymentRequest.getService().getServiceInstances() != null) ? deploymentRequest
+		.getService().getServiceInstances() : new ArrayList<ServiceInstance>();
 
 	for (Node node : nodes) {
-	    applyConfig(config, node, cookbook, recipe);
+	    waitForSshAccess(node);
+
+	    SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
+	    String serviceInstanceId = "";
+
+	    switch (deploymentRequest.getService().getSpec().getPackageType()) {
+	    case COMMAND_LINE:
+		serviceInstanceId = installJar(deploymentRequest, ssh, serviceInstanceId);
+		break;
+	    case TOMCAT:
+		serviceInstanceId = installWar(deploymentRequest, ssh, serviceInstanceId);
+		break;
+	    case EASY_ESB:
+		break;
+	    default:
+		break;
+	    }
+
+	    ServiceInstance instance = new ServiceInstance(node);
+	    instance.setServiceSpec(deploymentRequest.getService().getSpec());
+	    instance.setInstanceId(serviceInstanceId);
+	    instances.add(instance);
 	}
 
+	deploymentRequest.getService().setServiceInstances(instances);
 	return nodes;
     }
 
-    private void applyConfig(DeploymentRequest config, Node node, String cookbook, String recipe) throws PrepareDeploymentFailedException {
-	final int TRIALS = 3;
-	final int SLEEP_TIME = 1000;
-	int step = 0;
-	boolean ok = false;
-
-	while (!ok) {
-	    try {
-		RecipeApplier recipeApplyer = new RecipeApplier();
-		recipeApplyer.applyRecipe(node, cookbook, recipe);
-		ok = true;
-	    } catch (PrepareDeploymentFailedException e) {
-		try {
-		    Thread.sleep(SLEEP_TIME);
-		} catch (InterruptedException e1) {
-		    logger.error("Exception at sleeping!", e1);
-		}
-		step++;
-		if (step > TRIALS)
-		    throw new PrepareDeploymentFailedException(config.getRecipeName());
-	    }
+    private String installWar(DeploymentRequest deploymentRequest, SshUtil ssh, String serviceInstanceId) {
+	try {
+	    serviceInstanceId = ssh.runCommand(getWarCommand(deploymentRequest));
+	} catch (JSchException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} catch (SshCommandFailed e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
+	return serviceInstanceId;
+    }
+
+    private String installJar(DeploymentRequest deploymentRequest, SshUtil ssh, String serviceInstanceId) {
+	try {
+	    serviceInstanceId = ssh.runCommand(getJarCommand(deploymentRequest));
+	} catch (JSchException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} catch (SshCommandFailed e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	return serviceInstanceId;
+    }
+
+    private void waitForSshAccess(Node node) {
+	SshWaiter sshWaiter = new SshWaiter();
+	try {
+	    sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), 60);
+	} catch (SshNotConnected e) {
+	    e.printStackTrace();
+	    ;// throw new NodeNotAccessibleException(node.getIp() +
+	     // " not accessible");
+	}
+    }
+
+    private String getJarCommand(DeploymentRequest deploymentRequest) {
+	return "bash -c" + " 'wget http://www.ime.usp.br/~tfurtado/generate_and_apply.tgz;"
+		+ "tar xf generate_and_apply.tgz;" + ". generate_and_apply.sh " + "-jar "
+		+ deploymentRequest.getService().getSpec().getPackageUri() + " "
+		+ deploymentRequest.getDeploymentManagerURL() + "' ";
+    }
+
+    private String getWarCommand(DeploymentRequest deploymentRequest) {
+	return "bash -c" + " 'wget http://www.ime.usp.br/~tfurtado/generate_and_apply.tgz;"
+		+ "tar xf generate_and_apply.tgz;" + ". generate_and_apply.sh " + "-war "
+		+ deploymentRequest.getService().getSpec().getPackageUri() + " "
+		+ deploymentRequest.getDeploymentManagerURL() + "' ";
     }
 
     @Override

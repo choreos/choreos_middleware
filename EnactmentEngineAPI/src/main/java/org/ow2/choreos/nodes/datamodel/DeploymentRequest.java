@@ -5,6 +5,7 @@
 package org.ow2.choreos.nodes.datamodel;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import org.ow2.choreos.services.datamodel.DeployableService;
 
 @XmlRootElement
 public class DeploymentRequest {
@@ -12,14 +13,23 @@ public class DeploymentRequest {
     private String recipeName;
     private ResourceImpact resourceImpact;
     private int numberOfInstances = 1;
+    private DeployableService service;
+    private String deploymentManagerURL;
 
     public DeploymentRequest() {
 
     }
 
+	public DeploymentRequest(DeployableService service) {
+	this.service = service;
+	this.resourceImpact = service.getSpec().getResourceImpact();
+	this.numberOfInstances = service.getSpec().getNumberOfInstances();
+    }
+
     public DeploymentRequest(String recipeName) {
 	this.recipeName = recipeName;
     }
+
 
     public DeploymentRequest(String recipeName, ResourceImpact resourceImpact, int numberOfInstances) {
 	this.recipeName = recipeName;
@@ -33,6 +43,10 @@ public class DeploymentRequest {
 
     public void setRecipeName(String recipeName) {
 	this.recipeName = recipeName;
+    }
+
+    public DeployableService getService() {
+	return this.service;
     }
 
     public ResourceImpact getResourceImpact() {
@@ -89,6 +103,14 @@ public class DeploymentRequest {
     public String toString() {
 	return "DeploymentRequest [recipeName=" + recipeName + ", resourceImpact=" + resourceImpact
 		+ ", numberOfInstances=" + numberOfInstances + "]";
+    }
+
+    public String getDeploymentManagerURL() {
+	return this.deploymentManagerURL;
+    }
+
+    public void setDeploymentManagerURL(String deploymentManagerURL) {
+	this.deploymentManagerURL = deploymentManagerURL;
     }
 
 }

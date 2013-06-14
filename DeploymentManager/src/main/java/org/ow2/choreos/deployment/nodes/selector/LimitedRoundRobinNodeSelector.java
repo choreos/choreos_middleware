@@ -13,15 +13,15 @@ import org.ow2.choreos.selectors.NotSelectedException;
 public class LimitedRoundRobinNodeSelector implements NodeSelector {
 
     private static final String VM_LIMIT_PROPERTY = "VM_LIMIT";
-    
+
     private LimitedRoundRobinSelector<Node, DeploymentRequest> selector;
-    
+
     public LimitedRoundRobinNodeSelector() {
 	int nodeLimit = getNodeLimit();
 	NodePoolManager npm = NPMImpl.getNewInstance();
 	NodeFactory factory = new NodeFactory(npm);
 	NodeRetriever retriever = new NodeRetriever(npm);
-	NodeFilter filter = new NodeFilter(); 
+	NodeFilter filter = new NodeFilter();
 	this.selector = new LimitedRoundRobinSelector<Node, DeploymentRequest>(nodeLimit, retriever, factory, filter);
     }
 
@@ -35,7 +35,7 @@ public class LimitedRoundRobinNodeSelector implements NodeSelector {
 	}
 	return nodeLimit;
     }
-    
+
     @Override
     public List<Node> select(DeploymentRequest requirements, int objectsQuantity) throws NotSelectedException {
 	return this.selector.select(requirements, objectsQuantity);
