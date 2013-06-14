@@ -5,7 +5,6 @@
 package org.ow2.choreos.deployment.nodes.cm;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.utils.SshCommandFailed;
@@ -17,11 +16,12 @@ import com.jcraft.jsch.JSchException;
 
 /**
  * 
- * @author leonardo, cadu, felps
+ * @author leonardo, cadu, felps, thiago
  * 
  */
 public class NodeBootstrapper {
 
+    // TODO use the timeout
     public static final int SSH_TIMEOUT_IN_SECONDS = 250;
 
     private int sshTimeoutInSeconds;
@@ -35,14 +35,14 @@ public class NodeBootstrapper {
 	this.sshTimeoutInSeconds = SSH_TIMEOUT_IN_SECONDS;
     }
 
-    public void bootstrapNode() throws NodeNotAccessibleException, KnifeException, NodeNotBootstrappedException {
+    public void bootstrapNode() throws NodeNotAccessibleException, NodeNotBootstrappedException {
 
 	SshWaiter sshWaiter = new SshWaiter();
 	try {
 	    sshWaiter.waitSsh(this.node.getIp(), this.node.getUser(), this.node.getPrivateKeyFile(),
 		    this.sshTimeoutInSeconds);
 	} catch (SshNotConnected e) {
-	    throw new NodeNotAccessibleException(this.node.getIp() + " not accessible");
+	    throw new NodeNotAccessibleException(this.node.getIp());
 	}
 
 	logger.info("Bootstrapping " + this.node.getIp());
@@ -53,13 +53,18 @@ public class NodeBootstrapper {
 	try {
 	    ssh.runCommand(bootstrapCommand);
 	} catch (JSchException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    logFailMessage();
+	    throw new NodeNotAccessibleException(node.getId());
 	} catch (SshCommandFailed e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    logFailMessage();
+	    throw new NodeNotBootstrappedException(node.getId());
 	}
 
 	logger.info("Bootstrap completed at" + this.node);
     }
+    
+    private void logFailMessage() {
+	logger.error("Node " + node.getId() + " not bootstrapped");
+    }
+    
 }

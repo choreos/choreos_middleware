@@ -12,7 +12,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cm.NodeBootstrapper;
 import org.ow2.choreos.deployment.nodes.cm.NodeNotBootstrappedException;
@@ -42,7 +41,6 @@ public class NodeCreator {
     }
 
     public NodeCreator(CloudProvider cp, boolean bootstrapNode) {
-
 	this(cp);
 	this.bootstrapNode = bootstrapNode;
     }
@@ -53,8 +51,8 @@ public class NodeCreator {
     public Node create(NodeSpec nodeSpec) throws NodeNotCreatedException {
 
 	ExecutorService executor = Executors.newSingleThreadExecutor();
-	CPNodeCreation cpNodeCreator = new CPNodeCreation(cp, nodeSpec);
-	Future<Node> future = executor.submit(cpNodeCreator);
+	CloudNodeCreation cloudNodeCreator = new CloudNodeCreation(cp, nodeSpec);
+	Future<Node> future = executor.submit(cloudNodeCreator);
 	Concurrency.waitExecutor(executor, VM_CREATION_TIMEOUT, TimeUnit.SECONDS, logger);
 
 	Node node = null;
@@ -74,8 +72,6 @@ public class NodeCreator {
 	    try {
 		NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
 		bootstrapper.bootstrapNode();
-	    } catch (KnifeException e) {
-		throw new NodeNotCreatedException(node.getId());
 	    } catch (NodeNotBootstrappedException e) {
 		throw new NodeNotCreatedException(node.getId());
 	    } catch (NodeNotAccessibleException e) {
@@ -86,12 +82,12 @@ public class NodeCreator {
 	return node;
     }
 
-    private class CPNodeCreation implements Callable<Node> {
+    private class CloudNodeCreation implements Callable<Node> {
 
 	CloudProvider cp;
 	NodeSpec nodeSpec;
 
-	CPNodeCreation(CloudProvider cp, NodeSpec nodeSpec) {
+	CloudNodeCreation(CloudProvider cp, NodeSpec nodeSpec) {
 	    this.cp = cp;
 	    this.nodeSpec = nodeSpec;
 	}

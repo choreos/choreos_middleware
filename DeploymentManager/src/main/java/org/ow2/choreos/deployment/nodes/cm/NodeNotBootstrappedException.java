@@ -12,7 +12,7 @@ public class NodeNotBootstrappedException extends Exception {
 
     }
 
-    public NodeNotBootstrappedException(String msg) {
-	super(msg);
+    public NodeNotBootstrappedException(String nodeId) {
+	super("Node " + nodeId + " not bootstrapped!");
     }
 }

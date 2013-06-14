@@ -55,7 +55,6 @@ public class NPMImpl implements NodePoolManager {
      * @return
      */
     public static NodePoolManager getNewInstance() {
-
 	String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
 	return new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
     }
@@ -84,34 +83,30 @@ public class NPMImpl implements NodePoolManager {
 
     @Override
     public Node createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
-
 	Node node = new Node();
 	try {
 	    node = nodeCreator.create(nodeSpec);
-	    nodeRegistry.putNode(node);
-	    idlePool.fillPool(); // we want the pool to be always filled
-				 // whenever requests are coming
 	} catch (NodeNotCreatedException e1) {
 	    // if node creation has failed, let's retrieve a node from the pool
-	    // wait for a new node would take too much time!
-	    // TODO: maybe the failed node only took too much time to be ready
+	    // since waiting for a new node would take too much time!
+	    // TODO: maybe the failed node only took too much time to be ready;
 	    // in such situation, this node could go to the pool!
 	    try {
 		logger.warn("*** Node creation failed, let's retrieve a node from the pool ***");
 		node = idlePool.retriveNode();
-		nodeRegistry.putNode(node);
-		idlePool.fillPool();
 	    } catch (NodeNotCreatedException e2) {
 		// OK, now we give up =/
 		throw new NodeNotCreatedException(node.getId());
 	    }
 	}
+	nodeRegistry.putNode(node);
+	idlePool.fillPool(); // we want the pool to be always filled
+			     // whenever requests are coming
 	return node;
     }
 
     @Override
     public List<Node> getNodes() {
-
 	if (this.cloudProvider.getProviderName() == FixedCloudProvider.FIXED_CLOUD_PROVIDER) {
 	    return this.cloudProvider.getNodes();
 	} else {

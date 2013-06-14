@@ -44,8 +44,6 @@ public class NodeChecker {
 		    bootstrapper.bootstrapNode();
 		} catch (NodeNotAccessibleException e) {
 		    throw new NodeNotOKException();
-		} catch (KnifeException e) {
-		    throw new NodeNotOKException();
 		} catch (NodeNotBootstrappedException e) {
 		    throw new NodeNotOKException();
 		}
