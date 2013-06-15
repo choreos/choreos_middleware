@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -31,8 +30,6 @@ import org.ow2.choreos.utils.LogConfigurator;
 public class IdlePoolTest {
 
     private NodeCreator nodeCreator;
-    
-    private static Logger logger = Logger.getLogger(IdlePoolTest.class);
 
     @BeforeClass
     public static void setUpClass() {
@@ -40,7 +37,7 @@ public class IdlePoolTest {
     }
 
     @Before
-    public void setUp() throws NodeNotCreatedException  {
+    public void setUp() throws NodeNotCreatedException {
 
 	int N = 10;
 	nodeCreator = mock(NodeCreator.class);
@@ -66,24 +63,23 @@ public class IdlePoolTest {
 	assertEquals(howManyVMs, idlePool.size());
     }
 
-    @Test(timeout=5000)
+    @Test(timeout = 1000)
     public void shouldFillThePool() throws InterruptedException {
 
 	int N = 3;
 	IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
 	pool.createExtraVMs(1);
-	logger.info("Request to fill the pool");
 	pool.fillPool();
 
 	while (true) {
 	    Set<Node> idlePool = pool.getIdleNodes();
-	    if (N == idlePool.size())
+	    if (idlePool.size() >= N)
 		break; // pas the test
 	    Thread.sleep(50);
 	}
     }
 
-    @Test(timeout=5000)
+    @Test(timeout = 1000)
     public void shouldFillThePoolConcurrently() throws InterruptedException {
 
 	int N = 5;
@@ -98,7 +94,7 @@ public class IdlePoolTest {
 
 	while (true) {
 	    Set<Node> idlePool = pool.getIdleNodes();
-	    if (N == idlePool.size())
+	    if (idlePool.size() > N)
 		break; // pas the test
 	    Thread.sleep(50);
 	}
@@ -132,7 +128,7 @@ public class IdlePoolTest {
 	}
     }
 
-    @Test(timeout=5000)
+    @Test(timeout = 1000)
     public void multipleRequestsShouldLeaveThePoolFull() throws InterruptedException {
 
 	int N = 5;
@@ -147,7 +143,7 @@ public class IdlePoolTest {
 
 	while (true) {
 	    Set<Node> idlePool = pool.getIdleNodes();
-	    if (N == idlePool.size())
+	    if (idlePool.size() > N)
 		break; // pas the test
 	    Thread.sleep(50);
 	}

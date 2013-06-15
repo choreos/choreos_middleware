@@ -176,8 +176,6 @@ public class IdlePool {
 
 	@Override
 	public void run() {
-
-	    logger.info("Filling the pool");
 	    int extra = poolSize - idleNodes.size();
 	    if (extra > 0) {
 		ExecutorService executor = Executors.newFixedThreadPool(extra);
