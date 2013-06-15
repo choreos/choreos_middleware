@@ -94,7 +94,7 @@ public class IdlePoolTest {
 
 	while (true) {
 	    Set<Node> idlePool = pool.getIdleNodes();
-	    if (idlePool.size() > N)
+	    if (idlePool.size() >= N)
 		break; // pas the test
 	    Thread.sleep(50);
 	}
@@ -143,7 +143,7 @@ public class IdlePoolTest {
 
 	while (true) {
 	    Set<Node> idlePool = pool.getIdleNodes();
-	    if (idlePool.size() > N)
+	    if (idlePool.size() >= N)
 		break; // pas the test
 	    Thread.sleep(50);
 	}
