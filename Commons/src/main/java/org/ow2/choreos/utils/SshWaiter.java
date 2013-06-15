@@ -35,7 +35,7 @@ public class SshWaiter {
 	Concurrency.waitExecutor(executor, timeoutSeconds, TimeUnit.SECONDS, logger);
 
 	try {
-	    SshUtil ssh = Concurrency.checkFuture(future);
+	    SshUtil ssh = Concurrency.checkAndGetFromFuture(future);
 	    if (ssh != null) {
 		return ssh;
 	    } else {

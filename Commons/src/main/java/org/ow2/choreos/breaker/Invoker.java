@@ -11,7 +11,9 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.utils.Concurrency;
 
 /**
- * Use this class to invoke external systems.
+ * You should use this this class to invoke external systems.
+ * 
+ * TODO: use a received circuit breaker
  * 
  * @author leonardo
  * 
@@ -50,7 +52,7 @@ public class Invoker<T> {
 	Future<T> future = executor.submit(task);
 	Concurrency.waitExecutor(executor, trialTimeout, timeoutUnit, logger);
 	try {
-	    return Concurrency.checkFuture(future);
+	    return Concurrency.checkAndGetFromFuture(future);
 	} catch (ExecutionException e) {
 	    Throwable cause = e.getCause();
 	    if (cause instanceof Exception)

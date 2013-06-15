@@ -71,7 +71,7 @@ public class NewDeploymentPreparing {
 	configuredServices = new ArrayList<DeployableService>();
 	for (Entry<DeployableServiceSpec, Future<DeployableService>> entry : futures.entrySet()) {
 	    try {
-		DeployableService service = Concurrency.checkFuture(entry.getValue());
+		DeployableService service = Concurrency.checkAndGetFromFuture(entry.getValue());
 		if (service != null) {
 		    configuredServices.add(service);
 		} else {

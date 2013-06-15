@@ -5,6 +5,9 @@ import java.util.concurrent.Callable;
 /**
  * Invocations to external systems should be done through the CircuitBreaker[1].
  * 
+ * This helps in protecting the invoked system if multiple clients try to
+ * perform several invocations that are failing.
+ * 
  * [1] Michael T. Nygard. "Release it!". Pragmatic Bookshelf, 2009.
  * 
  * @author leonardo
@@ -22,6 +25,14 @@ public class CircuitBreaker<T> {
     private CircuitBreakerState<T> halfOpenState;
     private CircuitBreakerState<T> currentState;
 
+    /**
+     * 
+     * @param task
+     * @param threshold
+     *            how many failed trials to open the breaker
+     * @param timeoutSeconds
+     *            how many time to remain opened
+     */
     public CircuitBreaker(Callable<T> task, int threshold, int timeoutSeconds) {
 	this.task = task;
 	this.threshold = threshold;
@@ -31,7 +42,7 @@ public class CircuitBreaker<T> {
 	this.halfOpenState = new HalfOpenState<T>(this);
 	this.currentState = closedState;
     }
-    
+
     public T call() throws BreakerException {
 	try {
 	    return this.currentState.call();
@@ -39,7 +50,7 @@ public class CircuitBreaker<T> {
 	    throw new BreakerException(e);
 	}
     }
-    
+
     public int getThreshold() {
 	return this.threshold;
     }

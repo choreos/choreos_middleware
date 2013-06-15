@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 public class Concurrency {
 
     public static void waitExecutor(ExecutorService executor, int timeoutMinutes, TimeUnit timeUnit, Logger logger) {
-
 	executor.shutdown();
 	boolean status = false;
 	try {
@@ -57,8 +56,7 @@ public class Concurrency {
      *             if the Callable code caused the exception, or
      *             IllegalStateException if there was any other problem
      */
-    public static <T> T checkFuture(Future<T> f) throws ExecutionException {
-
+    public static <T> T checkAndGetFromFuture(Future<T> f) throws ExecutionException {
 	T result = null;
 	try {
 	    if (f.isDone()) {
@@ -78,7 +76,6 @@ public class Concurrency {
     }
 
     public static void waitThreads(List<Thread> threads) {
-
 	for (Thread trd : threads) {
 	    try {
 		trd.join();

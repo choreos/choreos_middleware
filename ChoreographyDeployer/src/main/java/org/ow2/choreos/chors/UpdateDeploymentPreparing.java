@@ -67,7 +67,7 @@ public class UpdateDeploymentPreparing {
 	List<DeployableService> services = new ArrayList<DeployableService>();
 	for (Entry<DeployableServiceSpec, Future<DeployableService>> entry : futures.entrySet()) {
 	    try {
-		DeployableService service = Concurrency.checkFuture(entry.getValue());
+		DeployableService service = Concurrency.checkAndGetFromFuture(entry.getValue());
 		if (service != null) {
 		    services.add(service);
 		} else {
@@ -199,7 +199,7 @@ public class UpdateDeploymentPreparing {
 	List<DeployableService> services = new ArrayList<DeployableService>();
 	for (Entry<DeployableServiceSpec, Future<DeployableService>> entry : futures.entrySet()) {
 	    try {
-		DeployableService service = Concurrency.checkFuture(entry.getValue());
+		DeployableService service = Concurrency.checkAndGetFromFuture(entry.getValue());
 
 		if (service != null) {
 		    services.add(service);
