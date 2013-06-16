@@ -19,7 +19,7 @@ public class LegacyService extends Service {
     
     List<String> URIs;
 
-    LegacyService(LegacyServiceSpec serviceSpec) {
+    public LegacyService(LegacyServiceSpec serviceSpec) {
 	super(serviceSpec);
 	URIs = serviceSpec.getNativeURIs();
     }

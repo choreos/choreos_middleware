@@ -21,7 +21,6 @@ import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.UnhandledModificationException;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
-import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceSpec;
 
@@ -45,12 +44,10 @@ public class ServicesManagerImpl implements ServicesManager {
 	} catch (IllegalArgumentException e) {
 	    String message = "Invalid service spec";
 	    logger.error(message, e);
-	    throw new ServiceNotCreatedException(serviceSpec.getUuid(), message);
+	    throw new ServiceNotCreatedException(serviceSpec.getName());
 	}
 
-	if (serviceSpec.getPackageType() != PackageType.LEGACY) {
-	    runGenerateAndApplyScript(service, service.getSpec().getNumberOfInstances());
-	}
+	runGenerateAndApplyScript(service, service.getSpec().getNumberOfInstances());
 
 	registry.addService(serviceSpec.getUuid(), service);
 	return service;

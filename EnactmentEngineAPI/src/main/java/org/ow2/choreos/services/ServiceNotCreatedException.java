@@ -9,16 +9,7 @@ public class ServiceNotCreatedException extends ServiceDeployerException {
     private static final long serialVersionUID = -4535824877031190147L;
 
     public ServiceNotCreatedException(String serviceName) {
-	super(serviceName);
-    }
-
-    public ServiceNotCreatedException(String serviceName, String message) {
-	super(serviceName, message);
-    }
-
-    @Override
-    public String toString() {
-	return "Could not create service " + super.getServiceName();
+	super( "Could not create service " + serviceName);
     }
 
 }

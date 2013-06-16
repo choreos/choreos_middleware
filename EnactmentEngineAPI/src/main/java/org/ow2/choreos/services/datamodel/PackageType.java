@@ -13,7 +13,7 @@ package org.ow2.choreos.services.datamodel;
  */
 public enum PackageType {
 
-    COMMAND_LINE("jar"), TOMCAT("war"), EASY_ESB("tar.gz"), LEGACY(null), OTHER(null);
+    COMMAND_LINE("jar"), TOMCAT("war"), EASY_ESB("tar.gz"), OTHER(null);
 
     private final String extension;
 

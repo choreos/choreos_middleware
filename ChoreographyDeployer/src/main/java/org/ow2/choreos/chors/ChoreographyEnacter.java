@@ -7,6 +7,7 @@ import org.ow2.choreos.chors.bus.ServicesProxifier;
 import org.ow2.choreos.chors.context.ContextCaster;
 import org.ow2.choreos.chors.context.ContextSenderFactory;
 import org.ow2.choreos.chors.datamodel.Choreography;
+import org.ow2.choreos.chors.datamodel.LegacyService;
 import org.ow2.choreos.services.datamodel.DeployableService;
 
 public class ChoreographyEnacter {
@@ -22,6 +23,7 @@ public class ChoreographyEnacter {
     public Choreography enact() throws EnactmentException {
 	logBegin();
 	deploy();
+	createLegacyServices();
 	proxifyServices(chor);
 	castContext();
 	chor.enactmentFinished();
@@ -42,13 +44,19 @@ public class ChoreographyEnacter {
 	chor.setDeployableServices(deployedServices);
     }
 
+    private void createLegacyServices() {
+	LegacyServicesCreator legacyServicesCreator = new LegacyServicesCreator();
+	List<LegacyService> legacyServices = legacyServicesCreator.createLegacyServices(chor.getChoreographySpec());
+	chor.setLegacyServices(legacyServices);
+    }
+
     private void proxifyServices(Choreography choreography) {
 	ServicesProxifier proxifier = new ServicesProxifier(chor);
 	proxifier.proxify();
     }
-    
+
     private void castContext() {
-	ContextSenderFactory factory = new ContextSenderFactory(); 
+	ContextSenderFactory factory = new ContextSenderFactory();
 	ContextCaster caster = new ContextCaster(factory);
 	caster.cast(chor);
     }
