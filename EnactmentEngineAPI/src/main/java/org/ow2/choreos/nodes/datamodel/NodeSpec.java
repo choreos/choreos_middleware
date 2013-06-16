@@ -21,6 +21,10 @@ public class NodeSpec {
 	return this.resourceImpact;
     }
 
+    public void setResourceImpact(ResourceImpact resourceImpact) {
+        this.resourceImpact = resourceImpact;
+    }
+
     public String getZone() {
         return zone;
     }
