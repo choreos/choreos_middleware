@@ -36,12 +36,6 @@ OPENSTACK_PRIVATE_SSH_KEY=/path/to/keyname.pem
 
 CHEF_SOLO_LOG=/tmp/chef-solo.log # log written on chef nodes
 
-# If RECIPES_CACHE=True recipes are not overwritten in DeploymentManager/src/main/resources/chef/recipes/
-# It is recommended if you are going to deploy the same recipe several times,
-# but be aware it can prevent you for properly updating a recipe!
-# RecipeBuilder implementors should observe this variable
-RECIPES_CACHE=False
-
 # creates a pool of extra VMs to make the deployment faster and more scalable
 # the trade-off is the cost of some more VMs
 # if you do not want to use the pool, leave IDLE_POOL_SIZE as zero.
