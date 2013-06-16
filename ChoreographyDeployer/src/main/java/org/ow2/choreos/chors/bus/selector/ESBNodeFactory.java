@@ -11,10 +11,11 @@ import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.selectors.ObjectCreationException;
 import org.ow2.choreos.selectors.ObjectFactory;
 
-public class ESBNodeFactory implements ObjectFactory<EasyESBNode> {
+public class ESBNodeFactory implements ObjectFactory<EasyESBNode, ResourceImpact> {
     
     private static final String EASY_ESB_RECIPE = "easyesb";
     private static final int TIMEOUT_SECONDS = 5*60;
@@ -26,7 +27,7 @@ public class ESBNodeFactory implements ObjectFactory<EasyESBNode> {
     }
 
     @Override
-    public EasyESBNode createNewInstance() throws ObjectCreationException {
+    public EasyESBNode createNewInstance(ResourceImpact requirements) throws ObjectCreationException {
 	try {
 	    EasyESBNode esbNode = createNewESBNode();
 	    ESBRegister.addEsbNode(esbNode);

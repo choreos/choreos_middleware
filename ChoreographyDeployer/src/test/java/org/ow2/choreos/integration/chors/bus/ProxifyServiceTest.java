@@ -27,6 +27,7 @@ import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.client.NodesClient;
 import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.selectors.ObjectCreationException;
 import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServicesManager;
@@ -98,7 +99,7 @@ public class ProxifyServiceTest {
 
     private void deployEsbNode() throws ObjectCreationException {
 	ESBNodeFactory factory = new ESBNodeFactory(npm);
-	esbNode = factory.createNewInstance();
+	esbNode = factory.createNewInstance(new ResourceImpact());
     }
 
     private void proxifyService() {

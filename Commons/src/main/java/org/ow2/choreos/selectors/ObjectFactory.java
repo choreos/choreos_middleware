@@ -4,10 +4,10 @@
 
 package org.ow2.choreos.selectors;
 
-public interface ObjectFactory<T> {
+public interface ObjectFactory<T, R> {
 
-    public T createNewInstance() throws ObjectCreationException;
-    
+    public T createNewInstance(R requirements) throws ObjectCreationException;
+
     public int getTimeouInSeconds();
 
 }

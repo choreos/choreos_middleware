@@ -17,6 +17,7 @@ import org.ow2.choreos.chors.bus.EasyESBNode;
 import org.ow2.choreos.chors.bus.selector.ESBNodeFactory;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.client.NodesClient;
+import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.selectors.ObjectCreationException;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -43,7 +44,7 @@ public class EsbNodeFactoryTest {
 	String host = ChoreographyDeployerConfiguration.get(DEPLOYMENT_MANAGER_URI_PROPERTY);
 	NodePoolManager npm = new NodesClient(host);
 	ESBNodeFactory factory = new ESBNodeFactory(npm);
-	EasyESBNode esbNode = factory.createNewInstance();
+	EasyESBNode esbNode = factory.createNewInstance(new ResourceImpact());
 	String endpoint = esbNode.getAdminEndpoint();
 	String url = endpoint + "?wsdl";
 	System.out.println("Acessando " + url);

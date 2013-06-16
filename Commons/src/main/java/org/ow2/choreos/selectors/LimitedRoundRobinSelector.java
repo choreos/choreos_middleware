@@ -27,7 +27,7 @@ public class LimitedRoundRobinSelector<T, R> implements Selector<T, R> {
 	CREATING, ROUND_ROBIN
     };
 
-    public LimitedRoundRobinSelector(int limit, ObjectRetriever<T> objectRetriever, ObjectFactory<T> objectFactory) {
+    public LimitedRoundRobinSelector(int limit, ObjectRetriever<T> objectRetriever, ObjectFactory<T, R> objectFactory) {
 	ObjectFilters<T, R> filters = new ObjectFilters<T, R>();
 	ObjectFilter<T, R> filter = filters.getNoFilter();
 	this.limit = limit;
@@ -36,7 +36,7 @@ public class LimitedRoundRobinSelector<T, R> implements Selector<T, R> {
 	this.objectRetriever = objectRetriever;
     }
 
-    public LimitedRoundRobinSelector(int limit, ObjectRetriever<T> objectRetriever, ObjectFactory<T> objectFactory,
+    public LimitedRoundRobinSelector(int limit, ObjectRetriever<T> objectRetriever, ObjectFactory<T, R> objectFactory,
 	    ObjectFilter<T, R> objectFilter) {
 	this.limit = limit;
 	this.alwaysCreatorSelector = new AlwaysCreateSelector<T, R>(objectFactory);

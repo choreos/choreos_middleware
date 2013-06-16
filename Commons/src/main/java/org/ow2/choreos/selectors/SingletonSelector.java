@@ -17,11 +17,11 @@ import java.util.concurrent.TimeUnit;
 public class SingletonSelector<T, R> implements Selector<T, R> {
 
     private T theObject;
-    private ObjectFactory<T> factory;
+    private ObjectFactory<T, R> factory;
     private ExecutorService executor = Executors.newSingleThreadExecutor();
     boolean creating = false;
 
-    public SingletonSelector(ObjectFactory<T> factory) {
+    public SingletonSelector(ObjectFactory<T, R> factory) {
 	this.factory = factory;
     }
 
@@ -31,7 +31,7 @@ public class SingletonSelector<T, R> implements Selector<T, R> {
 	if (objectsQuantity != 1)
 	    throw new IllegalArgumentException("Current implementation supports only objectsQuantity=1");
 
-	createObjectIfNecessary();
+	createObjectIfNecessary(requirements);
 
 	if (objectIsBeenCreated())
 	    waitObjectCreation();
@@ -42,19 +42,19 @@ public class SingletonSelector<T, R> implements Selector<T, R> {
 	return Collections.singletonList(theObject);
     }
 
-    private void createObjectIfNecessary() {
+    private void createObjectIfNecessary(R requirements) {
 	if (objectIsNotCreated() && !objectIsBeenCreated()) {
 	    synchronized (this) {
 		if (objectIsNotCreated() && !objectIsBeenCreated()) {
-		    createTheObject();
+		    createTheObject(requirements);
 		}
 	    }
 	}
     }
 
-    private void createTheObject() {
+    private void createTheObject(R requirements) {
 	creating = true;
-	CreationTask task = new CreationTask();
+	CreationTask task = new CreationTask(requirements);
 	executor.submit(task);
 	executor.shutdown();
     }
@@ -80,10 +80,17 @@ public class SingletonSelector<T, R> implements Selector<T, R> {
     }
 
     private class CreationTask implements Runnable {
+	
+	R requirements;
+	
+	CreationTask(R requirements) {
+	    this.requirements = requirements;
+	}
+
 	@Override
 	public void run() {
 	    try {
-		theObject = factory.createNewInstance();
+		theObject = factory.createNewInstance(requirements);
 	    } catch (ObjectCreationException e) {
 		theObject = null;
 	    }

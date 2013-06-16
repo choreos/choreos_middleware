@@ -9,12 +9,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.ow2.choreos.selectors.ObjectCreationException;
 import org.ow2.choreos.selectors.ObjectFactory;
 
-public class StringFactory implements ObjectFactory<String> {
+public class StringFactory implements ObjectFactory<String, String> {
 
     private AtomicInteger counter = new AtomicInteger();
 
     @Override
-    public String createNewInstance() throws ObjectCreationException {
+    public String createNewInstance(String requirements) throws ObjectCreationException {
 	return Integer.toString(counter.getAndIncrement());
     }
 
@@ -22,4 +22,5 @@ public class StringFactory implements ObjectFactory<String> {
     public int getTimeouInSeconds() {
 	return 10;
     }
+
 }

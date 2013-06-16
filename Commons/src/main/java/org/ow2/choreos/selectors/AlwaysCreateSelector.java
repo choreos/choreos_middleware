@@ -17,9 +17,9 @@ import java.util.List;
  */
 public class AlwaysCreateSelector<T, R> implements Selector<T, R> {
 
-    private ObjectFactory<T> objectFactory;
+    private ObjectFactory<T, R> objectFactory;
 
-    public AlwaysCreateSelector(ObjectFactory<T> objectFactory) {
+    public AlwaysCreateSelector(ObjectFactory<T, R> objectFactory) {
 	this.objectFactory = objectFactory;
     }
 
@@ -30,7 +30,7 @@ public class AlwaysCreateSelector<T, R> implements Selector<T, R> {
 
 	for (int i = 0; i < objectsQuantity; i++) {
 	    try {
-		T obj = this.objectFactory.createNewInstance();
+		T obj = this.objectFactory.createNewInstance(requirements);
 		selectedObjects.add(obj);
 	    } catch (ObjectCreationException e) {
 		throw new NotSelectedException();
