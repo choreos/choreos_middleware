@@ -45,7 +45,7 @@ public class NewDeploymentPreparing {
 	logger.info("Request to configure nodes; creating services; setting up Chef; for chor " + chor.getId());
 	submitConfigureTasks();
 	waitConfigureTasks();
-	retrievedConfigureServices();
+	retrievedConfiguredServices();
 	checkStatus();
 	logger.info("Nodes are configured to run chef-client on chor " + chor.getId());
 	return configuredServices;
@@ -67,7 +67,7 @@ public class NewDeploymentPreparing {
 	Concurrency.waitExecutor(executor, TIMEOUT);
     }
 
-    private void retrievedConfigureServices() {
+    private void retrievedConfiguredServices() {
 	configuredServices = new ArrayList<DeployableService>();
 	for (Entry<DeployableServiceSpec, Future<DeployableService>> entry : futures.entrySet()) {
 	    try {
