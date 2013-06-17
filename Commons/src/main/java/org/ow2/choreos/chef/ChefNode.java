@@ -34,6 +34,17 @@ public class ChefNode {
 	}
 	return false;
     }
+    
+    /**
+     * 
+     * @param recipeName it can be "cookbook" or "cookbook:recipe".
+     *  
+     */
+    public void addRecipe(String recipeName) {
+	if (runList == null)
+	    runList = new ArrayList<String>();
+	runList.add("recipe[" + recipeName + "]");
+    }
 
     public String getName() {
 	return name;
@@ -158,6 +169,19 @@ public class ChefNode {
 	    }
 	}
 	return simpleRunList;
+    }
+    
+    public String toJson() {
+	StringBuilder json = new StringBuilder("{ 'run_list' : [ ");
+	for (int i=0; i<runList.size(); i++) {
+	    String runListItem = runList.get(i);
+	    json.append("'" + runListItem + "'");
+	    if (i != runList.size()-1)
+		json.append(",");
+	    json.append(" ");
+	}
+	json.append("] }");
+	return json.toString();
     }
 
 }
