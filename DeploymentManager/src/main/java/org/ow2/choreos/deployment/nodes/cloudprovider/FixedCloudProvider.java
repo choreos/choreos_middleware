@@ -59,7 +59,6 @@ public class FixedCloudProvider implements CloudProvider {
     private String setNode(String ip, String host, String user, String key, String type, Node node, int id) {
 	node.setIp(ip);
 	node.setHostname(host);
-	node.setChefName(host);
 	node.setUser(user);
 	node.setPrivateKey(key);
 	node.setId(Integer.toString(id));

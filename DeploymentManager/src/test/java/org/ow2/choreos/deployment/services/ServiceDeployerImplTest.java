@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.ow2.choreos.chef.KnifeException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
@@ -36,7 +35,7 @@ public class ServiceDeployerImplTest {
     private DeployableServiceSpec serviceSpec;
 
     @Before
-    public void setUp() throws PrepareDeploymentFailedException, KnifeException {
+    public void setUp() throws PrepareDeploymentFailedException {
 
 	LogConfigurator.configLog();
 	setUpNPM();
@@ -57,7 +56,7 @@ public class ServiceDeployerImplTest {
 	when(npm.prepareDeployment(any(DeploymentRequest.class))).thenReturn(selectedNodes);
     }
 
-    private void setUpServiceDeployer() throws KnifeException {
+    private void setUpServiceDeployer() {
 
 	serviceSpec = new DeployableServiceSpec();
 	serviceSpec.setPackageUri("http://choreos.eu/services/airline.jar");

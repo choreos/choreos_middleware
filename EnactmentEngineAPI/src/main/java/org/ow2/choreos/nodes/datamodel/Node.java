@@ -7,6 +7,9 @@ package org.ow2.choreos.nodes.datamodel;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Node {
 
     private String id;
@@ -21,9 +24,9 @@ public class Node {
     private String privateKeyFile;
     private String image;
     private Integer state;
-    private String chefName; // nos comandos do chef é o NODE_NAME
 
     public Node() {
+	
     }
 
     public Node(NodeRestRepresentation rest) {
@@ -63,14 +66,6 @@ public class Node {
 	    return false;
 	Matcher matcher = IP_PATTERN.matcher(ip);
 	return matcher.matches();
-    }
-
-    public String getChefName() {
-	return chefName;
-    }
-
-    public void setChefName(String chefName) {
-	this.chefName = chefName;
     }
 
     public void setPrivateKeyFile(String privateKeyFile) {
@@ -177,7 +172,6 @@ public class Node {
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
-	result = prime * result + ((chefName == null) ? 0 : chefName.hashCode());
 	result = prime * result + ((hostname == null) ? 0 : hostname.hashCode());
 	result = prime * result + ((id == null) ? 0 : id.hashCode());
 	result = prime * result + ((ip == null) ? 0 : ip.hashCode());
@@ -193,11 +187,6 @@ public class Node {
 	if (getClass() != obj.getClass())
 	    return false;
 	Node other = (Node) obj;
-	if (chefName == null) {
-	    if (other.chefName != null)
-		return false;
-	} else if (!chefName.equals(other.chefName))
-	    return false;
 	if (hostname == null) {
 	    if (other.hostname != null)
 		return false;
@@ -218,7 +207,7 @@ public class Node {
 
     @Override
     public String toString() {
-	return "Node [id=" + id + ", ip=" + ip + ", hostname=" + hostname + ", chefName=" + chefName + "]";
+	return "Node [id=" + id + ", ip=" + ip + ", hostname=" + hostname + "]";
     }
 
 }
