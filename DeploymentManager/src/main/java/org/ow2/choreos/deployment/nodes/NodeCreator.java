@@ -17,7 +17,7 @@ import org.ow2.choreos.deployment.nodes.cm.NodeBootstrapper;
 import org.ow2.choreos.deployment.nodes.cm.NodeNotBootstrappedException;
 import org.ow2.choreos.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.utils.Concurrency;
 
@@ -48,14 +48,14 @@ public class NodeCreator {
     /**
      * Tries to create a node and bootstrap it.
      */
-    public Node create(NodeSpec nodeSpec) throws NodeNotCreatedException {
+    public CloudNode create(NodeSpec nodeSpec) throws NodeNotCreatedException {
 
 	ExecutorService executor = Executors.newSingleThreadExecutor();
 	CloudNodeCreation cloudNodeCreator = new CloudNodeCreation(cp, nodeSpec);
-	Future<Node> future = executor.submit(cloudNodeCreator);
+	Future<CloudNode> future = executor.submit(cloudNodeCreator);
 	Concurrency.waitExecutor(executor, VM_CREATION_TIMEOUT, TimeUnit.SECONDS, logger);
 
-	Node node = null;
+	CloudNode node = null;
 	try {
 	    node = future.get();
 	} catch (InterruptedException e1) {
@@ -82,7 +82,7 @@ public class NodeCreator {
 	return node;
     }
 
-    private class CloudNodeCreation implements Callable<Node> {
+    private class CloudNodeCreation implements Callable<CloudNode> {
 
 	CloudProvider cp;
 	NodeSpec nodeSpec;
@@ -93,8 +93,8 @@ public class NodeCreator {
 	}
 
 	@Override
-	public Node call() throws Exception {
-	    Node node = cp.createNode(nodeSpec);
+	public CloudNode call() throws Exception {
+	    CloudNode node = cp.createNode(nodeSpec);
 	    return node;
 	}
     }

@@ -18,7 +18,7 @@ import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cm.NodeChecker;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -84,7 +84,7 @@ public class MultipleAWSNodesCreationTest {
 	public void run() {
 
 	    try {
-		Node node = npm.createNode(new NodeSpec());
+		CloudNode node = npm.createNode(new NodeSpec());
 		created = true;
 		NodeChecker checker = new NodeChecker();
 		bootstrapped = checker.checkNodeOnNodesList(node);

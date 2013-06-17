@@ -8,17 +8,17 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 
 public class NodeDestroyer implements Runnable {
 
     private Logger logger = Logger.getLogger(NodeDestroyer.class);
 
-    private Node node;
+    private CloudNode node;
     private CloudProvider cp;
     private boolean ok;
 
-    public NodeDestroyer(Node node, CloudProvider cp) {
+    public NodeDestroyer(CloudNode node, CloudProvider cp) {
 	this.node = node;
 	this.cp = cp;
     }
@@ -27,7 +27,7 @@ public class NodeDestroyer implements Runnable {
 	return this.ok;
     }
 
-    public Node getNode() {
+    public CloudNode getNode() {
 	return this.node;
     }
 

@@ -7,7 +7,7 @@ package org.ow2.choreos.nodes;
 import java.util.List;
 
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 public interface NodePoolManager {
@@ -20,7 +20,7 @@ public interface NodePoolManager {
      * @throws NodeNotCreatedException
      *             if node was not created
      */
-    public Node createNode(NodeSpec nodeSpec) throws NodeNotCreatedException;
+    public CloudNode createNode(NodeSpec nodeSpec) throws NodeNotCreatedException;
 
     /**
      * Retrieve information about all the nodes managed by this Node Pool
@@ -28,7 +28,7 @@ public interface NodePoolManager {
      * 
      * @return
      */
-    public List<Node> getNodes();
+    public List<CloudNode> getNodes();
 
     /**
      * Retrieve information of a node according to a given node id.
@@ -38,7 +38,7 @@ public interface NodePoolManager {
      * @throws NodeNotFoundException
      *             if the node does not exist
      */
-    public Node getNode(String nodeId) throws NodeNotFoundException;
+    public CloudNode getNode(String nodeId) throws NodeNotFoundException;
 
     /**
      * Destroys the Virtual Machine node
@@ -84,5 +84,5 @@ public interface NodePoolManager {
      * @throws PrepareDeploymentFailedException
      *             if it was not possible to allocate any node
      */
-    public List<Node> prepareDeployment(DeploymentRequest deploymentRequest) throws PrepareDeploymentFailedException;
+    public List<CloudNode> prepareDeployment(DeploymentRequest deploymentRequest) throws PrepareDeploymentFailedException;
 }

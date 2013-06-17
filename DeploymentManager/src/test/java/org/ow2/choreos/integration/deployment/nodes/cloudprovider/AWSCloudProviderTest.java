@@ -15,7 +15,7 @@ import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.CommandLineException;
@@ -38,7 +38,7 @@ public class AWSCloudProviderTest {
     public void shouldCreateAndDeleteNode() throws NodeNotCreatedException, NodeNotDestroyed, NodeNotFoundException,
 	    CommandLineException, InterruptedException {
 
-	Node created = infra.createNode(nodeSpec);
+	CloudNode created = infra.createNode(nodeSpec);
 	System.out.println("created " + created);
 	assertTrue(created != null);
 	

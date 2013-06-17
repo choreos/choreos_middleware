@@ -12,7 +12,7 @@ import org.junit.experimental.categories.Category;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -35,7 +35,7 @@ public class FixedConnectionTest {
     public void shouldConnectToTheNode() throws NodeNotCreatedException {
 
 	CloudProvider cp = new FixedCloudProvider();
-	Node node = cp.createOrUseExistingNode(new NodeSpec());
+	CloudNode node = cp.createOrUseExistingNode(new NodeSpec());
 
 	SshUtil ssh = null;
 	ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());

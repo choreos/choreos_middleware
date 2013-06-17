@@ -3,12 +3,12 @@ package org.ow2.choreos.deployment.nodes.selector;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.selectors.ObjectCreationException;
 import org.ow2.choreos.selectors.ObjectFactory;
 
-class NodeFactory implements ObjectFactory<Node, DeploymentRequest> {
+class NodeFactory implements ObjectFactory<CloudNode, DeploymentRequest> {
 
     private static final int TIMEOUT_SECONDS = 5 * 60;
     private NodePoolManager npm;
@@ -18,7 +18,7 @@ class NodeFactory implements ObjectFactory<Node, DeploymentRequest> {
     }
 
     @Override
-    public Node createNewInstance(DeploymentRequest requirements) throws ObjectCreationException {
+    public CloudNode createNewInstance(DeploymentRequest requirements) throws ObjectCreationException {
 	try {
 	    NodeSpec nodeSpec = new NodeSpec();
 	    nodeSpec.setResourceImpact(requirements.getResourceImpact());

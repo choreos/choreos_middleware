@@ -22,7 +22,7 @@ import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotFoundException;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 import com.google.common.collect.ImmutableSet;
@@ -68,10 +68,10 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
     }
 
     @Override
-    public Node createNode(NodeSpec nodeSpec) {
+    public CloudNode createNode(NodeSpec nodeSpec) {
 
 	System.out.println(">OpenStack: Create new Node.");
-	Node node = new Node();
+	CloudNode node = new CloudNode();
 
 	// TODO: resource impact changes
 
@@ -100,10 +100,10 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
     }
 
     @Override
-    public Node getNode(String nodeId) throws NodeNotFoundException {
+    public CloudNode getNode(String nodeId) throws NodeNotFoundException {
 	ComputeService client = getClient("");
 
-	Node node = new Node();
+	CloudNode node = new CloudNode();
 
 	try {
 	    NodeMetadata cloudNode = client.getNodeMetadata(nodeId);
@@ -116,9 +116,9 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
     }
 
     @Override
-    public List<Node> getNodes() {
-	List<Node> nodeList = new ArrayList<Node>();
-	Node node;
+    public List<CloudNode> getNodes() {
+	List<CloudNode> nodeList = new ArrayList<CloudNode>();
+	CloudNode node;
 	ComputeService client = getClient("");
 
 	logger.info("Getting list of nodes");
@@ -126,7 +126,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
 	logger.debug("Got: " + cloudNodes);
 	for (ComputeMetadata computeMetadata : cloudNodes) {
 	    NodeMetadata cloudNode = client.getNodeMetadata(computeMetadata.getId());
-	    node = new Node();
+	    node = new CloudNode();
 
 	    setNodeProperties(node, cloudNode);
 	    if (node.getState() != 1) {
@@ -184,13 +184,13 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
     }
 
     @Override
-    public Node createOrUseExistingNode(NodeSpec nodeSpec) {
-	for (Node n : getNodes()) {
+    public CloudNode createOrUseExistingNode(NodeSpec nodeSpec) {
+	for (CloudNode n : getNodes()) {
 	    if (n.getImage().equals(nodeSpec.getImage()) && NodeMetadata.Status.RUNNING.ordinal() == n.getState()) {
 		return n;
 	    }
 	}
-	Node i = null;
+	CloudNode i = null;
 	i = createNode(nodeSpec);
 	return i;
     }
@@ -216,7 +216,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
 	return template;
     }
 
-    private void setNodeProperties(Node node, NodeMetadata cloudNode) {
+    private void setNodeProperties(CloudNode node, NodeMetadata cloudNode) {
 	setNodeIp(node, cloudNode);
 	node.setHostname(cloudNode.getName());
 	node.setSo(cloudNode.getOperatingSystem().getName());
@@ -227,7 +227,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
 	node.setPrivateKeyFile(DeploymentManagerConfiguration.get("OPENSTACK_PRIVATE_SSH_KEY"));
     }
 
-    private void setNodeIp(Node node, NodeMetadata cloudNode) {
+    private void setNodeIp(CloudNode node, NodeMetadata cloudNode) {
 	Iterator<String> publicAddresses = cloudNode.getPrivateAddresses().iterator();
 
 	if (publicAddresses != null && publicAddresses.hasNext()) {

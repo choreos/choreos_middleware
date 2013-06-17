@@ -3,10 +3,10 @@ package org.ow2.choreos.deployment.nodes.selector;
 import java.util.List;
 
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.selectors.ObjectRetriever;
 
-class NodeRetriever implements ObjectRetriever<Node> {
+class NodeRetriever implements ObjectRetriever<CloudNode> {
 
     private NodePoolManager npm;
 
@@ -15,7 +15,7 @@ class NodeRetriever implements ObjectRetriever<Node> {
     }
 
     @Override
-    public List<Node> retrieveObjects() {
+    public List<CloudNode> retrieveObjects() {
 	return this.npm.getNodes();
     }
 

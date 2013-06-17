@@ -14,7 +14,7 @@ import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.client.NodesClient;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.tests.IntegrationTest;
 
@@ -25,10 +25,10 @@ public class NodesResourceTest extends BaseTest {
     public void getNode() throws Exception {
 
 	CloudProvider cp = new FixedCloudProvider();
-	Node node = cp.createOrUseExistingNode(new NodeSpec());
+	CloudNode node = cp.createOrUseExistingNode(new NodeSpec());
 
 	NodePoolManager npm = new NodesClient(nodePoolManagerHost);
-	Node returnedNode = npm.getNode(node.getId());
+	CloudNode returnedNode = npm.getNode(node.getId());
 
 	assertEquals(node.getId(), returnedNode.getId());
 	assertEquals(node.getHostname(), returnedNode.getHostname());
@@ -40,7 +40,7 @@ public class NodesResourceTest extends BaseTest {
 
 	String NO_EXISTING_NODE = "nodes/696969696969";
 	NodePoolManager npm = new NodesClient(nodePoolManagerHost);
-	Node node = npm.getNode(NO_EXISTING_NODE);
+	CloudNode node = npm.getNode(NO_EXISTING_NODE);
 	assertTrue(node == null);
     }
 

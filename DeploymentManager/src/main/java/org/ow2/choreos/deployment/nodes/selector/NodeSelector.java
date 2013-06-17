@@ -5,7 +5,7 @@
 package org.ow2.choreos.deployment.nodes.selector;
 
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.selectors.Selector;
 
 /**
@@ -22,6 +22,6 @@ import org.ow2.choreos.selectors.Selector;
  * @author leonardo
  * 
  */
-public interface NodeSelector extends Selector<Node, DeploymentRequest> {
+public interface NodeSelector extends Selector<CloudNode, DeploymentRequest> {
 
 }

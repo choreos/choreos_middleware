@@ -10,7 +10,7 @@ import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.selectors.ObjectCreationException;
 import org.ow2.choreos.selectors.ObjectFactory;
@@ -42,7 +42,7 @@ public class ESBNodeFactory implements ObjectFactory<EasyESBNode, ResourceImpact
     }
     
     private EasyESBNode createNewESBNode() throws PrepareDeploymentFailedException, NodeNotUpdatedException, NodeNotFoundException {
-	    List<Node> nodes = this.npm.prepareDeployment(new DeploymentRequest(EASY_ESB_RECIPE));
+	    List<CloudNode> nodes = this.npm.prepareDeployment(new DeploymentRequest(EASY_ESB_RECIPE));
 	    this.npm.updateNode(nodes.get(0).getId()); // TODO set time out
 	    String endpoint = this.getEndpoint(nodes.get(0).getIp());
 	    return new EasyESBNodeImpl(endpoint);

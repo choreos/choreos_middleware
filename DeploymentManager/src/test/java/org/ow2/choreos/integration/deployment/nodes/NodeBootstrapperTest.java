@@ -14,7 +14,7 @@ import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.cm.BootstrapChecker;
 import org.ow2.choreos.deployment.nodes.cm.NodeBootstrapper;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -31,7 +31,7 @@ import org.ow2.choreos.utils.LogConfigurator;
 @Category(IntegrationTest.class)
 public class NodeBootstrapperTest {
 
-    protected Node node;
+    protected CloudNode node;
 
     @Before
     public void setUp() {

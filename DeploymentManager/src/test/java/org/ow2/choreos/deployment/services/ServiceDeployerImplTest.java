@@ -18,7 +18,7 @@ import org.junit.Test;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.datamodel.DeployableService;
@@ -31,7 +31,7 @@ public class ServiceDeployerImplTest {
     private NodePoolManager npm;
     private ServicesManager servicesManager;
 
-    private Node selectedNode;
+    private CloudNode selectedNode;
     private DeployableServiceSpec serviceSpec;
 
     @Before
@@ -44,12 +44,12 @@ public class ServiceDeployerImplTest {
 
     private void setUpNPM() throws PrepareDeploymentFailedException {
 
-	selectedNode = new Node();
+	selectedNode = new CloudNode();
 	selectedNode.setId("1");
 	selectedNode.setIp("192.168.56.102");
 	selectedNode.setHostname("CHOREOS-NODE");
 
-	List<Node> selectedNodes = new ArrayList<Node>();
+	List<CloudNode> selectedNodes = new ArrayList<CloudNode>();
 	selectedNodes.add(selectedNode);
 
 	npm = mock(NodePoolManager.class);

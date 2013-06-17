@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.breaker.Invoker;
 import org.ow2.choreos.breaker.InvokerException;
 import org.ow2.choreos.nodes.NodeNotAccessibleException;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.utils.SshCommandFailed;
 import org.ow2.choreos.utils.SshNotConnected;
 import org.ow2.choreos.utils.SshUtil;
@@ -33,13 +33,13 @@ public class NodeBootstrapper {
     private static String BOOTSTRAP_COMMAND = "bash -c 'wget http://www.ime.usp.br/~tfurtado/bootstrap.tgz; "
 	    + "tar xf bootstrap.tgz; chmod +x bootstrap.sh; ./bootstrap.sh'";
 
-    private Node node;
+    private CloudNode node;
     private final int sshTimeoutInSeconds;
     private final int bootstrapTimeoutInSeconds;
 
     private Logger logger = Logger.getLogger(NodeBootstrapper.class);
 
-    public NodeBootstrapper(Node node) {
+    public NodeBootstrapper(CloudNode node) {
 	this.node = node;
 	this.sshTimeoutInSeconds = getSshTimeoutInSeconds();
 	this.bootstrapTimeoutInSeconds = getBootstrapTimeoutInSeconds();

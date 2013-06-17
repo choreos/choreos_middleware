@@ -27,7 +27,7 @@ import org.jclouds.ec2.domain.InstanceType;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 
@@ -65,11 +65,11 @@ public class AWSCloudProvider implements CloudProvider {
 	return context.getComputeService();
     }
 
-    public Node createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
+    public CloudNode createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
 
 	long t0 = System.currentTimeMillis();
 
-	Node node = new Node();
+	CloudNode node = new CloudNode();
 
 	oneRequestPerSecondRule();
 	logger.debug("Creating node...");
@@ -133,14 +133,14 @@ public class AWSCloudProvider implements CloudProvider {
 	return ok;
     }
 
-    public Node getNode(String nodeId) throws NodeNotFoundException {
+    public CloudNode getNode(String nodeId) throws NodeNotFoundException {
 
 	ComputeService client = getClient("");
-	Node node = null;
+	CloudNode node = null;
 	try {
 	    ComputeMetadata computeMetadata = client.getNodeMetadata(nodeId);
 	    NodeMetadata cloudNode = client.getNodeMetadata(computeMetadata.getId());
-	    node = new Node();
+	    node = new CloudNode();
 	    setNodeProperties(node, cloudNode);
 	    client.getContext().close();
 	} catch (Exception e) {
@@ -150,16 +150,16 @@ public class AWSCloudProvider implements CloudProvider {
 	return node;
     }
 
-    public List<Node> getNodes() {
+    public List<CloudNode> getNodes() {
 
-	List<Node> nodeList = new ArrayList<Node>();
-	Node node;
+	List<CloudNode> nodeList = new ArrayList<CloudNode>();
+	CloudNode node;
 
 	ComputeService client = getClient("");
 	Set<? extends ComputeMetadata> cloudNodes = client.listNodes();
 	for (ComputeMetadata computeMetadata : cloudNodes) {
 	    NodeMetadata cloudNode = client.getNodeMetadata(computeMetadata.getId());
-	    node = new Node();
+	    node = new CloudNode();
 
 	    setNodeProperties(node, cloudNode);
 	    if (node.getState() != 1) {
@@ -179,7 +179,7 @@ public class AWSCloudProvider implements CloudProvider {
 	client.getContext().close();
     }
 
-    private void setNodeProperties(Node node, NodeMetadata cloudNode) {
+    private void setNodeProperties(CloudNode node, NodeMetadata cloudNode) {
 	setNodeIp(node, cloudNode);
 	node.setHostname(cloudNode.getName());
 	node.setSo(cloudNode.getOperatingSystem().getName());
@@ -190,7 +190,7 @@ public class AWSCloudProvider implements CloudProvider {
 	node.setPrivateKey(DeploymentManagerConfiguration.get("AMAZON_PRIVATE_SSH_KEY"));
     }
 
-    private void setNodeIp(Node node, NodeMetadata cloudNode) {
+    private void setNodeIp(CloudNode node, NodeMetadata cloudNode) {
 	Iterator<String> publicAddresses = cloudNode.getPublicAddresses().iterator();
 
 	if (publicAddresses != null && publicAddresses.hasNext()) {
@@ -234,9 +234,9 @@ public class AWSCloudProvider implements CloudProvider {
 	return defaultImage;
     }
 
-    public Node createOrUseExistingNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
+    public CloudNode createOrUseExistingNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
 
-	List<Node> nodes = this.getNodes();
+	List<CloudNode> nodes = this.getNodes();
 	if (nodes.size() > 0)
 	    return nodes.get(0);
 	else

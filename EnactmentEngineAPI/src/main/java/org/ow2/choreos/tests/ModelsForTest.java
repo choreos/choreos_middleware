@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
@@ -140,7 +140,7 @@ public class ModelsForTest {
     }
 
     public void initTravelService() {
-	Node node = createNode("2", TRAVEL_AGENCY_IP, "choreos-node");
+	CloudNode node = createNode("2", TRAVEL_AGENCY_IP, "choreos-node");
 	travelService = new DeployableService(this.travelSpec);
 	ServiceInstance instance = new ServiceInstance(node);
 	instance.setInstanceId(TRAVEL_AGENCY + "1");
@@ -150,7 +150,7 @@ public class ModelsForTest {
 
     public void initAirlineService() {
 	airlineService = new DeployableService(this.airlineSpec);
-	Node node = createNode("1", AIRLINE_IP, "choreos-node"); // TODO
+	CloudNode node = createNode("1", AIRLINE_IP, "choreos-node"); // TODO
 								 // instances
 								 // should be in
 								 // different
@@ -175,8 +175,8 @@ public class ModelsForTest {
 	this.chor.addService(airlineService);
     }
 
-    private Node createNode(String id, String ip, String hostname) {
-	Node node1 = new Node();
+    private CloudNode createNode(String id, String ip, String hostname) {
+	CloudNode node1 = new CloudNode();
 	node1.setId(id);
 	node1.setIp(ip);
 	node1.setHostname(hostname);

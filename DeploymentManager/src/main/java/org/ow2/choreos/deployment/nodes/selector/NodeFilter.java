@@ -10,7 +10,7 @@ import java.util.List;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.MemoryType;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.selectors.ObjectFilter;
 
@@ -21,7 +21,7 @@ import org.ow2.choreos.selectors.ObjectFilter;
  * @author leonardo
  * 
  */
-class NodeFilter implements ObjectFilter<Node, DeploymentRequest> {
+class NodeFilter implements ObjectFilter<CloudNode, DeploymentRequest> {
 
     private enum MapperPolicy {
 	ANY_FIT, EXACT_FIT
@@ -53,9 +53,9 @@ class NodeFilter implements ObjectFilter<Node, DeploymentRequest> {
     }
 
     @Override
-    public List<Node> filter(List<Node> nodes, DeploymentRequest config) {
-	List<Node> filtered = new ArrayList<Node>();
-	for (Node node : nodes) {
+    public List<CloudNode> filter(List<CloudNode> nodes, DeploymentRequest config) {
+	List<CloudNode> filtered = new ArrayList<CloudNode>();
+	for (CloudNode node : nodes) {
 	    if (isAcceptable(config.getResourceImpact(), node)) {
 		filtered.add(node);
 	    }
@@ -83,7 +83,7 @@ class NodeFilter implements ObjectFilter<Node, DeploymentRequest> {
 	}
     }
 
-    private boolean isAcceptable(ResourceImpact resourceImpact, Node selected) {
+    private boolean isAcceptable(ResourceImpact resourceImpact, CloudNode selected) {
 	if (noMemoryRequirements(resourceImpact)) {
 	    return true;
 	}

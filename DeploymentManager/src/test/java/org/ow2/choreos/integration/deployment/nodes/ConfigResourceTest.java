@@ -22,7 +22,7 @@ import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.SshCommandFailed;
@@ -52,13 +52,13 @@ public class ConfigResourceTest extends BaseTest {
 	String RECIPE_NAME = "getting-started";
 	String CREATED_FILE = "chef-getting-started.txt";
 	CloudProvider cp = new FixedCloudProvider();
-	Node node = cp.createOrUseExistingNode(new NodeSpec());
+	CloudNode node = cp.createOrUseExistingNode(new NodeSpec());
 
 	NodePoolManager npm = new NPMImpl(cp);
 	int num_replicas = 1;
 	DeploymentRequest config = new DeploymentRequest(RECIPE_NAME, null, num_replicas);
 
-	List<Node> returnedNodes = npm.prepareDeployment(config);
+	List<CloudNode> returnedNodes = npm.prepareDeployment(config);
 	assertTrue(returnedNodes != null);
 	assertTrue(returnedNodes.get(0).hasIp());
 	assertEquals(node.getIp(), returnedNodes.get(0).getIp());

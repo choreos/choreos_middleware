@@ -7,13 +7,13 @@ package org.ow2.choreos.services.datamodel;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 
 public class ServiceInstance {
 
     private String instanceId; // The effective service instance ID
     private String nativeUri; // URI for access instance directly
-    private Node node; // The hosting node
+    private CloudNode node; // The hosting node
 
     // Map containing all URIs for access instance through the bus
     private Map<ServiceType, String> busUris = new HashMap<ServiceType, String>();
@@ -26,7 +26,7 @@ public class ServiceInstance {
 
     }
 
-    public ServiceInstance(Node node) {
+    public ServiceInstance(CloudNode node) {
 	this.setNode(node);
     }
 
@@ -46,11 +46,11 @@ public class ServiceInstance {
 	this.serviceSpec = serviceSpec;
     }
 
-    public Node getNode() {
+    public CloudNode getNode() {
 	return node;
     }
 
-    public void setNode(Node node) {
+    public void setNode(CloudNode node) {
 	this.node = node;
     }
 

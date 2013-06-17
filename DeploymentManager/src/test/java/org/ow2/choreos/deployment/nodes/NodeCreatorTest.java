@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderMocks;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 public class NodeCreatorTest {
@@ -21,11 +21,11 @@ public class NodeCreatorTest {
 	CloudProvider goodCP = CloudProviderMocks.getGoodMock();
 
 	NodeCreator nodeCreator = new NodeCreator(goodCP, false);
-	Node createdNode = nodeCreator.create(new NodeSpec());
+	CloudNode createdNode = nodeCreator.create(new NodeSpec());
 	assertTrue(this.isNodeOK(createdNode));
     }
 
-    private boolean isNodeOK(Node node) {
+    private boolean isNodeOK(CloudNode node) {
 
 	return (node != null) && (node.getId() != null) && (!node.getId().isEmpty());
     }

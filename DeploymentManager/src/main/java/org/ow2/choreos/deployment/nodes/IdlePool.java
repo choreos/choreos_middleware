@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.utils.Concurrency;
 
@@ -36,7 +36,7 @@ public class IdlePool {
 
     private static Logger logger = Logger.getLogger(IdlePool.class);
 
-    private Set<Node> idleNodes = new HashSet<Node>();
+    private Set<CloudNode> idleNodes = new HashSet<CloudNode>();
     private NodeCreator nodeCreator;
     private int poolSize;
     private ExecutorService fillerExecutor = Executors.newSingleThreadExecutor();
@@ -92,7 +92,7 @@ public class IdlePool {
      * 
      * @return an unmodifiable list with the ids of the nodes in the idle pool
      */
-    public Set<Node> getIdleNodes() {
+    public Set<CloudNode> getIdleNodes() {
 	return Collections.unmodifiableSet(idleNodes);
     }
 
@@ -106,7 +106,7 @@ public class IdlePool {
      * @throws NodeNotCreatedException
      * @return
      */
-    public Node retriveNode() throws NodeNotCreatedException {
+    public CloudNode retriveNode() throws NodeNotCreatedException {
 
 	if (idleNodes.isEmpty()) {
 	    VMCreator vmCreator = new VMCreator(nodeCreator);
@@ -117,7 +117,7 @@ public class IdlePool {
 	}
 
 	synchronized (this) {
-	    Node node = idleNodes.iterator().next();
+	    CloudNode node = idleNodes.iterator().next();
 	    idleNodes.remove(node);
 	    return node;
 	}
@@ -160,7 +160,7 @@ public class IdlePool {
 	@Override
 	public void run() {
 	    try {
-		Node node = nodeCreator.create(new NodeSpec());
+		CloudNode node = nodeCreator.create(new NodeSpec());
 		ok = true;
 		synchronized (IdlePool.this) {
 		    idleNodes.add(node);

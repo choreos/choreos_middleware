@@ -23,7 +23,7 @@ import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.selectors.NotSelectedException;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
@@ -82,8 +82,8 @@ public class NPMImpl implements NodePoolManager {
     }
 
     @Override
-    public Node createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
-	Node node = new Node();
+    public CloudNode createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
+	CloudNode node = new CloudNode();
 	try {
 	    node = nodeCreator.create(nodeSpec);
 	} catch (NodeNotCreatedException e1) {
@@ -106,7 +106,7 @@ public class NPMImpl implements NodePoolManager {
     }
 
     @Override
-    public List<Node> getNodes() {
+    public List<CloudNode> getNodes() {
 	if (this.cloudProvider.getProviderName() == FixedCloudProvider.FIXED_CLOUD_PROVIDER) {
 	    return this.cloudProvider.getNodes();
 	} else {
@@ -115,7 +115,7 @@ public class NPMImpl implements NodePoolManager {
     }
 
     @Override
-    public Node getNode(String nodeId) throws NodeNotFoundException {
+    public CloudNode getNode(String nodeId) throws NodeNotFoundException {
 	if (this.cloudProvider.getProviderName() == FixedCloudProvider.FIXED_CLOUD_PROVIDER) {
 	    return this.cloudProvider.getNode(nodeId);
 	} else {
@@ -124,10 +124,10 @@ public class NPMImpl implements NodePoolManager {
     }
 
     @Override
-    public List<Node> prepareDeployment(DeploymentRequest deploymentRequest) throws PrepareDeploymentFailedException {
+    public List<CloudNode> prepareDeployment(DeploymentRequest deploymentRequest) throws PrepareDeploymentFailedException {
 
 	NodeSelector selector = NodeSelectorFactory.getFactoryInstance().getNodeSelectorInstance();
-	List<Node> nodes = null;
+	List<CloudNode> nodes = null;
 	try {
 	    nodes = selector.select(deploymentRequest, deploymentRequest.getNumberOfInstances());
 	    logger.info("Selected nodes to " + deploymentRequest.getService().toString() + ": " + nodes);
@@ -142,7 +142,7 @@ public class NPMImpl implements NodePoolManager {
 	List<ServiceInstance> instances = (deploymentRequest.getService().getServiceInstances() != null) ? deploymentRequest
 		.getService().getServiceInstances() : new ArrayList<ServiceInstance>();
 
-	for (Node node : nodes) {
+	for (CloudNode node : nodes) {
 	    waitForSshAccess(node);
 
 	    SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
@@ -197,7 +197,7 @@ public class NPMImpl implements NodePoolManager {
 	return serviceInstanceId;
     }
 
-    private void waitForSshAccess(Node node) {
+    private void waitForSshAccess(CloudNode node) {
 	SshWaiter sshWaiter = new SshWaiter();
 	try {
 	    sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), 60);
@@ -225,7 +225,7 @@ public class NPMImpl implements NodePoolManager {
     @Override
     public void updateNode(String nodeId) throws NodeNotUpdatedException, NodeNotFoundException {
 
-	Node node = this.getNode(nodeId);
+	CloudNode node = this.getNode(nodeId);
 	NodeUpdater upgrader = NodeUpgraderFactory.getInstance(nodeId);
 	upgrader.update(node);
     }
@@ -243,7 +243,7 @@ public class NPMImpl implements NodePoolManager {
 	List<Thread> trds = new ArrayList<Thread>();
 	List<NodeDestroyer> destroyers = new ArrayList<NodeDestroyer>();
 
-	for (Node node : this.getNodes()) {
+	for (CloudNode node : this.getNodes()) {
 	    NodeDestroyer destroyer = new NodeDestroyer(node, this.cloudProvider);
 	    Thread trd = new Thread(destroyer);
 	    destroyers.add(destroyer);

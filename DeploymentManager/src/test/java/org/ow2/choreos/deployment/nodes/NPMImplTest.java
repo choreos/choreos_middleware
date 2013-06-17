@@ -12,7 +12,7 @@ import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderMocks;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 public class NPMImplTest {
@@ -30,9 +30,9 @@ public class NPMImplTest {
 
 	NodePoolManager npm = new NPMImpl(cp, creator, pool);
 
-	Node createdNode = npm.createNode(new NodeSpec());
+	CloudNode createdNode = npm.createNode(new NodeSpec());
 	assertTrue(isNodeOK(createdNode));
-	Node fromRegNode = reg.getNode(createdNode.getId());
+	CloudNode fromRegNode = reg.getNode(createdNode.getId());
 	assertTrue(isNodeOK(fromRegNode));
 	assertEquals(fromRegNode, createdNode);
     }
@@ -50,9 +50,9 @@ public class NPMImplTest {
 
 	NodePoolManager npm = new NPMImpl(cp, creator, pool);
 
-	Node createdNode = npm.createNode(new NodeSpec());
+	CloudNode createdNode = npm.createNode(new NodeSpec());
 	assertTrue(isNodeOK(createdNode));
-	Node fromRegNode = reg.getNode(createdNode.getId());
+	CloudNode fromRegNode = reg.getNode(createdNode.getId());
 	assertTrue(isNodeOK(fromRegNode));
 	assertEquals(fromRegNode, createdNode);
 
@@ -72,7 +72,7 @@ public class NPMImplTest {
 	IdlePool pool1 = IdlePool.getCleanInstance(N, creator1);
 	NodePoolManager npm1 = new NPMImpl(cp1, creator1, pool1);
 
-	Node createdNode = npm1.createNode(new NodeSpec());
+	CloudNode createdNode = npm1.createNode(new NodeSpec());
 	assertTrue(isNodeOK(createdNode));
 
 	CloudProvider cp2 = CloudProviderMocks.getGoodMock();
@@ -81,12 +81,12 @@ public class NPMImplTest {
 	IdlePool pool2 = IdlePool.getCleanInstance(N, creator2);
 	NodePoolManager npm2 = new NPMImpl(cp2, creator2, pool2);
 
-	Node fromOtherNPM = npm2.getNode(createdNode.getId());
+	CloudNode fromOtherNPM = npm2.getNode(createdNode.getId());
 	assertTrue(isNodeOK(fromOtherNPM));
 	assertEquals(fromOtherNPM, createdNode);
     }
 
-    private boolean isNodeOK(Node node) {
+    private boolean isNodeOK(CloudNode node) {
 
 	return (node != null) && (node.getId() != null) && (!node.getId().isEmpty());
     }

@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -37,7 +37,7 @@ public class FixedCloudProviderTest {
 	DeploymentManagerConfiguration.set("FIXED_VM_TYPES", "SMALL");
 	DeploymentManagerConfiguration.set("MAPPER_POLICY", "ANY_FIT");
 	CloudProvider cp = new FixedCloudProvider();
-	Node node = cp.createOrUseExistingNode(new NodeSpec());
+	CloudNode node = cp.createOrUseExistingNode(new NodeSpec());
 
 	assertTrue(node.getHostname() != null && !node.getHostname().isEmpty());
 
@@ -57,11 +57,11 @@ public class FixedCloudProviderTest {
 	DeploymentManagerConfiguration.set("MAPPER_POLICY", "ANY_FIT");
 
 	CloudProvider cp = new FixedCloudProvider();
-	List<Node> nodes = cp.getNodes();
+	List<CloudNode> nodes = cp.getNodes();
 	assertEquals(2, nodes.size());
 
-	Node node0 = nodes.get(0);
-	Node node1 = nodes.get(1);
+	CloudNode node0 = nodes.get(0);
+	CloudNode node1 = nodes.get(1);
 
 	assertTrue(node0.getId().equals("0") || node0.getId().equals("1"));
 	assertTrue(node1.getId().equals("0") || node1.getId().equals("1"));

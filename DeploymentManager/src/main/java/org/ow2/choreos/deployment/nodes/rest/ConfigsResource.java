@@ -25,7 +25,7 @@ import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 
 @Path("nodes/configs")
 public class ConfigsResource {
@@ -64,7 +64,7 @@ public class ConfigsResource {
 	if (config == null || config.getService() == null)
 	    return Response.status(Status.BAD_REQUEST).build();
 
-	List<Node> nodes;
+	List<CloudNode> nodes;
 	try {
 	    nodes = npm.prepareDeployment(config);
 	} catch (PrepareDeploymentFailedException e) {
@@ -76,7 +76,7 @@ public class ConfigsResource {
 
 	// TODO: how to return all the nodes?
 
-	Node node = nodes.get(0);
+	CloudNode node = nodes.get(0);
 	UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
 	uriBuilder = uriBuilder.path(NodesResource.class).path(node.getId());
 	URI uri = uriBuilder.build();

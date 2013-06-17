@@ -9,7 +9,7 @@ import java.util.List;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 /**
@@ -25,14 +25,14 @@ public interface CloudProvider {
 
     public String getProviderName();
 
-    public Node createNode(NodeSpec nodeSpec) throws NodeNotCreatedException;
+    public CloudNode createNode(NodeSpec nodeSpec) throws NodeNotCreatedException;
 
-    public Node getNode(String nodeId) throws NodeNotFoundException;
+    public CloudNode getNode(String nodeId) throws NodeNotFoundException;
 
-    public List<Node> getNodes();
+    public List<CloudNode> getNodes();
 
     public void destroyNode(String id) throws NodeNotDestroyed, NodeNotFoundException;
 
-    public Node createOrUseExistingNode(NodeSpec nodeSpec) throws NodeNotCreatedException;
+    public CloudNode createOrUseExistingNode(NodeSpec nodeSpec) throws NodeNotCreatedException;
 
 }

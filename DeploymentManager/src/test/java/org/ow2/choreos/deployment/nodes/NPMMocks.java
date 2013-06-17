@@ -20,18 +20,18 @@ import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 public class NPMMocks {
 
     public static NodePoolManager getMock() throws NodeNotFoundException {
 
-	Node node1 = createNode("1", "192.168.122.14", "choreos1", "SMALL");
-	Node node2 = createNode("2", "192.168.122.160", "choreos2", "SMALL");
-	Node node3 = createNode("3", "192.168.122.182", "choreos3", "MEDIUM");
+	CloudNode node1 = createNode("1", "192.168.122.14", "choreos1", "SMALL");
+	CloudNode node2 = createNode("2", "192.168.122.160", "choreos2", "SMALL");
+	CloudNode node3 = createNode("3", "192.168.122.182", "choreos3", "MEDIUM");
 
-	List<Node> nodes = new ArrayList<Node>();
+	List<CloudNode> nodes = new ArrayList<CloudNode>();
 	nodes.add(node1);
 	nodes.add(node2);
 	nodes.add(node3);
@@ -49,7 +49,7 @@ public class NPMMocks {
 	NodePoolManager npmMock = new NodePoolManager() {
 
 	    AtomicInteger counter = new AtomicInteger();
-	    List<Node> nodes = new ArrayList<Node>();
+	    List<CloudNode> nodes = new ArrayList<CloudNode>();
 
 	    @Override
 	    public void updateNode(String nodeId) throws NodeNotUpdatedException, NodeNotFoundException {
@@ -57,13 +57,13 @@ public class NPMMocks {
 	    }
 
 	    @Override
-	    public List<Node> getNodes() {
+	    public List<CloudNode> getNodes() {
 		return nodes;
 	    }
 
 	    @Override
-	    public Node getNode(String nodeId) throws NodeNotFoundException {
-		for (Node node : nodes) {
+	    public CloudNode getNode(String nodeId) throws NodeNotFoundException {
+		for (CloudNode node : nodes) {
 		    if (nodeId.equals(node.getId())) {
 			return node;
 		    }
@@ -82,9 +82,9 @@ public class NPMMocks {
 	    }
 
 	    @Override
-	    public Node createNode(NodeSpec NodeSpec) throws NodeNotCreatedException {
+	    public CloudNode createNode(NodeSpec NodeSpec) throws NodeNotCreatedException {
 
-		Node n = new Node();
+		CloudNode n = new CloudNode();
 		try {
 		    Thread.sleep(200);
 		} catch (InterruptedException e) {
@@ -97,7 +97,7 @@ public class NPMMocks {
 	    }
 
 	    @Override
-	    public List<Node> prepareDeployment(DeploymentRequest config) throws PrepareDeploymentFailedException {
+	    public List<CloudNode> prepareDeployment(DeploymentRequest config) throws PrepareDeploymentFailedException {
 		throw new NotImplementedException();
 	    }
 	};
@@ -105,9 +105,9 @@ public class NPMMocks {
 	return npmMock;
     }
 
-    private static Node createNode(String id, String ip, String host, String type) {
+    private static CloudNode createNode(String id, String ip, String host, String type) {
 
-	Node node = new Node();
+	CloudNode node = new CloudNode();
 	node.setId(id);
 	node.setIp(ip);
 	node.setHostname(host);

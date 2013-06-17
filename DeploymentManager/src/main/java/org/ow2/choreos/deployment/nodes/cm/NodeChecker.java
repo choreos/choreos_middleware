@@ -4,7 +4,7 @@
 
 package org.ow2.choreos.deployment.nodes.cm;
 
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 
 public class NodeChecker {
 
@@ -16,7 +16,7 @@ public class NodeChecker {
      * @param node
      * @throws NodeNotOKException
      */
-    public void checkAndPrepareNode(Node node) throws NodeNotOKException {
+    public void checkAndPrepareNode(CloudNode node) throws NodeNotOKException {
 	;
     }
 
@@ -26,7 +26,7 @@ public class NodeChecker {
      * @param node
      * @return
      */
-    public boolean checkNodeOnNodesList(Node node) {
+    public boolean checkNodeOnNodesList(CloudNode node) {
 	return true;
     }
 

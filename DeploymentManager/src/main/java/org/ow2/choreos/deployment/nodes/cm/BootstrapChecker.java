@@ -4,7 +4,7 @@
 
 package org.ow2.choreos.deployment.nodes.cm;
 
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.utils.SshCommandFailed;
 import org.ow2.choreos.utils.SshNotConnected;
 import org.ow2.choreos.utils.SshUtil;
@@ -23,7 +23,7 @@ public class BootstrapChecker {
 
     private static final int SSH_TIMEOUT_IN_SECONDS = 250;
 
-    public boolean isBootstrapped(Node node) {
+    public boolean isBootstrapped(CloudNode node) {
 
 	SshWaiter sshWaiter = new SshWaiter();
 	SshUtil ssh = null;

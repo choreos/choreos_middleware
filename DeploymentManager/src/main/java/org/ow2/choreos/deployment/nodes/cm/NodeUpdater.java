@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.utils.SshCommandFailed;
 import org.ow2.choreos.utils.SshUtil;
 
@@ -46,7 +46,7 @@ public class NodeUpdater {
      *             if chef-client ends in error or if could not connect into the
      *             node
      */
-    public void update(Node node) throws NodeNotUpdatedException {
+    public void update(CloudNode node) throws NodeNotUpdatedException {
 
 	SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
 	ChefSoloRunner runner = new ChefSoloRunner(ssh, node.getId());
@@ -74,7 +74,7 @@ public class NodeUpdater {
 	}
     }
 
-    private void fail(Node node) throws NodeNotUpdatedException {
+    private void fail(CloudNode node) throws NodeNotUpdatedException {
 	String message = "chef-client returned an error exit status on node " + node.toString();
 	logger.error(message);
 	throw new NodeNotUpdatedException(node.getId());

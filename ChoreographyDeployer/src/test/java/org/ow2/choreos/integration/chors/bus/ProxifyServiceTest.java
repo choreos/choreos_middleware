@@ -26,7 +26,7 @@ import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.client.NodesClient;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.selectors.ObjectCreationException;
 import org.ow2.choreos.services.ServiceNotCreatedException;
@@ -93,7 +93,7 @@ public class ProxifyServiceTest {
     private void deployService() throws ServiceNotCreatedException, NodeNotUpdatedException, NodeNotFoundException {
 	ServiceSpec airlineSpec = models.getAirlineSpec();
 	serviceInstance = sd.createService((DeployableServiceSpec) airlineSpec).getInstances().get(0);
-	Node node = serviceInstance.getNode();
+	CloudNode node = serviceInstance.getNode();
 	npm.updateNode(node.getId());
     }
 

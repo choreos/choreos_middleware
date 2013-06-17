@@ -23,7 +23,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.stubbing.OngoingStubbing;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -41,9 +41,9 @@ public class IdlePoolTest {
 
 	int N = 10;
 	nodeCreator = mock(NodeCreator.class);
-	OngoingStubbing<Node> ongoingStubbing = when(nodeCreator.create(any(NodeSpec.class)));
+	OngoingStubbing<CloudNode> ongoingStubbing = when(nodeCreator.create(any(NodeSpec.class)));
 	for (int i = 0; i < N; i++) {
-	    Node node = new Node();
+	    CloudNode node = new CloudNode();
 	    node.setId("node" + i);
 	    ongoingStubbing = ongoingStubbing.thenReturn(node);
 	}
@@ -59,7 +59,7 @@ public class IdlePoolTest {
 
 	Thread.sleep(300);
 
-	Set<Node> idlePool = pool.getIdleNodes();
+	Set<CloudNode> idlePool = pool.getIdleNodes();
 	assertEquals(howManyVMs, idlePool.size());
     }
 
@@ -72,7 +72,7 @@ public class IdlePoolTest {
 	pool.fillPool();
 
 	while (true) {
-	    Set<Node> idlePool = pool.getIdleNodes();
+	    Set<CloudNode> idlePool = pool.getIdleNodes();
 	    if (idlePool.size() >= N)
 		break; // pas the test
 	    Thread.sleep(50);
@@ -93,7 +93,7 @@ public class IdlePoolTest {
 	}
 
 	while (true) {
-	    Set<Node> idlePool = pool.getIdleNodes();
+	    Set<CloudNode> idlePool = pool.getIdleNodes();
 	    if (idlePool.size() >= N)
 		break; // pas the test
 	    Thread.sleep(50);
@@ -118,10 +118,10 @@ public class IdlePoolTest {
 	Thread.sleep(200);
 
 	Iterator<PoolClient> it = clients.iterator();
-	Node previousNode = it.next().retrievedNode;
+	CloudNode previousNode = it.next().retrievedNode;
 	assertNotNull(previousNode);
 	while (it.hasNext()) {
-	    Node node = it.next().retrievedNode;
+	    CloudNode node = it.next().retrievedNode;
 	    assertNotNull(node);
 	    assertNotSame(previousNode, node);
 	    previousNode = node;
@@ -142,7 +142,7 @@ public class IdlePoolTest {
 	}
 
 	while (true) {
-	    Set<Node> idlePool = pool.getIdleNodes();
+	    Set<CloudNode> idlePool = pool.getIdleNodes();
 	    if (idlePool.size() >= N)
 		break; // pas the test
 	    Thread.sleep(50);
@@ -154,7 +154,7 @@ public class IdlePoolTest {
 
 	int N = 5;
 	IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
-	Node node = pool.retriveNode();
+	CloudNode node = pool.retriveNode();
 	assertNotNull(node);
 	assertNotNull(node.getId());
 	assertFalse(node.getId().isEmpty());
@@ -170,11 +170,11 @@ public class IdlePoolTest {
 	Thread.sleep(200);
 
 	List<String> nodes = new ArrayList<String>();
-	for (Node n : pool.getIdleNodes()) {
+	for (CloudNode n : pool.getIdleNodes()) {
 	    nodes.add(n.getId());
 	}
 
-	Node node = pool.retriveNode();
+	CloudNode node = pool.retriveNode();
 	assertNotNull(node);
 	assertNotNull(node.getId());
 	assertFalse(node.getId().isEmpty());
@@ -197,10 +197,10 @@ public class IdlePoolTest {
 	Thread.sleep(200);
 
 	Iterator<PoolClient> it = clients.iterator();
-	Node previousNode = it.next().retrievedNode;
+	CloudNode previousNode = it.next().retrievedNode;
 	assertNotNull(previousNode);
 	while (it.hasNext()) {
-	    Node node = it.next().retrievedNode;
+	    CloudNode node = it.next().retrievedNode;
 	    assertNotNull(node);
 	    assertNotSame(previousNode, node);
 	    previousNode = node;
@@ -224,7 +224,7 @@ public class IdlePoolTest {
     private class PoolClient implements Runnable {
 
 	IdlePool pool;
-	Node retrievedNode;
+	CloudNode retrievedNode;
 
 	public PoolClient(IdlePool pool) {
 	    this.pool = pool;

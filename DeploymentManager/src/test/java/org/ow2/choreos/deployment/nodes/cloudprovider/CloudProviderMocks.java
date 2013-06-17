@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ow2.choreos.nodes.NodeNotCreatedException;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 public class CloudProviderMocks {
@@ -28,17 +28,17 @@ public class CloudProviderMocks {
      */
     public static CloudProvider getGoodMock() throws Exception {
 
-	Node node1 = new Node();
+	CloudNode node1 = new CloudNode();
 	node1.setId("1");
 	node1.setIp("192.168.0.11");
-	Node node2 = new Node();
+	CloudNode node2 = new CloudNode();
 	node2.setId("2");
 	node2.setIp("192.168.0.12");
-	Node node3 = new Node();
+	CloudNode node3 = new CloudNode();
 	node3.setId("3");
 	node3.setIp("192.168.0.13");
 
-	List<Node> initialNodes = new ArrayList<Node>();
+	List<CloudNode> initialNodes = new ArrayList<CloudNode>();
 	initialNodes.add(node1);
 	initialNodes.add(node2);
 
@@ -62,14 +62,14 @@ public class CloudProviderMocks {
      */
     public static CloudProvider getBadMock() throws Exception {
 
-	Node node1 = new Node();
+	CloudNode node1 = new CloudNode();
 	node1.setId("1");
 	node1.setIp("192.168.0.11");
-	Node node2 = new Node();
+	CloudNode node2 = new CloudNode();
 	node2.setId("2");
 	node2.setIp("192.168.0.12");
 
-	List<Node> initialNodes = new ArrayList<Node>();
+	List<CloudNode> initialNodes = new ArrayList<CloudNode>();
 	initialNodes.add(node1);
 	initialNodes.add(node2);
 
@@ -94,17 +94,17 @@ public class CloudProviderMocks {
      */
     public static CloudProvider getIntermitentMock() throws Exception {
 
-	Node node1 = new Node();
+	CloudNode node1 = new CloudNode();
 	node1.setId("1");
 	node1.setIp("192.168.0.11");
-	Node node2 = new Node();
+	CloudNode node2 = new CloudNode();
 	node2.setId("2");
 	node2.setIp("192.168.0.12");
-	Node node3 = new Node();
+	CloudNode node3 = new CloudNode();
 	node3.setId("3");
 	node3.setIp("192.168.0.13");
 
-	List<Node> initialNodes = new ArrayList<Node>();
+	List<CloudNode> initialNodes = new ArrayList<CloudNode>();
 	initialNodes.add(node1);
 	initialNodes.add(node2);
 

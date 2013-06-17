@@ -1,10 +1,10 @@
 package org.ow2.choreos.services.datamodel;
 
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 
 public class NativeUriRetriever {
 
-    private Node node;
+    private CloudNode node;
     private DeployableServiceSpec spec;
     private String instanceId;
 

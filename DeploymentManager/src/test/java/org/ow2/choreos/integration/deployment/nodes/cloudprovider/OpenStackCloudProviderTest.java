@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.deployment.nodes.cloudprovider.OpenStackKeystoneCloudProvider;
 import org.ow2.choreos.integration.deployment.nodes.BaseTest;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.tests.IntegrationTest;
 
@@ -66,11 +66,11 @@ public class OpenStackCloudProviderTest extends BaseTest {
 	if (bTestNodesList) {
 	    // List nodes
 	    System.out.println("TEST: List Nodes from OpenStack\n");
-	    List<Node> nodes = infra.getNodes();
+	    List<CloudNode> nodes = infra.getNodes();
 
 	    System.out.println("Node Count:" + nodes.size());
 
-	    for (Node node : nodes) {
+	    for (CloudNode node : nodes) {
 		System.out.println("ID: " + node.getId());
 		System.out.println("SO: " + node.getSo());
 		System.out.println("Hostname: " + node.getHostname());

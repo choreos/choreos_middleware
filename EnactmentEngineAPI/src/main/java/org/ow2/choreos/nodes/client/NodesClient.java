@@ -22,7 +22,7 @@ import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 /**
@@ -65,15 +65,15 @@ public class NodesClient implements NodePoolManager {
     }
 
     @Override
-    public Node createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
+    public CloudNode createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
 
 	WebClient client = setupClient();
 	client.path("nodes");
 	client.type(MediaType.APPLICATION_XML);
-	Node node = null;
+	CloudNode node = null;
 
 	try {
-	    node = client.post(nodeSpec, Node.class);
+	    node = client.post(nodeSpec, CloudNode.class);
 	} catch (WebApplicationException e) {
 	    throw new NodeNotCreatedException();
 	}
@@ -82,19 +82,19 @@ public class NodesClient implements NodePoolManager {
     }
 
     @Override
-    public List<Node> getNodes() {
+    public List<CloudNode> getNodes() {
 	throw new NotImplementedException();
     }
 
     @Override
-    public Node getNode(String nodeId) throws NodeNotFoundException {
+    public CloudNode getNode(String nodeId) throws NodeNotFoundException {
 
 	WebClient client = setupClient();
 	client.path("nodes/" + nodeId);
-	Node node = null;
+	CloudNode node = null;
 
 	try {
-	    node = client.get(Node.class);
+	    node = client.get(CloudNode.class);
 	} catch (WebApplicationException e) {
 	    throw new NodeNotFoundException(nodeId);
 	}
@@ -122,19 +122,19 @@ public class NodesClient implements NodePoolManager {
     }
 
     @Override
-    public List<Node> prepareDeployment(DeploymentRequest config) throws PrepareDeploymentFailedException {
+    public List<CloudNode> prepareDeployment(DeploymentRequest config) throws PrepareDeploymentFailedException {
 
 	WebClient client = setupClient();
 	client.path("nodes/configs");
-	Node node = null;
+	CloudNode node = null;
 
 	try {
-	    node = client.post(config, Node.class);
+	    node = client.post(config, CloudNode.class);
 	} catch (WebApplicationException e) {
 	    throw new PrepareDeploymentFailedException(config.getRecipeName());
 	}
 
-	List<Node> resultList = new ArrayList<Node>();
+	List<CloudNode> resultList = new ArrayList<CloudNode>();
 	resultList.add(node);
 	return resultList;
     }

@@ -13,7 +13,7 @@ import java.util.Map;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 /**
@@ -29,11 +29,11 @@ import org.ow2.choreos.nodes.datamodel.NodeSpec;
 public class FixedCloudProvider implements CloudProvider {
 
     public static final String FIXED_CLOUD_PROVIDER = "Fixed Provider";
-    private Map<String, Node> nodes = null;
+    private Map<String, CloudNode> nodes = null;
 
     public FixedCloudProvider() {
 
-	nodes = new HashMap<String, Node>();
+	nodes = new HashMap<String, CloudNode>();
 
 	String[] ips = DeploymentManagerConfiguration.getMultiple("FIXED_VM_IPS");
 	String[] hosts = DeploymentManagerConfiguration.getMultiple("FIXED_VM_HOSTNAMES");
@@ -45,18 +45,18 @@ public class FixedCloudProvider implements CloudProvider {
 		&& (types.length == ips.length)) {
 	    int node_id = 0;
 	    for (int i = 0; i < ips.length; i++, node_id++) {
-		Node node = new Node();
+		CloudNode node = new CloudNode();
 		String id = setNode(ips[i], hosts[i], users[i], keys[i], types[i], node, node_id);
 		addNode(node, id);
 	    }
 	}
     }
 
-    private void addNode(Node node, String id) {
+    private void addNode(CloudNode node, String id) {
 	nodes.put(id, node);
     }
 
-    private String setNode(String ip, String host, String user, String key, String type, Node node, int id) {
+    private String setNode(String ip, String host, String user, String key, String type, CloudNode node, int id) {
 	node.setIp(ip);
 	node.setHostname(host);
 	node.setUser(user);
@@ -81,20 +81,20 @@ public class FixedCloudProvider implements CloudProvider {
 	    return 256;
     }
 
-    public Node getNode(String nodeId) throws NodeNotFoundException {
+    public CloudNode getNode(String nodeId) throws NodeNotFoundException {
 	if (nodes.containsKey(nodeId))
 	    return nodes.get(nodeId);
 	throw new NodeNotFoundException(nodeId);
     }
 
-    public List<Node> getNodes() {
-	List<Node> theList = new ArrayList<Node>();
+    public List<CloudNode> getNodes() {
+	List<CloudNode> theList = new ArrayList<CloudNode>();
 	theList.addAll(nodes.values());
 	return theList;
     }
 
     @Override
-    public Node createOrUseExistingNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
+    public CloudNode createOrUseExistingNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
 
 	if (nodes != null && !nodes.keySet().isEmpty()) {
 	    Iterator<String> it = nodes.keySet().iterator();
@@ -123,7 +123,7 @@ public class FixedCloudProvider implements CloudProvider {
     }
 
     @Override
-    public Node createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
+    public CloudNode createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
 
 	throw new UnsupportedOperationException("FixedCloudProvider cannot create new nodes");
     }

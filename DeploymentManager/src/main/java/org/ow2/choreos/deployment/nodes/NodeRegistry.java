@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.ow2.choreos.nodes.NodeNotFoundException;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 
 /**
  * Local node registry.
@@ -24,7 +24,7 @@ public class NodeRegistry {
 
     private static NodeRegistry instance = new NodeRegistry();
 
-    private Map<String, Node> nodes = new ConcurrentHashMap<String, Node>();
+    private Map<String, CloudNode> nodes = new ConcurrentHashMap<String, CloudNode>();
 
     private NodeRegistry() {
 
@@ -34,12 +34,12 @@ public class NodeRegistry {
 	return instance;
     }
 
-    public synchronized void putNode(Node node) {
+    public synchronized void putNode(CloudNode node) {
 	this.nodes.put(node.getId(), node);
     }
 
-    public Node getNode(String nodeId) throws NodeNotFoundException {
-	Node node = this.nodes.get(nodeId);
+    public CloudNode getNode(String nodeId) throws NodeNotFoundException {
+	CloudNode node = this.nodes.get(nodeId);
 	if (node == null) {
 	    throw new NodeNotFoundException(nodeId);
 	}
@@ -50,8 +50,8 @@ public class NodeRegistry {
 	this.nodes.remove(nodeId);
     }
 
-    public List<Node> getNodes() {
-	return new ArrayList<Node>(this.nodes.values());
+    public List<CloudNode> getNodes() {
+	return new ArrayList<CloudNode>(this.nodes.values());
     }
 
     public void clear() {

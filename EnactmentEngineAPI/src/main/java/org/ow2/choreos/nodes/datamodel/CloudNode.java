@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class Node {
+public class CloudNode {
 
     private String id;
     private Integer cpus;
@@ -25,7 +25,7 @@ public class Node {
     private String image;
     private Integer state;
 
-    public Node() {
+    public CloudNode() {
 	
     }
 
@@ -156,7 +156,7 @@ public class Node {
 	    return false;
 	if (getClass() != obj.getClass())
 	    return false;
-	Node other = (Node) obj;
+	CloudNode other = (CloudNode) obj;
 	if (hostname == null) {
 	    if (other.hostname != null)
 		return false;

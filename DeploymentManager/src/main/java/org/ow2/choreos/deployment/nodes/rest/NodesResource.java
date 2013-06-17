@@ -30,7 +30,7 @@ import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 @Path("nodes")
@@ -62,7 +62,7 @@ public class NodesResource {
 
 	logger.debug("Request to create node");
 
-	Node node = null;
+	CloudNode node = null;
 	try {
 	    node = npm.createNode(nodeSpec);
 	} catch (NodeNotCreatedException e) {
@@ -87,7 +87,7 @@ public class NodesResource {
      * @return HTTP code 200 (OK) Body: representation of the retrieved nodes
      */
     @GET
-    public List<Node> getNodes() {
+    public List<CloudNode> getNodes() {
 	return npm.getNodes();
     }
 
@@ -104,21 +104,18 @@ public class NodesResource {
     @GET
     @Path("{node_id:.+}")
     public Response getNode(@PathParam("node_id") String nodeId) {
-
 	logger.debug("Request to get node " + nodeId);
-
 	Response response;
 	try {
-	    Node node = npm.getNode(nodeId);
+	    CloudNode node = npm.getNode(nodeId);
 	    response = Response.ok(node).build();
 	} catch (NodeNotFoundException e) {
 	    logger.error("Node not found", e);
 	    response = Response.status(Status.NOT_FOUND).build();
 	}
-
 	return response;
     }
-
+    
     /**
      * DELETE /nodes/{nodeId}
      * 
@@ -183,20 +180,20 @@ public class NodesResource {
      */
     @POST
     @Path("{node_id:.+}/upgrade")
-    public Response upgradeNode(@PathParam("node_id") String nodeId) {
+    public Response updateNode(@PathParam("node_id") String nodeId) {
 
-	logger.debug("Request to upgrade node " + nodeId);
+	logger.debug("Request to update node " + nodeId);
 
 	Response response;
 	try {
 	    npm.updateNode(nodeId);
-	    logger.info("Node " + nodeId + " upgraded");
+	    logger.info("Node " + nodeId + " updated");
 	    response = Response.status(Status.OK).build();
 	} catch (NodeNotUpdatedException e) {
-	    logger.error("Node " + nodeId + " not upgraded", e);
+	    logger.error("Node " + nodeId + " not updated", e);
 	    response = Response.status(Status.NOT_FOUND).build();
 	} catch (NodeNotFoundException e) {
-	    logger.error("Node " + nodeId + " not upgraded", e);
+	    logger.error("Node " + nodeId + " not updated", e);
 	    response = Response.status(Status.INTERNAL_SERVER_ERROR).build();
 	}
 
