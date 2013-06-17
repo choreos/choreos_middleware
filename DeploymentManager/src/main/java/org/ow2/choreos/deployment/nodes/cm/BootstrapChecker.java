@@ -21,13 +21,14 @@ import com.jcraft.jsch.JSchException;
  */
 public class BootstrapChecker {
 
+    private static final int SSH_TIMEOUT_IN_SECONDS = 250;
+
     public boolean isBootstrapped(Node node) {
 
 	SshWaiter sshWaiter = new SshWaiter();
 	SshUtil ssh = null;
 	try {
-	    ssh = sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(),
-		    NodeBootstrapper.SSH_TIMEOUT_IN_SECONDS);
+	    ssh = sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), SSH_TIMEOUT_IN_SECONDS);
 	} catch (SshNotConnected e) {
 	    return false;
 	}
