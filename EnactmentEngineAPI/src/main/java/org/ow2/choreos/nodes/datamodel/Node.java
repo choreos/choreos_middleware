@@ -29,36 +29,6 @@ public class Node {
 	
     }
 
-    public Node(NodeRestRepresentation rest) {
-	cpus = rest.cpus;
-	hostname = rest.hostname;
-	id = rest.id;
-	image = rest.image;
-	ip = rest.ip;
-	ram = rest.ram;
-	storage = rest.storage;
-	so = rest.so;
-	zone = rest.zone;
-	state = rest.state;
-    }
-
-    public NodeRestRepresentation getRestRepresentation() {
-	NodeRestRepresentation rest = new NodeRestRepresentation();
-
-	rest.cpus = cpus;
-	rest.hostname = hostname;
-	rest.id = id;
-	rest.image = image;
-	rest.ip = ip;
-	rest.ram = ram;
-	rest.storage = storage;
-	rest.so = so;
-	rest.zone = zone;
-	rest.state = state;
-
-	return rest;
-    }
-
     static Pattern IP_PATTERN = Pattern.compile("(\\d{1,4}\\.){3}\\d{1,4}");
 
     public boolean hasIp() {

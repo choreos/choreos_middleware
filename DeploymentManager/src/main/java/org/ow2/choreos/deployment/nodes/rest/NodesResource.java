@@ -6,7 +6,6 @@ package org.ow2.choreos.deployment.nodes.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -32,7 +31,6 @@ import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.Node;
-import org.ow2.choreos.nodes.datamodel.NodeRestRepresentation;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 @Path("nodes")
@@ -77,8 +75,7 @@ public class NodesResource {
 	UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
 	uriBuilder = uriBuilder.path(NodesResource.class).path(node.getId());
 	URI uri = uriBuilder.build();
-	NodeRestRepresentation nodeRest = new NodeRestRepresentation(node);
-	return Response.created(uri).entity(nodeRest).build();
+	return Response.created(uri).entity(node).build();
     }
 
     /**
@@ -90,15 +87,8 @@ public class NodesResource {
      * @return HTTP code 200 (OK) Body: representation of the retrieved nodes
      */
     @GET
-    public List<NodeRestRepresentation> getNodes() {
-
-	logger.debug("Request to get nodes");
-
-	List<NodeRestRepresentation> restNodeList = new ArrayList<NodeRestRepresentation>();
-	for (Node node : npm.getNodes()) {
-	    restNodeList.add(node.getRestRepresentation());
-	}
-	return restNodeList;
+    public List<Node> getNodes() {
+	return npm.getNodes();
     }
 
     /**
@@ -120,8 +110,7 @@ public class NodesResource {
 	Response response;
 	try {
 	    Node node = npm.getNode(nodeId);
-	    NodeRestRepresentation nodeRest = new NodeRestRepresentation(node);
-	    response = Response.ok(nodeRest).build();
+	    response = Response.ok(node).build();
 	} catch (NodeNotFoundException e) {
 	    logger.error("Node not found", e);
 	    response = Response.status(Status.NOT_FOUND).build();

@@ -15,15 +15,14 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
-import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
+import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
-import org.ow2.choreos.nodes.datamodel.NodeRestRepresentation;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 /**
@@ -71,15 +70,15 @@ public class NodesClient implements NodePoolManager {
 	WebClient client = setupClient();
 	client.path("nodes");
 	client.type(MediaType.APPLICATION_XML);
-	NodeRestRepresentation nodeRest = null;
+	Node node = null;
 
 	try {
-	    nodeRest = client.post(nodeSpec, NodeRestRepresentation.class);
+	    node = client.post(nodeSpec, Node.class);
 	} catch (WebApplicationException e) {
 	    throw new NodeNotCreatedException();
 	}
 
-	return new Node(nodeRest);
+	return node;
     }
 
     @Override
@@ -92,15 +91,15 @@ public class NodesClient implements NodePoolManager {
 
 	WebClient client = setupClient();
 	client.path("nodes/" + nodeId);
-	NodeRestRepresentation nodeRest = null;
+	Node node = null;
 
 	try {
-	    nodeRest = client.get(NodeRestRepresentation.class);
+	    node = client.get(Node.class);
 	} catch (WebApplicationException e) {
 	    throw new NodeNotFoundException(nodeId);
 	}
 
-	return new Node(nodeRest);
+	return node;
     }
 
     @Override
@@ -127,16 +126,16 @@ public class NodesClient implements NodePoolManager {
 
 	WebClient client = setupClient();
 	client.path("nodes/configs");
-	NodeRestRepresentation nodeRest = null;
+	Node node = null;
 
 	try {
-	    nodeRest = client.post(config, NodeRestRepresentation.class);
+	    node = client.post(config, Node.class);
 	} catch (WebApplicationException e) {
 	    throw new PrepareDeploymentFailedException(config.getRecipeName());
 	}
 
 	List<Node> resultList = new ArrayList<Node>();
-	resultList.add(new Node(nodeRest));
+	resultList.add(node);
 	return resultList;
     }
 

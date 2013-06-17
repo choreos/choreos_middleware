@@ -15,7 +15,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.deployment.rest.DeploymentManagerServer;
-import org.ow2.choreos.nodes.datamodel.NodeRestRepresentation;
+import org.ow2.choreos.nodes.datamodel.Node;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -40,11 +40,11 @@ public class BaseTest {
 	server.stop();
     }
 
-    protected static NodeRestRepresentation getNodeFromResponse(Response response) {
+    protected static Node getNodeFromResponse(Response response) {
 
 	String location = (String) response.getMetadata().get("Location").get(0);
 	WebClient webClient = WebClient.create(location);
-	return webClient.get(NodeRestRepresentation.class);
+	return webClient.get(Node.class);
     }
 
     /**

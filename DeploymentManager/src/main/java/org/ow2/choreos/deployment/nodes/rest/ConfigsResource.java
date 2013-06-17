@@ -26,7 +26,6 @@ import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.Node;
-import org.ow2.choreos.nodes.datamodel.NodeRestRepresentation;
 
 @Path("nodes/configs")
 public class ConfigsResource {
@@ -81,7 +80,6 @@ public class ConfigsResource {
 	UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
 	uriBuilder = uriBuilder.path(NodesResource.class).path(node.getId());
 	URI uri = uriBuilder.build();
-	NodeRestRepresentation nodeRest = new NodeRestRepresentation(node);
-	return Response.created(uri).entity(nodeRest).build();
+	return Response.created(uri).entity(node).build();
     }
 }
