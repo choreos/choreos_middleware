@@ -11,23 +11,16 @@ import java.util.regex.Pattern;
 
 public class ChefNode {
 
-    private String name;
-    private String environment;
-    private String fqdn;
     private String ip;
     private List<String> runList;
-    private List<String> roles;
-    private List<String> recipes;
-    private String platform;
 
     /**
      * 
      * @param recipe
-     *            in the format 'cookbook::recipe'
+     *            in the format 'cookbook::recipe' ot 'cookbook'
      * @return
      */
     public boolean hasRecipeOnRunlist(String recipe) {
-
 	for (String entry : runList) {
 	    if (entry.contains(recipe))
 		return true;
@@ -46,30 +39,6 @@ public class ChefNode {
 	runList.add("recipe[" + recipeName + "]");
     }
 
-    public String getName() {
-	return name;
-    }
-
-    public void setName(String name) {
-	this.name = name;
-    }
-
-    public String getEnvironment() {
-	return environment;
-    }
-
-    public void setEnvironment(String environment) {
-	this.environment = environment;
-    }
-
-    public String getFqdn() {
-	return fqdn;
-    }
-
-    public void setFqdn(String fqdn) {
-	this.fqdn = fqdn;
-    }
-
     public String getIp() {
 	return ip;
     }
@@ -86,36 +55,12 @@ public class ChefNode {
 	this.runList = runList;
     }
 
-    public List<String> getRoles() {
-	return roles;
-    }
-
-    public void setRoles(List<String> roles) {
-	this.roles = roles;
-    }
-
-    public List<String> getRecipes() {
-	return recipes;
-    }
-
-    public void setRecipes(List<String> recipes) {
-	this.recipes = recipes;
-    }
-
-    public String getPlatform() {
-	return platform;
-    }
-
-    public void setPlatform(String platform) {
-	this.platform = platform;
-    }
-
     @Override
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
 	result = prime * result + ((ip == null) ? 0 : ip.hashCode());
-	result = prime * result + ((name == null) ? 0 : name.hashCode());
+	result = prime * result + ((runList == null) ? 0 : runList.hashCode());
 	return result;
     }
 
@@ -133,18 +78,12 @@ public class ChefNode {
 		return false;
 	} else if (!ip.equals(other.ip))
 	    return false;
-	if (name == null) {
-	    if (other.name != null)
+	if (runList == null) {
+	    if (other.runList != null)
 		return false;
-	} else if (!name.equals(other.name))
+	} else if (!runList.equals(other.runList))
 	    return false;
 	return true;
-    }
-
-    @Override
-    public String toString() {
-	return "ChefNode [name=" + name + ", ip=" + ip + ", runList=" + runList + ", roles=" + roles + ", recipes="
-		+ recipes + "]";
     }
 
     /**
@@ -171,6 +110,11 @@ public class ChefNode {
 	return simpleRunList;
     }
     
+    @Override
+    public String toString() {
+	return "ChefNode [ip=" + ip + ", runList=" + runList + "]";
+    }
+
     public String toJson() {
 	StringBuilder json = new StringBuilder("{ 'run_list' : [ ");
 	for (int i=0; i<runList.size(); i++) {
