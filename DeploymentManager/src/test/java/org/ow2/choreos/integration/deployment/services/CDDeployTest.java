@@ -36,7 +36,7 @@ public class CDDeployTest {
 
     private String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
     private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-    private ServicesManager deployer = new ServicesManagerImpl(npm);
+    private ServicesManager deployer = new ServicesManagerImpl();
 
     private WebClient client;
     private DeployableServiceSpec spec = new DeployableServiceSpec();

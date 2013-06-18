@@ -6,7 +6,6 @@ package org.ow2.choreos.nodes;
 
 import java.util.List;
 
-import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
@@ -75,14 +74,4 @@ public interface NodePoolManager {
      */
     public void updateNode(String nodeId) throws NodeNotUpdatedException, NodeNotFoundException;
 
-    /**
-     * 
-     * @param deploymentRequest
-     *            what must be deployed
-     * @return the representation of the node where the configuration will be
-     *         applied,
-     * @throws PrepareDeploymentFailedException
-     *             if it was not possible to allocate any node
-     */
-    public List<CloudNode> prepareDeployment(DeploymentRequest deploymentRequest) throws PrepareDeploymentFailedException;
 }

@@ -9,19 +9,10 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.commons.lang.NotImplementedException;
-import org.ow2.choreos.nodes.NodeNotCreatedException;
-import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
-import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
-import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
-import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 public class NPMMocks {
 
@@ -41,67 +32,6 @@ public class NPMMocks {
 	when(npmMock.getNode("1")).thenReturn(node1);
 	when(npmMock.getNode("2")).thenReturn(node2);
 	when(npmMock.getNode("3")).thenReturn(node3);
-	return npmMock;
-    }
-
-    public static NodePoolManager getDynamicMock() throws NodeNotCreatedException {
-
-	NodePoolManager npmMock = new NodePoolManager() {
-
-	    AtomicInteger counter = new AtomicInteger();
-	    List<CloudNode> nodes = new ArrayList<CloudNode>();
-
-	    @Override
-	    public void updateNode(String nodeId) throws NodeNotUpdatedException, NodeNotFoundException {
-		throw new NotImplementedException();
-	    }
-
-	    @Override
-	    public List<CloudNode> getNodes() {
-		return nodes;
-	    }
-
-	    @Override
-	    public CloudNode getNode(String nodeId) throws NodeNotFoundException {
-		for (CloudNode node : nodes) {
-		    if (nodeId.equals(node.getId())) {
-			return node;
-		    }
-		}
-		throw new NoSuchElementException();
-	    }
-
-	    @Override
-	    public void destroyNodes() throws NodeNotDestroyed {
-		throw new NotImplementedException();
-	    }
-
-	    @Override
-	    public void destroyNode(String nodeId) throws NodeNotDestroyed, NodeNotFoundException {
-		throw new NotImplementedException();
-	    }
-
-	    @Override
-	    public CloudNode createNode(NodeSpec NodeSpec) throws NodeNotCreatedException {
-
-		CloudNode n = new CloudNode();
-		try {
-		    Thread.sleep(200);
-		} catch (InterruptedException e) {
-		    System.out.println("Exception at sleeping");
-		}
-		String id = Integer.toString(counter.getAndIncrement());
-		n.setId(id);
-		nodes.add(n);
-		return n;
-	    }
-
-	    @Override
-	    public List<CloudNode> prepareDeployment(DeploymentRequest config) throws PrepareDeploymentFailedException {
-		throw new NotImplementedException();
-	    }
-	};
-
 	return npmMock;
     }
 

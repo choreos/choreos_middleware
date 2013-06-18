@@ -10,7 +10,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpdater;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpgraderFactory;
@@ -19,9 +18,7 @@ import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
-import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.utils.Concurrency;
 
@@ -38,16 +35,6 @@ public class NPMImpl implements NodePoolManager {
     private NodeRegistry nodeRegistry;
     private NodeCreator nodeCreator;
     private IdlePool idlePool;
-
-    /**
-     * The CloudProvider used is the one configured in the properties file
-     * 
-     * @return
-     */
-    public static NodePoolManager getNewInstance() {
-	String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
-	return new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-    }
 
     public NPMImpl(CloudProvider provider) {
 
@@ -111,12 +98,6 @@ public class NPMImpl implements NodePoolManager {
 	} else {
 	    return nodeRegistry.getNode(nodeId);
 	}
-    }
-
-    @Override
-    public List<CloudNode> prepareDeployment(DeploymentRequest deploymentRequest) throws PrepareDeploymentFailedException {
-	DeploymentPreparer deploymentPreparer = new DeploymentPreparer();
-	return deploymentPreparer.prepareDeployment(deploymentRequest);
     }
 
     @Override

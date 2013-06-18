@@ -9,9 +9,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
+import org.ow2.choreos.deployment.nodes.DeploymentPreparer;
 import org.ow2.choreos.deployment.services.diff.UpdateAction;
 import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
-import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.services.ServiceNotCreatedException;
@@ -29,11 +29,6 @@ public class ServicesManagerImpl implements ServicesManager {
     private Logger logger = Logger.getLogger(ServicesManagerImpl.class);
 
     private DeployedServicesRegistry registry = DeployedServicesRegistry.getInstance();
-    private NodePoolManager npm;
-
-    public ServicesManagerImpl(NodePoolManager npm) {
-	this.npm = npm;
-    }
 
     @Override
     public DeployableService createService(DeployableServiceSpec serviceSpec) throws ServiceNotCreatedException {
@@ -62,7 +57,8 @@ public class ServicesManagerImpl implements ServicesManager {
 		.setDeploymentManagerURL(DeploymentManagerConfiguration.get("EXTERNAL_DEPLOYMENT_MANAGER_URL"));
 
 	try {
-	    npm.prepareDeployment(deploymentRequest);
+	    DeploymentPreparer deploymentPreparer = new DeploymentPreparer();
+	    deploymentPreparer.prepareDeployment(deploymentRequest);
 	} catch (PrepareDeploymentFailedException e) {
 	    logger.error("Service " + service.getSpec().getUuid() + " not created: " + e.getMessage());
 	} catch (Exception e) {

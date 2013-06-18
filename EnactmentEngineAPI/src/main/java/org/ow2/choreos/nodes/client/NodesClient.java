@@ -18,9 +18,7 @@ import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
-import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 /**
@@ -109,11 +107,6 @@ public class NodesClient implements NodePoolManager {
     
     @Override
     public List<CloudNode> getNodes() {
-	throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public List<CloudNode> prepareDeployment(DeploymentRequest config) throws PrepareDeploymentFailedException {
 	throw new UnsupportedOperationException();
     }
 

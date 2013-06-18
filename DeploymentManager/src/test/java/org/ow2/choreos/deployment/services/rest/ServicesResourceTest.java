@@ -21,7 +21,6 @@ import javax.ws.rs.core.UriInfo;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.services.ServiceInstanceNotFoundException;
 import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServicesManager;
@@ -43,10 +42,9 @@ public class ServicesResourceTest {
     @Before
     public void setUp() throws ServiceNotCreatedException {
 	this.serviceSpec = getSpec();
-	NodePoolManager npmMock = mock(NodePoolManager.class);
 	ServicesManager servicesManagerMock = mock(ServicesManager.class);
 	when(servicesManagerMock.createService(serviceSpec)).thenReturn(getService());
-	this.servicesResources = new ServicesResource(npmMock, servicesManagerMock);
+	this.servicesResources = new ServicesResource(servicesManagerMock);
     }
 
     private DeployableServiceSpec getSpec() {

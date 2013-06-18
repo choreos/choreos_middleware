@@ -21,13 +21,9 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
-import org.ow2.choreos.deployment.nodes.NPMImpl;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.services.ServicesManagerImpl;
-import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.services.ServiceNotDeletedException;
 import org.ow2.choreos.services.ServiceNotCreatedException;
+import org.ow2.choreos.services.ServiceNotDeletedException;
 import org.ow2.choreos.services.ServiceNotFoundException;
 import org.ow2.choreos.services.ServiceNotModifiedException;
 import org.ow2.choreos.services.ServicesManager;
@@ -46,23 +42,15 @@ import org.ow2.choreos.services.datamodel.ServiceInstance;
 public class ServicesResource {
 
     private Logger logger = Logger.getLogger(ServicesResource.class);
-    protected NodePoolManager npm;
     protected ServicesManager servicesManager;
 
     public ServicesResource() {
-	String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
-	NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-	ServicesManager servicesManager = new ServicesManagerImpl(npm);
-	this.fakeConstructor(npm, servicesManager);
+	ServicesManager servicesManager = new ServicesManagerImpl();
+	this.servicesManager = servicesManager;
     }
 
     // constructor created to mock npm and servicesManager in tests
-    public ServicesResource(NodePoolManager npm, ServicesManager servicesManager) {
-	this.fakeConstructor(npm, servicesManager);
-    }
-
-    private void fakeConstructor(NodePoolManager npm, ServicesManager servicesManager) {
-	this.npm = npm;
+    public ServicesResource(ServicesManager servicesManager) {
 	this.servicesManager = servicesManager;
     }
 
