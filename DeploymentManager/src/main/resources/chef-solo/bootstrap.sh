@@ -26,10 +26,8 @@ function install_chef_solo() {
 }
 
 function prepare_node() {
-	install_chef_solo
-
 	if [ ! -d $HOME/chef-solo ]; then
-                mkdir -p $HOME/chef-solo/cookbooks
+        mkdir -p $HOME/chef-solo/cookbooks
 	
 		# create cookbooks repo
 		cd $HOME/chef-solo
@@ -39,9 +37,12 @@ function prepare_node() {
 
 		#create solo.rb file
 		cp /usr/share/chef/solo.rb .
+
+        # configuring cookbook_path in solo.rb
 		chefrepo=$HOME/chef-solo/cookbooks 
 		sed -i "s#^cookbook_path.*\[.*\]#cookbook_path\t\[\"$chefrepo\"\]#g" solo.rb
 
+        # configuring json_attribs in solo.rb
 		attribs=$HOME/chef-solo/node.json
 		sed -i -r "s@(\#)?json_attribs.*\".*\"@json_attribs \"$attribs\"@g" solo.rb
 		# remove duplicate lines (http://sed.sourceforge.net/sed1line.txt)
@@ -50,5 +51,9 @@ function prepare_node() {
 	fi
 }
 
-install_chef_solo
-prepare_node
+install_chef_solo > /tmp/chef-solo-bootstrap.log 2>&1
+prepare_node >> /tmp/chef-solo-bootstrap.log 2>&1
+
+
+ 
+

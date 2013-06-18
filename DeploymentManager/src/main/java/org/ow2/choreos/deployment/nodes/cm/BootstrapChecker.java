@@ -42,7 +42,7 @@ public class BootstrapChecker {
 	    return false;
 	}
 
-	if (result.contains("solo.rb") && result.contains("node.json") && result.contains("cookbooks")) {
+	if (result.contains("solo.rb") && result.contains("cookbooks")) {
 	    return true;
 	} else {
 	    return false;

@@ -34,8 +34,6 @@ OPENSTACK_PASSWORD=secret
 OPENSTACK_KEY_PAIR=keyname
 OPENSTACK_PRIVATE_SSH_KEY=/path/to/keyname.pem
 
-CHEF_SOLO_LOG=/tmp/chef-solo.log # log written on chef nodes
-
 # creates a pool of extra VMs to make the deployment faster and more scalable
 # the trade-off is the cost of some more VMs
 # if you do not want to use the pool, leave IDLE_POOL_SIZE as zero.

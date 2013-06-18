@@ -71,6 +71,20 @@ public class InvokerTest {
 	invoker.invoke();
     }
 
+    @Test
+    public void shouldExecuteVoidTask() throws InvokerException {
+
+	VoidTask task = new VoidTask();
+	int trials = 1;
+	int timeout = 20;
+
+	Invoker<Void> invoker = new Invoker<Void>(task, trials, timeout, TimeUnit.MILLISECONDS);
+	invoker.invoke();
+	
+	boolean done = task.done;
+	assertEquals(true, done);
+    }
+    
     private class AlwaysWork implements Callable<String> {
 
 	AtomicInteger counter = new AtomicInteger();
@@ -106,6 +120,19 @@ public class InvokerTest {
 	public String call() throws Exception {
 	    Thread.sleep(10);
 	    return Integer.toString(counter.getAndIncrement());
+	}
+
+    }
+    
+    private class VoidTask implements Callable<Void> {
+
+	boolean done = false;
+	
+	@Override
+	public Void call() throws Exception {
+	    Thread.sleep(10);
+	    done = true;
+	    return null;
 	}
 
     }

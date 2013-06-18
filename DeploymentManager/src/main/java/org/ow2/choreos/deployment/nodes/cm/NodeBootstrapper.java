@@ -4,9 +4,13 @@
 
 package org.ow2.choreos.deployment.nodes.cm;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.breaker.Invoker;
 import org.ow2.choreos.breaker.InvokerException;
@@ -27,11 +31,8 @@ import com.jcraft.jsch.JSchException;
  */
 public class NodeBootstrapper {
 
-    // TODO save bootstrap log
-
     private static final int BOOTSTRAP_TRIALS = 1;
-    private static String BOOTSTRAP_COMMAND = "bash -c 'wget http://www.ime.usp.br/~tfurtado/bootstrap.tgz; "
-	    + "tar xf bootstrap.tgz; chmod +x bootstrap.sh; ./bootstrap.sh'";
+    private static String BOOTSTRAP_SCRIPT = "chef-solo/bootstrap.sh";
 
     private CloudNode node;
     private final int sshTimeoutInSeconds;
@@ -81,7 +82,7 @@ public class NodeBootstrapper {
 
     private void executeBootstrapCommand() throws NodeNotBootstrappedException {
 	BootstrapTask task = new BootstrapTask();
-	Invoker<String> invoker = new Invoker<String>(task, BOOTSTRAP_TRIALS, bootstrapTimeoutInSeconds,
+	Invoker<Void> invoker = new Invoker<Void>(task, BOOTSTRAP_TRIALS, bootstrapTimeoutInSeconds,
 		TimeUnit.SECONDS);
 	try {
 	    invoker.invoke();
@@ -90,14 +91,14 @@ public class NodeBootstrapper {
 	}
     }
 
-    private class BootstrapTask implements Callable<String> {
+    private class BootstrapTask implements Callable<Void> {
 
 	@Override
-	public String call() throws Exception {
+	public Void call() throws Exception {
 	    SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
 	    try {
-		String log = ssh.runCommand(BOOTSTRAP_COMMAND);
-		return log;
+		String bootstrapScript = getBootStrapScript();
+		ssh.runCommand(bootstrapScript);
 	    } catch (JSchException e) {
 		logFailMessage();
 		throw new NodeNotAccessibleException(node.getId());
@@ -105,6 +106,19 @@ public class NodeBootstrapper {
 		logFailMessage();
 		throw new NodeNotBootstrappedException(node.getId());
 	    }
+	    return null;
+	}
+
+	private String getBootStrapScript() {
+	    URL scriptFile = this.getClass().getClassLoader().getResource(BOOTSTRAP_SCRIPT);
+	    String command = null;
+	    try {
+		command = FileUtils.readFileToString(new File(scriptFile.getFile()));
+	    } catch (IOException e) {
+		logger.error("Should not happen!", e);
+		throw new IllegalStateException();
+	    }
+	    return command;
 	}
 
 	private void logFailMessage() {

@@ -22,7 +22,7 @@ public class DeploymentRequest {
 
     }
 
-	public DeploymentRequest(DeployableService service) {
+    public DeploymentRequest(DeployableService service) {
 	this.service = service;
 	this.resourceImpact = service.getSpec().getResourceImpact();
 	this.numberOfInstances = service.getSpec().getNumberOfInstances();
@@ -31,7 +31,6 @@ public class DeploymentRequest {
     public DeploymentRequest(String recipeName) {
 	this.recipeName = recipeName;
     }
-
 
     public DeploymentRequest(String recipeName, ResourceImpact resourceImpact, int numberOfInstances) {
 	this.recipeName = recipeName;
