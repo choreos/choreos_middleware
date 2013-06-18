@@ -24,6 +24,7 @@ public class CloudNode {
     private String privateKeyFile;
     private String image;
     private Integer state;
+    private RunList runList;
 
     public CloudNode() {
 	
@@ -136,6 +137,14 @@ public class CloudNode {
 
     public void setState(Integer state) {
 	this.state = state;
+    }
+
+    public RunList getRunList() {
+        return runList;
+    }
+
+    public void setRunList(RunList runList) {
+        this.runList = runList;
     }
 
     @Override
