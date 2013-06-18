@@ -97,11 +97,12 @@ public class NodesResource {
 	    CloudNode node = npm.getNode(nodeId);
 	    response = Response.ok(node).build();
 	} catch (NodeNotFoundException e) {
-	    logger.error("Node not found", e);
+	    logger.error("Node " + nodeId + " not found");
 	    response = Response.status(Status.NOT_FOUND).build();
 	}
 	return response;
     }
+    
     
     /**
      * POST /nodes/{nodeId}/update

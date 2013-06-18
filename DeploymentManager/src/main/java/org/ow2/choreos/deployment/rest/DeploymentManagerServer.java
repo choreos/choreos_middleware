@@ -6,6 +6,7 @@ package org.ow2.choreos.deployment.rest;
 
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.rest.NodesResource;
+import org.ow2.choreos.deployment.services.rest.RunListResource;
 import org.ow2.choreos.deployment.services.rest.ServicesResource;
 import org.ow2.choreos.rest.RESTServer;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -30,7 +31,8 @@ public class DeploymentManagerServer {
 
     public DeploymentManagerServer() {
 
-	this.restServer = new RESTServer(NAME, URL, new Class[] { NodesResource.class, ServicesResource.class });
+	this.restServer = new RESTServer(NAME, URL, new Class[] { NodesResource.class, RunListResource.class,
+		ServicesResource.class });
     }
 
     public void start() {

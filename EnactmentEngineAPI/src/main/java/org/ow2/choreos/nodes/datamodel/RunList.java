@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * The list of chef-recipes to be applied in some node.
  * 
  * @author leonardo
- *
+ * 
  */
 public class RunList {
 
@@ -43,7 +43,7 @@ public class RunList {
 	    runList = new ArrayList<String>();
 	runList.add("recipe[" + recipeName + "]");
     }
-    
+
     /**
      * Returns the run list without the "recipe" keyword and without the
      * brackets "[]".
@@ -69,7 +69,7 @@ public class RunList {
     }
 
     public List<String> getRunList() {
-        return Collections.unmodifiableList(runList);
+	return Collections.unmodifiableList(runList);
     }
 
     @Override
@@ -101,18 +101,20 @@ public class RunList {
     public String toString() {
 	return "RunList [runList=" + runList + "]";
     }
-    
+
     public String toJson() {
 	StringBuilder json = new StringBuilder("{ 'run_list' : [ ");
-	for (int i=0; i<runList.size(); i++) {
-	    String runListItem = runList.get(i);
-	    json.append("'" + runListItem + "'");
-	    if (i != runList.size()-1)
-		json.append(",");
-	    json.append(" ");
+	if (runList != null) {
+	    for (int i = 0; i < runList.size(); i++) {
+		String runListItem = runList.get(i);
+		json.append("'" + runListItem + "'");
+		if (i != runList.size() - 1)
+		    json.append(",");
+		json.append(" ");
+	    }
 	}
 	json.append("] }");
 	return json.toString();
     }
-    
+
 }
