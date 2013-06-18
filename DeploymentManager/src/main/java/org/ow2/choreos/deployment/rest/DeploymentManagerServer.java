@@ -6,7 +6,7 @@ package org.ow2.choreos.deployment.rest;
 
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.rest.NodesResource;
-import org.ow2.choreos.deployment.services.rest.RunListResource;
+import org.ow2.choreos.deployment.nodes.rest.RunListResource;
 import org.ow2.choreos.deployment.services.rest.ServicesResource;
 import org.ow2.choreos.rest.RESTServer;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -26,7 +26,6 @@ public class DeploymentManagerServer {
     static {
 	String port = DeploymentManagerConfiguration.get("DEPLOYMENT_MANAGER_PORT");
 	URL = "http://0.0.0.0:" + port + "/deploymentmanager/";
-	System.out.println(URL);
     }
 
     public DeploymentManagerServer() {

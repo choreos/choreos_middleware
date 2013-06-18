@@ -1,4 +1,4 @@
-package org.ow2.choreos.deployment.services.rest;
+package org.ow2.choreos.deployment.nodes.rest;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
