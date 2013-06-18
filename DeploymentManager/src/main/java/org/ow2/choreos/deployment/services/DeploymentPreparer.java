@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelector;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelectorFactory;
+import org.ow2.choreos.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.selectors.NotSelectedException;
@@ -19,10 +20,11 @@ import org.ow2.choreos.utils.SshWaiter;
 import com.jcraft.jsch.JSchException;
 
 public class DeploymentPreparer {
-    
+
     private Logger logger = Logger.getLogger(DeploymentPreparer.class);
 
-    public List<CloudNode> prepareDeployment(DeploymentRequest deploymentRequest) throws PrepareDeploymentFailedException {
+    public List<CloudNode> prepareDeployment(DeploymentRequest deploymentRequest)
+	    throws PrepareDeploymentFailedException {
 
 	NodeSelector selector = NodeSelectorFactory.getFactoryInstance().getNodeSelectorInstance();
 	List<CloudNode> nodes = null;
@@ -41,7 +43,11 @@ public class DeploymentPreparer {
 		.getService().getServiceInstances() : new ArrayList<ServiceInstance>();
 
 	for (CloudNode node : nodes) {
-	    waitForSshAccess(node);
+	    try {
+		waitForSshAccess(node);
+	    } catch (NodeNotAccessibleException e) {
+		throw new PrepareDeploymentFailedException(deploymentRequest.getRecipeName());
+	    }
 
 	    SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
 	    String serviceInstanceId = "";
@@ -68,7 +74,7 @@ public class DeploymentPreparer {
 	deploymentRequest.getService().setServiceInstances(instances);
 	return nodes;
     }
-    
+
     private String installWar(DeploymentRequest deploymentRequest, SshUtil ssh, String serviceInstanceId) {
 	try {
 	    serviceInstanceId = ssh.runCommand(getWarCommand(deploymentRequest));
@@ -95,26 +101,22 @@ public class DeploymentPreparer {
 	return serviceInstanceId;
     }
 
-    private void waitForSshAccess(CloudNode node) {
+    private void waitForSshAccess(CloudNode node) throws NodeNotAccessibleException {
 	SshWaiter sshWaiter = new SshWaiter();
 	try {
 	    sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), 60);
 	} catch (SshNotConnected e) {
-	    e.printStackTrace();
-	    ;// throw new NodeNotAccessibleException(node.getIp() +
-	     // " not accessible");
+	    throw new NodeNotAccessibleException(node.getIp());
 	}
     }
 
     private String getJarCommand(DeploymentRequest deploymentRequest) {
-	return ". generate_and_apply.sh " + "-jar "
-		+ deploymentRequest.getService().getSpec().getPackageUri() + " "
+	return ". prepare_deployment.sh " + "-jar " + deploymentRequest.getService().getSpec().getPackageUri() + " "
 		+ deploymentRequest.getDeploymentManagerURL();
     }
 
     private String getWarCommand(DeploymentRequest deploymentRequest) {
-	return ". generate_and_apply.sh " + "-war "
-		+ deploymentRequest.getService().getSpec().getPackageUri() + " "
+	return ". prepare_deployment.sh " + "-war " + deploymentRequest.getService().getSpec().getPackageUri() + " "
 		+ deploymentRequest.getDeploymentManagerURL();
     }
 

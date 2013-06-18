@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
-import org.ow2.choreos.deployment.nodes.DeploymentPreparer;
 import org.ow2.choreos.deployment.services.diff.UpdateAction;
 import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;

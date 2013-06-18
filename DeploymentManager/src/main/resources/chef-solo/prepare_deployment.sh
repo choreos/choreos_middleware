@@ -79,7 +79,7 @@ case "$1" in
                 install_jar $2 $3 > /tmp/chef-solo.log  2>&1 
                 ;;
         *)      
-                echo "Usage: generate_and_apply [-jar|-war]"
+                echo "Usage: prepare_deployment [-jar|-war]"
                 ;;
 esac
 echo $s_name | tr -d '\n'

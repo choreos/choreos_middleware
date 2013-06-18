@@ -14,7 +14,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.utils.SshCommandFailed;
@@ -30,7 +29,7 @@ import com.jcraft.jsch.JSchException;
 public class NodeUpdater {
 
     // it is not the time to one update, but also the time waiting in the queue
-    private static final int UPGRADE_TIMEOUT = 30;
+    private static final int UPDATE_TIMEOUT = 30;
 
     private Logger logger = Logger.getLogger(NodeUpdater.class);
 
@@ -54,11 +53,11 @@ public class NodeUpdater {
 	myExecutor.submit(runner);
 
 	try {
-	    Future<Boolean> taskCompleted = myExecutor.poll(UPGRADE_TIMEOUT, TimeUnit.MINUTES);
+	    Future<Boolean> taskCompleted = myExecutor.poll(UPDATE_TIMEOUT, TimeUnit.MINUTES);
 	    if (taskCompleted != null) {
 		Boolean ok = taskCompleted.get();
 		if (ok != null && ok.booleanValue()) {
-		    logger.debug("Node " + node.getId() + " upgraded");
+		    logger.debug("Node " + node.getId() + " updated");
 		} else {
 		    fail(node);
 		}
@@ -101,14 +100,9 @@ public class NodeUpdater {
 	@Override
 	public Boolean call() throws Exception {
 
-	    logger.debug("upgrading node " + nodeId);
+	    logger.debug("updating node " + nodeId);
 
-	    String logFile = DeploymentManagerConfiguration.get("CHEF_SOLO_LOG");
-	    if (logFile == null || logFile.isEmpty()) {
-		logFile = "/tmp/chef-solo.log";
-	    }
-
-	    final String CHEF_SOLO_COMMAND = "sudo bash -c 'chef-solo -c $HOME/chef-solo/solo.rb " + logFile + "' ";
+	    final String CHEF_SOLO_COMMAND = "sudo chef-solo -c $HOME/chef-solo/solo.rb";
 	    final int MAX_TRIALS = 5;
 	    final int SLEEPING_TIME = 5000;
 	    int trials = 0;
