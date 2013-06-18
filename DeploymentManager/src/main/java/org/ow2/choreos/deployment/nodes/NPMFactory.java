@@ -1,7 +1,6 @@
 package org.ow2.choreos.deployment.nodes;
 
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
-import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.nodes.NPMStub;
 import org.ow2.choreos.nodes.NodePoolManager;

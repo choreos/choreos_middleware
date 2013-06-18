@@ -13,7 +13,6 @@ import org.ow2.choreos.deployment.nodes.DeploymentPreparer;
 import org.ow2.choreos.deployment.services.diff.UpdateAction;
 import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
-import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServiceNotDeletedException;
 import org.ow2.choreos.services.ServiceNotFoundException;
@@ -21,6 +20,7 @@ import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.UnhandledModificationException;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
+import org.ow2.choreos.services.datamodel.DeploymentRequest;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceSpec;
 

@@ -2,11 +2,11 @@ package org.ow2.choreos.deployment.nodes.selector;
 
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.selectors.ObjectCreationException;
 import org.ow2.choreos.selectors.ObjectFactory;
+import org.ow2.choreos.services.datamodel.DeploymentRequest;
 
 class NodeFactory implements ObjectFactory<CloudNode, DeploymentRequest> {
 

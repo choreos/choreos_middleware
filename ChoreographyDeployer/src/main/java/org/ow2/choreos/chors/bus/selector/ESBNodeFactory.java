@@ -1,7 +1,5 @@
 package org.ow2.choreos.chors.bus.selector;
 
-import java.util.List;
-
 import org.ow2.choreos.chors.bus.ESBRegister;
 import org.ow2.choreos.chors.bus.EasyESBNode;
 import org.ow2.choreos.chors.bus.EasyESBNodeImpl;
@@ -9,8 +7,6 @@ import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
-import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
-import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.selectors.ObjectCreationException;
 import org.ow2.choreos.selectors.ObjectFactory;

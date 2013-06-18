@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.ow2.choreos.deployment.nodes.chef.ConfigToChef;
-import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
+import org.ow2.choreos.services.datamodel.DeploymentRequest;
 
 public class ConfigToChefTest {
 

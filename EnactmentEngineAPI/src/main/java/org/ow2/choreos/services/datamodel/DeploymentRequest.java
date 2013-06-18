@@ -2,9 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-package org.ow2.choreos.nodes.datamodel;
+package org.ow2.choreos.services.datamodel;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.services.datamodel.DeployableService;
 
 @XmlRootElement
