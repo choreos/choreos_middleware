@@ -16,6 +16,7 @@ import org.ow2.choreos.breaker.Invoker;
 import org.ow2.choreos.breaker.InvokerException;
 import org.ow2.choreos.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
+import org.ow2.choreos.utils.RemoteFileWriter;
 import org.ow2.choreos.utils.SshCommandFailed;
 import org.ow2.choreos.utils.SshNotConnected;
 import org.ow2.choreos.utils.SshUtil;
@@ -33,6 +34,7 @@ public class NodeBootstrapper {
 
     private static final int BOOTSTRAP_TRIALS = 1;
     private static String BOOTSTRAP_SCRIPT = "chef-solo/bootstrap.sh";
+    private static String PREPARE_DEPLOYMENT_SCRIPT = "chef-solo/prepare_deployment.sh";
 
     private CloudNode node;
     private final int sshTimeoutInSeconds;
@@ -68,6 +70,7 @@ public class NodeBootstrapper {
 	waitSsh();
 	logger.info("Bootstrapping " + this.node.getIp());
 	executeBootstrapCommand();
+	savePrepareDeploymentScript();
 	logger.info("Bootstrap completed at" + this.node);
     }
 
@@ -82,13 +85,35 @@ public class NodeBootstrapper {
 
     private void executeBootstrapCommand() throws NodeNotBootstrappedException {
 	BootstrapTask task = new BootstrapTask();
-	Invoker<Void> invoker = new Invoker<Void>(task, BOOTSTRAP_TRIALS, bootstrapTimeoutInSeconds,
-		TimeUnit.SECONDS);
+	Invoker<Void> invoker = new Invoker<Void>(task, BOOTSTRAP_TRIALS, bootstrapTimeoutInSeconds, TimeUnit.SECONDS);
 	try {
 	    invoker.invoke();
 	} catch (InvokerException e) {
 	    throw new NodeNotBootstrappedException(node.getId(), e.getCause());
 	}
+    }
+
+    private void savePrepareDeploymentScript() {
+	SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
+	String script = getPrepareDeploymentScript();
+	RemoteFileWriter remoteFileWriter = new RemoteFileWriter();
+	try {
+	    remoteFileWriter.writeFile(script, "$HOME/prepare_deployment.sh", ssh);
+	} catch (SshCommandFailed e) {
+	    logger.error("It was not possible to save prepare_deployment.sh on node " + node.getId());
+	}
+    }
+
+    private String getPrepareDeploymentScript() {
+	URL scriptFile = this.getClass().getClassLoader().getResource(PREPARE_DEPLOYMENT_SCRIPT);
+	String script = null;
+	try {
+	    script = FileUtils.readFileToString(new File(scriptFile.getFile()));
+	} catch (IOException e) {
+	    logger.error("Should not happen!", e);
+	    throw new IllegalStateException();
+	}
+	return script;
     }
 
     private class BootstrapTask implements Callable<Void> {
@@ -111,14 +136,14 @@ public class NodeBootstrapper {
 
 	private String getBootStrapScript() {
 	    URL scriptFile = this.getClass().getClassLoader().getResource(BOOTSTRAP_SCRIPT);
-	    String command = null;
+	    String script = null;
 	    try {
-		command = FileUtils.readFileToString(new File(scriptFile.getFile()));
+		script = FileUtils.readFileToString(new File(scriptFile.getFile()));
 	    } catch (IOException e) {
 		logger.error("Should not happen!", e);
 		throw new IllegalStateException();
 	    }
-	    return command;
+	    return script;
 	}
 
 	private void logFailMessage() {

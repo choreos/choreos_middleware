@@ -107,18 +107,15 @@ public class DeploymentPreparer {
     }
 
     private String getJarCommand(DeploymentRequest deploymentRequest) {
-	return "bash -c" + " 'wget http://www.ime.usp.br/~tfurtado/generate_and_apply.tgz;"
-		+ "tar xf generate_and_apply.tgz;" + ". generate_and_apply.sh " + "-jar "
+	return ". generate_and_apply.sh " + "-jar "
 		+ deploymentRequest.getService().getSpec().getPackageUri() + " "
-		+ deploymentRequest.getDeploymentManagerURL() + "' ";
+		+ deploymentRequest.getDeploymentManagerURL();
     }
 
     private String getWarCommand(DeploymentRequest deploymentRequest) {
-	return "bash -c" + " 'wget http://www.ime.usp.br/~tfurtado/generate_and_apply.tgz;"
-		+ "tar xf generate_and_apply.tgz;" + ". generate_and_apply.sh " + "-war "
+	return ". generate_and_apply.sh " + "-war "
 		+ deploymentRequest.getService().getSpec().getPackageUri() + " "
-		+ deploymentRequest.getDeploymentManagerURL() + "' ";
+		+ deploymentRequest.getDeploymentManagerURL();
     }
-
 
 }

@@ -23,16 +23,27 @@ public class BootstrapChecker {
 
     private static final int SSH_TIMEOUT_IN_SECONDS = 250;
 
+    private SshUtil ssh = null;
+
     public boolean isBootstrapped(CloudNode node) {
 
 	SshWaiter sshWaiter = new SshWaiter();
-	SshUtil ssh = null;
 	try {
 	    ssh = sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), SSH_TIMEOUT_IN_SECONDS);
 	} catch (SshNotConnected e) {
 	    return false;
 	}
 
+	if (!verifyChefSoloFolder())
+	    return false;
+	
+	if (!verifyPrepareDeploymentScript())
+	    return false;
+	
+	return true;
+    }
+
+    private boolean verifyChefSoloFolder() {
 	String result = "";
 	try {
 	    result = ssh.runCommand("ls $HOME/chef-solo");
@@ -43,6 +54,24 @@ public class BootstrapChecker {
 	}
 
 	if (result.contains("solo.rb") && result.contains("cookbooks")) {
+	    return true;
+	} else {
+	    return false;
+	}
+    }
+
+    private boolean verifyPrepareDeploymentScript() {
+	String result;
+	result = "";
+	try {
+	    result = ssh.runCommand("ls $HOME");
+	} catch (JSchException e) {
+	    return false;
+	} catch (SshCommandFailed e) {
+	    return false;
+	}
+
+	if (result.contains("prepare_deployment.sh")) {
 	    return true;
 	} else {
 	    return false;
