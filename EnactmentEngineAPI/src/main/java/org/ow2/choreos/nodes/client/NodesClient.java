@@ -4,14 +4,12 @@
 
 package org.ow2.choreos.nodes.client;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
@@ -21,15 +19,14 @@ import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
-import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
+import org.ow2.choreos.nodes.datamodel.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 /**
  * Access Node Pool Manager functionalities through the REST API.
  * 
- * The user of NPMClient does not need to worry with the REST
- * communication.
+ * The user of NPMClient does not need to worry with the REST communication.
  * 
  * @author leonardo
  * 
@@ -45,7 +42,6 @@ public class NodesClient implements NodePoolManager {
      * 
      */
     public NodesClient(String host) {
-
 	this.host = host;
     }
 
@@ -82,11 +78,6 @@ public class NodesClient implements NodePoolManager {
     }
 
     @Override
-    public List<CloudNode> getNodes() {
-	throw new NotImplementedException();
-    }
-
-    @Override
     public CloudNode getNode(String nodeId) throws NodeNotFoundException {
 
 	WebClient client = setupClient();
@@ -103,46 +94,37 @@ public class NodesClient implements NodePoolManager {
     }
 
     @Override
-    public void destroyNode(String nodeId) throws NodeNotDestroyed, NodeNotFoundException {
-
-	throw new NotImplementedException();
-    }
-
-    @Override
     public void updateNode(String nodeId) throws NodeNotUpdatedException {
+	
 	WebClient client = setupClient();
 	client.path("nodes");
 	client.path(nodeId);
-	client.path("upgrade");
+	client.path("update");
 	Response response = client.post(null);
 
 	if (response.getStatus() != 200) {
 	    throw new NodeNotUpdatedException(nodeId);
 	}
     }
+    
+    @Override
+    public List<CloudNode> getNodes() {
+	throw new UnsupportedOperationException();
+    }
 
     @Override
     public List<CloudNode> prepareDeployment(DeploymentRequest config) throws PrepareDeploymentFailedException {
+	throw new UnsupportedOperationException();
+    }
 
-	WebClient client = setupClient();
-	client.path("nodes/configs");
-	CloudNode node = null;
-
-	try {
-	    node = client.post(config, CloudNode.class);
-	} catch (WebApplicationException e) {
-	    throw new PrepareDeploymentFailedException(config.getRecipeName());
-	}
-
-	List<CloudNode> resultList = new ArrayList<CloudNode>();
-	resultList.add(node);
-	return resultList;
+    @Override
+    public void destroyNode(String nodeId) throws NodeNotDestroyed, NodeNotFoundException {
+	throw new UnsupportedOperationException();
     }
 
     @Override
     public void destroyNodes() throws NodeNotDestroyed {
-
-	throw new NotImplementedException();
+	throw new UnsupportedOperationException();
     }
 
 }
