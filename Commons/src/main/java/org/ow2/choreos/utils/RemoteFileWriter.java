@@ -11,6 +11,13 @@ import java.io.StringReader;
 
 import com.jcraft.jsch.JSchException;
 
+/**
+ * Disclaimer: do not use this class to send executable files or files that will
+ * be read by another programs, since ' are replace by "
+ * 
+ * @author leonardo
+ * 
+ */
 public class RemoteFileWriter {
 
     /**
