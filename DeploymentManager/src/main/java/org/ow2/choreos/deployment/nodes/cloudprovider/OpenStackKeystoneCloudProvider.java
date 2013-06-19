@@ -32,6 +32,8 @@ import com.google.inject.Module;
 public class OpenStackKeystoneCloudProvider implements CloudProvider {
 
     private static final String FLAVOR = "m1.medium";
+    private static final String DEFAULT_IMAGE = "210e028d-9b88-4e54-af6b-25fc5ca00e69"; // Ubuntu 12.04
+    
     private Logger logger = Logger.getLogger(OpenStackKeystoneCloudProvider.class);
 
     public String getProviderName() {
@@ -43,7 +45,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
     private static String OP_USER = DeploymentManagerConfiguration.get("OPENSTACK_USER");
     private static String OP_PASS = DeploymentManagerConfiguration.get("OPENSTACK_PASSWORD");
 
-    private ComputeService getClient(String imageId) {
+    private ComputeService getClient() {
 	logger.info("Obtaining Client");
 
 	String provider = "openstack-nova";
@@ -76,12 +78,12 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
 
 	// TODO: resource impact changes
 
-	ComputeService client = getClient("");
+	ComputeService client = getClient();
 	Set<? extends NodeMetadata> createdNodes = null;
 
 	try {
 	    try {
-		createdNodes = client.createNodesInGroup("default", 1, getTemplate(client, getImages().get(0).getId()));
+		createdNodes = client.createNodesInGroup("default", 1, getTemplate(client, getImage().getId()));
 	    } catch (RunNodesException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -102,7 +104,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
 
     @Override
     public CloudNode getNode(String nodeId) throws NodeNotFoundException {
-	ComputeService client = getClient("");
+	ComputeService client = getClient();
 
 	CloudNode node = new CloudNode();
 
@@ -120,7 +122,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
     public List<CloudNode> getNodes() {
 	List<CloudNode> nodeList = new ArrayList<CloudNode>();
 	CloudNode node;
-	ComputeService client = getClient("");
+	ComputeService client = getClient();
 
 	logger.info("Getting list of nodes");
 	Set<? extends ComputeMetadata> cloudNodes = client.listNodes();
@@ -142,26 +144,25 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
 	return nodeList;
     }
 
-    public List<Image> getImages() {
+    public Image getImage() {
 	logger.info("Getting image info...");
-	ComputeService client = getClient("");
+	ComputeService client = getClient();
 	Set<? extends Image> images = client.listImages();
 
-	List<Image> imageList = new ArrayList<Image>();
-
+	if (images == null || images.isEmpty())
+	    throw new IllegalStateException("No images available!");
+	
 	for (Image image : images) {
-	    imageList.add(image);
+	    if (image.getId().equals(DEFAULT_IMAGE))
+		return image;
 	}
 
-	logger.info("Images: " + imageList.toString());
-
-	return imageList;
-
+	return images.iterator().next();
     }
 
     public Hardware getHardwareProfile() {
 	logger.info("getting hardware profile info...");
-	ComputeService client = getClient("");
+	ComputeService client = getClient();
 	Set<? extends Hardware> profiles = client.listHardwareProfiles();
 
 	if (profiles == null || profiles.isEmpty())
@@ -179,7 +180,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
     @Override
     public void destroyNode(String id) {
 	logger.info("Destroy Node.");
-	ComputeService client = getClient("");
+	ComputeService client = getClient();
 	client.destroyNode(id);
 	client.getContext().close();
 	logger.info("Node destroyed successfully.");
@@ -200,7 +201,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
     private Template getTemplate(ComputeService client, String imageId) {
 
 	if (imageId.isEmpty()) {
-	    imageId = getImages().get(0).getId();
+	    imageId = getImage().getId();
 	}
 
 	String hardwareId = getHardwareProfile().getId();
