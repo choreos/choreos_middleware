@@ -4,99 +4,50 @@
 
 package org.ow2.choreos.deployment.nodes.cloudprovider;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 import java.util.Random;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.jclouds.ContextBuilder;
-import org.jclouds.aws.ec2.compute.AWSEC2ComputeService;
 import org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions;
-import org.jclouds.aws.ec2.reference.AWSEC2Constants;
-import org.jclouds.compute.ComputeService;
-import org.jclouds.compute.ComputeServiceContext;
-import org.jclouds.compute.RunNodesException;
-import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.compute.domain.Template;
-import org.jclouds.compute.domain.TemplateBuilder;
+import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.ec2.domain.InstanceType;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
-import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
-import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 
-import com.google.common.collect.Iterables;
+public class AWSCloudProvider extends JCloudsCloudProvider {
 
-public class AWSCloudProvider implements CloudProvider {
-
-    private Logger logger = Logger.getLogger(AWSCloudProvider.class);
-
-    private static String DEFAULT_USER = "ubuntu";
-    private static String PROVIDER = "aws-ec2";
-    private static String DEFAULT_IMAGE = "us-east-1/ami-3b4ff252"; // Ubuntu 12.04
+    private static final String IDENTITY = DeploymentManagerConfiguration.get("AMAZON_ACCESS_KEY_ID");
+    private static final String CREDENTIAL = DeploymentManagerConfiguration.get("AMAZON_SECRET_KEY");
+    private static final Properties PROPERTIES = new Properties();
+    private static final String DEFAULT_USER = "ubuntu";
+    private static final String DEFAULT_PRIVATE_KEY = DeploymentManagerConfiguration.get("AMAZON_PRIVATE_SSH_KEY");
+    private static final String PROVIDER = "aws-ec2";
+    private static final String DEFAULT_IMAGE = "us-east-1/ami-3b4ff252"; // Ubuntu
+									  // 12.04
 
     // only threads with the creationToken can create new instances
     // we use this token to implement the 1 req/sec rule
     private static boolean creationToken = true;
     private static Random random = new Random();
 
-    public String getProviderName() {
+    private Logger logger = Logger.getLogger(AWSCloudProvider.class);
+
+    public AWSCloudProvider() {
+	super(IDENTITY, CREDENTIAL, PROVIDER, PROPERTIES);
+    }
+
+    public String getCloudProviderName() {
 	return PROVIDER;
     }
 
-    ComputeService getClient(String image) {
-
-	Properties overrides = new Properties();
-	overrides.setProperty(AWSEC2Constants.PROPERTY_EC2_AMI_QUERY, "image-id=" + image);
-
-	ComputeServiceContext context = ContextBuilder
-		.newBuilder(PROVIDER)
-		.credentials(DeploymentManagerConfiguration.get("AMAZON_ACCESS_KEY_ID"),
-			DeploymentManagerConfiguration.get("AMAZON_SECRET_KEY")).overrides(overrides)
-		.buildView(ComputeServiceContext.class);
-
-	return context.getComputeService();
-    }
-
+    @Override
     public CloudNode createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
-
-	long t0 = System.currentTimeMillis();
-
-	CloudNode node = new CloudNode();
-
 	oneRequestPerSecondRule();
-	logger.debug("Creating node...");
-
-	String imageId = nodeSpec.getImage();
-	if (imageId == null || imageId.isEmpty()) {
-	    imageId = DEFAULT_IMAGE;
-	}
-	String image = imageId.substring(imageId.indexOf('/') + 1);
-
-	ComputeService client = getClient(image);
-	try {
-	    Set<? extends NodeMetadata> createdNodes = client.createNodesInGroup("default", 1,
-		    getTemplate(client, imageId, nodeSpec.getResourceImpact()));
-	    NodeMetadata cloudNode = Iterables.get(createdNodes, 0);
-
-	    setNodeProperties(node, cloudNode);
-	    client.getContext().close();
-	} catch (RunNodesException e) {
-	    logger.error("Node creation failed: " + e.getMessage());
-	    throw new NodeNotCreatedException(node.getId());
-	}
-
-	long tf = System.currentTimeMillis();
-	long duration = tf - t0;
-	logger.debug(node + " created in " + duration + " miliseconds");
-
-	return node;
+	return super.createNode(nodeSpec);
     }
 
     private void oneRequestPerSecondRule() {
@@ -132,114 +83,41 @@ public class AWSCloudProvider implements CloudProvider {
 	return ok;
     }
 
-    public CloudNode getNode(String nodeId) throws NodeNotFoundException {
-
-	ComputeService client = getClient("");
-	CloudNode node = null;
-	try {
-	    ComputeMetadata computeMetadata = client.getNodeMetadata(nodeId);
-	    NodeMetadata cloudNode = client.getNodeMetadata(computeMetadata.getId());
-	    node = new CloudNode();
-	    setNodeProperties(node, cloudNode);
-	    client.getContext().close();
-	} catch (Exception e) {
-	    throw new NodeNotFoundException(nodeId);
-	}
-
-	return node;
+    @Override
+    protected String getDefaultImageId() {
+	return DEFAULT_IMAGE;
     }
 
-    public List<CloudNode> getNodes() {
-
-	List<CloudNode> nodeList = new ArrayList<CloudNode>();
-	CloudNode node;
-
-	ComputeService client = getClient("");
-	Set<? extends ComputeMetadata> cloudNodes = client.listNodes();
-	for (ComputeMetadata computeMetadata : cloudNodes) {
-	    NodeMetadata cloudNode = client.getNodeMetadata(computeMetadata.getId());
-	    node = new CloudNode();
-
-	    setNodeProperties(node, cloudNode);
-	    if (node.getState() != 1) {
-		nodeList.add(node);
-	    }
-	}
-
-	client.getContext().close();
-
-	return nodeList;
+    @Override
+    protected String getHardwareId() {
+	return InstanceType.M1_SMALL;
     }
 
-    public void destroyNode(String id) {
-
-	ComputeService client = getClient("");
-	client.destroyNode(id);
-	client.getContext().close();
+    @Override
+    protected String getUserName() {
+	return DEFAULT_USER;
     }
 
-    private void setNodeProperties(CloudNode node, NodeMetadata cloudNode) {
-	setNodeIp(node, cloudNode);
-	node.setHostname(cloudNode.getName());
-	node.setSo(cloudNode.getOperatingSystem().getName());
-	node.setId(cloudNode.getId());
-	node.setImage(cloudNode.getImageId());
-	node.setState(cloudNode.getStatus().ordinal());
-	node.setUser(DEFAULT_USER);
-	node.setPrivateKey(DeploymentManagerConfiguration.get("AMAZON_PRIVATE_SSH_KEY"));
+    @Override
+    protected String getUserPrivateKey() {
+	return DEFAULT_PRIVATE_KEY;
     }
 
-    private void setNodeIp(CloudNode node, NodeMetadata cloudNode) {
-	Iterator<String> publicAddresses = cloudNode.getPublicAddresses().iterator();
-
+    @Override
+    protected String getNodeIp(NodeMetadata nodeMetadata) {
+	Iterator<String> publicAddresses = nodeMetadata.getPublicAddresses().iterator();
 	if (publicAddresses != null && publicAddresses.hasNext()) {
-	    node.setIp(publicAddresses.next());
+	    return publicAddresses.next();
+	} else {
+	    throw new IllegalStateException("Could not retrieve IP from node");
 	}
     }
 
-    private Template getTemplate(ComputeService client, String imageId, ResourceImpact resourceImpact) {
-
-	String AWSInstanceType = getInstanceTypeFromResourceImpact(resourceImpact);
-
-	TemplateBuilder builder = client.templateBuilder().imageId(imageId);
-	if (client instanceof AWSEC2ComputeService) {
-	    builder.hardwareId(AWSInstanceType);
-	    Template template = builder.build();
-	    AWSEC2TemplateOptions options = template.getOptions().as(AWSEC2TemplateOptions.class);
-	    options.securityGroups("default");
-	    options.keyPair(DeploymentManagerConfiguration.get("AMAZON_KEY_PAIR"));
-	    return template;
-	}
-
-	return builder.build();
-    }
-
-    private String getInstanceTypeFromResourceImpact(ResourceImpact resourceImpact) {
-
-	String defaultImage = InstanceType.M1_SMALL;
-
-	if (resourceImpact != null && resourceImpact.getMemory() != null) {
-	    switch (resourceImpact.getMemory()) {
-	    case SMALL:
-		return InstanceType.M1_SMALL;
-	    case MEDIUM:
-		return InstanceType.M1_MEDIUM;
-	    case LARGE:
-		return InstanceType.M1_LARGE;
-	    default:
-		return defaultImage;
-	    }
-	}
-	return defaultImage;
-    }
-
-    public CloudNode createOrUseExistingNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
-
-	List<CloudNode> nodes = this.getNodes();
-	if (nodes.size() > 0)
-	    return nodes.get(0);
-	else
-	    return createNode(nodeSpec);
+    @Override
+    protected void configureTemplateOptions(TemplateOptions templateOptions) {
+	AWSEC2TemplateOptions options = templateOptions.as(AWSEC2TemplateOptions.class);
+	options.securityGroups("default");
+	options.keyPair(DeploymentManagerConfiguration.get("AMAZON_KEY_PAIR"));
     }
 
 }

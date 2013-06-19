@@ -23,7 +23,7 @@ import org.ow2.choreos.nodes.datamodel.NodeSpec;
  */
 public interface CloudProvider {
 
-    public String getProviderName();
+    public String getCloudProviderName();
 
     public CloudNode createNode(NodeSpec nodeSpec) throws NodeNotCreatedException;
 

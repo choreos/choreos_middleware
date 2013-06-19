@@ -84,17 +84,9 @@ public class OpenStackCloudProviderTest extends BaseTest {
 	if (bTestImagesList) {
 	    // Image List Test
 	    System.out.println("TEST: List Images from OpenStack\n");
-	    List<Image> images = infra.getImages();
+	    Image image = infra.getImage();
 
-	    System.out.println("Image Count: " + images.size());
-
-	    for (Image image : images) {
-		System.out.println("Name: " + image.getName());
-		System.out.println("ID: " + image.getId());
-		System.out.println("OS: " + image.getOperatingSystem());
-		System.out.println("Location: " + image.getLocation());
-		System.out.println("--------------");
-	    }
+	    System.out.println("Image : " + image);
 	}
 
 	if (bTestHWList) {

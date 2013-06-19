@@ -108,7 +108,7 @@ public class FixedCloudProvider implements CloudProvider {
 	}
     }
 
-    public String getProviderName() {
+    public String getCloudProviderName() {
 	return FIXED_CLOUD_PROVIDER;
     }
 

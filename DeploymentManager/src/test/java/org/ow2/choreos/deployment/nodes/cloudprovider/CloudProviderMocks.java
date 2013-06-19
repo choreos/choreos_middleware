@@ -43,7 +43,7 @@ public class CloudProviderMocks {
 	initialNodes.add(node2);
 
 	CloudProvider cpMock = mock(CloudProvider.class);
-	when(cpMock.getProviderName()).thenReturn(CP_MOCK_NAME);
+	when(cpMock.getCloudProviderName()).thenReturn(CP_MOCK_NAME);
 	when(cpMock.getNodes()).thenReturn(initialNodes);
 	when(cpMock.getNode("1")).thenReturn(node1);
 	when(cpMock.getNode("2")).thenReturn(node1);
@@ -74,7 +74,7 @@ public class CloudProviderMocks {
 	initialNodes.add(node2);
 
 	CloudProvider cpMock = mock(CloudProvider.class);
-	when(cpMock.getProviderName()).thenReturn(CP_MOCK_NAME);
+	when(cpMock.getCloudProviderName()).thenReturn(CP_MOCK_NAME);
 	when(cpMock.getNodes()).thenReturn(initialNodes);
 	when(cpMock.getNode("1")).thenReturn(node1);
 	when(cpMock.getNode("2")).thenReturn(node1);
@@ -109,7 +109,7 @@ public class CloudProviderMocks {
 	initialNodes.add(node2);
 
 	CloudProvider cpMock = mock(CloudProvider.class);
-	when(cpMock.getProviderName()).thenReturn(CP_MOCK_NAME);
+	when(cpMock.getCloudProviderName()).thenReturn(CP_MOCK_NAME);
 	when(cpMock.getNodes()).thenReturn(initialNodes);
 	when(cpMock.getNode("1")).thenReturn(node1);
 	when(cpMock.getNode("2")).thenReturn(node1);

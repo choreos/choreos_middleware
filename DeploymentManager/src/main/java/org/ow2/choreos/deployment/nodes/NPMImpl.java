@@ -84,7 +84,7 @@ public class NPMImpl implements NodePoolManager {
 
     @Override
     public List<CloudNode> getNodes() {
-	if (this.cloudProvider.getProviderName() == FixedCloudProvider.FIXED_CLOUD_PROVIDER) {
+	if (this.cloudProvider.getCloudProviderName() == FixedCloudProvider.FIXED_CLOUD_PROVIDER) {
 	    return this.cloudProvider.getNodes();
 	} else {
 	    return nodeRegistry.getNodes();
@@ -93,7 +93,7 @@ public class NPMImpl implements NodePoolManager {
 
     @Override
     public CloudNode getNode(String nodeId) throws NodeNotFoundException {
-	if (this.cloudProvider.getProviderName() == FixedCloudProvider.FIXED_CLOUD_PROVIDER) {
+	if (this.cloudProvider.getCloudProviderName() == FixedCloudProvider.FIXED_CLOUD_PROVIDER) {
 	    return this.cloudProvider.getNode(nodeId);
 	} else {
 	    return nodeRegistry.getNode(nodeId);
