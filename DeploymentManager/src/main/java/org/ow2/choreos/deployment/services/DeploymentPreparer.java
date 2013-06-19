@@ -20,6 +20,8 @@ import org.ow2.choreos.utils.SshWaiter;
 import com.jcraft.jsch.JSchException;
 
 public class DeploymentPreparer {
+    
+    SshUtil ssh;
 
     private Logger logger = Logger.getLogger(DeploymentPreparer.class);
 
@@ -44,20 +46,18 @@ public class DeploymentPreparer {
 
 	for (CloudNode node : nodes) {
 	    try {
-		waitForSshAccess(node);
+		ssh = waitForSshAccess(node);
 	    } catch (NodeNotAccessibleException e) {
 		throw new PrepareDeploymentFailedException(deploymentRequest.getRecipeName());
 	    }
 
-	    SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
 	    String serviceInstanceId = "";
-
 	    switch (deploymentRequest.getService().getSpec().getPackageType()) {
 	    case COMMAND_LINE:
-		serviceInstanceId = installJar(deploymentRequest, ssh, serviceInstanceId);
+		serviceInstanceId = installJar(deploymentRequest, serviceInstanceId);
 		break;
 	    case TOMCAT:
-		serviceInstanceId = installWar(deploymentRequest, ssh, serviceInstanceId);
+		serviceInstanceId = installWar(deploymentRequest, serviceInstanceId);
 		break;
 	    case EASY_ESB:
 		break;
@@ -72,12 +72,14 @@ public class DeploymentPreparer {
 	}
 
 	deploymentRequest.getService().setServiceInstances(instances);
+	ssh.disconnect();
 	return nodes;
     }
 
-    private String installWar(DeploymentRequest deploymentRequest, SshUtil ssh, String serviceInstanceId) {
+    private String installWar(DeploymentRequest deploymentRequest, String serviceInstanceId) {
+	String command = getWarCommand(deploymentRequest);
 	try {
-	    serviceInstanceId = ssh.runCommand(getWarCommand(deploymentRequest));
+	    serviceInstanceId = ssh.runCommand(command);
 	} catch (JSchException e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
@@ -88,23 +90,22 @@ public class DeploymentPreparer {
 	return serviceInstanceId;
     }
 
-    private String installJar(DeploymentRequest deploymentRequest, SshUtil ssh, String serviceInstanceId) {
+    private String installJar(DeploymentRequest deploymentRequest, String serviceInstanceId) {
+	String command = getJarCommand(deploymentRequest);
 	try {
-	    serviceInstanceId = ssh.runCommand(getJarCommand(deploymentRequest));
+	    serviceInstanceId = ssh.runCommand(command);
 	} catch (JSchException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	} catch (SshCommandFailed e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
 	return serviceInstanceId;
     }
 
-    private void waitForSshAccess(CloudNode node) throws NodeNotAccessibleException {
+    private SshUtil waitForSshAccess(CloudNode node) throws NodeNotAccessibleException {
 	SshWaiter sshWaiter = new SshWaiter();
 	try {
-	    sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), 60);
+	    return sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), 60);
 	} catch (SshNotConnected e) {
 	    throw new NodeNotAccessibleException(node.getIp());
 	}

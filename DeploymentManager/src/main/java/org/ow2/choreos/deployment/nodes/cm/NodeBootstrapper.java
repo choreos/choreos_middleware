@@ -16,7 +16,8 @@ import org.ow2.choreos.breaker.Invoker;
 import org.ow2.choreos.breaker.InvokerException;
 import org.ow2.choreos.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
-import org.ow2.choreos.utils.RemoteFileWriter;
+import org.ow2.choreos.utils.Scp;
+import org.ow2.choreos.utils.ScpFailed;
 import org.ow2.choreos.utils.SshCommandFailed;
 import org.ow2.choreos.utils.SshNotConnected;
 import org.ow2.choreos.utils.SshUtil;
@@ -94,26 +95,24 @@ public class NodeBootstrapper {
     }
 
     private void savePrepareDeploymentScript() {
-	SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-	String script = getPrepareDeploymentScript();
-	RemoteFileWriter remoteFileWriter = new RemoteFileWriter();
+	Scp scp = new Scp(node.getIp(), node.getUser(), node.getPrivateKeyFile());
+	File script = getPrepareDeploymentScript();
 	try {
-	    remoteFileWriter.writeFile(script, "$HOME/prepare_deployment.sh", ssh);
-	} catch (SshCommandFailed e) {
+	    scp.sendFile(script.getAbsolutePath());
+	} catch (ScpFailed e) {
 	    logger.error("It was not possible to save prepare_deployment.sh on node " + node.getId());
+	    throw new IllegalStateException();
 	}
     }
 
-    private String getPrepareDeploymentScript() {
-	URL scriptFile = this.getClass().getClassLoader().getResource(PREPARE_DEPLOYMENT_SCRIPT);
-	String script = null;
-	try {
-	    script = FileUtils.readFileToString(new File(scriptFile.getFile()));
-	} catch (IOException e) {
-	    logger.error("Should not happen!", e);
+    private File getPrepareDeploymentScript() {
+	URL scriptFileURL = this.getClass().getClassLoader().getResource(PREPARE_DEPLOYMENT_SCRIPT);
+	File scriptFile = new File(scriptFileURL.getFile());
+	if (!scriptFile.exists()) {
+	    logger.error(PREPARE_DEPLOYMENT_SCRIPT + " not found! Should never happen!");
 	    throw new IllegalStateException();
 	}
-	return script;
+	return scriptFile;
     }
 
     private class BootstrapTask implements Callable<Void> {

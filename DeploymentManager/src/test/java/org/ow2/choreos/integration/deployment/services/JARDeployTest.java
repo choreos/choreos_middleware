@@ -43,7 +43,6 @@ public class JARDeployTest {
 
     @Before
     public void setUp() throws Exception {
-
 	spec.setPackageUri(JAR_LOCATION);
 	spec.setPackageType(PackageType.COMMAND_LINE);
 	spec.setEndpointName("airline");

@@ -15,7 +15,7 @@ import org.junit.experimental.categories.Category;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.cloudprovider.AWSCloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
-import org.ow2.choreos.deployment.nodes.cm.NodeChecker;
+import org.ow2.choreos.deployment.nodes.cm.BootstrapChecker;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
@@ -86,8 +86,8 @@ public class MultipleAWSNodesCreationTest {
 	    try {
 		CloudNode node = npm.createNode(new NodeSpec());
 		created = true;
-		NodeChecker checker = new NodeChecker();
-		bootstrapped = checker.checkNodeOnNodesList(node);
+		BootstrapChecker checker = new BootstrapChecker();
+		bootstrapped = checker.isBootstrapped(node);
 	    } catch (NodeNotCreatedException e) {
 		System.out.println("Node not created in " + index + " because " + e.getMessage());
 	    }
