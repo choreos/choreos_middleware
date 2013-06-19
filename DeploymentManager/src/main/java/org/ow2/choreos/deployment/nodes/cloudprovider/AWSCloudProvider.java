@@ -6,14 +6,13 @@ package org.ow2.choreos.deployment.nodes.cloudprovider;
 
 import java.util.Iterator;
 import java.util.Properties;
-import java.util.Random;
 
-import org.apache.log4j.Logger;
 import org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.ec2.domain.InstanceType;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
+import org.ow2.choreos.integration.deployment.nodes.cloudprovider.OneRequestPerSecondEnforcer;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
@@ -29,13 +28,8 @@ public class AWSCloudProvider extends JCloudsCloudProvider {
     private static final String DEFAULT_IMAGE = "us-east-1/ami-3b4ff252"; // Ubuntu
 									  // 12.04
 
-    // only threads with the creationToken can create new instances
-    // we use this token to implement the 1 req/sec rule
-    private static boolean creationToken = true;
-    private static Random random = new Random();
-
-    private Logger logger = Logger.getLogger(AWSCloudProvider.class);
-
+    private static final OneRequestPerSecondEnforcer oneRequestPerSecondEnforcer = new OneRequestPerSecondEnforcer();
+    
     public AWSCloudProvider() {
 	super(IDENTITY, CREDENTIAL, PROVIDER, PROPERTIES);
     }
@@ -46,41 +40,8 @@ public class AWSCloudProvider extends JCloudsCloudProvider {
 
     @Override
     public CloudNode createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
-	oneRequestPerSecondRule();
+	oneRequestPerSecondEnforcer.enforceRule();
 	return super.createNode(nodeSpec);
-    }
-
-    private void oneRequestPerSecondRule() {
-
-	while (!getToken()) {
-	    final int DELAY = 10;
-	    final int DELTA = random.nextInt(10);
-	    try {
-		Thread.sleep(DELAY + DELTA);
-	    } catch (InterruptedException e) {
-		logger.error("Exception at sleeping =/");
-	    }
-	}
-
-	final int TWO_SECONDS = 2000;
-	try {
-	    Thread.sleep(TWO_SECONDS);
-	} catch (InterruptedException e) {
-	    logger.error("Exception at sleeping =/");
-	}
-
-	creationToken = true; // releases the token
-    }
-
-    private boolean getToken() {
-	boolean ok = false;
-	synchronized (AWSCloudProvider.class) {
-	    ok = creationToken;
-	    if (ok) {
-		creationToken = false;
-	    }
-	}
-	return ok;
     }
 
     @Override
