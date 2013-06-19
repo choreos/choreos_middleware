@@ -1,4 +1,4 @@
-package org.ow2.choreos.integration.deployment.nodes.cloudprovider;
+package org.ow2.choreos.deployment.nodes.cloudprovider;
 
 import java.util.Random;
 
