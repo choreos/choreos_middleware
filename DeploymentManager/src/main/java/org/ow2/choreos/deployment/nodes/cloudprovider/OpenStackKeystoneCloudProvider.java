@@ -31,6 +31,7 @@ import com.google.inject.Module;
 
 public class OpenStackKeystoneCloudProvider implements CloudProvider {
 
+    private static final String FLAVOR = "m1.medium";
     private Logger logger = Logger.getLogger(OpenStackKeystoneCloudProvider.class);
 
     public String getProviderName() {
@@ -158,20 +159,21 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
 
     }
 
-    public List<Hardware> getHardwareProfiles() {
+    public Hardware getHardwareProfile() {
 	logger.info("getting hardware profile info...");
 	ComputeService client = getClient("");
 	Set<? extends Hardware> profiles = client.listHardwareProfiles();
 
-	List<Hardware> hardwareList = new ArrayList<Hardware>();
-
+	if (profiles == null || profiles.isEmpty())
+	    throw new IllegalStateException("No hardware profiles available!");
+	
 	for (Hardware profile : profiles) {
-	    hardwareList.add(profile);
+	    if (profile.getName().equals(FLAVOR))
+		return profile;
 	}
-	logger.info(hardwareList.toString());
 
-	return hardwareList;
-
+	Iterator<? extends Hardware> it = profiles.iterator();
+	return it.next();
     }
 
     @Override
@@ -201,7 +203,7 @@ public class OpenStackKeystoneCloudProvider implements CloudProvider {
 	    imageId = getImages().get(0).getId();
 	}
 
-	String hardwareId = getHardwareProfiles().get(1).getId();
+	String hardwareId = getHardwareProfile().getId();
 
 	logger.info("Creating Template with image ID: " + imageId + "; hardware ID: " + hardwareId);
 

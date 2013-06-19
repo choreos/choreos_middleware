@@ -100,15 +100,9 @@ public class OpenStackCloudProviderTest extends BaseTest {
 	if (bTestHWList) {
 	    // Hardware Profiles Test
 	    System.out.println("TEST: List Hardware Profiles from OpenStack\n");
-	    List<Hardware> hardwares = infra.getHardwareProfiles();
+	    Hardware hardware = infra.getHardwareProfile();
 
-	    System.out.println("Hardware Count: " + hardwares.size());
-
-	    for (Hardware hardware : hardwares) {
-		System.out.println("Name: " + hardware.getName());
-		System.out.println("ID: " + hardware.getId());
-		System.out.println("--------------");
-	    }
+	    System.out.println("Hardware : " + hardware);
 	}
 
 	System.out.println(">>>> Completed Openstack Tests.");
