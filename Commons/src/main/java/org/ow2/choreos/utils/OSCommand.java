@@ -115,4 +115,9 @@ public class OSCommand {
 	}
     }
 
+    @Override
+    public String toString() {
+	return command;
+    }
+
 }

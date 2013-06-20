@@ -16,7 +16,9 @@ public class Scp {
     }
 
     public void sendFile(String filePath, String targetPath) throws ScpFailed {
-	OSCommand command = new OSCommand("scp -i " + privateKeyFile + " " + filePath + " " +  user + "@" + hostname + ":" + targetPath);
+	OSCommand command = new OSCommand("scp -i " + privateKeyFile
+		+ " -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null " + filePath + " " + user + "@"
+		+ hostname + ":" + targetPath);
 	try {
 	    command.execute();
 	} catch (CommandLineException e) {
