@@ -23,7 +23,7 @@ public class OneRequestPerSecondEnforcerTest {
 	
 	int previous = 0;
 	int value = counter.get();
-	while (value < N) {
+	while (value < N-1) {
 	    if (value > previous + 2)
 		fail();
 	    waitOneSecond();

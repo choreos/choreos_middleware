@@ -1,4 +1,7 @@
 #! /bin/bash
+# arg $1 -jar or -war flag
+# arg $2 package URI
+# arg $3 Deployment Manager URI
 
 function write_war_json() {
 
@@ -54,8 +57,6 @@ function edit_recipe() {
         sed -i -r -e 's/.*\"recipe\[apt\]\",/\t\t\"recipe[apt]\",\n\t\t\"recipe\['"$3"']\",/g' node.json
 }
 
-# AIRLINE_JAR=http://valinhos.ime.usp.br:54080/enact_test/v2-2/airline-service.jar
-# AIRLINE_WAR=http://valinhos.ime.usp.br:54080/enact_test/v2-2/airline.war
 function add_jar_service() {
 	cd $HOME/chef-solo
 	s_name=`uuidgen`
@@ -73,10 +74,10 @@ function install_jar() {
 
 case "$1" in
         -war)
-                install_war $2 $3 > /tmp/chef-solo.log  2>&1 
+                install_war $2 $3 >> /tmp/chef-solo.log  2>&1 
                 ;;
         -jar)   
-                install_jar $2 $3 > /tmp/chef-solo.log  2>&1 
+                install_jar $2 $3 >> /tmp/chef-solo.log  2>&1 
                 ;;
         *)      
                 echo "Usage: prepare_deployment [-jar|-war]"
