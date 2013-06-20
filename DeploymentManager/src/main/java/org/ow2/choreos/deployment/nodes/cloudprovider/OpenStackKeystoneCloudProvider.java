@@ -17,7 +17,7 @@ public class OpenStackKeystoneCloudProvider extends JCloudsCloudProvider {
 
     private static final String USER_NAME = "ubuntu";
     private static final String USER_PRIVATE_KEY = DeploymentManagerConfiguration.get("OPENSTACK_PRIVATE_SSH_KEY");
-    private static final String DEFAULT_FLAVOR = "m1.medium";
+    private static final String DEFAULT_FLAVOR_NAME = "m1.medium";
     private static final String DEFAULT_IMAGE = "RegionOne/210e028d-9b88-4e54-af6b-25fc5ca00e69"; // Ubuntu
 												  // 12.04
 
@@ -64,7 +64,7 @@ public class OpenStackKeystoneCloudProvider extends JCloudsCloudProvider {
 	    throw new IllegalStateException("No hardware profiles available!");
 
 	for (Hardware profile : profiles) {
-	    if (profile.getName().equals(DEFAULT_FLAVOR))
+	    if (profile.getName().equals(DEFAULT_FLAVOR_NAME))
 		return profile;
 	}
 
@@ -80,8 +80,9 @@ public class OpenStackKeystoneCloudProvider extends JCloudsCloudProvider {
     @Override
     protected String getHardwareId() {
 	for (Hardware profile : getComputeService().listHardwareProfiles()) {
-	    if (profile.getName().equals(DEFAULT_FLAVOR))
+	    if (profile.getName().equals(DEFAULT_FLAVOR_NAME)) {
 		return profile.getId();
+	    }
 	}
 	return getComputeService().listHardwareProfiles().iterator().next().getId();
     }

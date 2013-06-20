@@ -69,7 +69,7 @@ public class AWSCloudProvider extends JCloudsCloudProvider {
 	if (publicAddresses != null && publicAddresses.hasNext()) {
 	    return publicAddresses.next();
 	} else {
-	    throw new IllegalStateException("Could not retrieve IP from node");
+	    return null;
 	}
     }
 

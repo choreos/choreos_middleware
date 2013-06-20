@@ -61,6 +61,9 @@ public abstract class JCloudsCloudProvider implements CloudProvider {
 	    Set<? extends NodeMetadata> createdNodes = computeService.createNodesInGroup("default", 1, template);
 	    NodeMetadata nodeMetadata = Iterables.get(createdNodes, 0);
 	    CloudNode node = getCloudNodeFromMetadata(nodeMetadata);
+	    if (!node.hasIp()) {
+		throw new NodeNotCreatedException("Could not retrieve IP from just created node.");
+	    }
 	    logger.debug(node + " created");
 	    computeService.getContext().close();
 	    return node;
@@ -150,7 +153,7 @@ public abstract class JCloudsCloudProvider implements CloudProvider {
 	for (ComputeMetadata computeMetadata : cloudNodes) {
 	    NodeMetadata nodeMetadata = client.getNodeMetadata(computeMetadata.getId());
 	    CloudNode node = getCloudNodeFromMetadata(nodeMetadata);
-	    if (node.getState() != 1) {
+	    if (node.getState() != 1 && node.hasIp()) {
 		nodeList.add(node);
 	    }
 	}
