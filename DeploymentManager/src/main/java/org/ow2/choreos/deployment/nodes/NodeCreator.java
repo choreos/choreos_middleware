@@ -20,6 +20,7 @@ import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.utils.Concurrency;
+import org.ow2.choreos.utils.Timeouts;
 
 /**
  * Creates a new node and bootstrapped it
@@ -28,8 +29,6 @@ import org.ow2.choreos.utils.Concurrency;
  * 
  */
 public class NodeCreator {
-
-    private static final int VM_CREATION_TIMEOUT = 200; // in seconds
 
     private Logger logger = Logger.getLogger(NodeDestroyer.class);
 
@@ -51,9 +50,10 @@ public class NodeCreator {
     public CloudNode create(NodeSpec nodeSpec) throws NodeNotCreatedException {
 
 	ExecutorService executor = Executors.newSingleThreadExecutor();
-	CloudNodeCreation cloudNodeCreator = new CloudNodeCreation(cp, nodeSpec);
+	CloudNodeCreation cloudNodeCreator = new CloudNodeCreation(nodeSpec);
 	Future<CloudNode> future = executor.submit(cloudNodeCreator);
-	Concurrency.waitExecutor(executor, VM_CREATION_TIMEOUT, TimeUnit.SECONDS, logger);
+	int creationTimeout = getCreationTimeoutInSeconds();
+	Concurrency.waitExecutor(executor, creationTimeout, TimeUnit.SECONDS, logger);
 
 	CloudNode node = null;
 	try {
@@ -64,7 +64,7 @@ public class NodeCreator {
 	    throw new NodeNotCreatedException();
 	}
 
-	if (node == null || node.getIp() == null || node.getIp().isEmpty()) {
+	if (node == null || !node.hasIp()) {
 	    throw new NodeNotCreatedException(node.getId());
 	}
 
@@ -82,13 +82,20 @@ public class NodeCreator {
 	return node;
     }
 
+    private int getCreationTimeoutInSeconds() {
+	final String property = "NODE_CREATION";
+	try {
+	    return Integer.parseInt(Timeouts.get(property));
+	} catch (NumberFormatException e) {
+	    throw new IllegalStateException(property + " not configured on timeouts.properties");
+	}	
+    }
+
     private class CloudNodeCreation implements Callable<CloudNode> {
 
-	CloudProvider cp;
 	NodeSpec nodeSpec;
 
-	CloudNodeCreation(CloudProvider cp, NodeSpec nodeSpec) {
-	    this.cp = cp;
+	CloudNodeCreation(NodeSpec nodeSpec) {
 	    this.nodeSpec = nodeSpec;
 	}
 
