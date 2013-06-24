@@ -41,7 +41,7 @@ public class IdlePoolTest {
 
 	int N = 10;
 	nodeCreator = mock(NodeCreator.class);
-	OngoingStubbing<CloudNode> ongoingStubbing = when(nodeCreator.create(any(NodeSpec.class)));
+	OngoingStubbing<CloudNode> ongoingStubbing = when(nodeCreator.createBootstrappedNode(any(NodeSpec.class)));
 	for (int i = 0; i < N; i++) {
 	    CloudNode node = new CloudNode();
 	    node.setId("node" + i);

@@ -9,11 +9,12 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderMocks;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
+
+import static org.mockito.Mockito.mock;
 
 public class NPMImplTest {
 
@@ -23,10 +24,9 @@ public class NPMImplTest {
 	NodeRegistry reg = NodeRegistry.getInstance();
 	reg.clear();
 
-	CloudProvider cp = CloudProviderMocks.getGoodMock();
-	NodeCreator creator = new NodeCreator(cp, false);
-	int N = cp.getNodes().size();
-	IdlePool pool = IdlePool.getCleanInstance(N, creator);
+	CloudProvider cp = mock(CloudProvider.class);
+	NodeCreator creator = NodeCreatorMocks.getGoodMock();
+	IdlePool pool = IdlePool.getCleanInstance(1, creator);
 
 	NodePoolManager npm = new NPMImpl(cp, creator, pool);
 
@@ -43,10 +43,9 @@ public class NPMImplTest {
 	NodeRegistry reg = NodeRegistry.getInstance();
 	reg.clear();
 
-	CloudProvider cp = CloudProviderMocks.getGoodMock();
-	NodeCreator creator = new NodeCreator(cp, false);
-	int N = cp.getNodes().size();
-	IdlePool pool = IdlePool.getCleanInstance(N, creator);
+	CloudProvider cp = mock(CloudProvider.class);
+	NodeCreator creator = NodeCreatorMocks.getGoodMock();
+	IdlePool pool = IdlePool.getCleanInstance(1, creator);
 
 	NodePoolManager npm = new NPMImpl(cp, creator, pool);
 
@@ -66,19 +65,17 @@ public class NPMImplTest {
 	NodeRegistry reg = NodeRegistry.getInstance();
 	reg.clear();
 
-	CloudProvider cp1 = CloudProviderMocks.getGoodMock();
-	NodeCreator creator1 = new NodeCreator(cp1, false);
-	int N = cp1.getNodes().size();
-	IdlePool pool1 = IdlePool.getCleanInstance(N, creator1);
+	CloudProvider cp1 = mock(CloudProvider.class);
+	NodeCreator creator1 = NodeCreatorMocks.getGoodMock();
+	IdlePool pool1 = IdlePool.getCleanInstance(1, creator1);
 	NodePoolManager npm1 = new NPMImpl(cp1, creator1, pool1);
 
 	CloudNode createdNode = npm1.createNode(new NodeSpec());
 	assertTrue(isNodeOK(createdNode));
 
-	CloudProvider cp2 = CloudProviderMocks.getGoodMock();
-	NodeCreator creator2 = new NodeCreator(cp2, false);
-	N = cp2.getNodes().size();
-	IdlePool pool2 = IdlePool.getCleanInstance(N, creator2);
+	CloudProvider cp2 = mock(CloudProvider.class);
+	NodeCreator creator2 = NodeCreatorMocks.getGoodMock();
+	IdlePool pool2 = IdlePool.getCleanInstance(1, creator2);
 	NodePoolManager npm2 = new NPMImpl(cp2, creator2, pool2);
 
 	CloudNode fromOtherNPM = npm2.getNode(createdNode.getId());

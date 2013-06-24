@@ -162,7 +162,7 @@ public class IdlePool {
 	@Override
 	public void run() {
 	    try {
-		CloudNode node = nodeCreator.create(new NodeSpec());
+		CloudNode node = nodeCreator.createBootstrappedNode(new NodeSpec());
 		ok = true;
 		synchronized (IdlePool.this) {
 		    idleNodes.add(node);

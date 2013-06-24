@@ -10,15 +10,15 @@ package org.ow2.choreos.utils;
  * @author leonardo
  * 
  */
-public class Timeouts {
+public class TimeoutsAndTrials {
 
-    private static final String FILE_PATH = "timeouts.properties";
+    private static final String FILE_PATH = "timeouts_and_trials.properties";
 
     private final Configuration configuration;
 
-    private static Timeouts INSTANCE = new Timeouts();
+    private static TimeoutsAndTrials INSTANCE = new TimeoutsAndTrials();
 
-    private Timeouts() {
+    private TimeoutsAndTrials() {
 	this.configuration = new Configuration(FILE_PATH);
     }
 

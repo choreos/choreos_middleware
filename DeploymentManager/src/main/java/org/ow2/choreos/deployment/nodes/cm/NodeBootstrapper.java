@@ -7,13 +7,9 @@ package org.ow2.choreos.deployment.nodes.cm;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.ow2.choreos.breaker.Invoker;
-import org.ow2.choreos.breaker.InvokerException;
 import org.ow2.choreos.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.utils.Scp;
@@ -22,7 +18,7 @@ import org.ow2.choreos.utils.SshCommandFailed;
 import org.ow2.choreos.utils.SshNotConnected;
 import org.ow2.choreos.utils.SshUtil;
 import org.ow2.choreos.utils.SshWaiter;
-import org.ow2.choreos.utils.Timeouts;
+import org.ow2.choreos.utils.TimeoutsAndTrials;
 
 import com.jcraft.jsch.JSchException;
 
@@ -33,47 +29,63 @@ import com.jcraft.jsch.JSchException;
  */
 public class NodeBootstrapper {
 
-    private static final int BOOTSTRAP_TRIALS = 1;
     private static String BOOTSTRAP_SCRIPT = "chef-solo/bootstrap.sh";
     private static String PREPARE_DEPLOYMENT_SCRIPT = "chef-solo/prepare_deployment.sh";
 
     private CloudNode node;
-    private final int sshTimeoutInSeconds;
-    private final int bootstrapTimeoutInSeconds;
 
     private Logger logger = Logger.getLogger(NodeBootstrapper.class);
 
     public NodeBootstrapper(CloudNode node) {
 	this.node = node;
-	this.sshTimeoutInSeconds = Timeouts.get("LOG_IN_WITH_SSH");
-	this.bootstrapTimeoutInSeconds = Timeouts.get("BOOTSTRAP");
     }
 
     public void bootstrapNode() throws NodeNotAccessibleException, NodeNotBootstrappedException {
-	waitSsh();
 	logger.info("Bootstrapping " + this.node.getIp());
 	executeBootstrapCommand();
 	savePrepareDeploymentScript();
 	logger.info("Bootstrap completed at" + this.node);
     }
 
-    private void waitSsh() throws NodeNotAccessibleException {
-	SshWaiter sshWaiter = new SshWaiter();
+    private void executeBootstrapCommand() throws NodeNotBootstrappedException {
 	try {
-	    sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), sshTimeoutInSeconds);
+	    SshUtil ssh = getSsh();
+	    String bootstrapScript = getBootStrapScript();
+	    ssh.runCommand(bootstrapScript);
+	    ssh.disconnect();
 	} catch (SshNotConnected e) {
-	    throw new NodeNotAccessibleException(this.node.getIp());
+	    logFailMessage();
+	    throw new NodeNotBootstrappedException(node.getId());
+	} catch (JSchException e) {
+	    logFailMessage();
+	    throw new NodeNotBootstrappedException(node.getId());
+	} catch (SshCommandFailed e) {
+	    logFailMessage();
+	    throw new NodeNotBootstrappedException(node.getId());
 	}
     }
 
-    private void executeBootstrapCommand() throws NodeNotBootstrappedException {
-	BootstrapTask task = new BootstrapTask();
-	Invoker<Void> invoker = new Invoker<Void>(task, BOOTSTRAP_TRIALS, bootstrapTimeoutInSeconds, TimeUnit.SECONDS);
+    private SshUtil getSsh() throws SshNotConnected {
+	int timeout = TimeoutsAndTrials.get("CONNECT_SSH_TIMEOUT");
+	SshWaiter sshWaiter = new SshWaiter();
+	SshUtil ssh = sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
+	return ssh;
+    }
+
+    private String getBootStrapScript() {
+	URL scriptFile = this.getClass().getClassLoader().getResource(BOOTSTRAP_SCRIPT);
+	String script = null;
 	try {
-	    invoker.invoke();
-	} catch (InvokerException e) {
-	    throw new NodeNotBootstrappedException(node.getId(), e.getCause());
+	    script = FileUtils.readFileToString(new File(scriptFile.getFile()));
+	} catch (IOException e) {
+	    logger.error("Should not happen!", e);
+	    throw new IllegalStateException();
 	}
+	return script;
+    }
+
+    private void logFailMessage() {
+	logger.error("Node " + node.getId() + " not bootstrapped");
     }
 
     private void savePrepareDeploymentScript() {
@@ -95,41 +107,6 @@ public class NodeBootstrapper {
 	    throw new IllegalStateException();
 	}
 	return scriptFile;
-    }
-
-    private class BootstrapTask implements Callable<Void> {
-
-	@Override
-	public Void call() throws Exception {
-	    SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-	    try {
-		String bootstrapScript = getBootStrapScript();
-		ssh.runCommand(bootstrapScript);
-	    } catch (JSchException e) {
-		logFailMessage();
-		throw new NodeNotAccessibleException(node.getId());
-	    } catch (SshCommandFailed e) {
-		logFailMessage();
-		throw new NodeNotBootstrappedException(node.getId());
-	    }
-	    return null;
-	}
-
-	private String getBootStrapScript() {
-	    URL scriptFile = this.getClass().getClassLoader().getResource(BOOTSTRAP_SCRIPT);
-	    String script = null;
-	    try {
-		script = FileUtils.readFileToString(new File(scriptFile.getFile()));
-	    } catch (IOException e) {
-		logger.error("Should not happen!", e);
-		throw new IllegalStateException();
-	    }
-	    return script;
-	}
-
-	private void logFailMessage() {
-	    logger.error("Node " + node.getId() + " not bootstrapped");
-	}
     }
 
 }

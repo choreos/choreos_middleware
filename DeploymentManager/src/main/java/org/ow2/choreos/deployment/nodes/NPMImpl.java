@@ -47,7 +47,7 @@ public class NPMImpl implements NodePoolManager {
 
 	cloudProvider = provider;
 	nodeRegistry = NodeRegistry.getInstance();
-	nodeCreator = new NodeCreator(cloudProvider, true);
+	nodeCreator = new NodeCreator(cloudProvider);
 	idlePool = IdlePool.getInstance(poolSize, nodeCreator);
     }
 
@@ -62,7 +62,7 @@ public class NPMImpl implements NodePoolManager {
     public CloudNode createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
 	CloudNode node = new CloudNode();
 	try {
-	    node = nodeCreator.create(nodeSpec);
+	    node = nodeCreator.createBootstrappedNode(nodeSpec);
 	} catch (NodeNotCreatedException e1) {
 	    // if node creation has failed, let's retrieve a node from the pool
 	    // since waiting for a new node would take too much time!
