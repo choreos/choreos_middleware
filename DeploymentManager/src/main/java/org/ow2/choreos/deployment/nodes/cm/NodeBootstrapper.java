@@ -45,26 +45,8 @@ public class NodeBootstrapper {
 
     public NodeBootstrapper(CloudNode node) {
 	this.node = node;
-	this.sshTimeoutInSeconds = getSshTimeoutInSeconds();
-	this.bootstrapTimeoutInSeconds = getBootstrapTimeoutInSeconds();
-    }
-
-    private int getSshTimeoutInSeconds() {
-	final String property = "LOG_IN_WITH_SSH";
-	try {
-	    return Integer.parseInt(Timeouts.get(property));
-	} catch (NumberFormatException e) {
-	    throw new IllegalStateException(property + " not configured on timeouts.properties");
-	}
-    }
-
-    private int getBootstrapTimeoutInSeconds() {
-	final String property = "BOOTSTRAP";
-	try {
-	    return Integer.parseInt(Timeouts.get(property));
-	} catch (NumberFormatException e) {
-	    throw new IllegalStateException(property + " not configured on timeouts.properties");
-	}
+	this.sshTimeoutInSeconds = Timeouts.get("LOG_IN_WITH_SSH");
+	this.bootstrapTimeoutInSeconds = Timeouts.get("BOOTSTRAP");
     }
 
     public void bootstrapNode() throws NodeNotAccessibleException, NodeNotBootstrappedException {

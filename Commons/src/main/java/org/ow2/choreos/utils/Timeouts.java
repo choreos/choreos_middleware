@@ -4,7 +4,6 @@
 
 package org.ow2.choreos.utils;
 
-import org.ow2.choreos.utils.Configuration;
 
 /**
  * 
@@ -23,20 +22,16 @@ public class Timeouts {
 	this.configuration = new Configuration(FILE_PATH);
     }
 
-    public static String get(String key) {
-	return INSTANCE.configuration.get(key);
+    public static int get(String key) {
+	try {
+	    return Integer.parseInt(INSTANCE.configuration.get(key).trim());
+	} catch (NumberFormatException e) {
+	    throw new IllegalStateException(key + " not configured on " + FILE_PATH);
+	}
     }
 
-    public static String[] getMultiple(String key) {
-	return INSTANCE.configuration.getMultiple(key);
-    }
-
-    public static void set(String key, String value) {
-	INSTANCE.configuration.set(key, value);
-    }
-
-    public static void set(String key, String[] values) {
-	INSTANCE.configuration.set(key, values);
+    public static void set(String key, int value) {
+	INSTANCE.configuration.set(key, Integer.toString(value));
     }
 
 }

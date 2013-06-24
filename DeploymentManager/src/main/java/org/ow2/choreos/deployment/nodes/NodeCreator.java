@@ -52,7 +52,7 @@ public class NodeCreator {
 	ExecutorService executor = Executors.newSingleThreadExecutor();
 	CloudNodeCreation cloudNodeCreator = new CloudNodeCreation(nodeSpec);
 	Future<CloudNode> future = executor.submit(cloudNodeCreator);
-	int creationTimeout = getCreationTimeoutInSeconds();
+	int creationTimeout = Timeouts.get("NODE_CREATION");
 	Concurrency.waitExecutor(executor, creationTimeout, TimeUnit.SECONDS, logger);
 
 	CloudNode node = null;
@@ -82,15 +82,6 @@ public class NodeCreator {
 	return node;
     }
 
-    private int getCreationTimeoutInSeconds() {
-	final String property = "NODE_CREATION";
-	try {
-	    return Integer.parseInt(Timeouts.get(property));
-	} catch (NumberFormatException e) {
-	    throw new IllegalStateException(property + " not configured on timeouts.properties");
-	}	
-    }
-
     private class CloudNodeCreation implements Callable<CloudNode> {
 
 	NodeSpec nodeSpec;
@@ -105,5 +96,5 @@ public class NodeCreator {
 	    return node;
 	}
     }
-
+    
 }
