@@ -72,8 +72,7 @@ public class IdlePoolTest {
 	pool.fillPool();
 
 	while (true) {
-	    Set<CloudNode> idlePool = pool.getIdleNodes();
-	    if (idlePool.size() >= N)
+	    if (pool.isFull())
 		break; // pas the test
 	    Thread.sleep(50);
 	}
@@ -93,8 +92,7 @@ public class IdlePoolTest {
 	}
 
 	while (true) {
-	    Set<CloudNode> idlePool = pool.getIdleNodes();
-	    if (idlePool.size() >= N)
+	    if (pool.isFull())
 		break; // pas the test
 	    Thread.sleep(50);
 	}
@@ -142,8 +140,7 @@ public class IdlePoolTest {
 	}
 
 	while (true) {
-	    Set<CloudNode> idlePool = pool.getIdleNodes();
-	    if (idlePool.size() >= N)
+	    if (pool.isFull())
 		break; // pas the test
 	    Thread.sleep(50);
 	}

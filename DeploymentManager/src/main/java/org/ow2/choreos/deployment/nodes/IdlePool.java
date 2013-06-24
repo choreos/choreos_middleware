@@ -47,7 +47,6 @@ public class IdlePool {
     }
 
     public static IdlePool getInstance(NodeCreator nodeCreator) {
-
 	int poolSize = 0;
 	try {
 	    poolSize = Integer.parseInt(DeploymentManagerConfiguration.get("POOL_SIZE"));
@@ -67,7 +66,6 @@ public class IdlePool {
      * @return
      */
     public static IdlePool getInstance(int poolSize, NodeCreator nodeCreator) {
-
 	synchronized (IdlePool.class) {
 	    if (instance == null) {
 		instance = new IdlePool(poolSize, nodeCreator);
@@ -92,7 +90,7 @@ public class IdlePool {
      * 
      * @return an unmodifiable list with the ids of the nodes in the idle pool
      */
-    public Set<CloudNode> getIdleNodes() {
+    Set<CloudNode> getIdleNodes() {
 	return Collections.unmodifiableSet(idleNodes);
     }
 
@@ -136,6 +134,10 @@ public class IdlePool {
 	    Thread thrd = new Thread(vmCreator);
 	    thrd.start();
 	}
+    }
+    
+    public boolean isFull() {
+	return idleNodes.size() >= poolSize;
     }
 
     /**
