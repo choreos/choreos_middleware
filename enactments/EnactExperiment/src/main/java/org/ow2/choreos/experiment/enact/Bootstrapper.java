@@ -6,7 +6,7 @@ import java.util.List;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.client.NodesClient;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 public class Bootstrapper {
@@ -22,7 +22,7 @@ public class Bootstrapper {
 		this.report = report;
 	}
 	
-	private List<Node> vms;
+	private List<CloudNode> vms;
 
 	/**
 	 * Creates VMs,
@@ -31,9 +31,9 @@ public class Bootstrapper {
 		
 		System.out.println(Utils.getTimeStamp() + "Creating VMs...");
 		long t0 = System.currentTimeMillis();
-		List<Node> vms = createVMs();
+		List<CloudNode> vms = createVMs();
 		System.out.println(Utils.getTimeStamp() + "Created machines: ");
-		for (Node vm: vms) {
+		for (CloudNode vm: vms) {
 			String timeStamp = Utils.getTimeStamp();
 			if (timeStamp != null & vm != null) {
 				System.out.println(timeStamp + vm.getIp() + "  ");
@@ -45,9 +45,9 @@ public class Bootstrapper {
 		report.setVmsCreationTotalTime(duration);
 	}
 
-	private List<Node> createVMs() {
+	private List<CloudNode> createVMs() {
 	
-		final List<Node> vms = new ArrayList<Node>();
+		final List<CloudNode> vms = new ArrayList<CloudNode>();
 		Thread[] trds = new Thread[vmsQuantity];
 		
 		for (int i=0; i<vmsQuantity; i++) {
@@ -58,7 +58,7 @@ public class Bootstrapper {
 					long t0 = System.currentTimeMillis();
 					NodePoolManager npm = new NodesClient(NPM_HOST);
 					NodeSpec nodeSpec = new NodeSpec();
-					Node vm = null;
+					CloudNode vm = null;
 					boolean created = false;
 					
 					while (!created) {
@@ -103,7 +103,7 @@ public class Bootstrapper {
 		}
 	}
 	
-	public List<Node> getNodes() {
+	public List<CloudNode> getNodes() {
 		
 		return vms;
 	}

@@ -42,7 +42,7 @@ public class ContextCasterTest {
 
     private Map<String, DeployableService> deployedServices;
 
-    ModelsForTest models;
+    private ModelsForTest models;
     private DeployableService travelService;
     private DeployableService airlineService;
 

@@ -11,7 +11,7 @@ import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory.CloudProviderType;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
-import org.ow2.choreos.nodes.datamodel.Node;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.utils.Concurrency;
 
 public class VMsDestroyer {
@@ -31,10 +31,10 @@ public class VMsDestroyer {
 		
 		logger.info("Destroying all the nodes...");
 		
-		List<Node> nodes = this.cp.getNodes();
+		List<CloudNode> nodes = this.cp.getNodes();
 		final int N = nodes.size();
 		ExecutorService executor = Executors.newFixedThreadPool(N);
-		for (Node node: nodes) {
+		for (CloudNode node: nodes) {
 			RunnableDestroyer destroyer = new RunnableDestroyer(node);
 			executor.submit(destroyer);
 			this.sleepForAws();
@@ -55,9 +55,9 @@ public class VMsDestroyer {
 	
 	private class RunnableDestroyer implements Runnable {
 		
-		Node node;
+	    CloudNode node;
 		
-		RunnableDestroyer(Node node) {
+		RunnableDestroyer(CloudNode node) {
 			this.node = node;
 		}
 
