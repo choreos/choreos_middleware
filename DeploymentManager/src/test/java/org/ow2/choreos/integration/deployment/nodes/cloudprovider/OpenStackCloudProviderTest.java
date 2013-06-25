@@ -6,10 +6,8 @@ package org.ow2.choreos.integration.deployment.nodes.cloudprovider;
 
 import java.util.List;
 
-import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Image;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.deployment.nodes.cloudprovider.OpenStackKeystoneCloudProvider;
@@ -21,16 +19,7 @@ import org.ow2.choreos.tests.IntegrationTest;
 @Category(IntegrationTest.class)
 public class OpenStackCloudProviderTest extends BaseTest {
 
-    private final static OpenStackKeystoneCloudProvider infra = new OpenStackKeystoneCloudProvider();
-
-    // private Node node = new Node();
-
-    @Before
-    public void SetUp() throws RunNodesException {
-	// node.
-	System.out.println("Began Pre-OS Testing...");
-
-    }
+    private final OpenStackKeystoneCloudProvider infra = new OpenStackKeystoneCloudProvider();
 
     @Test
     public void shouldCreateNodeFromPool() throws Exception {
