@@ -28,6 +28,7 @@ import com.jcraft.jsch.JSchException;
  */
 public class NodeUpdater {
 
+    private static final String CHEF_SOLO_COMMAND = "sudo chef-solo -c $HOME/chef-solo/solo.rb";
     // it is not the time to one update, but also the time waiting in the queue
     private static final int UPDATE_TIMEOUT = 30;
 
@@ -102,7 +103,6 @@ public class NodeUpdater {
 
 	    logger.debug("updating node " + nodeId);
 
-	    final String CHEF_SOLO_COMMAND = "sudo chef-solo -c $HOME/chef-solo/solo.rb";
 	    final int MAX_TRIALS = 5;
 	    final int SLEEPING_TIME = 5000;
 	    int trials = 0;

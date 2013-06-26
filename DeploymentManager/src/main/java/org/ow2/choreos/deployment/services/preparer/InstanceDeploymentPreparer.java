@@ -26,9 +26,7 @@ public class InstanceDeploymentPreparer {
     public String prepareDeployment() throws PrepareDeploymentFailedException {
 	int timeout = TimeoutsAndTrials.get("PREPARE_DEPLOYMENT_TIMEOUT");
 	int trials = TimeoutsAndTrials.get("PREPARE_DEPLOYMENT_TRIALS");
-	PrepareDeploymentCommand prepareDeploymentCommand = PrepareDeploymentCommandFactory
-		.getInstance(deploymentRequest);
-	String command = prepareDeploymentCommand.getCommand();
+	String command = getCommand();
 	PreparerTask task = new PreparerTask(command, node);
 	Invoker<String> invoker = new Invoker<String>(task, trials, timeout, TimeUnit.SECONDS);
 	String serviceInstanceId = null;
@@ -38,6 +36,13 @@ public class InstanceDeploymentPreparer {
 	    throw new PrepareDeploymentFailedException(serviceName, node);
 	}
 	return serviceInstanceId;
+    }
+    
+    private String getCommand() {
+	String scriptName = deploymentRequest.getService().getSpec().getPackageType().toString().toLowerCase();
+	String packageUri = deploymentRequest.getService().getSpec().getPackageUri();
+	return ". chef-solo/prepare_deployment/" + scriptName + ".sh " + packageUri + " "
+		+ deploymentRequest.getDeploymentManagerURL();
     }
 
     private class PreparerTask implements Callable<String> {

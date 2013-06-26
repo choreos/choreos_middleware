@@ -31,7 +31,6 @@ import com.jcraft.jsch.JSchException;
 public class NodeBootstrapper {
 
     private static String BOOTSTRAP_SCRIPT = "chef-solo/bootstrap.sh";
-    private static String PREPARE_DEPLOYMENT_SCRIPT = "chef-solo/prepare_deployment.sh";
     private static String PREPARE_DEPLOYMENT_SCRIPTS_FOLDER = "chef-solo/prepare_deployment/";
     private static String INITIAL_NODE_JSON = "chef-solo/node.json";
 
@@ -47,7 +46,6 @@ public class NodeBootstrapper {
 	logger.info("Bootstrapping " + this.node.getIp());
 	executeBootstrapCommand();
 	saveFile(INITIAL_NODE_JSON, "chef-solo");
-	saveFile(PREPARE_DEPLOYMENT_SCRIPT, "");
 	savePrepareDeploymentScripts();
 	logger.info("Bootstrap completed at" + this.node);
     }

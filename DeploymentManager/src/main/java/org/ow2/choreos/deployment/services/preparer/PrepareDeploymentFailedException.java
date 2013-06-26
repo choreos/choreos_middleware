@@ -11,11 +11,11 @@ public class PrepareDeploymentFailedException extends Exception {
     private static final long serialVersionUID = -3910285345563830341L;
 
     public PrepareDeploymentFailedException(String serviceName, CloudNode node) {
-	super("Service " + serviceName + " not applied on " + node);
+	super("Deployment of service " + serviceName + " not prepared on " + node);
     }
     
     public PrepareDeploymentFailedException(String serviceName) {
-	super("Service " + serviceName + " not applied on any node");
+	super("Deployment of service " + serviceName + " not preapred on any node");
     }
     
 }
