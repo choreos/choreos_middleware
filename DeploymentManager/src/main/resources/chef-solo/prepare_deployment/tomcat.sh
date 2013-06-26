@@ -4,18 +4,16 @@
 
 function copy_template() {
     cd $HOME/chef-solo
-    cp -ra cookbooks/jar cookbooks/$3
+    cp -ra cookbooks/war cookbooks/$3
     echo "WAR template copied to folder cookbooks/$3"
 }
 
 function edit_recipe() {
-    # edit recipe ($PackageURL , $NAME, $DeploymentManagerURL, $WARFILE)
+    # edit recipe ($NAME, $PackageURL)
     cd cookbooks/$3
-    sed -i '/\$PackageURL/ s##'"$1"'#g' attributes/default.rb
     sed -i '/\$NAME/ s##'"$3"'#g' attributes/default.rb
-    sed -i '/\$DeploymentManagerURL/ s##'"$2"'#g' attributes/default.rb
+    sed -i '/\$PackageURL/ s##'"$1"'#g' attributes/default.rb
     sed -i '/\$NAME/ s##'"$3"'#g' recipes/default.rb
-    sed -i '/\$WARFILE/ s##'"$3"'#g' attributes/default.rb
     echo "Cookbook $3 edited"
 }
 
@@ -39,4 +37,4 @@ function prepare_jar() {
 }
 
 prepare_jar $1 $2 >> /tmp/chef-solo.log  2>&1 
-
+echo $instance_uuid | tr -d '\n'

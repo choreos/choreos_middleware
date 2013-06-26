@@ -1,20 +1,5 @@
-#
-# Cookbook Name:: generic-jar-service-template
-# Recipe:: default
-#
-# Copyright 2012, YOUR_COMPANY_NAME
-#
-# All rights reserved - Do Not Redistribute
-#
 
-##########################################################################
-#									 #
-#                IMPORTANT DEVELOPMENT NOTICE:                           #
-#									 #
-# All ocurrences of $ NAME must be replaced with the actual service name #
-#            before uploading the recipe to the chef-server              #
-#									 #
-##########################################################################
+# NOTE: this is a template file. $variables must be properly replaced.
 
 include_recipe "apt" # java recipe is failing without recipe apt (and tomcat depends on java)
 include_recipe "tomcat::choreos"

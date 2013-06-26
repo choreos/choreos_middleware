@@ -9,11 +9,10 @@ function copy_template() {
 }
 
 function edit_recipe() {
-    # edit recipe ($PackageURL , $NAME, $DeploymentManagerURL)
+    # edit recipe ($NAME, $PackageURL)
     cd cookbooks/$3
     sed -i '/\$PackageURL/ s##'"$1"'#g' attributes/default.rb
     sed -i '/\$NAME/ s##'"$3"'#g' attributes/default.rb
-    sed -i '/\$DeploymentManagerURL/ s##'"$2"'#g' attributes/default.rb
     sed -i '/\$NAME/ s##'"$3"'#g' recipes/default.rb
     echo "Cookbook $3 edited"
 }
@@ -38,4 +37,5 @@ function prepare_jar() {
 }
 
 prepare_jar $1 $2 >> /tmp/chef-solo.log  2>&1 
+echo $instance_uuid | tr -d '\n'
 
