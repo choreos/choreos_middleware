@@ -12,132 +12,125 @@ import java.util.List;
  * Times must be set in nanoseconds
  * 
  * @author leonardo
- *
+ * 
  */
 public class Report {
 
-	private static final double CONVERSOR = 1000000000.0;
-	
-	public int run;
-	int vmLimit;
-	
-	boolean calculated;
-	
-	int chorsQty;
-	int chorsSize;
-	List<Double> chorsEnactmentTimes = new ArrayList<Double>();
-	double chorsEnactmentMeanTime;
-	double chorsEnactmentStdDev;
-	double chorsEnactmentTotalTime;
-	
-	List<Double> checkTimes = new ArrayList<Double>();
-	double checkMeanTime;
-	double checkStdDev;
-	double checkTotalTime;
-	
-	int chorsWorking;
-	
-	double totalTime;
-	
-	String header;
-	
-	public Report(int run, int chorsQty, int chorsSize, int vmLimit) {
-		this.run = run;
-		this.chorsQty = chorsQty;
-		this.chorsSize = chorsSize;
-		this.vmLimit = vmLimit;
-		this.header = run + "/10 with " + chorsQty + " chors of size " + chorsSize + "; " + (new Date()).toString();
-	}
-	
-	public void setChorsQuantity(int chorsQty) {
-		this.chorsQty = chorsQty;
-	}
+    private static final double CONVERSOR = 1000000000.0;
 
-	public void setChorsWorking(int chorsWorking) {
-		this.chorsWorking = chorsWorking;
-	}
+    public int run;
+    int vmLimit;
 
-	public void setTotalTime(long totalTime) {
-		this.totalTime = totalTime / CONVERSOR;
-	}
-	
-	public void setChorsEnactmentTotalTime(long chorsEnactmentTotalTime) {
-		this.chorsEnactmentTotalTime = chorsEnactmentTotalTime / CONVERSOR;
-	}
+    boolean calculated;
 
-	public void setCheckTotalTime(long checkTotalTime) {
-		this.checkTotalTime = checkTotalTime / CONVERSOR;
-	}
+    int chorsQty;
+    int chorsSize;
+    List<Double> chorsEnactmentTimes = new ArrayList<Double>();
+    double chorsEnactmentMeanTime;
+    double chorsEnactmentStdDev;
+    double chorsEnactmentTotalTime;
 
-	public synchronized void addChorEnactmentTime(long chorEnactmentTime) {
-		this.chorsEnactmentTimes.add(chorEnactmentTime / CONVERSOR);
-	}
-	
-	public synchronized void addCheckTime(long checkTime) {
-		this.checkTimes.add(checkTime / CONVERSOR);
-	}
+    List<Double> checkTimes = new ArrayList<Double>();
+    double checkMeanTime;
+    double checkStdDev;
+    double checkTotalTime;
 
-	private double mean(List<Double> values) {
-		
-		double sum = 0;
-		for (double v: values) {
-			sum += v;
-		}
-		return 1.0 * sum / values.size();
-	}
-	
-	private double stdDev(List<Double> values, double mean) {
-		
-		double sum = 0;
-		for (double v: values) {
-			sum += (v - mean) * (v - mean);
-		}
-		int n = values.size();
-		return  Math.sqrt(1.0 * sum / (n-1));
-	}
+    int chorsWorking;
 
-	private void calculate() {
+    double totalTime;
 
-		if (!this.calculated) {
-			
-			this.calculated = true;
-			
-			this.chorsEnactmentMeanTime = this.mean(this.chorsEnactmentTimes);
-			this.chorsEnactmentStdDev = this.stdDev(this.chorsEnactmentTimes, this.chorsEnactmentMeanTime);
-			this.checkMeanTime = this.mean(this.checkTimes);
-			this.checkStdDev = this.stdDev(this.checkTimes, this.checkMeanTime);
-		}
-	}
-	
-	public void toFile() throws IOException {
-		
-		String report = this.toString();
-		File file = new File("results/chor" + chorsQty + "x" + chorsSize + "_" 
-				+ vmLimit + "vms_" + run + "run.txt");
-		Writer w = new FileWriter(file);
-		w.append(report + "\n");
-		w.close();
-	}
+    String header;
 
-	@Override
-	public String toString() {
-		this.calculate();
-		return "########Report:########## "
-				+ "\n // tuples are (mean, std dev)"
-				+ "\n // times in seconds"
-				+ "\n " + header
-				+ "\n VM_LIMIT = " + vmLimit
-				+ "\n How many choreographies to enact = " + chorsQty
-				+ "\n How many choreographies enacted = " + chorsEnactmentTimes.size()
-				+ "\n Time to enact choreographies = " + chorsEnactmentTimes
-				+ "\n Mean time to enact a choreography = (" + chorsEnactmentMeanTime + ", " + chorsEnactmentStdDev + ")"
-				+ "\n Total time to enact choreographies = " + chorsEnactmentTotalTime
-				+ "\n Time to check choreographies = " + checkTimes
-				+ "\n Mean time to check a choreography = (" + checkMeanTime + ", " + checkStdDev + ")"
-				+ "\n Total time to check choreographies = " + checkTotalTime
-				+ "\n How many choreographies working = " + chorsWorking
-				+ "\n Total time = " + totalTime + "\n";
-	}
+    public Report(int run, int chorsQty, int chorsSize, int vmLimit) {
+	this.run = run;
+	this.chorsQty = chorsQty;
+	this.chorsSize = chorsSize;
+	this.vmLimit = vmLimit;
+	this.header = run + "/10 with " + chorsQty + " chors of size " + chorsSize + "; " + (new Date()).toString();
+    }
 
+    public void setChorsQuantity(int chorsQty) {
+	this.chorsQty = chorsQty;
+    }
+
+    public void setChorsWorking(int chorsWorking) {
+	this.chorsWorking = chorsWorking;
+    }
+
+    public void setTotalTime(long totalTime) {
+	this.totalTime = totalTime / CONVERSOR;
+    }
+
+    public void setChorsEnactmentTotalTime(long chorsEnactmentTotalTime) {
+	this.chorsEnactmentTotalTime = chorsEnactmentTotalTime / CONVERSOR;
+    }
+
+    public void setCheckTotalTime(long checkTotalTime) {
+	this.checkTotalTime = checkTotalTime / CONVERSOR;
+    }
+
+    public synchronized void addChorEnactmentTime(long chorEnactmentTime) {
+	this.chorsEnactmentTimes.add(chorEnactmentTime / CONVERSOR);
+    }
+
+    public synchronized void addCheckTime(long checkTime) {
+	this.checkTimes.add(checkTime / CONVERSOR);
+    }
+
+    private double mean(List<Double> values) {
+
+	double sum = 0;
+	for (double v : values) {
+	    sum += v;
+	}
+	return 1.0 * sum / values.size();
+    }
+
+    private double stdDev(List<Double> values, double mean) {
+
+	double sum = 0;
+	for (double v : values) {
+	    sum += (v - mean) * (v - mean);
+	}
+	int n = values.size();
+	return Math.sqrt(1.0 * sum / (n - 1));
+    }
+
+    private void calculate() {
+
+	if (!this.calculated) {
+
+	    this.calculated = true;
+
+	    this.chorsEnactmentMeanTime = this.mean(this.chorsEnactmentTimes);
+	    this.chorsEnactmentStdDev = this.stdDev(this.chorsEnactmentTimes, this.chorsEnactmentMeanTime);
+	    this.checkMeanTime = this.mean(this.checkTimes);
+	    this.checkStdDev = this.stdDev(this.checkTimes, this.checkMeanTime);
+	}
+    }
+
+    public void toFile() throws IOException {
+
+	String report = this.toString();
+	File file = new File("results/chor" + chorsQty + "x" + chorsSize + "_" + vmLimit + "vms_" + run + "run.txt");
+	Writer w = new FileWriter(file);
+	w.append(report + "\n");
+	w.close();
+    }
+
+    @Override
+    public String toString() {
+	this.calculate();
+	return "########Report:########## " + "\n // tuples are (mean, std dev)" + "\n // times in seconds" + "\n "
+		+ header + "\n VM_LIMIT = " + vmLimit + "\n How many choreographies to enact = " + chorsQty
+		+ "\n How many choreographies enacted = " + chorsEnactmentTimes.size()
+		+ "\n Time to enact choreographies = " + chorsEnactmentTimes
+		+ "\n Mean time to enact a choreography = (" + chorsEnactmentMeanTime + ", " + chorsEnactmentStdDev
+		+ ")" + "\n Total time to enact choreographies = " + chorsEnactmentTotalTime
+		+ "\n Time to check choreographies = " + checkTimes + "\n Mean time to check a choreography = ("
+		+ checkMeanTime + ", " + checkStdDev + ")" + "\n Total time to check choreographies = "
+		+ checkTotalTime + "\n How many choreographies working = " + chorsWorking + "\n Total time = "
+		+ totalTime + "\n";
+    }
 
 }
