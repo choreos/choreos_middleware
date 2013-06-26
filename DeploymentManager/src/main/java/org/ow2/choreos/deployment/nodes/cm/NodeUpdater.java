@@ -5,21 +5,21 @@
 package org.ow2.choreos.deployment.nodes.cm;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
+import org.ow2.choreos.breaker.Invoker;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
-import org.ow2.choreos.utils.SshCommandFailed;
+import org.ow2.choreos.utils.SshNotConnected;
 import org.ow2.choreos.utils.SshUtil;
-
-import com.jcraft.jsch.JSchException;
+import org.ow2.choreos.utils.SshWaiter;
+import org.ow2.choreos.utils.TimeoutsAndTrials;
 
 /**
  * 
@@ -29,113 +29,83 @@ import com.jcraft.jsch.JSchException;
 public class NodeUpdater {
 
     private static final String CHEF_SOLO_COMMAND = "sudo chef-solo -c $HOME/chef-solo/solo.rb";
-    // it is not the time to one update, but also the time waiting in the queue
-    private static final int UPDATE_TIMEOUT = 30;
+
+    // this executor is shared among multiple updates to the same node
+    private final ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+
+    private final int timeout;
+    private final int trials;
 
     private Logger logger = Logger.getLogger(NodeUpdater.class);
 
-    // this executor is shared among multiple upgrade invocations to the same
-    // node
-    private ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+    public NodeUpdater() {
+	this.timeout = TimeoutsAndTrials.get("UPDATE_TIMEOUT");
+	this.trials = TimeoutsAndTrials.get("UPDATE_TRIALS");
+    }
 
-    /**
-     * Runs chef-client in a given node
-     * 
-     * @param node
-     * @throws NodeNotUpdatedException
-     *             if chef-client ends in error or if could not connect into the
-     *             node
-     */
     public void update(CloudNode node) throws NodeNotUpdatedException {
+	UpdateInvokerTask updateTask = new UpdateInvokerTask(node);
+	Future<Void> future = singleThreadExecutor.submit(updateTask);
+	checkFuture(node, future);
+    }
 
-	SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-	ChefSoloRunner runner = new ChefSoloRunner(ssh, node.getId());
-	CompletionService<Boolean> myExecutor = new ExecutorCompletionService<Boolean>(singleThreadExecutor);
-	myExecutor.submit(runner);
-
+    private void checkFuture(CloudNode node, Future<Void> future) throws NodeNotUpdatedException {
 	try {
-	    Future<Boolean> taskCompleted = myExecutor.poll(UPDATE_TIMEOUT, TimeUnit.MINUTES);
-	    if (taskCompleted != null) {
-		Boolean ok = taskCompleted.get();
-		if (ok != null && ok.booleanValue()) {
-		    logger.debug("Node " + node.getId() + " updated");
-		} else {
-		    fail(node);
-		}
-	    } else {
-		fail(node);
-	    }
+	    int delta = 100;
+	    int totalTimeout = trials * timeout + delta;
+	    future.get(totalTimeout, TimeUnit.SECONDS);
 	} catch (InterruptedException e) {
-	    String message = "chef-solo timed out on node " + node.toString();
-	    logger.error(message);
-	    throw new NodeNotUpdatedException(node.getId());
+	    fail(node);
 	} catch (ExecutionException e) {
+	    fail(node);
+	} catch (TimeoutException e) {
 	    fail(node);
 	}
     }
 
     private void fail(CloudNode node) throws NodeNotUpdatedException {
-	String message = "chef-client returned an error exit status on node " + node.toString();
-	logger.error(message);
-	throw new NodeNotUpdatedException(node.getId());
+	NodeNotUpdatedException e = new NodeNotUpdatedException(node.getId());
+	logger.error(e.getMessage());
+	throw e;
     }
 
-    /**
-     * Try to run chef client 5 times
-     * 
-     * This strategy is carried out since sometimes we try to ssh the VM when it
-     * is not ready yet.
-     * 
-     */
-    private class ChefSoloRunner implements Callable<Boolean> {
+    private class UpdateInvokerTask implements Callable<Void> {
 
-	SshUtil ssh;
-	String nodeId;
-	boolean ok = false;
+	CloudNode node;
 
-	public ChefSoloRunner(SshUtil ssh, String nodeId) {
-	    this.ssh = ssh;
-	    this.nodeId = nodeId;
+	public UpdateInvokerTask(CloudNode node) {
+	    this.node = node;
 	}
 
 	@Override
-	public Boolean call() throws Exception {
+	public Void call() throws Exception {
+	    ChefSoloTask task = new ChefSoloTask(node);
+	    Invoker<Void> invoker = new Invoker<Void>(task, trials, timeout, TimeUnit.SECONDS);
+	    invoker.invoke();
+	    return null;
+	}
+    }
 
-	    logger.debug("updating node " + nodeId);
+    private class ChefSoloTask implements Callable<Void> {
 
-	    final int MAX_TRIALS = 5;
-	    final int SLEEPING_TIME = 5000;
-	    int trials = 0;
-	    ok = false;
-	    boolean stop = false;
+	CloudNode node;
 
-	    while (!ok && !stop) {
-		try {
-		    trials++;
-		    ssh.runCommand(CHEF_SOLO_COMMAND);
-		    ok = true;
-		} catch (JSchException e) {
-		    if (trials >= MAX_TRIALS) {
-			stop = true;
-		    }
-		    sleep(SLEEPING_TIME);
-		} catch (SshCommandFailed e) {
-		    if (trials >= MAX_TRIALS) {
-			stop = true;
-		    }
-		    sleep(SLEEPING_TIME);
-		}
-	    }
-
-	    return ok;
+	public ChefSoloTask(CloudNode node) {
+	    this.node = node;
 	}
 
-	private void sleep(long time) {
-	    try {
-		Thread.sleep(time);
-	    } catch (InterruptedException e1) {
-		logger.error("Exception at sleeping, should not happen");
-	    }
+	@Override
+	public Void call() throws Exception {
+	    logger.debug("updating node " + node.getId());
+	    SshUtil ssh = getSsh();
+	    ssh.runCommand(CHEF_SOLO_COMMAND);
+	    return null;
+	}
+
+	private SshUtil getSsh() throws SshNotConnected {
+	    int timeout = TimeoutsAndTrials.get("CONNECT_SSH_TIMEOUT");
+	    SshWaiter waiter = new SshWaiter();
+	    return waiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
 	}
     }
 
