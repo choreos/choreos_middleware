@@ -37,9 +37,6 @@ public class BootstrapChecker {
 	if (!verifyChefSoloFolder())
 	    return false;
 	
-	if (!verifyPrepareDeploymentScripts())
-	    return false;
-	
 	return true;
     }
 
@@ -53,29 +50,11 @@ public class BootstrapChecker {
 	    return false;
 	}
 
-	if (result.contains("solo.rb") && result.contains("cookbooks") && result.contains("prepare_deployment")) {
+	if (result.contains("solo.rb") && result.contains("cookbooks") && result.contains("prepare_deployment.sh")) {
 	    return true;
 	} else {
 	    return false;
 	}
     }
 
-    private boolean verifyPrepareDeploymentScripts() {
-	int numberOfScripts = 0;
-	try {
-	    String result = ssh.runCommand("ls -1 $HOME/chef-solo/prepare_deployment/*.sh | wc -l");
-	    numberOfScripts = Integer.parseInt(result.trim());
-	} catch (JSchException e) {
-	    return false;
-	} catch (SshCommandFailed e) {
-	    return false;
-	}
-
-	// we must have at least command_line.sh and tomcat.sh
-	if (numberOfScripts >= 2) {
-	    return true;
-	} else {
-	    return false;
-	}
-    }
 }

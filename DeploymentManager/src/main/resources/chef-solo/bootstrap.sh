@@ -28,7 +28,6 @@ function install_chef_solo() {
 function prepare_node() {
 	if [ ! -d $HOME/chef-solo ]; then
         mkdir -p $HOME/chef-solo/cookbooks
-        mkdir -p $HOME/chef-solo/prepare_deployment
 	
 		# create cookbooks repo
 		cd $HOME/chef-solo

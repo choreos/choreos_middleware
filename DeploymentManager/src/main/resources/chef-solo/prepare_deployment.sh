@@ -1,11 +1,11 @@
 #! /bin/bash
-# arg $1 package URI
-# arg $2 Deployment Manager URI
+# arg $1 package URL
+# arg $2 cookbook template name
 
 function copy_template() {
     cd $HOME/chef-solo
-    cp -ra cookbooks/jar cookbooks/$3
-    echo "JAR template copied to folder cookbooks/$3"
+    cp -ra "cookbooks/$2" cookbooks/$3
+    echo "$2 template copied to folder cookbooks/$3"
 }
 
 function edit_recipe() {
@@ -26,16 +26,16 @@ function edit_json() {
     cat node.json
 }
 
-function prepare_jar() {
+function prepare() {
     instance_uuid=`uuidgen`
     echo '==========================='
-    echo "Preparing JAR deployment of $instance_uuid at `date`"
+    echo "Preparing $2 deployment of $instance_uuid at `date`"
     copy_template $1 $2 $instance_uuid
     edit_recipe $1 $2 $instance_uuid
     edit_json $1 $2 $instance_uuid
     echo "Instance $instance_uuid is prepared"
 }
 
-prepare_jar $1 $2 >> /tmp/chef-solo.log  2>&1 
+prepare $1 $2 >> /tmp/chef-solo.log  2>&1 
 echo $instance_uuid | tr -d '\n'
 
