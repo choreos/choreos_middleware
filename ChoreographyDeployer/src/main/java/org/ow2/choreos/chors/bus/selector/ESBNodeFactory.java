@@ -3,10 +3,7 @@ package org.ow2.choreos.chors.bus.selector;
 import org.ow2.choreos.chors.bus.ESBRegister;
 import org.ow2.choreos.chors.bus.EasyESBNode;
 import org.ow2.choreos.chors.bus.EasyESBNodeImpl;
-import org.ow2.choreos.nodes.NodeNotFoundException;
-import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.selectors.ObjectCreationException;
 import org.ow2.choreos.selectors.ObjectFactory;
@@ -24,20 +21,12 @@ public class ESBNodeFactory implements ObjectFactory<EasyESBNode, ResourceImpact
 
     @Override
     public EasyESBNode createNewInstance(ResourceImpact requirements) throws ObjectCreationException {
-	try {
-	    EasyESBNode esbNode = createNewESBNode();
-	    ESBRegister.addEsbNode(esbNode);
-	    return esbNode;
-	} catch (PrepareDeploymentFailedException e) {
-	    throw new ObjectCreationException();
-	} catch (NodeNotUpdatedException e) {
-	    throw new ObjectCreationException();
-	} catch (NodeNotFoundException e) {
-	    throw new ObjectCreationException();
-	}
+	EasyESBNode esbNode = createNewESBNode();
+	ESBRegister.addEsbNode(esbNode);
+	return esbNode;
     }
     
-    private EasyESBNode createNewESBNode() throws PrepareDeploymentFailedException, NodeNotUpdatedException, NodeNotFoundException {
+    private EasyESBNode createNewESBNode() {
 	// TODO
 //	    List<CloudNode> nodes = this.npm.prepareDeployment(new DeploymentRequest(EASY_ESB_RECIPE));
 //	    this.npm.updateNode(nodes.get(0).getId()); // TODO set time out

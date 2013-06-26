@@ -186,7 +186,7 @@ public class CloudNode {
 
     @Override
     public String toString() {
-	return "Node [id=" + id + ", ip=" + ip + ", hostname=" + hostname + "]";
+	return "Node [id=" + id + ", ip=" + ip + "]";
     }
 
 }

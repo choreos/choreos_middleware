@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
-import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
+import org.ow2.choreos.deployment.services.preparer.PrepareDeploymentFailedException;
 import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.datamodel.DeployableService;

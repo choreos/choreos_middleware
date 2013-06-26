@@ -10,8 +10,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.services.diff.UpdateAction;
+import org.ow2.choreos.deployment.services.preparer.DeploymentPreparer;
+import org.ow2.choreos.deployment.services.preparer.DeploymentPreparers;
+import org.ow2.choreos.deployment.services.preparer.PrepareDeploymentFailedException;
 import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
-import org.ow2.choreos.nodes.PrepareDeploymentFailedException;
 import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServiceNotDeletedException;
 import org.ow2.choreos.services.ServiceNotFoundException;
@@ -56,7 +58,7 @@ public class ServicesManagerImpl implements ServicesManager {
 		.setDeploymentManagerURL(DeploymentManagerConfiguration.get("EXTERNAL_DEPLOYMENT_MANAGER_URL"));
 
 	try {
-	    DeploymentPreparer deploymentPreparer = new DeploymentPreparer();
+	    DeploymentPreparer deploymentPreparer = DeploymentPreparers.getInstance(deploymentRequest);
 	    deploymentPreparer.prepareDeployment(deploymentRequest);
 	} catch (PrepareDeploymentFailedException e) {
 	    logger.error("Service " + service.getSpec().getUuid() + " not created: " + e.getMessage());
