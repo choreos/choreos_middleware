@@ -3,11 +3,11 @@ package org.ow2.choreos.deployment.nodes.selector;
 import java.util.List;
 
 import org.ow2.choreos.deployment.nodes.NPMFactory;
+import org.ow2.choreos.deployment.services.preparer.DeploymentRequest;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.selectors.NotSelectedException;
 import org.ow2.choreos.selectors.RoundRobinSelector;
-import org.ow2.choreos.services.datamodel.DeploymentRequest;
 
 public class RoundRobinNodeSelector implements NodeSelector {
 

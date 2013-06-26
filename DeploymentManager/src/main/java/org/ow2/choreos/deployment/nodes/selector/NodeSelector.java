@@ -4,9 +4,9 @@
 
 package org.ow2.choreos.deployment.nodes.selector;
 
+import org.ow2.choreos.deployment.services.preparer.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.selectors.Selector;
-import org.ow2.choreos.services.datamodel.DeploymentRequest;
 
 /**
  * Selects a node to apply a given configuration

@@ -10,9 +10,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.services.diff.UpdateAction;
-import org.ow2.choreos.deployment.services.preparer.DeploymentPreparer;
-import org.ow2.choreos.deployment.services.preparer.DeploymentPreparers;
+import org.ow2.choreos.deployment.services.preparer.DeploymentRequest;
 import org.ow2.choreos.deployment.services.preparer.PrepareDeploymentFailedException;
+import org.ow2.choreos.deployment.services.preparer.ServiceDeploymentPreparer;
 import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
 import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServiceNotDeletedException;
@@ -21,15 +21,14 @@ import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.UnhandledModificationException;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
-import org.ow2.choreos.services.datamodel.DeploymentRequest;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceSpec;
 
 public class ServicesManagerImpl implements ServicesManager {
 
-    private Logger logger = Logger.getLogger(ServicesManagerImpl.class);
-
     private DeployedServicesRegistry registry = DeployedServicesRegistry.getInstance();
+
+    private Logger logger = Logger.getLogger(ServicesManagerImpl.class);
 
     @Override
     public DeployableService createService(DeployableServiceSpec serviceSpec) throws ServiceNotCreatedException {
@@ -37,10 +36,10 @@ public class ServicesManagerImpl implements ServicesManager {
 	DeployableService service = null;
 	try {
 	    service = new DeployableService(serviceSpec);
-	} catch (IllegalArgumentException e) {
-	    String message = "Invalid service spec";
-	    logger.error(message, e);
-	    throw new ServiceNotCreatedException(serviceSpec.getName());
+	} catch (IllegalArgumentException e1) {
+	    ServiceNotCreatedException e = new ServiceNotCreatedException(serviceSpec.getName());
+	    logger.error(e.getMessage());
+	    throw e;
 	}
 
 	runGenerateAndApplyScript(service, service.getSpec().getNumberOfInstances());
@@ -58,8 +57,8 @@ public class ServicesManagerImpl implements ServicesManager {
 		.setDeploymentManagerURL(DeploymentManagerConfiguration.get("EXTERNAL_DEPLOYMENT_MANAGER_URL"));
 
 	try {
-	    DeploymentPreparer deploymentPreparer = DeploymentPreparers.getInstance(deploymentRequest);
-	    deploymentPreparer.prepareDeployment(deploymentRequest);
+	    ServiceDeploymentPreparer deploymentPreparer = new ServiceDeploymentPreparer(deploymentRequest);
+	    deploymentPreparer.prepareDeployment();
 	} catch (PrepareDeploymentFailedException e) {
 	    logger.error("Service " + service.getSpec().getUuid() + " not created: " + e.getMessage());
 	} catch (Exception e) {
@@ -69,7 +68,6 @@ public class ServicesManagerImpl implements ServicesManager {
 
     @Override
     public DeployableService getService(String serviceId) throws ServiceNotFoundException {
-
 	DeployableService s = registry.getService(serviceId);
 	if (s == null)
 	    throw new ServiceNotFoundException(serviceId, "Error while getting service from service map.");

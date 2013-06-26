@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
+import org.ow2.choreos.deployment.services.preparer.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.MemoryType;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.selectors.ObjectFilter;
-import org.ow2.choreos.services.datamodel.DeploymentRequest;
 
 /**
  * Filter nodes that match requirements. The filter policy is extracted from
