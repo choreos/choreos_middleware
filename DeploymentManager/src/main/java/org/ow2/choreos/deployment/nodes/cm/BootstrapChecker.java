@@ -9,6 +9,7 @@ import org.ow2.choreos.utils.SshCommandFailed;
 import org.ow2.choreos.utils.SshNotConnected;
 import org.ow2.choreos.utils.SshUtil;
 import org.ow2.choreos.utils.SshWaiter;
+import org.ow2.choreos.utils.TimeoutsAndTrials;
 
 import com.jcraft.jsch.JSchException;
 
@@ -21,15 +22,14 @@ import com.jcraft.jsch.JSchException;
  */
 public class BootstrapChecker {
 
-    private static final int SSH_TIMEOUT_IN_SECONDS = 250;
-
     private SshUtil ssh = null;
 
     public boolean isBootstrapped(CloudNode node) {
 
+	int timeout = TimeoutsAndTrials.get("CONNECT_SSH_TIMEOUT");
 	SshWaiter sshWaiter = new SshWaiter();
 	try {
-	    ssh = sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), SSH_TIMEOUT_IN_SECONDS);
+	    ssh = sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
 	} catch (SshNotConnected e) {
 	    return false;
 	}
@@ -37,7 +37,7 @@ public class BootstrapChecker {
 	if (!verifyChefSoloFolder())
 	    return false;
 	
-	if (!verifyPrepareDeploymentScript())
+	if (!verifyPrepareDeploymentScripts())
 	    return false;
 	
 	return true;
@@ -53,25 +53,26 @@ public class BootstrapChecker {
 	    return false;
 	}
 
-	if (result.contains("solo.rb") && result.contains("cookbooks")) {
+	if (result.contains("solo.rb") && result.contains("cookbooks") && result.contains("prepare_deployment")) {
 	    return true;
 	} else {
 	    return false;
 	}
     }
 
-    private boolean verifyPrepareDeploymentScript() {
-	String result;
-	result = "";
+    private boolean verifyPrepareDeploymentScripts() {
+	int numberOfScripts = 0;
 	try {
-	    result = ssh.runCommand("ls $HOME");
+	    String result = ssh.runCommand("ls -1 $HOME/chef-solo/prepare_deployment/*.sh | wc -l");
+	    numberOfScripts = Integer.parseInt(result.trim());
 	} catch (JSchException e) {
 	    return false;
 	} catch (SshCommandFailed e) {
 	    return false;
 	}
 
-	if (result.contains("prepare_deployment.sh")) {
+	// we must have at least command_line.sh and tomcat.sh
+	if (numberOfScripts >= 2) {
 	    return true;
 	} else {
 	    return false;
