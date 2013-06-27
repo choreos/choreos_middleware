@@ -10,7 +10,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.breaker.Invoker;
@@ -51,14 +50,13 @@ public class NodeUpdater {
 
     private void checkFuture(CloudNode node, Future<Void> future) throws NodeNotUpdatedException {
 	try {
-	    int delta = 100;
-	    int totalTimeout = trials * timeout + delta;
-	    future.get(totalTimeout, TimeUnit.SECONDS);
+	    // since the task been executed is basically the invoker invocation,
+	    // we hope do not get stuck here (invoker already has a timeout)
+	    // this is why we did not set a timeout in the "future.get()"
+	    future.get();
 	} catch (InterruptedException e) {
 	    fail(node);
 	} catch (ExecutionException e) {
-	    fail(node);
-	} catch (TimeoutException e) {
 	    fail(node);
 	}
     }
