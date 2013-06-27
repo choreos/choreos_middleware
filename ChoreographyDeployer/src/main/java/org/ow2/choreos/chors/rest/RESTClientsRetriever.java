@@ -18,17 +18,27 @@ import org.ow2.choreos.services.client.ServicesClient;
  */
 public class RESTClientsRetriever {
 
-    public ServicesManager getServicesClient(String owner) {
+    public static NodePoolManager npmForTest;
+    public static ServicesManager servicesManagerForTest;
+    public static boolean testing = false;
 
-        String uri = Owners.get(owner);
-        ServicesManager client = new ServicesClient(uri);
-        return client;
+    public static ServicesManager getServicesClient(String owner) {
+        if (!testing) {
+            String uri = Owners.get(owner);
+            ServicesManager client = new ServicesClient(uri);
+            return client;
+        } else {
+            return servicesManagerForTest;
+        }
     }
 
-    public NodePoolManager getNodesClient(String owner) {
-
-        String uri = Owners.get(owner);
-        NodePoolManager client = new NodesClient(uri);
-        return client;
+    public static NodePoolManager getNodesClient(String owner) {
+        if (!testing) {
+            String uri = Owners.get(owner);
+            NodePoolManager client = new NodesClient(uri);
+            return client;
+        } else {
+            return npmForTest;
+        }
     }
 }

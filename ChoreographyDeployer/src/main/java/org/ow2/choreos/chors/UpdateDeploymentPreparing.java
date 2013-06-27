@@ -94,8 +94,7 @@ public class UpdateDeploymentPreparing {
         public DeployableService call() throws Exception {
 
             String owner = serviceSpec.getOwner();
-            RESTClientsRetriever retriever = new RESTClientsRetriever();
-            ServicesManager servicesManager = retriever.getServicesClient(owner);
+            ServicesManager servicesManager = RESTClientsRetriever.getServicesClient(owner);
 
             try {
                 DeployableService deployedService = servicesManager.createService(serviceSpec);
@@ -225,8 +224,7 @@ public class UpdateDeploymentPreparing {
         public DeployableService call() throws ServiceNotModifiedException, UnhandledModificationException {
 
             String owner = service.getSpec().getOwner();
-            RESTClientsRetriever retriever = new RESTClientsRetriever();
-            ServicesManager servicesManager = retriever.getServicesClient(owner);
+            ServicesManager servicesManager = RESTClientsRetriever.getServicesClient(owner);
 
             try {
                 return servicesManager.updateService(service.getSpec());

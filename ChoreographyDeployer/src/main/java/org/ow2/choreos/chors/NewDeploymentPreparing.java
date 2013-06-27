@@ -25,7 +25,6 @@ public class NewDeploymentPreparing {
     private static final int TIMEOUT = 30; // it may encompasses bootstrap time
 
     private Choreography chor;
-    private RESTClientsRetriever servicesClientRetriever = new RESTClientsRetriever();
     private ExecutorService executor;
     private Map<DeployableServiceSpec, Future<DeployableService>> futures;
     private List<DeployableService> configuredServices;
@@ -34,11 +33,6 @@ public class NewDeploymentPreparing {
 
     public NewDeploymentPreparing(Choreography chor) {
         this.chor = chor;
-    }
-
-    public NewDeploymentPreparing(Choreography chor, RESTClientsRetriever servicesClientRetriever) {
-        this.chor = chor;
-        this.servicesClientRetriever = servicesClientRetriever;
     }
 
     public List<DeployableService> prepare() throws EnactmentException {
@@ -102,7 +96,7 @@ public class NewDeploymentPreparing {
         @Override
         public DeployableService call() throws Exception {
             String owner = spec.getOwner();
-            ServicesManager servicesManager = servicesClientRetriever.getServicesClient(owner);
+            ServicesManager servicesManager = RESTClientsRetriever.getServicesClient(owner);
             try {
                 DeployableService deployedService = servicesManager.createService(spec);
                 return deployedService;

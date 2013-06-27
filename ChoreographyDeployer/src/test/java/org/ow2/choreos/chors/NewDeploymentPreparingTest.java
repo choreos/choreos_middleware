@@ -1,7 +1,6 @@
 package org.ow2.choreos.chors;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -42,10 +41,10 @@ public class NewDeploymentPreparingTest {
         ServicesManager smMock = mock(ServicesManager.class);
         when(smMock.createService(airlineSpec)).thenReturn(airlineService);
         when(smMock.createService(travelSpec)).thenReturn(travelService);
-        RESTClientsRetriever retrieverMock = mock(RESTClientsRetriever.class);
-        when(retrieverMock.getServicesClient(any(String.class))).thenReturn(smMock);
+        RESTClientsRetriever.servicesManagerForTest = smMock;
+        RESTClientsRetriever.testing = true;
 
-        NewDeploymentPreparing preparer = new NewDeploymentPreparing(chor, retrieverMock);
+        NewDeploymentPreparing preparer = new NewDeploymentPreparing(chor);
         List<DeployableService> configuredServices = preparer.prepare();
 
         assertEquals(2, configuredServices.size());

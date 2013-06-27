@@ -12,7 +12,6 @@ import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
 public class DeployedServicesRetriever {
     
-    private RESTClientsRetriever restClientsRetriever = new RESTClientsRetriever();
     private List<DeployableServiceSpec> specs;
     
     private Logger logger = Logger.getLogger(DeployedServicesRetriever.class);
@@ -39,7 +38,7 @@ public class DeployedServicesRetriever {
     }
     
     private DeployableService retrieveService (DeployableServiceSpec spec) throws ServiceNotFoundException {
-        ServicesManager servicesManager = restClientsRetriever.getServicesClient(spec.getOwner());  
+        ServicesManager servicesManager = RESTClientsRetriever.getServicesClient(spec.getOwner());  
         return servicesManager.getService(spec.getUuid());
     }
     

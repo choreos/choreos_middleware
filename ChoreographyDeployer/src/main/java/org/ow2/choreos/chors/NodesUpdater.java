@@ -19,7 +19,6 @@ public class NodesUpdater {
 
     private List<DeployableService> services;
     private String chorId;
-    private RESTClientsRetriever npmRetriever = new RESTClientsRetriever();
     private ExecutorService executor;
 
     private Logger logger = Logger.getLogger(NodesUpdater.class);
@@ -27,12 +26,6 @@ public class NodesUpdater {
     public NodesUpdater(List<DeployableService> services, String chorId) {
         this.services = services;
         this.chorId = chorId;
-    }
-
-    public NodesUpdater(List<DeployableService> services, String chorId, RESTClientsRetriever npmRetriever) {
-        this.services = services;
-        this.chorId = chorId;
-        this.npmRetriever = npmRetriever;
     }
 
     public void updateNodes() throws EnactmentException {
@@ -69,7 +62,7 @@ public class NodesUpdater {
 
         @Override
         public void run() {
-            NodePoolManager npm = npmRetriever.getNodesClient(owner);
+            NodePoolManager npm = RESTClientsRetriever.getNodesClient(owner);
             try {
                 npm.updateNode(nodeId);
             } catch (NodeNotUpdatedException e) {

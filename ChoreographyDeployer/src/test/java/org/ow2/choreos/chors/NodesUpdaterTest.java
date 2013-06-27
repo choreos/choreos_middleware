@@ -1,9 +1,7 @@
 package org.ow2.choreos.chors;
 
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.util.List;
 
@@ -33,11 +31,11 @@ public class NodesUpdaterTest {
     public void shouldUpdateAllNodes() throws Exception {
 
         NodePoolManager npmMock = mock(NodePoolManager.class);
-        RESTClientsRetriever retrieverMock = mock(RESTClientsRetriever.class);
-        when(retrieverMock.getNodesClient(anyString())).thenReturn(npmMock);
+        RESTClientsRetriever.npmForTest = npmMock;
+        RESTClientsRetriever.testing = true;
 
         List<DeployableService> services = chor.getDeployableServices();
-        NodesUpdater updater = new NodesUpdater(services, chor.getId(), retrieverMock);
+        NodesUpdater updater = new NodesUpdater(services, chor.getId());
         updater.updateNodes();
 
         for (DeployableService svc: services) {
