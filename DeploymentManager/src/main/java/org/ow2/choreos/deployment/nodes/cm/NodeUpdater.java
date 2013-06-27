@@ -44,6 +44,12 @@ public class NodeUpdater {
         this.trials = TimeoutsAndTrials.get("UPDATE_TRIALS");
     }
 
+    public void update(CloudNode node, UpdateHandler handler) throws NodeNotUpdatedException {
+        update(node);
+        // if update did not throw an exception, then:
+        handler.handle();
+    }
+    
     public void update(CloudNode node) throws NodeNotUpdatedException {
         UpdateInvokerTask updateTask = new UpdateInvokerTask(node);
         Future<Void> future = singleThreadExecutor.submit(updateTask);
@@ -68,7 +74,7 @@ public class NodeUpdater {
         logger.error(e.getMessage());
         throw e;
     }
-
+    
     private class UpdateInvokerTask implements Callable<Void> {
 
         CloudNode node;

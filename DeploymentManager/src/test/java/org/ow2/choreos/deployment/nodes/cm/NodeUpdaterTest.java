@@ -39,11 +39,21 @@ public class NodeUpdaterTest {
     }
     
     @Test
-    public void test() throws Exception {
+    public void shouldRunChefSolo() throws Exception {
         NodeUpdater updater = new NodeUpdater();
         updater.sshWaiter = waiter;
         updater.update(node);
         verify(ssh).runCommand(NodeUpdater.CHEF_SOLO_COMMAND);
+    }
+    
+    @Test
+    public void shouldInvokeHandler() throws Exception {
+        UpdateHandler handler = mock(UpdateHandler.class);
+        NodeUpdater updater = new NodeUpdater();
+        updater.sshWaiter = waiter;
+        updater.update(node, handler);
+        verify(ssh).runCommand(NodeUpdater.CHEF_SOLO_COMMAND);
+        verify(handler).handle();
     }
 
 }
