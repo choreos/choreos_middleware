@@ -23,11 +23,11 @@ import com.jcraft.jsch.JSchException;
 public class BootstrapChecker {
 
     private SshUtil ssh = null;
+    SshWaiter sshWaiter = new SshWaiter();
 
     public boolean isBootstrapped(CloudNode node) {
 
 	int timeout = TimeoutsAndTrials.get("CONNECT_SSH_TIMEOUT");
-	SshWaiter sshWaiter = new SshWaiter();
 	try {
 	    ssh = sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
 	} catch (SshNotConnected e) {
@@ -36,7 +36,7 @@ public class BootstrapChecker {
 
 	if (!verifyChefSoloFolder())
 	    return false;
-	
+
 	return true;
     }
 
@@ -50,7 +50,8 @@ public class BootstrapChecker {
 	    return false;
 	}
 
-	if (result.contains("solo.rb") && result.contains("cookbooks") && result.contains("prepare_deployment.sh")) {
+	if (result.contains("solo.rb") && result.contains("cookbooks") && result.contains("prepare_deployment.sh")
+		&& result.contains("node.json")) {
 	    return true;
 	} else {
 	    return false;
