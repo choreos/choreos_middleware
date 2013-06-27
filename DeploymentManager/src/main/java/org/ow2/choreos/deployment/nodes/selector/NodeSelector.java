@@ -4,24 +4,22 @@
 
 package org.ow2.choreos.deployment.nodes.selector;
 
-import org.ow2.choreos.deployment.services.preparer.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.selectors.Selector;
+import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
 /**
  * Selects a node to apply a given configuration
  * 
  * The selection can consider functional requirements, which is provided by
- * config.name and non-functional requirements, which is provided by
- * config.resourceImpact. Implementing classes must use the NodePoolManager to
- * retrieve nodes AND/OR create new nodes (the use of other operations of
- * NodePoolManager are not allowed). NodeSelectors are always accessed as
+ * spec.resourceImpact. Implementing classes must use the NodePoolManager to
+ * retrieve nodes AND/OR create new nodes. NodeSelectors are always accessed as
  * singletons. Implementing classes must consider concurrent access to the
  * selectNodes method.
  * 
  * @author leonardo
  * 
  */
-public interface NodeSelector extends Selector<CloudNode, DeploymentRequest> {
+public interface NodeSelector extends Selector<CloudNode, DeployableServiceSpec> {
 
 }

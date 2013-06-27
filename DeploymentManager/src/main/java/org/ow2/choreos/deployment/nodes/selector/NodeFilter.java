@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
-import org.ow2.choreos.deployment.services.preparer.DeploymentRequest;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.MemoryType;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.selectors.ObjectFilter;
+import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
 /**
  * Filter nodes that match requirements. The filter policy is extracted from
@@ -21,7 +21,7 @@ import org.ow2.choreos.selectors.ObjectFilter;
  * @author leonardo
  * 
  */
-class NodeFilter implements ObjectFilter<CloudNode, DeploymentRequest> {
+class NodeFilter implements ObjectFilter<CloudNode, DeployableServiceSpec> {
 
     private enum MapperPolicy {
         ANY_FIT, EXACT_FIT
@@ -53,10 +53,10 @@ class NodeFilter implements ObjectFilter<CloudNode, DeploymentRequest> {
     }
 
     @Override
-    public List<CloudNode> filter(List<CloudNode> nodes, DeploymentRequest config) {
+    public List<CloudNode> filter(List<CloudNode> nodes, DeployableServiceSpec spec) {
         List<CloudNode> filtered = new ArrayList<CloudNode>();
         for (CloudNode node : nodes) {
-            if (isAcceptable(config.getSpec().getResourceImpact(), node)) {
+            if (isAcceptable(spec.getResourceImpact(), node)) {
                 filtered.add(node);
             }
         }

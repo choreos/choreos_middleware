@@ -31,11 +31,7 @@ public class ServiceDeploymentPreparer {
     private void selectNodes() throws PrepareDeploymentFailedException {
         NodeSelector selector = NodeSelectorFactory.getFactoryInstance().getNodeSelectorInstance();
         try {
-            DeploymentRequest deploymentRequest = new DeploymentRequest();
-            deploymentRequest.setSpec(spec);
-            deploymentRequest.setNumberOfInstances(spec.getNumberOfInstances());
-            // TODO: change selector to receive spec, and after delete deployment request
-            nodes = selector.select(deploymentRequest, deploymentRequest.getNumberOfInstances());
+            nodes = selector.select(spec, spec.getNumberOfInstances());
             logger.info("Selected nodes to " + serviceName + ": " + nodes);
         } catch (NotSelectedException e) {
             failDeployment();

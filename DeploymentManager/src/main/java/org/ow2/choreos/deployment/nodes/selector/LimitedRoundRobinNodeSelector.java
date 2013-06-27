@@ -4,17 +4,17 @@ import java.util.List;
 
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.NPMFactory;
-import org.ow2.choreos.deployment.services.preparer.DeploymentRequest;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.selectors.LimitedRoundRobinSelector;
 import org.ow2.choreos.selectors.NotSelectedException;
+import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
 public class LimitedRoundRobinNodeSelector implements NodeSelector {
 
     private static final String VM_LIMIT_PROPERTY = "VM_LIMIT";
 
-    private LimitedRoundRobinSelector<CloudNode, DeploymentRequest> selector;
+    private LimitedRoundRobinSelector<CloudNode, DeployableServiceSpec> selector;
 
     public LimitedRoundRobinNodeSelector() {
         int nodeLimit = getNodeLimit();
@@ -22,7 +22,7 @@ public class LimitedRoundRobinNodeSelector implements NodeSelector {
         NodeFactory factory = new NodeFactory(npm);
         NodeRetriever retriever = new NodeRetriever(npm);
         NodeFilter filter = new NodeFilter();
-        this.selector = new LimitedRoundRobinSelector<CloudNode, DeploymentRequest>(nodeLimit, retriever, factory,
+        this.selector = new LimitedRoundRobinSelector<CloudNode, DeployableServiceSpec>(nodeLimit, retriever, factory,
                 filter);
     }
 
@@ -38,8 +38,8 @@ public class LimitedRoundRobinNodeSelector implements NodeSelector {
     }
 
     @Override
-    public List<CloudNode> select(DeploymentRequest requirements, int objectsQuantity) throws NotSelectedException {
-        return this.selector.select(requirements, objectsQuantity);
+    public List<CloudNode> select(DeployableServiceSpec spec, int objectsQuantity) throws NotSelectedException {
+        return this.selector.select(spec, objectsQuantity);
     }
 
 }
