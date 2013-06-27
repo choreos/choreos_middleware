@@ -29,11 +29,13 @@ import com.jcraft.jsch.JSchException;
  */
 public class NodeBootstrapper {
 
-    private static String BOOTSTRAP_SCRIPT = "chef-solo/bootstrap.sh";
-    private static String PREPARE_DEPLOYMENT_SCRIPT = "chef-solo/prepare_deployment.sh";
-    private static String INITIAL_NODE_JSON = "chef-solo/node.json";
+    public static final String BOOTSTRAP_SCRIPT = "chef-solo/bootstrap.sh";
+    public static final String INITIAL_NODE_JSON = "chef-solo/node.json";
+    public static final String PREPARE_DEPLOYMENT_SCRIPT = "chef-solo/prepare_deployment.sh";
+    public static final String CHEF_SOLO_FOLDER = "chef-solo";
 
     private CloudNode node;
+    SshWaiter sshWaiter = new SshWaiter();
 
     private Logger logger = Logger.getLogger(NodeBootstrapper.class);
 
@@ -44,8 +46,8 @@ public class NodeBootstrapper {
     public void bootstrapNode() throws NodeNotAccessibleException, NodeNotBootstrappedException {
 	logger.info("Bootstrapping " + this.node.getIp());
 	executeBootstrapCommand();
-	saveFile(INITIAL_NODE_JSON, "chef-solo");
-	saveFile(PREPARE_DEPLOYMENT_SCRIPT, "chef-solo");
+	saveFile(INITIAL_NODE_JSON, CHEF_SOLO_FOLDER);
+	saveFile(PREPARE_DEPLOYMENT_SCRIPT, CHEF_SOLO_FOLDER);
 	logger.info("Bootstrap completed at" + this.node);
     }
 
@@ -69,7 +71,6 @@ public class NodeBootstrapper {
 
     private SshUtil getSsh() throws SshNotConnected {
 	int timeout = TimeoutsAndTrials.get("CONNECT_SSH_TIMEOUT");
-	SshWaiter sshWaiter = new SshWaiter();
 	SshUtil ssh = sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
 	return ssh;
     }
@@ -91,7 +92,7 @@ public class NodeBootstrapper {
     }
 
     private void saveFile(String source, String target) {
-	Scp scp = new Scp(node.getIp(), node.getUser(), node.getPrivateKeyFile());
+	Scp scp = Scp.getInstance(node.getIp(), node.getUser(), node.getPrivateKeyFile());
 	File file = getFile(source);
 	try {
 	    scp.sendFile(file.getAbsolutePath(), target);
