@@ -18,6 +18,7 @@ public class NPMFactory {
             String cloudProviderType = DeploymentManagerConfiguration.get(CLOUD_PROVIDER_PROPERTY);
             return new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
         }
+
     }
 
 }
