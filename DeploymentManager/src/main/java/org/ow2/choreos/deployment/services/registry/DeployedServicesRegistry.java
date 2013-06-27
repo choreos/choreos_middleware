@@ -12,22 +12,22 @@ import org.ow2.choreos.services.datamodel.DeployableService;
 
 public class DeployedServicesRegistry {
 
-    private ConcurrentMap<String, DeployableService> availableServices = new ConcurrentHashMap<String, DeployableService>();
+    private ConcurrentMap<String, DeployableService> deployedServices = new ConcurrentHashMap<String, DeployableService>();
 
     public void addService(String serviceId, DeployableService service) {
-        availableServices.put(serviceId, service);
+        deployedServices.put(serviceId, service);
     }
 
     public DeployableService getService(String serviceId) {
-        return availableServices.get(serviceId);
+        return deployedServices.get(serviceId);
     }
 
     public Collection<DeployableService> getServices() {
-        return availableServices.values();
+        return deployedServices.values();
     }
 
     public void deleteService(String serviceId) {
-        if (availableServices.remove(serviceId) == null)
+        if (deployedServices.remove(serviceId) == null)
             throw new IllegalArgumentException("Service " + serviceId + " not registered");
     }
 

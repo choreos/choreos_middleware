@@ -43,7 +43,8 @@ public class DeployableService extends Service {
     }
 
     public void removeInstance(ServiceInstance instance) {
-        serviceInstances.remove(instance);
+        if (serviceInstances != null)
+            serviceInstances.remove(instance);
     }
 
     public List<ServiceInstance> getServiceInstances() {
@@ -52,6 +53,12 @@ public class DeployableService extends Service {
 
     public void setServiceInstances(List<ServiceInstance> instances) {
         this.serviceInstances = instances;
+    }
+    
+    public synchronized void addInstance(ServiceInstance instance) {
+        if (serviceInstances == null)
+            serviceInstances = new ArrayList<ServiceInstance>();
+        serviceInstances.add(instance);
     }
 
     @Override
