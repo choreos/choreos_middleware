@@ -47,13 +47,17 @@ public class NodeUpdaterTest {
     }
     
     @Test
-    public void shouldInvokeHandler() throws Exception {
-        UpdateHandler handler = mock(UpdateHandler.class);
+    public void shouldInvokeHandlers() throws Exception {
+        UpdateHandler h1 = mock(UpdateHandler.class);
+        UpdateHandler h2 = mock(UpdateHandler.class);
         NodeUpdater updater = new NodeUpdater();
         updater.sshWaiter = waiter;
-        updater.update(node, handler);
+        updater.addHandler(h1);
+        updater.addHandler(h2);
+        updater.update(node);
         verify(ssh).runCommand(NodeUpdater.CHEF_SOLO_COMMAND);
-        verify(handler).handle();
+        verify(h1).handle();
+        verify(h2).handle();
     }
 
 }

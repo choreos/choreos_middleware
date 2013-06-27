@@ -10,9 +10,14 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.ow2.choreos.nodes.datamodel.CloudNode;
+
 @XmlRootElement
 public class DeployableService extends Service {
 
+    // selectedNodes and serviceInstances's nodes may not match, since instances
+    // may be not deployed
+    private List<CloudNode> selectedNodes;
     private List<ServiceInstance> serviceInstances;
 
     @XmlTransient
@@ -54,11 +59,29 @@ public class DeployableService extends Service {
     public void setServiceInstances(List<ServiceInstance> instances) {
         this.serviceInstances = instances;
     }
-    
+
     public synchronized void addInstance(ServiceInstance instance) {
         if (serviceInstances == null)
             serviceInstances = new ArrayList<ServiceInstance>();
         serviceInstances.add(instance);
+    }
+    
+    public List<CloudNode> getSelectedNodes() {
+        return selectedNodes;
+    }
+
+    public void setSelectedNodes(List<CloudNode> selectedNodes) {
+        this.selectedNodes = selectedNodes;
+    }
+    
+    public synchronized void addSelectedNode(CloudNode node) {
+        if (selectedNodes == null)
+            selectedNodes = new ArrayList<CloudNode>();
+        selectedNodes.add(node);
+    }
+    
+    public boolean hasInstances() {
+        return serviceInstances != null && serviceInstances.size() > 0;
     }
 
     @Override

@@ -7,28 +7,34 @@ import org.ow2.choreos.deployment.nodes.selector.NodeSelector;
 import org.ow2.choreos.deployment.nodes.selector.NodeSelectorFactory;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.selectors.NotSelectedException;
+import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
 public class ServiceDeploymentPreparer {
 
-    private DeploymentRequest deploymentRequest;
+    private DeployableServiceSpec spec;
     private String serviceName;
     private List<CloudNode> nodes;
 
     private Logger logger = Logger.getLogger(ServiceDeploymentPreparer.class);
 
-    public ServiceDeploymentPreparer(DeploymentRequest deploymentRequest) {
-        this.deploymentRequest = deploymentRequest;
-        this.serviceName = deploymentRequest.getService().getSpec().getName();
+    public ServiceDeploymentPreparer(DeployableServiceSpec spec) {
+        this.spec = spec;
+        this.serviceName = spec.getName();
     }
 
-    public void prepareDeployment() throws PrepareDeploymentFailedException {
+    public List<CloudNode> prepareDeployment() throws PrepareDeploymentFailedException {
         selectNodes();
         prepareInstances();
+        return nodes;
     }
 
     private void selectNodes() throws PrepareDeploymentFailedException {
         NodeSelector selector = NodeSelectorFactory.getFactoryInstance().getNodeSelectorInstance();
         try {
+            DeploymentRequest deploymentRequest = new DeploymentRequest();
+            deploymentRequest.setSpec(spec);
+            deploymentRequest.setNumberOfInstances(spec.getNumberOfInstances());
+            // TODO: change selector to receive spec, and after delete deployment request
             nodes = selector.select(deploymentRequest, deploymentRequest.getNumberOfInstances());
             logger.info("Selected nodes to " + serviceName + ": " + nodes);
         } catch (NotSelectedException e) {
@@ -46,8 +52,7 @@ public class ServiceDeploymentPreparer {
     private void prepareInstances() {
         for (CloudNode node : nodes) {
             try {
-                InstanceDeploymentPreparer instanceDeploymentPreparer = new InstanceDeploymentPreparer(
-                        deploymentRequest, node);
+                InstanceDeploymentPreparer instanceDeploymentPreparer = new InstanceDeploymentPreparer(spec, node);
                 instanceDeploymentPreparer.prepareDeployment();
             } catch (PrepareDeploymentFailedException e) {
                 logger.error(e.getMessage());

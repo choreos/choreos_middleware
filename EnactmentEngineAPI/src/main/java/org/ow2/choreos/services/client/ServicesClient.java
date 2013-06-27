@@ -74,7 +74,7 @@ public class ServicesClient implements ServicesManager {
         client.path("services").path(uuid);
         DeployableService service = null;
         try {
-            service = client.get(null);
+            service = client.get(DeployableService.class);
         } catch (WebApplicationException e) {
             throw new ServiceNotFoundException(uuid);
         }
@@ -104,5 +104,5 @@ public class ServicesClient implements ServicesManager {
         }
         return service;
     }
-
+    
 }

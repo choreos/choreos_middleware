@@ -6,6 +6,7 @@ package org.ow2.choreos.integration.deployment.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import javax.ws.rs.core.Response;
 
@@ -17,6 +18,7 @@ import org.junit.experimental.categories.Category;
 import org.ow2.choreos.deployment.nodes.NPMFactory;
 import org.ow2.choreos.deployment.services.ServicesManagerImpl;
 import org.ow2.choreos.nodes.NodePoolManager;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
@@ -53,10 +55,13 @@ public class JARDeployTest {
     public void shouldDeployAJarServiceInANode() throws Exception {
 
         DeployableService service = deployer.createService(spec);
-        ServiceInstance instance = service.getInstances().get(0);
-        npm.updateNode(instance.getNode().getId());
+        assertNull(service.getInstances());
+        CloudNode node = service.getSelectedNodes().get(0);
+        npm.updateNode(node.getId());
         Thread.sleep(1000);
 
+        assertEquals(1, service.getInstances().size());
+        ServiceInstance instance = service.getInstances().get(0);
         String url = instance.getNativeUri();
         assertNotNull(url);
         String wsdl = url.replaceAll("/$", "").concat("?wsdl");

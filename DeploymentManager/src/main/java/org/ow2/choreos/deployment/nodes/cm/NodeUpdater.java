@@ -32,9 +32,11 @@ public class NodeUpdater {
     // this executor is shared among multiple updates to the same node
     private final ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
 
+    private UpdateHandlers handlers = new UpdateHandlers();
+
     private final int timeout;
     private final int trials;
-    
+
     SshWaiter sshWaiter = new SshWaiter();
 
     private Logger logger = Logger.getLogger(NodeUpdater.class);
@@ -44,12 +46,10 @@ public class NodeUpdater {
         this.trials = TimeoutsAndTrials.get("UPDATE_TRIALS");
     }
 
-    public void update(CloudNode node, UpdateHandler handler) throws NodeNotUpdatedException {
-        update(node);
-        // if update did not throw an exception, then:
-        handler.handle();
+    public void addHandler(UpdateHandler handler) {
+        handlers.addHandler(handler);
     }
-    
+
     public void update(CloudNode node) throws NodeNotUpdatedException {
         UpdateInvokerTask updateTask = new UpdateInvokerTask(node);
         Future<Void> future = singleThreadExecutor.submit(updateTask);
@@ -74,7 +74,7 @@ public class NodeUpdater {
         logger.error(e.getMessage());
         throw e;
     }
-    
+
     private class UpdateInvokerTask implements Callable<Void> {
 
         CloudNode node;
@@ -103,8 +103,11 @@ public class NodeUpdater {
         @Override
         public Void call() throws Exception {
             logger.debug("updating node " + node.getId());
+            handlers.fetchHandlers();
             SshUtil ssh = getSsh();
             ssh.runCommand(CHEF_SOLO_COMMAND);
+            // if ssh did not throw an exception, then:
+            processHandlers();            
             return null;
         }
 
@@ -112,6 +115,11 @@ public class NodeUpdater {
             int timeout = TimeoutsAndTrials.get("CONNECT_SSH_TIMEOUT");
             return sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
         }
+        
+        private void processHandlers() {
+            for (UpdateHandler h : handlers.getHandlersForProcessing())
+                h.handle();
+        }        
     }
 
 }

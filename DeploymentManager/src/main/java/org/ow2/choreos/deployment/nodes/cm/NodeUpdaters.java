@@ -7,13 +7,13 @@ package org.ow2.choreos.deployment.nodes.cm;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class NodeUpdaterFactory {
+public class NodeUpdaters {
 
     // the key is the node id
     private static Map<String, NodeUpdater> updaters = new ConcurrentHashMap<String, NodeUpdater>();
 
-    public static NodeUpdater getInstance(String nodeId) {
-        synchronized (NodeUpdaterFactory.class) {
+    public static NodeUpdater getUpdaterFor(String nodeId) {
+        synchronized (NodeUpdaters.class) {
             if (!updaters.containsKey(nodeId)) {
                 NodeUpdater updater = new NodeUpdater();
                 updaters.put(nodeId, updater);

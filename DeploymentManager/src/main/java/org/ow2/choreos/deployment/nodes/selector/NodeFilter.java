@@ -56,7 +56,7 @@ class NodeFilter implements ObjectFilter<CloudNode, DeploymentRequest> {
     public List<CloudNode> filter(List<CloudNode> nodes, DeploymentRequest config) {
         List<CloudNode> filtered = new ArrayList<CloudNode>();
         for (CloudNode node : nodes) {
-            if (isAcceptable(config.getResourceImpact(), node)) {
+            if (isAcceptable(config.getSpec().getResourceImpact(), node)) {
                 filtered.add(node);
             }
         }

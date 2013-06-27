@@ -9,8 +9,8 @@ public class NodeUpdaterFactoryTest {
     @Test
     public void shouldRetriveTheSameInstance() {
         String nodeId = "1";
-        NodeUpdater updater1 = NodeUpdaterFactory.getInstance(nodeId); 
-        NodeUpdater updater2 = NodeUpdaterFactory.getInstance(nodeId);
+        NodeUpdater updater1 = NodeUpdaters.getUpdaterFor(nodeId); 
+        NodeUpdater updater2 = NodeUpdaters.getUpdaterFor(nodeId);
         assertTrue(updater1 == updater2);
     }
     
@@ -18,8 +18,8 @@ public class NodeUpdaterFactoryTest {
     public void shouldRetriveDifferentInstances() {
         String nodeId1 = "1";
         String nodeId2 = "2";
-        NodeUpdater updater1 = NodeUpdaterFactory.getInstance(nodeId1); 
-        NodeUpdater updater2 = NodeUpdaterFactory.getInstance(nodeId2);
+        NodeUpdater updater1 = NodeUpdaters.getUpdaterFor(nodeId1); 
+        NodeUpdater updater2 = NodeUpdaters.getUpdaterFor(nodeId2);
         assertTrue(updater1 != updater2);
     }
 

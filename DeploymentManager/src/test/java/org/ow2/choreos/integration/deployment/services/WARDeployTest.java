@@ -4,6 +4,7 @@
 
 package org.ow2.choreos.integration.deployment.services;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -18,6 +19,7 @@ import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.services.ServicesManagerImpl;
 import org.ow2.choreos.nodes.NodePoolManager;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.datamodel.DeployableService;
@@ -62,16 +64,16 @@ public class WARDeployTest {
     public void shouldDeployAWarServiceInANode() throws Exception {
 
         DeployableService service = deployer.createService(specWar);
-
-        ServiceInstance instance = service.getInstances().get(0);
-
-        String url = instance.getNativeUri();
-        logger.info("Service at " + url);
-        npm.updateNode(instance.getNode().getId());
+        assertNull(service.getInstances());
+        CloudNode node = service.getSelectedNodes().get(0);
+        npm.updateNode(node.getId());
         Thread.sleep(1000);
 
+        ServiceInstance instance = service.getInstances().get(0);
+        String url = instance.getNativeUri();
         if (url.trim().endsWith("/"))
             url = url.trim().substring(0, url.length() - 1);
+        logger.info("Service at " + url);
 
         client = WebClient.create(url + "?wsdl");
         String body = client.get(String.class);

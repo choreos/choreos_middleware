@@ -81,7 +81,7 @@ public class ServicesResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
 
-        logger.info(service.getSpec().getUuid() + " configured to be deployed on " + service.getUris());
+        logger.info(service.getSpec().getUuid() + " configured to be deployed on " + service.getSelectedNodes());
 
         UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
         uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getSpec().getUuid());

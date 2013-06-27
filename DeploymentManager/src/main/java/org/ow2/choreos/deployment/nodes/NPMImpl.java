@@ -12,7 +12,7 @@ import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpdater;
-import org.ow2.choreos.deployment.nodes.cm.NodeUpdaterFactory;
+import org.ow2.choreos.deployment.nodes.cm.NodeUpdaters;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
@@ -103,7 +103,7 @@ public class NPMImpl implements NodePoolManager {
     @Override
     public void updateNode(String nodeId) throws NodeNotUpdatedException, NodeNotFoundException {
         CloudNode node = this.getNode(nodeId);
-        NodeUpdater updater = NodeUpdaterFactory.getInstance(nodeId);
+        NodeUpdater updater = NodeUpdaters.getUpdaterFor(nodeId);
         updater.update(node);
     }
 

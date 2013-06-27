@@ -21,7 +21,7 @@ class NodeFactory implements ObjectFactory<CloudNode, DeploymentRequest> {
     public CloudNode createNewInstance(DeploymentRequest requirements) throws ObjectCreationException {
         try {
             NodeSpec nodeSpec = new NodeSpec();
-            nodeSpec.setResourceImpact(requirements.getResourceImpact());
+            nodeSpec.setResourceImpact(requirements.getSpec().getResourceImpact());
             return this.npm.createNode(nodeSpec);
         } catch (NodeNotCreatedException e) {
             throw new ObjectCreationException();
