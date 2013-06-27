@@ -10,14 +10,14 @@ public class NPMFactory {
 
     public static NodePoolManager npmForTest;
     public static boolean testing = false;
-    
+
     public static NodePoolManager getNewNPMInstance() {
-	if (testing) {
-	    return npmForTest;
-	} else {
-	    String cloudProviderType = DeploymentManagerConfiguration.get(CLOUD_PROVIDER_PROPERTY);
-	    return new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
-	}
+        if (testing) {
+            return npmForTest;
+        } else {
+            String cloudProviderType = DeploymentManagerConfiguration.get(CLOUD_PROVIDER_PROPERTY);
+            return new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
+        }
     }
-    
+
 }

@@ -24,30 +24,30 @@ public class DeploymentManagerServer {
     private RESTServer restServer;
 
     static {
-	String port = DeploymentManagerConfiguration.get("DEPLOYMENT_MANAGER_PORT");
-	URL = "http://0.0.0.0:" + port + "/deploymentmanager/";
+        String port = DeploymentManagerConfiguration.get("DEPLOYMENT_MANAGER_PORT");
+        URL = "http://0.0.0.0:" + port + "/deploymentmanager/";
     }
 
     public DeploymentManagerServer() {
 
-	this.restServer = new RESTServer(NAME, URL, new Class[] { NodesResource.class, RunListResource.class,
-		ServicesResource.class });
+        this.restServer = new RESTServer(NAME, URL, new Class[] { NodesResource.class, RunListResource.class,
+                ServicesResource.class });
     }
 
     public void start() {
 
-	this.restServer.start();
+        this.restServer.start();
     }
 
     public void stop() {
 
-	this.restServer.stop();
+        this.restServer.stop();
     }
 
     public static void main(String[] args) {
 
-	LogConfigurator.configLog();
-	DeploymentManagerServer server = new DeploymentManagerServer();
-	server.start();
+        LogConfigurator.configLog();
+        DeploymentManagerServer server = new DeploymentManagerServer();
+        server.start();
     }
 }
