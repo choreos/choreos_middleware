@@ -24,63 +24,63 @@ public class FixedCloudProviderTest {
 
     @Before
     public void setUp() {
-	LogConfigurator.configLog();
+        LogConfigurator.configLog();
     }
 
     @Test
     public void shouldReturnNodeInfo() throws NodeNotCreatedException {
 
-	DeploymentManagerConfiguration.set("FIXED_VM_IPS", "192.168.56.101");
-	DeploymentManagerConfiguration.set("FIXED_VM_HOSTNAMES", "choreos");
-	DeploymentManagerConfiguration.set("FIXED_VM_PRIVATE_SSH_KEYS", "key");
-	DeploymentManagerConfiguration.set("FIXED_VM_USERS", "choreos");
-	DeploymentManagerConfiguration.set("FIXED_VM_TYPES", "SMALL");
-	DeploymentManagerConfiguration.set("MAPPER_POLICY", "ANY_FIT");
-	CloudProvider cp = new FixedCloudProvider();
-	CloudNode node = cp.createOrUseExistingNode(new NodeSpec());
+        DeploymentManagerConfiguration.set("FIXED_VM_IPS", "192.168.56.101");
+        DeploymentManagerConfiguration.set("FIXED_VM_HOSTNAMES", "choreos");
+        DeploymentManagerConfiguration.set("FIXED_VM_PRIVATE_SSH_KEYS", "key");
+        DeploymentManagerConfiguration.set("FIXED_VM_USERS", "choreos");
+        DeploymentManagerConfiguration.set("FIXED_VM_TYPES", "SMALL");
+        DeploymentManagerConfiguration.set("MAPPER_POLICY", "ANY_FIT");
+        CloudProvider cp = new FixedCloudProvider();
+        CloudNode node = cp.createOrUseExistingNode(new NodeSpec());
 
-	assertTrue(node.getHostname() != null && !node.getHostname().isEmpty());
+        assertTrue(node.getHostname() != null && !node.getHostname().isEmpty());
 
-	Pattern pat = Pattern.compile("(\\d{1,3}\\.){3}\\d{1,3}");
-	Matcher matcher = pat.matcher(node.getIp());
-	assertTrue(matcher.matches());
+        Pattern pat = Pattern.compile("(\\d{1,3}\\.){3}\\d{1,3}");
+        Matcher matcher = pat.matcher(node.getIp());
+        assertTrue(matcher.matches());
     }
 
     @Test
     public void shouldReturnAvalableVMs() {
 
-	DeploymentManagerConfiguration.set("FIXED_VM_IPS", "192.168.56.101, 192.168.56.102");
-	DeploymentManagerConfiguration.set("FIXED_VM_HOSTNAMES", "choreos, choreos");
-	DeploymentManagerConfiguration.set("FIXED_VM_PRIVATE_SSH_KEYS", "key, samekey");
-	DeploymentManagerConfiguration.set("FIXED_VM_USERS", "choreos, choreos");
-	DeploymentManagerConfiguration.set("FIXED_VM_TYPES", "SMALL, SMALL");
-	DeploymentManagerConfiguration.set("MAPPER_POLICY", "ANY_FIT");
+        DeploymentManagerConfiguration.set("FIXED_VM_IPS", "192.168.56.101, 192.168.56.102");
+        DeploymentManagerConfiguration.set("FIXED_VM_HOSTNAMES", "choreos, choreos");
+        DeploymentManagerConfiguration.set("FIXED_VM_PRIVATE_SSH_KEYS", "key, samekey");
+        DeploymentManagerConfiguration.set("FIXED_VM_USERS", "choreos, choreos");
+        DeploymentManagerConfiguration.set("FIXED_VM_TYPES", "SMALL, SMALL");
+        DeploymentManagerConfiguration.set("MAPPER_POLICY", "ANY_FIT");
 
-	CloudProvider cp = new FixedCloudProvider();
-	List<CloudNode> nodes = cp.getNodes();
-	assertEquals(2, nodes.size());
+        CloudProvider cp = new FixedCloudProvider();
+        List<CloudNode> nodes = cp.getNodes();
+        assertEquals(2, nodes.size());
 
-	CloudNode node0 = nodes.get(0);
-	CloudNode node1 = nodes.get(1);
+        CloudNode node0 = nodes.get(0);
+        CloudNode node1 = nodes.get(1);
 
-	assertTrue(node0.getId().equals("0") || node0.getId().equals("1"));
-	assertTrue(node1.getId().equals("0") || node1.getId().equals("1"));
-	assertTrue(!node0.getId().equals(node1.getId()));
+        assertTrue(node0.getId().equals("0") || node0.getId().equals("1"));
+        assertTrue(node1.getId().equals("0") || node1.getId().equals("1"));
+        assertTrue(!node0.getId().equals(node1.getId()));
 
-	assertTrue(node0.getIp().equals("192.168.56.101") || node0.getIp().equals("192.168.56.102"));
-	assertTrue(node1.getIp().equals("192.168.56.101") || node1.getIp().equals("192.168.56.102"));
-	assertTrue(!node0.getIp().equals(node1.getIp()));
+        assertTrue(node0.getIp().equals("192.168.56.101") || node0.getIp().equals("192.168.56.102"));
+        assertTrue(node1.getIp().equals("192.168.56.101") || node1.getIp().equals("192.168.56.102"));
+        assertTrue(!node0.getIp().equals(node1.getIp()));
     }
 
     @Test(expected = NodeNotFoundException.class)
     public void shouldNotFindVMs() throws NodeNotFoundException {
 
-	DeploymentManagerConfiguration.set("FIXED_VM_IPS", "192.168.56.101; 192.168.56.102 ");
-	DeploymentManagerConfiguration.set("FIXED_VM_HOSTNAMES", "choreos, choreos");
-	DeploymentManagerConfiguration.set("FIXED_VM_PRIVATE_SSH_KEYS", "key, samekey");
-	DeploymentManagerConfiguration.set("FIXED_VM_USERS", "choreos, choreos");
-	CloudProvider cp = new FixedCloudProvider();
-	cp.getNode("2");
+        DeploymentManagerConfiguration.set("FIXED_VM_IPS", "192.168.56.101; 192.168.56.102 ");
+        DeploymentManagerConfiguration.set("FIXED_VM_HOSTNAMES", "choreos, choreos");
+        DeploymentManagerConfiguration.set("FIXED_VM_PRIVATE_SSH_KEYS", "key, samekey");
+        DeploymentManagerConfiguration.set("FIXED_VM_USERS", "choreos, choreos");
+        CloudProvider cp = new FixedCloudProvider();
+        cp.getNode("2");
     }
 
 }

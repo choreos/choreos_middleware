@@ -13,7 +13,7 @@ public class SshNotConnected extends Exception {
     }
 
     public SshNotConnected(String msg) {
-	super(msg);
+        super(msg);
     }
 
 }

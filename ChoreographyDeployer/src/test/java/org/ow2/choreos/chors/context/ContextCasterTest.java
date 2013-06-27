@@ -48,65 +48,64 @@ public class ContextCasterTest {
 
     @BeforeClass
     public static void configLog() {
-	LogConfigurator.configLog();
+        LogConfigurator.configLog();
     }
 
     @Before
     public void setUp() {
-	models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-	travelService = models.getTravelService();
-	airlineService = models.getAirlineService();
+        models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
+        travelService = models.getTravelService();
+        airlineService = models.getAirlineService();
 
-	this.deployedServices = new HashMap<String, DeployableService>();
-	this.deployedServices.put(AIRLINE, airlineService);
-	this.deployedServices.put(TRAVEL_AGENCY, travelService);
+        this.deployedServices = new HashMap<String, DeployableService>();
+        this.deployedServices.put(AIRLINE, airlineService);
+        this.deployedServices.put(TRAVEL_AGENCY, travelService);
     }
 
     private void setUpBusUris() throws ServiceInstanceNotFoundException {
 
-	ServiceInstance airlineInstance = ((DeployableService) (deployedServices.get(AIRLINE)))
-		.getInstances().get(0);
-	airlineInstance.setBusUri(ServiceType.SOAP, AIRLINE_PROXIFIED_URI);
-	ServiceInstance travelInstance = deployedServices.get(TRAVEL_AGENCY).getInstances().get(0);
-	travelInstance.setBusUri(ServiceType.SOAP, TRAVEL_AGENCY_PROXIFIED_URI);
+        ServiceInstance airlineInstance = ((DeployableService) (deployedServices.get(AIRLINE))).getInstances().get(0);
+        airlineInstance.setBusUri(ServiceType.SOAP, AIRLINE_PROXIFIED_URI);
+        ServiceInstance travelInstance = deployedServices.get(TRAVEL_AGENCY).getInstances().get(0);
+        travelInstance.setBusUri(ServiceType.SOAP, TRAVEL_AGENCY_PROXIFIED_URI);
     }
 
     @Test
     public void shouldPassAirlineProxifiedAddressToTravelAgency() throws ContextNotSentException,
-	    ServiceInstanceNotFoundException {
+            ServiceInstanceNotFoundException {
 
-	this.setUpBusUris();
+        this.setUpBusUris();
 
-	ContextSender sender = mock(ContextSender.class);
-	ContextSenderFactory factory = mock(ContextSenderFactory.class);
-	when(factory.getNewInstance(any(ServiceType.class))).thenReturn(sender);
-	ContextCaster caster = new ContextCaster(factory);
-	caster.cast(models.getChoreography());
+        ContextSender sender = mock(ContextSender.class);
+        ContextSenderFactory factory = mock(ContextSenderFactory.class);
+        when(factory.getNewInstance(any(ServiceType.class))).thenReturn(sender);
+        ContextCaster caster = new ContextCaster(factory);
+        caster.cast(models.getChoreography());
 
-	List<String> expectedAirlineUrisList = new ArrayList<String>();
-	expectedAirlineUrisList.add(AIRLINE_PROXIFIED_URI);
+        List<String> expectedAirlineUrisList = new ArrayList<String>();
+        expectedAirlineUrisList.add(AIRLINE_PROXIFIED_URI);
 
-	verify(sender).sendContext(TRAVEL_AGENCY_URI, AIRLINE, AIRLINE, expectedAirlineUrisList);
+        verify(sender).sendContext(TRAVEL_AGENCY_URI, AIRLINE, AIRLINE, expectedAirlineUrisList);
     }
 
     @Test
     public void shouldPassAirlineNativeUriToTravelAgency() throws ContextNotSentException {
 
-	ContextSender sender = mock(ContextSender.class);
-	ContextSenderFactory factory = mock(ContextSenderFactory.class);
-	when(factory.getNewInstance(any(ServiceType.class))).thenReturn(sender);
-	ContextCaster caster = new ContextCaster(factory);
-	caster.cast(models.getChoreography());
+        ContextSender sender = mock(ContextSender.class);
+        ContextSenderFactory factory = mock(ContextSenderFactory.class);
+        when(factory.getNewInstance(any(ServiceType.class))).thenReturn(sender);
+        ContextCaster caster = new ContextCaster(factory);
+        caster.cast(models.getChoreography());
 
-	List<String> expectedAirlineUrisList = new ArrayList<String>();
-	expectedAirlineUrisList.add(AIRLINE_URI);
-	verify(sender).sendContext(TRAVEL_AGENCY_URI, AIRLINE, AIRLINE, expectedAirlineUrisList);
+        List<String> expectedAirlineUrisList = new ArrayList<String>();
+        expectedAirlineUrisList.add(AIRLINE_URI);
+        verify(sender).sendContext(TRAVEL_AGENCY_URI, AIRLINE, AIRLINE, expectedAirlineUrisList);
     }
 
     @After
     public void tearDown() {
-	System.out.println("Cleaning fixtures!");
-	models = null;
+        System.out.println("Cleaning fixtures!");
+        models = null;
     }
 
 }

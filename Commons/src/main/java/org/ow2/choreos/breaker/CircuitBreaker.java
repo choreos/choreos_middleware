@@ -34,66 +34,66 @@ public class CircuitBreaker<T> {
      *            how many time to remain opened
      */
     public CircuitBreaker(Callable<T> task, int threshold, int timeoutSeconds) {
-	this.task = task;
-	this.threshold = threshold;
-	this.timeoutSeconds = timeoutSeconds;
-	this.closedState = new ClosedState<T>(this);
-	this.openState = new OpenState<T>(this);
-	this.halfOpenState = new HalfOpenState<T>(this);
-	this.currentState = closedState;
+        this.task = task;
+        this.threshold = threshold;
+        this.timeoutSeconds = timeoutSeconds;
+        this.closedState = new ClosedState<T>(this);
+        this.openState = new OpenState<T>(this);
+        this.halfOpenState = new HalfOpenState<T>(this);
+        this.currentState = closedState;
     }
 
     public T call() throws BreakerException {
-	try {
-	    return this.currentState.call();
-	} catch (Exception e) {
-	    throw new BreakerException(e);
-	}
+        try {
+            return this.currentState.call();
+        } catch (Exception e) {
+            throw new BreakerException(e);
+        }
     }
 
     public int getThreshold() {
-	return this.threshold;
+        return this.threshold;
     }
 
     public int getTimeoutSeconds() {
-	return this.timeoutSeconds;
+        return this.timeoutSeconds;
     }
 
     T passThrough() throws Exception {
-	return this.task.call();
+        return this.task.call();
     }
 
     void trip() {
-	setState(openState);
+        setState(openState);
     }
 
     void attemptReset() {
-	setState(halfOpenState);
+        setState(halfOpenState);
     }
 
     void reset() {
-	setState(closedState);
+        setState(closedState);
     }
 
     void setState(CircuitBreakerState<T> state) {
-	this.currentState = state;
-	this.currentState.activate();
+        this.currentState = state;
+        this.currentState.activate();
     }
 
     CircuitBreakerState<T> getState() {
-	return this.currentState;
+        return this.currentState;
     }
 
     CircuitBreakerState<T> getClosedState() {
-	return closedState;
+        return closedState;
     }
 
     CircuitBreakerState<T> getOpenState() {
-	return openState;
+        return openState;
     }
 
     CircuitBreakerState<T> getHalfOpenState() {
-	return halfOpenState;
+        return halfOpenState;
     }
 
 }

@@ -11,12 +11,12 @@ class NodeRetriever implements ObjectRetriever<CloudNode> {
     private NodePoolManager npm;
 
     public NodeRetriever(NodePoolManager npm) {
-	this.npm = npm;
+        this.npm = npm;
     }
 
     @Override
     public List<CloudNode> retrieveObjects() {
-	return this.npm.getNodes();
+        return this.npm.getNodes();
     }
 
 }

@@ -16,21 +16,21 @@ public class ServicesProxifier {
     private Logger logger = Logger.getLogger(ServicesProxifier.class);
 
     public ServicesProxifier(Choreography chor) {
-	this.chor = chor;
+        this.chor = chor;
     }
 
     public void proxify() {
-	if (useTheBus()) {
-	    logger.info("Resquested to proxify depoloyed services");
-	    ESBNodesSelector selector = new ESBNodesSelector();
-	    Map<ServiceInstance, EasyESBNode> instancesNodesMap = selector.selectESBNodes(chor);
-	    ServiceInstancesProxifier proxifier = new ServiceInstancesProxifier();
-	    proxifier.proxify(instancesNodesMap);
-	    // TODO: should PUT /services/ (a registry would resolve...)
-	}
+        if (useTheBus()) {
+            logger.info("Resquested to proxify depoloyed services");
+            ESBNodesSelector selector = new ESBNodesSelector();
+            Map<ServiceInstance, EasyESBNode> instancesNodesMap = selector.selectESBNodes(chor);
+            ServiceInstancesProxifier proxifier = new ServiceInstancesProxifier();
+            proxifier.proxify(instancesNodesMap);
+            // TODO: should PUT /services/ (a registry would resolve...)
+        }
     }
-    
+
     private boolean useTheBus() {
-	return Boolean.parseBoolean(ChoreographyDeployerConfiguration.get(BUS_PROPERTY));
+        return Boolean.parseBoolean(ChoreographyDeployerConfiguration.get(BUS_PROPERTY));
     }
 }

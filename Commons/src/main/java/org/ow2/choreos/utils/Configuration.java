@@ -20,62 +20,63 @@ import org.apache.log4j.Logger;
 public class Configuration {
 
     private final PropertiesConfiguration properties;
-    
+
     private static Logger logger = Logger.getLogger(Configuration.class);
 
     /**
      * The file must be on the resources folder.
      * 
-     * @param filePath relative to resources folder.
+     * @param filePath
+     *            relative to resources folder.
      */
     public Configuration(String filePath) {
 
-	PropertiesConfiguration tmp = null;
-	try {
-	    // TODO try getResourceAsStrem; the current line does not works when
-	    // the class is loaded
-	    // by other application (not the DeploymentManager itself)
-	    URL fileUrl = this.getClass().getClassLoader().getResource(filePath);
-	    if (fileUrl != null) {
-		File propertiesFile = new File(fileUrl.getFile());
-		tmp = new PropertiesConfiguration(propertiesFile);
-	    } else {
-		logger.error("Could not load properties from " + filePath);
-		tmp = new PropertiesConfiguration();
-	    }
-	} catch (ConfigurationException e) {
-	    logger.error("Could not load properties from " + filePath);
-	    tmp = new PropertiesConfiguration();
-	}
-	this.properties = tmp;
+        PropertiesConfiguration tmp = null;
+        try {
+            // TODO try getResourceAsStrem; the current line does not works when
+            // the class is loaded
+            // by other application (not the DeploymentManager itself)
+            URL fileUrl = this.getClass().getClassLoader().getResource(filePath);
+            if (fileUrl != null) {
+                File propertiesFile = new File(fileUrl.getFile());
+                tmp = new PropertiesConfiguration(propertiesFile);
+            } else {
+                logger.error("Could not load properties from " + filePath);
+                tmp = new PropertiesConfiguration();
+            }
+        } catch (ConfigurationException e) {
+            logger.error("Could not load properties from " + filePath);
+            tmp = new PropertiesConfiguration();
+        }
+        this.properties = tmp;
     }
 
     public String get(String key) {
-	if (key == null)
-	    throw new IllegalArgumentException();
-	String value = properties.getString(key);
-	if (value != null)
-	    value.trim();
-	return value;
+        if (key == null)
+            throw new IllegalArgumentException();
+        String value = properties.getString(key);
+        if (value != null)
+            value.trim();
+        return value;
     }
 
     public String[] getMultiple(String key) {
-	if (key == null)
-	    throw new IllegalArgumentException();
-	String[] values = properties.getStringArray(key);
-	for (int i = 0; i < values.length; i++)
-	    values[i] = values[i].trim();
-	return values;
+        if (key == null)
+            throw new IllegalArgumentException();
+        String[] values = properties.getStringArray(key);
+        for (int i = 0; i < values.length; i++)
+            values[i] = values[i].trim();
+        return values;
     }
 
     public void set(String key, String value) {
-	if (key != null)
-	    properties.setProperty(key, value);
+        if (key != null)
+            properties.setProperty(key, value);
     }
 
     public void set(String key, String[] values) {
-	if (key != null)
-	    properties.setProperty(key, values);
+        if (key != null)
+            properties.setProperty(key, values);
     }
 
 }

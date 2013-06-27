@@ -41,51 +41,51 @@ public class ServicesResourceTest {
 
     @Before
     public void setUp() throws ServiceNotCreatedException {
-	this.serviceSpec = getSpec();
-	ServicesManager servicesManagerMock = mock(ServicesManager.class);
-	when(servicesManagerMock.createService(serviceSpec)).thenReturn(getService());
-	this.servicesResources = new ServicesResource(servicesManagerMock);
+        this.serviceSpec = getSpec();
+        ServicesManager servicesManagerMock = mock(ServicesManager.class);
+        when(servicesManagerMock.createService(serviceSpec)).thenReturn(getService());
+        this.servicesResources = new ServicesResource(servicesManagerMock);
     }
 
     private DeployableServiceSpec getSpec() {
-	DeployableServiceSpec serviceSpec = new DeployableServiceSpec(AIRLINE, ServiceType.SOAP,
-		PackageType.COMMAND_LINE, null, null, "http://choreos.eu/airilne.jar", 1234, "airline", 1);
-	return serviceSpec;
+        DeployableServiceSpec serviceSpec = new DeployableServiceSpec(AIRLINE, ServiceType.SOAP,
+                PackageType.COMMAND_LINE, null, null, "http://choreos.eu/airilne.jar", 1234, "airline", 1);
+        return serviceSpec;
     }
 
     private DeployableService getService() {
 
-	DeployableService airline = new DeployableService(serviceSpec);
-	expectedServiceUUID = airline.getSpec().getUuid();
-	ServiceInstance instance = new ServiceInstance();
-	instance.setInstanceId("1");
-	instance.setNativeUri("http://hostname:1234/airline");
-	List<ServiceInstance> instances = Collections.singletonList(instance);
-	airline.setServiceInstances(instances);
-	return airline;
+        DeployableService airline = new DeployableService(serviceSpec);
+        expectedServiceUUID = airline.getSpec().getUuid();
+        ServiceInstance instance = new ServiceInstance();
+        instance.setInstanceId("1");
+        instance.setNativeUri("http://hostname:1234/airline");
+        List<ServiceInstance> instances = Collections.singletonList(instance);
+        airline.setServiceInstances(instances);
+        return airline;
     }
 
     @Test
     public void shouldCreateService() throws IllegalArgumentException, UriBuilderException, URISyntaxException,
-	    ServiceInstanceNotFoundException {
+            ServiceInstanceNotFoundException {
 
-	String uri = "/services/airline";
-	UriBuilder uriBuilder = mock(UriBuilder.class);
-	UriInfo uriInfo = mock(UriInfo.class);
-	when(uriInfo.getBaseUriBuilder()).thenReturn(uriBuilder);
-	when(uriBuilder.path(any(Class.class))).thenReturn(uriBuilder);
-	when(uriBuilder.path(any(String.class))).thenReturn(uriBuilder);
-	when(uriBuilder.build()).thenReturn(new URI(uri));
+        String uri = "/services/airline";
+        UriBuilder uriBuilder = mock(UriBuilder.class);
+        UriInfo uriInfo = mock(UriInfo.class);
+        when(uriInfo.getBaseUriBuilder()).thenReturn(uriBuilder);
+        when(uriBuilder.path(any(Class.class))).thenReturn(uriBuilder);
+        when(uriBuilder.path(any(String.class))).thenReturn(uriBuilder);
+        when(uriBuilder.build()).thenReturn(new URI(uri));
 
-	Response response = this.servicesResources.deployService(serviceSpec, uriInfo);
+        Response response = this.servicesResources.deployService(serviceSpec, uriInfo);
 
-	assertEquals(201, response.getStatus());
-	Service entity = (Service) response.getEntity();
-	assertEquals(expectedServiceUUID, entity.getSpec().getUuid());
-	assertEquals(serviceSpec, entity.getSpec());
-	assertEquals(1, ((DeployableService) entity).getInstances().size());
-	assertEquals(getService().getInstanceById("1"), ((DeployableService) entity).getInstanceById("1"));
-	assertEquals(uri, response.getMetadata().get("location").get(0));
+        assertEquals(201, response.getStatus());
+        Service entity = (Service) response.getEntity();
+        assertEquals(expectedServiceUUID, entity.getSpec().getUuid());
+        assertEquals(serviceSpec, entity.getSpec());
+        assertEquals(1, ((DeployableService) entity).getInstances().size());
+        assertEquals(getService().getInstanceById("1"), ((DeployableService) entity).getInstanceById("1"));
+        assertEquals(uri, response.getMetadata().get("location").get(0));
     }
 
 }

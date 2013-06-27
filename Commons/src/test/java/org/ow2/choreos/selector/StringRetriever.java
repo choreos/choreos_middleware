@@ -17,13 +17,13 @@ public class StringRetriever implements ObjectRetriever<String> {
     @Override
     public List<String> retrieveObjects() {
 
-	return Collections.unmodifiableList(this.objects);
+        return Collections.unmodifiableList(this.objects);
     }
 
     public void addObject(String obj) {
 
-	if (!this.objects.contains(obj))
-	    this.objects.add(obj);
+        if (!this.objects.contains(obj))
+            this.objects.add(obj);
     }
 
 }

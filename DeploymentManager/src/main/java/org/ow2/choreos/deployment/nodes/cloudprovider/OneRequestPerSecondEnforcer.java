@@ -21,39 +21,39 @@ public class OneRequestPerSecondEnforcer {
 
     public void enforceRule() {
 
-	while (!getToken()) {
-	    final int DELAY = 10;
-	    final int DELTA = random.nextInt(10);
-	    try {
-		Thread.sleep(DELAY + DELTA);
-	    } catch (InterruptedException e) {
-		logger.error("Exception at sleeping =/");
-	    }
-	}
+        while (!getToken()) {
+            final int DELAY = 10;
+            final int DELTA = random.nextInt(10);
+            try {
+                Thread.sleep(DELAY + DELTA);
+            } catch (InterruptedException e) {
+                logger.error("Exception at sleeping =/");
+            }
+        }
 
-	final int TWO_SECONDS = 2000;
-	try {
-	    Thread.sleep(TWO_SECONDS);
-	} catch (InterruptedException e) {
-	    logger.error("Exception at sleeping =/");
-	}
+        final int TWO_SECONDS = 2000;
+        try {
+            Thread.sleep(TWO_SECONDS);
+        } catch (InterruptedException e) {
+            logger.error("Exception at sleeping =/");
+        }
 
-	releasesToken();
+        releasesToken();
     }
 
     private boolean getToken() {
-	boolean ok = false;
-	synchronized (this) {
-	    ok = creationToken;
-	    if (ok) {
-		creationToken = false;
-	    }
-	}
-	return ok;
+        boolean ok = false;
+        synchronized (this) {
+            ok = creationToken;
+            if (ok) {
+                creationToken = false;
+            }
+        }
+        return ok;
     }
-    
+
     private void releasesToken() {
-	creationToken = true;
+        creationToken = true;
     }
-    
+
 }

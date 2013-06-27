@@ -25,59 +25,59 @@ public class AWSCloudProvider extends JCloudsCloudProvider {
     private static final String DEFAULT_PRIVATE_KEY = DeploymentManagerConfiguration.get("AMAZON_PRIVATE_SSH_KEY");
     private static final String PROVIDER = "aws-ec2";
     private static final String DEFAULT_IMAGE = "us-east-1/ami-3b4ff252"; // Ubuntu
-									  // 12.04
+    // 12.04
 
     private static final OneRequestPerSecondEnforcer oneRequestPerSecondEnforcer = new OneRequestPerSecondEnforcer();
-    
+
     public AWSCloudProvider() {
-	super(IDENTITY, CREDENTIAL, PROVIDER, PROPERTIES);
+        super(IDENTITY, CREDENTIAL, PROVIDER, PROPERTIES);
     }
 
     public String getCloudProviderName() {
-	return PROVIDER;
+        return PROVIDER;
     }
 
     @Override
     public CloudNode createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
-	oneRequestPerSecondEnforcer.enforceRule();
-	return super.createNode(nodeSpec);
+        oneRequestPerSecondEnforcer.enforceRule();
+        return super.createNode(nodeSpec);
     }
 
     @Override
     protected String getDefaultImageId() {
-	return DEFAULT_IMAGE;
+        return DEFAULT_IMAGE;
     }
 
     @Override
     protected String getHardwareId() {
-	return InstanceType.M1_SMALL;
+        return InstanceType.M1_SMALL;
     }
 
     @Override
     protected String getUserName() {
-	return DEFAULT_USER;
+        return DEFAULT_USER;
     }
 
     @Override
     protected String getUserPrivateKey() {
-	return DEFAULT_PRIVATE_KEY;
+        return DEFAULT_PRIVATE_KEY;
     }
 
     @Override
     protected String getNodeIp(NodeMetadata nodeMetadata) {
-	Iterator<String> publicAddresses = nodeMetadata.getPublicAddresses().iterator();
-	if (publicAddresses != null && publicAddresses.hasNext()) {
-	    return publicAddresses.next();
-	} else {
-	    return null;
-	}
+        Iterator<String> publicAddresses = nodeMetadata.getPublicAddresses().iterator();
+        if (publicAddresses != null && publicAddresses.hasNext()) {
+            return publicAddresses.next();
+        } else {
+            return null;
+        }
     }
 
     @Override
     protected void configureTemplateOptions(TemplateOptions templateOptions) {
-	AWSEC2TemplateOptions options = templateOptions.as(AWSEC2TemplateOptions.class);
-	options.securityGroups("default");
-	options.keyPair(DeploymentManagerConfiguration.get("AMAZON_KEY_PAIR"));
+        AWSEC2TemplateOptions options = templateOptions.as(AWSEC2TemplateOptions.class);
+        options.securityGroups("default");
+        options.keyPair(DeploymentManagerConfiguration.get("AMAZON_KEY_PAIR"));
     }
 
 }

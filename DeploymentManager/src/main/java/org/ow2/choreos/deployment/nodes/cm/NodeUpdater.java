@@ -38,73 +38,73 @@ public class NodeUpdater {
     private Logger logger = Logger.getLogger(NodeUpdater.class);
 
     public NodeUpdater() {
-	this.timeout = TimeoutsAndTrials.get("UPDATE_TIMEOUT");
-	this.trials = TimeoutsAndTrials.get("UPDATE_TRIALS");
+        this.timeout = TimeoutsAndTrials.get("UPDATE_TIMEOUT");
+        this.trials = TimeoutsAndTrials.get("UPDATE_TRIALS");
     }
 
     public void update(CloudNode node) throws NodeNotUpdatedException {
-	UpdateInvokerTask updateTask = new UpdateInvokerTask(node);
-	Future<Void> future = singleThreadExecutor.submit(updateTask);
-	checkFuture(node, future);
+        UpdateInvokerTask updateTask = new UpdateInvokerTask(node);
+        Future<Void> future = singleThreadExecutor.submit(updateTask);
+        checkFuture(node, future);
     }
 
     private void checkFuture(CloudNode node, Future<Void> future) throws NodeNotUpdatedException {
-	try {
-	    // since the task been executed is basically the invoker invocation,
-	    // we hope do not get stuck here (invoker already has a timeout)
-	    // this is why we did not set a timeout in the "future.get()"
-	    future.get();
-	} catch (InterruptedException e) {
-	    fail(node);
-	} catch (ExecutionException e) {
-	    fail(node);
-	}
+        try {
+            // since the task been executed is basically the invoker invocation,
+            // we hope do not get stuck here (invoker already has a timeout)
+            // this is why we did not set a timeout in the "future.get()"
+            future.get();
+        } catch (InterruptedException e) {
+            fail(node);
+        } catch (ExecutionException e) {
+            fail(node);
+        }
     }
 
     private void fail(CloudNode node) throws NodeNotUpdatedException {
-	NodeNotUpdatedException e = new NodeNotUpdatedException(node.getId());
-	logger.error(e.getMessage());
-	throw e;
+        NodeNotUpdatedException e = new NodeNotUpdatedException(node.getId());
+        logger.error(e.getMessage());
+        throw e;
     }
 
     private class UpdateInvokerTask implements Callable<Void> {
 
-	CloudNode node;
+        CloudNode node;
 
-	public UpdateInvokerTask(CloudNode node) {
-	    this.node = node;
-	}
+        public UpdateInvokerTask(CloudNode node) {
+            this.node = node;
+        }
 
-	@Override
-	public Void call() throws Exception {
-	    ChefSoloTask task = new ChefSoloTask(node);
-	    Invoker<Void> invoker = new Invoker<Void>(task, trials, timeout, TimeUnit.SECONDS);
-	    invoker.invoke();
-	    return null;
-	}
+        @Override
+        public Void call() throws Exception {
+            ChefSoloTask task = new ChefSoloTask(node);
+            Invoker<Void> invoker = new Invoker<Void>(task, trials, timeout, TimeUnit.SECONDS);
+            invoker.invoke();
+            return null;
+        }
     }
 
     private class ChefSoloTask implements Callable<Void> {
 
-	CloudNode node;
+        CloudNode node;
 
-	public ChefSoloTask(CloudNode node) {
-	    this.node = node;
-	}
+        public ChefSoloTask(CloudNode node) {
+            this.node = node;
+        }
 
-	@Override
-	public Void call() throws Exception {
-	    logger.debug("updating node " + node.getId());
-	    SshUtil ssh = getSsh();
-	    ssh.runCommand(CHEF_SOLO_COMMAND);
-	    return null;
-	}
+        @Override
+        public Void call() throws Exception {
+            logger.debug("updating node " + node.getId());
+            SshUtil ssh = getSsh();
+            ssh.runCommand(CHEF_SOLO_COMMAND);
+            return null;
+        }
 
-	private SshUtil getSsh() throws SshNotConnected {
-	    int timeout = TimeoutsAndTrials.get("CONNECT_SSH_TIMEOUT");
-	    SshWaiter waiter = new SshWaiter();
-	    return waiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
-	}
+        private SshUtil getSsh() throws SshNotConnected {
+            int timeout = TimeoutsAndTrials.get("CONNECT_SSH_TIMEOUT");
+            SshWaiter waiter = new SshWaiter();
+            return waiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
+        }
     }
 
 }

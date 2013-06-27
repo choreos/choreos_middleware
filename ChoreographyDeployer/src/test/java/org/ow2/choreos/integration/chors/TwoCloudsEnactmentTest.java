@@ -28,7 +28,7 @@ import org.ow2.choreos.utils.LogConfigurator;
  */
 @Category(IntegrationTest.class)
 public class TwoCloudsEnactmentTest extends SimpleChorEnactmentTest {
-    
+
     private static final String BUS_PROPERTY = "BUS";
 
     private static final String DEPLOYER1 = "Deployer1";
@@ -38,21 +38,21 @@ public class TwoCloudsEnactmentTest extends SimpleChorEnactmentTest {
 
     @BeforeClass
     public static void startServers() {
-	LogConfigurator.configLog();
+        LogConfigurator.configLog();
     }
 
     @Before
     @Override
     public void setUp() {
 
-	ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "false");
-	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-	DeployableServiceSpec airlineSpec = models.getAirlineSpec();
-	DeployableServiceSpec travelSpec = models.getTravelSpec();
+        ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "false");
+        ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
+        DeployableServiceSpec airlineSpec = models.getAirlineSpec();
+        DeployableServiceSpec travelSpec = models.getTravelSpec();
 
-	travelSpec.setOwner(DEPLOYER2);
-	airlineSpec.setOwner(DEPLOYER1);
-	Owners.set(DEPLOYER1, DM_URI_1);
-	Owners.set(DEPLOYER2, DM_URI_2);
+        travelSpec.setOwner(DEPLOYER2);
+        airlineSpec.setOwner(DEPLOYER1);
+        Owners.set(DEPLOYER1, DM_URI_1);
+        Owners.set(DEPLOYER2, DM_URI_2);
     }
 }

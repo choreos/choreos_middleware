@@ -15,31 +15,31 @@ public class ESBNodeSelectorFactory extends SingletonsFactory<ESBNodeSelector> {
     private static Logger logger = Logger.getLogger(ESBNodeSelectorFactory.class);
 
     public static ESBNodeSelectorFactory getFactoryInstance() {
-	if (INSTANCE == null) {
-	    synchronized (ESBNodeSelectorFactory.class) {
-		if (INSTANCE == null)
-		    createNewInstance();
-	    }
-	}
-	return INSTANCE;
+        if (INSTANCE == null) {
+            synchronized (ESBNodeSelectorFactory.class) {
+                if (INSTANCE == null)
+                    createNewInstance();
+            }
+        }
+        return INSTANCE;
     }
 
     private static void createNewInstance() {
-	Configuration conf = new Configuration(CLASS_MAP_FILE_PATH);
-	INSTANCE = new ESBNodeSelectorFactory(conf);
+        Configuration conf = new Configuration(CLASS_MAP_FILE_PATH);
+        INSTANCE = new ESBNodeSelectorFactory(conf);
     }
 
     private ESBNodeSelectorFactory(Configuration classMap) {
-	super(classMap);
+        super(classMap);
     }
 
     public ESBNodeSelector getNodeSelectorInstance() {
-	String selectorType = ChoreographyDeployerConfiguration.get(BUS_POLICY_PROPERTY);
-	if (selectorType == null) {
-	    logger.error(BUS_POLICY_PROPERTY + " property not set on properties file!");
-	    throw new IllegalArgumentException();
-	}
-	return getInstance(selectorType);
+        String selectorType = ChoreographyDeployerConfiguration.get(BUS_POLICY_PROPERTY);
+        if (selectorType == null) {
+            logger.error(BUS_POLICY_PROPERTY + " property not set on properties file!");
+            throw new IllegalArgumentException();
+        }
+        return getInstance(selectorType);
     }
 
 }

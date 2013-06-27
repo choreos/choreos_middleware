@@ -10,13 +10,13 @@ public class ObjectFilters<T, R> {
 
     public ObjectFilter<T, R> getNoFilter() {
 
-	ObjectFilter<T, R> noFilter = new ObjectFilter<T, R>() {
-	    @Override
-	    public List<T> filter(List<T> objects, R requirements) {
-		return objects;
-	    }
-	};
-	return noFilter;
+        ObjectFilter<T, R> noFilter = new ObjectFilter<T, R>() {
+            @Override
+            public List<T> filter(List<T> objects, R requirements) {
+                return objects;
+            }
+        };
+        return noFilter;
     }
 
 }

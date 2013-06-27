@@ -18,80 +18,80 @@ public class ResourceImpact {
     private String network;
 
     public MemoryType getMemory() {
-	return memory;
+        return memory;
     }
 
     public void setMemory(MemoryType memory) {
-	this.memory = memory;
+        this.memory = memory;
     }
 
     public String getCpu() {
-	return cpu;
+        return cpu;
     }
 
     public void setCpu(String cpu) {
-	this.cpu = cpu;
+        this.cpu = cpu;
     }
 
     public String getStorage() {
-	return storage;
+        return storage;
     }
 
     public void setStorage(String storage) {
-	this.storage = storage;
+        this.storage = storage;
     }
 
     public String getNetwork() {
-	return network;
+        return network;
     }
 
     public void setNetwork(String network) {
-	this.network = network;
+        this.network = network;
     }
 
     @Override
     public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((cpu == null) ? 0 : cpu.hashCode());
-	result = prime * result + ((storage == null) ? 0 : storage.hashCode());
-	result = prime * result + ((memory == null) ? 0 : memory.hashCode());
-	result = prime * result + ((network == null) ? 0 : network.hashCode());
-	return result;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((cpu == null) ? 0 : cpu.hashCode());
+        result = prime * result + ((storage == null) ? 0 : storage.hashCode());
+        result = prime * result + ((memory == null) ? 0 : memory.hashCode());
+        result = prime * result + ((network == null) ? 0 : network.hashCode());
+        return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	ResourceImpact other = (ResourceImpact) obj;
-	if (cpu == null) {
-	    if (other.cpu != null)
-		return false;
-	} else if (!cpu.equals(other.cpu))
-	    return false;
-	if (storage == null) {
-	    if (other.storage != null)
-		return false;
-	} else if (!storage.equals(other.storage))
-	    return false;
-	if (memory != other.memory)
-	    return false;
-	if (network == null) {
-	    if (other.network != null)
-		return false;
-	} else if (!network.equals(other.network))
-	    return false;
-	return true;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ResourceImpact other = (ResourceImpact) obj;
+        if (cpu == null) {
+            if (other.cpu != null)
+                return false;
+        } else if (!cpu.equals(other.cpu))
+            return false;
+        if (storage == null) {
+            if (other.storage != null)
+                return false;
+        } else if (!storage.equals(other.storage))
+            return false;
+        if (memory != other.memory)
+            return false;
+        if (network == null) {
+            if (other.network != null)
+                return false;
+        } else if (!network.equals(other.network))
+            return false;
+        return true;
     }
 
     @Override
     public String toString() {
-	return "ResourceImpact [memory=" + memory + ", cpu=" + cpu + ", io=" + storage + ", network=" + network + "]";
+        return "ResourceImpact [memory=" + memory + ", cpu=" + cpu + ", io=" + storage + ", network=" + network + "]";
     }
 
 }

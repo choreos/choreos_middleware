@@ -9,7 +9,7 @@ public class NodeNotDestroyed extends Exception {
     private static final long serialVersionUID = -5097061342536022130L;
 
     public NodeNotDestroyed(String nodeId) {
-	super("Could not destroy node " + nodeId);
+        super("Could not destroy node " + nodeId);
     }
 
 }

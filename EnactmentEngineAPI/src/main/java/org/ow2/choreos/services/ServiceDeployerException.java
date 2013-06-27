@@ -10,15 +10,15 @@ public class ServiceDeployerException extends Exception {
     private final String serviceName;
 
     public ServiceDeployerException(String serviceName) {
-	this.serviceName = serviceName;
+        this.serviceName = serviceName;
     }
 
     public ServiceDeployerException(String serviceName, String message) {
-	super(message);
-	this.serviceName = serviceName;
+        super(message);
+        this.serviceName = serviceName;
     }
 
     public String getServiceName() {
-	return this.serviceName;
+        return this.serviceName;
     }
 }

@@ -18,9 +18,9 @@ public class SingletonsFactory<T> {
      *            are the respective full qualified class names.
      */
     public SingletonsFactory(Configuration classMap) {
-	this.classMap = classMap;
+        this.classMap = classMap;
     }
-    
+
     /**
      * 
      * @param type
@@ -29,39 +29,40 @@ public class SingletonsFactory<T> {
      *             if could not retrieve singleton
      */
     public T getInstance(String type) {
-	if (!singletons.containsKey(type)) {
-	    synchronized (SingletonsFactory.class) {
-		if (!singletons.containsKey(type)) {
-		    T singleton = newInstance(type);
-		    singletons.put(type, singleton);
-		}
-	    }
-	}
-	return singletons.get(type);
+        if (!singletons.containsKey(type)) {
+            synchronized (SingletonsFactory.class) {
+                if (!singletons.containsKey(type)) {
+                    T singleton = newInstance(type);
+                    singletons.put(type, singleton);
+                }
+            }
+        }
+        return singletons.get(type);
     }
 
     private T newInstance(String type) {
-	String className = this.classMap.get(type);
-	T singleton = null;
-	try {
-	    @SuppressWarnings("unchecked") // catches handle the problem
-	    Class<T> clazz = (Class<T>) Class.forName(className);
-	    singleton = clazz.newInstance();
-	} catch (ClassNotFoundException e) {
-	    singletonCreationFailed(type);
-	} catch (InstantiationException e) {
-	    singletonCreationFailed(type);
-	} catch (IllegalAccessException e) {
-	    singletonCreationFailed(type);
-	} catch (ClassCastException e) {
-	    singletonCreationFailed(type);
-	}
-	return singleton;
+        String className = this.classMap.get(type);
+        T singleton = null;
+        try {
+            @SuppressWarnings("unchecked")
+            // catches handle the problem
+            Class<T> clazz = (Class<T>) Class.forName(className);
+            singleton = clazz.newInstance();
+        } catch (ClassNotFoundException e) {
+            singletonCreationFailed(type);
+        } catch (InstantiationException e) {
+            singletonCreationFailed(type);
+        } catch (IllegalAccessException e) {
+            singletonCreationFailed(type);
+        } catch (ClassCastException e) {
+            singletonCreationFailed(type);
+        }
+        return singleton;
     }
-    
+
     private void singletonCreationFailed(String type) {
-	logger.error("invalid type: " + type);
-	throw new IllegalArgumentException();
+        logger.error("invalid type: " + type);
+        throw new IllegalArgumentException();
     }
 
 }

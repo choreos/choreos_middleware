@@ -58,22 +58,22 @@ public class NodesResource {
     @Consumes(MediaType.APPLICATION_XML)
     public Response createNode(NodeSpec nodeSpec, @Context UriInfo uriInfo) throws URISyntaxException {
 
-	logger.debug("Request to create node");
+        logger.debug("Request to create node");
 
-	CloudNode node = null;
-	try {
-	    node = npm.createNode(nodeSpec);
-	} catch (NodeNotCreatedException e) {
-	    logger.warn("Node not created", e);
-	    return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-	}
+        CloudNode node = null;
+        try {
+            node = npm.createNode(nodeSpec);
+        } catch (NodeNotCreatedException e) {
+            logger.warn("Node not created", e);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        }
 
-	logger.info(node + " created");
+        logger.info(node + " created");
 
-	UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-	uriBuilder = uriBuilder.path(NodesResource.class).path(node.getId());
-	URI uri = uriBuilder.build();
-	return Response.created(uri).entity(node).build();
+        UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+        uriBuilder = uriBuilder.path(NodesResource.class).path(node.getId());
+        URI uri = uriBuilder.build();
+        return Response.created(uri).entity(node).build();
     }
 
     /**
@@ -89,25 +89,24 @@ public class NodesResource {
     @GET
     @Path("{node_id:.+}")
     public Response getNode(@PathParam("node_id") String nodeId) {
-	
-	logger.debug("Request to get node " + nodeId);
-	
-	Response response;
-	try {
-	    CloudNode node = npm.getNode(nodeId);
-	    response = Response.ok(node).build();
-	} catch (NodeNotFoundException e) {
-	    logger.error("Node " + nodeId + " not found");
-	    response = Response.status(Status.NOT_FOUND).build();
-	}
-	return response;
+
+        logger.debug("Request to get node " + nodeId);
+
+        Response response;
+        try {
+            CloudNode node = npm.getNode(nodeId);
+            response = Response.ok(node).build();
+        } catch (NodeNotFoundException e) {
+            logger.error("Node " + nodeId + " not found");
+            response = Response.status(Status.NOT_FOUND).build();
+        }
+        return response;
     }
-    
-    
+
     /**
      * POST /nodes/{nodeId}/update
      * 
-     * Updates and installs new software installed in the selected node. 
+     * Updates and installs new software installed in the selected node.
      * 
      * @param nodeId
      *            the node id, provided in the URI
@@ -119,22 +118,22 @@ public class NodesResource {
     @Path("{node_id:.+}/update")
     public Response updateNode(@PathParam("node_id") String nodeId) {
 
-	logger.debug("Request to update node " + nodeId);
+        logger.debug("Request to update node " + nodeId);
 
-	Response response;
-	try {
-	    npm.updateNode(nodeId);
-	    logger.info("Node " + nodeId + " updated");
-	    response = Response.status(Status.OK).build();
-	} catch (NodeNotUpdatedException e) {
-	    logger.error("Node " + nodeId + " not updated", e);
-	    response = Response.status(Status.NOT_FOUND).build();
-	} catch (NodeNotFoundException e) {
-	    logger.error("Node " + nodeId + " not updated", e);
-	    response = Response.status(Status.INTERNAL_SERVER_ERROR).build();
-	}
+        Response response;
+        try {
+            npm.updateNode(nodeId);
+            logger.info("Node " + nodeId + " updated");
+            response = Response.status(Status.OK).build();
+        } catch (NodeNotUpdatedException e) {
+            logger.error("Node " + nodeId + " not updated", e);
+            response = Response.status(Status.NOT_FOUND).build();
+        } catch (NodeNotFoundException e) {
+            logger.error("Node " + nodeId + " not updated", e);
+            response = Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        }
 
-	return response;
+        return response;
     }
 
 }

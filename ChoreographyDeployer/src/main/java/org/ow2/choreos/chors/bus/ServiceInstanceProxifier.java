@@ -13,16 +13,16 @@ public class ServiceInstanceProxifier {
 
     public String proxify(ServiceInstance serviceInstance, EasyESBNode esbNode) throws ManagementException {
 
-	ServiceType type = serviceInstance.getServiceSpec().getServiceType();
-	if (type != ServiceType.SOAP) {
-	    throw new IllegalArgumentException("We can bind only SOAP services, not " + type);
-	}
+        ServiceType type = serviceInstance.getServiceSpec().getServiceType();
+        if (type != ServiceType.SOAP) {
+            throw new IllegalArgumentException("We can bind only SOAP services, not " + type);
+        }
 
-	String url = serviceInstance.getNativeUri();
-	url = url.replaceAll("/$", "");
-	String wsdl = url + "?wsdl";
+        String url = serviceInstance.getNativeUri();
+        url = url.replaceAll("/$", "");
+        String wsdl = url + "?wsdl";
 
-	return esbNode.proxifyService(url, wsdl);
+        return esbNode.proxifyService(url, wsdl);
     }
 
 }

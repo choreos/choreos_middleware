@@ -28,19 +28,19 @@ public class FixedConnectionTest {
 
     @BeforeClass
     public static void setupClass() {
-	LogConfigurator.configLog();
+        LogConfigurator.configLog();
     }
 
     @Test
     public void shouldConnectToTheNode() throws NodeNotCreatedException {
 
-	CloudProvider cp = new FixedCloudProvider();
-	CloudNode node = cp.createOrUseExistingNode(new NodeSpec());
+        CloudProvider cp = new FixedCloudProvider();
+        CloudNode node = cp.createOrUseExistingNode(new NodeSpec());
 
-	SshUtil ssh = null;
-	ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-	assertTrue(ssh.isAccessible());
-	ssh.disconnect();
+        SshUtil ssh = null;
+        ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
+        assertTrue(ssh.isAccessible());
+        ssh.disconnect();
     }
 
 }

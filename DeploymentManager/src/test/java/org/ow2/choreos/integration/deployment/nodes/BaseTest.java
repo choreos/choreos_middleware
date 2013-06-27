@@ -27,21 +27,21 @@ public class BaseTest {
 
     @BeforeClass
     public static void startServer() throws Exception {
-	LogConfigurator.configLog();
-	server = new DeploymentManagerServer();
-	server.start();
-	nodePoolManagerHost = DeploymentManagerServer.URL;
+        LogConfigurator.configLog();
+        server = new DeploymentManagerServer();
+        server.start();
+        nodePoolManagerHost = DeploymentManagerServer.URL;
     }
 
     @AfterClass
     public static void stopServer() throws UnsupportedEncodingException {
-	server.stop();
+        server.stop();
     }
 
     protected static CloudNode getNodeFromResponse(Response response) {
-	String location = (String) response.getMetadata().get("Location").get(0);
-	WebClient webClient = WebClient.create(location);
-	return webClient.get(CloudNode.class);
+        String location = (String) response.getMetadata().get("Location").get(0);
+        WebClient webClient = WebClient.create(location);
+        return webClient.get(CloudNode.class);
     }
 
     /**
@@ -51,10 +51,10 @@ public class BaseTest {
      * @return
      */
     protected boolean isNodeLocation(String uri) {
-	String regex = DeploymentManagerServer.URL + "nodes/.+";
-	Pattern pattern = Pattern.compile(regex);
-	Matcher matcher = pattern.matcher(uri);
-	return matcher.matches();
+        String regex = DeploymentManagerServer.URL + "nodes/.+";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(uri);
+        return matcher.matches();
     }
 
 }

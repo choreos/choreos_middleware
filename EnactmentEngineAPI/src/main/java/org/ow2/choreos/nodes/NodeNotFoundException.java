@@ -9,7 +9,7 @@ public class NodeNotFoundException extends Exception {
     private static final long serialVersionUID = 826431667001507667L;
 
     public NodeNotFoundException(String nodeId) {
-	super("Node " + nodeId + " not found.");
+        super("Node " + nodeId + " not found.");
     }
 
 }

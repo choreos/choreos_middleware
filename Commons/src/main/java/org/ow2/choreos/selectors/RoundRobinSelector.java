@@ -24,35 +24,35 @@ public class RoundRobinSelector<T, R> implements Selector<T, R> {
     private AtomicInteger counter = new AtomicInteger();
 
     public RoundRobinSelector(ObjectRetriever<T> objectRetriever) {
-	ObjectFilters<T, R> filters = new ObjectFilters<T, R>();
-	this.objectFilter = filters.getNoFilter();
-	this.objectRetriever = objectRetriever;
+        ObjectFilters<T, R> filters = new ObjectFilters<T, R>();
+        this.objectFilter = filters.getNoFilter();
+        this.objectRetriever = objectRetriever;
     }
 
     public RoundRobinSelector(ObjectRetriever<T> objectRetriever, ObjectFilter<T, R> objectFilter) {
-	this.objectRetriever = objectRetriever;
-	this.objectFilter = objectFilter;
+        this.objectRetriever = objectRetriever;
+        this.objectFilter = objectFilter;
     }
 
     @Override
     public List<T> select(R requirements, int objectsQuantity) throws NotSelectedException {
 
-	List<T> objects = this.objectRetriever.retrieveObjects();
-	List<T> compatibleObjects = this.objectFilter.filter(objects, requirements);
+        List<T> objects = this.objectRetriever.retrieveObjects();
+        List<T> compatibleObjects = this.objectFilter.filter(objects, requirements);
 
-	if (compatibleObjects.size() < objectsQuantity) {
-	    throw new NotSelectedException();
-	}
+        if (compatibleObjects.size() < objectsQuantity) {
+            throw new NotSelectedException();
+        }
 
-	List<T> selectedObjects = new ArrayList<T>();
+        List<T> selectedObjects = new ArrayList<T>();
 
-	for (int i = 0; i < objectsQuantity; i++) {
-	    int idx = counter.getAndIncrement();
-	    idx = idx % compatibleObjects.size();
-	    T selected = compatibleObjects.get(idx);
-	    selectedObjects.add(selected);
-	}
-	return selectedObjects;
+        for (int i = 0; i < objectsQuantity; i++) {
+            int idx = counter.getAndIncrement();
+            idx = idx % compatibleObjects.size();
+            T selected = compatibleObjects.get(idx);
+            selectedObjects.add(selected);
+        }
+        return selectedObjects;
     }
 
 }

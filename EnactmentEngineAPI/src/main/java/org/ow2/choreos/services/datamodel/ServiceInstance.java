@@ -27,112 +27,112 @@ public class ServiceInstance {
     }
 
     public ServiceInstance(CloudNode node) {
-	this.setNode(node);
+        this.setNode(node);
     }
 
     public Map<ServiceType, String> getBusUris() {
-	return busUris;
+        return busUris;
     }
 
     public void setBusUris(Map<ServiceType, String> busUris) {
-	this.busUris = busUris;
+        this.busUris = busUris;
     }
 
     public DeployableServiceSpec getServiceSpec() {
-	return serviceSpec;
+        return serviceSpec;
     }
 
     public void setServiceSpec(DeployableServiceSpec serviceSpec) {
-	this.serviceSpec = serviceSpec;
+        this.serviceSpec = serviceSpec;
     }
 
     public CloudNode getNode() {
-	return node;
+        return node;
     }
 
     public void setNode(CloudNode node) {
-	this.node = node;
+        this.node = node;
     }
 
     public String getBusUri(ServiceType type) {
-	return this.busUris.get(type);
+        return this.busUris.get(type);
     }
 
     public void setBusUri(ServiceType type, String uri) {
-	this.busUris.put(type, uri);
+        this.busUris.put(type, uri);
     }
 
     public String getInstanceId() {
-	return instanceId;
+        return instanceId;
     }
 
     public void setInstanceId(String instanceId) {
-	this.instanceId = instanceId;
+        this.instanceId = instanceId;
     }
 
     public void setNativeUri(String uri) {
-	this.nativeUri = uri;
+        this.nativeUri = uri;
     }
 
     public String getNativeUri() {
-	if (nativeUriIsDefined()) {
-	    return nativeUri;
-	} else {
-	    return getDefaultnativeUri();
-	}
+        if (nativeUriIsDefined()) {
+            return nativeUri;
+        } else {
+            return getDefaultnativeUri();
+        }
     }
 
     private boolean nativeUriIsDefined() {
-	return nativeUri != null && !nativeUri.isEmpty();
+        return nativeUri != null && !nativeUri.isEmpty();
     }
 
     private String getDefaultnativeUri() {
-	NativeUriRetriever retriever = new NativeUriRetriever(this);
-	return retriever.getDefaultnativeUri();
+        NativeUriRetriever retriever = new NativeUriRetriever(this);
+        return retriever.getDefaultnativeUri();
     }
 
     public String getEasyEsbNodeAdminEndpoint() {
-	return easyEsbNodeAdminEndpoint;
+        return easyEsbNodeAdminEndpoint;
     }
 
     public void setEasyEsbNodeAdminEndpoint(String easyEsbNodeAdminEndpoint) {
-	this.easyEsbNodeAdminEndpoint = easyEsbNodeAdminEndpoint;
+        this.easyEsbNodeAdminEndpoint = easyEsbNodeAdminEndpoint;
     }
 
     @Override
     public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((instanceId == null) ? 0 : instanceId.hashCode());
-	result = prime * result + ((nativeUri == null) ? 0 : nativeUri.hashCode());
-	return result;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((instanceId == null) ? 0 : instanceId.hashCode());
+        result = prime * result + ((nativeUri == null) ? 0 : nativeUri.hashCode());
+        return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	ServiceInstance other = (ServiceInstance) obj;
-	if (instanceId == null) {
-	    if (other.instanceId != null)
-		return false;
-	} else if (!instanceId.equals(other.instanceId))
-	    return false;
-	if (nativeUri == null) {
-	    if (other.nativeUri != null)
-		return false;
-	} else if (!nativeUri.equals(other.nativeUri))
-	    return false;
-	return true;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ServiceInstance other = (ServiceInstance) obj;
+        if (instanceId == null) {
+            if (other.instanceId != null)
+                return false;
+        } else if (!instanceId.equals(other.instanceId))
+            return false;
+        if (nativeUri == null) {
+            if (other.nativeUri != null)
+                return false;
+        } else if (!nativeUri.equals(other.nativeUri))
+            return false;
+        return true;
     }
 
     @Override
     public String toString() {
-	return "ServiceInstance [instanceId=" + instanceId + ", nativeUri=" + nativeUri + "]";
+        return "ServiceInstance [instanceId=" + instanceId + ", nativeUri=" + nativeUri + "]";
     }
 
 }

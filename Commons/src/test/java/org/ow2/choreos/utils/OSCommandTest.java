@@ -12,21 +12,21 @@ public class OSCommandTest {
 
     @Test
     public void testRunLocalCommand() throws CommandLineException {
-	OSCommand com = new OSCommand("pwd");
-	String result = com.execute();
-	assertTrue(result.length() > 0);
+        OSCommand com = new OSCommand("pwd");
+        String result = com.execute();
+        assertTrue(result.length() > 0);
     }
 
     @Test(expected = CommandLineException.class)
     public void shouldThrowExceptionBecauseExistStatus() throws CommandLineException {
-	OSCommand com = new OSCommand("this command does not exit");
-	com.execute();
+        OSCommand com = new OSCommand("this command does not exit");
+        com.execute();
     }
 
     @Test(expected = CommandLineException.class)
     public void shouldThrowExceptionBecauseExistStatus2() throws CommandLineException {
-	OSCommand com = new OSCommand("cat arquivo_que_nao_existe");
-	com.execute();
+        OSCommand com = new OSCommand("cat arquivo_que_nao_existe");
+        com.execute();
     }
 
 }

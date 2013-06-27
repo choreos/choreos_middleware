@@ -28,13 +28,13 @@ public class ChorDeployerTest {
      */
     @Test(expected = EnactmentException.class)
     public void shouldThrowExceptionWhenDeploymentManagerIsNotAvailable() throws EnactmentException,
-	    ChoreographyNotFoundException {
+            ChoreographyNotFoundException {
 
-	ChoreographyDeployer chorDeployer = new ChoreographyDeployerImpl();
-	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-	ChoreographySpec chorSpec = models.getChorSpec();
-	String id = chorDeployer.createChoreography(chorSpec);
-	chorDeployer.enactChoreography(id);
+        ChoreographyDeployer chorDeployer = new ChoreographyDeployerImpl();
+        ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
+        ChoreographySpec chorSpec = models.getChorSpec();
+        String id = chorDeployer.createChoreography(chorSpec);
+        chorDeployer.enactChoreography(id);
     }
 
 }

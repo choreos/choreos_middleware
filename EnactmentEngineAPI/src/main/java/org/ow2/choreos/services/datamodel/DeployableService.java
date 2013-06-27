@@ -19,107 +19,107 @@ public class DeployableService extends Service {
     private RecipeBundle recipeBundle;
 
     public DeployableService() {
-	super();
+        super();
     }
 
     public DeployableService(DeployableServiceSpec spec) {
-	super(spec);
+        super(spec);
     }
 
     @Override
     public DeployableServiceSpec getSpec() {
-	return (DeployableServiceSpec) super.getSpec();
+        return (DeployableServiceSpec) super.getSpec();
     }
 
     @Override
     public void setSpec(ServiceSpec spec) {
-	// This method seems to be necessary to JAXB set the super class
-	// attribute when doing unmarshalling
-	super.setSpec((DeployableServiceSpec) spec);
+        // This method seems to be necessary to JAXB set the super class
+        // attribute when doing unmarshalling
+        super.setSpec((DeployableServiceSpec) spec);
     }
 
     public List<ServiceInstance> getInstances() {
-	return serviceInstances;
+        return serviceInstances;
     }
-    
+
     public void removeInstance(ServiceInstance instance) {
-	serviceInstances.remove(instance);
+        serviceInstances.remove(instance);
     }
 
     public List<ServiceInstance> getServiceInstances() {
-	return serviceInstances;
+        return serviceInstances;
     }
 
     public void setServiceInstances(List<ServiceInstance> instances) {
-	this.serviceInstances = instances;
+        this.serviceInstances = instances;
     }
 
     @Override
     public List<String> getUris() {
 
-	if (serviceInstances == null) {
-	    return new ArrayList<String>();
-	}
+        if (serviceInstances == null) {
+            return new ArrayList<String>();
+        }
 
-	List<String> uris = new ArrayList<String>();
-	synchronized (serviceInstances) {
-	    for (ServiceInstance service : serviceInstances) {
-		uris.add(service.getNativeUri());
-	    }
-	}
-	return uris;
+        List<String> uris = new ArrayList<String>();
+        synchronized (serviceInstances) {
+            for (ServiceInstance service : serviceInstances) {
+                uris.add(service.getNativeUri());
+            }
+        }
+        return uris;
     }
 
     public ServiceInstance getInstanceById(String instanceId) {
-	if (serviceInstances != null) {
-	    for (ServiceInstance instance : serviceInstances) {
-		if (instance.getInstanceId().equals(instanceId))
-		    return instance;
-	    }
-	}
-	throw new IllegalArgumentException("getSpec().getUUID() " + " / " + instanceId);
+        if (serviceInstances != null) {
+            for (ServiceInstance instance : serviceInstances) {
+                if (instance.getInstanceId().equals(instanceId))
+                    return instance;
+            }
+        }
+        throw new IllegalArgumentException("getSpec().getUUID() " + " / " + instanceId);
     }
 
     public RecipeBundle getRecipeBundle() {
-	return recipeBundle;
+        return recipeBundle;
     }
 
     public void setRecipeBundle(RecipeBundle recipeBundle) {
-	this.recipeBundle = recipeBundle;
+        this.recipeBundle = recipeBundle;
     }
 
     @Override
     public int hashCode() {
-	final int prime = 31;
-	int result = super.hashCode();
-	result = prime * result + ((serviceInstances == null) ? 0 : serviceInstances.hashCode());
-	return result;
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((serviceInstances == null) ? 0 : serviceInstances.hashCode());
+        return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (!super.equals(obj))
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	DeployableService other = (DeployableService) obj;
-	if (serviceInstances == null) {
-	    if (other.serviceInstances != null)
-		return false;
-	} else if (!serviceInstances.equals(other.serviceInstances))
-	    return false;
-	return true;
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DeployableService other = (DeployableService) obj;
+        if (serviceInstances == null) {
+            if (other.serviceInstances != null)
+                return false;
+        } else if (!serviceInstances.equals(other.serviceInstances))
+            return false;
+        return true;
     }
 
     @Override
     public String toString() {
-	StringBuilder uris = new StringBuilder();
-	for (String uri: getUris()) {
-	    uris.append(uri + "; ");
-	}
-	return "DeployableService [recipeBundle=" + recipeBundle + ", serviceInstances=" + uris + "]";
+        StringBuilder uris = new StringBuilder();
+        for (String uri : getUris()) {
+            uris.append(uri + "; ");
+        }
+        return "DeployableService [recipeBundle=" + recipeBundle + ", serviceInstances=" + uris + "]";
     }
 
 }

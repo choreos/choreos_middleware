@@ -13,10 +13,10 @@ public class NodeNotBootstrappedException extends Exception {
     }
 
     public NodeNotBootstrappedException(String nodeId) {
-	super("Node " + nodeId + " not bootstrapped!");
+        super("Node " + nodeId + " not bootstrapped!");
     }
 
     public NodeNotBootstrappedException(String nodeId, Throwable cause) {
-	super("Node " + nodeId + " not bootstrapped!", cause);
+        super("Node " + nodeId + " not bootstrapped!", cause);
     }
 }

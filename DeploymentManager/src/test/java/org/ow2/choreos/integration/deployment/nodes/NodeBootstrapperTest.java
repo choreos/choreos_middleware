@@ -35,7 +35,7 @@ public class NodeBootstrapperTest {
 
     @Before
     public void setUp() {
-	LogConfigurator.configLog();
+        LogConfigurator.configLog();
     }
 
     /**
@@ -46,20 +46,20 @@ public class NodeBootstrapperTest {
     @Test
     public void shouldLeaveNodeBootstraped() throws Exception {
 
-	CloudProvider cp = CloudProviderFactory.getInstance(DeploymentManagerConfiguration.get("CLOUD_PROVIDER"));
-	node = cp.createOrUseExistingNode(new NodeSpec());
-	System.out.println(node);
+        CloudProvider cp = CloudProviderFactory.getInstance(DeploymentManagerConfiguration.get("CLOUD_PROVIDER"));
+        node = cp.createOrUseExistingNode(new NodeSpec());
+        System.out.println(node);
 
-	BootstrapChecker checker = new BootstrapChecker();
-	if (!checker.isBootstrapped(node)) {
-	    System.out.println("Going to bootstrap the node");
-	    NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
-	    bootstrapper.bootstrapNode();
-	    System.out.println("Checking if bootstrap was OK");
-	    assertTrue(checker.isBootstrapped(node));
-	} else {
-	    System.out.println("Node was already bootstrapped");
-	}
+        BootstrapChecker checker = new BootstrapChecker();
+        if (!checker.isBootstrapped(node)) {
+            System.out.println("Going to bootstrap the node");
+            NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
+            bootstrapper.bootstrapNode();
+            System.out.println("Checking if bootstrap was OK");
+            assertTrue(checker.isBootstrapped(node));
+        } else {
+            System.out.println("Node was already bootstrapped");
+        }
     }
 
 }

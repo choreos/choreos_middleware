@@ -11,11 +11,11 @@ public class SshCommandFailed extends Exception {
     private final String command;
 
     public SshCommandFailed(String command) {
-	this.command = command;
+        this.command = command;
     }
 
     public String getCommand() {
-	return this.command;
+        return this.command;
     }
 
 }

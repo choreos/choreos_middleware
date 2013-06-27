@@ -12,18 +12,18 @@ public class SshWaiterTest {
     @BeforeClass
     public static void setUpClass() {
 
-	LogConfigurator.configLog();
+        LogConfigurator.configLog();
     }
 
     @Test(expected = SshNotConnected.class)
     public void shouldThrowExepctionToInvalidNode() throws SshNotConnected {
 
-	String ip = "invalid_ip";
-	String user = "Invalid user";
-	String key = "Invalid key";
+        String ip = "invalid_ip";
+        String user = "Invalid user";
+        String key = "Invalid key";
 
-	SshWaiter sshWaiter = new SshWaiter();
-	sshWaiter.waitSsh(ip, user, key, 10);
+        SshWaiter sshWaiter = new SshWaiter();
+        sshWaiter.waitSsh(ip, user, key, 10);
     }
 
 }

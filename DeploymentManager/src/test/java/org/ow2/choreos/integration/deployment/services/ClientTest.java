@@ -49,47 +49,47 @@ public class ClientTest {
     @BeforeClass
     public static void configureLog() throws InterruptedException {
 
-	LogConfigurator.configLog();
-	server = new DeploymentManagerServer();
-	server.start();
-	deploymentManagerHost = DeploymentManagerServer.URL;
+        LogConfigurator.configLog();
+        server = new DeploymentManagerServer();
+        server.start();
+        deploymentManagerHost = DeploymentManagerServer.URL;
     }
 
     @Before
     public void setUp() throws Exception {
 
-	DeploymentManagerConfiguration.set("BUS", "false");
+        DeploymentManagerConfiguration.set("BUS", "false");
 
-	npm = new NodesClient(deploymentManagerHost);
-	servicesManager = new ServicesClient(deploymentManagerHost);
+        npm = new NodesClient(deploymentManagerHost);
+        servicesManager = new ServicesClient(deploymentManagerHost);
 
-	spec.setPackageUri(JAR_LOCATION);
-	spec.setPackageType(PackageType.COMMAND_LINE);
-	spec.setEndpointName("");
-	spec.setPort(8042);
+        spec.setPackageUri(JAR_LOCATION);
+        spec.setPackageType(PackageType.COMMAND_LINE);
+        spec.setEndpointName("");
+        spec.setPort(8042);
     }
 
     @AfterClass
     public static void stopServer() {
-	server.stop();
+        server.stop();
     }
 
     @Test
     public void shouldDeployAWarServiceInANode() throws Exception {
 
-	Service service = servicesManager.createService(spec);
+        Service service = servicesManager.createService(spec);
 
-	// now get the first instance
-	ServiceInstance instance = ((DeployableService) service).getInstances().get(0);
+        // now get the first instance
+        ServiceInstance instance = ((DeployableService) service).getInstances().get(0);
 
-	String url = instance.getNativeUri();
-	System.out.println("Service at " + url);
-	npm.updateNode(instance.getNode().getId());
-	Thread.sleep(1000);
-	client = WebClient.create(url);
-	String body = client.get(String.class);
-	String excerpt = "hello, world";
-	assertTrue(body.contains(excerpt));
+        String url = instance.getNativeUri();
+        System.out.println("Service at " + url);
+        npm.updateNode(instance.getNode().getId());
+        Thread.sleep(1000);
+        client = WebClient.create(url);
+        String body = client.get(String.class);
+        String excerpt = "hello, world";
+        assertTrue(body.contains(excerpt));
     }
 
 }

@@ -26,29 +26,29 @@ public class ServiceInstanceProxifierTest {
 
     private ServiceInstance getServiceInstance() {
 
-	Service airlineService = models.getAirlineService();
-	ServiceInstance instance = ((DeployableService) airlineService).getInstances().get(0);
-	instance.setNativeUri("http://localhost:1234/airline/");
+        Service airlineService = models.getAirlineService();
+        ServiceInstance instance = ((DeployableService) airlineService).getInstances().get(0);
+        instance.setNativeUri("http://localhost:1234/airline/");
 
-	return instance;
+        return instance;
     }
 
     private EasyESBNode getEsbNode() throws ManagementException {
 
-	EasyESBNode esbNode = mock(EasyESBNodeImpl.class);
-	when(esbNode.proxifyService(any(String.class), any(String.class))).thenReturn(PROXIFIED_ADDRESS);
-	return esbNode;
+        EasyESBNode esbNode = mock(EasyESBNodeImpl.class);
+        when(esbNode.proxifyService(any(String.class), any(String.class))).thenReturn(PROXIFIED_ADDRESS);
+        return esbNode;
     }
 
     @Test
     public void test() throws ManagementException {
 
-	ServiceInstance svc = this.getServiceInstance();
-	EasyESBNode esbNode = this.getEsbNode();
+        ServiceInstance svc = this.getServiceInstance();
+        EasyESBNode esbNode = this.getEsbNode();
 
-	ServiceInstanceProxifier proxifier = new ServiceInstanceProxifier();
-	String proxifiedAddress = proxifier.proxify(svc, esbNode);
-	assertEquals(PROXIFIED_ADDRESS, proxifiedAddress);
+        ServiceInstanceProxifier proxifier = new ServiceInstanceProxifier();
+        String proxifiedAddress = proxifier.proxify(svc, esbNode);
+        assertEquals(PROXIFIED_ADDRESS, proxifiedAddress);
     }
 
 }

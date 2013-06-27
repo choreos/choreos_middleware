@@ -33,47 +33,47 @@ public class RESTServer implements Runnable {
      */
     public RESTServer(String name, String url, Class<?>[] classes) {
 
-	this.name = name;
-	this.url = url;
-	this.classes = classes;
+        this.name = name;
+        this.url = url;
+        this.classes = classes;
     }
 
     public void start() {
 
-	new Thread(this).start();
-	while (!running) {
-	    try {
-		Thread.sleep(1);
-	    } catch (InterruptedException e) {
-		logger.error(e);
-	    }
-	}
+        new Thread(this).start();
+        while (!running) {
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                logger.error(e);
+            }
+        }
 
     }
 
     public void stop() {
-	running = false;
+        running = false;
     }
 
     public void run() {
 
-	JAXRSServerFactoryBean sf = new JAXRSServerFactoryBean();
-	for (Class<?> cls : this.classes) {
-	    sf.setResourceClasses(cls);
-	}
-	sf.setAddress(this.url);
-	sf.create();
-	logger.info(this.name + " has started [" + this.url + "]");
-	running = true;
+        JAXRSServerFactoryBean sf = new JAXRSServerFactoryBean();
+        for (Class<?> cls : this.classes) {
+            sf.setResourceClasses(cls);
+        }
+        sf.setAddress(this.url);
+        sf.create();
+        logger.info(this.name + " has started [" + this.url + "]");
+        running = true;
 
-	while (running) {
-	    try {
-		Thread.sleep(1000);
-	    } catch (InterruptedException e) {
-		e.printStackTrace();
-	    }
-	}
-	logger.info(this.name + " has stopped");
+        while (running) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        logger.info(this.name + " has stopped");
     }
 
 }

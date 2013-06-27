@@ -31,30 +31,30 @@ public class NodeRegistry {
     }
 
     public static NodeRegistry getInstance() {
-	return instance;
+        return instance;
     }
 
     public synchronized void putNode(CloudNode node) {
-	this.nodes.put(node.getId(), node);
+        this.nodes.put(node.getId(), node);
     }
 
     public CloudNode getNode(String nodeId) throws NodeNotFoundException {
-	CloudNode node = this.nodes.get(nodeId);
-	if (node == null) {
-	    throw new NodeNotFoundException(nodeId);
-	}
-	return node;
+        CloudNode node = this.nodes.get(nodeId);
+        if (node == null) {
+            throw new NodeNotFoundException(nodeId);
+        }
+        return node;
     }
 
     public void deleteNode(String nodeId) {
-	this.nodes.remove(nodeId);
+        this.nodes.remove(nodeId);
     }
 
     public List<CloudNode> getNodes() {
-	return new ArrayList<CloudNode>(this.nodes.values());
+        return new ArrayList<CloudNode>(this.nodes.values());
     }
 
     public void clear() {
-	this.nodes.clear();
+        this.nodes.clear();
     }
 }

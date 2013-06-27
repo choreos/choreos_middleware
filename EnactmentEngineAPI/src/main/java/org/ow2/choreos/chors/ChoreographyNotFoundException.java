@@ -10,16 +10,16 @@ public class ChoreographyNotFoundException extends Exception {
     private final String chorId;
 
     public ChoreographyNotFoundException(String chorId) {
-	this.chorId = chorId;
+        this.chorId = chorId;
     }
 
     public ChoreographyNotFoundException(String chorId, String message) {
-	super(message);
-	this.chorId = chorId;
+        super(message);
+        this.chorId = chorId;
     }
 
     @Override
     public String toString() {
-	return "Choreography " + chorId + " not found.";
+        return "Choreography " + chorId + " not found.";
     }
 }

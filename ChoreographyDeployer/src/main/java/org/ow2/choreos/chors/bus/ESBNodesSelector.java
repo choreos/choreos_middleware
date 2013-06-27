@@ -26,31 +26,31 @@ public class ESBNodesSelector {
     private Logger logger = Logger.getLogger(ESBNodesSelector.class);
 
     /**
-     * Selects EasyESB nodes to each one of the service instances. 
-     * EASY_ESB services (CDs) will be not proxified.
+     * Selects EasyESB nodes to each one of the service instances. EASY_ESB
+     * services (CDs) will be not proxified.
      * 
      * @param choreography
-     * @return a map whose key is a serviceInstance and the value is the
-     *         EasyESB node that must be used to proxify the serviceInstance; if
-     *         it was not possible to select an esb node to a specific instance,
-     *         there will be not a key to this instance.
+     * @return a map whose key is a serviceInstance and the value is the EasyESB
+     *         node that must be used to proxify the serviceInstance; if it was
+     *         not possible to select an esb node to a specific instance, there
+     *         will be not a key to this instance.
      */
     public Map<ServiceInstance, EasyESBNode> selectESBNodes(Choreography choreography) {
-	Map<ServiceInstance, EasyESBNode> selectedESBNodes = new HashMap<ServiceInstance, EasyESBNode>();
-	ESBNodeSelector selector = ESBNodeSelectorFactory.getFactoryInstance().getNodeSelectorInstance();
-	InstancesFilter filter = new InstancesFilter();
-	List<ServiceInstance> instancesToBeProxified = filter.filter(choreography.getServices());
-	for (ServiceInstance serviceInstance : instancesToBeProxified) {
-	    ResourceImpact resourceImpact = serviceInstance.getServiceSpec().getResourceImpact();
-	    try {
-		EasyESBNode esbNode = selector.select(resourceImpact, 1).get(0);
-		selectedESBNodes.put(serviceInstance, esbNode);
-	    } catch (NotSelectedException e) {
-		logger.error("Could not select ESB node to an instance of "
-			+ serviceInstance.getServiceSpec().getUuid());
-	    }
-	}
-	return selectedESBNodes;
+        Map<ServiceInstance, EasyESBNode> selectedESBNodes = new HashMap<ServiceInstance, EasyESBNode>();
+        ESBNodeSelector selector = ESBNodeSelectorFactory.getFactoryInstance().getNodeSelectorInstance();
+        InstancesFilter filter = new InstancesFilter();
+        List<ServiceInstance> instancesToBeProxified = filter.filter(choreography.getServices());
+        for (ServiceInstance serviceInstance : instancesToBeProxified) {
+            ResourceImpact resourceImpact = serviceInstance.getServiceSpec().getResourceImpact();
+            try {
+                EasyESBNode esbNode = selector.select(resourceImpact, 1).get(0);
+                selectedESBNodes.put(serviceInstance, esbNode);
+            } catch (NotSelectedException e) {
+                logger.error("Could not select ESB node to an instance of "
+                        + serviceInstance.getServiceSpec().getUuid());
+            }
+        }
+        return selectedESBNodes;
     }
 
 }

@@ -27,40 +27,40 @@ public class EasyESBNodeImpl implements EasyESBNode {
     private final String nodeIp;
 
     static {
-	EasyAPILoader.loadEasyAPI();
+        EasyAPILoader.loadEasyAPI();
     }
 
     public EasyESBNodeImpl(String adminEndpoint) {
-	this.adminEndpoint = adminEndpoint;
-	this.nodeIp = this.extractIpFromAdminEndpoint();
+        this.adminEndpoint = adminEndpoint;
+        this.nodeIp = this.extractIpFromAdminEndpoint();
     }
 
     private String extractIpFromAdminEndpoint() {
 
-	if (this.adminEndpoint.contains("localhost:8180")) {
-	    return "localhost";
-	} else {
-	    Pattern pat = Pattern.compile("(\\d{1,3}.){3}\\d{1,3}");
-	    Matcher m = pat.matcher(this.adminEndpoint);
-	    m.find();
-	    String ip = m.group(0);
-	    return ip;
-	}
+        if (this.adminEndpoint.contains("localhost:8180")) {
+            return "localhost";
+        } else {
+            Pattern pat = Pattern.compile("(\\d{1,3}.){3}\\d{1,3}");
+            Matcher m = pat.matcher(this.adminEndpoint);
+            m.find();
+            String ip = m.group(0);
+            return ip;
+        }
     }
 
     @Override
     public String getAdminEndpoint() {
-	return this.adminEndpoint;
+        return this.adminEndpoint;
     }
 
     @Override
     public String proxifyService(String serviceUrl, String serviceWsdl) throws ManagementException {
 
-	logger.debug("-c " + this.adminEndpoint + " -pr " + serviceUrl + " " + serviceWsdl);
-	UserManagementClientSOAP cli = new UserManagementClientSOAP(this.adminEndpoint);
-	String response = cli.proxify(serviceUrl, serviceWsdl);
-	String proxifiedUri = response.replace("localhost", this.nodeIp);
-	return proxifiedUri;
+        logger.debug("-c " + this.adminEndpoint + " -pr " + serviceUrl + " " + serviceWsdl);
+        UserManagementClientSOAP cli = new UserManagementClientSOAP(this.adminEndpoint);
+        String response = cli.proxify(serviceUrl, serviceWsdl);
+        String proxifiedUri = response.replace("localhost", this.nodeIp);
+        return proxifiedUri;
     }
 
 }

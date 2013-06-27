@@ -21,5 +21,5 @@ public interface ContextSender {
      *             if context was not successfully set
      */
     public void sendContext(String serviceEndpoint, String partnerRole, String partnerName,
-	    List<String> partnerEndpoints) throws ContextNotSentException;
+            List<String> partnerEndpoints) throws ContextNotSentException;
 }

@@ -19,51 +19,51 @@ public class ServiceDeploymentPreparer {
     private Logger logger = Logger.getLogger(ServiceDeploymentPreparer.class);
 
     public ServiceDeploymentPreparer(DeploymentRequest deploymentRequest) {
-	this.deploymentRequest = deploymentRequest;
-	this.serviceName = deploymentRequest.getService().getSpec().getName();
+        this.deploymentRequest = deploymentRequest;
+        this.serviceName = deploymentRequest.getService().getSpec().getName();
     }
 
     public void prepareDeployment() throws PrepareDeploymentFailedException {
-	selectNodes();
-	prepareInstances();
+        selectNodes();
+        prepareInstances();
     }
 
     private void selectNodes() throws PrepareDeploymentFailedException {
-	NodeSelector selector = NodeSelectorFactory.getFactoryInstance().getNodeSelectorInstance();
-	try {
-	    nodes = selector.select(deploymentRequest, deploymentRequest.getNumberOfInstances());
-	    logger.info("Selected nodes to " + serviceName + ": " + nodes);
-	} catch (NotSelectedException e) {
-	    failDeployment();
-	}
-	if (nodes == null || nodes.isEmpty()) {
-	    failDeployment();
-	}
+        NodeSelector selector = NodeSelectorFactory.getFactoryInstance().getNodeSelectorInstance();
+        try {
+            nodes = selector.select(deploymentRequest, deploymentRequest.getNumberOfInstances());
+            logger.info("Selected nodes to " + serviceName + ": " + nodes);
+        } catch (NotSelectedException e) {
+            failDeployment();
+        }
+        if (nodes == null || nodes.isEmpty()) {
+            failDeployment();
+        }
     }
 
     private void failDeployment() throws PrepareDeploymentFailedException {
-	throw new PrepareDeploymentFailedException(serviceName);
+        throw new PrepareDeploymentFailedException(serviceName);
     }
 
     private void prepareInstances() {
-	List<ServiceInstance> instances = (deploymentRequest.getService().getServiceInstances() != null) ? deploymentRequest
-		.getService().getServiceInstances() : new ArrayList<ServiceInstance>();
+        List<ServiceInstance> instances = (deploymentRequest.getService().getServiceInstances() != null) ? deploymentRequest
+                .getService().getServiceInstances() : new ArrayList<ServiceInstance>();
 
-	for (CloudNode node : nodes) {
-	    try {
-		InstanceDeploymentPreparer instanceDeploymentPreparer = new InstanceDeploymentPreparer(
-			deploymentRequest, node);
-		String instanceId = instanceDeploymentPreparer.prepareDeployment();
-		ServiceInstance instance = new ServiceInstance(node);
-		instance.setServiceSpec(deploymentRequest.getService().getSpec());
-		instance.setInstanceId(instanceId);
-		instances.add(instance);
-	    } catch (PrepareDeploymentFailedException e) {
-		logger.error(e.getMessage());
-	    }
-	}
+        for (CloudNode node : nodes) {
+            try {
+                InstanceDeploymentPreparer instanceDeploymentPreparer = new InstanceDeploymentPreparer(
+                        deploymentRequest, node);
+                String instanceId = instanceDeploymentPreparer.prepareDeployment();
+                ServiceInstance instance = new ServiceInstance(node);
+                instance.setServiceSpec(deploymentRequest.getService().getSpec());
+                instance.setInstanceId(instanceId);
+                instances.add(instance);
+            } catch (PrepareDeploymentFailedException e) {
+                logger.error(e.getMessage());
+            }
+        }
 
-	deploymentRequest.getService().setServiceInstances(instances);
+        deploymentRequest.getService().setServiceInstances(instances);
     }
 
 }

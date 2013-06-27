@@ -18,7 +18,7 @@ public class NodeSpec {
     }
 
     public ResourceImpact getResourceImpact() {
-	return this.resourceImpact;
+        return this.resourceImpact;
     }
 
     public void setResourceImpact(ResourceImpact resourceImpact) {
@@ -43,44 +43,44 @@ public class NodeSpec {
 
     @Override
     public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((image == null) ? 0 : image.hashCode());
-	result = prime * result + ((resourceImpact == null) ? 0 : resourceImpact.hashCode());
-	result = prime * result + ((zone == null) ? 0 : zone.hashCode());
-	return result;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((image == null) ? 0 : image.hashCode());
+        result = prime * result + ((resourceImpact == null) ? 0 : resourceImpact.hashCode());
+        result = prime * result + ((zone == null) ? 0 : zone.hashCode());
+        return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	NodeSpec other = (NodeSpec) obj;
-	if (image == null) {
-	    if (other.image != null)
-		return false;
-	} else if (!image.equals(other.image))
-	    return false;
-	if (resourceImpact == null) {
-	    if (other.resourceImpact != null)
-		return false;
-	} else if (!resourceImpact.equals(other.resourceImpact))
-	    return false;
-	if (zone == null) {
-	    if (other.zone != null)
-		return false;
-	} else if (!zone.equals(other.zone))
-	    return false;
-	return true;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        NodeSpec other = (NodeSpec) obj;
+        if (image == null) {
+            if (other.image != null)
+                return false;
+        } else if (!image.equals(other.image))
+            return false;
+        if (resourceImpact == null) {
+            if (other.resourceImpact != null)
+                return false;
+        } else if (!resourceImpact.equals(other.resourceImpact))
+            return false;
+        if (zone == null) {
+            if (other.zone != null)
+                return false;
+        } else if (!zone.equals(other.zone))
+            return false;
+        return true;
     }
 
     @Override
     public String toString() {
-	return "NodeSpec [image=" + image + ", zone=" + zone + ", resourceImpact=" + resourceImpact + "]";
+        return "NodeSpec [image=" + image + ", zone=" + zone + ", resourceImpact=" + resourceImpact + "]";
     }
 
 }

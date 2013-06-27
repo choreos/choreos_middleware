@@ -21,70 +21,70 @@ public class NPMImplTest {
     @Test
     public void shouldCreateNode() throws Exception {
 
-	NodeRegistry reg = NodeRegistry.getInstance();
-	reg.clear();
+        NodeRegistry reg = NodeRegistry.getInstance();
+        reg.clear();
 
-	CloudProvider cp = mock(CloudProvider.class);
-	NodeCreator creator = NodeCreatorMocks.getGoodMock();
-	IdlePool pool = IdlePool.getCleanInstance(1, creator);
+        CloudProvider cp = mock(CloudProvider.class);
+        NodeCreator creator = NodeCreatorMocks.getGoodMock();
+        IdlePool pool = IdlePool.getCleanInstance(1, creator);
 
-	NodePoolManager npm = new NPMImpl(cp, creator, pool);
+        NodePoolManager npm = new NPMImpl(cp, creator, pool);
 
-	CloudNode createdNode = npm.createNode(new NodeSpec());
-	assertTrue(isNodeOK(createdNode));
-	CloudNode fromRegNode = reg.getNode(createdNode.getId());
-	assertTrue(isNodeOK(fromRegNode));
-	assertEquals(fromRegNode, createdNode);
+        CloudNode createdNode = npm.createNode(new NodeSpec());
+        assertTrue(isNodeOK(createdNode));
+        CloudNode fromRegNode = reg.getNode(createdNode.getId());
+        assertTrue(isNodeOK(fromRegNode));
+        assertEquals(fromRegNode, createdNode);
     }
 
     @Test(expected = NodeNotFoundException.class)
     public void shouldCreateAndDeleteNode() throws Exception {
 
-	NodeRegistry reg = NodeRegistry.getInstance();
-	reg.clear();
+        NodeRegistry reg = NodeRegistry.getInstance();
+        reg.clear();
 
-	CloudProvider cp = mock(CloudProvider.class);
-	NodeCreator creator = NodeCreatorMocks.getGoodMock();
-	IdlePool pool = IdlePool.getCleanInstance(1, creator);
+        CloudProvider cp = mock(CloudProvider.class);
+        NodeCreator creator = NodeCreatorMocks.getGoodMock();
+        IdlePool pool = IdlePool.getCleanInstance(1, creator);
 
-	NodePoolManager npm = new NPMImpl(cp, creator, pool);
+        NodePoolManager npm = new NPMImpl(cp, creator, pool);
 
-	CloudNode createdNode = npm.createNode(new NodeSpec());
-	assertTrue(isNodeOK(createdNode));
-	CloudNode fromRegNode = reg.getNode(createdNode.getId());
-	assertTrue(isNodeOK(fromRegNode));
-	assertEquals(fromRegNode, createdNode);
+        CloudNode createdNode = npm.createNode(new NodeSpec());
+        assertTrue(isNodeOK(createdNode));
+        CloudNode fromRegNode = reg.getNode(createdNode.getId());
+        assertTrue(isNodeOK(fromRegNode));
+        assertEquals(fromRegNode, createdNode);
 
-	npm.destroyNode(createdNode.getId());
-	fromRegNode = reg.getNode(createdNode.getId());
+        npm.destroyNode(createdNode.getId());
+        fromRegNode = reg.getNode(createdNode.getId());
     }
 
     @Test
     public void shouldAccessNodeFromDifferentNPMInstances() throws Exception {
 
-	NodeRegistry reg = NodeRegistry.getInstance();
-	reg.clear();
+        NodeRegistry reg = NodeRegistry.getInstance();
+        reg.clear();
 
-	CloudProvider cp1 = mock(CloudProvider.class);
-	NodeCreator creator1 = NodeCreatorMocks.getGoodMock();
-	IdlePool pool1 = IdlePool.getCleanInstance(1, creator1);
-	NodePoolManager npm1 = new NPMImpl(cp1, creator1, pool1);
+        CloudProvider cp1 = mock(CloudProvider.class);
+        NodeCreator creator1 = NodeCreatorMocks.getGoodMock();
+        IdlePool pool1 = IdlePool.getCleanInstance(1, creator1);
+        NodePoolManager npm1 = new NPMImpl(cp1, creator1, pool1);
 
-	CloudNode createdNode = npm1.createNode(new NodeSpec());
-	assertTrue(isNodeOK(createdNode));
+        CloudNode createdNode = npm1.createNode(new NodeSpec());
+        assertTrue(isNodeOK(createdNode));
 
-	CloudProvider cp2 = mock(CloudProvider.class);
-	NodeCreator creator2 = NodeCreatorMocks.getGoodMock();
-	IdlePool pool2 = IdlePool.getCleanInstance(1, creator2);
-	NodePoolManager npm2 = new NPMImpl(cp2, creator2, pool2);
+        CloudProvider cp2 = mock(CloudProvider.class);
+        NodeCreator creator2 = NodeCreatorMocks.getGoodMock();
+        IdlePool pool2 = IdlePool.getCleanInstance(1, creator2);
+        NodePoolManager npm2 = new NPMImpl(cp2, creator2, pool2);
 
-	CloudNode fromOtherNPM = npm2.getNode(createdNode.getId());
-	assertTrue(isNodeOK(fromOtherNPM));
-	assertEquals(fromOtherNPM, createdNode);
+        CloudNode fromOtherNPM = npm2.getNode(createdNode.getId());
+        assertTrue(isNodeOK(fromOtherNPM));
+        assertEquals(fromOtherNPM, createdNode);
     }
 
     private boolean isNodeOK(CloudNode node) {
 
-	return (node != null) && (node.getId() != null) && (!node.getId().isEmpty());
+        return (node != null) && (node.getId() != null) && (!node.getId().isEmpty());
     }
 }

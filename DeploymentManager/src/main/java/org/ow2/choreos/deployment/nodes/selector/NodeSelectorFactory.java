@@ -19,31 +19,31 @@ public class NodeSelectorFactory extends SingletonsFactory<NodeSelector> {
     private static Logger logger = Logger.getLogger(NodeSelectorFactory.class);
 
     public static NodeSelectorFactory getFactoryInstance() {
-	if (INSTANCE == null) {
-	    synchronized (NodeSelectorFactory.class) {
-		if (INSTANCE == null)
-		    createNewInstance();
-	    }
-	}
-	return INSTANCE;
+        if (INSTANCE == null) {
+            synchronized (NodeSelectorFactory.class) {
+                if (INSTANCE == null)
+                    createNewInstance();
+            }
+        }
+        return INSTANCE;
     }
 
     private static void createNewInstance() {
-	Configuration conf = new Configuration(CLASS_MAP_FILE_PATH);
-	INSTANCE = new NodeSelectorFactory(conf);
+        Configuration conf = new Configuration(CLASS_MAP_FILE_PATH);
+        INSTANCE = new NodeSelectorFactory(conf);
     }
 
     private NodeSelectorFactory(Configuration classMap) {
-	super(classMap);
+        super(classMap);
     }
 
     public NodeSelector getNodeSelectorInstance() {
-	String nodeSelectorType = DeploymentManagerConfiguration.get(NODE_SELECTOR_PROPERTY);
-	if (nodeSelectorType == null) {
-	    logger.error(NODE_SELECTOR_PROPERTY + " property not set on properties file!");
-	    throw new IllegalArgumentException();
-	}
-	return getInstance(nodeSelectorType);
+        String nodeSelectorType = DeploymentManagerConfiguration.get(NODE_SELECTOR_PROPERTY);
+        if (nodeSelectorType == null) {
+            logger.error(NODE_SELECTOR_PROPERTY + " property not set on properties file!");
+            throw new IllegalArgumentException();
+        }
+        return getInstance(nodeSelectorType);
     }
 
 }

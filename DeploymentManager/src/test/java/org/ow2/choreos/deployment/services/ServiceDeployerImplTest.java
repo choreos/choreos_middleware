@@ -24,24 +24,24 @@ public class ServiceDeployerImplTest {
 
     @Before
     public void setUp() throws PrepareDeploymentFailedException {
-	LogConfigurator.configLog();
-	DeploymentManagerConfiguration.set("TESTING", "true");
-	setUpServiceDeployer();
+        LogConfigurator.configLog();
+        DeploymentManagerConfiguration.set("TESTING", "true");
+        setUpServiceDeployer();
     }
 
     private void setUpServiceDeployer() {
-	serviceSpec = new DeployableServiceSpec();
-	serviceSpec.setPackageUri("http://choreos.eu/services/airline.jar");
-	serviceSpec.setPackageType(PackageType.COMMAND_LINE);
-	serviceSpec.setEndpointName("airline");
-	serviceSpec.setPort(8042);
-	servicesManager = new ServicesManagerImpl();
+        serviceSpec = new DeployableServiceSpec();
+        serviceSpec.setPackageUri("http://choreos.eu/services/airline.jar");
+        serviceSpec.setPackageType(PackageType.COMMAND_LINE);
+        serviceSpec.setEndpointName("airline");
+        serviceSpec.setPort(8042);
+        servicesManager = new ServicesManagerImpl();
     }
 
     @Test
     public void shouldReturnAValidService() throws PrepareDeploymentFailedException, ServiceNotCreatedException {
-	DeployableService service = servicesManager.createService(serviceSpec);
-	assertEquals(serviceSpec.getUuid(), service.getSpec().getUuid());
+        DeployableService service = servicesManager.createService(serviceSpec);
+        assertEquals(serviceSpec.getUuid(), service.getSpec().getUuid());
     }
 
 }

@@ -13,29 +13,29 @@ import org.ow2.choreos.services.datamodel.DeployableService;
 public class ServicesDeployer {
 
     private Choreography chor;
-    
+
     private Logger logger = Logger.getLogger(ServicesDeployer.class);
 
     public ServicesDeployer(Choreography chor) {
-	this.chor = chor;
+        this.chor = chor;
     }
 
     public List<DeployableService> deployServices() throws EnactmentException {
-	List<DeployableService> configuredServices = null;
-	if (isFirstDeployment(chor)) {
-	    NewDeploymentPreparing preparer = new NewDeploymentPreparing(chor);
-	    configuredServices = preparer.prepare();
-	} else {
-	    UpdateDeploymentPreparing preparer = new UpdateDeploymentPreparing(chor);
-	    configuredServices = preparer.prepare();
-	}
-	NodesUpdater nodesUpdater = new NodesUpdater(configuredServices, chor.getId());
-	List<DeployableService> deployedServices = nodesUpdater.updateNodes();
-	logger.info("Deployement finished chorId=" + chor.getId());
-	return deployedServices;
+        List<DeployableService> configuredServices = null;
+        if (isFirstDeployment(chor)) {
+            NewDeploymentPreparing preparer = new NewDeploymentPreparing(chor);
+            configuredServices = preparer.prepare();
+        } else {
+            UpdateDeploymentPreparing preparer = new UpdateDeploymentPreparing(chor);
+            configuredServices = preparer.prepare();
+        }
+        NodesUpdater nodesUpdater = new NodesUpdater(configuredServices, chor.getId());
+        List<DeployableService> deployedServices = nodesUpdater.updateNodes();
+        logger.info("Deployement finished chorId=" + chor.getId());
+        return deployedServices;
     }
-    
+
     private boolean isFirstDeployment(Choreography chor) {
-	return (chor.getServices() == null) || (chor.getServices().isEmpty());
+        return (chor.getServices() == null) || (chor.getServices().isEmpty());
     }
 }

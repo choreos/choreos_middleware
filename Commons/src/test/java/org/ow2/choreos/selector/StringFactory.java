@@ -15,12 +15,12 @@ public class StringFactory implements ObjectFactory<String, String> {
 
     @Override
     public String createNewInstance(String requirements) throws ObjectCreationException {
-	return Integer.toString(counter.getAndIncrement());
+        return Integer.toString(counter.getAndIncrement());
     }
 
     @Override
     public int getTimeouInSeconds() {
-	return 10;
+        return 10;
     }
 
 }

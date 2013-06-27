@@ -14,23 +14,23 @@ class NodeFactory implements ObjectFactory<CloudNode, DeploymentRequest> {
     private NodePoolManager npm;
 
     public NodeFactory(NodePoolManager npm) {
-	this.npm = npm;
+        this.npm = npm;
     }
 
     @Override
     public CloudNode createNewInstance(DeploymentRequest requirements) throws ObjectCreationException {
-	try {
-	    NodeSpec nodeSpec = new NodeSpec();
-	    nodeSpec.setResourceImpact(requirements.getResourceImpact());
-	    return this.npm.createNode(nodeSpec);
-	} catch (NodeNotCreatedException e) {
-	    throw new ObjectCreationException();
-	}
+        try {
+            NodeSpec nodeSpec = new NodeSpec();
+            nodeSpec.setResourceImpact(requirements.getResourceImpact());
+            return this.npm.createNode(nodeSpec);
+        } catch (NodeNotCreatedException e) {
+            throw new ObjectCreationException();
+        }
     }
 
     @Override
     public int getTimeouInSeconds() {
-	return TIMEOUT_SECONDS;
+        return TIMEOUT_SECONDS;
     }
 
 }

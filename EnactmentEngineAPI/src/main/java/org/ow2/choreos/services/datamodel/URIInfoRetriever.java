@@ -15,43 +15,43 @@ public class URIInfoRetriever {
     private String uri;
 
     public URIInfoRetriever(String uri) {
-	this.uri = uri;
+        this.uri = uri;
     }
 
     private String getHostnameOrIp() {
 
-	Matcher matcher = URI_REGEX.matcher(this.uri);
-	if (matcher.matches()) {
-	    return matcher.group(2);
-	} else {
-	    return null;
-	}
+        Matcher matcher = URI_REGEX.matcher(this.uri);
+        if (matcher.matches()) {
+            return matcher.group(2);
+        } else {
+            return null;
+        }
     }
 
     private boolean isIp(String ip) {
 
-	Matcher matcher = IP_REGEX.matcher(ip);
-	return matcher.matches();
+        Matcher matcher = IP_REGEX.matcher(ip);
+        return matcher.matches();
     }
 
     public String getHostname() {
 
-	String hostname = getHostnameOrIp();
-	if (!isIp(hostname)) {
-	    return hostname;
-	} else {
-	    return null;
-	}
+        String hostname = getHostnameOrIp();
+        if (!isIp(hostname)) {
+            return hostname;
+        } else {
+            return null;
+        }
     }
 
     public String getIp() {
 
-	String ip = getHostnameOrIp();
-	if (isIp(ip)) {
-	    return ip;
-	} else {
-	    return null;
-	}
+        String ip = getHostnameOrIp();
+        if (isIp(ip)) {
+            return ip;
+        } else {
+            return null;
+        }
     }
 
 }

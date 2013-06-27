@@ -27,35 +27,35 @@ public class BootstrapChecker {
 
     public boolean isBootstrapped(CloudNode node) {
 
-	int timeout = TimeoutsAndTrials.get("CONNECT_SSH_TIMEOUT");
-	try {
-	    ssh = sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
-	} catch (SshNotConnected e) {
-	    return false;
-	}
+        int timeout = TimeoutsAndTrials.get("CONNECT_SSH_TIMEOUT");
+        try {
+            ssh = sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
+        } catch (SshNotConnected e) {
+            return false;
+        }
 
-	if (!verifyChefSoloFolder())
-	    return false;
+        if (!verifyChefSoloFolder())
+            return false;
 
-	return true;
+        return true;
     }
 
     private boolean verifyChefSoloFolder() {
-	String result = "";
-	try {
-	    result = ssh.runCommand("ls $HOME/chef-solo");
-	} catch (JSchException e) {
-	    return false;
-	} catch (SshCommandFailed e) {
-	    return false;
-	}
+        String result = "";
+        try {
+            result = ssh.runCommand("ls $HOME/chef-solo");
+        } catch (JSchException e) {
+            return false;
+        } catch (SshCommandFailed e) {
+            return false;
+        }
 
-	if (result.contains("solo.rb") && result.contains("cookbooks") && result.contains("prepare_deployment.sh")
-		&& result.contains("node.json")) {
-	    return true;
-	} else {
-	    return false;
-	}
+        if (result.contains("solo.rb") && result.contains("cookbooks") && result.contains("prepare_deployment.sh")
+                && result.contains("node.json")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

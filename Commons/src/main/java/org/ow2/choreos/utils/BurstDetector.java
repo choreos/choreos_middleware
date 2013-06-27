@@ -29,8 +29,8 @@ public class BurstDetector {
      *            in milliseconds
      */
     public BurstDetector(int n, long delta) {
-	this.N = n;
-	this.DELTA = delta;
+        this.N = n;
+        this.DELTA = delta;
     }
 
     /**
@@ -39,21 +39,21 @@ public class BurstDetector {
      */
     public boolean invoke() {
 
-	long now = System.currentTimeMillis();
-	long last = this.lastInvocationTime;
-	this.lastInvocationTime = now;
+        long now = System.currentTimeMillis();
+        long last = this.lastInvocationTime;
+        this.lastInvocationTime = now;
 
-	if (now - last < DELTA) {
-	    counter++;
-	    if (counter >= N) {
-		counter = 0;
-		return true;
-	    } else {
-		return false;
-	    }
-	} else {
-	    this.counter = 1;
-	    return false;
-	}
+        if (now - last < DELTA) {
+            counter++;
+            if (counter >= N) {
+                counter = 0;
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            this.counter = 1;
+            return false;
+        }
     }
 }

@@ -50,67 +50,67 @@ public class VerticalScalingTest {
 
     @BeforeClass
     public static void startServers() {
-	LogConfigurator.configLog();
+        LogConfigurator.configLog();
     }
 
     @Before
     public void setUp() {
 
-	ResourceImpact smallImpact = new ResourceImpact();
-	smallImpact.setMemory(MemoryType.SMALL);
-	ModelsForTest smallModels = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE, smallImpact);
-	smallSpec = smallModels.getChorSpec();
+        ResourceImpact smallImpact = new ResourceImpact();
+        smallImpact.setMemory(MemoryType.SMALL);
+        ModelsForTest smallModels = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE, smallImpact);
+        smallSpec = smallModels.getChorSpec();
 
-	ResourceImpact mediumImpact = new ResourceImpact();
-	smallImpact.setMemory(MemoryType.MEDIUM);
-	ModelsForTest mediumModels = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE, mediumImpact);
-	mediumSpec = mediumModels.getChorSpec();
+        ResourceImpact mediumImpact = new ResourceImpact();
+        smallImpact.setMemory(MemoryType.MEDIUM);
+        ModelsForTest mediumModels = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE, mediumImpact);
+        mediumSpec = mediumModels.getChorSpec();
     }
 
     @Test
     public void shouldMigrateAirlineServiceFromSmallToMediumMachine() throws Exception {
 
-	ChoreographyDeployer ee = new ChoreographyDeployerImpl();
+        ChoreographyDeployer ee = new ChoreographyDeployerImpl();
 
-	String chorId = ee.createChoreography(smallSpec);
-	Choreography chor = ee.enactChoreography(chorId);
+        String chorId = ee.createChoreography(smallSpec);
+        Choreography chor = ee.enactChoreography(chorId);
 
-	DeployableService airline = chor.getDeployableServiceBySpecName(ModelsForTest.AIRLINE);
-	DeployableService travel = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
+        DeployableService airline = chor.getDeployableServiceBySpecName(ModelsForTest.AIRLINE);
+        DeployableService travel = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
 
-	WSClient client = new WSClient(travel.getUris().get(0) + "?wsdl");
+        WSClient client = new WSClient(travel.getUris().get(0) + "?wsdl");
 
-	String codes = "";
+        String codes = "";
 
-	Item response = client.request("buyTrip");
-	codes = response.getChild("return").getContent();
+        Item response = client.request("buyTrip");
+        codes = response.getChild("return").getContent();
 
-	assertEquals(1, airline.getUris().size());
-	assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
+        assertEquals(1, airline.getUris().size());
+        assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
 
-	ee.updateChoreography(chorId, mediumSpec);
-	chor = ee.enactChoreography(chorId);
-	Thread.sleep(4000);
+        ee.updateChoreography(chorId, mediumSpec);
+        chor = ee.enactChoreography(chorId);
+        Thread.sleep(4000);
 
-	airline = chor.getDeployableServiceBySpecName(ModelsForTest.AIRLINE);
-	travel = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
+        airline = chor.getDeployableServiceBySpecName(ModelsForTest.AIRLINE);
+        travel = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
 
-	client = new WSClient(travel.getUris().get(0) + "?wsdl");
+        client = new WSClient(travel.getUris().get(0) + "?wsdl");
 
-	response = client.request("buyTrip");
-	codes = response.getChild("return").getContent();
+        response = client.request("buyTrip");
+        codes = response.getChild("return").getContent();
 
-	assertEquals(1, airline.getUris().size());
-	assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
+        assertEquals(1, airline.getUris().size());
+        assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
 
-	String actualIp = airline.getUris().get(0);
+        String actualIp = airline.getUris().get(0);
 
-	Matcher m = Pattern.compile("(\\d{1,3}\\.){3}\\d{1,3}").matcher(actualIp);
-	if (m.find()) {
-	    assertEquals(MEDIUM_VM_IP, m.group());
-	} else {
-	    fail("Invalid IP");
-	}
+        Matcher m = Pattern.compile("(\\d{1,3}\\.){3}\\d{1,3}").matcher(actualIp);
+        if (m.find()) {
+            assertEquals(MEDIUM_VM_IP, m.group());
+        } else {
+            fail("Invalid IP");
+        }
     }
 
 }

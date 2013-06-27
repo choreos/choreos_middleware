@@ -24,33 +24,33 @@ public class ChoreographySpec {
     }
 
     public ChoreographySpec(DeployableServiceSpec... serviceSpecs) {
-	for (DeployableServiceSpec spec : serviceSpecs)
-	    this.deployableServiceSpecs.add(spec);
+        for (DeployableServiceSpec spec : serviceSpecs)
+            this.deployableServiceSpecs.add(spec);
     }
 
     public ServiceSpec getServiceSpecByName(String ServiceSpecName) {
 
-	for (ServiceSpec svcSpec : deployableServiceSpecs) {
-	    if (ServiceSpecName.equals(svcSpec.getName()))
-		return svcSpec;
-	}
-	throw new NoSuchElementException("Service spec named " + ServiceSpecName + " does not exist");
+        for (ServiceSpec svcSpec : deployableServiceSpecs) {
+            if (ServiceSpecName.equals(svcSpec.getName()))
+                return svcSpec;
+        }
+        throw new NoSuchElementException("Service spec named " + ServiceSpecName + " does not exist");
     }
 
     public void addServiceSpec(DeployableServiceSpec serviceSpec) {
-	this.deployableServiceSpecs.add(serviceSpec);
+        this.deployableServiceSpecs.add(serviceSpec);
     }
 
     public void addServiceSpec(LegacyServiceSpec serviceSpec) {
-	this.legacyServiceSpecs.add(serviceSpec);
+        this.legacyServiceSpecs.add(serviceSpec);
     }
 
     public List<DeployableServiceSpec> getDeployableServiceSpecs() {
-	return deployableServiceSpecs;
+        return deployableServiceSpecs;
     }
 
     public void setDeployableServiceSpecs(List<DeployableServiceSpec> serviceSpecs) {
-	this.deployableServiceSpecs = serviceSpecs;
+        this.deployableServiceSpecs = serviceSpecs;
     }
 
     public List<LegacyServiceSpec> getLegacyServiceSpecs() {
@@ -63,33 +63,33 @@ public class ChoreographySpec {
 
     @Override
     public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((deployableServiceSpecs == null) ? 0 : deployableServiceSpecs.hashCode());
-	return result;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((deployableServiceSpecs == null) ? 0 : deployableServiceSpecs.hashCode());
+        return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	ChoreographySpec other = (ChoreographySpec) obj;
-	if (deployableServiceSpecs == null) {
-	    if (other.deployableServiceSpecs != null)
-		return false;
-	} else if (!deployableServiceSpecs.equals(other.deployableServiceSpecs))
-	    return false;
-	return true;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ChoreographySpec other = (ChoreographySpec) obj;
+        if (deployableServiceSpecs == null) {
+            if (other.deployableServiceSpecs != null)
+                return false;
+        } else if (!deployableServiceSpecs.equals(other.deployableServiceSpecs))
+            return false;
+        return true;
     }
 
     @Override
     public String toString() {
-	return "ChoreographySpec [deployableServiceSpecs=" + deployableServiceSpecs + ", legacyServiceSpecs="
-		+ legacyServiceSpecs + "]";
+        return "ChoreographySpec [deployableServiceSpecs=" + deployableServiceSpecs + ", legacyServiceSpecs="
+                + legacyServiceSpecs + "]";
     }
 
 }

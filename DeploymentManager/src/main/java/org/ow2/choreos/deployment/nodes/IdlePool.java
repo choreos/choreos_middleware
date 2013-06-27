@@ -42,20 +42,20 @@ public class IdlePool {
     private ExecutorService fillerExecutor = Executors.newSingleThreadExecutor();
 
     private IdlePool(int poolSize, NodeCreator nodeCreator) {
-	this.poolSize = poolSize;
-	this.nodeCreator = nodeCreator;
+        this.poolSize = poolSize;
+        this.nodeCreator = nodeCreator;
     }
 
     public static IdlePool getInstance(NodeCreator nodeCreator) {
-	int poolSize = 0;
-	try {
-	    poolSize = Integer.parseInt(DeploymentManagerConfiguration.get("POOL_SIZE"));
-	} catch (NumberFormatException e) {
-	    String msg = "You should set POOL_SIZE on the property files";
-	    logger.error(msg);
-	    throw new IllegalStateException(msg);
-	}
-	return getInstance(poolSize, nodeCreator);
+        int poolSize = 0;
+        try {
+            poolSize = Integer.parseInt(DeploymentManagerConfiguration.get("POOL_SIZE"));
+        } catch (NumberFormatException e) {
+            String msg = "You should set POOL_SIZE on the property files";
+            logger.error(msg);
+            throw new IllegalStateException(msg);
+        }
+        return getInstance(poolSize, nodeCreator);
     }
 
     /**
@@ -66,12 +66,12 @@ public class IdlePool {
      * @return
      */
     public static IdlePool getInstance(int poolSize, NodeCreator nodeCreator) {
-	synchronized (IdlePool.class) {
-	    if (instance == null) {
-		instance = new IdlePool(poolSize, nodeCreator);
-	    }
-	}
-	return instance;
+        synchronized (IdlePool.class) {
+            if (instance == null) {
+                instance = new IdlePool(poolSize, nodeCreator);
+            }
+        }
+        return instance;
     }
 
     /**
@@ -82,8 +82,8 @@ public class IdlePool {
      * @return
      */
     public static IdlePool getCleanInstance(int poolSize, NodeCreator nodeCreator) {
-	instance = new IdlePool(poolSize, nodeCreator);
-	return instance;
+        instance = new IdlePool(poolSize, nodeCreator);
+        return instance;
     }
 
     /**
@@ -91,7 +91,7 @@ public class IdlePool {
      * @return an unmodifiable list with the ids of the nodes in the idle pool
      */
     Set<CloudNode> getIdleNodes() {
-	return Collections.unmodifiableSet(idleNodes);
+        return Collections.unmodifiableSet(idleNodes);
     }
 
     /**
@@ -106,19 +106,19 @@ public class IdlePool {
      */
     public CloudNode retriveNode() throws NodeNotCreatedException {
 
-	if (idleNodes.isEmpty()) {
-	    VMCreator vmCreator = new VMCreator(nodeCreator);
-	    vmCreator.run();
-	    if (!vmCreator.ok) {
-		throw new NodeNotCreatedException("");
-	    }
-	}
+        if (idleNodes.isEmpty()) {
+            VMCreator vmCreator = new VMCreator(nodeCreator);
+            vmCreator.run();
+            if (!vmCreator.ok) {
+                throw new NodeNotCreatedException("");
+            }
+        }
 
-	synchronized (this) {
-	    CloudNode node = idleNodes.iterator().next();
-	    idleNodes.remove(node);
-	    return node;
-	}
+        synchronized (this) {
+            CloudNode node = idleNodes.iterator().next();
+            idleNodes.remove(node);
+            return node;
+        }
     }
 
     /**
@@ -129,15 +129,15 @@ public class IdlePool {
      */
     public void createExtraVMs(int howManyVMs) {
 
-	for (int i = 0; i < howManyVMs; i++) {
-	    VMCreator vmCreator = new VMCreator(nodeCreator);
-	    Thread thrd = new Thread(vmCreator);
-	    thrd.start();
-	}
+        for (int i = 0; i < howManyVMs; i++) {
+            VMCreator vmCreator = new VMCreator(nodeCreator);
+            Thread thrd = new Thread(vmCreator);
+            thrd.start();
+        }
     }
-    
+
     public boolean isFull() {
-	return idleNodes.size() >= poolSize;
+        return idleNodes.size() >= poolSize;
     }
 
     /**
@@ -146,47 +146,47 @@ public class IdlePool {
      */
     public void fillPool() {
 
-	PoolFiller filler = new PoolFiller();
-	this.fillerExecutor.execute(filler);
+        PoolFiller filler = new PoolFiller();
+        this.fillerExecutor.execute(filler);
     }
 
     private class VMCreator implements Runnable {
 
-	NodeCreator nodeCreator;
-	boolean ok;
+        NodeCreator nodeCreator;
+        boolean ok;
 
-	public VMCreator(NodeCreator nodeCreator) {
-	    this.nodeCreator = nodeCreator;
-	}
+        public VMCreator(NodeCreator nodeCreator) {
+            this.nodeCreator = nodeCreator;
+        }
 
-	@Override
-	public void run() {
-	    try {
-		CloudNode node = nodeCreator.createBootstrappedNode(new NodeSpec());
-		ok = true;
-		synchronized (IdlePool.this) {
-		    idleNodes.add(node);
-		}
-	    } catch (NodeNotCreatedException e) {
-		logger.error("Could not create a VM by the pool");
-		ok = false;
-	    }
-	}
+        @Override
+        public void run() {
+            try {
+                CloudNode node = nodeCreator.createBootstrappedNode(new NodeSpec());
+                ok = true;
+                synchronized (IdlePool.this) {
+                    idleNodes.add(node);
+                }
+            } catch (NodeNotCreatedException e) {
+                logger.error("Could not create a VM by the pool");
+                ok = false;
+            }
+        }
     }
 
     private class PoolFiller implements Runnable {
 
-	@Override
-	public void run() {
-	    int extra = poolSize - idleNodes.size();
-	    if (extra > 0) {
-		ExecutorService executor = Executors.newFixedThreadPool(extra);
-		for (int i = 0; i < extra; i++) {
-		    VMCreator vmCreator = new VMCreator(nodeCreator);
-		    executor.execute(vmCreator);
-		}
-		Concurrency.waitExecutor(executor, FILLING_POOL_TIMEOUT_MINUTES);
-	    }
-	}
+        @Override
+        public void run() {
+            int extra = poolSize - idleNodes.size();
+            if (extra > 0) {
+                ExecutorService executor = Executors.newFixedThreadPool(extra);
+                for (int i = 0; i < extra; i++) {
+                    VMCreator vmCreator = new VMCreator(nodeCreator);
+                    executor.execute(vmCreator);
+                }
+                Concurrency.waitExecutor(executor, FILLING_POOL_TIMEOUT_MINUTES);
+            }
+        }
     }
 }

@@ -30,72 +30,72 @@ public class NodesUpdaterTest {
 
     @Before
     public void setUp() {
-	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-	chor = models.getChoreography();
-	models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE, 3);
-	chorWithReplicas = models.getChoreography();
+        ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
+        chor = models.getChoreography();
+        models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE, 3);
+        chorWithReplicas = models.getChoreography();
     }
 
     @Test
     public void shouldUpdateAllServices() throws EnactmentException {
 
-	NodePoolManager npmMock = mock(NodePoolManager.class);
-	RESTClientsRetriever retrieverMock = mock(RESTClientsRetriever.class);
-	when(retrieverMock.getNodesClient(any(String.class))).thenReturn(npmMock);
+        NodePoolManager npmMock = mock(NodePoolManager.class);
+        RESTClientsRetriever retrieverMock = mock(RESTClientsRetriever.class);
+        when(retrieverMock.getNodesClient(any(String.class))).thenReturn(npmMock);
 
-	List<DeployableService> services = chor.getDeployableServices();
-	NodesUpdater updater = new NodesUpdater(services, chor.getId(), retrieverMock);
-	List<DeployableService> updatedServices = updater.updateNodes();
+        List<DeployableService> services = chor.getDeployableServices();
+        NodesUpdater updater = new NodesUpdater(services, chor.getId(), retrieverMock);
+        List<DeployableService> updatedServices = updater.updateNodes();
 
-	assertEquals(services.size(), updatedServices.size());
-	for (DeployableService service : services) {
-	    String serviceUUID = service.getSpec().getUuid();
-	    DeployableService updatedService = getUpdatedServiceByName(serviceUUID, updatedServices);
-	    assertEquals(service.getInstances().size(), updatedService.getInstances().size());
-	}
+        assertEquals(services.size(), updatedServices.size());
+        for (DeployableService service : services) {
+            String serviceUUID = service.getSpec().getUuid();
+            DeployableService updatedService = getUpdatedServiceByName(serviceUUID, updatedServices);
+            assertEquals(service.getInstances().size(), updatedService.getInstances().size());
+        }
     }
-    
+
     @Test
     public void shouldUpdateAllServicesWithReplicas() throws EnactmentException {
 
-	NodePoolManager npmMock = mock(NodePoolManager.class);
-	RESTClientsRetriever retrieverMock = mock(RESTClientsRetriever.class);
-	when(retrieverMock.getNodesClient(any(String.class))).thenReturn(npmMock);
+        NodePoolManager npmMock = mock(NodePoolManager.class);
+        RESTClientsRetriever retrieverMock = mock(RESTClientsRetriever.class);
+        when(retrieverMock.getNodesClient(any(String.class))).thenReturn(npmMock);
 
-	List<DeployableService> services = chorWithReplicas.getDeployableServices();
-	NodesUpdater updater = new NodesUpdater(services, chorWithReplicas.getId(), retrieverMock);
-	List<DeployableService> updatedServices = updater.updateNodes();
+        List<DeployableService> services = chorWithReplicas.getDeployableServices();
+        NodesUpdater updater = new NodesUpdater(services, chorWithReplicas.getId(), retrieverMock);
+        List<DeployableService> updatedServices = updater.updateNodes();
 
-	assertEquals(services.size(), updatedServices.size());
-	for (DeployableService service : services) {
-	    String serviceUUID = service.getSpec().getUuid();
-	    DeployableService updatedService = getUpdatedServiceByName(serviceUUID, updatedServices);
-	    assertEquals(service.getInstances().size(), updatedService.getInstances().size());
-	}
+        assertEquals(services.size(), updatedServices.size());
+        for (DeployableService service : services) {
+            String serviceUUID = service.getSpec().getUuid();
+            DeployableService updatedService = getUpdatedServiceByName(serviceUUID, updatedServices);
+            assertEquals(service.getInstances().size(), updatedService.getInstances().size());
+        }
     }
 
     @Test
     public void shouldUpdateNoService() throws EnactmentException, NodeNotUpdatedException, NodeNotFoundException {
 
-	NodePoolManager badNPMMock = mock(NodePoolManager.class);
-	doThrow(new NodeNotUpdatedException("whathever")).when(badNPMMock).updateNode(any(String.class));
-	RESTClientsRetriever retrieverMock = mock(RESTClientsRetriever.class);
-	when(retrieverMock.getNodesClient(any(String.class))).thenReturn(badNPMMock);
+        NodePoolManager badNPMMock = mock(NodePoolManager.class);
+        doThrow(new NodeNotUpdatedException("whathever")).when(badNPMMock).updateNode(any(String.class));
+        RESTClientsRetriever retrieverMock = mock(RESTClientsRetriever.class);
+        when(retrieverMock.getNodesClient(any(String.class))).thenReturn(badNPMMock);
 
-	List<DeployableService> services = chor.getDeployableServices();
-	NodesUpdater updater = new NodesUpdater(services, chor.getId(), retrieverMock);
-	List<DeployableService> updatedServices = updater.updateNodes();
+        List<DeployableService> services = chor.getDeployableServices();
+        NodesUpdater updater = new NodesUpdater(services, chor.getId(), retrieverMock);
+        List<DeployableService> updatedServices = updater.updateNodes();
 
-	assertTrue(updatedServices.isEmpty());
+        assertTrue(updatedServices.isEmpty());
     }
 
     private DeployableService getUpdatedServiceByName(String uuid, List<DeployableService> updatedServices) {
-	for (DeployableService updated : updatedServices) {
-	    String updatedUUID = updated.getSpec().getUuid();
-	    if (updatedUUID.equals(uuid))
-		return updated;
-	}
-	throw new NoSuchElementException();
+        for (DeployableService updated : updatedServices) {
+            String updatedUUID = updated.getSpec().getUuid();
+            if (updatedUUID.equals(uuid))
+                return updated;
+        }
+        throw new NoSuchElementException();
     }
 
 }

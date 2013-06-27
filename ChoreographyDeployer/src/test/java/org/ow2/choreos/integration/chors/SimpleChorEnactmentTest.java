@@ -36,37 +36,37 @@ import eu.choreos.vv.clientgenerator.WSClient;
  */
 @Category(IntegrationTest.class)
 public class SimpleChorEnactmentTest {
-    
+
     private static final String BUS_PROPERTY = "BUS";
 
     protected ChoreographySpec chorSpec;
 
     @BeforeClass
     public static void startServers() {
-	LogConfigurator.configLog();
+        LogConfigurator.configLog();
     }
 
     @Before
     public void setUp() {
 
-	ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "false");
-	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-	chorSpec = models.getChorSpec();
+        ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "false");
+        ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
+        chorSpec = models.getChorSpec();
     }
 
     @Test
     public void shouldEnactChoreography() throws Exception {
 
-	ChoreographyDeployer ee = new ChoreographyDeployerImpl();
+        ChoreographyDeployer ee = new ChoreographyDeployerImpl();
 
-	String chorId = ee.createChoreography(chorSpec);
-	Choreography chor = ee.enactChoreography(chorId);
+        String chorId = ee.createChoreography(chorSpec);
+        Choreography chor = ee.enactChoreography(chorId);
 
-	Service travel = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
-	WSClient client = new WSClient(travel.getUris().get(0) + "?wsdl");
-	Item response = client.request("buyTrip");
-	String codes = response.getChild("return").getContent();
+        Service travel = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
+        WSClient client = new WSClient(travel.getUris().get(0) + "?wsdl");
+        Item response = client.request("buyTrip");
+        String codes = response.getChild("return").getContent();
 
-	assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
+        assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
     }
 }

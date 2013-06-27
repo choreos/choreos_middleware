@@ -15,6 +15,6 @@ public class CommandLineException extends Exception {
     private static final long serialVersionUID = -5893337300004636570L;
 
     public CommandLineException(String message) {
-	super(message);
+        super(message);
     }
 }

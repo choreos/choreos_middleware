@@ -13,13 +13,13 @@ public class NodeUpdaterFactory {
     private static Map<String, NodeUpdater> updaters = new ConcurrentHashMap<String, NodeUpdater>();
 
     public static NodeUpdater getInstance(String nodeId) {
-	synchronized (NodeUpdaterFactory.class) {
-	    if (!updaters.containsKey(nodeId)) {
-		NodeUpdater updater = new NodeUpdater();
-		updaters.put(nodeId, updater);
-	    }
-	}
-	return updaters.get(nodeId);
+        synchronized (NodeUpdaterFactory.class) {
+            if (!updaters.containsKey(nodeId)) {
+                NodeUpdater updater = new NodeUpdater();
+                updaters.put(nodeId, updater);
+            }
+        }
+        return updaters.get(nodeId);
     }
 
 }

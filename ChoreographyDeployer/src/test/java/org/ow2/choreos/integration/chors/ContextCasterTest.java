@@ -54,43 +54,43 @@ public class ContextCasterTest {
 
     @BeforeClass
     public static void configLog() {
-	LogConfigurator.configLog();
+        LogConfigurator.configLog();
     }
 
     @Before
     public void setUp() {
-	models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-	chor = models.getChoreography();
-	deployedServices = new HashMap<String, DeployableService>();
-	deployedServices.put(AIRLINE, models.getAirlineService());
-	deployedServices.put(TRAVEL_AGENCY, models.getTravelService());
+        models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
+        chor = models.getChoreography();
+        deployedServices = new HashMap<String, DeployableService>();
+        deployedServices.put(AIRLINE, models.getAirlineService());
+        deployedServices.put(TRAVEL_AGENCY, models.getTravelService());
     }
 
     @Test
     public void test() throws WSDLException, XmlException, IOException, FrameworkException,
-	    InvalidOperationNameException, NoSuchFieldException {
+            InvalidOperationNameException, NoSuchFieldException {
 
-	checkPreCondition();
+        checkPreCondition();
 
-	ContextSenderFactory factory = new ContextSenderFactory();
-	ContextCaster caster = new ContextCaster(factory);
-	caster.cast(chor);
+        ContextSenderFactory factory = new ContextSenderFactory();
+        ContextCaster caster = new ContextCaster(factory);
+        caster.cast(chor);
 
-	WSClient travel = new WSClient(TRAVEL_AGENCY_URI + "?wsdl");
-	Item response = travel.request("buyTrip");
-	String codes = response.getChild("return").getContent();
+        WSClient travel = new WSClient(TRAVEL_AGENCY_URI + "?wsdl");
+        Item response = travel.request("buyTrip");
+        String codes = response.getChild("return").getContent();
 
-	assertEquals("33--22", codes);
+        assertEquals("33--22", codes);
     }
 
     private void checkPreCondition() throws WSDLException, XmlException, IOException, FrameworkException,
-	    InvalidOperationNameException, NoSuchFieldException {
+            InvalidOperationNameException, NoSuchFieldException {
 
-	WSClient travel = new WSClient(TRAVEL_AGENCY_URI + "?wsdl");
-	Item response = travel.request("buyTrip");
-	String codes = response.getChild("return").getContent();
+        WSClient travel = new WSClient(TRAVEL_AGENCY_URI + "?wsdl");
+        Item response = travel.request("buyTrip");
+        String codes = response.getChild("return").getContent();
 
-	assertEquals("Not possible to buy now", codes);
+        assertEquals("Not possible to buy now", codes);
     }
 
 }

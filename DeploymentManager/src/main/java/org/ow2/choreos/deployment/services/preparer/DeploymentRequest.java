@@ -16,9 +16,9 @@ public class DeploymentRequest {
     private int numberOfInstances = 1;
     private ResourceImpact resourceImpact = new ResourceImpact();
     private String deploymentManagerURL;
-    
+
     public DeploymentRequest(DeployableService service) {
-	this.service = service;
+        this.service = service;
     }
 
     public DeployableService getService() {
@@ -55,36 +55,36 @@ public class DeploymentRequest {
 
     @Override
     public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + numberOfInstances;
-	result = prime * result + ((service == null) ? 0 : service.hashCode());
-	return result;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + numberOfInstances;
+        result = prime * result + ((service == null) ? 0 : service.hashCode());
+        return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	DeploymentRequest other = (DeploymentRequest) obj;
-	if (numberOfInstances != other.numberOfInstances)
-	    return false;
-	if (service == null) {
-	    if (other.service != null)
-		return false;
-	} else if (!service.equals(other.service))
-	    return false;
-	return true;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DeploymentRequest other = (DeploymentRequest) obj;
+        if (numberOfInstances != other.numberOfInstances)
+            return false;
+        if (service == null) {
+            if (other.service != null)
+                return false;
+        } else if (!service.equals(other.service))
+            return false;
+        return true;
     }
 
     @Override
     public String toString() {
-	return "DeploymentRequest [service=" + service + ", numberOfInstances=" + numberOfInstances
-		+ ", resourceImpact=" + resourceImpact + "]";
+        return "DeploymentRequest [service=" + service + ", numberOfInstances=" + numberOfInstances
+                + ", resourceImpact=" + resourceImpact + "]";
     }
-    
+
 }

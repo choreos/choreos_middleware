@@ -28,41 +28,41 @@ public class NewDeploymentPreparingTest {
 
     @Before
     public void setUp() {
-	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-	this.airlineSpec = models.getAirlineSpec();
-	this.travelSpec = models.getTravelSpec();
-	this.chor = models.getChoreography();
-	this.airlineService = models.getAirlineService();
-	this.travelService = models.getTravelService();
+        ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
+        this.airlineSpec = models.getAirlineSpec();
+        this.travelSpec = models.getTravelSpec();
+        this.chor = models.getChoreography();
+        this.airlineService = models.getAirlineService();
+        this.travelService = models.getTravelService();
     }
 
     @Test
     public void shouldProperlyConfigureAllServices() throws ServiceNotCreatedException, EnactmentException {
 
-	ServicesManager smMock = mock(ServicesManager.class);
-	when(smMock.createService(airlineSpec)).thenReturn(airlineService);
-	when(smMock.createService(travelSpec)).thenReturn(travelService);
-	RESTClientsRetriever retrieverMock = mock(RESTClientsRetriever.class);
-	when(retrieverMock.getServicesClient(any(String.class))).thenReturn(smMock);
+        ServicesManager smMock = mock(ServicesManager.class);
+        when(smMock.createService(airlineSpec)).thenReturn(airlineService);
+        when(smMock.createService(travelSpec)).thenReturn(travelService);
+        RESTClientsRetriever retrieverMock = mock(RESTClientsRetriever.class);
+        when(retrieverMock.getServicesClient(any(String.class))).thenReturn(smMock);
 
-	NewDeploymentPreparing preparer = new NewDeploymentPreparing(chor, retrieverMock);
-	List<DeployableService> configuredServices = preparer.prepare();
+        NewDeploymentPreparing preparer = new NewDeploymentPreparing(chor, retrieverMock);
+        List<DeployableService> configuredServices = preparer.prepare();
 
-	assertEquals(2, configuredServices.size());
-	String airlineUUID = airlineSpec.getUuid();
-	DeployableService configuredAirlineService = findServiceByUUID(airlineUUID, configuredServices);
-	assertEquals(airlineService, configuredAirlineService);
-	String travelUUID = travelSpec.getUuid();
-	DeployableService configuredTravelService = findServiceByUUID(travelUUID, configuredServices);
-	assertEquals(travelService, configuredTravelService);
+        assertEquals(2, configuredServices.size());
+        String airlineUUID = airlineSpec.getUuid();
+        DeployableService configuredAirlineService = findServiceByUUID(airlineUUID, configuredServices);
+        assertEquals(airlineService, configuredAirlineService);
+        String travelUUID = travelSpec.getUuid();
+        DeployableService configuredTravelService = findServiceByUUID(travelUUID, configuredServices);
+        assertEquals(travelService, configuredTravelService);
     }
 
     private DeployableService findServiceByUUID(String uuid, List<DeployableService> services) {
-	for (DeployableService svc : services) {
-	    if (uuid.equals(svc.getSpec().getUuid())) {
-		return svc;
-	    }
-	}
-	throw new NoSuchElementException();
+        for (DeployableService svc : services) {
+            if (uuid.equals(svc.getSpec().getUuid())) {
+                return svc;
+            }
+        }
+        throw new NoSuchElementException();
     }
 }

@@ -43,55 +43,55 @@ public class MultipleAWSNodesCreationTest {
 
     @BeforeClass
     public static void setUpClass() {
-	LogConfigurator.configLog();
+        LogConfigurator.configLog();
     }
 
     @Test
     public void shouldLeaveNodesBootstraped() throws Exception {
 
-	List<Thread> trds = new ArrayList<Thread>();
-	List<SingleTest> tests = new ArrayList<SingleTest>();
-	for (int i = 0; i < BUNCH_SIZE; i++) {
-	    SingleTest singleTest = new SingleTest(i);
-	    Thread t = new Thread(singleTest);
-	    trds.add(t);
-	    tests.add(singleTest);
-	    t.start();
-	}
+        List<Thread> trds = new ArrayList<Thread>();
+        List<SingleTest> tests = new ArrayList<SingleTest>();
+        for (int i = 0; i < BUNCH_SIZE; i++) {
+            SingleTest singleTest = new SingleTest(i);
+            Thread t = new Thread(singleTest);
+            trds.add(t);
+            tests.add(singleTest);
+            t.start();
+        }
 
-	for (Thread t : trds) {
-	    t.join();
-	}
+        for (Thread t : trds) {
+            t.join();
+        }
 
-	for (SingleTest test : tests) {
-	    assertTrue("Node not created in test " + test.index, test.created);
-	    assertTrue("Node not bootstrapped " + test.index, test.bootstrapped);
-	    System.out.println("Test " + test.index + " OK.");
-	}
+        for (SingleTest test : tests) {
+            assertTrue("Node not created in test " + test.index, test.created);
+            assertTrue("Node not bootstrapped " + test.index, test.bootstrapped);
+            System.out.println("Test " + test.index + " OK.");
+        }
     }
 
     private class SingleTest implements Runnable {
 
-	int index;
-	boolean created;
-	boolean bootstrapped;
+        int index;
+        boolean created;
+        boolean bootstrapped;
 
-	public SingleTest(int index) {
-	    this.index = index;
-	}
+        public SingleTest(int index) {
+            this.index = index;
+        }
 
-	@Override
-	public void run() {
+        @Override
+        public void run() {
 
-	    try {
-		CloudNode node = npm.createNode(new NodeSpec());
-		created = true;
-		BootstrapChecker checker = new BootstrapChecker();
-		bootstrapped = checker.isBootstrapped(node);
-	    } catch (NodeNotCreatedException e) {
-		System.out.println("Node not created in " + index + " because " + e.getMessage());
-	    }
-	}
+            try {
+                CloudNode node = npm.createNode(new NodeSpec());
+                created = true;
+                BootstrapChecker checker = new BootstrapChecker();
+                bootstrapped = checker.isBootstrapped(node);
+            } catch (NodeNotCreatedException e) {
+                System.out.println("Node not created in " + index + " because " + e.getMessage());
+            }
+        }
 
     }
 

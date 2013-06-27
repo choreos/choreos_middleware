@@ -9,7 +9,7 @@ public class NodeNotUpdatedException extends Exception {
     private static final long serialVersionUID = 4566523788212445328L;
 
     public NodeNotUpdatedException(String nodeId) {
-	super("Could not update node " + nodeId);
+        super("Could not update node " + nodeId);
     }
 
 }

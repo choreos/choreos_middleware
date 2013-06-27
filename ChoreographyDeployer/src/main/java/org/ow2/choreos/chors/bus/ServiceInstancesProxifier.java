@@ -19,26 +19,26 @@ public class ServiceInstancesProxifier {
     /**
      * Proxifies all the instances.
      * 
-     * Side effect: the proxified address is set on the esbUris(SOAP)
-     * property on the instance object. If a instance can be not proxified, an
-     * error message is logged.
+     * Side effect: the proxified address is set on the esbUris(SOAP) property
+     * on the instance object. If a instance can be not proxified, an error
+     * message is logged.
      * 
      * @param instancesNodesMap
      */
     public void proxify(Map<ServiceInstance, EasyESBNode> instancesNodesMap) {
 
-	for (ServiceInstance instance : instancesNodesMap.keySet()) {
+        for (ServiceInstance instance : instancesNodesMap.keySet()) {
 
-	    EasyESBNode esbNode = instancesNodesMap.get(instance);
-	    ServiceInstanceProxifier proxifier = new ServiceInstanceProxifier();
-	    String svcName = instance.getServiceSpec().getUuid();
-	    try {
-		String proxifiedAddress = proxifier.proxify(instance, esbNode);
-		instance.setBusUri(ServiceType.SOAP, proxifiedAddress);
-		logger.info(svcName + " instance proxified");
-	    } catch (ManagementException e) {
-		logger.error(svcName + " could not be proxified");
-	    }
-	}
+            EasyESBNode esbNode = instancesNodesMap.get(instance);
+            ServiceInstanceProxifier proxifier = new ServiceInstanceProxifier();
+            String svcName = instance.getServiceSpec().getUuid();
+            try {
+                String proxifiedAddress = proxifier.proxify(instance, esbNode);
+                instance.setBusUri(ServiceType.SOAP, proxifiedAddress);
+                logger.info(svcName + " instance proxified");
+            } catch (ManagementException e) {
+                logger.error(svcName + " could not be proxified");
+            }
+        }
     }
 }

@@ -21,27 +21,27 @@ public class ChoreographyDeployerConfiguration {
 
     public static String get(String key) {
 
-	return INSTANCE.configuration.get(key);
+        return INSTANCE.configuration.get(key);
     }
 
     public static String[] getMultiple(String key) {
 
-	return INSTANCE.configuration.getMultiple(key);
+        return INSTANCE.configuration.getMultiple(key);
     }
 
     public static void set(String key, String value) {
 
-	INSTANCE.configuration.set(key, value);
+        INSTANCE.configuration.set(key, value);
     }
 
     public static void set(String key, String[] values) {
 
-	INSTANCE.configuration.set(key, values);
+        INSTANCE.configuration.set(key, values);
     }
 
     private ChoreographyDeployerConfiguration() {
 
-	this.configuration = new Configuration(FILE_PATH);
+        this.configuration = new Configuration(FILE_PATH);
     }
 
 }

@@ -16,40 +16,40 @@ public class LegacyServiceSpec extends ServiceSpec {
     List<String> nativeURIs;
 
     public List<String> getNativeURIs() {
-	return nativeURIs;
+        return nativeURIs;
     }
 
     public void setNativeURIs(List<String> nativeURIs) {
-	this.nativeURIs = nativeURIs;
+        this.nativeURIs = nativeURIs;
     }
 
     @Override
     public int hashCode() {
-	final int prime = 31;
-	int result = super.hashCode();
-	result = prime * result + ((nativeURIs == null) ? 0 : nativeURIs.hashCode());
-	return result;
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((nativeURIs == null) ? 0 : nativeURIs.hashCode());
+        return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	if (!super.equals(obj))
-	    return false;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        if (!super.equals(obj))
+            return false;
 
-	LegacyServiceSpec other = (LegacyServiceSpec) obj;
+        LegacyServiceSpec other = (LegacyServiceSpec) obj;
 
-	if (nativeURIs == null) {
-	    if (other.nativeURIs != null)
-		return false;
-	} else if (!nativeURIs.equals(other.nativeURIs))
-	    return false;
-	return true;
+        if (nativeURIs == null) {
+            if (other.nativeURIs != null)
+                return false;
+        } else if (!nativeURIs.equals(other.nativeURIs))
+            return false;
+        return true;
     }
 
 }

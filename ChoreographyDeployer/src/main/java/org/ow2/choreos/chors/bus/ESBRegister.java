@@ -7,13 +7,13 @@ import java.util.List;
 public class ESBRegister {
 
     private static List<EasyESBNode> esbNodes = new ArrayList<EasyESBNode>();
-    
+
     public static synchronized void addEsbNode(EasyESBNode esbNode) {
-	esbNodes.add(esbNode);
+        esbNodes.add(esbNode);
     }
-    
+
     public static synchronized List<EasyESBNode> getEsbNodes() {
-	return Collections.unmodifiableList(esbNodes);
+        return Collections.unmodifiableList(esbNodes);
     }
-    
+
 }

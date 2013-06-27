@@ -13,7 +13,7 @@ public class EnactmentException extends Exception {
     }
 
     public EnactmentException(String message) {
-	super(message);
+        super(message);
     }
 
 }

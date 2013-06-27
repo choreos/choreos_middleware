@@ -33,217 +33,217 @@ public class ServicesManagerImpl implements ServicesManager {
     @Override
     public DeployableService createService(DeployableServiceSpec serviceSpec) throws ServiceNotCreatedException {
 
-	DeployableService service = null;
-	try {
-	    service = new DeployableService(serviceSpec);
-	} catch (IllegalArgumentException e1) {
-	    ServiceNotCreatedException e = new ServiceNotCreatedException(serviceSpec.getName());
-	    logger.error(e.getMessage());
-	    throw e;
-	}
+        DeployableService service = null;
+        try {
+            service = new DeployableService(serviceSpec);
+        } catch (IllegalArgumentException e1) {
+            ServiceNotCreatedException e = new ServiceNotCreatedException(serviceSpec.getName());
+            logger.error(e.getMessage());
+            throw e;
+        }
 
-	runGenerateAndApplyScript(service, service.getSpec().getNumberOfInstances());
+        runGenerateAndApplyScript(service, service.getSpec().getNumberOfInstances());
 
-	registry.addService(serviceSpec.getUuid(), service);
-	return service;
+        registry.addService(serviceSpec.getUuid(), service);
+        return service;
 
     }
 
     private void runGenerateAndApplyScript(DeployableService service, int numberOfInstances)
-	    throws ServiceNotCreatedException {
+            throws ServiceNotCreatedException {
 
-	DeploymentRequest deploymentRequest = new DeploymentRequest(service);
-	deploymentRequest
-		.setDeploymentManagerURL(DeploymentManagerConfiguration.get("EXTERNAL_DEPLOYMENT_MANAGER_URL"));
+        DeploymentRequest deploymentRequest = new DeploymentRequest(service);
+        deploymentRequest
+                .setDeploymentManagerURL(DeploymentManagerConfiguration.get("EXTERNAL_DEPLOYMENT_MANAGER_URL"));
 
-	try {
-	    ServiceDeploymentPreparer deploymentPreparer = new ServiceDeploymentPreparer(deploymentRequest);
-	    deploymentPreparer.prepareDeployment();
-	} catch (PrepareDeploymentFailedException e) {
-	    logger.error("Service " + service.getSpec().getUuid() + " not created: " + e.getMessage());
-	} catch (Exception e) {
-	    logger.error("Service " + service.getSpec().getUuid() + " not created: " + e.getMessage());
-	}
+        try {
+            ServiceDeploymentPreparer deploymentPreparer = new ServiceDeploymentPreparer(deploymentRequest);
+            deploymentPreparer.prepareDeployment();
+        } catch (PrepareDeploymentFailedException e) {
+            logger.error("Service " + service.getSpec().getUuid() + " not created: " + e.getMessage());
+        } catch (Exception e) {
+            logger.error("Service " + service.getSpec().getUuid() + " not created: " + e.getMessage());
+        }
     }
 
     @Override
     public DeployableService getService(String serviceId) throws ServiceNotFoundException {
-	DeployableService s = registry.getService(serviceId);
-	if (s == null)
-	    throw new ServiceNotFoundException(serviceId, "Error while getting service from service map.");
-	return s;
+        DeployableService s = registry.getService(serviceId);
+        if (s == null)
+            throw new ServiceNotFoundException(serviceId, "Error while getting service from service map.");
+        return s;
     }
 
     @Override
     public void deleteService(String uuid) throws ServiceNotDeletedException {
 
-	DeployableService service = null;
-	try {
-	    service = this.getService(uuid);
-	} catch (ServiceNotFoundException e) {
-	    logger.error("Could not get service " + uuid);
-	}
+        DeployableService service = null;
+        try {
+            service = this.getService(uuid);
+        } catch (ServiceNotFoundException e) {
+            logger.error("Could not get service " + uuid);
+        }
 
-	this.executeUndeployment(service);
+        this.executeUndeployment(service);
 
-	registry.deleteService(uuid);
-	if (registry.getService(uuid) != null)
-	    throw new ServiceNotDeletedException(uuid);
+        registry.deleteService(uuid);
+        if (registry.getService(uuid) != null)
+            throw new ServiceNotDeletedException(uuid);
     }
 
     private void executeUndeployment(DeployableService service) {
-	for (ServiceInstance instance : service.getServiceInstances())
-	    executeServiceInstanceUndeployment(instance);
+        for (ServiceInstance instance : service.getServiceInstances())
+            executeServiceInstanceUndeployment(instance);
     }
 
     private void executeServiceInstanceUndeployment(ServiceInstance instance) {
-	// ssh to execute (cd $HOME/chef-solo; sed -i
-	// '/300b87ed-cca9-4858-8779-6987da782b18/d' ./node.json)
+        // ssh to execute (cd $HOME/chef-solo; sed -i
+        // '/300b87ed-cca9-4858-8779-6987da782b18/d' ./node.json)
     }
 
     @Override
     public DeployableService updateService(DeployableServiceSpec serviceSpec) throws UnhandledModificationException {
 
-	logger.info("Requested to update service " + serviceSpec.getUuid() + " with spec " + serviceSpec);
-	DeployableService current;
-	try {
-	    logger.info("Trying to get service with id " + serviceSpec.getUuid() + " from \n" + registry.getServices());
-	    current = getService(serviceSpec.getUuid());
-	    logger.info("getService got " + current);
-	} catch (ServiceNotFoundException e) {
-	    logger.info("ServiceNotFoundException happened when trying to get service with id " + serviceSpec.getUuid());
-	    logger.info("Exception message " + e.getMessage());
-	    throw new UnhandledModificationException();
-	}
+        logger.info("Requested to update service " + serviceSpec.getUuid() + " with spec " + serviceSpec);
+        DeployableService current;
+        try {
+            logger.info("Trying to get service with id " + serviceSpec.getUuid() + " from \n" + registry.getServices());
+            current = getService(serviceSpec.getUuid());
+            logger.info("getService got " + current);
+        } catch (ServiceNotFoundException e) {
+            logger.info("ServiceNotFoundException happened when trying to get service with id " + serviceSpec.getUuid());
+            logger.info("Exception message " + e.getMessage());
+            throw new UnhandledModificationException();
+        }
 
-	DeployableServiceSpec currentSpec = current.getSpec();
-	logger.info("Current service spec " + currentSpec);
-	List<UpdateAction> actions = getActions(currentSpec, serviceSpec);
-	applyUpdate(current, serviceSpec, actions);
-	logger.info("Updated service = " + current);
-	return current;
+        DeployableServiceSpec currentSpec = current.getSpec();
+        logger.info("Current service spec " + currentSpec);
+        List<UpdateAction> actions = getActions(currentSpec, serviceSpec);
+        applyUpdate(current, serviceSpec, actions);
+        logger.info("Updated service = " + current);
+        return current;
     }
 
     private void applyUpdate(DeployableService currentService, DeployableServiceSpec requestedSpec,
-	    List<UpdateAction> actions) throws UnhandledModificationException {
-	logger.info("Going to apply scheduled updates...");
-	for (UpdateAction a : actions) {
-	    logger.info("Selected update " + a);
-	    switch (a) {
-	    case INCREASE_NUMBER_OF_REPLICAS:
-		logger.info("Requesting to increase amount of replicas");
-		requestToIncreaseNumberOfInstances(currentService, requestedSpec);
-		break;
+            List<UpdateAction> actions) throws UnhandledModificationException {
+        logger.info("Going to apply scheduled updates...");
+        for (UpdateAction a : actions) {
+            logger.info("Selected update " + a);
+            switch (a) {
+            case INCREASE_NUMBER_OF_REPLICAS:
+                logger.info("Requesting to increase amount of replicas");
+                requestToIncreaseNumberOfInstances(currentService, requestedSpec);
+                break;
 
-	    case DECREASE_NUMBER_OF_REPLICAS:
-		logger.info("Requesting to decrease amount of replicas");
-		requestToDecreaseNumberOfInstances(currentService, requestedSpec);
-		break;
+            case DECREASE_NUMBER_OF_REPLICAS:
+                logger.info("Requesting to decrease amount of replicas");
+                requestToDecreaseNumberOfInstances(currentService, requestedSpec);
+                break;
 
-	    case MIGRATE:
-		logger.info("Requesting to migrate replicas");
-		requestToMigrateServiceInstances(currentService, requestedSpec);
-		break;
+            case MIGRATE:
+                logger.info("Requesting to migrate replicas");
+                requestToMigrateServiceInstances(currentService, requestedSpec);
+                break;
 
-	    default:
-		logger.info("Cannot apply modification " + a + "; Raising UnhandledModificationException");
-		throw new UnhandledModificationException();
-	    }
-	}
-	logger.info("Setting the new service spec for service " + currentService);
+            default:
+                logger.info("Cannot apply modification " + a + "; Raising UnhandledModificationException");
+                throw new UnhandledModificationException();
+            }
+        }
+        logger.info("Setting the new service spec for service " + currentService);
 
-	String uuid = currentService.getSpec().getUuid();
-	currentService.setSpec(requestedSpec);
-	registry.addService(currentService.getSpec().getUuid(), currentService);
-	registry.deleteService(uuid);
+        String uuid = currentService.getSpec().getUuid();
+        currentService.setSpec(requestedSpec);
+        registry.addService(currentService.getSpec().getUuid(), currentService);
+        registry.deleteService(uuid);
     }
 
     private List<UpdateAction> getActions(DeployableServiceSpec currentSpec, DeployableServiceSpec serviceSpec) {
-	boolean foundKnownModification = false;
+        boolean foundKnownModification = false;
 
-	List<UpdateAction> actions = new ArrayList<UpdateAction>();
+        List<UpdateAction> actions = new ArrayList<UpdateAction>();
 
-	logger.info("Calculating changes on service spec \nOld = " + currentSpec + "\nNew = " + serviceSpec);
-	if (currentSpec.getNumberOfInstances() < serviceSpec.getNumberOfInstances()) {
-	    logger.info("getAction has detected that must increase number of replicas");
-	    actions.add(UpdateAction.INCREASE_NUMBER_OF_REPLICAS);
-	    foundKnownModification = true;
-	} else if (currentSpec.getNumberOfInstances() > serviceSpec.getNumberOfInstances()) {
-	    logger.info("getAction has detected that must decrease number of replicas");
-	    actions.add(UpdateAction.DECREASE_NUMBER_OF_REPLICAS);
-	    foundKnownModification = true;
-	}
+        logger.info("Calculating changes on service spec \nOld = " + currentSpec + "\nNew = " + serviceSpec);
+        if (currentSpec.getNumberOfInstances() < serviceSpec.getNumberOfInstances()) {
+            logger.info("getAction has detected that must increase number of replicas");
+            actions.add(UpdateAction.INCREASE_NUMBER_OF_REPLICAS);
+            foundKnownModification = true;
+        } else if (currentSpec.getNumberOfInstances() > serviceSpec.getNumberOfInstances()) {
+            logger.info("getAction has detected that must decrease number of replicas");
+            actions.add(UpdateAction.DECREASE_NUMBER_OF_REPLICAS);
+            foundKnownModification = true;
+        }
 
-	if (!(currentSpec.getResourceImpact() == null || currentSpec.getResourceImpact().getMemory() == null)) {
-	    if (!(currentSpec.getResourceImpact().getMemory().ordinal() == serviceSpec.getResourceImpact().getMemory()
-		    .ordinal())) {
-		logger.info("getAction has detected that must to migrate service");
-		actions.add(UpdateAction.MIGRATE);
-		foundKnownModification = true;
-	    }
-	}
+        if (!(currentSpec.getResourceImpact() == null || currentSpec.getResourceImpact().getMemory() == null)) {
+            if (!(currentSpec.getResourceImpact().getMemory().ordinal() == serviceSpec.getResourceImpact().getMemory()
+                    .ordinal())) {
+                logger.info("getAction has detected that must to migrate service");
+                actions.add(UpdateAction.MIGRATE);
+                foundKnownModification = true;
+            }
+        }
 
-	if (!foundKnownModification) {
-	    logger.info("getAction has not detected any changes to do");
-	    actions.add(UpdateAction.UNKNOWN_MODIFICATION);
-	}
+        if (!foundKnownModification) {
+            logger.info("getAction has not detected any changes to do");
+            actions.add(UpdateAction.UNKNOWN_MODIFICATION);
+        }
 
-	logger.info("Detected changes: " + actions);
-	return actions;
+        logger.info("Detected changes: " + actions);
+        return actions;
     }
 
     private void requestToDecreaseNumberOfInstances(DeployableService currentService,
-	    DeployableServiceSpec requestedSpec) {
-	int decreaseAmount = currentService.getSpec().getNumberOfInstances() - requestedSpec.getNumberOfInstances();
-	removeServiceInstances(currentService, decreaseAmount);
+            DeployableServiceSpec requestedSpec) {
+        int decreaseAmount = currentService.getSpec().getNumberOfInstances() - requestedSpec.getNumberOfInstances();
+        removeServiceInstances(currentService, decreaseAmount);
     }
 
     private void requestToIncreaseNumberOfInstances(DeployableService currentService,
-	    DeployableServiceSpec requestedSpec) {
-	int increaseAmount = requestedSpec.getNumberOfInstances() - currentService.getSpec().getNumberOfInstances();
+            DeployableServiceSpec requestedSpec) {
+        int increaseAmount = requestedSpec.getNumberOfInstances() - currentService.getSpec().getNumberOfInstances();
 
-	logger.info("requestToIncreaseNumberOfInstances: Increase amount = " + increaseAmount);
-	addServiceInstances(currentService, increaseAmount);
+        logger.info("requestToIncreaseNumberOfInstances: Increase amount = " + increaseAmount);
+        addServiceInstances(currentService, increaseAmount);
     }
 
     private void requestToMigrateServiceInstances(DeployableService currentService, ServiceSpec requestedSpec)
-	    throws UnhandledModificationException {
-	currentService.setSpec(requestedSpec);
-	currentService.getServiceInstances().clear();
-	migrateServiceInstances(currentService);
+            throws UnhandledModificationException {
+        currentService.setSpec(requestedSpec);
+        currentService.getServiceInstances().clear();
+        migrateServiceInstances(currentService);
     }
 
     private void migrateServiceInstances(DeployableService currentService) throws UnhandledModificationException {
-	try {
-	    runGenerateAndApplyScript(currentService, currentService.getSpec().getNumberOfInstances());
-	} catch (ServiceNotCreatedException e) {
-	    throw new UnhandledModificationException();
-	}
+        try {
+            runGenerateAndApplyScript(currentService, currentService.getSpec().getNumberOfInstances());
+        } catch (ServiceNotCreatedException e) {
+            throw new UnhandledModificationException();
+        }
     }
 
     private void removeServiceInstances(DeployableService currentService, int amount) {
-	if (amount < currentService.getServiceInstances().size()) {
-	    for (int i = 0; i < amount; i++) {
-		executeServiceInstanceUndeployment(currentService.getServiceInstances().get(0));
-		currentService.getServiceInstances().remove(0);
-	    }
-	} else if (amount < currentService.getServiceInstances().size()) {
-	    try {
-		this.deleteService(currentService.getSpec().getUuid());
-	    } catch (ServiceNotDeletedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	    }
-	}
+        if (amount < currentService.getServiceInstances().size()) {
+            for (int i = 0; i < amount; i++) {
+                executeServiceInstanceUndeployment(currentService.getServiceInstances().get(0));
+                currentService.getServiceInstances().remove(0);
+            }
+        } else if (amount < currentService.getServiceInstances().size()) {
+            try {
+                this.deleteService(currentService.getSpec().getUuid());
+            } catch (ServiceNotDeletedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 
     private void addServiceInstances(DeployableService current, int amount) {
-	logger.info("Requesting to execute creation of " + amount + " replicas for" + current);
-	try {
-	    runGenerateAndApplyScript(current, amount);
-	} catch (ServiceNotCreatedException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
+        logger.info("Requesting to execute creation of " + amount + " replicas for" + current);
+        try {
+            runGenerateAndApplyScript(current, amount);
+        } catch (ServiceNotCreatedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }

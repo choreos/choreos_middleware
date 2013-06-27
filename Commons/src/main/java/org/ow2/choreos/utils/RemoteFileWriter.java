@@ -32,29 +32,29 @@ public class RemoteFileWriter {
      */
     public void writeFile(String text, String filePath, SshUtil ssh) throws SshCommandFailed {
 
-	text = text.replaceAll("'", "\""); // dirty hack
+        text = text.replaceAll("'", "\""); // dirty hack
 
-	Reader r = new StringReader(text);
-	BufferedReader bf = new BufferedReader(r);
-	String line;
-	try {
-	    line = bf.readLine();
-	} catch (IOException e) {
-	    throw new IllegalArgumentException("Invalid string: " + text);
-	}
-	while (line != null) {
-	    String command = "echo '" + line + "' >> " + filePath;
-	    try {
-		ssh.runCommand(command);
-	    } catch (JSchException e) {
-		throw new SshCommandFailed(command);
-	    }
-	    try {
-		line = bf.readLine();
-	    } catch (IOException e) {
-		throw new IllegalArgumentException("Invalid string: " + text);
-	    }
-	}
+        Reader r = new StringReader(text);
+        BufferedReader bf = new BufferedReader(r);
+        String line;
+        try {
+            line = bf.readLine();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Invalid string: " + text);
+        }
+        while (line != null) {
+            String command = "echo '" + line + "' >> " + filePath;
+            try {
+                ssh.runCommand(command);
+            } catch (JSchException e) {
+                throw new SshCommandFailed(command);
+            }
+            try {
+                line = bf.readLine();
+            } catch (IOException e) {
+                throw new IllegalArgumentException("Invalid string: " + text);
+            }
+        }
 
     }
 }

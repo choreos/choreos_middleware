@@ -43,39 +43,39 @@ public class CDDeployTest {
 
     @BeforeClass
     public static void configureLog() {
-	LogConfigurator.configLog();
+        LogConfigurator.configLog();
     }
 
     @Before
     public void setUp() throws Exception {
 
-	DeploymentManagerConfiguration.set("BUS", "false");
-	spec.setPackageUri(CD_LOCATION);
-	spec.setPackageType(PackageType.EASY_ESB);
-	spec.setEndpointName("CDWeatherForecastServicePort"); // configured in
-							      // the config.xml
+        DeploymentManagerConfiguration.set("BUS", "false");
+        spec.setPackageUri(CD_LOCATION);
+        spec.setPackageType(PackageType.EASY_ESB);
+        spec.setEndpointName("CDWeatherForecastServicePort"); // configured in
+        // the config.xml
     }
 
     // should display each instance of the service
     @Test
     public void shouldDeployCDInEasyESBNode() throws Exception {
 
-	DeployableService service = deployer.createService(spec);
+        DeployableService service = deployer.createService(spec);
 
-	assertNotNull(service);
-	System.out.println(">>>> " + service.toString());
+        assertNotNull(service);
+        System.out.println(">>>> " + service.toString());
 
-	ServiceInstance instance = service.getInstances().get(0);
+        ServiceInstance instance = service.getInstances().get(0);
 
-	String url = instance.getNativeUri();
-	System.out.println("Instance at " + url);
-	npm.updateNode(instance.getNode().getId());
-	Thread.sleep(5000);
-	String wsdl = url.substring(0, url.length() - 1) + "?wsdl";
-	System.out.println("Checking " + wsdl);
-	client = WebClient.create(wsdl);
-	Response response = client.get();
-	assertEquals(200, response.getStatus());
+        String url = instance.getNativeUri();
+        System.out.println("Instance at " + url);
+        npm.updateNode(instance.getNode().getId());
+        Thread.sleep(5000);
+        String wsdl = url.substring(0, url.length() - 1) + "?wsdl";
+        System.out.println("Checking " + wsdl);
+        client = WebClient.create(wsdl);
+        Response response = client.get();
+        assertEquals(200, response.getStatus());
     }
 
 }

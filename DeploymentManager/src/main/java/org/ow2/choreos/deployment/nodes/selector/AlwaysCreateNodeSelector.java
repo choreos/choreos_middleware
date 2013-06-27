@@ -14,14 +14,14 @@ public class AlwaysCreateNodeSelector implements NodeSelector {
     private AlwaysCreateSelector<CloudNode, DeploymentRequest> selector;
 
     public AlwaysCreateNodeSelector() {
-	NodePoolManager npm = NPMFactory.getNewNPMInstance();
-	NodeFactory nodeFac = new NodeFactory(npm);
-	this.selector = new AlwaysCreateSelector<CloudNode, DeploymentRequest>(nodeFac);
+        NodePoolManager npm = NPMFactory.getNewNPMInstance();
+        NodeFactory nodeFac = new NodeFactory(npm);
+        this.selector = new AlwaysCreateSelector<CloudNode, DeploymentRequest>(nodeFac);
     }
 
     @Override
     public List<CloudNode> select(DeploymentRequest requirements, int objectsQuantity) throws NotSelectedException {
-	return this.selector.select(requirements, objectsQuantity);
+        return this.selector.select(requirements, objectsQuantity);
     }
 
 }

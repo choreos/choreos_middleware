@@ -27,116 +27,116 @@ public class CloudNode {
     private RunList runList;
 
     public CloudNode() {
-	
+
     }
 
     static Pattern IP_PATTERN = Pattern.compile("(\\d{1,4}\\.){3}\\d{1,4}");
 
     public boolean hasIp() {
-	if (ip == null || ip.isEmpty())
-	    return false;
-	Matcher matcher = IP_PATTERN.matcher(ip);
-	return matcher.matches();
+        if (ip == null || ip.isEmpty())
+            return false;
+        Matcher matcher = IP_PATTERN.matcher(ip);
+        return matcher.matches();
     }
 
     public void setPrivateKeyFile(String privateKeyFile) {
-	this.privateKeyFile = privateKeyFile;
+        this.privateKeyFile = privateKeyFile;
     }
 
     public String getId() {
-	return id;
+        return id;
     }
 
     public void setId(String id) {
-	this.id = id;
+        this.id = id;
     }
 
     public Integer getCpus() {
-	return cpus;
+        return cpus;
     }
 
     public void setCpus(Integer cpus) {
-	this.cpus = cpus;
+        this.cpus = cpus;
     }
 
     public Integer getRam() {
-	return ram;
+        return ram;
     }
 
     public void setRam(Integer ram) {
-	this.ram = ram;
+        this.ram = ram;
     }
 
     public Integer getStorage() {
-	return storage;
+        return storage;
     }
 
     public void setStorage(Integer storage) {
-	this.storage = storage;
+        this.storage = storage;
     }
 
     public String getSo() {
-	return so;
+        return so;
     }
 
     public void setSo(String so) {
-	this.so = so;
+        this.so = so;
     }
 
     public String getZone() {
-	return zone;
+        return zone;
     }
 
     public void setZone(String zone) {
-	this.zone = zone;
+        this.zone = zone;
     }
 
     public String getIp() {
-	return ip;
+        return ip;
     }
 
     public void setIp(String ip) {
-	this.ip = ip;
+        this.ip = ip;
     }
 
     public String getHostname() {
-	return hostname;
+        return hostname;
     }
 
     public void setHostname(String hostname) {
-	this.hostname = hostname;
+        this.hostname = hostname;
     }
 
     public String getUser() {
-	return user;
+        return user;
     }
 
     public void setUser(String user) {
-	this.user = user;
+        this.user = user;
     }
 
     public String getPrivateKeyFile() {
-	return privateKeyFile;
+        return privateKeyFile;
     }
 
     public void setPrivateKey(String privateKeyFile) {
-	this.privateKeyFile = privateKeyFile;
+        this.privateKeyFile = privateKeyFile;
     }
 
     public String getImage() {
-	return image;
+        return image;
     }
 
     public void setImage(String image) {
-	this.image = image;
+        this.image = image;
     }
 
     public Integer getState() {
-	return state;
+        return state;
     }
 
     public void setState(Integer state) {
-	this.state = state;
+        this.state = state;
     }
 
     public RunList getRunList() {
@@ -149,44 +149,44 @@ public class CloudNode {
 
     @Override
     public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((hostname == null) ? 0 : hostname.hashCode());
-	result = prime * result + ((id == null) ? 0 : id.hashCode());
-	result = prime * result + ((ip == null) ? 0 : ip.hashCode());
-	return result;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((hostname == null) ? 0 : hostname.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((ip == null) ? 0 : ip.hashCode());
+        return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	CloudNode other = (CloudNode) obj;
-	if (hostname == null) {
-	    if (other.hostname != null)
-		return false;
-	} else if (!hostname.equals(other.hostname))
-	    return false;
-	if (id == null) {
-	    if (other.id != null)
-		return false;
-	} else if (!id.equals(other.id))
-	    return false;
-	if (ip == null) {
-	    if (other.ip != null)
-		return false;
-	} else if (!ip.equals(other.ip))
-	    return false;
-	return true;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        CloudNode other = (CloudNode) obj;
+        if (hostname == null) {
+            if (other.hostname != null)
+                return false;
+        } else if (!hostname.equals(other.hostname))
+            return false;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (ip == null) {
+            if (other.ip != null)
+                return false;
+        } else if (!ip.equals(other.ip))
+            return false;
+        return true;
     }
 
     @Override
     public String toString() {
-	return "Node [id=" + id + ", ip=" + ip + "]";
+        return "Node [id=" + id + ", ip=" + ip + "]";
     }
 
 }

@@ -4,7 +4,6 @@
 
 package org.ow2.choreos.utils;
 
-
 /**
  * 
  * @author leonardo
@@ -19,19 +18,19 @@ public class TimeoutsAndTrials {
     private static TimeoutsAndTrials INSTANCE = new TimeoutsAndTrials();
 
     private TimeoutsAndTrials() {
-	this.configuration = new Configuration(FILE_PATH);
+        this.configuration = new Configuration(FILE_PATH);
     }
 
     public static int get(String key) {
-	try {
-	    return Integer.parseInt(INSTANCE.configuration.get(key).trim());
-	} catch (NumberFormatException e) {
-	    throw new IllegalStateException(key + " not configured on " + FILE_PATH);
-	}
+        try {
+            return Integer.parseInt(INSTANCE.configuration.get(key).trim());
+        } catch (NumberFormatException e) {
+            throw new IllegalStateException(key + " not configured on " + FILE_PATH);
+        }
     }
 
     public static void set(String key, int value) {
-	INSTANCE.configuration.set(key, Integer.toString(value));
+        INSTANCE.configuration.set(key, Integer.toString(value));
     }
 
 }

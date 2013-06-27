@@ -5,5 +5,5 @@ public interface CircuitBreakerState<T> {
     public void activate();
 
     public T call() throws BreakerException;
-    
+
 }

@@ -36,21 +36,21 @@ public class EsbNodeFactoryTest {
 
     @BeforeClass
     public static void configureLog() {
-	LogConfigurator.configLog();
+        LogConfigurator.configLog();
     }
 
     @Test
     public void sholdCreateEasyESBNode() throws ObjectCreationException {
-	String host = ChoreographyDeployerConfiguration.get(DEPLOYMENT_MANAGER_URI_PROPERTY);
-	NodePoolManager npm = new NodesClient(host);
-	ESBNodeFactory factory = new ESBNodeFactory(npm);
-	EasyESBNode esbNode = factory.createNewInstance(new ResourceImpact());
-	String endpoint = esbNode.getAdminEndpoint();
-	String url = endpoint + "?wsdl";
-	System.out.println("Acessando " + url);
-	WebClient client = WebClient.create(url);
-	Response response = client.get();
-	assertEquals(200, response.getStatus());
+        String host = ChoreographyDeployerConfiguration.get(DEPLOYMENT_MANAGER_URI_PROPERTY);
+        NodePoolManager npm = new NodesClient(host);
+        ESBNodeFactory factory = new ESBNodeFactory(npm);
+        EasyESBNode esbNode = factory.createNewInstance(new ResourceImpact());
+        String endpoint = esbNode.getAdminEndpoint();
+        String url = endpoint + "?wsdl";
+        System.out.println("Acessando " + url);
+        WebClient client = WebClient.create(url);
+        Response response = client.get();
+        assertEquals(200, response.getStatus());
     }
 
 }

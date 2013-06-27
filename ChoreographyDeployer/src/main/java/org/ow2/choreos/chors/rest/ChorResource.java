@@ -55,17 +55,17 @@ public class ChorResource {
     @Consumes(MediaType.APPLICATION_XML)
     public Response create(ChoreographySpec chor, @Context UriInfo uriInfo) {
 
-	if (chor == null || chor.getDeployableServiceSpecs() == null || chor.getDeployableServiceSpecs().isEmpty()) {
-	    return Response.status(Status.BAD_REQUEST).build();
-	}
+        if (chor == null || chor.getDeployableServiceSpecs() == null || chor.getDeployableServiceSpecs().isEmpty()) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
 
-	String chorId = chorDeployer.createChoreography(chor);
+        String chorId = chorDeployer.createChoreography(chor);
 
-	UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-	uriBuilder = uriBuilder.path(ChorResource.class).path(chorId);
-	URI location = uriBuilder.build();
+        UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+        uriBuilder = uriBuilder.path(ChorResource.class).path(chorId);
+        URI location = uriBuilder.build();
 
-	return Response.created(location).build();
+        return Response.created(location).build();
     }
 
     /**
@@ -87,22 +87,22 @@ public class ChorResource {
     @Produces(MediaType.APPLICATION_XML)
     public Response get(@PathParam("chorID") String chorId, @Context UriInfo uriInfo) {
 
-	if (chorId == null || chorId.isEmpty()) {
-	    return Response.status(Status.BAD_REQUEST).build();
-	}
+        if (chorId == null || chorId.isEmpty()) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
 
-	Choreography chor;
-	try {
-	    chor = chorDeployer.getChoreography(chorId);
-	} catch (ChoreographyNotFoundException e) {
-	    return Response.status(Status.NOT_FOUND).build();
-	}
+        Choreography chor;
+        try {
+            chor = chorDeployer.getChoreography(chorId);
+        } catch (ChoreographyNotFoundException e) {
+            return Response.status(Status.NOT_FOUND).build();
+        }
 
-	UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-	uriBuilder = uriBuilder.path(ChorResource.class).path(chorId);
-	URI location = uriBuilder.build();
+        UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+        uriBuilder = uriBuilder.path(ChorResource.class).path(chorId);
+        URI location = uriBuilder.build();
 
-	return Response.ok(chor).location(location).build();
+        return Response.ok(chor).location(location).build();
     }
 
     /**
@@ -126,26 +126,26 @@ public class ChorResource {
     @Produces(MediaType.APPLICATION_XML)
     public Response enact(@PathParam("chorID") String chorId, @Context UriInfo uriInfo) {
 
-	if (chorId == null || chorId.isEmpty()) {
-	    return Response.status(Status.BAD_REQUEST).build();
-	}
+        if (chorId == null || chorId.isEmpty()) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
 
-	UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-	uriBuilder = uriBuilder.path(ChorResource.class).path(chorId);
-	URI location = uriBuilder.build();
+        UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+        uriBuilder = uriBuilder.path(ChorResource.class).path(chorId);
+        URI location = uriBuilder.build();
 
-	Choreography chor;
-	try {
-	    chor = chorDeployer.enactChoreography(chorId);
-	} catch (EnactmentException e) {
-	    return Response.serverError().build();
-	} catch (ChoreographyNotFoundException e) {
-	    return Response.status(Status.NOT_FOUND).build();
-	}
+        Choreography chor;
+        try {
+            chor = chorDeployer.enactChoreography(chorId);
+        } catch (EnactmentException e) {
+            return Response.serverError().build();
+        } catch (ChoreographyNotFoundException e) {
+            return Response.status(Status.NOT_FOUND).build();
+        }
 
-	System.out.println("At Resource: " + chor);
+        System.out.println("At Resource: " + chor);
 
-	return Response.ok(chor).location(location).build();
+        return Response.ok(chor).location(location).build();
     }
 
     @PUT
@@ -154,31 +154,31 @@ public class ChorResource {
     @Consumes(MediaType.APPLICATION_XML)
     public Response update(@PathParam("chorID") String chorId, ChoreographySpec spec, @Context UriInfo uriInfo) {
 
-	if (chorId == null || chorId.isEmpty()) {
-	    return Response.status(Status.BAD_REQUEST).build();
-	}
+        if (chorId == null || chorId.isEmpty()) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
 
-	UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-	uriBuilder = uriBuilder.path(ChorResource.class).path(chorId);
-	URI location = uriBuilder.build();
+        UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+        uriBuilder = uriBuilder.path(ChorResource.class).path(chorId);
+        URI location = uriBuilder.build();
 
-	Choreography chor;
-	try {
-	    chorDeployer.updateChoreography(chorId, spec);
-	    chor = chorDeployer.getChoreography(chorId);
-	} catch (EnactmentException e) {
-	    return Response.serverError().build();
-	} catch (ChoreographyNotFoundException e) {
-	    return Response.status(Status.NOT_FOUND).build();
-	}
+        Choreography chor;
+        try {
+            chorDeployer.updateChoreography(chorId, spec);
+            chor = chorDeployer.getChoreography(chorId);
+        } catch (EnactmentException e) {
+            return Response.serverError().build();
+        } catch (ChoreographyNotFoundException e) {
+            return Response.status(Status.NOT_FOUND).build();
+        }
 
-	return Response.ok(chor).location(location).build();
+        return Response.ok(chor).location(location).build();
     }
 
     @PUT
     @Path("cleanup")
     @Produces(MediaType.APPLICATION_XML)
     public Response cleanUp(@Context UriInfo uriInfo) {
-	return null;
+        return null;
     }
 }

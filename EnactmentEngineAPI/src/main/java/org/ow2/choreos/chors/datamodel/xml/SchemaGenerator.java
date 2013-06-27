@@ -28,70 +28,70 @@ public class SchemaGenerator {
 
     public String generateChorSpecSchema() {
 
-	try {
-	    return this.generateSchema(ChoreographySpec.class);
-	} catch (JAXBException e) {
-	    logger.error("It should never happen");
-	    return null;
-	} catch (IOException e) {
-	    logger.error("It should never happen");
-	    return null;
-	}
+        try {
+            return this.generateSchema(ChoreographySpec.class);
+        } catch (JAXBException e) {
+            logger.error("It should never happen");
+            return null;
+        } catch (IOException e) {
+            logger.error("It should never happen");
+            return null;
+        }
     }
 
     public String generateChoreographySchema() {
 
-	try {
-	    return this.generateSchema(Choreography.class);
-	} catch (JAXBException e) {
-	    logger.error("It should never happen");
-	    return null;
-	} catch (IOException e) {
-	    logger.error("It should never happen");
-	    return null;
-	}
+        try {
+            return this.generateSchema(Choreography.class);
+        } catch (JAXBException e) {
+            logger.error("It should never happen");
+            return null;
+        } catch (IOException e) {
+            logger.error("It should never happen");
+            return null;
+        }
     }
 
     // based on
     // http://arthur.gonigberg.com/2010/04/26/jaxb-generating-schema-from-object-model/
     private String generateSchema(Class<?> clazz) throws JAXBException, IOException {
 
-	// grab the context
-	JAXBContext context = JAXBContext.newInstance(clazz);
+        // grab the context
+        JAXBContext context = JAXBContext.newInstance(clazz);
 
-	final List<DOMResult> results = new ArrayList<DOMResult>();
+        final List<DOMResult> results = new ArrayList<DOMResult>();
 
-	// generate the schema
-	context.generateSchema(
-	// need to define a SchemaOutputResolver to store to
-	new SchemaOutputResolver() {
-	    @Override
-	    public Result createOutput(String ns, String file) throws IOException {
-		// save the schema to the list
-		DOMResult result = new DOMResult();
-		result.setSystemId(file);
-		results.add(result);
-		return result;
-	    }
-	});
+        // generate the schema
+        context.generateSchema(
+        // need to define a SchemaOutputResolver to store to
+        new SchemaOutputResolver() {
+            @Override
+            public Result createOutput(String ns, String file) throws IOException {
+                // save the schema to the list
+                DOMResult result = new DOMResult();
+                result.setSystemId(file);
+                results.add(result);
+                return result;
+            }
+        });
 
-	// output schema via System.out
-	DOMResult domResult = results.get(0);
-	Document doc = (Document) domResult.getNode();
-	OutputFormat format = new OutputFormat(doc);
-	format.setIndenting(true);
-	StringWriter writer = new StringWriter();
-	XMLSerializer serializer = new XMLSerializer(writer, format);
-	serializer.serialize(doc);
-	return writer.toString();
+        // output schema via System.out
+        DOMResult domResult = results.get(0);
+        Document doc = (Document) domResult.getNode();
+        OutputFormat format = new OutputFormat(doc);
+        format.setIndenting(true);
+        StringWriter writer = new StringWriter();
+        XMLSerializer serializer = new XMLSerializer(writer, format);
+        serializer.serialize(doc);
+        return writer.toString();
     }
 
     public static void main(String[] args) {
 
-	SchemaGenerator gen = new SchemaGenerator();
-	System.out.println("ChorSpec XSD:");
-	System.out.println(gen.generateChorSpecSchema());
-	System.out.println("\nChoreography XSD:");
-	System.out.println(gen.generateChoreographySchema());
+        SchemaGenerator gen = new SchemaGenerator();
+        System.out.println("ChorSpec XSD:");
+        System.out.println(gen.generateChorSpecSchema());
+        System.out.println("\nChoreography XSD:");
+        System.out.println(gen.generateChoreographySchema());
     }
 }

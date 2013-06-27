@@ -18,7 +18,7 @@ public enum PackageType {
     private final String extension;
 
     private PackageType(String extension) {
-	this.extension = extension;
+        this.extension = extension;
     }
 
     /**
@@ -26,8 +26,8 @@ public enum PackageType {
      * @return deploy file extension
      */
     public String getExtension() {
-	if (this.extension == null)
-	    throw new IllegalArgumentException("ServiceType " + this + " does not provide an extension.");
-	return this.extension;
+        if (this.extension == null)
+            throw new IllegalArgumentException("ServiceType " + this + " does not provide an extension.");
+        return this.extension;
     }
 }

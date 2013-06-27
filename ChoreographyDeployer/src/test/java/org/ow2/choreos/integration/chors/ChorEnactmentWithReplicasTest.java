@@ -38,47 +38,47 @@ import eu.choreos.vv.clientgenerator.WSClient;
  */
 @Category(IntegrationTest.class)
 public class ChorEnactmentWithReplicasTest {
-    
+
     private static final String BUS_PROPERTY = "BUS";
 
     private ChoreographySpec spec;
 
     @BeforeClass
     public static void startServers() {
-	LogConfigurator.configLog();
+        LogConfigurator.configLog();
     }
 
     @Before
     public void setUp() {
 
-	ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "false");
-	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE, 2);
-	spec = models.getChorSpec();
+        ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "false");
+        ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE, 2);
+        spec = models.getChorSpec();
     }
 
     @Test
     public void shouldEnactChoreographyWithTwoAirlineServices() throws Exception {
 
-	ChoreographyDeployer ee = new ChoreographyDeployerImpl();
+        ChoreographyDeployer ee = new ChoreographyDeployerImpl();
 
-	String chorId = ee.createChoreography(spec);
-	Choreography chor = ee.enactChoreography(chorId);
+        String chorId = ee.createChoreography(spec);
+        Choreography chor = ee.enactChoreography(chorId);
 
-	Service airline = chor.getDeployableServiceBySpecName(ModelsForTest.AIRLINE);
-	assertEquals(2, airline.getUris().size());
+        Service airline = chor.getDeployableServiceBySpecName(ModelsForTest.AIRLINE);
+        assertEquals(2, airline.getUris().size());
 
-	Service travel = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
-	WSClient client = new WSClient(travel.getUris().get(0) + "?wsdl");
-	Item response = client.request("buyTrip");
-	String codes = response.getChild("return").getContent();
-	assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
+        Service travel = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
+        WSClient client = new WSClient(travel.getUris().get(0) + "?wsdl");
+        Item response = client.request("buyTrip");
+        String codes = response.getChild("return").getContent();
+        assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
 
-	WSClient client2 = new WSClient(travel.getUris().get(0) + "?wsdl");
-	Item response2 = client2.request("buyTrip");
-	String codes2 = response2.getChild("return").getContent();
-	assertTrue(codes2.startsWith("33") && codes2.endsWith("--22"));
+        WSClient client2 = new WSClient(travel.getUris().get(0) + "?wsdl");
+        Item response2 = client2.request("buyTrip");
+        String codes2 = response2.getChild("return").getContent();
+        assertTrue(codes2.startsWith("33") && codes2.endsWith("--22"));
 
-	assertFalse(codes.equals(codes2));
+        assertFalse(codes.equals(codes2));
 
     }
 

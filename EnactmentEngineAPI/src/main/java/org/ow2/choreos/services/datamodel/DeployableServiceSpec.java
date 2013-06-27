@@ -20,132 +20,133 @@ public class DeployableServiceSpec extends ServiceSpec {
     private int numberOfInstances = 1;
     private ResourceImpact resourceImpact;
     private String version;
-    
+
     public DeployableServiceSpec() {
-	
+
     }
 
-    public DeployableServiceSpec(String name, ServiceType serviceType, PackageType packageType, ResourceImpact resourceImpact,
-	    String version, String packageUri, int port, String endpointName, int numberOfInstances) {
-	super.name = name;
-	super.serviceType = serviceType;
-	this.packageType = packageType;
-	this.resourceImpact = resourceImpact;
-	this.version = version;
-	this.packageUri = packageUri;
-	this.port = port;
-	this.endpointName = endpointName;
-	this.numberOfInstances = numberOfInstances;
+    public DeployableServiceSpec(String name, ServiceType serviceType, PackageType packageType,
+            ResourceImpact resourceImpact, String version, String packageUri, int port, String endpointName,
+            int numberOfInstances) {
+        super.name = name;
+        super.serviceType = serviceType;
+        this.packageType = packageType;
+        this.resourceImpact = resourceImpact;
+        this.version = version;
+        this.packageUri = packageUri;
+        this.port = port;
+        this.endpointName = endpointName;
+        this.numberOfInstances = numberOfInstances;
     }
 
-    public DeployableServiceSpec(String name, ServiceType serviceType, PackageType packageType, ResourceImpact resourceImpact,
-	    String version, String packageUri, String endpointName, int numberOfInstances) {
-	super.name = name;
-	super.serviceType = serviceType;
-	this.packageType = packageType;
-	this.resourceImpact = resourceImpact;
-	this.version = version;
-	this.packageUri = packageUri;
-	this.endpointName = endpointName;
-	this.numberOfInstances = numberOfInstances;
+    public DeployableServiceSpec(String name, ServiceType serviceType, PackageType packageType,
+            ResourceImpact resourceImpact, String version, String packageUri, String endpointName, int numberOfInstances) {
+        super.name = name;
+        super.serviceType = serviceType;
+        this.packageType = packageType;
+        this.resourceImpact = resourceImpact;
+        this.version = version;
+        this.packageUri = packageUri;
+        this.endpointName = endpointName;
+        this.numberOfInstances = numberOfInstances;
     }
 
     public void setNumberOfInstances(int numberOfInstances) {
-	if (numberOfInstances > 0)
-	    this.numberOfInstances = numberOfInstances;
-	else
-	    this.numberOfInstances = 1;
+        if (numberOfInstances > 0)
+            this.numberOfInstances = numberOfInstances;
+        else
+            this.numberOfInstances = 1;
     }
 
     public String getPackageUri() {
-	return packageUri;
+        return packageUri;
     }
 
     public void setPackageUri(String packageUri) {
-	this.packageUri = packageUri;
+        this.packageUri = packageUri;
     }
 
     public PackageType getPackageType() {
-	return packageType;
+        return packageType;
     }
 
     public void setPackageType(PackageType packageType) {
-	this.packageType = packageType;
+        this.packageType = packageType;
     }
 
     public String getEndpointName() {
-	return endpointName;
+        return endpointName;
     }
 
     public void setEndpointName(String endpointName) {
-	this.endpointName = endpointName;
+        this.endpointName = endpointName;
     }
 
     public String getOwner() {
-	return owner;
+        return owner;
     }
 
     public void setOwner(String owner) {
-	this.owner = owner;
+        this.owner = owner;
     }
 
     public String getGroup() {
-	return group;
+        return group;
     }
 
     public void setGroup(String group) {
-	this.group = group;
+        this.group = group;
     }
 
     public ResourceImpact getResourceImpact() {
-	return resourceImpact;
+        return resourceImpact;
     }
 
     public void setResourceImpact(ResourceImpact resourceImpact) {
-	this.resourceImpact = resourceImpact;
+        this.resourceImpact = resourceImpact;
     }
 
     public String getVersion() {
-	return version;
+        return version;
     }
 
     public void setVersion(String version) {
-	this.version = version;
+        this.version = version;
     }
 
     public int getNumberOfInstances() {
-	return numberOfInstances;
+        return numberOfInstances;
     }
 
     public void setPort(int port) {
-	this.port = port;
+        this.port = port;
     }
 
     public String getFileName() {
-	FileNameRetriever retriever = new FileNameRetriever(this);
-	return retriever.getFileName();
+        FileNameRetriever retriever = new FileNameRetriever(this);
+        return retriever.getFileName();
     }
 
     public int getPort() {
-	int effectivePort = port;
-	if (portIsNotDefined()) {
-	    PortRetriever portRetriever = new PortRetriever();
-	    effectivePort = portRetriever.getPortByPackageType(packageType);
-	}
-	return effectivePort;
+        int effectivePort = port;
+        if (portIsNotDefined()) {
+            PortRetriever portRetriever = new PortRetriever();
+            effectivePort = portRetriever.getPortByPackageType(packageType);
+        }
+        return effectivePort;
     }
 
     private boolean portIsNotDefined() {
-	return this.port == 0;
+        return this.port == 0;
     }
 
     // equals and hash code are used from ServiceSpec
 
     @Override
     public String toString() {
-	return "DeployableServiceSpec [packageUri=" + packageUri + ", packageType=" + packageType + ", endpointName="
-		+ endpointName + ", port=" + port + ", owner=" + owner + ", group=" + group + ", numberOfInstances="
-		+ numberOfInstances + ", version=" + version + "]";
+        return "DeployableServiceSpec [packageUri=" + packageUri + ", packageType=" + packageType + ", endpointName="
+                + endpointName + ", port=" + port + ", owner=" + owner + ", group=" + group + ", numberOfInstances="
+                + numberOfInstances + ", version=" + version + "]";
     }
 
 }

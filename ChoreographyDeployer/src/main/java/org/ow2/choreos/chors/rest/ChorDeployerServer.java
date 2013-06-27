@@ -14,34 +14,34 @@ public class ChorDeployerServer {
     public static String URL;
 
     private static final String CHOR_DEPLOYER_PORT_PROPERTY = "CHOR_DEPLOYER_PORT";
-    
+
     private RESTServer restServer;
 
     static {
-	String port = ChoreographyDeployerConfiguration.get(CHOR_DEPLOYER_PORT_PROPERTY);
-	URL = "http://0.0.0.0:" + port + "/choreographydeployer/";
+        String port = ChoreographyDeployerConfiguration.get(CHOR_DEPLOYER_PORT_PROPERTY);
+        URL = "http://0.0.0.0:" + port + "/choreographydeployer/";
     }
 
     public ChorDeployerServer() {
 
-	this.restServer = new RESTServer(NAME, URL, new Class[] { ChorResource.class });
+        this.restServer = new RESTServer(NAME, URL, new Class[] { ChorResource.class });
 
     }
 
     public void start() {
 
-	this.restServer.start();
+        this.restServer.start();
     }
 
     public void stop() {
 
-	this.restServer.stop();
+        this.restServer.stop();
     }
 
     public static void main(String[] args) throws InterruptedException {
 
-	LogConfigurator.configLog();
-	ChorDeployerServer server = new ChorDeployerServer();
-	server.start();
+        LogConfigurator.configLog();
+        ChorDeployerServer server = new ChorDeployerServer();
+        server.start();
     }
 }

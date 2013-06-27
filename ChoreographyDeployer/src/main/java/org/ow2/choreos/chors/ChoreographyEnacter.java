@@ -17,52 +17,52 @@ public class ChoreographyEnacter {
     private Logger logger = Logger.getLogger(ChoreographyEnacter.class);
 
     public ChoreographyEnacter(Choreography chor) {
-	this.chor = chor;
+        this.chor = chor;
     }
 
     public Choreography enact() throws EnactmentException {
-	logBegin();
-	deploy();
-	createLegacyServices();
-	proxifyServices(chor);
-	castContext();
-	chor.enactmentFinished();
-	logEnd();
-	return chor;
+        logBegin();
+        deploy();
+        createLegacyServices();
+        proxifyServices(chor);
+        castContext();
+        chor.enactmentFinished();
+        logEnd();
+        return chor;
     }
 
     private void logBegin() {
-	if (chor.getChoreographySpec() == chor.getRequestedChoreographySpec())
-	    logger.info("Starting enactment; chorId= " + chor.getId());
-	else if (chor.getChoreographySpec() == chor.getRequestedChoreographySpec())
-	    logger.info("Starting enactment for requested update; chorId= " + chor.getId());
+        if (chor.getChoreographySpec() == chor.getRequestedChoreographySpec())
+            logger.info("Starting enactment; chorId= " + chor.getId());
+        else if (chor.getChoreographySpec() == chor.getRequestedChoreographySpec())
+            logger.info("Starting enactment for requested update; chorId= " + chor.getId());
     }
 
     private void deploy() throws EnactmentException {
-	ServicesDeployer deployer = new ServicesDeployer(chor);
-	List<DeployableService> deployedServices = deployer.deployServices();
-	chor.setDeployableServices(deployedServices);
+        ServicesDeployer deployer = new ServicesDeployer(chor);
+        List<DeployableService> deployedServices = deployer.deployServices();
+        chor.setDeployableServices(deployedServices);
     }
 
     private void createLegacyServices() {
-	LegacyServicesCreator legacyServicesCreator = new LegacyServicesCreator();
-	List<LegacyService> legacyServices = legacyServicesCreator.createLegacyServices(chor.getChoreographySpec());
-	chor.setLegacyServices(legacyServices);
+        LegacyServicesCreator legacyServicesCreator = new LegacyServicesCreator();
+        List<LegacyService> legacyServices = legacyServicesCreator.createLegacyServices(chor.getChoreographySpec());
+        chor.setLegacyServices(legacyServices);
     }
 
     private void proxifyServices(Choreography choreography) {
-	ServicesProxifier proxifier = new ServicesProxifier(chor);
-	proxifier.proxify();
+        ServicesProxifier proxifier = new ServicesProxifier(chor);
+        proxifier.proxify();
     }
 
     private void castContext() {
-	ContextSenderFactory factory = new ContextSenderFactory();
-	ContextCaster caster = new ContextCaster(factory);
-	caster.cast(chor);
+        ContextSenderFactory factory = new ContextSenderFactory();
+        ContextCaster caster = new ContextCaster(factory);
+        caster.cast(chor);
     }
 
     private void logEnd() {
-	logger.info("Enactment completed; chorId=" + chor.getId());
+        logger.info("Enactment completed; chorId=" + chor.getId());
     }
 
 }

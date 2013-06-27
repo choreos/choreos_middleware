@@ -40,84 +40,84 @@ public class NodesClient implements NodePoolManager {
      * 
      */
     public NodesClient(String host) {
-	this.host = host;
+        this.host = host;
     }
 
     private WebClient setupClient() {
 
-	WebClient client = WebClient.create(host);
+        WebClient client = WebClient.create(host);
 
-	// remove time out
-	// not proud of it!
-	HTTPConduit http = (HTTPConduit) WebClient.getConfig(client).getConduit();
-	HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
-	httpClientPolicy.setConnectionTimeout(0);// indefined
-	httpClientPolicy.setReceiveTimeout(0);// indefined
-	http.setClient(httpClientPolicy);
+        // remove time out
+        // not proud of it!
+        HTTPConduit http = (HTTPConduit) WebClient.getConfig(client).getConduit();
+        HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
+        httpClientPolicy.setConnectionTimeout(0);// indefined
+        httpClientPolicy.setReceiveTimeout(0);// indefined
+        http.setClient(httpClientPolicy);
 
-	return client;
+        return client;
     }
 
     @Override
     public CloudNode createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
 
-	WebClient client = setupClient();
-	client.path("nodes");
-	client.type(MediaType.APPLICATION_XML);
-	CloudNode node = null;
+        WebClient client = setupClient();
+        client.path("nodes");
+        client.type(MediaType.APPLICATION_XML);
+        CloudNode node = null;
 
-	try {
-	    node = client.post(nodeSpec, CloudNode.class);
-	} catch (WebApplicationException e) {
-	    throw new NodeNotCreatedException();
-	}
+        try {
+            node = client.post(nodeSpec, CloudNode.class);
+        } catch (WebApplicationException e) {
+            throw new NodeNotCreatedException();
+        }
 
-	return node;
+        return node;
     }
 
     @Override
     public CloudNode getNode(String nodeId) throws NodeNotFoundException {
 
-	WebClient client = setupClient();
-	client.path("nodes/" + nodeId);
-	CloudNode node = null;
+        WebClient client = setupClient();
+        client.path("nodes/" + nodeId);
+        CloudNode node = null;
 
-	try {
-	    node = client.get(CloudNode.class);
-	} catch (WebApplicationException e) {
-	    throw new NodeNotFoundException(nodeId);
-	}
+        try {
+            node = client.get(CloudNode.class);
+        } catch (WebApplicationException e) {
+            throw new NodeNotFoundException(nodeId);
+        }
 
-	return node;
+        return node;
     }
 
     @Override
     public void updateNode(String nodeId) throws NodeNotUpdatedException {
-	
-	WebClient client = setupClient();
-	client.path("nodes");
-	client.path(nodeId);
-	client.path("update");
-	Response response = client.post(null);
 
-	if (response.getStatus() != 200) {
-	    throw new NodeNotUpdatedException(nodeId);
-	}
+        WebClient client = setupClient();
+        client.path("nodes");
+        client.path(nodeId);
+        client.path("update");
+        Response response = client.post(null);
+
+        if (response.getStatus() != 200) {
+            throw new NodeNotUpdatedException(nodeId);
+        }
     }
-    
+
     @Override
     public List<CloudNode> getNodes() {
-	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void destroyNode(String nodeId) throws NodeNotDestroyed, NodeNotFoundException {
-	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void destroyNodes() throws NodeNotDestroyed {
-	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
 }

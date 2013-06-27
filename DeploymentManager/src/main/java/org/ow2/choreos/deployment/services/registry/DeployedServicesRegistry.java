@@ -15,20 +15,20 @@ public class DeployedServicesRegistry {
     private ConcurrentMap<String, DeployableService> availableServices = new ConcurrentHashMap<String, DeployableService>();
 
     public void addService(String serviceId, DeployableService service) {
-	availableServices.put(serviceId, service);
+        availableServices.put(serviceId, service);
     }
 
     public DeployableService getService(String serviceId) {
-	return availableServices.get(serviceId);
+        return availableServices.get(serviceId);
     }
 
     public Collection<DeployableService> getServices() {
-	return availableServices.values();
+        return availableServices.values();
     }
 
     public void deleteService(String serviceId) {
-	if (availableServices.remove(serviceId) == null)
-	    throw new IllegalArgumentException("Service " + serviceId + " not registered");
+        if (availableServices.remove(serviceId) == null)
+            throw new IllegalArgumentException("Service " + serviceId + " not registered");
     }
 
     private DeployedServicesRegistry() {
@@ -38,9 +38,9 @@ public class DeployedServicesRegistry {
     private static DeployedServicesRegistry INSTANCE = null;
 
     public static DeployedServicesRegistry getInstance() {
-	if (INSTANCE == null)
-	    INSTANCE = new DeployedServicesRegistry();
-	return INSTANCE;
+        if (INSTANCE == null)
+            INSTANCE = new DeployedServicesRegistry();
+        return INSTANCE;
     }
 
 }

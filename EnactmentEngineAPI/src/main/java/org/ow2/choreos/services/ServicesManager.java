@@ -47,5 +47,5 @@ public interface ServicesManager {
      *             if deploy was not possible.
      */
     public DeployableService updateService(DeployableServiceSpec newServiceSpec) throws ServiceNotModifiedException,
-	    UnhandledModificationException;
+            UnhandledModificationException;
 }

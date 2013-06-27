@@ -46,37 +46,37 @@ public class WARDeployTest {
 
     @BeforeClass
     public static void configureLog() {
-	LogConfigurator.configLog();
+        LogConfigurator.configLog();
     }
 
     @Before
     public void setUp() throws Exception {
 
-	specWar.setPackageUri(WAR_LOCATION);
-	specWar.setEndpointName(ENDPOINT_NAME);
-	specWar.setPackageType(PackageType.TOMCAT);
-	specWar.setResourceImpact(resourceImpact);
+        specWar.setPackageUri(WAR_LOCATION);
+        specWar.setEndpointName(ENDPOINT_NAME);
+        specWar.setPackageType(PackageType.TOMCAT);
+        specWar.setResourceImpact(resourceImpact);
     }
 
     @Test
     public void shouldDeployAWarServiceInANode() throws Exception {
 
-	DeployableService service = deployer.createService(specWar);
+        DeployableService service = deployer.createService(specWar);
 
-	ServiceInstance instance = service.getInstances().get(0);
+        ServiceInstance instance = service.getInstances().get(0);
 
-	String url = instance.getNativeUri();
-	logger.info("Service at " + url);
-	npm.updateNode(instance.getNode().getId());
-	Thread.sleep(1000);
+        String url = instance.getNativeUri();
+        logger.info("Service at " + url);
+        npm.updateNode(instance.getNode().getId());
+        Thread.sleep(1000);
 
-	if (url.trim().endsWith("/"))
-	    url = url.trim().substring(0, url.length() - 1);
+        if (url.trim().endsWith("/"))
+            url = url.trim().substring(0, url.length() - 1);
 
-	client = WebClient.create(url + "?wsdl");
-	String body = client.get(String.class);
-	String excerpt = "buyFlight";
-	assertTrue(body.contains(excerpt));
+        client = WebClient.create(url + "?wsdl");
+        String body = client.get(String.class);
+        String excerpt = "buyFlight";
+        assertTrue(body.contains(excerpt));
     }
 
 }

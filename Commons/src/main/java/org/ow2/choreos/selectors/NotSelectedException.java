@@ -13,7 +13,7 @@ public class NotSelectedException extends Exception {
     }
 
     public NotSelectedException(String message) {
-	super(message);
+        super(message);
     }
 
 }

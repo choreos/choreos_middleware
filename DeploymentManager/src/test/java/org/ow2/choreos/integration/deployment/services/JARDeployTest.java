@@ -38,31 +38,31 @@ public class JARDeployTest {
 
     @BeforeClass
     public static void configureLog() {
-	LogConfigurator.configLog();
+        LogConfigurator.configLog();
     }
 
     @Before
     public void setUp() throws Exception {
-	spec.setPackageUri(JAR_LOCATION);
-	spec.setPackageType(PackageType.COMMAND_LINE);
-	spec.setEndpointName("airline");
-	spec.setPort(1234);
+        spec.setPackageUri(JAR_LOCATION);
+        spec.setPackageType(PackageType.COMMAND_LINE);
+        spec.setEndpointName("airline");
+        spec.setPort(1234);
     }
 
     @Test
     public void shouldDeployAJarServiceInANode() throws Exception {
 
-	DeployableService service = deployer.createService(spec);
-	ServiceInstance instance = service.getInstances().get(0);
-	npm.updateNode(instance.getNode().getId());
-	Thread.sleep(1000);
+        DeployableService service = deployer.createService(spec);
+        ServiceInstance instance = service.getInstances().get(0);
+        npm.updateNode(instance.getNode().getId());
+        Thread.sleep(1000);
 
-	String url = instance.getNativeUri();
-	assertNotNull(url);
-	String wsdl = url.replaceAll("/$", "").concat("?wsdl");
-	System.out.println("Service at " + wsdl);
-	client = WebClient.create(wsdl);
-	Response response = client.get();
-	assertEquals(200, response.getStatus());
+        String url = instance.getNativeUri();
+        assertNotNull(url);
+        String wsdl = url.replaceAll("/$", "").concat("?wsdl");
+        System.out.println("Service at " + wsdl);
+        client = WebClient.create(wsdl);
+        Response response = client.get();
+        assertEquals(200, response.getStatus());
     }
 }

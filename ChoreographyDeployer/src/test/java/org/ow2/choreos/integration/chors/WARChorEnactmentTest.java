@@ -25,21 +25,21 @@ import org.ow2.choreos.utils.LogConfigurator;
  */
 @Category(IntegrationTest.class)
 public class WARChorEnactmentTest extends SimpleChorEnactmentTest {
-    
+
     private static final String BUS_PROPERTY = "BUS";
 
     @BeforeClass
     public static void startServers() {
-	LogConfigurator.configLog();
+        LogConfigurator.configLog();
     }
 
     @Before
     @Override
     public void setUp() {
 
-	ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "false");
-	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT);
-	super.chorSpec = models.getChorSpec();
+        ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "false");
+        ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT);
+        super.chorSpec = models.getChorSpec();
     }
 
 }

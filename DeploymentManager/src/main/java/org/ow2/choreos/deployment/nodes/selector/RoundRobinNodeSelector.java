@@ -14,15 +14,15 @@ public class RoundRobinNodeSelector implements NodeSelector {
     private RoundRobinSelector<CloudNode, DeploymentRequest> selector;
 
     public RoundRobinNodeSelector() {
-	NodePoolManager npm = NPMFactory.getNewNPMInstance();
-	NodeRetriever retriever = new NodeRetriever(npm);
-	NodeFilter filter = new NodeFilter(); 
-	this.selector = new RoundRobinSelector<CloudNode, DeploymentRequest>(retriever, filter);
+        NodePoolManager npm = NPMFactory.getNewNPMInstance();
+        NodeRetriever retriever = new NodeRetriever(npm);
+        NodeFilter filter = new NodeFilter();
+        this.selector = new RoundRobinSelector<CloudNode, DeploymentRequest>(retriever, filter);
     }
 
     @Override
     public List<CloudNode> select(DeploymentRequest requirements, int objectsQuantity) throws NotSelectedException {
-	return this.selector.select(requirements, objectsQuantity);
+        return this.selector.select(requirements, objectsQuantity);
     }
-    
+
 }

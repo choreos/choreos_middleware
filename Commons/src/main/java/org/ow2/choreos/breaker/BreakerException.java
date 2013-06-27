@@ -5,10 +5,10 @@ public class BreakerException extends Exception {
     private static final long serialVersionUID = 1L;
 
     public BreakerException() {
-	super();
+        super();
     }
-    
+
     public BreakerException(Throwable cause) {
-	super(cause);
+        super(cause);
     }
 }

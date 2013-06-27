@@ -16,21 +16,21 @@ import org.ow2.choreos.services.datamodel.Service;
  * legacy services.
  */
 public class LegacyService extends Service {
-    
+
     List<String> URIs;
 
     public LegacyService(LegacyServiceSpec serviceSpec) {
-	super(serviceSpec);
-	URIs = serviceSpec.getNativeURIs();
+        super(serviceSpec);
+        URIs = serviceSpec.getNativeURIs();
     }
 
     public LegacyService() {
-	
+
     }
 
     @Override
     public List<String> getUris() {
-	return URIs;
+        return URIs;
     }
-    
+
 }

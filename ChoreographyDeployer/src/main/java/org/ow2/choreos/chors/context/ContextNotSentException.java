@@ -15,33 +15,33 @@ public class ContextNotSentException extends Exception {
     private List<String> partnerUris = new ArrayList<String>();
 
     public ContextNotSentException(String serviceUri, String partnerRole, String partnerName, List<String> partnerUris) {
-	super();
-	this.serviceUri = serviceUri;
-	this.partnerRole = partnerRole;
-	this.partnerName = partnerName;
-	this.partnerUris = partnerUris;
+        super();
+        this.serviceUri = serviceUri;
+        this.partnerRole = partnerRole;
+        this.partnerName = partnerName;
+        this.partnerUris = partnerUris;
     }
 
     public static long getSerialversionuid() {
-	return serialVersionUID;
+        return serialVersionUID;
     }
 
     public String getServiceUri() {
-	return serviceUri;
+        return serviceUri;
     }
 
     public String getPartnerRole() {
-	return partnerRole;
+        return partnerRole;
     }
 
     public List<String> getPartnerUris() {
-	return partnerUris;
+        return partnerUris;
     }
 
     @Override
     public String toString() {
-	return "ContextNotSentException [serviceUri=" + serviceUri + ", partnerRole=" + partnerRole + ", partnerName="
-		+ partnerName + ", partnerUris=" + partnerUris.toString() + "]";
+        return "ContextNotSentException [serviceUri=" + serviceUri + ", partnerRole=" + partnerRole + ", partnerName="
+                + partnerName + ", partnerUris=" + partnerUris.toString() + "]";
     }
 
 }
