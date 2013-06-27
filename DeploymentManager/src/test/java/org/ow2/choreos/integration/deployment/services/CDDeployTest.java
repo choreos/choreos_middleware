@@ -20,6 +20,7 @@ import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.services.ServicesManagerImpl;
 import org.ow2.choreos.nodes.NodePoolManager;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
@@ -61,16 +62,16 @@ public class CDDeployTest {
     public void shouldDeployCDInEasyESBNode() throws Exception {
 
         DeployableService service = deployer.createService(spec);
-
         assertNotNull(service);
         System.out.println(">>>> " + service.toString());
 
-        ServiceInstance instance = service.getInstances().get(0);
+        CloudNode node = service.getSelectedNodes().get(0);
+        npm.updateNode(node.getId());
+        Thread.sleep(5000);
 
+        ServiceInstance instance = service.getInstances().get(0);
         String url = instance.getNativeUri();
         System.out.println("Instance at " + url);
-        npm.updateNode(instance.getNode().getId());
-        Thread.sleep(5000);
         String wsdl = url.substring(0, url.length() - 1) + "?wsdl";
         System.out.println("Checking " + wsdl);
         client = WebClient.create(wsdl);

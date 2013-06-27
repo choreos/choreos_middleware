@@ -16,12 +16,12 @@ import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.rest.DeploymentManagerServer;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.client.NodesClient;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.client.ServicesClient;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
-import org.ow2.choreos.services.datamodel.Service;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -77,15 +77,14 @@ public class ClientTest {
     @Test
     public void shouldDeployAWarServiceInANode() throws Exception {
 
-        Service service = servicesManager.createService(spec);
+        DeployableService service = servicesManager.createService(spec);
+        CloudNode node = service.getSelectedNodes().get(0);
+        npm.updateNode(node.getId());
+        Thread.sleep(1000);
 
-        // now get the first instance
-        ServiceInstance instance = ((DeployableService) service).getInstances().get(0);
-
+        ServiceInstance instance = service.getInstances().get(0);
         String url = instance.getNativeUri();
         System.out.println("Service at " + url);
-        npm.updateNode(instance.getNode().getId());
-        Thread.sleep(1000);
         client = WebClient.create(url);
         String body = client.get(String.class);
         String excerpt = "hello, world";
