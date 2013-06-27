@@ -54,6 +54,8 @@ public class NewDeploymentPreparingTest {
         String travelUUID = travelSpec.getUuid();
         DeployableService configuredTravelService = findServiceByUUID(travelUUID, configuredServices);
         assertEquals(travelService, configuredTravelService);
+        
+        RESTClientsRetriever.testing = false;
     }
 
     private DeployableService findServiceByUUID(String uuid, List<DeployableService> services) {

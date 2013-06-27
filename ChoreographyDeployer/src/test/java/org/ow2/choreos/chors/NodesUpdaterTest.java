@@ -42,6 +42,8 @@ public class NodesUpdaterTest {
             String nodeId = svc.getSelectedNodes().get(0).getId();
             verify(npmMock).updateNode(nodeId);
         }
+        
+        RESTClientsRetriever.testing = false;
     }
 
 }

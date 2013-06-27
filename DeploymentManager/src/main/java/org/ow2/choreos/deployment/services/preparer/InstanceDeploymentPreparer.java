@@ -21,6 +21,8 @@ public class InstanceDeploymentPreparer {
     
     private String instanceId;
 
+    SshWaiter sshWaiter = new SshWaiter();
+    
     public InstanceDeploymentPreparer(DeployableServiceSpec spec, CloudNode node) {
         this.spec = spec;
         this.node = node;
@@ -81,7 +83,6 @@ public class InstanceDeploymentPreparer {
         }
 
         private SshUtil waitForSshAccess() throws SshNotConnected {
-            SshWaiter sshWaiter = new SshWaiter();
             int timeout = TimeoutsAndTrials.get("CONNECT_SSH_TIMEOUT");
             return sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
         }

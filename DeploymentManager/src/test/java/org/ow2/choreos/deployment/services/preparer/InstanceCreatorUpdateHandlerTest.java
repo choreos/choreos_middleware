@@ -48,7 +48,7 @@ public class InstanceCreatorUpdateHandlerTest {
     
 
     @Test
-    public void test() {
+    public void shouldCreateInstancesOnService() {
         int N = 3;
         List<Thread> trds = new ArrayList<Thread>();
         for (int i=0; i<N; i++) {

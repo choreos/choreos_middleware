@@ -12,14 +12,21 @@ public class NodeUpdaters {
     // the key is the node id
     private static Map<String, NodeUpdater> updaters = new ConcurrentHashMap<String, NodeUpdater>();
 
+    public static NodeUpdater updaterForTest;
+    public static boolean testing = false;
+    
     public static NodeUpdater getUpdaterFor(String nodeId) {
-        synchronized (NodeUpdaters.class) {
-            if (!updaters.containsKey(nodeId)) {
-                NodeUpdater updater = new NodeUpdater();
-                updaters.put(nodeId, updater);
+        if (testing) {
+            return updaterForTest;
+        } else {
+            synchronized (NodeUpdaters.class) {
+                if (!updaters.containsKey(nodeId)) {
+                    NodeUpdater updater = new NodeUpdater();
+                    updaters.put(nodeId, updater);
+                }
             }
+            return updaters.get(nodeId);
         }
-        return updaters.get(nodeId);
     }
 
 }
