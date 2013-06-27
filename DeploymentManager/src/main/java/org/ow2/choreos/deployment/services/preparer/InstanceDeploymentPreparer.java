@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import org.ow2.choreos.breaker.Invoker;
 import org.ow2.choreos.breaker.InvokerException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
+import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.utils.SshNotConnected;
 import org.ow2.choreos.utils.SshUtil;
 import org.ow2.choreos.utils.SshWaiter;
@@ -23,28 +24,34 @@ public class InstanceDeploymentPreparer {
         this.serviceName = deploymentRequest.getService().getSpec().getName();
     }
 
-    public String prepareDeployment() throws PrepareDeploymentFailedException {
+    public void prepareDeployment() throws PrepareDeploymentFailedException {
         int timeout = TimeoutsAndTrials.get("PREPARE_DEPLOYMENT_TIMEOUT");
         int trials = TimeoutsAndTrials.get("PREPARE_DEPLOYMENT_TRIALS");
         String command = getCommand();
-        System.out.println(command);
         PreparerTask task = new PreparerTask(command, node);
         Invoker<String> invoker = new Invoker<String>(task, trials, timeout, TimeUnit.SECONDS);
-        String serviceInstanceId = null;
         try {
-            serviceInstanceId = invoker.invoke();
+            String instanceId = invoker.invoke();
+            InstanceCreatorUpdateHandler handler = getHandler(instanceId);
+            // TODO retrieve updater and add handler
         } catch (InvokerException e) {
             throw new PrepareDeploymentFailedException(serviceName, node);
         }
-        return serviceInstanceId;
     }
-
+    
     private String getCommand() {
         String packageUri = deploymentRequest.getService().getSpec().getPackageUri();
         String cookbookTemplateName = deploymentRequest.getService().getSpec().getPackageType().getExtension();
         return ". chef-solo/prepare_deployment.sh " + packageUri + " " + cookbookTemplateName;
     }
 
+    private InstanceCreatorUpdateHandler getHandler(String instanceId) {
+        DeployableServiceSpec spec = deploymentRequest.getService().getSpec();
+        String serviceId = spec.getUuid();
+        InstanceCreatorUpdateHandler handler = new InstanceCreatorUpdateHandler(serviceId, instanceId, spec, node);
+        return handler;
+    }
+    
     private class PreparerTask implements Callable<String> {
 
         String command;
