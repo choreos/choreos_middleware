@@ -143,8 +143,6 @@ public class ChorResource {
             return Response.status(Status.NOT_FOUND).build();
         }
 
-        System.out.println("At Resource: " + chor);
-
         return Response.ok(chor).location(location).build();
     }
 

@@ -60,8 +60,6 @@ public class SshWaiter {
 
         @Override
         public SshUtil call() throws Exception {
-
-            logger.debug("Waiting for SSH to " + ip);
             SshUtil ssh = new SshUtil(ip, user, keyPath);
             while (!ssh.isAccessible()) {
                 logger.debug("Trying SSH into " + ip + " again in 5 seconds");
@@ -74,7 +72,6 @@ public class SshWaiter {
                 }
             }
             ssh.disconnect();
-            logger.debug("Connected to " + ip);
             return ssh;
         }
     }

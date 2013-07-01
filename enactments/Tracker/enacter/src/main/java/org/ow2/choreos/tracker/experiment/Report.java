@@ -36,6 +36,7 @@ public class Report {
     double checkTotalTime;
 
     int chorsWorking;
+    int servicesWorking;
 
     double totalTime;
 
@@ -67,6 +68,10 @@ public class Report {
 
     public void setCheckTotalTime(long checkTotalTime) {
 	this.checkTotalTime = checkTotalTime / CONVERSOR;
+    }
+    
+    public void setServicesWorking(int servicesWorking) {
+        this.servicesWorking = servicesWorking;
     }
 
     public synchronized void addChorEnactmentTime(long chorEnactmentTime) {
@@ -121,16 +126,21 @@ public class Report {
     @Override
     public String toString() {
 	this.calculate();
-	return "########Report:########## " + "\n // tuples are (mean, std dev)" + "\n // times in seconds" + "\n "
-		+ header + "\n VM_LIMIT = " + vmLimit + "\n How many choreographies to enact = " + chorsQty
+	return "########Report:########## " 
+	        + "\n // tuples are (mean, std dev)" + "\n // times in seconds" + "\n "
+		+ header 
+		+ "\n VM_LIMIT = " + vmLimit 
+		+ "\n How many choreographies to enact = " + chorsQty
 		+ "\n How many choreographies enacted = " + chorsEnactmentTimes.size()
 		+ "\n Time to enact choreographies = " + chorsEnactmentTimes
-		+ "\n Mean time to enact a choreography = (" + chorsEnactmentMeanTime + ", " + chorsEnactmentStdDev
-		+ ")" + "\n Total time to enact choreographies = " + chorsEnactmentTotalTime
-		+ "\n Time to check choreographies = " + checkTimes + "\n Mean time to check a choreography = ("
-		+ checkMeanTime + ", " + checkStdDev + ")" + "\n Total time to check choreographies = "
-		+ checkTotalTime + "\n How many choreographies working = " + chorsWorking + "\n Total time = "
-		+ totalTime + "\n";
+		+ "\n Mean time to enact a choreography = (" + chorsEnactmentMeanTime + ", " + chorsEnactmentStdDev + ")" 
+		+ "\n Total time to enact choreographies = " + chorsEnactmentTotalTime
+		+ "\n Time to check choreographies = " + checkTimes 
+		+ "\n Mean time to check a choreography = (" + checkMeanTime + ", " + checkStdDev + ")" 
+		+ "\n Total time to check choreographies = " + checkTotalTime 
+		+ "\n How many choreographies working = " + chorsWorking + " / " + (chorsQty) 
+		+ "\n How many services working = " + servicesWorking + " / " + (chorsQty*chorsSize) 
+		+ "\n Total time = " + totalTime + "\n";
     }
 
 }

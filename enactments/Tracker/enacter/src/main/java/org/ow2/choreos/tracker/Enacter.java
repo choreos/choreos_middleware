@@ -16,8 +16,8 @@ public class Enacter {
     private static final String CHOR_DEPLOYER = "http://localhost:9102/choreographydeployer/";
 
     private int enacterId;
-    private transient int chorSize;
-    private transient Choreography choreography;
+    private int chorSize;
+    private Choreography choreography;
 
     private Logger logger = Logger.getLogger(Enacter.class);
 
@@ -45,17 +45,20 @@ public class Enacter {
     public int getId() {
 	return this.enacterId;
     }
+    
+    public Choreography getChoreography() {
+        return choreography;
+    }
 
     public void enact(final String warFile, final int chorSize) throws EnactmentException,
 	    ChoreographyNotFoundException, MalformedURLException {
 	ChorSpecCreator.setWarFile(warFile);
 	this.chorSize = chorSize;
-
-	this.choreography = getChoreography();
+	this.choreography = createChoreography();
 	setLastServiceId();
     }
 
-    private Choreography getChoreography() throws EnactmentException, ChoreographyNotFoundException {
+    private Choreography createChoreography() throws EnactmentException, ChoreographyNotFoundException {
 	final ChorSpecCreator chorSpecCreator = new ChorSpecCreator();
 	final ChoreographySpec chorSpec = chorSpecCreator.create(chorSize);
 	return deployChoreography(chorSpec);
