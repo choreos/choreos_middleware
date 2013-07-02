@@ -17,7 +17,7 @@ public class OpenStackKeystoneCloudProvider extends JCloudsCloudProvider {
 
     private static final String USER_NAME = "ubuntu";
     private static final String USER_PRIVATE_KEY = DeploymentManagerConfiguration.get("OPENSTACK_PRIVATE_SSH_KEY");
-    private static final String DEFAULT_FLAVOR_NAME = "m1.medium";
+    private static final String DEFAULT_FLAVOR_NAME = "m1.tiny";
     private static final String DEFAULT_IMAGE = "RegionOne/210e028d-9b88-4e54-af6b-25fc5ca00e69"; // Ubuntu
     // 12.04
 
