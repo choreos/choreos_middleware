@@ -27,7 +27,7 @@ import org.ow2.choreos.utils.TimeoutsAndTrials;
  */
 public class NodeUpdater {
 
-    public static final String CHEF_SOLO_COMMAND = "sudo chef-solo -c $HOME/chef-solo/solo.rb";
+    public static final String CHEF_SOLO_COMMAND = "sudo chef-solo -c $HOME/chef-solo/solo.rb >> /tmp/chef-solo-update";
 
     // this executor is shared among multiple updates to the same node
     private final ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
@@ -107,7 +107,7 @@ public class NodeUpdater {
             SshUtil ssh = getSsh();
             ssh.runCommand(CHEF_SOLO_COMMAND);
             // if ssh did not throw an exception, then:
-            processHandlers();            
+            processHandlers();
             return null;
         }
 
@@ -115,11 +115,11 @@ public class NodeUpdater {
             int timeout = TimeoutsAndTrials.get("CONNECT_SSH_TIMEOUT");
             return sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
         }
-        
+
         private void processHandlers() {
             for (UpdateHandler h : handlers.getHandlersForProcessing())
                 h.handle();
-        }        
+        }
     }
 
 }

@@ -36,6 +36,6 @@ function prepare() {
     echo "Instance $instance_uuid is prepared"
 }
 
-prepare $1 $2 >> /tmp/chef-solo.log  2>&1 
+prepare $1 $2 >> /tmp/chef-solo-prepare.log  2>&1 
 echo $instance_uuid | tr -d '\n'
 
