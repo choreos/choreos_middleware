@@ -31,7 +31,7 @@ class RunnableVerifier implements Runnable {
             long tf = System.nanoTime();
             report.addCheckTime(tf - t0);
             if (ok) {
-                int all = Experiment.CHORS_QTY * Experiment.CHORS_SIZE;
+                int all = Experiment.CHORS_SIZE;
                 logger.info("All " + all + " services working on enacter " + enacter.getId());
                 servicesWorking = all;
             } else {
