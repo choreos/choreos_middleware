@@ -185,7 +185,7 @@ public class UpdateDeploymentPreparing {
             DeployableService chorService = chor.getDeployableServiceBySpecName(serviceSpec.getKey());
 
             DeployableServiceSpec tmp = serviceSpec.getValue();
-            tmp.setUuid(chorService.getSpec().getUuid());
+//            tmp.setUuid(chorService.getUUID());  !!!
             chorService.setSpec(tmp);
 
             ServiceUpdateInvoker invoker = new ServiceUpdateInvoker(chorService);
@@ -227,7 +227,7 @@ public class UpdateDeploymentPreparing {
             ServicesManager servicesManager = RESTClientsRetriever.getServicesClient(owner);
 
             try {
-                return servicesManager.updateService(service.getSpec());
+                return servicesManager.updateService(service.getUUID(), service.getSpec());
             } catch (ServiceNotModifiedException e) {
                 logger.error(e.getMessage());
                 throw e;

@@ -21,7 +21,6 @@ public class InstanceCreatorUpdateHandlerTest {
 
     private DeployableService service; 
     private CloudNode node;
-    private String serviceId; 
     private DeployableServiceSpec spec;
     
     @Before
@@ -41,9 +40,9 @@ public class InstanceCreatorUpdateHandlerTest {
         ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
         spec = models.getAirlineSpec();
         service = new DeployableService();
+        service.generateUUID();
         service.setSpec(spec);
-        serviceId = spec.getUuid();
-        DeployedServicesRegistry.getInstance().addService(serviceId, service);
+        DeployedServicesRegistry.getInstance().addService(service.getUUID(), service);
     }
     
 
@@ -53,7 +52,7 @@ public class InstanceCreatorUpdateHandlerTest {
         List<Thread> trds = new ArrayList<Thread>();
         for (int i=0; i<N; i++) {
             String instanceId = Integer.toString(i);
-            InstanceCreatorUpdateHandler handler = new InstanceCreatorUpdateHandler(serviceId, instanceId, spec, node);
+            InstanceCreatorUpdateHandler handler = new InstanceCreatorUpdateHandler(service.getUUID(), instanceId, spec, node);
             HandlerTask task = new HandlerTask(handler);
             Thread t = new Thread(task);
             trds.add(t);

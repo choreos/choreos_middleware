@@ -65,7 +65,7 @@ public class DeployableService extends Service {
             serviceInstances = new ArrayList<ServiceInstance>();
         serviceInstances.add(instance);
     }
-    
+
     public List<CloudNode> getSelectedNodes() {
         return selectedNodes;
     }
@@ -73,13 +73,13 @@ public class DeployableService extends Service {
     public void setSelectedNodes(List<CloudNode> selectedNodes) {
         this.selectedNodes = selectedNodes;
     }
-    
+
     public synchronized void addSelectedNode(CloudNode node) {
         if (selectedNodes == null)
             selectedNodes = new ArrayList<CloudNode>();
         selectedNodes.add(node);
     }
-    
+
     public boolean hasInstances() {
         return serviceInstances != null && serviceInstances.size() > 0;
     }
@@ -149,7 +149,8 @@ public class DeployableService extends Service {
         for (String uri : getUris()) {
             uris.append(uri + "; ");
         }
-        return "DeployableService [recipeBundle=" + recipeBundle + ", serviceInstances=" + uris + "]";
+        return "DeployableService [UUID=" + super.uuid + ", specName=" + super.spec.getName() + ", serviceInstances="
+                + uris + "]";
     }
 
 }

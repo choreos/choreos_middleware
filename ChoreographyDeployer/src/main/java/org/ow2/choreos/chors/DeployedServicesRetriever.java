@@ -8,38 +8,37 @@ import org.ow2.choreos.chors.rest.RESTClientsRetriever;
 import org.ow2.choreos.services.ServiceNotFoundException;
 import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.datamodel.DeployableService;
-import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
 public class DeployedServicesRetriever {
     
-    private List<DeployableServiceSpec> specs;
+    private List<DeployableService> services;
     
     private Logger logger = Logger.getLogger(DeployedServicesRetriever.class);
     
-    public DeployedServicesRetriever(List<DeployableServiceSpec> specs) {
-        this.specs = specs;
+    public DeployedServicesRetriever(List<DeployableService> services) {
+        this.services = services;
     }
 
     public List<DeployableService> retrieveDeployedServicesFromDeploymentManager() {
-        List<DeployableService> deployedServices = new ArrayList<DeployableService>();
-        for (DeployableServiceSpec spec: specs) {
-            DeployableService service;
+        List<DeployableService> retrievedServices = new ArrayList<DeployableService>();
+        for (DeployableService svc: services) {
+            DeployableService retrievedService;
             try {
-                service = retrieveService(spec);
-                if (service.hasInstances())
-                    deployedServices.add(service);
+                retrievedService = retrieveService(svc);
+                if (retrievedService.hasInstances())
+                    retrievedServices.add(retrievedService);
                 else
-                    logger.warn("Service " + spec.getUuid() + " has no instances");
+                    logger.warn("Service " + retrievedService.getUUID() + " has no instances");
             } catch (ServiceNotFoundException e) {
-                logger.error("Service " + spec.getUuid() + " not found");
+                logger.error("Service " + svc.getUUID() + " not found");
             }
         }
-        return deployedServices;
+        return retrievedServices;
     }
     
-    private DeployableService retrieveService (DeployableServiceSpec spec) throws ServiceNotFoundException {
-        ServicesManager servicesManager = RESTClientsRetriever.getServicesClient(spec.getOwner());  
-        return servicesManager.getService(spec.getUuid());
+    private DeployableService retrieveService (DeployableService service) throws ServiceNotFoundException {
+        ServicesManager servicesManager = RESTClientsRetriever.getServicesClient(service.getSpec().getOwner());  
+        return servicesManager.getService(service.getUUID());
     }
     
 }

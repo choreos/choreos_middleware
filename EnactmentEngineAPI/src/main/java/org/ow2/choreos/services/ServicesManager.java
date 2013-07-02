@@ -39,6 +39,7 @@ public interface ServicesManager {
 
     /**
      * 
+     * @param serviceUUID
      * @param service
      *            specification
      * @return information about how the service was deployed.
@@ -46,6 +47,7 @@ public interface ServicesManager {
      * @throws ServiceNotCreatedException
      *             if deploy was not possible.
      */
-    public DeployableService updateService(DeployableServiceSpec newServiceSpec) throws ServiceNotModifiedException,
-            UnhandledModificationException;
+    public DeployableService updateService(String serviceUUID, DeployableServiceSpec newServiceSpec)
+            throws ServiceNotModifiedException, UnhandledModificationException;
+    
 }

@@ -101,7 +101,7 @@ public class NewDeploymentPreparing {
                 DeployableService deployedService = servicesManager.createService(spec);
                 return deployedService;
             } catch (ServiceNotCreatedException e) {
-                logger.error("Service " + spec.getUuid() + " not created!");
+                logger.error("Service " + spec.getName() + " not created!");
                 throw e;
             }
         }

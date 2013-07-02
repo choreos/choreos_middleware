@@ -6,7 +6,6 @@ package org.ow2.choreos.services.datamodel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.xml.bind.annotation.XmlSeeAlso;
 
@@ -16,14 +15,9 @@ import org.ow2.choreos.chors.datamodel.LegacyServiceSpec;
 public abstract class ServiceSpec {
 
     protected String name;
-    protected String uuid;
     protected ServiceType serviceType;
     protected List<String> roles;
     protected List<ServiceDependency> dependencies;
-
-    public ServiceSpec() {
-        this.uuid = UUID.randomUUID().toString();
-    }
 
     public String getName() {
         return name;
@@ -31,14 +25,6 @@ public abstract class ServiceSpec {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 
     public ServiceType getServiceType() {
@@ -76,7 +62,8 @@ public abstract class ServiceSpec {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
+        result = prime * result + ((roles == null) ? 0 : roles.hashCode());
+        result = prime * result + ((serviceType == null) ? 0 : serviceType.hashCode());
         return result;
     }
 
@@ -94,17 +81,20 @@ public abstract class ServiceSpec {
                 return false;
         } else if (!name.equals(other.name))
             return false;
-        if (uuid == null) {
-            if (other.uuid != null)
+        if (roles == null) {
+            if (other.roles != null)
                 return false;
-        } else if (!uuid.equals(other.uuid))
+        } else if (!roles.equals(other.roles))
+            return false;
+        if (serviceType != other.serviceType)
             return false;
         return true;
     }
 
     @Override
     public String toString() {
-        return "ServiceSpec [name=" + name + ", uuid=" + uuid + "]";
+        return "ServiceSpec [name=" + name + ", serviceType=" + serviceType + ", roles=" + roles + ", dependencies="
+                + dependencies + "]";
     }
 
 }

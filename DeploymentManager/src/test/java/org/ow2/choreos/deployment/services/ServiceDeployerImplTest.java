@@ -5,6 +5,7 @@
 package org.ow2.choreos.deployment.services;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +42,9 @@ public class ServiceDeployerImplTest {
     @Test
     public void shouldReturnAValidService() throws PrepareDeploymentFailedException, ServiceNotCreatedException {
         DeployableService service = servicesManager.createService(serviceSpec);
-        assertEquals(serviceSpec.getUuid(), service.getSpec().getUuid());
+        assertEquals(serviceSpec.getName(), service.getSpec().getName());
+        String uuid = service.getUUID();
+        assertTrue(uuid != null && !uuid.isEmpty());
     }
 
 }

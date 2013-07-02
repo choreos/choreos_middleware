@@ -48,10 +48,10 @@ public class NewDeploymentPreparingTest {
         List<DeployableService> configuredServices = preparer.prepare();
 
         assertEquals(2, configuredServices.size());
-        String airlineUUID = airlineSpec.getUuid();
+        String airlineUUID = airlineService.getUUID();
         DeployableService configuredAirlineService = findServiceByUUID(airlineUUID, configuredServices);
         assertEquals(airlineService, configuredAirlineService);
-        String travelUUID = travelSpec.getUuid();
+        String travelUUID = travelService.getUUID();
         DeployableService configuredTravelService = findServiceByUUID(travelUUID, configuredServices);
         assertEquals(travelService, configuredTravelService);
         
@@ -60,7 +60,7 @@ public class NewDeploymentPreparingTest {
 
     private DeployableService findServiceByUUID(String uuid, List<DeployableService> services) {
         for (DeployableService svc : services) {
-            if (uuid.equals(svc.getSpec().getUuid())) {
+            if (uuid.equals(svc.getUUID())) {
                 return svc;
             }
         }

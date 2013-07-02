@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.services.datamodel.DeployableService;
-import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
 public class ServicesDeployer {
 
@@ -48,8 +47,7 @@ public class ServicesDeployer {
     }    
     
     private void retrieveServices() {
-        List<DeployableServiceSpec> specs = chor.getChoreographySpec().getDeployableServiceSpecs();
-        DeployedServicesRetriever retriever = new DeployedServicesRetriever(specs);
+        DeployedServicesRetriever retriever = new DeployedServicesRetriever(configuredServices);
         deployedServices = retriever.retrieveDeployedServicesFromDeploymentManager();
     }
     

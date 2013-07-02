@@ -56,7 +56,8 @@ public class ServicesResourceTest {
     private DeployableService getService() {
 
         DeployableService airline = new DeployableService(serviceSpec);
-        expectedServiceUUID = airline.getSpec().getUuid();
+        airline.generateUUID();
+        expectedServiceUUID = airline.getUUID();
         ServiceInstance instance = new ServiceInstance();
         instance.setInstanceId("1");
         instance.setNativeUri("http://hostname:1234/airline");
@@ -81,7 +82,7 @@ public class ServicesResourceTest {
 
         assertEquals(201, response.getStatus());
         Service entity = (Service) response.getEntity();
-        assertEquals(expectedServiceUUID, entity.getSpec().getUuid());
+        assertEquals(expectedServiceUUID, entity.getUUID());
         assertEquals(serviceSpec, entity.getSpec());
         assertEquals(1, ((DeployableService) entity).getInstances().size());
         assertEquals(getService().getInstanceById("1"), ((DeployableService) entity).getInstanceById("1"));

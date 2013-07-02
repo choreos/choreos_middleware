@@ -35,37 +35,39 @@ public class ServicesManagerImpl implements ServicesManager {
         DeployableService service = null;
         try {
             service = new DeployableService(serviceSpec);
+            service.generateUUID();
         } catch (IllegalArgumentException e1) {
             ServiceNotCreatedException e = new ServiceNotCreatedException(serviceSpec.getName());
             logger.error(e.getMessage());
             throw e;
         }
 
-        List<CloudNode> selectedNodes = prepareDeployment(serviceSpec, service.getSpec().getNumberOfInstances());
+        List<CloudNode> selectedNodes = prepareDeployment(serviceSpec, service.getUUID());
         service.setSelectedNodes(selectedNodes);
 
-        registry.addService(serviceSpec.getUuid(), service);
+        registry.addService(service.getUUID(), service);
+        logger.info("Created service " + service);
         return service;
 
     }
 
-    private List<CloudNode> prepareDeployment(DeployableServiceSpec spec, int numberOfInstances)
+    private List<CloudNode> prepareDeployment(DeployableServiceSpec spec, String serviceUUID)
             throws ServiceNotCreatedException {
-        ServiceDeploymentPreparer deploymentPreparer = new ServiceDeploymentPreparer(spec);
+        ServiceDeploymentPreparer deploymentPreparer = new ServiceDeploymentPreparer(spec, serviceUUID);
         try {
             return deploymentPreparer.prepareDeployment();
         } catch (PrepareDeploymentFailedException e1) {
-            ServiceNotCreatedException e = new ServiceNotCreatedException(spec.getUuid());
+            ServiceNotCreatedException e = new ServiceNotCreatedException(spec.getName());
             logger.error(e.getMessage());
             throw e;
         }
     }
 
     @Override
-    public DeployableService getService(String serviceId) throws ServiceNotFoundException {
-        DeployableService s = registry.getService(serviceId);
+    public DeployableService getService(String uuid) throws ServiceNotFoundException {
+        DeployableService s = registry.getService(uuid);
         if (s == null)
-            throw new ServiceNotFoundException(serviceId, "Error while getting service from service map.");
+            throw new ServiceNotFoundException(uuid);
         return s;
     }
 
@@ -97,16 +99,16 @@ public class ServicesManagerImpl implements ServicesManager {
     }
 
     @Override
-    public DeployableService updateService(DeployableServiceSpec serviceSpec) throws UnhandledModificationException {
+    public DeployableService updateService(String serviceUUID, DeployableServiceSpec serviceSpec) throws UnhandledModificationException {
 
-        logger.info("Requested to update service " + serviceSpec.getUuid() + " with spec " + serviceSpec);
+        logger.info("Requested to update service " + serviceUUID + " with spec " + serviceSpec);
         DeployableService current;
         try {
-            logger.info("Trying to get service with id " + serviceSpec.getUuid() + " from \n" + registry.getServices());
-            current = getService(serviceSpec.getUuid());
+            logger.info("Trying to get service with id " + serviceUUID + " from \n" + registry.getServices());
+            current = this.getService(serviceUUID);
             logger.info("getService got " + current);
         } catch (ServiceNotFoundException e) {
-            logger.info("ServiceNotFoundException happened when trying to get service with id " + serviceSpec.getUuid());
+            logger.info("ServiceNotFoundException happened when trying to get service with id " + serviceUUID);
             logger.info("Exception message " + e.getMessage());
             throw new UnhandledModificationException();
         }
@@ -147,9 +149,9 @@ public class ServicesManagerImpl implements ServicesManager {
         }
         logger.info("Setting the new service spec for service " + currentService);
 
-        String uuid = currentService.getSpec().getUuid();
+        String uuid = currentService.getUUID();
         currentService.setSpec(requestedSpec);
-        registry.addService(currentService.getSpec().getUuid(), currentService);
+        registry.addService(currentService.getUUID(), currentService);
         registry.deleteService(uuid);
     }
 
@@ -210,7 +212,7 @@ public class ServicesManagerImpl implements ServicesManager {
 
     private void migrateServiceInstances(DeployableService currentService) throws UnhandledModificationException {
         try {
-            prepareDeployment(currentService.getSpec(), currentService.getSpec().getNumberOfInstances());
+            prepareDeployment(currentService.getSpec(), currentService.getUUID());
         } catch (ServiceNotCreatedException e) {
             throw new UnhandledModificationException();
         }
@@ -224,7 +226,7 @@ public class ServicesManagerImpl implements ServicesManager {
             }
         } else if (amount < currentService.getServiceInstances().size()) {
             try {
-                this.deleteService(currentService.getSpec().getUuid());
+                this.deleteService(currentService.getUUID());
             } catch (ServiceNotDeletedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -233,9 +235,11 @@ public class ServicesManagerImpl implements ServicesManager {
     }
 
     private void addServiceInstances(DeployableService current, int amount) {
-        logger.info("Requesting to execute creation of " + amount + " replicas for" + current);
+        logger.info("Requesting to execute creation of " + amount + " replicas for service " + current.getUUID());
         try {
-            prepareDeployment(current.getSpec(), amount);
+            DeployableServiceSpec newSpec = current.getSpec();
+            newSpec.setNumberOfInstances(amount);
+            prepareDeployment(newSpec, current.getUUID());
         } catch (ServiceNotCreatedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

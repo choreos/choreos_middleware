@@ -63,7 +63,7 @@ public class ServicesClient implements ServicesManager {
         try {
             service = client.post(serviceSpec, DeployableService.class);
         } catch (WebApplicationException e) {
-            throw new ServiceNotCreatedException(serviceSpec.getUuid());
+            throw new ServiceNotCreatedException(serviceSpec.getName());
         }
         return service;
     }
@@ -93,14 +93,14 @@ public class ServicesClient implements ServicesManager {
     }
 
     @Override
-    public DeployableService updateService(DeployableServiceSpec serviceSpec) throws ServiceNotModifiedException {
+    public DeployableService updateService(String serviceUUID, DeployableServiceSpec serviceSpec) throws ServiceNotModifiedException {
         WebClient client = setupClient();
-        client.path("services").path(serviceSpec.getUuid());
+        client.path("services").path(serviceUUID);
         DeployableService service = null;
         try {
             service = client.post(serviceSpec, DeployableService.class);
         } catch (WebApplicationException e) {
-            throw new ServiceNotModifiedException(serviceSpec.getUuid(), e.getMessage());
+            throw new ServiceNotModifiedException(serviceUUID);
         }
         return service;
     }

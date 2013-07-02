@@ -16,6 +16,7 @@ import org.ow2.choreos.utils.TimeoutsAndTrials;
 
 public class InstanceDeploymentPreparer {
 
+    private String serviceUUID;
     private DeployableServiceSpec spec;
     private CloudNode node;
     
@@ -23,8 +24,9 @@ public class InstanceDeploymentPreparer {
 
     SshWaiter sshWaiter = new SshWaiter();
     
-    public InstanceDeploymentPreparer(DeployableServiceSpec spec, CloudNode node) {
+    public InstanceDeploymentPreparer(DeployableServiceSpec spec, String serviceUUID, CloudNode node) {
         this.spec = spec;
+        this.serviceUUID = serviceUUID;
         this.node = node;
     }
 
@@ -59,8 +61,7 @@ public class InstanceDeploymentPreparer {
     }
 
     private InstanceCreatorUpdateHandler getHandler(String instanceId) {
-        String serviceId = spec.getUuid();
-        InstanceCreatorUpdateHandler handler = new InstanceCreatorUpdateHandler(serviceId, instanceId, spec, node);
+        InstanceCreatorUpdateHandler handler = new InstanceCreatorUpdateHandler(serviceUUID, instanceId, spec, node);
         return handler;
     }
     

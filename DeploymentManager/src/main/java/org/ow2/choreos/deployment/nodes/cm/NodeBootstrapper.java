@@ -47,8 +47,9 @@ public class NodeBootstrapper {
         logger.info("Bootstrapping " + this.node.getIp());
         executeBootstrapCommand();
         saveFile(INITIAL_NODE_JSON, CHEF_SOLO_FOLDER);
+        saveFile(INITIAL_NODE_JSON, CHEF_SOLO_FOLDER + "/node.json.backup");
         saveFile(PREPARE_DEPLOYMENT_SCRIPT, CHEF_SOLO_FOLDER);
-        logger.info("Bootstrap completed at" + this.node);
+        logger.info("Bootstrap completed at " + this.node);
     }
 
     private void executeBootstrapCommand() throws NodeNotBootstrappedException {

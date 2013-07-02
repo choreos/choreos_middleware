@@ -23,6 +23,7 @@ import org.ow2.choreos.utils.SshWaiter;
 
 public class InstanceDeploymentPreparerTest {
 
+    private static final String SERVICE_UUID = "1";
     private static final String RANDON_INSTANCE_ID = "2";
     private static final String COMMAND_EXCERPT = "prepare_deployment";
     
@@ -68,7 +69,7 @@ public class InstanceDeploymentPreparerTest {
     @Test
     public void shouldRunDeploymentPrepareOnNodeAndAddHandler() throws Exception {
         DeployableServiceSpec spec = models.getAirlineSpec();
-        InstanceDeploymentPreparer instanceDeploymentPreparer = new InstanceDeploymentPreparer(spec, node);
+        InstanceDeploymentPreparer instanceDeploymentPreparer = new InstanceDeploymentPreparer(spec, SERVICE_UUID, node);
         instanceDeploymentPreparer.sshWaiter = waiter;
         instanceDeploymentPreparer.prepareDeployment();
         verify(ssh).runCommand(Mockito.contains(COMMAND_EXCERPT));

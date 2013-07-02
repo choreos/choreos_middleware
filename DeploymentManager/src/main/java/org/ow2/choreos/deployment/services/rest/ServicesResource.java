@@ -81,10 +81,8 @@ public class ServicesResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
 
-        logger.info(service.getSpec().getUuid() + " configured to be deployed on " + service.getSelectedNodes());
-
         UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-        uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getSpec().getUuid());
+        uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getUUID());
         URI location = uriBuilder.build();
 
         return Response.created(location).entity(service).build();
@@ -230,7 +228,7 @@ public class ServicesResource {
 
         DeployableService service;
         try {
-            service = servicesManager.updateService(serviceSpec);
+            service = servicesManager.updateService(uuid, serviceSpec);
         } catch (ServiceNotModifiedException e) {
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         } catch (UnhandledModificationException e) {
@@ -240,7 +238,7 @@ public class ServicesResource {
         logger.info(uuid + " updated. Running on " + service.getUris());
 
         UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-        uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getSpec().getUuid());
+        uriBuilder = uriBuilder.path(ServicesResource.class).path(service.getUUID());
 
         Response build = Response.ok(service).build();
         return build;

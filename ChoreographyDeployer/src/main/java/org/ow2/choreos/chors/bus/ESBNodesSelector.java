@@ -47,7 +47,7 @@ public class ESBNodesSelector {
                 selectedESBNodes.put(serviceInstance, esbNode);
             } catch (NotSelectedException e) {
                 logger.error("Could not select ESB node to an instance of "
-                        + serviceInstance.getServiceSpec().getUuid());
+                        + serviceInstance.getServiceSpec().getName());
             }
         }
         return selectedESBNodes;

@@ -142,6 +142,7 @@ public class ModelsForTest {
     public void initTravelService() {
         CloudNode node = createNode("2", TRAVEL_AGENCY_IP, "choreos-node");
         travelService = new DeployableService(this.travelSpec);
+        travelService.generateUUID();
         travelService.setSelectedNodes(Collections.singletonList(node));
         ServiceInstance instance = new ServiceInstance(node);
         instance.setInstanceId(TRAVEL_AGENCY + "1");
@@ -151,6 +152,7 @@ public class ModelsForTest {
 
     public void initAirlineService() {
         airlineService = new DeployableService(this.airlineSpec);
+        airlineService.generateUUID();
         CloudNode node = createNode("1", AIRLINE_IP, "choreos-node"); // TODO
         // instances
         // should be in

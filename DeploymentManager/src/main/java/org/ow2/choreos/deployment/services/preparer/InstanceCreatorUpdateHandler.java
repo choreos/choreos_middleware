@@ -9,7 +9,7 @@ import org.ow2.choreos.services.datamodel.ServiceInstance;
 
 public class InstanceCreatorUpdateHandler implements UpdateHandler {
 
-    private final String serviceId;
+    private final String serviceUUID;
     private final String instanceId;
     private final DeployableServiceSpec spec;
     private final CloudNode node;
@@ -17,7 +17,7 @@ public class InstanceCreatorUpdateHandler implements UpdateHandler {
     private ServiceInstance instance;
     
     public InstanceCreatorUpdateHandler(String serviceId, String instanceId, DeployableServiceSpec spec, CloudNode node) {
-        this.serviceId = serviceId;
+        this.serviceUUID = serviceId;
         this.instanceId = instanceId;
         this.spec = spec;
         this.node = node;
@@ -38,7 +38,7 @@ public class InstanceCreatorUpdateHandler implements UpdateHandler {
 
     private void setInstanceToService() {
         DeployedServicesRegistry reg = DeployedServicesRegistry.getInstance();
-        DeployableService service = reg.getService(serviceId);
+        DeployableService service = reg.getService(serviceUUID);
         service.addInstance(instance);
     }
     
