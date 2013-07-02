@@ -18,7 +18,10 @@ public class DeployedServicesRegistry {
 
     public static DeployedServicesRegistry getInstance() {
         if (INSTANCE == null)
-            INSTANCE = new DeployedServicesRegistry();
+            synchronized (DeployedServicesRegistry.class) {
+                if (INSTANCE == null)
+                    INSTANCE = new DeployedServicesRegistry();
+            }
         return INSTANCE;
     }
     
@@ -41,6 +44,16 @@ public class DeployedServicesRegistry {
     public void deleteService(String uuid) {
         if (deployedServices.remove(uuid) == null)
             throw new IllegalArgumentException("Service " + uuid + " not registered");
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder("len(reg)="+deployedServices.size()+"\n");
+        str.append("Registred services:\n");
+        for (DeployableService svc: deployedServices.values()) {
+            str.append(svc.toString()+"\n");
+        }
+        return str.toString();
     }
 
 }
