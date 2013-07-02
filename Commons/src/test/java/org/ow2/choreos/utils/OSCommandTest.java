@@ -6,15 +6,19 @@ package org.ow2.choreos.utils;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.Calendar;
+
 import org.junit.Test;
 
 public class OSCommandTest {
 
     @Test
     public void testRunLocalCommand() throws CommandLineException {
-        OSCommand com = new OSCommand("pwd");
+        OSCommand com = new OSCommand("date");
         String result = com.execute();
-        assertTrue(result.length() > 0);
+        Calendar cal = Calendar.getInstance();
+        int today = cal.get(Calendar.DAY_OF_MONTH);
+        assertTrue(result.contains(Integer.toString(today)));
     }
 
     @Test(expected = CommandLineException.class)
