@@ -19,11 +19,7 @@ function edit_recipe() {
 
 function edit_json() {
     cd $HOME/chef-solo
-    echo 'previous node.json:'
-    cat node.json
-    sed -i -r 's/.*\"run_list\" : \[/\t\"run_list\" : \[\n\t\t\"recipe\['"$3"']\",/' node.json
-    echo 'node.json edited:'
-    cat node.json
+    . add_recipe_to_node.sh $3
 }
 
 function prepare() {
