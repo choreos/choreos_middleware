@@ -4,6 +4,7 @@
 
 package org.ow2.choreos.services.datamodel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,9 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import org.ow2.choreos.chors.datamodel.LegacyServiceSpec;
 
 @XmlSeeAlso({ DeployableServiceSpec.class, LegacyServiceSpec.class })
-public abstract class ServiceSpec {
+public abstract class ServiceSpec implements Serializable {
+
+    private static final long serialVersionUID = -1319357334438972249L;
 
     protected String name;
     protected ServiceType serviceType;
@@ -61,6 +64,7 @@ public abstract class ServiceSpec {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + ((dependencies == null) ? 0 : dependencies.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         result = prime * result + ((roles == null) ? 0 : roles.hashCode());
         result = prime * result + ((serviceType == null) ? 0 : serviceType.hashCode());
@@ -76,6 +80,11 @@ public abstract class ServiceSpec {
         if (getClass() != obj.getClass())
             return false;
         ServiceSpec other = (ServiceSpec) obj;
+        if (dependencies == null) {
+            if (other.dependencies != null)
+                return false;
+        } else if (!dependencies.equals(other.dependencies))
+            return false;
         if (name == null) {
             if (other.name != null)
                 return false;

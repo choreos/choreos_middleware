@@ -44,10 +44,9 @@ public interface ServicesManager {
      *            specification
      * @return information about how the service was deployed.
      * @throws UnhandledModificationException
-     * @throws ServiceNotCreatedException
-     *             if deploy was not possible.
+     * @throws ServiceNotFoundException 
      */
     public DeployableService updateService(String serviceUUID, DeployableServiceSpec newServiceSpec)
-            throws ServiceNotModifiedException, UnhandledModificationException;
+            throws ServiceNotModifiedException, UnhandledModificationException, ServiceNotFoundException;
     
 }

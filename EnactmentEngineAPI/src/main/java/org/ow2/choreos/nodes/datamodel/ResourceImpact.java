@@ -4,13 +4,17 @@
 
 package org.ow2.choreos.nodes.datamodel;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
-public class ResourceImpact {
+public class ResourceImpact implements Serializable {
+
+    private static final long serialVersionUID = 3562796485617767731L;
 
     private MemoryType memory;
     private String cpu;
