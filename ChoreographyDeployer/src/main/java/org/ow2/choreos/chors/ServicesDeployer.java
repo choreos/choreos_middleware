@@ -5,9 +5,11 @@
 package org.ow2.choreos.chors;
 
 import java.util.List;
+import java.util.Map;
 
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
 public class ServicesDeployer {
 
@@ -28,19 +30,16 @@ public class ServicesDeployer {
     }
 
     private void prepare() throws EnactmentException {
-        if (isFirstDeployment(chor)) {
-            NewDeploymentPreparing preparer = new NewDeploymentPreparing(chor);
-            configuredServices = preparer.prepare();
-        } else {
-            UpdateDeploymentPreparing preparer = new UpdateDeploymentPreparing(chor);
-            configuredServices = preparer.prepare();
-        }
+        ChorDiffer differ = new ChorDiffer(chor);
+        List<DeployableServiceSpec> toCreate = differ.getNewServiceSpecs();
+        Map<DeployableService, DeployableServiceSpec> toUpdate = differ.getServicesToUpdate();
+        NewDeploymentPreparing newPreparer = new NewDeploymentPreparing(chor.getId(), toCreate);
+        configuredServices = newPreparer.prepare();
+        UpdateDeploymentPreparing preparer = new UpdateDeploymentPreparing(chor.getId(), toUpdate);
+        List<DeployableService> updatedServices = preparer.prepare();
+        configuredServices.addAll(updatedServices);
     }
 
-    private boolean isFirstDeployment(Choreography chor) {
-        return (chor.getServices() == null) || (chor.getServices().isEmpty());
-    }
-    
     private void updateNodes() throws EnactmentException {
         NodesUpdater nodesUpdater = new NodesUpdater(configuredServices, chor.getId());
         nodesUpdater.updateNodes();

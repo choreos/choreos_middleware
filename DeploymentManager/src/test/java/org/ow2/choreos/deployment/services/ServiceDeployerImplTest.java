@@ -57,7 +57,7 @@ public class ServiceDeployerImplTest {
         servicesManager = new ServicesManagerImpl();
         
         ServiceDeploymentPreparer preparerMock = mock(ServiceDeploymentPreparer.class);
-        when(preparerMock.prepareDeployment()).thenReturn(Collections.singletonList(node));
+        when(preparerMock.prepareDeployment()).thenReturn(Collections.singleton(node));
         ServiceDeploymentPreparerFactory.preparerForTest = preparerMock;
         ServiceDeploymentPreparerFactory.testing = true;
     }
@@ -68,7 +68,7 @@ public class ServiceDeployerImplTest {
         assertEquals(serviceSpec.getName(), service.getSpec().getName());
         String uuid = service.getUUID();
         assertTrue(uuid != null && !uuid.isEmpty());
-        assertEquals(service.getSelectedNodes().get(0), node);
+        assertEquals(service.getSelectedNodes().iterator().next(), node);
         ServiceDeploymentPreparerFactory.testing = false;
     }
 

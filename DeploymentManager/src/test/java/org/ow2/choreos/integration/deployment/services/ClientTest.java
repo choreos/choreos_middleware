@@ -78,7 +78,7 @@ public class ClientTest {
     public void shouldDeployAWarServiceInANode() throws Exception {
 
         DeployableService service = servicesManager.createService(spec);
-        CloudNode node = service.getSelectedNodes().get(0);
+        CloudNode node = service.getSelectedNodes().iterator().next();
         npm.updateNode(node.getId());
         Thread.sleep(1000);
 

@@ -65,7 +65,7 @@ public class WARDeployTest {
 
         DeployableService service = deployer.createService(specWar);
         assertNull(service.getInstances());
-        CloudNode node = service.getSelectedNodes().get(0);
+        CloudNode node = service.getSelectedNodes().iterator().next();
         npm.updateNode(node.getId());
         Thread.sleep(1000);
 

@@ -44,7 +44,7 @@ public class NewDeploymentPreparingTest {
         RESTClientsRetriever.servicesManagerForTest = smMock;
         RESTClientsRetriever.testing = true;
 
-        NewDeploymentPreparing preparer = new NewDeploymentPreparing(chor);
+        NewDeploymentPreparing preparer = new NewDeploymentPreparing(chor.getId(), chor.getChoreographySpec().getDeployableServiceSpecs());
         List<DeployableService> configuredServices = preparer.prepare();
 
         assertEquals(2, configuredServices.size());

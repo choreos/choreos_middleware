@@ -233,6 +233,8 @@ public class ServicesResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         } catch (UnhandledModificationException e) {
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        } catch (ServiceNotFoundException e) {
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
 
         logger.info(uuid + " updated. Running on " + service.getUris());

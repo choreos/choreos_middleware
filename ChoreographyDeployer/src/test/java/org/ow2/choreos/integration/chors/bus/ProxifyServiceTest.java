@@ -93,7 +93,7 @@ public class ProxifyServiceTest {
     private void deployService() throws ServiceNotCreatedException, NodeNotUpdatedException, NodeNotFoundException, ServiceNotFoundException {
         DeployableServiceSpec airlineSpec = models.getAirlineSpec();
         DeployableService service = sm.createService(airlineSpec);
-        CloudNode node = service.getSelectedNodes().get(0);
+        CloudNode node = service.getSelectedNodes().iterator().next();
         npm.updateNode(node.getId());
         serviceInstance = sm.getService(service.getUUID()).getInstances().get(0);
     }

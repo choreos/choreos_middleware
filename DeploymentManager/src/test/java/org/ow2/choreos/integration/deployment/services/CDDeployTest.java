@@ -65,7 +65,7 @@ public class CDDeployTest {
         assertNotNull(service);
         System.out.println(">>>> " + service.toString());
 
-        CloudNode node = service.getSelectedNodes().get(0);
+        CloudNode node = service.getSelectedNodes().iterator().next();
         npm.updateNode(node.getId());
         Thread.sleep(5000);
 

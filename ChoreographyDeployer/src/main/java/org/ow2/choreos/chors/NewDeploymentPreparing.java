@@ -12,7 +12,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.rest.RESTClientsRetriever;
 import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServicesManager;
@@ -24,29 +23,32 @@ public class NewDeploymentPreparing {
 
     private static final int TIMEOUT = 30; // it may encompasses bootstrap time
 
-    private Choreography chor;
+    private String chorId;
+    private List<DeployableServiceSpec> specs;
     private ExecutorService executor;
     private Map<DeployableServiceSpec, Future<DeployableService>> futures;
     private List<DeployableService> configuredServices;
 
     private Logger logger = Logger.getLogger(NewDeploymentPreparing.class);
 
-    public NewDeploymentPreparing(Choreography chor) {
-        this.chor = chor;
+    public NewDeploymentPreparing(String chorId, List<DeployableServiceSpec> specs) {
+        this.chorId = chorId;
+        this.specs = specs;
     }
 
     public List<DeployableService> prepare() throws EnactmentException {
-        logger.info("Request to configure nodes; creating services; setting up Chef; for chor " + chor.getId());
+        if (specs.size() == 0)
+            return new ArrayList<DeployableService>();        
+        logger.info("Request to configure nodes; creating services; setting up Chef; for chor " + chorId);
         submitConfigureTasks();
         waitConfigureTasks();
-        retrievedConfiguredServices();
+        retrieveConfiguredServices();
         checkStatus();
-        logger.info("Nodes are configured to run chef-client on chor " + chor.getId());
+        logger.info("Nodes are configured to run chef-client on chor " + chorId);
         return configuredServices;
     }
 
     private void submitConfigureTasks() {
-        List<DeployableServiceSpec> specs = chor.getRequestedChoreographySpec().getDeployableServiceSpecs();
         final int N = specs.size();
         executor = Executors.newFixedThreadPool(N);
         futures = new HashMap<DeployableServiceSpec, Future<DeployableService>>();
@@ -61,7 +63,7 @@ public class NewDeploymentPreparing {
         Concurrency.waitExecutor(executor, TIMEOUT);
     }
 
-    private void retrievedConfiguredServices() {
+    private void retrieveConfiguredServices() {
         configuredServices = new ArrayList<DeployableService>();
         for (Entry<DeployableServiceSpec, Future<DeployableService>> entry : futures.entrySet()) {
             try {
@@ -80,7 +82,7 @@ public class NewDeploymentPreparing {
 
     private void checkStatus() throws EnactmentException {
         if (configuredServices == null || configuredServices.isEmpty()) {
-            logger.error("No services configured in chor " + chor.getId() + "!");
+            logger.error("No services configured in chor " + chorId + "!");
             throw new EnactmentException();
         }
     }

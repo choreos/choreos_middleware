@@ -2,8 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-package org.ow2.choreos.deployment.services.diff;
+package org.ow2.choreos.deployment.services.update;
 
-public enum UpdateAction {
-    INCREASE_NUMBER_OF_REPLICAS, DECREASE_NUMBER_OF_REPLICAS, MIGRATE, UNKNOWN_MODIFICATION
+
+public interface UpdateAction {
+    
+    public void applyUpdate() throws UpdateActionFailedException;
+    
 }

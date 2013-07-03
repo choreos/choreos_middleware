@@ -83,12 +83,8 @@ public class IncreaseNumberOfInstancesTest {
         ee.updateChoreography(chorId, newSpec);
         chor = ee.enactChoreography(chorId);
 
-        Thread.sleep(4000);
-
         airline = chor.getDeployableServiceBySpecName(ModelsForTest.AIRLINE);
-
         travel = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
-
         client = new WSClient(travel.getUris().get(0) + "?wsdl");
 
         response = client.request("buyTrip");

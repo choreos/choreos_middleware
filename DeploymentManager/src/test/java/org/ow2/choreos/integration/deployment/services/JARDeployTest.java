@@ -56,7 +56,7 @@ public class JARDeployTest {
 
         DeployableService service = deployer.createService(spec);
         assertNull(service.getInstances());
-        CloudNode node = service.getSelectedNodes().get(0);
+        CloudNode node = service.getSelectedNodes().iterator().next();
         npm.updateNode(node.getId());
         Thread.sleep(1000);
 

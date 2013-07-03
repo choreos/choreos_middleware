@@ -39,7 +39,7 @@ public class NodesUpdaterTest {
         updater.updateNodes();
 
         for (DeployableService svc: services) {
-            String nodeId = svc.getSelectedNodes().get(0).getId();
+            String nodeId = svc.getSelectedNodes().iterator().next().getId();
             verify(npmMock).updateNode(nodeId);
         }
         

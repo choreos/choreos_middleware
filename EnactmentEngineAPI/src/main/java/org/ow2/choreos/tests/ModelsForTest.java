@@ -143,7 +143,7 @@ public class ModelsForTest {
         CloudNode node = createNode("2", TRAVEL_AGENCY_IP, "choreos-node");
         travelService = new DeployableService(this.travelSpec);
         travelService.generateUUID();
-        travelService.setSelectedNodes(Collections.singletonList(node));
+        travelService.setSelectedNodes(Collections.singleton(node));
         ServiceInstance instance = new ServiceInstance(node);
         instance.setInstanceId(TRAVEL_AGENCY + "1");
         instance.setServiceSpec(this.travelSpec);
@@ -158,7 +158,7 @@ public class ModelsForTest {
         // should be in
         // different
         // nodes
-        airlineService.setSelectedNodes(Collections.singletonList(node));
+        airlineService.setSelectedNodes(Collections.singleton(node));
         List<ServiceInstance> instances = new ArrayList<ServiceInstance>();
         for (int i = 0; i < numberOfAirlineServices; i++) {
             ServiceInstance instance = new ServiceInstance(node);

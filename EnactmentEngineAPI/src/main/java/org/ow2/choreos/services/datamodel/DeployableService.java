@@ -5,7 +5,9 @@
 package org.ow2.choreos.services.datamodel;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -17,7 +19,7 @@ public class DeployableService extends Service {
 
     // selectedNodes and serviceInstances's nodes may not match, since instances
     // may be not deployed
-    private List<CloudNode> selectedNodes;
+    private Set<CloudNode> selectedNodes;
     private List<ServiceInstance> serviceInstances;
 
     @XmlTransient
@@ -66,17 +68,17 @@ public class DeployableService extends Service {
         serviceInstances.add(instance);
     }
 
-    public List<CloudNode> getSelectedNodes() {
+    public Set<CloudNode> getSelectedNodes() {
         return selectedNodes;
     }
 
-    public void setSelectedNodes(List<CloudNode> selectedNodes) {
+    public void setSelectedNodes(Set<CloudNode> selectedNodes) {
         this.selectedNodes = selectedNodes;
     }
 
     public synchronized void addSelectedNode(CloudNode node) {
         if (selectedNodes == null)
-            selectedNodes = new ArrayList<CloudNode>();
+            selectedNodes = new HashSet<CloudNode>();
         selectedNodes.add(node);
     }
 

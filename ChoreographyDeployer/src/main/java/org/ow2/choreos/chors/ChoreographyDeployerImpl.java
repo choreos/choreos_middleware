@@ -29,9 +29,8 @@ public class ChoreographyDeployerImpl implements ChoreographyDeployer {
 
     @Override
     public Choreography enactChoreography(String chorId) throws EnactmentException, ChoreographyNotFoundException {
-        if (!reg.contains(chorId)) {
+        if (!reg.contains(chorId)) 
             throw new ChoreographyNotFoundException(chorId);
-        }
         Choreography chor = reg.get(chorId);
         ChoreographyEnacter enacter = new ChoreographyEnacter(chor);
         return enacter.enact();
@@ -41,22 +40,14 @@ public class ChoreographyDeployerImpl implements ChoreographyDeployer {
     public void updateChoreography(String chorId, ChoreographySpec spec) throws ChoreographyNotFoundException {
         logger.info("Requested to update choreography " + chorId);
         Choreography chor = reg.get(chorId);
-
         if (chor == null) {
-            logger.info("Could not get choreography with ID = " + chorId);
             throw new ChoreographyNotFoundException(chorId);
         }
-
         if (spec.equals(chor.getChoreographySpec())) {
             logger.info("Requested to update choreography with the same spec that already have");
             return;
         }
-        logger.info("Starting update on choreography with ID " + chorId);
-        logger.info("Updating choreography spec of choreography " + chorId);
         chor.setChoreographySpec(spec);
-        logger.info("Choreography spec updated for choreography " + chorId);
-        logger.info("Choreography " + chorId + " ready to be re-enacted");
-        return;
     }
 
 }
