@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.services.diff.UpdateAction;
 import org.ow2.choreos.deployment.services.preparer.PrepareDeploymentFailedException;
 import org.ow2.choreos.deployment.services.preparer.ServiceDeploymentPreparer;
+import org.ow2.choreos.deployment.services.preparer.ServiceDeploymentPreparerFactory;
 import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.services.ServiceNotCreatedException;
@@ -53,7 +54,7 @@ public class ServicesManagerImpl implements ServicesManager {
 
     private List<CloudNode> prepareDeployment(DeployableServiceSpec spec, String serviceUUID)
             throws ServiceNotCreatedException {
-        ServiceDeploymentPreparer deploymentPreparer = new ServiceDeploymentPreparer(spec, serviceUUID);
+        ServiceDeploymentPreparer deploymentPreparer = ServiceDeploymentPreparerFactory.getNewInstance(spec, serviceUUID);
         try {
             return deploymentPreparer.prepareDeployment();
         } catch (PrepareDeploymentFailedException e1) {
