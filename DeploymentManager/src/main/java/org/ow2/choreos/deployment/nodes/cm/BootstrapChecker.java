@@ -51,7 +51,7 @@ public class BootstrapChecker {
         }
 
         if (result.contains("solo.rb") && result.contains("cookbooks") && result.contains("prepare_deployment.sh")
-                && result.contains("node.json")) {
+                && result.contains("node.json") && result.contains("add_recipe_to_node.sh")) {
             return true;
         } else {
             return false;

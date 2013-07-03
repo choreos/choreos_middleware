@@ -32,6 +32,7 @@ public class NodeBootstrapper {
     public static final String BOOTSTRAP_SCRIPT = "chef-solo/bootstrap.sh";
     public static final String INITIAL_NODE_JSON = "chef-solo/node.json";
     public static final String PREPARE_DEPLOYMENT_SCRIPT = "chef-solo/prepare_deployment.sh";
+    public static final String ADD_RECIPE_SCRIPT = "chef-solo/add_recipe_to_node.sh";
     public static final String CHEF_SOLO_FOLDER = "chef-solo";
 
     private CloudNode node;
@@ -49,6 +50,7 @@ public class NodeBootstrapper {
         saveFile(INITIAL_NODE_JSON, CHEF_SOLO_FOLDER);
         saveFile(INITIAL_NODE_JSON, CHEF_SOLO_FOLDER + "/node.json.backup");
         saveFile(PREPARE_DEPLOYMENT_SCRIPT, CHEF_SOLO_FOLDER);
+        saveFile(ADD_RECIPE_SCRIPT, CHEF_SOLO_FOLDER);
         logger.info("Bootstrap completed at " + this.node);
     }
 

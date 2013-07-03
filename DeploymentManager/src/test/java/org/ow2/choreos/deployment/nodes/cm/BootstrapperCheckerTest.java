@@ -24,7 +24,7 @@ public class BootstrapperCheckerTest {
 
         SshUtil goodSsh = mock(SshUtil.class);
         when(goodSsh.runCommand("ls $HOME/chef-solo")).thenReturn(
-                "cookbooks  node.json  prepare_deployment.sh  solo.rb");
+                "cookbooks  node.json  prepare_deployment.sh  solo.rb add_recipe_to_node.sh");
         waiterForGoodNode = mock(SshWaiter.class);
         when(waiterForGoodNode.waitSsh(anyString(), anyString(), anyString(), anyInt())).thenReturn(goodSsh);
 
