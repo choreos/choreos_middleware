@@ -18,10 +18,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.chors.bus.EasyESBNode;
 import org.ow2.choreos.chors.bus.ServiceInstanceProxifier;
 import org.ow2.choreos.chors.bus.selector.ESBNodeFactory;
+import org.ow2.choreos.chors.rest.Owners;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
@@ -30,12 +30,13 @@ import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.selectors.ObjectCreationException;
 import org.ow2.choreos.services.ServiceNotCreatedException;
+import org.ow2.choreos.services.ServiceNotFoundException;
 import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.client.ServicesClient;
+import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
-import org.ow2.choreos.services.datamodel.ServiceSpec;
 import org.ow2.choreos.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.tests.ModelsForTest;
@@ -49,7 +50,8 @@ import eu.choreos.vv.exceptions.InvalidOperationNameException;
 import eu.choreos.vv.exceptions.WSDLException;
 
 /**
- * Deploys a service and a EasyESB node and proxify the service
+ * Deploys a service and a EasyESB node and proxify the service. Before run the
+ * test, start the deployment manager.
  * 
  * @author leonardo
  * 
@@ -57,11 +59,9 @@ import eu.choreos.vv.exceptions.WSDLException;
 @Category(IntegrationTest.class)
 public class ProxifyServiceTest {
 
-    private static final String DEPLOYMENT_MANAGER_URI_PROPERTY = "DEPLOYMENT_MANAGER_URI";
-
     private ModelsForTest models;
     private NodePoolManager npm;
-    private ServicesManager sd;
+    private ServicesManager sm;
     private ServiceInstance serviceInstance;
     private EasyESBNode esbNode;
     private String proxifiedUrl;
@@ -74,9 +74,9 @@ public class ProxifyServiceTest {
     @Before
     public void setup() {
         models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-        String host = ChoreographyDeployerConfiguration.get(DEPLOYMENT_MANAGER_URI_PROPERTY);
+        String host = Owners.getDefault();
         npm = new NodesClient(host);
-        sd = new ServicesClient(host);
+        sm = new ServicesClient(host);
     }
 
     @Test
@@ -86,15 +86,16 @@ public class ProxifyServiceTest {
         deployEsbNode();
         proxifyService();
 
-        checkWSDLIsOnline();
+        checkProxifiedWSDLIsOnline();
         invokeService();
     }
 
-    private void deployService() throws ServiceNotCreatedException, NodeNotUpdatedException, NodeNotFoundException {
-        ServiceSpec airlineSpec = models.getAirlineSpec();
-        serviceInstance = sd.createService((DeployableServiceSpec) airlineSpec).getInstances().get(0);
-        CloudNode node = serviceInstance.getNode();
+    private void deployService() throws ServiceNotCreatedException, NodeNotUpdatedException, NodeNotFoundException, ServiceNotFoundException {
+        DeployableServiceSpec airlineSpec = models.getAirlineSpec();
+        DeployableService service = sm.createService(airlineSpec);
+        CloudNode node = service.getSelectedNodes().get(0);
         npm.updateNode(node.getId());
+        serviceInstance = sm.getService(service.getUUID()).getInstances().get(0);
     }
 
     private void deployEsbNode() throws ObjectCreationException {
@@ -112,7 +113,7 @@ public class ProxifyServiceTest {
         }
     }
 
-    private void checkWSDLIsOnline() {
+    private void checkProxifiedWSDLIsOnline() {
         String wsdl = proxifiedUrl + "?wsdl";
         System.out.println("Accessing " + wsdl);
         WebClient client = WebClient.create(wsdl);

@@ -12,9 +12,9 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.chors.bus.EasyESBNode;
 import org.ow2.choreos.chors.bus.selector.ESBNodeFactory;
+import org.ow2.choreos.chors.rest.Owners;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.client.NodesClient;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;
@@ -32,8 +32,6 @@ import org.ow2.choreos.utils.LogConfigurator;
 @Category(IntegrationTest.class)
 public class EsbNodeFactoryTest {
 
-    private static final String DEPLOYMENT_MANAGER_URI_PROPERTY = "DEPLOYMENT_MANAGER_URI";
-
     @BeforeClass
     public static void configureLog() {
         LogConfigurator.configLog();
@@ -41,8 +39,8 @@ public class EsbNodeFactoryTest {
 
     @Test
     public void sholdCreateEasyESBNode() throws ObjectCreationException {
-        String host = ChoreographyDeployerConfiguration.get(DEPLOYMENT_MANAGER_URI_PROPERTY);
-        NodePoolManager npm = new NodesClient(host);
+        String npmUri = Owners.getDefault();
+        NodePoolManager npm = new NodesClient(npmUri);
         ESBNodeFactory factory = new ESBNodeFactory(npm);
         EasyESBNode esbNode = factory.createNewInstance(new ResourceImpact());
         String endpoint = esbNode.getAdminEndpoint();

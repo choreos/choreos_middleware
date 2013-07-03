@@ -65,9 +65,12 @@ public class Owners {
             INSTANCE.getProperties().setProperty(key, value);
         }
     }
+    
+    public static String getDefault() {
+        return INSTANCE.getProperties().getProperty(DEFAULT);
+    }
 
     private Owners() {
-
         try {
             final ClassLoader loader = this.getClass().getClassLoader();
             final InputStream propFile = loader.getResourceAsStream(PROPERTIES_FILE);
