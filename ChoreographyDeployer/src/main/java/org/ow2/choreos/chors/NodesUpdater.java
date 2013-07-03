@@ -1,6 +1,10 @@
 package org.ow2.choreos.chors;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,10 +19,12 @@ import org.ow2.choreos.utils.Concurrency;
 
 public class NodesUpdater {
 
-    private static final int TIMEOUT = 30; 
+    private static final int TIMEOUT = 30;
 
     private List<DeployableService> services;
     private String chorId;
+    private Set<CloudNode> nodesToUpdate;
+    private Map<CloudNode, String> owners = new HashMap<CloudNode, String>();
     private ExecutorService executor;
 
     private Logger logger = Logger.getLogger(NodesUpdater.class);
@@ -30,20 +36,29 @@ public class NodesUpdater {
 
     public void updateNodes() throws EnactmentException {
         logger.info("Going to update nodes of choreography " + chorId);
+        setNodesToUpdate();
         submitUpdates();
         waitUpdates();
     }
 
-    private void submitUpdates() {
-        final int N = services.size();
-        executor = Executors.newFixedThreadPool(N);
+    private void setNodesToUpdate() {
+        nodesToUpdate = new HashSet<CloudNode>();
         for (DeployableService deployable : services) {
-            String owner = deployable.getSpec().getOwner();
-                for (CloudNode node: deployable.getSelectedNodes()) {
-                    String nodeId = node.getId();
-                    NodeUpdater updater = new NodeUpdater(nodeId, owner);
-                    executor.submit(updater);
-                }
+            for (CloudNode node : deployable.getSelectedNodes()) {
+                nodesToUpdate.add(node);
+                String owner = deployable.getSpec().getOwner();
+                owners.put(node, owner);
+            }
+        }
+    }
+    
+    private void submitUpdates() {
+        executor = Executors.newFixedThreadPool(nodesToUpdate.size());
+        for (CloudNode node : nodesToUpdate) {
+            String nodeId = node.getId();
+            String owner = owners.get(node);
+            NodeUpdater updater = new NodeUpdater(nodeId, owner);
+            executor.submit(updater);
         }
     }
 

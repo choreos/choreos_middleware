@@ -28,8 +28,9 @@ import eu.choreos.vv.clientgenerator.Item;
 import eu.choreos.vv.clientgenerator.WSClient;
 
 /**
- * This test will enact a choreography with two services. One of them will serve
- * with two replicas
+ * This test will enact a choreography with two services. The Airline service
+ * will serve with two replicas. The test assume that Travel Agency round robins
+ * the Airline instances.
  * 
  * Before the test, start the NPMServer and the ServiceDeployerServer
  * 
@@ -79,7 +80,6 @@ public class ChorEnactmentWithReplicasTest {
         assertTrue(codes2.startsWith("33") && codes2.endsWith("--22"));
 
         assertFalse(codes.equals(codes2));
-
     }
 
 }
