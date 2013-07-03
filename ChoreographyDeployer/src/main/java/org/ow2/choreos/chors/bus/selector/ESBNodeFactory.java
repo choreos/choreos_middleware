@@ -69,7 +69,7 @@ public class ESBNodeFactory implements ObjectFactory<EasyESBNode, ResourceImpact
     }
 
     @Override
-    public int getTimeouInSeconds() {
+    public int getTimeoutInSeconds() {
         return TIMEOUT_SECONDS;
     }
 

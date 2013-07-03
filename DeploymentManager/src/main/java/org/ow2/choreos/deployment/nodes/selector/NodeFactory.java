@@ -29,7 +29,7 @@ class NodeFactory implements ObjectFactory<CloudNode, DeployableServiceSpec> {
     }
 
     @Override
-    public int getTimeouInSeconds() {
+    public int getTimeoutInSeconds() {
         return TIMEOUT_SECONDS;
     }
 

@@ -8,6 +8,6 @@ public interface ObjectFactory<T, R> {
 
     public T createNewInstance(R requirements) throws ObjectCreationException;
 
-    public int getTimeouInSeconds();
+    public int getTimeoutInSeconds();
 
 }

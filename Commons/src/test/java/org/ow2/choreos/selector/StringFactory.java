@@ -19,7 +19,7 @@ public class StringFactory implements ObjectFactory<String, String> {
     }
 
     @Override
-    public int getTimeouInSeconds() {
+    public int getTimeoutInSeconds() {
         return 10;
     }
 

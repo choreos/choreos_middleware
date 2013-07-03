@@ -70,7 +70,7 @@ public class SingletonSelector<T, R> implements Selector<T, R> {
     private void waitObjectCreation() throws NotSelectedException {
         boolean ok = false;
         try {
-            ok = executor.awaitTermination(factory.getTimeouInSeconds(), TimeUnit.SECONDS);
+            ok = executor.awaitTermination(factory.getTimeoutInSeconds(), TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             throw new NotSelectedException();
         }
