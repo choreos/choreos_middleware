@@ -50,9 +50,9 @@ public class InvokerTest {
     @Test
     public void shouldInvokeAndNotTimeout() throws InvokerException {
 
-        Callable<String> task = new TakesTenMilliSecToWork();
+        Callable<String> task = new TakesHundredMilliSecToWork();
         int trials = 1;
-        int timeout = 20;
+        int timeout = 500;
 
         Invoker<String> invoker = new Invoker<String>(task, trials, timeout, TimeUnit.MILLISECONDS);
         String result = invoker.invoke();
@@ -63,7 +63,7 @@ public class InvokerTest {
     @Test(expected = InvokerException.class)
     public void shouldInvokeAndTimeout() throws InvokerException {
 
-        Callable<String> task = new TakesTenMilliSecToWork();
+        Callable<String> task = new TakesHundredMilliSecToWork();
         int trials = 1;
         int timeout = 5;
 
@@ -112,13 +112,13 @@ public class InvokerTest {
         }
     }
 
-    private class TakesTenMilliSecToWork implements Callable<String> {
+    private class TakesHundredMilliSecToWork implements Callable<String> {
 
         AtomicInteger counter = new AtomicInteger();
 
         @Override
         public String call() throws Exception {
-            Thread.sleep(10);
+            Thread.sleep(100);
             return Integer.toString(counter.getAndIncrement());
         }
 
