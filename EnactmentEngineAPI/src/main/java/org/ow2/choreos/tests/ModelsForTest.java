@@ -19,6 +19,8 @@ import org.ow2.choreos.services.datamodel.ServiceDependency;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceType;
 
+import com.google.common.collect.Sets;
+
 public class ModelsForTest {
 
     public static final String AIRLINE = "airline";
@@ -143,7 +145,7 @@ public class ModelsForTest {
         CloudNode node = createNode("2", TRAVEL_AGENCY_IP, "choreos-node");
         travelService = new DeployableService(this.travelSpec);
         travelService.generateUUID();
-        travelService.setSelectedNodes(Collections.singleton(node));
+        travelService.setSelectedNodes(Sets.newHashSet(node));
         ServiceInstance instance = new ServiceInstance(node);
         instance.setInstanceId(TRAVEL_AGENCY + "1");
         instance.setServiceSpec(this.travelSpec);
@@ -158,7 +160,7 @@ public class ModelsForTest {
         // should be in
         // different
         // nodes
-        airlineService.setSelectedNodes(Collections.singleton(node));
+        airlineService.setSelectedNodes(Sets.newHashSet(node));
         List<ServiceInstance> instances = new ArrayList<ServiceInstance>();
         for (int i = 0; i < numberOfAirlineServices; i++) {
             ServiceInstance instance = new ServiceInstance(node);

@@ -6,8 +6,8 @@ package org.ow2.choreos.deployment.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-import java.util.Collections;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,8 +23,7 @@ import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.utils.LogConfigurator;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.google.common.collect.Sets;
 
 public class ServiceDeployerImplTest {
 
@@ -57,7 +56,7 @@ public class ServiceDeployerImplTest {
         servicesManager = new ServicesManagerImpl();
         
         ServiceDeploymentPreparer preparerMock = mock(ServiceDeploymentPreparer.class);
-        when(preparerMock.prepareDeployment()).thenReturn(Collections.singleton(node));
+        when(preparerMock.prepareDeployment()).thenReturn(Sets.newHashSet(node));
         ServiceDeploymentPreparerFactory.preparerForTest = preparerMock;
         ServiceDeploymentPreparerFactory.testing = true;
     }

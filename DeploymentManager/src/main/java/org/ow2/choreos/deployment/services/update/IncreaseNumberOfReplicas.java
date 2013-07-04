@@ -31,7 +31,8 @@ public class IncreaseNumberOfReplicas extends BaseAction {
         try {
             Set<CloudNode> nodes = deploymentPreparer.prepareDeployment();
             currentService.setSpec(newSpec);
-            currentService.getSelectedNodes().addAll(nodes);
+            for (CloudNode node: nodes)
+                currentService.addSelectedNode(node);
         } catch (PrepareDeploymentFailedException e) {
             throw new UpdateActionFailedException();
         }

@@ -4,8 +4,6 @@
 
 package org.ow2.choreos.deployment.services;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -14,7 +12,6 @@ import org.ow2.choreos.deployment.services.preparer.ServiceDeploymentPreparer;
 import org.ow2.choreos.deployment.services.preparer.ServiceDeploymentPreparerFactory;
 import org.ow2.choreos.deployment.services.registry.DeployedServicesRegistry;
 import org.ow2.choreos.deployment.services.update.ServiceUpdater;
-import org.ow2.choreos.deployment.services.update.UpdateAction;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServiceNotDeletedException;
@@ -24,7 +21,6 @@ import org.ow2.choreos.services.UnhandledModificationException;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
-import org.ow2.choreos.services.datamodel.ServiceSpec;
 
 public class ServicesManagerImpl implements ServicesManager {
 
