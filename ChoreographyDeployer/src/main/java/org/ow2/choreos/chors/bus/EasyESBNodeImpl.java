@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-import com.ebmwebsourcing.esstar.management.UserManagementClientSOAP;
+import com.ebmwebsourcing.esstar.management.UserManagementClient;
 
 import esstar.petalslink.com.service.management._1_0.ManagementException;
 
@@ -57,10 +57,10 @@ public class EasyESBNodeImpl implements EasyESBNode {
     public String proxifyService(String serviceUrl, String serviceWsdl) throws ManagementException {
 
         logger.debug("-c " + this.adminEndpoint + " -pr " + serviceUrl + " " + serviceWsdl);
-        UserManagementClientSOAP cli = new UserManagementClientSOAP(this.adminEndpoint);
+        UserManagementClient cli = new UserManagementClient(this.adminEndpoint);
         String response = cli.proxify(serviceUrl, serviceWsdl);
         String proxifiedUri = response.replace("localhost", this.nodeIp);
         return proxifiedUri;
     }
-
+    
 }
