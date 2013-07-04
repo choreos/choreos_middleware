@@ -57,6 +57,7 @@ public class NodeBootstrapperTest {
             bootstrapper.bootstrapNode();
             System.out.println("Checking if bootstrap was OK");
             assertTrue(checker.isBootstrapped(node));
+            System.out.println("OK!");
         } else {
             System.out.println("Node was already bootstrapped");
         }

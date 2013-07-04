@@ -4,9 +4,9 @@
 #
 # Downloads EasyESB client
 #
-# Copyright 2011, USP
+# Copyright 2013, USP
 #
-# LGPL 2.0 or, at your option, any later version
+# License MPL 2.0
 #
 
 include_recipe "apt" # java recipe is failing without recipe apt

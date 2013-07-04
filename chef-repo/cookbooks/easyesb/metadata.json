@@ -3,7 +3,7 @@
   "description": "Installs/Configures EasyESB",
   "maintainer": "CCSL - Centro de Competencia de Software Livre - IME/USP",
   "maintainer_email": "ccsl@ime.usp.br",
-  "license": "LGPL 2.0 or, at your option, any later version",
+  "license": "MPL 2.0",
   "platforms": {
   },
   "dependencies": {
