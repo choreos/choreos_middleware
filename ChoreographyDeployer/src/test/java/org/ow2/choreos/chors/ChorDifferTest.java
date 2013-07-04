@@ -63,9 +63,9 @@ public class ChorDifferTest {
     }
     
     private void checkNotModifiedSpec(ChorDiffer differ) {
-        List<DeployableServiceSpec> notModifiedServices = differ.getNotModifiedServices();
+        List<DeployableService> notModifiedServices = differ.getNotModifiedServices();
         assertEquals(1, notModifiedServices.size());
-        assertEquals(ModelsForTest.TRAVEL_AGENCY, notModifiedServices.get(0).getName());
+        assertEquals(ModelsForTest.TRAVEL_AGENCY, notModifiedServices.get(0).getSpec().getName());
     }
     
     private void checkNewSpec(ChorDiffer differ) {

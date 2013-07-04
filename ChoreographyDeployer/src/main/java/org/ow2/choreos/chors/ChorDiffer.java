@@ -14,7 +14,7 @@ public class ChorDiffer {
     private Choreography chor;
     private List<DeployableServiceSpec> toCreate;
     private Map<DeployableService, DeployableServiceSpec> toUpdate;
-    private List<DeployableServiceSpec> notModify;
+    private List<DeployableService> notModify;
 
     public ChorDiffer(Choreography chor) {
         this.chor = chor;
@@ -32,7 +32,7 @@ public class ChorDiffer {
         return toUpdate;
     }
 
-    public List<DeployableServiceSpec> getNotModifiedServices() {
+    public List<DeployableService> getNotModifiedServices() {
         if (notModify == null)
             diff();
         return notModify;
@@ -42,7 +42,7 @@ public class ChorDiffer {
         
         toCreate = new ArrayList<DeployableServiceSpec>();
         toUpdate = new HashMap<DeployableService, DeployableServiceSpec>();
-        notModify = new ArrayList<DeployableServiceSpec>();
+        notModify = new ArrayList<DeployableService>();
         
         List<DeployableServiceSpec> specsList = chor.getRequestedChoreographySpec().getDeployableServiceSpecs();
         Map<String, DeployableServiceSpec> requestedSpecMap = makeMapFromServiceList(specsList);
@@ -55,7 +55,7 @@ public class ChorDiffer {
                 if (!requestedSpec.equals(currentService.getSpec())) {
                     toUpdate.put(currentService, requestedSpec);
                 } else {
-                    notModify.add(currentServiceEntry.getValue().getSpec());
+                    notModify.add(currentService);
                 }
             }
         }

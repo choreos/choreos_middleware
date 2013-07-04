@@ -101,6 +101,7 @@ public class ServicesManagerImpl implements ServicesManager {
     public DeployableService updateService(String serviceUUID, DeployableServiceSpec serviceSpec) throws UnhandledModificationException, ServiceNotFoundException {
         DeployableService service = this.getService(serviceUUID);
         ServiceUpdater updater = new ServiceUpdater(service, serviceSpec);
-        return updater.updateService();
+        updater.updateService();
+        return service;
     }
 }

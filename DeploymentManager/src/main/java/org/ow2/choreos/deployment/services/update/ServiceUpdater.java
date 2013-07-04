@@ -16,18 +16,22 @@ public class ServiceUpdater {
 
     private Logger logger = Logger.getLogger(ServiceUpdater.class);
 
+    /**
+     * 
+     * @param service may be changed by the updateService method
+     * @param serviceSpec
+     */
     public ServiceUpdater(DeployableService service, DeployableServiceSpec serviceSpec) {
         this.service = service;
         this.serviceUUID = service.getUUID();
         this.newServiceSpec = serviceSpec;
     }
     
-    public DeployableService updateService() throws UnhandledModificationException {
+    public void updateService() throws UnhandledModificationException {
         logger.info("Requested to update service " + serviceUUID + " with spec " + newServiceSpec);
         getActions();
         applyActions();
         logger.info("Service " + serviceUUID + " updated");
-        return service;
     }
     
     private void getActions() {
