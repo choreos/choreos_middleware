@@ -49,8 +49,7 @@ public class CDDeployTest {
 
     @Before
     public void setUp() throws Exception {
-
-        DeploymentManagerConfiguration.set("BUS", "false");
+        spec.setName("MyCD");
         spec.setPackageUri(CD_LOCATION);
         spec.setPackageType(PackageType.EASY_ESB);
         spec.setEndpointName("CDWeatherForecastServicePort"); // configured in

@@ -1,4 +1,8 @@
 #! /bin/bash
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+
 # arg $1 package URL
 # arg $2 cookbook template name
 
@@ -9,9 +13,9 @@ function copy_template() {
 }
 
 function edit_recipe() {
-    # edit recipe ($NAME, $PackageURL)
+    # edit recipe replacing: $NAME, $PACKAGE_URL
     cd cookbooks/$3
-    sed -i '/\$PackageURL/ s##'"$1"'#g' attributes/default.rb
+    sed -i '/\$PACKAGE_URL/ s##'"$1"'#g' attributes/default.rb
     sed -i '/\$NAME/ s##'"$3"'#g' attributes/default.rb
     sed -i '/\$NAME/ s##'"$3"'#g' recipes/default.rb
     echo "Cookbook $3 edited"

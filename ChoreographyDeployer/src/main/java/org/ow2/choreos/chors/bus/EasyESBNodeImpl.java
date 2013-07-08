@@ -36,7 +36,6 @@ public class EasyESBNodeImpl implements EasyESBNode {
     }
 
     private String extractIpFromAdminEndpoint() {
-
         if (this.adminEndpoint.contains("localhost:8180")) {
             return "localhost";
         } else {
@@ -55,7 +54,6 @@ public class EasyESBNodeImpl implements EasyESBNode {
 
     @Override
     public String proxifyService(String serviceUrl, String serviceWsdl) throws ManagementException {
-
         logger.debug("-c " + this.adminEndpoint + " -pr " + serviceUrl + " " + serviceWsdl);
         UserManagementClient cli = new UserManagementClient(this.adminEndpoint);
         String response = cli.proxify(serviceUrl, serviceWsdl);

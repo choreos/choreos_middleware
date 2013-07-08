@@ -1,2 +1,0 @@
-NODE=choreos-vm
-FINAL_RUN_LIST='recipe[ganglia] role[master]'

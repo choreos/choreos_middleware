@@ -7,6 +7,7 @@ import org.ow2.choreos.breaker.Invoker;
 import org.ow2.choreos.breaker.InvokerException;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpdater;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpdaters;
+import org.ow2.choreos.deployment.nodes.cm.PackageTypeToCookbook;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.utils.SshNotConnected;
@@ -50,7 +51,7 @@ public class InstanceDeploymentPreparer {
 
     private String getCommand() {
         String packageUri = spec.getPackageUri();
-        String cookbookTemplateName = spec.getPackageType().getExtension();
+        String cookbookTemplateName = PackageTypeToCookbook.getCookbookName(spec.getPackageType());
         return ". chef-solo/prepare_deployment.sh " + packageUri + " " + cookbookTemplateName;
     }
     

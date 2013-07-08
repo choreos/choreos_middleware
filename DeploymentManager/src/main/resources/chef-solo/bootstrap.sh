@@ -1,5 +1,7 @@
 #! /bin/bash
-
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/. 
 
 function install_chef_solo() {
 	if which chef-solo >/dev/null; then
@@ -31,9 +33,7 @@ function prepare_node() {
 	
 		# create cookbooks repo
 		cd $HOME/chef-solo
-	        wget -O - http://valinhos.ime.usp.br:54080/choreos/chef-repo.tar.gz | tar xzf -
-		mv chef-repo/* cookbooks
-		rm -rf chef-repo
+	    wget -O - http://valinhos.ime.usp.br:54080/choreos/cookbooks.tar.gz | tar xzf -
 
 		#create solo.rb file
 		cp /usr/share/chef/solo.rb .

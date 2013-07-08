@@ -23,7 +23,7 @@ public enum PackageType {
 
     /**
      * 
-     * @return deploy file extension
+     * @return package extension
      */
     public String getExtension() {
         if (this.extension == null)

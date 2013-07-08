@@ -53,7 +53,6 @@ public class WARDeployTest {
 
     @Before
     public void setUp() throws Exception {
-
         specWar.setPackageUri(WAR_LOCATION);
         specWar.setEndpointName(ENDPOINT_NAME);
         specWar.setPackageType(PackageType.TOMCAT);

@@ -1,0 +1,29 @@
+{
+  "name": "easyesb-cd",
+  "description": "Deploys a CD on an EasyESB node",
+  "maintainer": "CCSL - Centro de Competencia de Software Livre - IME/USP",
+  "maintainer_email": "ccsl@ime.usp.br",
+  "license": "MPL v2.0",
+  "platforms": {
+  },
+  "dependencies": {
+    "easyesb": ">= 0.0.0",
+  },
+  "recommendations": {
+  },
+  "suggestions": {
+  },
+  "conflicting": {
+  },
+  "providing": {
+  },
+  "replacing": {
+  },
+  "attributes": {
+  },
+  "groupings": {
+  },
+  "recipes": {
+  },
+  "version": "0.0.1"
+}
