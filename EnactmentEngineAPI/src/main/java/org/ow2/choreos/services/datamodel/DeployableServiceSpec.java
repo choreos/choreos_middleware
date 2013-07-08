@@ -127,11 +127,6 @@ public class DeployableServiceSpec extends ServiceSpec implements Serializable {
         this.port = port;
     }
 
-    public String getFileName() {
-        FileNameRetriever retriever = new FileNameRetriever(this);
-        return retriever.getFileName();
-    }
-
     public int getPort() {
         int effectivePort = port;
         if (portIsNotDefined()) {

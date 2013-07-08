@@ -13,6 +13,8 @@ import org.ow2.choreos.services.datamodel.ServiceSpec;
 @XmlRootElement
 public class LegacyServiceSpec extends ServiceSpec {
 
+    private static final long serialVersionUID = -3516716037662320784L;
+
     List<String> nativeURIs;
 
     public List<String> getNativeURIs() {

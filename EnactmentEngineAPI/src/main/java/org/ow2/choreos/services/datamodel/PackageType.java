@@ -13,21 +13,6 @@ package org.ow2.choreos.services.datamodel;
  */
 public enum PackageType {
 
-    COMMAND_LINE("jar"), TOMCAT("war"), EASY_ESB("tar.gz"), OTHER(null);
+    COMMAND_LINE, TOMCAT, EASY_ESB, OTHER;
 
-    private final String extension;
-
-    private PackageType(String extension) {
-        this.extension = extension;
-    }
-
-    /**
-     * 
-     * @return package extension
-     */
-    public String getExtension() {
-        if (this.extension == null)
-            throw new IllegalArgumentException("ServiceType " + this + " does not provide an extension.");
-        return this.extension;
-    }
 }
