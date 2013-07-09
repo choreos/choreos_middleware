@@ -10,7 +10,7 @@
 \newcommand{\ee}{CHOReOS Enactment Engine}
 
 
-\title{\ee\ REST API \\ {\normalsize Version 2.2}}
+\title{\ee\ REST API \\ {\normalsize Version 2.3}}
 \author{Leonardo Leite, Thiago Furtado, Nelson Lago (IME - USP)}
 
 \begin{document}
@@ -62,7 +62,6 @@ To request a choreography enactment, it is important to understand very well the
 \item \verb!ServiceSpec!
 	\begin{description}
 		\item [name:] a unique character sequence within the choreography specification;
-		\item [UUID:] A randomly-generated unique identifier for the service
 		\item [type:] whether the service is a SOAP service or a REST service. More types can be added as necessary.
 		\item [roles:] list of roles implemented by the service;
 		\item [dependencies:] list of \verb!ServiceDependency! entries; each entry describes the name of the dependency (matching the \verb!name! attribute), and the the role provided by the dependency;
@@ -117,7 +116,6 @@ To properly build and read these XML representations, you can rely on the schema
         <name>airline</name>
         <roles>airline</roles>
         <serviceType>SOAP</serviceType>
-        <uuid>f002dd4a-ff9f-4f6a-b169-4b5c2015add2</uuid>
         <endpointName>airline</endpointName>
         <numberOfInstances>1</numberOfInstances>
         <packageType>COMMAND_LINE</packageType>
@@ -134,7 +132,6 @@ To properly build and read these XML representations, you can rely on the schema
         <name>travelagency</name>
         <roles>travelagency</roles>
         <serviceType>SOAP</serviceType>
-        <uuid>032fe24f-1f5a-440b-936e-bab5111156f1</uuid>
         <endpointName>travelagency</endpointName>
         <numberOfInstances>1</numberOfInstances>
         <packageType>COMMAND_LINE</packageType>
@@ -153,7 +150,6 @@ To properly build and read these XML representations, you can rely on the schema
             <name>airline</name>
             <roles>airline</roles>
             <serviceType>SOAP</serviceType>
-            <uuid>f002dd4a-ff9f-4f6a-b169-4b5c2015add2</uuid>
             <endpointName>airline</endpointName>
             <numberOfInstances>1</numberOfInstances>
             <packageType>COMMAND_LINE</packageType>
@@ -170,7 +166,6 @@ To properly build and read these XML representations, you can rely on the schema
             <name>travelagency</name>
             <roles>travelagency</roles>
             <serviceType>SOAP</serviceType>
-            <uuid>032fe24f-1f5a-440b-936e-bab5111156f1</uuid>
             <endpointName>travelagency</endpointName>
             <numberOfInstances>1</numberOfInstances>
             <packageType>COMMAND_LINE</packageType>
@@ -190,7 +185,6 @@ To properly build and read these XML representations, you can rely on the schema
             <name>travelagency</name>
             <roles>travelagency</roles>
             <serviceType>SOAP</serviceType>
-            <uuid>032fe24f-1f5a-440b-936e-bab5111156f1</uuid>
             <endpointName>travelagency</endpointName>
             <numberOfInstances>1</numberOfInstances>
             <packageType>COMMAND_LINE</packageType>
@@ -199,9 +193,15 @@ To properly build and read these XML representations, you can rely on the schema
             <resourceImpact/>
             <version>0.1</version>
         </spec>
+        <UUID>e4d621d8-6de7-4fec-a586-803550dbb7ab</UUID>
+        <selectedNodes>
+            <hostname>choreos-node</hostname>
+            <id>2</id>
+            <ip>192.168.56.102</ip>
+        </selectedNodes>
         <serviceInstances>
             <busUris/>
-            <instanceId>f8c00ce1-ebd7-4c52-897a-8d20cea3e80f</instanceId>
+            <instanceId>travelagency1</instanceId>
             <nativeUri>http://192.168.56.102:1235/travelagency/</nativeUri>
             <node>
                 <hostname>choreos-node</hostname>
@@ -216,7 +216,6 @@ To properly build and read these XML representations, you can rely on the schema
                 <name>travelagency</name>
                 <roles>travelagency</roles>
                 <serviceType>SOAP</serviceType>
-                <uuid>032fe24f-1f5a-440b-936e-bab5111156f1</uuid>
                 <endpointName>travelagency</endpointName>
                 <numberOfInstances>1</numberOfInstances>
                 <packageType>COMMAND_LINE</packageType>
@@ -233,7 +232,6 @@ To properly build and read these XML representations, you can rely on the schema
             <name>airline</name>
             <roles>airline</roles>
             <serviceType>SOAP</serviceType>
-            <uuid>f002dd4a-ff9f-4f6a-b169-4b5c2015add2</uuid>
             <endpointName>airline</endpointName>
             <numberOfInstances>1</numberOfInstances>
             <packageType>COMMAND_LINE</packageType>
@@ -242,9 +240,15 @@ To properly build and read these XML representations, you can rely on the schema
             <resourceImpact/>
             <version>0.1</version>
         </spec>
+        <UUID>ba2d8502-a69a-420e-93f3-cb8088eb6974</UUID>
+        <selectedNodes>
+            <hostname>choreos-node</hostname>
+            <id>1</id>
+            <ip>192.168.56.101</ip>
+        </selectedNodes>
         <serviceInstances>
             <busUris/>
-            <instanceId>579f4e86-7a12-4b64-8228-c4820ba20fda</instanceId>
+            <instanceId>airline0</instanceId>
             <nativeUri>http://192.168.56.101:1234/airline/</nativeUri>
             <node>
                 <hostname>choreos-node</hostname>
@@ -255,7 +259,6 @@ To properly build and read these XML representations, you can rely on the schema
                 <name>airline</name>
                 <roles>airline</roles>
                 <serviceType>SOAP</serviceType>
-                <uuid>f002dd4a-ff9f-4f6a-b169-4b5c2015add2</uuid>
                 <endpointName>airline</endpointName>
                 <numberOfInstances>1</numberOfInstances>
                 <packageType>COMMAND_LINE</packageType>
@@ -491,6 +494,7 @@ To use the \ee\ Java client in your code, it's enough to import the API project 
 \lstset{language=XML}
 
 \begin{lstlisting}[caption=, label=lst:chor_xsd]
+ChorSpec XSD:
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:element name="choreographySpec" type="choreographySpec"/>
@@ -530,7 +534,6 @@ To use the \ee\ Java client in your code, it's enough to import the API project 
             <xs:element maxOccurs="unbounded" minOccurs="0" name="roles"
                 nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="serviceType" type="serviceType"/>
-            <xs:element minOccurs="0" name="uuid" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="resourceImpact">
@@ -562,7 +565,6 @@ To use the \ee\ Java client in your code, it's enough to import the API project 
             <xs:enumeration value="COMMAND_LINE"/>
             <xs:enumeration value="TOMCAT"/>
             <xs:enumeration value="EASY_ESB"/>
-            <xs:enumeration value="LEGACY"/>
             <xs:enumeration value="OTHER"/>
         </xs:restriction>
     </xs:simpleType>
@@ -587,6 +589,7 @@ Choreography XSD:
 <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:element name="choreography" type="choreography"/>
     <xs:element name="choreographySpec" type="choreographySpec"/>
+    <xs:element name="cloudNode" type="cloudNode"/>
     <xs:element name="deployableService" type="deployableService"/>
     <xs:element name="deployableServiceSpec" type="deployableServiceSpec"/>
     <xs:element name="legacyServiceSpec" type="legacyServiceSpec"/>
@@ -634,7 +637,6 @@ Choreography XSD:
             <xs:element maxOccurs="unbounded" minOccurs="0" name="roles"
                 nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="serviceType" type="serviceType"/>
-            <xs:element minOccurs="0" name="uuid" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="resourceImpact">
@@ -667,6 +669,8 @@ Choreography XSD:
                 <xs:sequence>
                     <xs:element minOccurs="0" name="recipeBundle" type="recipeBundle"/>
                     <xs:element maxOccurs="unbounded" minOccurs="0"
+                        name="selectedNodes" nillable="true" type="cloudNode"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0"
                         name="serviceInstances" nillable="true" type="serviceInstance"/>
                 </xs:sequence>
             </xs:extension>
@@ -675,6 +679,7 @@ Choreography XSD:
     <xs:complexType abstract="true" name="service">
         <xs:sequence>
             <xs:element minOccurs="0" name="spec" type="serviceSpec"/>
+            <xs:element minOccurs="0" name="UUID" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="recipeBundle">
@@ -689,6 +694,26 @@ Choreography XSD:
             <xs:element minOccurs="0" name="cookbookName" type="xs:string"/>
             <xs:element minOccurs="0" name="name" type="xs:string"/>
         </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="cloudNode">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="cpus" type="xs:int"/>
+            <xs:element minOccurs="0" name="hostname" type="xs:string"/>
+            <xs:element minOccurs="0" name="id" type="xs:string"/>
+            <xs:element minOccurs="0" name="image" type="xs:string"/>
+            <xs:element minOccurs="0" name="ip" type="xs:string"/>
+            <xs:element minOccurs="0" name="privateKeyFile" type="xs:string"/>
+            <xs:element minOccurs="0" name="ram" type="xs:int"/>
+            <xs:element minOccurs="0" name="runList" type="runList"/>
+            <xs:element minOccurs="0" name="so" type="xs:string"/>
+            <xs:element minOccurs="0" name="state" type="xs:int"/>
+            <xs:element minOccurs="0" name="storage" type="xs:int"/>
+            <xs:element minOccurs="0" name="user" type="xs:string"/>
+            <xs:element minOccurs="0" name="zone" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="runList">
+        <xs:sequence/>
     </xs:complexType>
     <xs:complexType name="serviceInstance">
         <xs:sequence>
@@ -710,25 +735,8 @@ Choreography XSD:
             <xs:element minOccurs="0" name="easyEsbNodeAdminEndpoint" type="xs:string"/>
             <xs:element minOccurs="0" name="instanceId" type="xs:string"/>
             <xs:element minOccurs="0" name="nativeUri" type="xs:string"/>
-            <xs:element minOccurs="0" name="node" type="node"/>
+            <xs:element minOccurs="0" name="node" type="cloudNode"/>
             <xs:element minOccurs="0" name="serviceSpec" type="deployableServiceSpec"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="node">
-        <xs:sequence>
-            <xs:element minOccurs="0" name="chefName" type="xs:string"/>
-            <xs:element minOccurs="0" name="cpus" type="xs:int"/>
-            <xs:element minOccurs="0" name="hostname" type="xs:string"/>
-            <xs:element minOccurs="0" name="id" type="xs:string"/>
-            <xs:element minOccurs="0" name="image" type="xs:string"/>
-            <xs:element minOccurs="0" name="ip" type="xs:string"/>
-            <xs:element minOccurs="0" name="privateKeyFile" type="xs:string"/>
-            <xs:element minOccurs="0" name="ram" type="xs:int"/>
-            <xs:element minOccurs="0" name="so" type="xs:string"/>
-            <xs:element minOccurs="0" name="state" type="xs:int"/>
-            <xs:element minOccurs="0" name="storage" type="xs:int"/>
-            <xs:element minOccurs="0" name="user" type="xs:string"/>
-            <xs:element minOccurs="0" name="zone" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="legacyService">
@@ -743,7 +751,6 @@ Choreography XSD:
             <xs:enumeration value="COMMAND_LINE"/>
             <xs:enumeration value="TOMCAT"/>
             <xs:enumeration value="EASY_ESB"/>
-            <xs:enumeration value="LEGACY"/>
             <xs:enumeration value="OTHER"/>
         </xs:restriction>
     </xs:simpleType>

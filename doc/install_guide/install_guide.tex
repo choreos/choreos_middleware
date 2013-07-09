@@ -51,7 +51,7 @@
 \newcommand{\cd}{Choreography Deployer}
 \newcommand{\dm}{Deployment Manager}
 
-\title{CHOReOS \ee\ Installation Guide \\ {\normalsize Version 1.5}}
+\title{CHOReOS \ee\ Installation Guide \\ {\normalsize Version 2.0}}
 \author{Leonardo Leite (IME - USP)}
 
 \begin{document}
@@ -62,11 +62,11 @@
 
 The CHOReOS \ee\ provides a Platform as a Service (PaaS) that automates the distributed deployment of service choreographies in cloud environments. This document provides instructions about how to install, configure, and run the \ee.
 
-We will describe now each one of the \ee\ components, that are pictured in the Fig.~\ref{fig:ee_components}. The \cd\ and the \dm\ are components provided by the \ee, whereas the Chef components and the Cloud Gateway are third-party software used by the \ee.
+We will describe now each one of the \ee\ components, that are pictured in the Fig.~\ref{fig:ee_components}. The \cd\ and the \dm\ are components provided by the \ee, whereas Chef-solo and the Cloud Gateway are third-party software used by the \ee.
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.7]{img/components.pdf}
+\includegraphics[scale=0.8]{img/components.pdf}
 \caption{\ee\ architecture}
 \label{fig:ee_components}
 \end{figure}
@@ -75,18 +75,15 @@ We will describe now each one of the \ee\ components, that are pictured in the F
 
 \item [Cloud Gateway] creates and destroys virtual machines (also called \emph{nodes}) in a cloud computing environment. This component is used by the \dm, that decides when to create or to destroy the nodes. Currently, only Amazon EC2 and OpenStack are supported as Cloud Gateways, but the \dm\ may be extended to support other virtualization technologies.
 
-\item [Chef Server:] in an environment managed by Chef, nodes software configuration are specified by ``recipes'', that are scripts written in a Ruby-like Domain Specific Language. In the \ee, recipes implement the process of configuring operational system, installing required middleware, and finally deploying the services. The recipes and the association between recipes and nodes are stored on Chef Server.
+\item[Chef-solo] is installed by the \ee\ in each cloud node to manage ``recipes'' execution. \emph{Chef recipes} are scripts written in a Ruby-like Domain Specific Language that implement the process of configuring operational system, installing required middleware, and finally deploying the services.
 
-\item[Chef Client] is installed by the \ee\ in each managed node. It uses the Chef Server REST API to retrieve the recipes that are associated to the local node and update the node software configuration by executing the recipes. 
-
-\item [\dm] deploys services in a cloud environment. Through its REST API, the \dm\ receives a declarative service specification and selects the node where the service will be deployed, possibly considering the service non-functional requirements. The \dm\ converts the received specification into a Chef recipe that implements the service installation process. After generating the recipe, the \dm\ stores on the Chef Server the generated recipe and the association between the recipe and the selected node. Using other \dm\ REST operation, one can request the upgrade of a node, which consists in running the Chef Client on that node.
+\item [\dm] deploys services in a cloud environment. Through its REST API, the \dm\ receives a declarative service specification and selects the node where the service will be deployed, possibly considering the service non-functional requirements. The \dm\ executes in the selected node a process to generate the service recipe based on the service specification. Using other \dm\ REST operation, one can request the upgrade of a node, which consists in running Chef-solo on that node.
 
 \item [\cd] exposes the REST API to web service choreography automated deployment. The \cd\ client must provide a choreography declarative specification, that contains the choreography architectural description and the locations of service packages. Based on this specification, the \cd\ coordinates invocations to the multiple \dm{s} belonging to the different participant organizations. After services deployment, the \cd\ provides the provider services locations to their respective consumer services.
 
 \end{description} 
 
-
-In this guide we assume that both \cd\ and \dm\ components will be executed on the deployer machine. Deployer is the human operator responsible by the deployment process. For while, a \cd\ instance is limited to use only one \dm.
+In this guide we assume that both \cd\ and \dm\ components will be executed on the deployer machine. Deployer is the human operator responsible by the deployment process. 
 
 \section{Requirements}
 
@@ -96,9 +93,7 @@ Before you run \ee, you will need:
 \item SVN;
 \item Java 7 (we are using OpenJDK);
 \item Maven 3  (\url{http://maven.apache.org/download.html});
-\item a Cloud Gateway access, as detailed in Section~\ref{sec:cloud};
-\item a Chef account, as detailed in Section~\ref{sec:chef};
-\item Knife (version 10.16.4).
+\item a Cloud Gateway access, as detailed in Section~\ref{sec:cloud}.
 \end{itemize}
 
 \section{Cloud Provider}
@@ -110,7 +105,7 @@ Whatever the cloud provider you choose, ensure that the required TCP ports of th
 
 \subsection{Amazon EC2}
 
-Amazon EC2 service is the simplest choice to dynamically retrieve VMs as you need. You need just to create an account at \url{http://aws.amazon.com} and configure a pair of keys to access the VMs through SSH. The trade-off is that you must to pay to Amazon! 
+Amazon EC2 service is the simplest choice to dynamically retrieve VMs as you need. You need just to create an account at \url{http://aws.amazon.com} and configure a pair of keys to access the VMs through SSH. The trade-off is that you must pay to Amazon! 
 
 Some hints:
 
@@ -160,33 +155,6 @@ After testing and installing some recipes in the VM, you can restore the bootstr
 
 Depending on how you create your VMs, some network configuration may be needed. In case of using VirtualBox, you can refer to \url{http://ccsl.ime.usp.br/foswiki/bin/view/Choreos/VMs}.
 
-\section{Chef}
-\label{sec:chef}
-
-\dm\ will properly configure the nodes using Chef, an open-source configuration management system. With Chef you can specify a resources set to be deployed into cloud nodes. These resources are described by a Ruby-like DSL (Domain Specific Language), and include: systems, files, scripts execution, and others.
-
-You can setup your own Chef server, or create an Hosted Chef server account. Hosted Chef is offered by Opscode\footnote{\url{http://www.opscode.com/}}. Although Hosted Chef frees you from setting the Chef Server in the infrastructure of your organization, it allows only a limited number of nodes to be managed by Chef.
-
-You must install the Knife program in the machine running the Deployment Manager component. Knife is a command line tool to control data on Chef Server. The installed knife must be on version 10.16.4. Make sure your \texttt{knife.rb} file be something like the example on Listing~\ref{lst:kniferb}. You can use the template in \texttt{chef-repo/.chef/knife\_template.rb} to create your \texttt{knife.rb}, that should stay in the \texttt{.chef} directory.
-
-{\footnotesize
-\begin{lstlisting}[caption=knife.rb example,label=lst:kniferb] 
-current_dir = File.dirname(__FILE__)
-log_level                :info
-log_location             STDOUT
-node_name                'leofl'
-client_key               "#{current_dir}/leofl.pem"
-validation_client_name   'chef-validator'
-validation_key           "#{current_dir}/chef-validator.pem"
-chef_server_url          'http://aguia1.ime.usp.br:40000'
-cache_type               'BasicFile'
-cache_options( :path => "#{current_dir}/checksums" )
-cookbook_path            ["#{current_dir}/../cookbooks"]
-\end{lstlisting}
-}
-
-Here, the ``node\_name'' corresponds to my \emph{client} name. Make sure your client is marked as ``admin'', what can be accomplished by using the Chef Server web interface. You will also need to upload to your Chef Server all the cookbooks from our cookbook folder: \texttt{chef-repo/cookbooks}.
-
 \section{EasyESB}
 
 The \ee\ enables the usage of a Distributed Service Bus, EasyESB~\footnote{\url{https://research.petalslink.org/display/easyesb}}, to bind the services according to the choreography specification. In this way, a service is not directly consumed by other services, but rather accessed through the bus. We also say that a service is ``proxified'' by the bus. The usage of the bus also enables some management and monitoring facilities. To enable the bus usage by \ee, add `\texttt{BUS=True}' to the \texttt{chordeployer.properties} configuration file. If this property is not set, the \ee\ deploys the services and bind them directly, without using the bus. If `\texttt{BUS=True}' is set, you must still set the \texttt{BUS\_POLICY} property on the same file. Possible values to the \texttt{BUS\_POLICY} property are:
@@ -196,6 +164,8 @@ The \ee\ enables the usage of a Distributed Service Bus, EasyESB~\footnote{\url{
 \item [ALWAYS\_CREATE:] each deployed service has a different associated EasyESB node. 
 \item [LIMITED\_ROUND\_ROBIN:] initially new ESB nodes are created as in the ALWAYS\_CREATE policy. After a limit is reached, new proxifications are distributed to the existing ESB nodes in a round robin sequence. The limit is defined by the ESB\_NODES\_LIMIT property on \texttt{chordeployed.properties}
 \end{description}
+
+Obs: \ee\ always create a new cloud node to host each EasyESB node.
 
 \section{Checkout and Compilation}
 
@@ -216,30 +186,29 @@ numbers=left
 DEPLOYMENT_MANAGER_PORT=9100
 CLOUD_PROVIDER=AWS
 NODE_SELECTOR=LIMITED_ROUND_ROBIN
-VM_LIMIT=70
+VM_LIMIT=5
 
-FIXED_VM_IPS=192.168.122.160, 192.168.122.91, 192.168.122.14, 192.168.122.182
-FIXED_VM_HOSTNAMES=debian32, debian32doB, debian64, debian64doB
-FIXED_VM_PRIVATE_SSH_KEYS=/path/to/id_rsa, /path/to/id_rsa, /path/to/id_rsa
-FIXED_VM_USERS=choreos, choreos, choreos, choreos
-FIXED_VM_TYPES=LARGE, SMALL, MEDIUM, SMALL
+FIXED_VM_IPS=192.168.56.101
+FIXED_VM_HOSTNAMES=leo-arch-node
+FIXED_VM_PRIVATE_SSH_KEYS=/home/leonardo/.ssh/nopass
+FIXED_VM_USERS=choreos
+MAPPER_POLICY=ANY_FIT
+FIXED_VM_TYPES=SMALL
 
-AMAZON_ACCESS_KEY_ID=secret
-AMAZON_SECRET_KEY=secret
-AMAZON_KEY_PAIR=leofl
-AMAZON_PRIVATE_SSH_KEY=/path/to/leofl.pem
+AMAZON_ACCESS_KEY_ID=SECRET
+AMAZON_SECRET_KEY=SECRET
+AMAZON_KEY_PAIR=leoflaws
+AMAZON_PRIVATE_SSH_KEY=/home/leonardo/.ssh/leoflaws.pem
 
-OPENSTACK_KEY_PAIR=leof
-OPENSTACK_PRIVATE_SSH_KEY=/path/to/nopass
-OS_NO_CACHE=1
+OPENSTACK_KEY_PAIR=leofl
+OPENSTACK_PRIVATE_SSH_KEY=/home/leonardo/.ssh/nopass
 OPENSTACK_TENANT=CHOReOS_Sandbox
-OPENSTACK_USER=leonardo
-OPENSTACK_PASSWORD=secret
-OPENSTACK_IP="http://172.16.239.1:5000/v2.0/"
+OPENSTACK_USER=leofl
+OPENSTACK_PASSWORD=SECRET
+OPENSTACK_IP=http://172.15.237.10:5000/v2.0
 
-CHEF_CONFIG_FILE=/path/to/chef-repo/.chef/knife.rb
-CHEF_REPO=/path/to/chef-repo
-CHEF_CLIENT_LOG=/tmp/chef-client.log 
+IDLE_POOL_SIZE=0
+
 \end{lstlisting}
 }
 
@@ -278,8 +247,5 @@ If you successfully start the \cd\ and the \dm\, you must see the following mess
 \texttt{\dm\ has started [http://localhost:9101/deploymentmanager/]}
 
 To verify if it is everything OK, run the \textsf{org.ow2.choreos.chors.SimpleChorEnactmentTest}. This test will deploy a simple choreography composed of two services and try to invoke it.
-
-
-
 
 \end{document}
