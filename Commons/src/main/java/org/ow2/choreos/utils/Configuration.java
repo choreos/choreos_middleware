@@ -55,17 +55,29 @@ public class Configuration {
         if (key == null)
             throw new IllegalArgumentException();
         String value = properties.getString(key);
-        if (value != null)
-            value.trim();
-        return value;
+        return process(key, value);
+    }
+
+    private String process(String key, String value) {
+        if (value != null) {
+            if (value.contains("#")) {
+                logger.warn("The value for " + key
+                        + " property contains '#'. Beware that inline comments are not allowed in property files!");
+            }
+            return value.trim();
+        } else {
+            logger.error(key + " not found in " + properties.getFileName());
+            return value;
+        }
     }
 
     public String[] getMultiple(String key) {
         if (key == null)
             throw new IllegalArgumentException();
         String[] values = properties.getStringArray(key);
-        for (int i = 0; i < values.length; i++)
-            values[i] = values[i].trim();
+        for (int i = 0; i < values.length; i++) {
+            values[i] = process(key, values[i]);
+        }
         return values;
     }
 
