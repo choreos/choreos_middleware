@@ -51,7 +51,7 @@
 \newcommand{\cd}{Choreography Deployer}
 \newcommand{\dm}{Deployment Manager}
 
-\title{CHOReOS \ee\ Installation Guide \\ {\normalsize Version 2.0}}
+\title{CHOReOS \ee\ Installation Guide \\ {\normalsize Version 2.1}}
 \author{Leonardo Leite (IME - USP)}
 
 \begin{document}
@@ -227,6 +227,8 @@ The IDLE\_POOL\_SIZE makes the Deployment Manager operate with a pool of idle no
 Other options are explained in the \texttt{deployment.properties.template} file.
 
 In the \texttt{ChoreographyDeployer} project you may also edit the file \texttt{owners.properties}. If you are going to use only one cloud infrastructure, and the default \ee\ configuration\footnote{Choreography Deployer and Deployment Manager on the same machine, and both using their respective default ports.}, the file do not need to be changed. If you are going to use multiple cloud environments, you need to configure one Deployment Manager to each cloud infrastructure. So, you must configure the \texttt{owners.properties} file to give a name to each available Deployment Manager. These names will be compared with the \texttt{owner} attribute in the  service specifications, so the service can be deployed by the matched Deployment Manager. If there is no match, the DEFAULT value declared on \texttt{owners.properties} will be used.
+
+\emph{Attention:} inline comments are not allowed in properties files. Therefore, the following would not work: \verb!VM\_LIMIT=3 \# how many instances we can afford to pay!
 
 \section{Execution}
 
