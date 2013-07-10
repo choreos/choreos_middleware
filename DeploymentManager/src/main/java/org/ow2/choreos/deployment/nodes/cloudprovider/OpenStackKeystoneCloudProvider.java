@@ -17,9 +17,8 @@ public class OpenStackKeystoneCloudProvider extends JCloudsCloudProvider {
 
     private static final String USER_NAME = "ubuntu";
     private static final String USER_PRIVATE_KEY = DeploymentManagerConfiguration.get("OPENSTACK_PRIVATE_SSH_KEY");
+    private static final String DEFAULT_IMAGE_ID = DeploymentManagerConfiguration.get("OPENSTACK_IMAGE_ID");
     private static final String DEFAULT_FLAVOR_NAME = "m1.tiny";
-    private static final String DEFAULT_IMAGE = "RegionOne/210e028d-9b88-4e54-af6b-25fc5ca00e69"; // Ubuntu
-    // 12.04
 
     private static final String OP_AUTHURL = DeploymentManagerConfiguration.get("OPENSTACK_IP");
     private static final String OP_TENANT = DeploymentManagerConfiguration.get("OPENSTACK_TENANT");
@@ -49,7 +48,7 @@ public class OpenStackKeystoneCloudProvider extends JCloudsCloudProvider {
             throw new IllegalStateException("No images available!");
 
         for (Image image : images) {
-            if (image.getId().equals(DEFAULT_IMAGE))
+            if (image.getId().equals(DEFAULT_IMAGE_ID))
                 return image;
         }
 
@@ -74,7 +73,7 @@ public class OpenStackKeystoneCloudProvider extends JCloudsCloudProvider {
 
     @Override
     protected String getDefaultImageId() {
-        return DEFAULT_IMAGE;
+        return DEFAULT_IMAGE_ID;
     }
 
     @Override

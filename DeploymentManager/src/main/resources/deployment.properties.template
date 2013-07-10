@@ -38,6 +38,7 @@ OPENSTACK_USER=secret
 OPENSTACK_PASSWORD=secret
 OPENSTACK_KEY_PAIR=keyname
 OPENSTACK_PRIVATE_SSH_KEY=/path/to/keyname.pem
+OPENSTACK_IMAGE_ID=RegionOne/1654b5b6-49b7-4039-b7b7-0e42e85480f4
 
 # creates a pool of extra VMs to make the deployment faster and more scalable
 # the trade-off is the cost of some more VMs
