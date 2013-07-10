@@ -111,7 +111,7 @@ public class SshUtil {
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
-                    logger.error("Sleep exception \"u.u", e);
+                    logger.error("Sleep exception! Cause: ", e.getCause());
                 }
             }
 

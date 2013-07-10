@@ -31,6 +31,8 @@ AMAZON_SECRET_KEY=secret
 AMAZON_KEY_PAIR=leofl
 # the correspondent public key must be registered on the AWS web console, related with the AMAZON_KEY_PAIR above
 AMAZON_PRIVATE_SSH_KEY=/home/leonardo/.ssh/leofl.pem
+# optional:
+AMAZON_IMAGE_ID=
 
 OPENSTACK_IP=http://198.55.33.14:5000/v2.0
 OPENSTACK_TENANT=Choreos
