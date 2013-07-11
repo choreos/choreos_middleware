@@ -1,19 +1,14 @@
 package org.ow2.choreos.deployment.services.preparer;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
-
-import org.ow2.choreos.breaker.Invoker;
-import org.ow2.choreos.breaker.InvokerException;
+import org.ow2.choreos.deployment.nodes.cm.NodeNotPreparedException;
+import org.ow2.choreos.deployment.nodes.cm.NodePreparer;
+import org.ow2.choreos.deployment.nodes.cm.NodePreparers;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpdater;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpdaters;
 import org.ow2.choreos.deployment.nodes.cm.PackageTypeToCookbook;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
-import org.ow2.choreos.utils.SshNotConnected;
-import org.ow2.choreos.utils.SshUtil;
 import org.ow2.choreos.utils.SshWaiter;
-import org.ow2.choreos.utils.TimeoutsAndTrials;
 
 public class InstanceDeploymentPreparer {
 
@@ -37,58 +32,20 @@ public class InstanceDeploymentPreparer {
     }
     
     private void runDeploymentPrepare() throws PrepareDeploymentFailedException {
-        int timeout = TimeoutsAndTrials.get("PREPARE_DEPLOYMENT_TIMEOUT");
-        int trials = TimeoutsAndTrials.get("PREPARE_DEPLOYMENT_TRIALS");
-        String command = getCommand();
-        PreparerTask task = new PreparerTask(command, node);
-        Invoker<String> invoker = new Invoker<String>(task, trials, timeout, TimeUnit.SECONDS);
+        NodePreparer nodePreparer = NodePreparers.getPreparerFor(node);
+        String packageUri = spec.getPackageUri();
+        String cookbookTemplateName = PackageTypeToCookbook.getCookbookName(spec.getPackageType());        
         try {
-            instanceId = invoker.invoke();
-        } catch (InvokerException e) {
+            instanceId = nodePreparer.prepareNode(packageUri, cookbookTemplateName);
+        } catch (NodeNotPreparedException e1) {
             throw new PrepareDeploymentFailedException(spec.getName(), node);
         }
     }
 
-    private String getCommand() {
-        String packageUri = spec.getPackageUri();
-        String cookbookTemplateName = PackageTypeToCookbook.getCookbookName(spec.getPackageType());
-        return ". chef-solo/prepare_deployment.sh " + packageUri + " " + cookbookTemplateName;
-    }
-    
     private void scheduleHandler() {
-        InstanceCreatorUpdateHandler handler = getHandler(instanceId);
+        InstanceCreatorUpdateHandler handler = new InstanceCreatorUpdateHandler(serviceUUID, instanceId, spec, node);
         NodeUpdater nodeUpdater = NodeUpdaters.getUpdaterFor(node);
         nodeUpdater.addHandler(handler);
-    }
-
-    private InstanceCreatorUpdateHandler getHandler(String instanceId) {
-        InstanceCreatorUpdateHandler handler = new InstanceCreatorUpdateHandler(serviceUUID, instanceId, spec, node);
-        return handler;
-    }
-    
-    private class PreparerTask implements Callable<String> {
-
-        String command;
-        CloudNode node;
-
-        public PreparerTask(String command, CloudNode node) {
-            this.command = command;
-            this.node = node;
-        }
-
-        @Override
-        public String call() throws Exception {
-            SshUtil ssh = waitForSshAccess();
-            String serviceInstanceId = ssh.runCommand(command);
-            ssh.disconnect();
-            return serviceInstanceId;
-        }
-
-        private SshUtil waitForSshAccess() throws SshNotConnected {
-            int timeout = TimeoutsAndTrials.get("CONNECT_SSH_TIMEOUT");
-            return sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
-        }
-
     }
 
 }
