@@ -3,8 +3,6 @@ package org.ow2.choreos.deployment.services.update;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 public class Migrate extends BaseAction {
 
     private static final String NAME = "Migrate instance";
@@ -29,7 +27,7 @@ public class Migrate extends BaseAction {
 //        } catch (PrepareDeploymentFailedException e) {
 //            throw new UpdateActionFailedException();
 //        }
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override

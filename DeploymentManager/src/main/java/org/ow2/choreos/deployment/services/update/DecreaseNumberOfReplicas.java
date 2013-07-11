@@ -3,8 +3,6 @@ package org.ow2.choreos.deployment.services.update;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 public class DecreaseNumberOfReplicas extends BaseAction {
 
     private static final String NAME = "Decrease number of instances";
@@ -32,7 +30,7 @@ public class DecreaseNumberOfReplicas extends BaseAction {
 //                throw new UpdateActionFailedException();
 //            }
 //        }
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
