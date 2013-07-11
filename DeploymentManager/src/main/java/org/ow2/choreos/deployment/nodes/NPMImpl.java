@@ -103,8 +103,8 @@ public class NPMImpl implements NodePoolManager {
     @Override
     public void updateNode(String nodeId) throws NodeNotUpdatedException, NodeNotFoundException {
         CloudNode node = this.getNode(nodeId);
-        NodeUpdater updater = NodeUpdaters.getUpdaterFor(nodeId);
-        updater.update(node);
+        NodeUpdater updater = NodeUpdaters.getUpdaterFor(node);
+        updater.update();
     }
 
     @Override

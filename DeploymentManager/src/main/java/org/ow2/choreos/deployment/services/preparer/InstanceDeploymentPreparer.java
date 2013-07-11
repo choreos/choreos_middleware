@@ -57,7 +57,7 @@ public class InstanceDeploymentPreparer {
     
     private void scheduleHandler() {
         InstanceCreatorUpdateHandler handler = getHandler(instanceId);
-        NodeUpdater nodeUpdater = NodeUpdaters.getUpdaterFor(node.getId());
+        NodeUpdater nodeUpdater = NodeUpdaters.getUpdaterFor(node);
         nodeUpdater.addHandler(handler);
     }
 

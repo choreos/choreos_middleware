@@ -32,6 +32,7 @@ public class NodeUpdater {
     // this executor is shared among multiple updates to the same node
     private final ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
 
+    private CloudNode node;
     private UpdateHandlers handlers = new UpdateHandlers();
 
     private final int timeout;
@@ -41,7 +42,8 @@ public class NodeUpdater {
 
     private Logger logger = Logger.getLogger(NodeUpdater.class);
 
-    public NodeUpdater() {
+    public NodeUpdater(CloudNode node) {
+        this.node = node;
         this.timeout = TimeoutsAndTrials.get("UPDATE_TIMEOUT");
         this.trials = TimeoutsAndTrials.get("UPDATE_TRIALS");
     }
@@ -50,8 +52,8 @@ public class NodeUpdater {
         handlers.addHandler(handler);
     }
 
-    public void update(CloudNode node) throws NodeNotUpdatedException {
-        UpdateInvokerTask updateTask = new UpdateInvokerTask(node);
+    public void update() throws NodeNotUpdatedException {
+        UpdateInvokerTask updateTask = new UpdateInvokerTask();
         Future<Void> future = singleThreadExecutor.submit(updateTask);
         checkFuture(node, future);
     }
@@ -77,15 +79,9 @@ public class NodeUpdater {
 
     private class UpdateInvokerTask implements Callable<Void> {
 
-        CloudNode node;
-
-        public UpdateInvokerTask(CloudNode node) {
-            this.node = node;
-        }
-
         @Override
         public Void call() throws Exception {
-            ChefSoloTask task = new ChefSoloTask(node);
+            ChefSoloTask task = new ChefSoloTask();
             Invoker<Void> invoker = new Invoker<Void>(task, trials, timeout, TimeUnit.SECONDS);
             invoker.invoke();
             return null;
@@ -93,12 +89,6 @@ public class NodeUpdater {
     }
 
     private class ChefSoloTask implements Callable<Void> {
-
-        CloudNode node;
-
-        public ChefSoloTask(CloudNode node) {
-            this.node = node;
-        }
 
         @Override
         public Void call() throws Exception {

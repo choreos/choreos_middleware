@@ -7,6 +7,8 @@ package org.ow2.choreos.deployment.nodes.cm;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.ow2.choreos.nodes.datamodel.CloudNode;
+
 public class NodeUpdaters {
 
     // the key is the node id
@@ -15,13 +17,14 @@ public class NodeUpdaters {
     public static NodeUpdater updaterForTest;
     public static boolean testing = false;
     
-    public static NodeUpdater getUpdaterFor(String nodeId) {
+    public static NodeUpdater getUpdaterFor(CloudNode node) {
+        String nodeId = node.getId();
         if (testing) {
             return updaterForTest;
         } else {
             synchronized (NodeUpdaters.class) {
                 if (!updaters.containsKey(nodeId)) {
-                    NodeUpdater updater = new NodeUpdater();
+                    NodeUpdater updater = new NodeUpdater(node);
                     updaters.put(nodeId, updater);
                 }
             }
