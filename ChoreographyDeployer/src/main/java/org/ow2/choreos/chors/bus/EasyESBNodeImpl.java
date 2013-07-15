@@ -4,13 +4,17 @@
 
 package org.ow2.choreos.chors.bus;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import com.ebmwebsourcing.easyesb.admin.client.impl.AdminClientImpl;
 import com.ebmwebsourcing.esstar.management.UserManagementClient;
 
+import easyesb.petalslink.com.data.admin._1.AddNeighBourNode;
 import esstar.petalslink.com.service.management._1_0.ManagementException;
 
 /**
@@ -59,6 +63,26 @@ public class EasyESBNodeImpl implements EasyESBNode {
         String response = cli.proxify(serviceUrl, serviceWsdl);
         String proxifiedUri = response.replace("localhost", this.nodeIp);
         return proxifiedUri;
+    }
+    
+    public void addNeighbour(String neighbourAdminEndpoint) throws ManagementException {
+        AdminClientImpl cli = new AdminClientImpl(this.adminEndpoint);
+        AddNeighBourNode payload = new AddNeighBourNode();
+        URI neighbourURI;
+        try {
+            neighbourURI = new URI(neighbourAdminEndpoint);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("neighbourAdminEndpoint not OK: " + neighbourAdminEndpoint);
+        }
+        payload.setBaseURI(neighbourURI);
+        cli.addNeighBourNode(payload);
+    }
+    
+    public static void main(String[] args) throws ManagementException {
+        String nodeAddress = "http://23.23.16.157:8180/services/adminExternalEndpoint";
+        String neighbourAddress = "http://107.21.192.248:8180";
+        EasyESBNodeImpl easyEsb = new EasyESBNodeImpl(nodeAddress);
+        easyEsb.addNeighbour(neighbourAddress);
     }
     
 }

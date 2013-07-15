@@ -15,6 +15,36 @@
  	<repositories>
 		<repository>
 			<id>ebmws-public</id>
+			<url>http://maven.petalslink.com/public</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>ebmws-public.others</id>
+			<url>http://maven.petalslink.com/others</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>ebmws-public.snapshot</id>
+			<url>http://maven.petalslink.com/public-snapshot</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>ebmws-public.research</id>
 			<url>http://maven.petalslink.com/public-research</url>
 			<releases>
 				<enabled>true</enabled>
@@ -41,6 +71,11 @@
 			<groupId>com.ebmwebsourcing.esstar.esmanagement</groupId>
 			<version>v2013-01-10</version>
 		</dependency> 
+		<dependency>
+			<artifactId>ws-binding-admin-client</artifactId>
+			<groupId>com.ebmwebsourcing.easyesb</groupId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>		
 		<dependency>
 			<groupId>eu.choreos</groupId>
 			<artifactId>rehearsal</artifactId>

@@ -22,5 +22,6 @@ public interface EasyESBNode {
      *             if could not complete the operation
      */
     public String proxifyService(String serviceUrl, String serviceWsdl) throws ManagementException;
+    
 
 }
