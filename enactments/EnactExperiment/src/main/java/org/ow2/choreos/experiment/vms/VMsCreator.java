@@ -19,90 +19,90 @@ import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.utils.Concurrency;
 
-public class VMsCreator { 
+public class VMsCreator {
 
-	private Logger logger = Logger.getLogger(VMsCreator.class);
-	private AtomicInteger counter = new AtomicInteger();
-	
-	private static final int TIMEOUT = 4; // minutes
+    private Logger logger = Logger.getLogger(VMsCreator.class);
+    private AtomicInteger counter = new AtomicInteger();
 
-	/**
-	 * Create N VMs using the given cloud provider
-	 * @param N
-	 * @param cp
-	 * @return an ordered list with the times necessary to create each VM.
-	 * If a VM is not created, the size of the returned list is less then N.
-	 */
-	public List<Long> createVMs(int N, CloudProviderType cpType) {
+    private static final int TIMEOUT = 60; // minutes
 
-		CloudProvider cp = CloudProviderFactory.getInstance(cpType);
-		ExecutorService executor = Executors.newFixedThreadPool(N);
-		List<Future<Long>> futures = new ArrayList<Future<Long>>();
-		for (int i=0; i<N; i++) {
-			Future<Long> future = executor.submit(new VMCreator(cp));
-			futures.add(future);
-		}
-		
-		Concurrency.waitExecutor(executor, TIMEOUT);
-		System.out.println("");
-		
-		List<Long> times = new ArrayList<Long>();
-		for (Future<Long> f: futures) {
-			Long time = this.checkFuture(f);
-			if (time != null) {
-				times.add(time);
-			}
-		}
-		
-		executor.shutdownNow();
-		Collections.sort(times);
-		return times;
-	}
-	
-	private Long checkFuture(Future<Long> f) {
-		Long time = null;
-		try {
-			if (f.isDone()) {
-				time = f.get();
-			} else {
-				logger.warn("VM not ready yet");
-			}
-		} catch (InterruptedException e) {
-			logger.error("Interrupted thread! Should not happen!");
-		} catch (ExecutionException e) {
-			logger.info("VM not created (Execution exception): " + e.getCause().getMessage());
-		} catch (CancellationException e) {
-			logger.info("VM not created (CancellationException)");
-		}
-		return time;
-	}
+    /**
+     * Create N VMs using the given cloud provider
+     * 
+     * @param N
+     * @param cp
+     * @return an ordered list with the times necessary to create each VM. If a
+     *         VM is not created, the size of the returned list is less then N.
+     */
+    public List<Long> createVMs(int N, CloudProviderType cpType) {
 
-	private class VMCreator implements Callable<Long> {
+        CloudProvider cp = CloudProviderFactory.getInstance(cpType);
+        ExecutorService executor = Executors.newFixedThreadPool(N);
+        List<Future<Long>> futures = new ArrayList<Future<Long>>();
+        for (int i = 0; i < N; i++) {
+            Future<Long> future = executor.submit(new VMCreator(cp));
+            futures.add(future);
+        }
 
-		CloudProvider cp;
-		
-		public VMCreator(CloudProvider cp) {
-			this.cp = cp;
-		}
-		
-		/**
-		 * Returns the time (seconds) to create the VM
-		 * This time encompasses the time to the VM gets ready for use,
-		 * which we verify with a SSH connection
-		 * If the VM is not created, an exception is thrown
-		 */
-		@Override
-		public Long call() throws Exception {
+        Concurrency.waitExecutor(executor, TIMEOUT);
+        System.out.println("");
 
-			long t0 = System.currentTimeMillis();
-			CloudNode node = cp.createNode(new NodeSpec());
-			VMChecker ssh = new VMChecker();
-			ssh.check(node.getIp());
-			long tf = System.currentTimeMillis();					
-			System.out.print(counter.incrementAndGet() + " ");
-			return (tf - t0)/1000;
-		}
-		
-	}
+        List<Long> times = new ArrayList<Long>();
+        for (Future<Long> f : futures) {
+            Long time = this.checkFuture(f);
+            if (time != null) {
+                times.add(time);
+            }
+        }
+
+        executor.shutdownNow();
+        Collections.sort(times);
+        return times;
+    }
+
+    private Long checkFuture(Future<Long> f) {
+        Long time = null;
+        try {
+            if (f.isDone()) {
+                time = f.get();
+            } else {
+                logger.warn("VM not ready yet");
+            }
+        } catch (InterruptedException e) {
+            logger.error("Interrupted thread! Should not happen!");
+        } catch (ExecutionException e) {
+            logger.info("VM not created (Execution exception): " + e.getCause().getMessage());
+        } catch (CancellationException e) {
+            logger.info("VM not created (CancellationException)");
+        }
+        return time;
+    }
+
+    private class VMCreator implements Callable<Long> {
+
+        CloudProvider cp;
+
+        public VMCreator(CloudProvider cp) {
+            this.cp = cp;
+        }
+
+        /**
+         * Returns the time (seconds) to create the VM This time encompasses the
+         * time to the VM gets ready for use, which we verify with a SSH
+         * connection If the VM is not created, an exception is thrown
+         */
+        @Override
+        public Long call() throws Exception {
+
+            long t0 = System.currentTimeMillis();
+            CloudNode node = cp.createNode(new NodeSpec());
+            VMChecker ssh = new VMChecker();
+            ssh.check(node.getIp());
+            long tf = System.currentTimeMillis();
+            System.out.println(counter.incrementAndGet() + " " + node.getIp());
+            return (tf - t0) / 1000;
+        }
+
+    }
 
 }
