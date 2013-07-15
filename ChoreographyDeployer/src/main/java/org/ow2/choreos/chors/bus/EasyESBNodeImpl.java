@@ -11,9 +11,13 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import com.ebmwebsourcing.easierbsm.admin.client.api.BSMAdminClient;
+import com.ebmwebsourcing.easierbsm.admin.client.impl.BSMAdminClientImpl;
 import com.ebmwebsourcing.easyesb.admin.client.impl.AdminClientImpl;
+import com.ebmwebsourcing.easyesb.soa.api.ESBException;
 import com.ebmwebsourcing.esstar.management.UserManagementClient;
 
+import easierbsm.petalslink.com.service.bsmadmin._1_0.AdminExceptionMsg;
 import easyesb.petalslink.com.data.admin._1.AddNeighBourNode;
 import esstar.petalslink.com.service.management._1_0.ManagementException;
 
@@ -76,6 +80,11 @@ public class EasyESBNodeImpl implements EasyESBNode {
         }
         payload.setBaseURI(neighbourURI);
         cli.addNeighBourNode(payload);
+    }
+    
+    public void notifyEasierBSM(String bsmEndpoint) throws ESBException, AdminExceptionMsg {
+        BSMAdminClient bsmClient = new BSMAdminClientImpl(bsmEndpoint);
+        bsmClient.connectToEsb(this.adminEndpoint, true);
     }
     
     public static void main(String[] args) throws ManagementException {
