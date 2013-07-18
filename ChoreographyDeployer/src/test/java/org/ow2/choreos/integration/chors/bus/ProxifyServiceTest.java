@@ -18,6 +18,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.ow2.choreos.chors.bus.EasyESBException;
 import org.ow2.choreos.chors.bus.EasyESBNode;
 import org.ow2.choreos.chors.bus.ServiceInstanceProxifier;
 import org.ow2.choreos.chors.bus.selector.ESBNodeFactory;
@@ -42,7 +43,6 @@ import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.tests.ModelsForTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
-import esstar.petalslink.com.service.management._1_0.ManagementException;
 import eu.choreos.vv.clientgenerator.Item;
 import eu.choreos.vv.clientgenerator.WSClient;
 import eu.choreos.vv.exceptions.FrameworkException;
@@ -107,7 +107,7 @@ public class ProxifyServiceTest {
         ServiceInstanceProxifier proxifier = new ServiceInstanceProxifier();
         try {
             proxifiedUrl = proxifier.proxify(serviceInstance, esbNode);
-        } catch (ManagementException e) {
+        } catch (EasyESBException e) {
             System.out.println(e);
             fail();
         }

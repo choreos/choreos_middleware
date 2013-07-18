@@ -61,15 +61,19 @@ public class EasyESBNodeImpl implements EasyESBNode {
     }
 
     @Override
-    public String proxifyService(String serviceUrl, String serviceWsdl) throws ManagementException {
-        logger.debug("-c " + this.adminEndpoint + " -pr " + serviceUrl + " " + serviceWsdl);
+    public String proxifyService(String serviceUrl, String serviceWsdl) throws EasyESBException {
         UserManagementClient cli = new UserManagementClient(this.adminEndpoint);
-        String response = cli.proxify(serviceUrl, serviceWsdl);
+        String response = null;
+        try {
+            response = cli.proxify(serviceUrl, serviceWsdl);
+        } catch (ManagementException e) {
+            fail("Proxifying " + serviceUrl + " in the bus " + this.adminEndpoint + " failed.");
+        }
         String proxifiedUri = response.replace("localhost", this.nodeIp);
         return proxifiedUri;
     }
-    
-    public void addNeighbour(String neighbourAdminEndpoint) throws ManagementException {
+
+    public void addNeighbour(String neighbourAdminEndpoint) throws EasyESBException {
         AdminClientImpl cli = new AdminClientImpl(this.adminEndpoint);
         AddNeighBourNode payload = new AddNeighBourNode();
         URI neighbourURI;
@@ -79,19 +83,35 @@ public class EasyESBNodeImpl implements EasyESBNode {
             throw new IllegalArgumentException("neighbourAdminEndpoint not OK: " + neighbourAdminEndpoint);
         }
         payload.setBaseURI(neighbourURI);
-        cli.addNeighBourNode(payload);
+        try {
+            cli.addNeighBourNode(payload);
+        } catch (ManagementException e) {
+            fail("Adding " + neighbourAdminEndpoint + " as neighbour of " + this.adminEndpoint + " failed.");
+        }
     }
-    
-    public void notifyEasierBSM(String bsmEndpoint) throws ESBException, AdminExceptionMsg {
-        BSMAdminClient bsmClient = new BSMAdminClientImpl(bsmEndpoint);
-        bsmClient.connectToEsb(this.adminEndpoint, true);
+
+    public void notifyEasierBSM(String bsmAdminEndpoint) throws EasyESBException {
+        BSMAdminClient bsmClient;
+        try {
+            bsmClient = new BSMAdminClientImpl(bsmAdminEndpoint);
+            bsmClient.connectToEsb(this.adminEndpoint, true);
+        } catch (ESBException e) {
+            fail("Connecting to " + bsmAdminEndpoint + " failed.");
+        } catch (AdminExceptionMsg e) {
+            fail("Notifying " + bsmAdminEndpoint + " about " + this.adminEndpoint + " failed.");
+        }
     }
-    
-    public static void main(String[] args) throws ManagementException {
+
+    private void fail(String msg) throws EasyESBException {
+        logger.error(msg);
+        throw new EasyESBException(msg);
+    }
+
+    public static void main(String[] args) throws EasyESBException {
         String nodeAddress = "http://23.23.16.157:8180/services/adminExternalEndpoint";
         String neighbourAddress = "http://107.21.192.248:8180";
         EasyESBNodeImpl easyEsb = new EasyESBNodeImpl(nodeAddress);
         easyEsb.addNeighbour(neighbourAddress);
     }
-    
+
 }

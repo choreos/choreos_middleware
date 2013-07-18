@@ -4,9 +4,6 @@
 
 package org.ow2.choreos.chors.bus;
 
-import java.io.IOException;
-
-import esstar.petalslink.com.service.management._1_0.ManagementException;
 
 public interface EasyESBNode {
 
@@ -18,10 +15,12 @@ public interface EasyESBNode {
      * @param serviceUrl
      * @param serviceWsdl
      * @return the URI to access the service exposed by the bus
-     * @throws IOException
-     *             if could not complete the operation
+     * @throws EasyESBException
      */
-    public String proxifyService(String serviceUrl, String serviceWsdl) throws ManagementException;
+    public String proxifyService(String serviceUrl, String serviceWsdl) throws EasyESBException;
+
+    public void addNeighbour(String neighbourAdminEndpoint) throws EasyESBException;
     
+    public void notifyEasierBSM(String bsmAdminEndpoint) throws EasyESBException;
 
 }

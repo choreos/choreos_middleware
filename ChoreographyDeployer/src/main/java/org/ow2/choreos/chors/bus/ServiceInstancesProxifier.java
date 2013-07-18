@@ -10,8 +10,6 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceType;
 
-import esstar.petalslink.com.service.management._1_0.ManagementException;
-
 public class ServiceInstancesProxifier {
 
     private Logger logger = Logger.getLogger(ServiceInstancesProxifier.class);
@@ -36,7 +34,7 @@ public class ServiceInstancesProxifier {
                 String proxifiedAddress = proxifier.proxify(instance, esbNode);
                 instance.setBusUri(ServiceType.SOAP, proxifiedAddress);
                 logger.info(svcName + " instance proxified");
-            } catch (ManagementException e) {
+            } catch (EasyESBException e) {
                 logger.error(svcName + " could not be proxified");
             }
         }

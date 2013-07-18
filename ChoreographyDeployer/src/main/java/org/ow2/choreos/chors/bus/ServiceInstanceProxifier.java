@@ -7,11 +7,9 @@ package org.ow2.choreos.chors.bus;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceType;
 
-import esstar.petalslink.com.service.management._1_0.ManagementException;
-
 public class ServiceInstanceProxifier {
 
-    public String proxify(ServiceInstance serviceInstance, EasyESBNode esbNode) throws ManagementException {
+    public String proxify(ServiceInstance serviceInstance, EasyESBNode esbNode) throws EasyESBException {
 
         ServiceType type = serviceInstance.getServiceSpec().getServiceType();
         if (type != ServiceType.SOAP) {

@@ -17,8 +17,6 @@ import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.ModelsForTest;
 
-import esstar.petalslink.com.service.management._1_0.ManagementException;
-
 public class ServiceInstanceProxifierTest {
 
     private ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
@@ -33,7 +31,7 @@ public class ServiceInstanceProxifierTest {
         return instance;
     }
 
-    private EasyESBNode getEsbNode() throws ManagementException {
+    private EasyESBNode getEsbNode() throws EasyESBException {
 
         EasyESBNode esbNode = mock(EasyESBNodeImpl.class);
         when(esbNode.proxifyService(any(String.class), any(String.class))).thenReturn(PROXIFIED_ADDRESS);
@@ -41,7 +39,7 @@ public class ServiceInstanceProxifierTest {
     }
 
     @Test
-    public void test() throws ManagementException {
+    public void test() throws EasyESBException {
 
         ServiceInstance svc = this.getServiceInstance();
         EasyESBNode esbNode = this.getEsbNode();
