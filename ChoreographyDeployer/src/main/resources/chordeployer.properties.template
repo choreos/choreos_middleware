@@ -8,3 +8,6 @@ BUS_POLICY=SINGLE_NODE
 
 # used if BUS_POLICY=LIMITED_ROUND_ROBIN 
 ESB_NODES_LIMIT=0 
+
+# optional, in case you want to monitor EasyESB nodes with EasierBSM
+EASIER_BSM_ADMIN_ENDPOINT=

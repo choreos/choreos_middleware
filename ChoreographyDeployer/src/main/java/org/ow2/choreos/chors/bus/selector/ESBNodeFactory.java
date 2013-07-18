@@ -1,6 +1,8 @@
 package org.ow2.choreos.chors.bus.selector;
 
+import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.chors.bus.ESBRegister;
+import org.ow2.choreos.chors.bus.EasyESBException;
 import org.ow2.choreos.chors.bus.EasyESBNode;
 import org.ow2.choreos.chors.bus.EasyESBNodeImpl;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
@@ -21,6 +23,7 @@ import org.ow2.choreos.selectors.ObjectFactory;
 public class ESBNodeFactory implements ObjectFactory<EasyESBNode, ResourceImpact> {
 
     private static final int TIMEOUT_SECONDS = 5 * 60;
+    private static final String EASIER_BSM_ADMIN_ENDPOINT_PROPERTY = "EASIER_BSM_ADMIN_ENDPOINT";
 
     private NodePoolManager npm;
     private CloudNode node;
@@ -34,6 +37,7 @@ public class ESBNodeFactory implements ObjectFactory<EasyESBNode, ResourceImpact
     public EasyESBNode createNewInstance(ResourceImpact requirements) throws ObjectCreationException {
         createNewCloudNode();
         createNewESBNode();
+        notifyBSM();
         ESBRegister.addEsbNode(esbNode);
         return esbNode;
     }
@@ -63,6 +67,17 @@ public class ESBNodeFactory implements ObjectFactory<EasyESBNode, ResourceImpact
         String endpoint = this.getEndpoint();
         esbNode = new EasyESBNodeImpl(endpoint);
     }
+    
+    private void notifyBSM() {
+        String bsmAdminEndpoint = ChoreographyDeployerConfiguration.get(EASIER_BSM_ADMIN_ENDPOINT_PROPERTY);
+        if (bsmAdminEndpoint != null && !bsmAdminEndpoint.isEmpty()) {
+            try {
+                this.esbNode.notifyEasierBSM(bsmAdminEndpoint);
+            } catch (EasyESBException e) {
+                ; // log will be printed within EasyESBNodeImpl class
+            }
+        }
+    }    
     
     private String getEndpoint() {
         return "http://" + node.getIp() + ":8180/services/adminExternalEndpoint";
