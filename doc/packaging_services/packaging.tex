@@ -10,7 +10,7 @@
 \newcommand{\ee}{CHOReOS Enactment Engine}
 
 
-\title{How to package services to be deployed \\ by the \ee \\ {\normalsize Version 1.3}}
+\title{How to package services to be deployed \\ by the \ee \\ {\normalsize Version 1.4}}
 \author{Leonardo Leite (IME - USP)}
 
 \begin{document}
@@ -425,6 +425,8 @@ label=lst:wsdl_address]
 }
 
 \item If service A needs to invoke service B, there is no problem if service A is compiled with classes used to build service B. Actually, usually it is very useful to A having access to B interfaces. Nonetheless, this class dependency must be only static. There is no point in service A trying to access objects states of service B, or access resources, as configuration files, bundled in service B package.
+
+\item Packages cannot be downloaded from https URLs. This restricts using some services, such as Dropbox, to host the packages.
 
 \end{itemize}
 
