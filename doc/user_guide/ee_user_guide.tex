@@ -1,0 +1,63 @@
+
+\documentclass[a4paper, 10pt]{book}
+\usepackage[utf8]{inputenc}
+%\usepackage[brazil]{babel}
+\usepackage[top=3cm,left=3cm,right=2cm,bottom=2cm]{geometry} % para as margens
+\usepackage{graphicx} % para as figuras  
+\usepackage{color}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+
+% ---------------------------------------------------------------------------- %
+% Macros for proof-reading
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage[normalem]{ulem} % for \sout
+\newcommand{\ugh}[1]{\textcolor{red}{\uwave{#1}}} % please rephrase
+\newcommand{\ins}[1]{\textcolor{blue}{\uline{#1}}} % please insert
+\newcommand{\del}[1]{\textcolor{red}{\sout{#1}}} % please delete
+\newcommand{\chg}[2]{\textcolor{red}{\sout{#1}}{$\rightarrow$}\textcolor{blue}{\uline{#2}}} % please change
+
+% Put edit comments in a really ugly standout display
+\usepackage{ifthen}
+\usepackage{amssymb}
+\newboolean{showcomments}
+\setboolean{showcomments}{true} % toggle to show or hide comments
+\ifthenelse{\boolean{showcomments}}
+  {\newcommand{\nb}[2]{
+    \fcolorbox{gray}{yellow}{\bfseries\sffamily\scriptsize#1}
+    {\sf\small$\blacktriangleright$\textit{#2}$\blacktriangleleft$}
+   }
+   \newcommand{\version}{\emph{\scriptsize$-$working$-$}}
+  }
+  {\newcommand{\nb}[2]{}
+   \newcommand{•}{•}\version}{}
+  }
+
+% General comment
+\newcommand\info[1]{\nb{Info}{#1}}
+\newcommand\todo[1]{\nb{ToDo}{#1}}
+
+% Single author comment
+\newcommand\Leo[1]{\nb{Leo}{#1}}
+\newcommand\leo[1]{\nb{Leo}{#1}}
+
+\newcommand{\ee}{Enactment Engine}
+\newcommand{\cd}{Choreography Deployer}
+\newcommand{\dm}{Deployment Manager}
+
+\title{CHOReOS \ee\ \\ User Guide \\ {\normalsize Version 1.0}}
+\author{Leonardo Leite, Thiago Furtado, Nelson Lago (IME - USP)}
+
+\begin{document}
+
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+
+\input{install_guide.tex}
+\input{ee_api.tex}
+\input{packaging.tex}
+
+\end{document}

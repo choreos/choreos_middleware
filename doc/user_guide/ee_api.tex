@@ -1,21 +1,5 @@
-\documentclass[a4paper, 10pt]{article}
-\usepackage[utf8]{inputenc}
-%\usepackage[brazil]{babel}
-\usepackage[top=3cm,left=3cm,right=2cm,bottom=2cm]{geometry} % para as margens
-\usepackage{graphicx} % para as figuras  
-\usepackage{color}
-\usepackage[hidelinks]{hyperref}
-\usepackage{listings,enumerate}
 
-\newcommand{\ee}{CHOReOS Enactment Engine}
-
-
-\title{\ee\ REST API \\ {\normalsize Version 2.4}}
-\author{Leonardo Leite, Thiago Furtado, Nelson Lago (IME - USP)}
-
-\begin{document}
-
-\maketitle
+\chapter{\ee\ API}
 
 \section{Introduction}
 
@@ -104,12 +88,10 @@ This attribute is not described in this document because its structure is not fu
 \subsubsection*{XML representation}
 
 Each class is mapped to and from an XML representation according to the default behaviour of the JAXB API\footnote{Java Architecture for XML Binding (JAXB): allows Java developers to map Java classes to XML representations.}. 
-To properly build and read these XML representations, you can rely on the schema definition (XSD file) located in the appendix of this document. We provide here an example of \verb!ChorSpec! (Listing \ref{lst:chor_spec_xml}) and \verb!Choreography! (Listing \ref{lst:chor_xml}) XML representations to a little choreography with just two services (airline and travel-agency services). 
+To properly build and read these XML representations, you can rely on the schema definition (Section~ \ref{sec:xsd}). We provide here an example of \verb!ChorSpec! (Listing \ref{lst:chor_spec_xml}) and \verb!Choreography! (Listing \ref{lst:chor_xml}) XML representations to a little choreography with just two services (airline and travel-agency services). 
 
 {\footnotesize
-
 \lstset{language=XML}
-
 \begin{lstlisting}[caption=ChorSpec XML representation example, label=lst:chor_spec_xml]
 <choreographySpec>
     <deployableServiceSpecs>
@@ -553,7 +535,8 @@ public class ChorSpecExample {
 \end{lstlisting}
 }
 
-\section*{Appendix -- Choreography XML Schema Definition (XSD file)}
+\section{Choreography XML Schema Definition (XSD file)}
+\label{sec:xsd}
 
 {\footnotesize
 
@@ -835,5 +818,4 @@ Choreography XSD:
     </xs:simpleType>
 </xs:schema>
 \end{lstlisting}
-
-\end{document}
+}
