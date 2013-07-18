@@ -4,8 +4,6 @@
 
 package org.ow2.choreos.chors.bus;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,7 +16,10 @@ import com.ebmwebsourcing.easyesb.soa.api.ESBException;
 import com.ebmwebsourcing.esstar.management.UserManagementClient;
 
 import easierbsm.petalslink.com.service.bsmadmin._1_0.AdminExceptionMsg;
+import easybox.easyesb.petalslink.com.soa.model.datatype._1.EJaxbBasicNodeInformationsType;
 import easyesb.petalslink.com.data.admin._1.AddNeighBourNode;
+import easyesb.petalslink.com.data.admin._1.GetNodeInformations;
+import easyesb.petalslink.com.data.admin._1.GetNodeInformationsResponse;
 import esstar.petalslink.com.service.management._1_0.ManagementException;
 
 /**
@@ -73,23 +74,34 @@ public class EasyESBNodeImpl implements EasyESBNode {
         return proxifiedUri;
     }
 
-    public void addNeighbour(String neighbourAdminEndpoint) throws EasyESBException {
+    @Override
+    public void addNeighbour(EasyESBNode neighbour) throws EasyESBException {
+        String neighbourAdminEndpoint = neighbour.getAdminEndpoint();
+        EJaxbBasicNodeInformationsType neighbourNodeInfo = getNodeInfo(neighbourAdminEndpoint);
+        AddNeighBourNode parameters = new AddNeighBourNode();
+        parameters.setNeighbourNode(neighbourNodeInfo);
         AdminClientImpl cli = new AdminClientImpl(this.adminEndpoint);
-        AddNeighBourNode payload = new AddNeighBourNode();
-        URI neighbourURI;
         try {
-            neighbourURI = new URI(neighbourAdminEndpoint);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("neighbourAdminEndpoint not OK: " + neighbourAdminEndpoint);
-        }
-        payload.setBaseURI(neighbourURI);
-        try {
-            cli.addNeighBourNode(payload);
-        } catch (ManagementException e) {
+            cli.addNeighBourNode(parameters);
+        } catch (ManagementException e1) {
             fail("Adding " + neighbourAdminEndpoint + " as neighbour of " + this.adminEndpoint + " failed.");
         }
     }
 
+    private EJaxbBasicNodeInformationsType getNodeInfo(String adminEndpoint) throws EasyESBException {
+        AdminClientImpl client = new AdminClientImpl(adminEndpoint);
+        GetNodeInformations nodein = new GetNodeInformations();
+        GetNodeInformationsResponse nodeout = null;
+        try {
+            nodeout = client.getNodeInformations(nodein);
+        } catch (ManagementException e1) {
+            fail("Retrieving information about " + adminEndpoint + " failed");
+        }
+        EJaxbBasicNodeInformationsType nodeInfo = nodeout.getNode().getBasicNodeInformations();
+        return nodeInfo;
+    }
+
+    @Override
     public void notifyEasierBSM(String bsmAdminEndpoint) throws EasyESBException {
         BSMAdminClient bsmClient;
         try {
@@ -108,10 +120,11 @@ public class EasyESBNodeImpl implements EasyESBNode {
     }
 
     public static void main(String[] args) throws EasyESBException {
-        String nodeAddress = "http://23.23.16.157:8180/services/adminExternalEndpoint";
-        String neighbourAddress = "http://107.21.192.248:8180";
-        EasyESBNodeImpl easyEsb = new EasyESBNodeImpl(nodeAddress);
-        easyEsb.addNeighbour(neighbourAddress);
+        String nodeAddress = "http://10.0.0.5:8180/services/adminExternalEndpoint";
+        String neighbourAddress = "http://10.0.0.2:8180/services/adminExternalEndpoint";
+        EasyESBNodeImpl node = new EasyESBNodeImpl(nodeAddress);
+        EasyESBNodeImpl neighbour = new EasyESBNodeImpl(neighbourAddress);
+        node.addNeighbour(neighbour);
     }
 
 }

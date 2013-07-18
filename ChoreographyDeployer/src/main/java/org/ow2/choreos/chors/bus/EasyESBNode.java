@@ -19,7 +19,7 @@ public interface EasyESBNode {
      */
     public String proxifyService(String serviceUrl, String serviceWsdl) throws EasyESBException;
 
-    public void addNeighbour(String neighbourAdminEndpoint) throws EasyESBException;
+    public void addNeighbour(EasyESBNode neighbour) throws EasyESBException;
     
     public void notifyEasierBSM(String bsmAdminEndpoint) throws EasyESBException;
 
