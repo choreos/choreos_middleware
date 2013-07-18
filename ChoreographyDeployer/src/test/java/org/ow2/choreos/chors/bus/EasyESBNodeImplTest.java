@@ -21,7 +21,7 @@ public class EasyESBNodeImplTest {
         EasyAPILoader.loadEasyAPI();
     }
 
-    private Node createBSMNode(final QName name, final String host, final int port, final int soap_port)
+    private static Node createBSMNode(final QName name, final String host, final int port, final int soap_port)
             throws ESBException {
         ESBFactory factory = new BSMFactoryImpl("creation-resources-service-factory", "rawreport-service-factory");
         Node node = factory.createNode(name, new ConfigurationImpl(host, port, new HashMap<String, String>() {
@@ -34,7 +34,11 @@ public class EasyESBNodeImplTest {
     
     @Test
     public void test() throws ESBException {
-        Node monitoringBus = this.createBSMNode(new QName("http://petals.ow2.org", "MonitoringBus"), "localhost", 9101, 8085);
+        
+    }
+    
+    public static void main(String[] args) throws ESBException {
+        Node monitoringBus = createBSMNode(new QName("http://petals.ow2.org", "MonitoringBus"), "localhost", 9101, 8085);
     }
 
 }
