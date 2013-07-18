@@ -10,7 +10,7 @@
 \newcommand{\ee}{CHOReOS Enactment Engine}
 
 
-\title{\ee\ REST API \\ {\normalsize Version 2.3}}
+\title{\ee\ REST API \\ {\normalsize Version 2.4}}
 \author{Leonardo Leite, Thiago Furtado, Nelson Lago (IME - USP)}
 
 \begin{document}
@@ -433,7 +433,7 @@ of the choreography are correlated by means of the \texttt{name} attribute of Se
 
 In the \verb!EnactmentEngineAPI! project there is the \verb!ChorDeployerClient! class, which implements the \verb!ChoreographyDeployer! interface (Listing \ref{lst:java_interface}) and handles the REST communication with the Enactment Engine server. This means you can invoke the \ee\ by using a simple Java object, without worrying with XML details.
 
-{\small
+{\footnotesize
 \lstset{language=Java}
 \begin{lstlisting}[caption=\ee\ Java interface, label=lst:java_interface]
 package org.ow2.choreos.chors;
@@ -485,7 +485,73 @@ public interface ChoreographyDeployer {
 \end{lstlisting}
 }
 
-To use the \ee\ Java client in your code, it's enough to import the API project into your project. One way of doing this is using Maven: install the API project into your local maven repo (\texttt{EnactmentEngineAPI\$mvn install}), add it as a dependency of your project by editing your pom.xml, and finally compile your project.
+To use the \ee\ Java client in your code, it's enough to import the API project into your project. One way of doing this is using Maven: install the API project into your local maven repo (\texttt{EnactmentEngineAPI\$mvn install}), add it as a dependency of your project by editing your pom.xml (Listing~\ref{lst:ee_api_maven}), and finally compile your project.
+
+{\footnotesize
+\lstset{language=XML}
+\begin{lstlisting}[caption=Adding EnactmentEngineAPI as a dependency of your project, label=lst:ee_api_maven]
+<dependency>
+  <groupId>org.ow2.choreos</groupId>
+  <artifactId>EnactmentEngineAPI</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+</dependency>
+\end{lstlisting}
+}
+
+The Listing~\ref{lst:chor_spec_example_java} shows an example of how to use the Java API to create a choreography specification. This example is quite equivalent to the XML in Listing~\ref{lst:chor_spec_xml}.
+
+{\footnotesize
+\lstset{language=Java}
+\begin{lstlisting}[caption=Example of choreography specification using the Java API, label=lst:chor_spec_example_java]
+public class ChorSpecExample {
+
+    public static final String AIRLINE = "airline";
+    public static final String TRAVEL_AGENCY = "travelagency";
+    public static final String AIRLINE_JAR = 
+            "http://valinhos.ime.usp.br:54080/airline.jar";
+    public static final String TRAVEL_AGENCY_JAR = 
+            "http://valinhos.ime.usp.br:54080/travel.jar";
+    public static final int AIRLINE_PORT = 1234;
+    public static final int TRAVEL_AGENCY_PORT = 1235;
+
+    private ChoreographySpec chorSpec;
+    private DeployableServiceSpec airlineSpec;
+    private DeployableServiceSpec travelSpec;
+
+    public ChoreographySpec getChorSpec() {
+        createAirlineSpec();
+        createTravelAgencySpec();
+        chorSpec = new ChoreographySpec(this.airlineSpec, this.travelSpec);
+        return chorSpec;
+    }
+
+    private void createAirlineSpec() {
+        airlineSpec = new DeployableServiceSpec();
+        airlineSpec.setName(AIRLINE);
+        airlineSpec.setServiceType(ServiceType.SOAP);
+        airlineSpec.setPackageType(PackageType.COMMAND_LINE);
+        airlineSpec.setPackageUri(AIRLINE_JAR);
+        airlineSpec.setPort(AIRLINE_PORT);
+        airlineSpec.setEndpointName(AIRLINE);
+        airlineSpec.setRoles(Collections.singletonList(AIRLINE));
+    }
+
+    private void createTravelAgencySpec() {
+        travelSpec = new DeployableServiceSpec();
+        travelSpec.setName(TRAVEL_AGENCY);
+        travelSpec.setServiceType(ServiceType.SOAP);
+        travelSpec.setPackageType(PackageType.COMMAND_LINE);
+        travelSpec.setPackageUri(TRAVEL_AGENCY_JAR);
+        travelSpec.setPort(TRAVEL_AGENCY_PORT);
+        travelSpec.setEndpointName(TRAVEL_AGENCY);
+        travelSpec.setRoles(Collections.singletonList(TRAVEL_AGENCY));
+        ServiceDependency dependency = new ServiceDependency();
+        dependency.setServiceSpecName(AIRLINE);
+        dependency.setServiceSpecRole(AIRLINE);
+        travelSpec.addDependency(dependency);
+    }
+\end{lstlisting}
+}
 
 \section*{Appendix -- Choreography XML Schema Definition (XSD file)}
 
