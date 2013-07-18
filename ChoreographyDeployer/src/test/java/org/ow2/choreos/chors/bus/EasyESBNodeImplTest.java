@@ -18,7 +18,7 @@ public class EasyESBNodeImplTest {
 
     @Before
     public void setUp() throws Exception {
-    
+        EasyAPILoader.loadEasyAPI();
     }
 
     private Node createBSMNode(final QName name, final String host, final int port, final int soap_port)
