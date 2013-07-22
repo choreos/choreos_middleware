@@ -133,6 +133,17 @@ Dependencies (JAR libraries) must be packaged within the WAR file. However, we p
 \item \verb! wstx-asl-3.2.3.jar!
 \end{itemize}
 
+One way to be sure that you are using the required versions is making your project depending on JAX-WS by adding the fragment of Listing~\ref{lst:jaxws_pom} in your Maven's pom:
+
+{\footnotesize
+\begin{lstlisting}[caption=Making your project depending on JAX-WS using Maven, label=lst:jaxws_pom]
+  <dependency>
+      <groupId>com.sun.xml.ws</groupId>
+      <artifactId>jaxws-rt</artifactId>
+      <version>2.1.4</version>
+  </dependency>
+\end{lstlisting}
+}
 
 If you write your web service using JAX-WS, your WAR file must also package a \texttt{sun-jaxws.xml} file, as Listing~\ref{lst:sun_jaxws_xml}. As any other WAR file, it must also contain a \texttt{web.xml} file. If your service was built with JAX-WS, your \texttt{web.xml} file must be similar to the one presented in the Listing~\ref{lst:web_xml}. Be aware that besides the usual definition of \texttt{servlet} and \texttt{servelet-mapping} elements, it is also necessary to declare the \texttt{listener} element exactly as in the example (lines 8, 9, and 10)\footnote{The instructions about the \texttt{sun-jaxws.xml} and \texttt{web.xml} files were retrieved from \url{http://www.mkyong.com/webservices/jax-ws/deploy-jax-ws-web-services-on-tomcat/}}.
 
