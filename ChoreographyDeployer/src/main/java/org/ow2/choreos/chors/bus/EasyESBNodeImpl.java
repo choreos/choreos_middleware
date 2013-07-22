@@ -120,11 +120,18 @@ public class EasyESBNodeImpl implements EasyESBNode {
     }
 
     public static void main(String[] args) throws EasyESBException {
-        String nodeAddress = "http://10.0.0.5:8180/services/adminExternalEndpoint";
-        String neighbourAddress = "http://10.0.0.2:8180/services/adminExternalEndpoint";
+        String nodeAddress = "http://54.226.167.166:8180/services/adminExternalEndpoint";
+        String neighbourAddress = "http://54.227.157.80:8180/services/adminExternalEndpoint";
         EasyESBNodeImpl node = new EasyESBNodeImpl(nodeAddress);
         EasyESBNodeImpl neighbour = new EasyESBNodeImpl(neighbourAddress);
         node.addNeighbour(neighbour);
+    }
+    
+    public static void main2(String[] args) throws EasyESBException {
+        String nodeAddress = "http://54.226.206.109:8180/services/adminExternalEndpoint";
+        String bsmAdminEndpoint = "http://avalon.isti.cnr.it:8184/";
+        EasyESBNodeImpl node = new EasyESBNodeImpl(nodeAddress);
+        node.notifyEasierBSM(bsmAdminEndpoint);        
     }
 
 }

@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.bus.ServicesProxifier;
+import org.ow2.choreos.chors.bus.TopologyConfigurator;
+import org.ow2.choreos.chors.bus.TopologyNotConfigureException;
 import org.ow2.choreos.chors.context.ContextCaster;
 import org.ow2.choreos.chors.context.ContextSenderFactory;
 import org.ow2.choreos.chors.datamodel.Choreography;
@@ -11,6 +13,8 @@ import org.ow2.choreos.chors.datamodel.LegacyService;
 import org.ow2.choreos.services.datamodel.DeployableService;
 
 public class ChoreographyEnacter {
+    
+    private static final String BUS_PROPERTY = "BUS";
 
     private Choreography chor;
 
@@ -24,7 +28,10 @@ public class ChoreographyEnacter {
         logBegin();
         deploy();
         createLegacyServices();
-        proxifyServices(chor);
+        if (useTheBus()) {
+            proxifyServices();
+            configureESBTopology();
+        }
         castContext();
         chor.enactmentFinished();
         logEnd();
@@ -49,10 +56,23 @@ public class ChoreographyEnacter {
         List<LegacyService> legacyServices = legacyServicesCreator.createLegacyServices(chor.getChoreographySpec());
         chor.setLegacyServices(legacyServices);
     }
+    
+    private boolean useTheBus() {
+        return Boolean.parseBoolean(ChoreographyDeployerConfiguration.get(BUS_PROPERTY));
+    }
 
-    private void proxifyServices(Choreography choreography) {
+    private void proxifyServices() {
         ServicesProxifier proxifier = new ServicesProxifier(chor);
         proxifier.proxify();
+    }
+    
+    private void configureESBTopology() {
+        TopologyConfigurator topologyConfigurator = new TopologyConfigurator(chor);
+        try {
+            topologyConfigurator.configureTopology();
+        } catch (TopologyNotConfigureException e) {
+            logger.error("ESB topology was not properly configured");
+        }
     }
 
     private void castContext() {
