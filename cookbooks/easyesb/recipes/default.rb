@@ -24,6 +24,14 @@ execute 'extract_easyesb' do
   action :run
 end
 
+bash "edit_config" do
+  cwd "#{node['easyesb']['bin_folder']}"
+  code <<-EOH
+    IP=`ifconfig eth0 | grep 'inet addr' | awk -F: '{print $2}' | awk '{print $1}'`
+    sed -i s/localhost/$IP/ config.properties
+  EOH
+end
+
 service "start_easyesb" do
   start_command "cd #{node['easyesb']['bin_folder']} ; java -jar #{node['easyesb']['jar_name']} &"
   action [ :start ]
