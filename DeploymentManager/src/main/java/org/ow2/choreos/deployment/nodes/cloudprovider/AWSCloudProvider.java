@@ -25,7 +25,9 @@ public class AWSCloudProvider extends JCloudsCloudProvider {
     private static final String DEFAULT_PRIVATE_KEY = DeploymentManagerConfiguration.get("AMAZON_PRIVATE_SSH_KEY");
     private static final String PROVIDER = "aws-ec2";
     private static final String DEFAULT_IMAGE = "us-east-1/ami-3b4ff252"; // Ubuntu 12.04
-
+    private static final String DEFAULT_INSTANCE_TYPE = InstanceType.M1_SMALL;
+    
+    
     private static final OneRequestPerSecondEnforcer oneRequestPerSecondEnforcer = new OneRequestPerSecondEnforcer();
 
     public AWSCloudProvider() {
@@ -52,7 +54,10 @@ public class AWSCloudProvider extends JCloudsCloudProvider {
 
     @Override
     protected String getHardwareId() {
-        return InstanceType.M1_SMALL;
+        String instanceType = DeploymentManagerConfiguration.get("AMAZON_INSTANCE_TYPE");
+        if (instanceType == null || instanceType.isEmpty())
+            instanceType = DEFAULT_INSTANCE_TYPE;
+        return instanceType;
     }
 
     @Override
@@ -80,12 +85,6 @@ public class AWSCloudProvider extends JCloudsCloudProvider {
         AWSEC2TemplateOptions options = templateOptions.as(AWSEC2TemplateOptions.class);
         options.securityGroups("default");
         options.keyPair(DeploymentManagerConfiguration.get("AMAZON_KEY_PAIR"));
-    }
-    
-    public static void main(String[] args) throws NodeNotCreatedException {
-        AWSCloudProvider cp = new AWSCloudProvider();
-        CloudNode node = cp.createNode(new NodeSpec());
-        System.out.println("Created: " + node);
     }
 
 }

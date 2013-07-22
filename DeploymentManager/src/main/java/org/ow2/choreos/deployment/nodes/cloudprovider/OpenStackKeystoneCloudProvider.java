@@ -78,8 +78,11 @@ public class OpenStackKeystoneCloudProvider extends JCloudsCloudProvider {
 
     @Override
     protected String getHardwareId() {
+        String flavorName = DeploymentManagerConfiguration.get("OPENSTACK_FLAVOR_NAME");
+        if (flavorName == null || flavorName.isEmpty())
+            flavorName = DEFAULT_FLAVOR_NAME;
         for (Hardware profile : getComputeService().listHardwareProfiles()) {
-            if (profile.getName().equals(DEFAULT_FLAVOR_NAME)) {
+            if (profile.getName().equals(flavorName)) {
                 return profile.getId();
             }
         }
@@ -112,5 +115,4 @@ public class OpenStackKeystoneCloudProvider extends JCloudsCloudProvider {
             throw new IllegalStateException("Could not retrieve IP from node");
         }
     }
-
 }

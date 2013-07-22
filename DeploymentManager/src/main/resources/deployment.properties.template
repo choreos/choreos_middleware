@@ -33,6 +33,8 @@ AMAZON_KEY_PAIR=leofl
 AMAZON_PRIVATE_SSH_KEY=/home/leonardo/.ssh/leofl.pem
 # optional:
 AMAZON_IMAGE_ID=
+# optional:
+AMAZON_INSTANCE_TYPE=
 
 OPENSTACK_IP=http://198.55.33.14:5000/v2.0
 OPENSTACK_TENANT=Choreos
@@ -41,6 +43,8 @@ OPENSTACK_PASSWORD=secret
 OPENSTACK_KEY_PAIR=keyname
 OPENSTACK_PRIVATE_SSH_KEY=/path/to/keyname.pem
 OPENSTACK_IMAGE_ID=RegionOne/1654b5b6-49b7-4039-b7b7-0e42e85480f4
+# optional
+OPENSTACK_FLAVOR_NAME=
 
 # creates a pool of extra VMs to make the deployment faster and more scalable
 # the trade-off is the cost of some more VMs
