@@ -7,7 +7,9 @@ public class Migrate extends BaseAction {
 
     private static final String NAME = "Migrate instance";
 
+    @SuppressWarnings("unused")
     private DeployableService currentService;
+    @SuppressWarnings("unused")
     private DeployableServiceSpec newSpec;
 
     public Migrate(DeployableService currentService, DeployableServiceSpec newSpec) {
