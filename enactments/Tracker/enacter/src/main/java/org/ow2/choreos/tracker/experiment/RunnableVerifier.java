@@ -66,5 +66,11 @@ class RunnableVerifier implements Runnable {
         String wsdl = uri.replaceAll("/$", "").concat("?wsdl");
         return wsdl;
     }
+    
+    public static void main(String[] args) {
+        String wsdl = "http://54.227.32.32:8080/e5f5f8f0-b720-4582-bc41-0a9819bf4440/endpoint?wsdl";
+        WSDLChecker checker = new WSDLChecker(wsdl);
+        System.out.println(checker.check());
+    }
 
 }
