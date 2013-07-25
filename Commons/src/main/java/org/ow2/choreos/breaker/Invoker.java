@@ -20,18 +20,20 @@ import org.ow2.choreos.utils.Concurrency;
  */
 public class Invoker<T> {
 
-    private Callable<T> task;
-    private int trials;
-    private int trialTimeout;
-    private TimeUnit timeoutUnit;
+    private final Callable<T> task;
+    private final int trials;
+    private final int trialTimeout;
+    private final int pauseBetweenTrials;
+    private final TimeUnit timeUnit;
 
     private Logger logger = Logger.getLogger(Invoker.class);
 
-    public Invoker(Callable<T> task, int trials, int trialTimeout, TimeUnit timeoutUnit) {
+    public Invoker(Callable<T> task, int trials, int trialTimeout, int pauseBetweenTrials, TimeUnit timeUnit) {
         this.task = task;
         this.trials = trials;
         this.trialTimeout = trialTimeout;
-        this.timeoutUnit = timeoutUnit;
+        this.pauseBetweenTrials = pauseBetweenTrials;
+        this.timeUnit = timeUnit;
     }
 
     public T invoke() throws InvokerException {
@@ -42,6 +44,7 @@ public class Invoker<T> {
                 return result;
             } catch (Exception e) {
                 cause = e;
+                pause();
             }
         }
         throw new InvokerException(cause);
@@ -50,7 +53,7 @@ public class Invoker<T> {
     private T tryToInvoke() throws Exception {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<T> future = executor.submit(task);
-        Concurrency.waitExecutor(executor, trialTimeout, timeoutUnit, logger);
+        Concurrency.waitExecutor(executor, trialTimeout, timeUnit, logger);
         try {
             return Concurrency.checkAndGetFromFuture(future);
         } catch (ExecutionException e) {
@@ -59,6 +62,14 @@ public class Invoker<T> {
                 throw (Exception) e;
             else
                 throw e;
+        }
+    }
+    
+    private void pause() throws InvokerException {
+        try {
+            Thread.sleep(pauseBetweenTrials);
+        } catch (InterruptedException e) {
+            throw new InvokerException(e);
         }
     }
 

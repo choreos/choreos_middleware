@@ -82,7 +82,7 @@ public class NodeUpdater {
         @Override
         public Void call() throws Exception {
             ChefSoloTask task = new ChefSoloTask();
-            Invoker<Void> invoker = new Invoker<Void>(task, trials, timeout, TimeUnit.SECONDS);
+            Invoker<Void> invoker = new Invoker<Void>(task, trials, timeout, 0, TimeUnit.SECONDS);
             invoker.invoke();
             return null;
         }

@@ -92,7 +92,7 @@ public class NodePreparer {
         @Override
         public String call() throws Exception {
             PrepareNodeTask task = new PrepareNodeTask(packageUri, cookbookTemplateName);
-            Invoker<String> invoker = new Invoker<String>(task, trials, timeout, TimeUnit.SECONDS);
+            Invoker<String> invoker = new Invoker<String>(task, trials, timeout, 0, TimeUnit.SECONDS);
             String instanceId = invoker.invoke();
             System.out.println(instanceId);
             return instanceId;

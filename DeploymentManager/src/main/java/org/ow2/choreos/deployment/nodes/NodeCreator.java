@@ -46,7 +46,7 @@ public class NodeCreator {
         CloudNodeCreationTask task = new CloudNodeCreationTask(nodeSpec);
         int timeout = TimeoutsAndTrials.get("NODE_CREATION_TIMEOUT");
         int trials = TimeoutsAndTrials.get("NODE_CREATION_TRIALS");
-        Invoker<CloudNode> invoker = new Invoker<CloudNode>(task, trials, timeout, TimeUnit.SECONDS);
+        Invoker<CloudNode> invoker = new Invoker<CloudNode>(task, trials, timeout, 0, TimeUnit.SECONDS);
         try {
             CloudNode node = invoker.invoke();
             return node;
@@ -70,7 +70,7 @@ public class NodeCreator {
         BootstrapTask task = new BootstrapTask(node);
         int timeout = TimeoutsAndTrials.get("BOOTSTRAP_TIMEOUT");
         int trials = TimeoutsAndTrials.get("BOOTSTRAP_TRIALS");
-        Invoker<Void> invoker = new Invoker<Void>(task, trials, timeout, TimeUnit.SECONDS);
+        Invoker<Void> invoker = new Invoker<Void>(task, trials, timeout, 0, TimeUnit.SECONDS);
         try {
             invoker.invoke();
         } catch (InvokerException e) {
