@@ -2,4 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/. 
 
-default['CHOReOSData']['serviceData']['$NAME']['deactivate'] = true
+file "#{node['tomcat']['webapp_dir']}/$NAME.war" do
+	action :delete
+end
+
