@@ -7,7 +7,6 @@ import org.ow2.choreos.chors.bus.ServicesProxifier;
 import org.ow2.choreos.chors.bus.TopologyConfigurator;
 import org.ow2.choreos.chors.bus.TopologyNotConfigureException;
 import org.ow2.choreos.chors.context.ContextCaster;
-import org.ow2.choreos.chors.context.ContextSenderFactory;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.LegacyService;
 import org.ow2.choreos.services.datamodel.DeployableService;
@@ -76,8 +75,7 @@ public class ChoreographyEnacter {
     }
 
     private void castContext() {
-        ContextSenderFactory factory = new ContextSenderFactory();
-        ContextCaster caster = new ContextCaster(factory);
+        ContextCaster caster = new ContextCaster();
         caster.cast(chor);
     }
 

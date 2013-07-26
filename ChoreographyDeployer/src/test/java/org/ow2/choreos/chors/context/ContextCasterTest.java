@@ -4,10 +4,8 @@
 
 package org.ow2.choreos.chors.context;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,7 +59,7 @@ public class ContextCasterTest {
         this.deployedServices.put(AIRLINE, airlineService);
         this.deployedServices.put(TRAVEL_AGENCY, travelService);
     }
-
+    
     private void setUpBusUris() throws ServiceInstanceNotFoundException {
 
         ServiceInstance airlineInstance = ((DeployableService) (deployedServices.get(AIRLINE))).getInstances().get(0);
@@ -77,9 +75,9 @@ public class ContextCasterTest {
         this.setUpBusUris();
 
         ContextSender sender = mock(ContextSender.class);
-        ContextSenderFactory factory = mock(ContextSenderFactory.class);
-        when(factory.getNewInstance(any(ServiceType.class))).thenReturn(sender);
-        ContextCaster caster = new ContextCaster(factory);
+        ContextSenderFactory.testing = true;
+        ContextSenderFactory.senderForTesting = sender;
+        ContextCaster caster = new ContextCaster();
         caster.cast(models.getChoreography());
 
         List<String> expectedAirlineUrisList = new ArrayList<String>();
@@ -92,9 +90,9 @@ public class ContextCasterTest {
     public void shouldPassAirlineNativeUriToTravelAgency() throws ContextNotSentException {
 
         ContextSender sender = mock(ContextSender.class);
-        ContextSenderFactory factory = mock(ContextSenderFactory.class);
-        when(factory.getNewInstance(any(ServiceType.class))).thenReturn(sender);
-        ContextCaster caster = new ContextCaster(factory);
+        ContextSenderFactory.testing = true;
+        ContextSenderFactory.senderForTesting = sender;
+        ContextCaster caster = new ContextCaster();
         caster.cast(models.getChoreography());
 
         List<String> expectedAirlineUrisList = new ArrayList<String>();
@@ -104,8 +102,9 @@ public class ContextCasterTest {
 
     @After
     public void tearDown() {
-        System.out.println("Cleaning fixtures!");
-        models = null;
+        ContextSenderFactory.testing = false;
+        System.out.println("Cleaning fixtures!"); // By Léo: ???
+        models = null; // By Léo: ???
     }
 
 }

@@ -7,58 +7,84 @@ package org.ow2.choreos.chors.context;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
+import org.ow2.choreos.breaker.Invoker;
+import org.ow2.choreos.breaker.InvokerBuilder;
+import org.ow2.choreos.breaker.InvokerException;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.Service;
 import org.ow2.choreos.services.datamodel.ServiceDependency;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
-import org.ow2.choreos.services.datamodel.ServiceSpec;
 import org.ow2.choreos.services.datamodel.ServiceType;
+import org.ow2.choreos.utils.TimeoutsAndTrials;
 
 public class ContextCaster {
 
+    private final int timeout;
+    private final int trials;
+    private final int pauseBetweenTrials;
+
+    private Choreography chor;
+    private DeployableService consumer, provider;
+    private Map<String, DeployableService> deployedServicesMap;
+    private String providerRole, providerName, consumerName;
+
     private Logger logger = Logger.getLogger(ContextCaster.class);
-    private static final int MAX_TRIALS = 5;
-    private static final int DELAY_BETWEEN_TRIALS = 30000;
 
-    private ContextSenderFactory senderFactory;
-
-    public ContextCaster(ContextSenderFactory senderFactory) {
-        this.senderFactory = senderFactory;
+    public ContextCaster() {
+        this.timeout = TimeoutsAndTrials.get("SET_INVOCATION_ADDRESS_TIMEOUT");
+        this.trials = TimeoutsAndTrials.get("SET_INVOCATION_ADDRESS_TRIALS");
+        this.pauseBetweenTrials = TimeoutsAndTrials.get("SET_INVOCATION_ADDRESS_PAUSE");
     }
 
     public void cast(Choreography chor) {
         logger.info("Passing context to deployed services on choreograghy " + chor.getId());
-        Map<String, DeployableService> deployedServices = chor.getMapOfDeployableServicesBySpecNames();
-        for (Map.Entry<String, DeployableService> entry : deployedServices.entrySet()) {
-            Service deployed = entry.getValue();
-            castContext(deployedServices, deployed);
+        this.chor = chor;
+        deployedServicesMap = chor.getMapOfDeployableServicesBySpecNames();
+        for (DeployableService service : chor.getDeployableServices()) {
+            consumer = service;
+            consumerName = consumer.getSpec().getName();
+            castContextsToConsumer();
         }
     }
 
-    private void castContext(Map<String, DeployableService> deployedServices, Service deployed) {
-
-        ServiceSpec spec = deployed.getSpec();
-        if (spec.getDependencies() == null)
+    private void castContextsToConsumer() {
+        if (consumer.getSpec().getDependencies() == null)
             return;
-
-        List<String> serviceUris = deployed.getUris();
-
-        for (ServiceDependency dep : spec.getDependencies()) {
-
-            Service providerService = deployedServices.get(dep.getServiceSpecName());
-
-            if (providerService == null) {
-                logger.error("Service " + dep.getServiceSpecName() + " (" + spec.getName()
-                        + "dependency) not deployed. Not goint to pass this context to " + spec.getName());
+        for (ServiceDependency dep : consumer.getSpec().getDependencies()) {
+            providerName = dep.getServiceSpecName();
+            providerRole = dep.getServiceSpecRole();
+            provider = deployedServicesMap.get(providerName);
+            if (provider == null) {
+                logger.error("Service " + providerName + " not deployed. Not goint to pass this context to "
+                        + consumerName + " on chor " + chor.getId());
             } else {
-                try {
-                    trySendContext(spec, serviceUris, dep, providerService);
-                } catch (ContextNotSentException e) {
-                    logger.error("Could not setInvocationAddress to " + e.getServiceUri());
-                }
+                if (provider.getSpec().getRoles().contains(providerRole))
+                    sendProviderContextToConsumer();
+                else
+                    logger.error("Service " + providerName + " does not have role + " + providerRole
+                            + "; not going to pass it to service " + consumerName + " on chor " + chor.getId());
+            }
+        }
+    }
+
+    private void sendProviderContextToConsumer() {
+        ServiceType consumerType = consumer.getSpec().getServiceType();
+        List<String> consumerUris = consumer.getUris();
+        List<String> providerUris = this.getUris(provider);
+        for (String consumerEndpoint : consumerUris) {
+            ContextSenderTask task = new ContextSenderTask(consumerType, consumerEndpoint, providerRole, providerName,
+                    providerUris);
+            Invoker<Void> invoker = new InvokerBuilder<Void>(task, timeout).trials(trials)
+                    .pauseBetweenTrials(pauseBetweenTrials).build();
+            try {
+                invoker.invoke();
+            } catch (InvokerException e) {
+                logger.error("Could not set " + providerName + " as " + providerRole + " to " + consumerName
+                        + " on chor " + chor.getId());
             }
         }
     }
@@ -73,7 +99,6 @@ public class ContextCaster {
      * @return
      */
     private List<String> getUris(Service providerService) {
-
         List<String> uris = new ArrayList<String>();
         for (ServiceInstance instance : ((DeployableService) providerService).getInstances()) {
             String proxifiedUri = instance.getBusUri(ServiceType.SOAP);
@@ -86,44 +111,27 @@ public class ContextCaster {
         return uris;
     }
 
-    private void trySendContext(ServiceSpec consumerServiceSpec, List<String> consumerServiceInstanceUris,
-            ServiceDependency consumerServiceDependency, Service providerService) throws ContextNotSentException {
+    private class ContextSenderTask implements Callable<Void> {
 
-        List<String> providerUris = this.getUris(providerService);
-        int trial = 0;
+        ServiceType consumerType;
+        String consumerEndpoint, providerRole, providerName;
+        List<String> providerEndpoints;
 
-        for (String serviceUri : consumerServiceInstanceUris) {
-            while (trial < MAX_TRIALS) {
-                try {
-                    ServiceType serviceType = consumerServiceSpec.getServiceType();
-                    ContextSender sender = senderFactory.getNewInstance(serviceType);
-                    sender.sendContext(serviceUri, consumerServiceDependency.getServiceSpecRole(),
-                            consumerServiceDependency.getServiceSpecName(), providerUris);
-                    logger.debug(consumerServiceSpec.getName() + " has received "
-                            + consumerServiceDependency.getServiceSpecName() + " as "
-                            + consumerServiceDependency.getServiceSpecRole() + ": " + providerUris);
-                    return;
-                } catch (ContextNotSentException e) {
-                    trial = tryRecoveryNotSentContext(consumerServiceSpec, consumerServiceDependency, trial);
-                    logger.error("Trial=" + trial);
-                }
-            }
-            throw new ContextNotSentException(serviceUri, consumerServiceDependency.getServiceSpecRole(),
-                    consumerServiceDependency.getServiceSpecName(), providerUris);
+        public ContextSenderTask(ServiceType consumerType, String consumerEndpoint, String providerRole,
+                String providerName, List<String> providerEndpoints) {
+            this.consumerType = consumerType;
+            this.consumerEndpoint = consumerEndpoint;
+            this.providerRole = providerRole;
+            this.providerName = providerName;
+            this.providerEndpoints = providerEndpoints;
+        }
+
+        @Override
+        public Void call() throws Exception {
+            ContextSender sender = ContextSenderFactory.getNewInstance(consumerType);
+            sender.sendContext(consumerEndpoint, providerRole, providerName, providerEndpoints);
+            return null;
         }
     }
 
-    private int tryRecoveryNotSentContext(ServiceSpec spec, ServiceDependency dep, int trial) {
-        trial++;
-        if (trial == MAX_TRIALS) {
-            logger.error("Could not set " + dep.getServiceSpecName() + " as " + dep.getServiceSpecRole() + " to "
-                    + spec.getName());
-        }
-        try {
-            Thread.sleep(DELAY_BETWEEN_TRIALS);
-        } catch (InterruptedException e1) {
-            logger.error("Exception at sleeping. This should not happen.");
-        }
-        return trial;
-    }
 }
