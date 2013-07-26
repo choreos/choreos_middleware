@@ -64,11 +64,10 @@ public class Invoker<T> {
                 throw e;
         }
     }
-    
+
     private void pause() throws InvokerException {
         try {
-            // TODO convert according to time unit
-            Thread.sleep(pauseBetweenTrials * 1000);
+            timeUnit.sleep(pauseBetweenTrials);
         } catch (InterruptedException e) {
             throw new InvokerException(e);
         }
