@@ -26,6 +26,8 @@ public class DecreaseNumberOfReplicas extends BaseAction {
 
 	try {
 	    undeploymentPreparer.prepareUndeployment();
+	    currentService.setSpec(newSpec);
+
 	} catch (Exception e) {
 	    throw new UpdateActionFailedException();
 	}
