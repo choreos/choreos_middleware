@@ -17,7 +17,8 @@ function edit_recipe() {
     cd cookbooks/$3
     sed -i '/\$PACKAGE_URL/ s##'"$1"'#g' attributes/default.rb
     sed -i '/\$NAME/ s##'"$3"'#g' attributes/default.rb
-    sed -i '/\$NAME/ s##'"$3"'#g' recipes/default.rb
+    sed -i '/\$NAME/ s##'"$3"'#g' recipes/default.rb	
+    sed -i '/\$NAME/ s##'"$3"'#g' recipes/remove.rb
     echo "Cookbook $3 edited"
 }
 
