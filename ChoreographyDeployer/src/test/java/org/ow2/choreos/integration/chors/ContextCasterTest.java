@@ -16,7 +16,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.context.ContextCaster;
-import org.ow2.choreos.chors.context.ContextSenderFactory;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.PackageType;
@@ -72,8 +71,7 @@ public class ContextCasterTest {
 
         checkPreCondition();
 
-        ContextSenderFactory factory = new ContextSenderFactory();
-        ContextCaster caster = new ContextCaster(factory);
+        ContextCaster caster = new ContextCaster();
         caster.cast(chor);
 
         WSClient travel = new WSClient(TRAVEL_AGENCY_URI + "?wsdl");

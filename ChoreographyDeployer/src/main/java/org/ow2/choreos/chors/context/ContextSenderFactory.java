@@ -7,8 +7,13 @@ package org.ow2.choreos.chors.context;
 import org.ow2.choreos.services.datamodel.ServiceType;
 
 public class ContextSenderFactory {
+    
+    public static boolean testing = false;
+    public static ContextSender senderForTesting;
 
-    public ContextSender getNewInstance(ServiceType serviceType) {
+    public static ContextSender getNewInstance(ServiceType serviceType) {
+        if (testing)
+            return senderForTesting;
         switch (serviceType) {
         case SOAP:
             return new SoapContextSender();

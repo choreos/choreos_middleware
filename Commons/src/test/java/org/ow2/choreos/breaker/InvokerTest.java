@@ -9,6 +9,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
 
 public class InvokerTest {
+    
+    private final int pauseBetweenTrials = 0;
 
     @Test
     public void shouldInvoke() throws InvokerException {
@@ -17,7 +19,7 @@ public class InvokerTest {
         int trials = 1;
         int timeout = 1;
 
-        Invoker<String> invoker = new Invoker<String>(task, trials, timeout, TimeUnit.SECONDS);
+        Invoker<String> invoker = new Invoker<String>(task, trials, timeout, pauseBetweenTrials, TimeUnit.SECONDS);
         String result = invoker.invoke();
 
         assertEquals("0", result);
@@ -30,7 +32,7 @@ public class InvokerTest {
         int trials = 2;
         int timeout = 1;
 
-        Invoker<String> invoker = new Invoker<String>(task, trials, timeout, TimeUnit.SECONDS);
+        Invoker<String> invoker = new Invoker<String>(task, trials, timeout, pauseBetweenTrials, TimeUnit.SECONDS);
         String result = invoker.invoke();
 
         assertEquals("0", result);
@@ -43,7 +45,7 @@ public class InvokerTest {
         int trials = 1;
         int timeout = 1;
 
-        Invoker<String> invoker = new Invoker<String>(task, trials, timeout, TimeUnit.SECONDS);
+        Invoker<String> invoker = new Invoker<String>(task, trials, timeout, pauseBetweenTrials, TimeUnit.SECONDS);
         invoker.invoke();
     }
 
@@ -54,7 +56,7 @@ public class InvokerTest {
         int trials = 1;
         int timeout = 500;
 
-        Invoker<String> invoker = new Invoker<String>(task, trials, timeout, TimeUnit.MILLISECONDS);
+        Invoker<String> invoker = new Invoker<String>(task, trials, timeout, pauseBetweenTrials, TimeUnit.MILLISECONDS);
         String result = invoker.invoke();
 
         assertEquals("0", result);
@@ -67,7 +69,7 @@ public class InvokerTest {
         int trials = 1;
         int timeout = 5;
 
-        Invoker<String> invoker = new Invoker<String>(task, trials, timeout, TimeUnit.MILLISECONDS);
+        Invoker<String> invoker = new Invoker<String>(task, trials, timeout, pauseBetweenTrials, TimeUnit.MILLISECONDS);
         invoker.invoke();
     }
 
@@ -78,7 +80,7 @@ public class InvokerTest {
         int trials = 1;
         int timeout = 20;
 
-        Invoker<Void> invoker = new Invoker<Void>(task, trials, timeout, TimeUnit.MILLISECONDS);
+        Invoker<Void> invoker = new Invoker<Void>(task, trials, timeout, pauseBetweenTrials, TimeUnit.MILLISECONDS);
         invoker.invoke();
 
         boolean done = task.done;

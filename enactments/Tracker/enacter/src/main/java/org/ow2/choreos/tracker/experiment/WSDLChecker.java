@@ -1,8 +1,13 @@
 package org.ow2.choreos.tracker.experiment;
 
+import java.util.concurrent.Callable;
+
 import javax.ws.rs.WebApplicationException;
 
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.ow2.choreos.breaker.Invoker;
+import org.ow2.choreos.breaker.InvokerBuilder;
+import org.ow2.choreos.breaker.InvokerException;
 
 public class WSDLChecker {
 
@@ -15,14 +20,28 @@ public class WSDLChecker {
     }
     
     public boolean check() {
-        WebClient client = WebClient.create(wsdl);
+        CheckerTask task = new CheckerTask();
+        int timeout = 10;
+        Invoker<Boolean> invoker = new InvokerBuilder<Boolean>(task, timeout).trials(3).pauseBetweenTrials(20).build();
         try {
-            String wsdlStr = client.get(String.class);
-            return wsdlStr.contains(WSDL_EXCERPT);
-        } catch (WebApplicationException e) {
+            return invoker.invoke();
+        } catch (InvokerException e) {
             return false;
-        } catch (Exception e) {
-            return false;
+        }
+    }
+    
+    private class CheckerTask implements Callable<Boolean> {
+        @Override
+        public Boolean call() throws Exception {
+            WebClient client = WebClient.create(wsdl);
+            try {
+                String wsdlStr = client.get(String.class);
+                return wsdlStr.contains(WSDL_EXCERPT);
+            } catch (WebApplicationException e) {
+                return false;
+            } catch (Exception e) {
+                return false;
+            }
         }
     }
     
