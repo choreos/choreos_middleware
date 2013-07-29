@@ -1,5 +1,7 @@
 package org.ow2.choreos.deployment.services.update;
 
+import org.ow2.choreos.deployment.services.preparer.ServiceUndeploymentPreparer;
+import org.ow2.choreos.deployment.services.preparer.ServiceUndeploymentPreparerFactory;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
@@ -11,31 +13,27 @@ public class DecreaseNumberOfReplicas extends BaseAction {
     private DeployableServiceSpec newSpec;
 
     public DecreaseNumberOfReplicas(DeployableService currentService, DeployableServiceSpec newSpec) {
-        this.currentService = currentService;
-        this.newSpec = newSpec;
+	this.currentService = currentService;
+	this.newSpec = newSpec;
     }
 
     @Override
-    public void applyUpdate() {
-//        int decreaseAmount = currentService.getSpec().getNumberOfInstances() - newSpec.getNumberOfInstances();
-//        if (decreaseAmount < currentService.getServiceInstances().size()) {
-//            for (int i = 0; i < decreaseAmount; i++) {
-//                executeServiceInstanceUndeployment(currentService.getServiceInstances().get(0));
-//                currentService.getServiceInstances().remove(0);
-//            }
-//        } else if (decreaseAmount < currentService.getServiceInstances().size()) {
-//            try {
-//                this.deleteService(currentService.getUUID());
-//            } catch (ServiceNotDeletedException e) {
-//                throw new UpdateActionFailedException();
-//            }
-//        }
-        throw new UnsupportedOperationException();
+    public void applyUpdate() throws UpdateActionFailedException {
+	int decreaseAmount = currentService.getSpec().getNumberOfInstances() - newSpec.getNumberOfInstances();
+
+	ServiceUndeploymentPreparer undeploymentPreparer = ServiceUndeploymentPreparerFactory.getNewInstance(
+		currentService, decreaseAmount);
+
+	try {
+	    undeploymentPreparer.prepareUndeployment();
+	} catch (Exception e) {
+	    throw new UpdateActionFailedException();
+	}
     }
 
     @Override
     public String getName() {
-        return NAME;
+	return NAME;
     }
 
 }
