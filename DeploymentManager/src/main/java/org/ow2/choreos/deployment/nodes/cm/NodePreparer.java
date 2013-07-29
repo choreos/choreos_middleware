@@ -38,93 +38,98 @@ public class NodePreparer {
     private Logger logger = Logger.getLogger(NodePreparer.class);
 
     public NodePreparer(CloudNode node) {
-        this.node = node;
-        this.timeout = TimeoutsAndTrials.get("PREPARE_DEPLOYMENT_TIMEOUT");
-        this.trials = TimeoutsAndTrials.get("PREPARE_DEPLOYMENT_TRIALS");
+	this.node = node;
+	this.timeout = TimeoutsAndTrials.get("PREPARE_DEPLOYMENT_TIMEOUT");
+	this.trials = TimeoutsAndTrials.get("PREPARE_DEPLOYMENT_TRIALS");
     }
 
     /**
      * 
      * @param packageUri
-     * @param cookbookTemplateName ex: jar, war, cd
+     * @param cookbookTemplateName
+     *            ex: jar, war, cd
      * @return the id of the prepared instance
      * @throws NodeNotPreparedException
      */
     public String prepareNode(String packageUri, String cookbookTemplateName) throws NodeNotPreparedException {
-        PreparerInvokerTask task = new PreparerInvokerTask(packageUri, cookbookTemplateName);
-        Future<String> future = singleThreadExecutor.submit(task);
-        String instanceId = checkFuture(future);
-        return instanceId;
+	PreparerInvokerTask task = new PreparerInvokerTask(packageUri, cookbookTemplateName);
+	Future<String> future = singleThreadExecutor.submit(task);
+	String instanceId = checkFuture(future);
+	return instanceId;
     }
-    
+
+    public void prepareNodeForUndeployment(String instanceId) throws NodeNotPreparedException {
+	return;
+    }
+
     private String checkFuture(Future<String> future) throws NodeNotPreparedException {
-        try {
-            // since the task been executed is basically the invoker invocation,
-            // we hope do not get stuck here (invoker already has a timeout)
-            // this is why we did not set a timeout in the "future.get()"
-            String instanceId = future.get();
-            if (instanceId == null)
-                return fail();
-            return instanceId;
-        } catch (InterruptedException e) {
-            return fail();
-        } catch (ExecutionException e) {
-            return fail();
-        }
-    }    
+	try {
+	    // since the task been executed is basically the invoker invocation,
+	    // we hope do not get stuck here (invoker already has a timeout)
+	    // this is why we did not set a timeout in the "future.get()"
+	    String instanceId = future.get();
+	    if (instanceId == null)
+		return fail();
+	    return instanceId;
+	} catch (InterruptedException e) {
+	    return fail();
+	} catch (ExecutionException e) {
+	    return fail();
+	}
+    }
 
     private String fail() throws NodeNotPreparedException {
-        NodeNotPreparedException e = new NodeNotPreparedException(node.getId());
-        logger.error(e.getMessage());
-        throw e;
+	NodeNotPreparedException e = new NodeNotPreparedException(node.getId());
+	logger.error(e.getMessage());
+	throw e;
     }
 
     private class PreparerInvokerTask implements Callable<String> {
 
-        String packageUri; 
-        String cookbookTemplateName;
+	String packageUri;
+	String cookbookTemplateName;
 
-        public PreparerInvokerTask(String packageUri, String cookbookTemplateName) {
-            this.packageUri = packageUri;
-            this.cookbookTemplateName = cookbookTemplateName;
-        }
+	public PreparerInvokerTask(String packageUri, String cookbookTemplateName) {
+	    this.packageUri = packageUri;
+	    this.cookbookTemplateName = cookbookTemplateName;
+	}
 
-        @Override
-        public String call() throws Exception {
-            PrepareNodeTask task = new PrepareNodeTask(packageUri, cookbookTemplateName);
-            Invoker<String> invoker = new Invoker<String>(task, trials, timeout, TimeUnit.SECONDS);
-            String instanceId = invoker.invoke();
-            System.out.println(instanceId);
-            return instanceId;
-        }
+	@Override
+	public String call() throws Exception {
+	    PrepareNodeTask task = new PrepareNodeTask(packageUri, cookbookTemplateName);
+	    Invoker<String> invoker = new Invoker<String>(task, trials, timeout, TimeUnit.SECONDS);
+	    String instanceId = invoker.invoke();
+	    System.out.println(instanceId);
+	    return instanceId;
+	}
     }
 
     private class PrepareNodeTask implements Callable<String> {
 
-        String packageUri; 
-        String cookbookTemplateName;
+	String packageUri;
+	String cookbookTemplateName;
 
-        public PrepareNodeTask(String packageUri, String cookbookTemplateName) {
-            this.packageUri = packageUri;
-            this.cookbookTemplateName = cookbookTemplateName;
-        }
+	public PrepareNodeTask(String packageUri, String cookbookTemplateName) {
+	    this.packageUri = packageUri;
+	    this.cookbookTemplateName = cookbookTemplateName;
+	}
 
-        @Override
-        public String call() throws Exception {
-            SshUtil ssh = getSsh();
-            String command = getCommand();
-            String instanceId = ssh.runCommand(command);
-            return instanceId;
-        }
+	@Override
+	public String call() throws Exception {
+	    SshUtil ssh = getSsh();
+	    String command = getCommand();
+	    String instanceId = ssh.runCommand(command);
+	    return instanceId;
+	}
 
-        private SshUtil getSsh() throws SshNotConnected {
-            int timeout = TimeoutsAndTrials.get("CONNECT_SSH_TIMEOUT");
-            return sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
-        }
+	private SshUtil getSsh() throws SshNotConnected {
+	    int timeout = TimeoutsAndTrials.get("CONNECT_SSH_TIMEOUT");
+	    return sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
+	}
 
-        private String getCommand() {
-            return ". chef-solo/prepare_deployment.sh " + packageUri + " " + cookbookTemplateName;
-        }
+	private String getCommand() {
+	    return ". chef-solo/prepare_deployment.sh " + packageUri + " " + cookbookTemplateName;
+	}
     }
 
 }

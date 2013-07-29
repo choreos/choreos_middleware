@@ -15,37 +15,37 @@ public class InstanceDeploymentPreparer {
     private String serviceUUID;
     private DeployableServiceSpec spec;
     private CloudNode node;
-    
+
     private String instanceId;
 
     SshWaiter sshWaiter = new SshWaiter();
-    
+
     public InstanceDeploymentPreparer(DeployableServiceSpec spec, String serviceUUID, CloudNode node) {
-        this.spec = spec;
-        this.serviceUUID = serviceUUID;
-        this.node = node;
+	this.spec = spec;
+	this.serviceUUID = serviceUUID;
+	this.node = node;
     }
 
     public void prepareDeployment() throws PrepareDeploymentFailedException {
-        runDeploymentPrepare();
-        scheduleHandler();
+	runDeploymentPrepare();
+	scheduleHandler();
     }
-    
+
     private void runDeploymentPrepare() throws PrepareDeploymentFailedException {
-        NodePreparer nodePreparer = NodePreparers.getPreparerFor(node);
-        String packageUri = spec.getPackageUri();
-        String cookbookTemplateName = PackageTypeToCookbook.getCookbookName(spec.getPackageType());        
-        try {
-            instanceId = nodePreparer.prepareNode(packageUri, cookbookTemplateName);
-        } catch (NodeNotPreparedException e1) {
-            throw new PrepareDeploymentFailedException(spec.getName(), node);
-        }
+	NodePreparer nodePreparer = NodePreparers.getPreparerFor(node);
+	String packageUri = spec.getPackageUri();
+	String cookbookTemplateName = PackageTypeToCookbook.getCookbookName(spec.getPackageType());
+	try {
+	    instanceId = nodePreparer.prepareNode(packageUri, cookbookTemplateName);
+	} catch (NodeNotPreparedException e1) {
+	    throw new PrepareDeploymentFailedException(spec.getName(), node);
+	}
     }
 
     private void scheduleHandler() {
-        InstanceCreatorUpdateHandler handler = new InstanceCreatorUpdateHandler(serviceUUID, instanceId, spec, node);
-        NodeUpdater nodeUpdater = NodeUpdaters.getUpdaterFor(node);
-        nodeUpdater.addHandler(handler);
+	InstanceCreatorUpdateHandler handler = new InstanceCreatorUpdateHandler(serviceUUID, instanceId, spec, node);
+	NodeUpdater nodeUpdater = NodeUpdaters.getUpdaterFor(node);
+	nodeUpdater.addHandler(handler);
     }
 
 }

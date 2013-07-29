@@ -32,6 +32,7 @@ public class NodeBootstrapper {
     public static final String BOOTSTRAP_SCRIPT = "chef-solo/bootstrap.sh";
     public static final String INITIAL_NODE_JSON = "chef-solo/node.json";
     public static final String PREPARE_DEPLOYMENT_SCRIPT = "chef-solo/prepare_deployment.sh";
+    public static final String PREPARE_UNDEPLOYMENT_SCRIPT = "chef-solo/prepare_undeployment.sh";
     public static final String ADD_RECIPE_SCRIPT = "chef-solo/add_recipe_to_node.sh";
     public static final String CHEF_SOLO_FOLDER = "chef-solo";
 
@@ -41,78 +42,79 @@ public class NodeBootstrapper {
     private Logger logger = Logger.getLogger(NodeBootstrapper.class);
 
     public NodeBootstrapper(CloudNode node) {
-        this.node = node;
+	this.node = node;
     }
 
     public void bootstrapNode() throws NodeNotAccessibleException, NodeNotBootstrappedException {
-        logger.info("Bootstrapping " + this.node.getIp());
-        executeBootstrapCommand();
-        saveFile(INITIAL_NODE_JSON, CHEF_SOLO_FOLDER);
-        saveFile(INITIAL_NODE_JSON, CHEF_SOLO_FOLDER + "/node.json.backup");
-        saveFile(PREPARE_DEPLOYMENT_SCRIPT, CHEF_SOLO_FOLDER);
-        saveFile(ADD_RECIPE_SCRIPT, CHEF_SOLO_FOLDER);
-        logger.info("Bootstrap completed at " + this.node);
+	logger.info("Bootstrapping " + this.node.getIp());
+	executeBootstrapCommand();
+	saveFile(INITIAL_NODE_JSON, CHEF_SOLO_FOLDER);
+	saveFile(INITIAL_NODE_JSON, CHEF_SOLO_FOLDER + "/node.json.backup");
+	saveFile(PREPARE_DEPLOYMENT_SCRIPT, CHEF_SOLO_FOLDER);
+	saveFile(PREPARE_UNDEPLOYMENT_SCRIPT, CHEF_SOLO_FOLDER);
+	saveFile(ADD_RECIPE_SCRIPT, CHEF_SOLO_FOLDER);
+	logger.info("Bootstrap completed at " + this.node);
     }
 
     private void executeBootstrapCommand() throws NodeNotBootstrappedException {
-        try {
-            SshUtil ssh = getSsh();
-            String bootstrapScript = getBootStrapScript();
-            ssh.runCommand(bootstrapScript);
-            ssh.disconnect();
-        } catch (SshNotConnected e) {
-            logFailMessage();
-            throw new NodeNotBootstrappedException(node.getId());
-        } catch (JSchException e) {
-            logFailMessage();
-            throw new NodeNotBootstrappedException(node.getId());
-        } catch (SshCommandFailed e) {
-            logFailMessage();
-            throw new NodeNotBootstrappedException(node.getId());
-        }
+	try {
+	    SshUtil ssh = getSsh();
+	    String bootstrapScript = getBootStrapScript();
+	    ssh.runCommand(bootstrapScript);
+	    ssh.disconnect();
+	} catch (SshNotConnected e) {
+	    logFailMessage();
+	    throw new NodeNotBootstrappedException(node.getId());
+	} catch (JSchException e) {
+	    logFailMessage();
+	    throw new NodeNotBootstrappedException(node.getId());
+	} catch (SshCommandFailed e) {
+	    logFailMessage();
+	    throw new NodeNotBootstrappedException(node.getId());
+	}
     }
 
     private SshUtil getSsh() throws SshNotConnected {
-        int timeout = TimeoutsAndTrials.get("CONNECT_SSH_TIMEOUT");
-        SshUtil ssh = sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
-        return ssh;
+	int timeout = TimeoutsAndTrials.get("CONNECT_SSH_TIMEOUT");
+	SshUtil ssh = sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
+	return ssh;
     }
 
     private String getBootStrapScript() {
-        URL scriptFile = this.getClass().getClassLoader().getResource(BOOTSTRAP_SCRIPT);
-        String script = null;
-        try {
-            script = FileUtils.readFileToString(new File(scriptFile.getFile()));
-        } catch (IOException e) {
-            logger.error("Should not happen!", e);
-            throw new IllegalStateException();
-        }
-        return script;
+	URL scriptFile = this.getClass().getClassLoader().getResource(BOOTSTRAP_SCRIPT);
+	String script = null;
+	try {
+	    script = FileUtils.readFileToString(new File(scriptFile.getFile()));
+	} catch (IOException e) {
+	    logger.error("Should not happen!", e);
+	    throw new IllegalStateException();
+	}
+	return script;
     }
 
     private void logFailMessage() {
-        logger.error("Node " + node.getId() + " not bootstrapped");
+	logger.error("Node " + node.getId() + " not bootstrapped");
     }
 
     private void saveFile(String source, String target) {
-        Scp scp = Scp.getInstance(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-        File file = getFile(source);
-        try {
-            scp.sendFile(file.getAbsolutePath(), target);
-        } catch (ScpFailed e) {
-            logger.error("It was not possible to save " + file.getName() + " on node " + node.getId());
-            throw new IllegalStateException();
-        }
+	Scp scp = Scp.getInstance(node.getIp(), node.getUser(), node.getPrivateKeyFile());
+	File file = getFile(source);
+	try {
+	    scp.sendFile(file.getAbsolutePath(), target);
+	} catch (ScpFailed e) {
+	    logger.error("It was not possible to save " + file.getName() + " on node " + node.getId());
+	    throw new IllegalStateException();
+	}
     }
 
     private File getFile(String path) {
-        URL url = this.getClass().getClassLoader().getResource(path);
-        File file = new File(url.getFile());
-        if (!file.exists()) {
-            logger.error(path + " not found! Should never happen!");
-            throw new IllegalStateException();
-        }
-        return file;
+	URL url = this.getClass().getClassLoader().getResource(path);
+	File file = new File(url.getFile());
+	if (!file.exists()) {
+	    logger.error(path + " not found! Should never happen!");
+	    throw new IllegalStateException();
+	}
+	return file;
     }
 
 }
