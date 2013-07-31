@@ -10,6 +10,7 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.utils.Scp;
@@ -30,7 +31,9 @@ import com.jcraft.jsch.JSchException;
 public class NodeBootstrapper {
 
     public static final String BOOTSTRAP_SCRIPT = "chef-solo/bootstrap.sh";
+    public static final String BOOTSTRAP_HARAKIRI_SCRIPT = "chef-solo/bootstrap_harakiri.sh";
     public static final String INITIAL_NODE_JSON = "chef-solo/node.json";
+    public static final String INITIAL_NODE_HARAKIRI_JSON = "chef-solo/node_harakiri.json";
     public static final String PREPARE_DEPLOYMENT_SCRIPT = "chef-solo/prepare_deployment.sh";
     public static final String PREPARE_UNDEPLOYMENT_SCRIPT = "chef-solo/prepare_undeployment.sh";
     public static final String ADD_RECIPE_SCRIPT = "chef-solo/add_recipe_to_node.sh";
@@ -48,7 +51,10 @@ public class NodeBootstrapper {
     public void bootstrapNode() throws NodeNotAccessibleException, NodeNotBootstrappedException {
 	logger.info("Bootstrapping " + this.node.getIp());
 	executeBootstrapCommand();
-	saveFile(INITIAL_NODE_JSON, CHEF_SOLO_FOLDER);
+	if (Boolean.parseBoolean(DeploymentManagerConfiguration.get("HARAKIRI")))
+	    saveFile(INITIAL_NODE_HARAKIRI_JSON, CHEF_SOLO_FOLDER + "/node.json");
+	else
+	    saveFile(INITIAL_NODE_JSON, CHEF_SOLO_FOLDER + "/node.json");
 	saveFile(INITIAL_NODE_JSON, CHEF_SOLO_FOLDER + "/node.json.backup");
 	saveFile(PREPARE_DEPLOYMENT_SCRIPT, CHEF_SOLO_FOLDER);
 	saveFile(PREPARE_UNDEPLOYMENT_SCRIPT, CHEF_SOLO_FOLDER);
@@ -81,7 +87,11 @@ public class NodeBootstrapper {
     }
 
     private String getBootStrapScript() {
-	URL scriptFile = this.getClass().getClassLoader().getResource(BOOTSTRAP_SCRIPT);
+	URL scriptFile;
+	if (Boolean.parseBoolean(DeploymentManagerConfiguration.get("HARAKIRI")))
+	    scriptFile = this.getClass().getClassLoader().getResource(BOOTSTRAP_HARAKIRI_SCRIPT);
+	else
+	    scriptFile = this.getClass().getClassLoader().getResource(BOOTSTRAP_SCRIPT);
 	String script = null;
 	try {
 	    script = FileUtils.readFileToString(new File(scriptFile.getFile()));
@@ -89,7 +99,8 @@ public class NodeBootstrapper {
 	    logger.error("Should not happen!", e);
 	    throw new IllegalStateException();
 	}
-	return script;
+	return script.replace("$THE_URL", DeploymentManagerConfiguration.get("EXTERNAL_DEPLOYMENT_MANAGER_URL"))
+		.replace("$THE_ID", node.getId());
     }
 
     private void logFailMessage() {

@@ -6,59 +6,43 @@
 # Thiago Furtado
 #
 
-b_minute_str = `who -b | sed -e 's/^.*system boot .//g' -e 's/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].[0-9][0-9]://g'`.strip
-b_minute = b_minute_str.to_i()
-boot_minute_str = b_minute.to_i()
+boot_minute_str = `who -b | sed -e 's/^.*system boot .//g' -e 's/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].[0-9][0-9]://g'`.strip
+boot_minute = boot_minute_str.to_i()
 
 current_minute_str = `date +%M`.strip
-current_minute = current_minute_str.to_i()
+current_minute = current_minute.to_i()
 
-boot_minute = boot_minute_str.to_i() - 2
-if boot_minute < 0
-  boot_minute = boot_minute + 60
+h_m = boot_minute - 3
+harakiri_minute = boot_minute - 3
+if harakiri_minute < 0
+  harakiri_minute = harakiri_minute + 60
 end
-boot_minute_str = boot_minute.to_s()
-
-#bash "test_who" do
-#  cwd "/tmp"
-#  code <<-EOF
-#    echo #{boot_minute_str} >> testeeee
-#  EOF
-#end
 
 # who -b | sed -e 's/^.*system boot .//g' -e 's/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].[0-9][0-9]://g'
-cron "monitor_hour_and_runlist" do
+cron "run_chef_solo" do
   action :create
   hour "*"
-  minute boot_minute_str
-  command "chef-client"
+  minute harakiri_minute
+  command "chef-solo -c #{ENV['HOME']}/chef-solo/solo.rb"
 end
 
 #UUID = /\A([0-9a-fA-F]{32}|[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\z/
-
-ruby_block "create_tmp_del_file" do
-  block do
-    the_list = node.run_list
-    del = true
-        
-    the_list.each { |rec|
-      rec_str = rec.to_s()
-      if rec_str['/\A([0-9a-fA-F]{32}|[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\z/']
-        del = false
-      end
-    }
-
-    if del
-      notifies :delete, 'http_request[http_delete]'
-    end
-  end
-end
 
 http_request "http_delete" do
   action :nothing
   message ""
   url "#node{['CHOReOSData']['nodeData']['deploymentManagerURL']}/nodes/#node{['CHOReOSData']['nodeData']['nodeID']}"
   only_if do
-    File.exists?("/tmp/harakiri") and b_minute == current_minute
+    File.readlines("#{ENV['HOME']}/chef-solo/node.json").grep(/\A([0-9a-fA-F]{32}|[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\z/).any? and current_minute >= h_m and current_minute < boot_minute
+  end
+end
+
+bash "test_who" do
+  cwd "/tmp"
+  code <<-EOF
+    echo #{boot_minute_str} >> testeeee
+  EOF
+  only_if do
+    File.readlines("#{ENV['HOME']}/chef-solo/node.json").grep(/\A([0-9a-fA-F]{32}|[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\z/).any? and current_minute >= h_m and current_minute < boot_minute
   end
 end

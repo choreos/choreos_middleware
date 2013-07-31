@@ -10,7 +10,7 @@
 
 
 # Because there is possibility of more than one DeploymentManager
-default['CHOReOSData']['nodeData']['deploymentManagerURL'] = "$DEPLOYMENT_MANAGER_URL"
+default['CHOReOSData']['nodeData']['deploymentManagerURL'] = "$DM_URL"
 
 # The id used to send delete request on resource 
 # http://deploymentmanagerhost:port/nodes/<node_id>

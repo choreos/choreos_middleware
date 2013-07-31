@@ -1,7 +1,7 @@
 DEPLOYMENT_MANAGER_PORT=9100
 
 EXTERNAL_DEPLOYMENT_MANAGER_URL=http://192.168.48.115:9100/deploymentmanager
-
+HARAKIRI=false
 # Values in node_selector.properties
 NODE_SELECTOR=ALWAYS_CREATE
 # set if using LIMITED_ROUND_ROBIN 
