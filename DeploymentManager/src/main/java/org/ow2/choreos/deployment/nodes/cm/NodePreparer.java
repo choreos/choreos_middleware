@@ -61,8 +61,7 @@ public class NodePreparer {
     public void prepareNodeForUndeployment(String instanceId) throws NodeNotPreparedException {
 	UndeploymentPreparerInvokerTask task = new UndeploymentPreparerInvokerTask(instanceId);
 	Future<String> future = singleThreadExecutor.submit(task);
-	@SuppressWarnings("unused")
-	String output = checkFuture(future);
+	checkFuture(future);
     }
 
     private String checkFuture(Future<String> future) throws NodeNotPreparedException {
