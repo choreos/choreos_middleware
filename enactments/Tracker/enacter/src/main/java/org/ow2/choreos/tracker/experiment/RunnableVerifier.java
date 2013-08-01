@@ -1,19 +1,24 @@
 package org.ow2.choreos.tracker.experiment;
 
 import java.net.MalformedURLException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.Service;
 import org.ow2.choreos.tracker.Enacter;
+import org.ow2.choreos.utils.Concurrency;
 
 class RunnableVerifier implements Runnable {
 
     Enacter enacter;
     Report report;
     boolean ok = false;
-    int servicesWorking;
+    AtomicInteger servicesWorking = new AtomicInteger();
     
     private static Logger logger = Logger.getLogger(RunnableVerifier.class);
 
@@ -33,7 +38,7 @@ class RunnableVerifier implements Runnable {
             if (ok) {
                 int all = Experiment.CHORS_SIZE;
                 logger.info("All " + all + " services working on enacter " + enacter.getId());
-                servicesWorking = all;
+                servicesWorking.set(all);
             } else {
                 verifyServicePerService();
             }
@@ -45,26 +50,47 @@ class RunnableVerifier implements Runnable {
     }
 
     private void verifyServicePerService() {
+        int NUM_THREADS = 200 / Experiment.CHORS_QTY;
+        ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
         Choreography chor = enacter.getChoreography();
         int len = chor.getServices().size();
         logger.info("Verifying " + len + " services in enacter " + enacter.getId());
-        servicesWorking = 0;
+        servicesWorking.set(0);
         for (DeployableService svc : chor.getDeployableServices()) {
             String wsdl = getWsdl(svc);
-            WSDLChecker checker = new WSDLChecker(wsdl);
-            if (checker.check()) {
-                servicesWorking++;
-                logger.info("Tracker OK: " + wsdl);
-            } else {
-                logger.error("Tracker not accessible (enacter " + enacter.getId() + "): " + wsdl);
-            }
+            VerifierTask task = new VerifierTask(wsdl);
+            executor.submit(task);
         }
+        Concurrency.waitExecutor(executor, Experiment.VERIFY_TIMEOUT);
     }
 
     private String getWsdl(Service svc) {
         String uri = svc.getUris().get(0);
         String wsdl = uri.replaceAll("/$", "").concat("?wsdl");
         return wsdl;
+    }
+    
+    private class VerifierTask implements Callable<Void> {
+
+        String wsdl;
+        
+        public VerifierTask(String wsdl) {
+            super();
+            this.wsdl = wsdl;
+        }
+
+        @Override
+        public Void call() throws Exception {
+            WSDLChecker checker = new WSDLChecker(wsdl);
+            if (checker.check()) {
+                servicesWorking.incrementAndGet();
+                logger.info("Tracker OK: " + wsdl);
+            } else {
+                logger.error("Tracker not accessible (enacter " + enacter.getId() + "): " + wsdl);
+            }
+            return null;
+        }
+        
     }
     
     public static void main(String[] args) {

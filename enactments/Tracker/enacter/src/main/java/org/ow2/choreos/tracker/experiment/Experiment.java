@@ -18,8 +18,8 @@ public class Experiment {
     public static final int VM_LIMIT = Integer.parseInt(ExperimentConfiguration.get("VM_LIMIT"));
     public static final int CHORS_QTY = Integer.parseInt(ExperimentConfiguration.get("CHORS_QTY"));
 
-    private static final int ENACTMENT_TIMEOUT = 40;
-    private static final int VERIFY_TIMEOUT = 5;
+    public static final int ENACTMENT_TIMEOUT = 40;
+    public static final int VERIFY_TIMEOUT = 15;
     
     private Report report;
     private List<RunnableEnacter> enacters;
@@ -82,7 +82,6 @@ public class Experiment {
             verifiers.add(verifier);
             executor.submit(verifier);
         }
-
         Concurrency.waitExecutor(executor, VERIFY_TIMEOUT);
         long tf = System.nanoTime();
         report.setCheckTotalTime(tf - t0);
@@ -95,7 +94,7 @@ public class Experiment {
             if (verifier.ok) {
                 chorsWorking++;
             }
-            servicesWorking += verifier.servicesWorking;
+            servicesWorking += verifier.servicesWorking.get();
         }
         report.setChorsWorking(chorsWorking);
         report.setServicesWorking(servicesWorking);
