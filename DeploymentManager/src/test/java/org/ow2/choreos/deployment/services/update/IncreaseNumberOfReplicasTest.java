@@ -53,7 +53,7 @@ public class IncreaseNumberOfReplicasTest {
     }
 
     @After
-    private void tearDown() {
+    public void tearDown() {
 	ServiceDeploymentPreparerFactory.testing = false;
     }
 
