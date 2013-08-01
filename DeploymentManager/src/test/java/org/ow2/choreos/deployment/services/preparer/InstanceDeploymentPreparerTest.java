@@ -65,7 +65,7 @@ public class InstanceDeploymentPreparerTest {
         DeployableServiceSpec spec = models.getAirlineSpec();
         InstanceDeploymentPreparer instanceDeploymentPreparer = new InstanceDeploymentPreparer(spec, SERVICE_UUID, node);
         instanceDeploymentPreparer.prepareDeployment();
-        verify(nodePreparer).prepareNode(spec.getPackageUri(), "jar");
+        verify(nodePreparer).prepareNodeForDeployment(spec.getPackageUri(), "jar");
         verify(nodeUpdater).addHandler(any(InstanceCreatorUpdateHandler.class));
     }
 

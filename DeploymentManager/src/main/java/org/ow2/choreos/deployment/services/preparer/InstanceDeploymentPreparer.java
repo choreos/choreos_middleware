@@ -36,7 +36,7 @@ public class InstanceDeploymentPreparer {
 	String packageUri = spec.getPackageUri();
 	String cookbookTemplateName = PackageTypeToCookbook.getCookbookName(spec.getPackageType());
 	try {
-	    instanceId = nodePreparer.prepareNode(packageUri, cookbookTemplateName);
+	    instanceId = nodePreparer.prepareNodeForDeployment(packageUri, cookbookTemplateName);
 	} catch (NodeNotPreparedException e1) {
 	    throw new PrepareDeploymentFailedException(spec.getName(), node);
 	}

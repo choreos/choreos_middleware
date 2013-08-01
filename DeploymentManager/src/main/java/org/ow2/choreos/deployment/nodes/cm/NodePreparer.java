@@ -51,8 +51,8 @@ public class NodePreparer {
      * @return the id of the prepared instance
      * @throws NodeNotPreparedException
      */
-    public String prepareNode(String packageUri, String cookbookTemplateName) throws NodeNotPreparedException {
-	PreparerInvokerTask task = new PreparerInvokerTask(packageUri, cookbookTemplateName);
+    public String prepareNodeForDeployment(String packageUri, String cookbookTemplateName) throws NodeNotPreparedException {
+	DeploymentPreparerInvokerTask task = new DeploymentPreparerInvokerTask(packageUri, cookbookTemplateName);
 	Future<String> future = singleThreadExecutor.submit(task);
 	String instanceId = checkFuture(future);
 	return instanceId;
@@ -86,19 +86,19 @@ public class NodePreparer {
 	throw e;
     }
 
-    private class PreparerInvokerTask implements Callable<String> {
+    private class DeploymentPreparerInvokerTask implements Callable<String> {
 
 	String packageUri;
 	String cookbookTemplateName;
 
-	public PreparerInvokerTask(String packageUri, String cookbookTemplateName) {
+	public DeploymentPreparerInvokerTask(String packageUri, String cookbookTemplateName) {
 	    this.packageUri = packageUri;
 	    this.cookbookTemplateName = cookbookTemplateName;
 	}
 
 	@Override
 	public String call() throws Exception {
-	    PrepareNodeTask task = new PrepareNodeTask(packageUri, cookbookTemplateName);
+	    DeploymentPrepareNodeTask task = new DeploymentPrepareNodeTask(packageUri, cookbookTemplateName);
 	    Invoker<String> invoker = new Invoker<String>(task, trials, timeout, 0, TimeUnit.SECONDS);
 	    String instanceId = invoker.invoke();
 	    System.out.println(instanceId);
@@ -133,12 +133,12 @@ public class NodePreparer {
 	}
     }
 
-    private class PrepareNodeTask extends AbstractPreparerInvokerTask implements Callable<String> {
+    private class DeploymentPrepareNodeTask extends AbstractPreparerInvokerTask implements Callable<String> {
 
 	String packageUri;
 	String cookbookTemplateName;
 
-	public PrepareNodeTask(String packageUri, String cookbookTemplateName) {
+	public DeploymentPrepareNodeTask(String packageUri, String cookbookTemplateName) {
 	    this.packageUri = packageUri;
 	    this.cookbookTemplateName = cookbookTemplateName;
 	}
