@@ -47,7 +47,7 @@ public class NodeBootstrapperTest {
     public void shouldLeaveNodeBootstraped() throws Exception {
 
         CloudProvider cp = CloudProviderFactory.getInstance(DeploymentManagerConfiguration.get("CLOUD_PROVIDER"));
-        node = cp.createOrUseExistingNode(new NodeSpec());
+        node = cp.createNode(new NodeSpec());
         System.out.println(node);
 
         BootstrapChecker checker = new BootstrapChecker();
