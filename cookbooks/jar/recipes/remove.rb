@@ -31,3 +31,14 @@ ruby_block "remove-file-$NAME" do
     end
 	notifies :stop, "service[service_$NAME_jar]", :immediately
 end
+
+bash "edit_json" do
+    cwd "#{ENV['HOME']}"
+    code "sed -i '/$NAME::remove/d' ./chef-solo/node.json"
+end
+
+bash "remove_$NAME_recipe" do
+    cwd "#{ENV['HOME']}"
+    code "rm -rf chef-solo/cookbooks/$NAME"
+end
+

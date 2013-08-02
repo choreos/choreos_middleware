@@ -6,3 +6,12 @@ file "#{node['tomcat']['webapp_dir']}/$NAME.war" do
 	action :delete
 end
 
+bash "edit_json" do
+    cwd "#{ENV['HOME']}"
+    code "sed -i '/$NAME::remove/d' ./chef-solo/node.json"
+end
+
+bash "remove_$NAME_recipe" do
+    cwd "#{ENV['HOME']}"
+    code "rm -rf chef-solo/cookbooks/$NAME"
+end
