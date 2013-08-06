@@ -8,6 +8,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -24,6 +25,7 @@ import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
+import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
@@ -58,22 +60,22 @@ public class NodesResource {
     @Consumes(MediaType.APPLICATION_XML)
     public Response createNode(NodeSpec nodeSpec, @Context UriInfo uriInfo) throws URISyntaxException {
 
-        logger.debug("Request to create node");
+	logger.debug("Request to create node");
 
-        CloudNode node = null;
-        try {
-            node = npm.createNode(nodeSpec);
-        } catch (NodeNotCreatedException e) {
-            logger.warn("Node not created", e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-        }
+	CloudNode node = null;
+	try {
+	    node = npm.createNode(nodeSpec);
+	} catch (NodeNotCreatedException e) {
+	    logger.warn("Node not created", e);
+	    return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+	}
 
-        logger.info(node + " created");
+	logger.info(node + " created");
 
-        UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-        uriBuilder = uriBuilder.path(NodesResource.class).path(node.getId());
-        URI uri = uriBuilder.build();
-        return Response.created(uri).entity(node).build();
+	UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+	uriBuilder = uriBuilder.path(NodesResource.class).path(node.getId());
+	URI uri = uriBuilder.build();
+	return Response.created(uri).entity(node).build();
     }
 
     /**
@@ -90,17 +92,17 @@ public class NodesResource {
     @Path("{node_id:.+}")
     public Response getNode(@PathParam("node_id") String nodeId) {
 
-        logger.debug("Request to get node " + nodeId);
+	logger.debug("Request to get node " + nodeId);
 
-        Response response;
-        try {
-            CloudNode node = npm.getNode(nodeId);
-            response = Response.ok(node).build();
-        } catch (NodeNotFoundException e) {
-            logger.error("Node " + nodeId + " not found");
-            response = Response.status(Status.NOT_FOUND).build();
-        }
-        return response;
+	Response response;
+	try {
+	    CloudNode node = npm.getNode(nodeId);
+	    response = Response.ok(node).build();
+	} catch (NodeNotFoundException e) {
+	    logger.error("Node " + nodeId + " not found");
+	    response = Response.status(Status.NOT_FOUND).build();
+	}
+	return response;
     }
 
     /**
@@ -118,22 +120,44 @@ public class NodesResource {
     @Path("{node_id:.+}/update")
     public Response updateNode(@PathParam("node_id") String nodeId) {
 
-        logger.debug("Request to update node " + nodeId);
+	logger.debug("Request to update node " + nodeId);
 
-        Response response;
-        try {
-            npm.updateNode(nodeId);
-            logger.info("Node " + nodeId + " updated");
-            response = Response.status(Status.OK).build();
-        } catch (NodeNotUpdatedException e) {
-            logger.error("Node " + nodeId + " not updated", e);
-            response = Response.status(Status.NOT_FOUND).build();
-        } catch (NodeNotFoundException e) {
-            logger.error("Node " + nodeId + " not updated", e);
-            response = Response.status(Status.INTERNAL_SERVER_ERROR).build();
-        }
+	Response response;
+	try {
+	    npm.updateNode(nodeId);
+	    logger.info("Node " + nodeId + " updated");
+	    response = Response.status(Status.OK).build();
+	} catch (NodeNotUpdatedException e) {
+	    logger.error("Node " + nodeId + " not updated", e);
+	    response = Response.status(Status.NOT_FOUND).build();
+	} catch (NodeNotFoundException e) {
+	    logger.error("Node " + nodeId + " not updated", e);
+	    response = Response.status(Status.INTERNAL_SERVER_ERROR).build();
+	}
 
-        return response;
+	return response;
+    }
+
+    @DELETE
+    @Path("{node_id:.+}")
+    public Response deleteNode(@PathParam("node_id") String nodeId) {
+
+	logger.debug("Request to delete node");
+
+	Response response;
+	try {
+	    this.npm.destroyNode(nodeId);
+	    response = Response.status(Status.OK).build();
+	    logger.info("Node " + nodeId + " deleted");
+	} catch (NodeNotDestroyed e) {
+	    logger.error("Nodenot destroyed", e);
+	    response = Response.status(Status.INTERNAL_SERVER_ERROR).build();
+	} catch (NodeNotFoundException e) {
+	    logger.error("Node not destroyed", e);
+	    response = Response.status(Status.NOT_FOUND).build();
+	}
+
+	return response;
     }
 
 }
