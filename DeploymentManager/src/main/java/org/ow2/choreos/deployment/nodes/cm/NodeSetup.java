@@ -3,7 +3,6 @@ package org.ow2.choreos.deployment.nodes.cm;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -17,6 +16,9 @@ import org.ow2.choreos.utils.SshUtil;
 
 public class NodeSetup {
 
+    public static NodeSetup setupForTest;
+    public static boolean testing = false;
+
     private static final int trials = 3;
     private static final int trialTimeout = 10;
 
@@ -28,16 +30,17 @@ public class NodeSetup {
 
     private Logger logger = Logger.getLogger(NodeSetup.class);
 
-    public NodeSetup(CloudNode node, String scriptFileName, Map<String, String> substitutions) {
+    public static NodeSetup getInstance(CloudNode node, String scriptFileName, Map<String, String> substitutions) {
+	if (!testing)
+	    return new NodeSetup(node, scriptFileName, substitutions);
+	else
+	    return setupForTest;
+    }
+
+    private NodeSetup(CloudNode node, String scriptFileName, Map<String, String> substitutions) {
 	this.node = node;
 	this.scriptFileName = scriptFileName;
 	this.substitutions = substitutions;
-    }
-
-    public NodeSetup(CloudNode node, String scriptFileName) {
-	this.node = node;
-	this.scriptFileName = scriptFileName;
-	substitutions = new HashMap<String, String>();
     }
 
     private void applySubstitutions() {
