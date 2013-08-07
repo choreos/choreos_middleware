@@ -50,10 +50,11 @@ case node[:ganglia][:unicast]
 when true
   template "/etc/ganglia/gmond.conf" do
     source "gmond_unicast.conf.erb"
-    iplist = search(:node, "*:*").map {|node| node.ipaddress}
+    # iplist = search(:node, "*:*").map {|node| node.ipaddress}
+    iplist = node[:ganglia][:server_addresses] || search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node.ipaddress}
 	if iplist.empty? 
 		# This should not happen, at least this node should be found
-    	iplist = ["143.107.45.126"] # Must be set by deployment manager
+    	iplist = ["127.0.0.1"]
     end
     variables( :cluster_name => node[:ganglia][:cluster_name],
                :iplist => iplist,

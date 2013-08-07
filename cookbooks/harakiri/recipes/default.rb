@@ -23,7 +23,7 @@ cron "run_chef_solo" do
   action :create
   hour "*"
   minute harakiri_minute
-  command "chef-solo -c #{ENV['HOME']}/chef-solo/solo.rb"
+  command "chef-solo -c #{ENV['HOME']}/chef-solo/solo.rb >> /tmp/chef-solo-harakiri.log 2>&1"
 end
 
 #UUID = /\A([0-9a-fA-F]{32}|[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\z/
