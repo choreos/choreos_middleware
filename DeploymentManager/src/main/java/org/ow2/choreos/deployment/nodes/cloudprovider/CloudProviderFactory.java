@@ -4,36 +4,39 @@
 
 package org.ow2.choreos.deployment.nodes.cloudprovider;
 
+import org.ow2.choreos.utils.Configuration;
+
 public class CloudProviderFactory {
 
-    public enum CloudProviderType {
-        FIXED, AWS, OPEN_STACK
+    private static final String CLASS_MAP_FILE_PATH = "cloud_providers.properties";
+
+    private static Configuration classMap;
+    
+    static {
+        classMap = new Configuration(CLASS_MAP_FILE_PATH);
     }
-
-    public static CloudProvider getInstance(String cloudProviderType) {
-
-        CloudProviderType type;
+    
+    public static CloudProvider getInstance(String type) {
+        String className = classMap.get(type);
+        CloudProvider singleton = null;
         try {
-            type = CloudProviderType.valueOf(cloudProviderType);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalStateException("Invalid CLOUD_PROVIDER in properties file: " + cloudProviderType);
+            @SuppressWarnings("unchecked")
+            // catches handle the problem
+            Class<CloudProvider> clazz = (Class<CloudProvider>) Class.forName(className);
+            singleton = clazz.newInstance();
+        } catch (ClassNotFoundException e) {
+            creationFailed(type);
+        } catch (InstantiationException e) {
+            creationFailed(type);
+        } catch (IllegalAccessException e) {
+            creationFailed(type);
+        } catch (ClassCastException e) {
+            creationFailed(type);
         }
-
-        return getInstance(type);
+        return singleton;
     }
-
-    public static CloudProvider getInstance(CloudProviderType type) {
-
-        switch (type) {
-
-        case AWS:
-            return new AWSCloudProvider();
-        case FIXED:
-            return new FixedCloudProvider();
-        case OPEN_STACK:
-            return new OpenStackKeystoneCloudProvider();
-        default:
-            throw new IllegalArgumentException("Invalid cloud provider type");
-        }
+    
+    private static void creationFailed(String type) {
+        throw new IllegalStateException("Invalid CLOUD_PROVIDER: " + type);
     }
 }
