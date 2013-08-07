@@ -9,7 +9,7 @@ import java.util.Properties;
 
 public class Locations {
 
-    private final String FILE_NAME = "locations_test.properties";
+    private final String FILE_NAME = "locations.properties";
 
     private final Properties properties = new Properties();
 
@@ -29,7 +29,6 @@ public class Locations {
 
     private Locations() {
         final ClassLoader loader = Thread.currentThread().getContextClassLoader();
-
         try {
             properties.load(loader.getResourceAsStream(FILE_NAME));
         } catch (IOException e) {

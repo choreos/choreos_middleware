@@ -6,11 +6,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -23,7 +21,6 @@ import org.ow2.choreos.utils.SshWaiter;
 
 public class NodeBootstrapperTest {
 
-    private String bootstrapScript;
     private String initialNodeJsonPath;
     private String prepareDeploymentScriptPath;
     private CloudNode node;
@@ -49,7 +46,6 @@ public class NodeBootstrapperTest {
 
     private void setFiles() throws IOException {
 	URL url = this.getClass().getClassLoader().getResource(NodeBootstrapper.BOOTSTRAP_SCRIPT);
-	bootstrapScript = FileUtils.readFileToString(new File(url.getFile()));
 	url = this.getClass().getClassLoader().getResource(NodeBootstrapper.INITIAL_NODE_JSON);
 	initialNodeJsonPath = url.getFile();
 	url = this.getClass().getClassLoader().getResource(NodeBootstrapper.PREPARE_DEPLOYMENT_SCRIPT);

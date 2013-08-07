@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
+import org.ow2.choreos.deployment.Locations;
 import org.ow2.choreos.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.utils.Scp;
@@ -63,6 +64,23 @@ public class NodeBootstrapper {
 	}
 	logger.info("Bootstrap completed at " + this.node);
     }
+    
+    private void executeBootstrapCommand() throws NodeNotBootstrappedException {
+        Map<String, String> substitutions = new HashMap<String, String>();
+        String cookbooksUrl = Locations.get("COOKBOOKS");
+        if (cookbooksUrl == null || cookbooksUrl.isEmpty()) {
+            logger.error("Field COOKBOOKS in locations.properties should be filled!");
+            throw new NodeNotBootstrappedException(node.getId());
+        }
+        substitutions.put("$THE_COOKBOOKS_URL", cookbooksUrl);
+        NodeSetup bootstrapSetup = NodeSetup.getInstance(node, BOOTSTRAP_SCRIPT, substitutions);
+        try {
+            bootstrapSetup.setup();
+        } catch (NodeSetupException e) {
+            logger.error("Could not bootstrap node " + node.getId());
+            throw new NodeNotBootstrappedException(node.getId());
+        }
+    }
 
     private void setUpHarakiri() {
 	Map<String, String> substitutions = new HashMap<String, String>();
@@ -87,21 +105,6 @@ public class NodeBootstrapper {
 	    monitoringSetup.setup();
 	} catch (NodeSetupException e) {
 	    logger.error("Could not properly setup monitoring on node " + node.getId());
-	}
-    }
-
-    private void executeBootstrapCommand() throws NodeNotBootstrappedException {
-	Map<String, String> substitutions = new HashMap<String, String>();
-	String cookbooksUrl = DeploymentManagerConfiguration.get("COOKBOOKS_URL");
-	if (cookbooksUrl == null || cookbooksUrl.isEmpty())
-	    throw new NodeNotBootstrappedException(node.getId());
-	substitutions.put("$THE_COOKBOOKS_URL", cookbooksUrl);
-	NodeSetup bootstrapSetup = NodeSetup.getInstance(node, BOOTSTRAP_SCRIPT, substitutions);
-	try {
-	    bootstrapSetup.setup();
-	} catch (NodeSetupException e) {
-	    logger.error("Could not bootstrap node " + node.getId());
-	    throw new NodeNotBootstrappedException(node.getId());
 	}
     }
 
