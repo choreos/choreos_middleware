@@ -73,7 +73,8 @@ public class NodeBootstrapper {
             throw new NodeNotBootstrappedException(node.getId());
         }
         substitutions.put("$THE_COOKBOOKS_URL", cookbooksUrl);
-        NodeSetup bootstrapSetup = NodeSetup.getInstance(node, BOOTSTRAP_SCRIPT, substitutions);
+        int timeout = 3;
+        NodeSetup bootstrapSetup = NodeSetup.getInstance(node, BOOTSTRAP_SCRIPT, timeout, substitutions);
         try {
             bootstrapSetup.setup();
         } catch (NodeSetupException e) {
@@ -87,7 +88,8 @@ public class NodeBootstrapper {
 	String externalDeplManURL = DeploymentManagerConfiguration.get("EXTERNAL_DEPLOYMENT_MANAGER_URL");
 	substitutions.put("$THE_URL", externalDeplManURL);
 	substitutions.put("$THE_ID", node.getId());
-	NodeSetup harakiriSetup = NodeSetup.getInstance(node, SETUP_HARAKIRI_SCRIPT, substitutions);
+	int timeout = 1;
+	NodeSetup harakiriSetup = NodeSetup.getInstance(node, SETUP_HARAKIRI_SCRIPT, timeout, substitutions);
 	try {
 	    harakiriSetup.setup();
 	} catch (NodeSetupException e) {
@@ -100,7 +102,8 @@ public class NodeBootstrapper {
 	String externalDeplManURL = DeploymentManagerConfiguration.get("EXTERNAL_DEPLOYMENT_MANAGER_URL");
 	String ip = URLUtils.extractIpFromURL(externalDeplManURL);
 	substitutions.put("$THE_IP", ip);
-	NodeSetup monitoringSetup = NodeSetup.getInstance(node, SETUP_MONITORING_SCRIPT, substitutions);
+	int timeout = 1;
+	NodeSetup monitoringSetup = NodeSetup.getInstance(node, SETUP_MONITORING_SCRIPT, timeout, substitutions);
 	try {
 	    monitoringSetup.setup();
 	} catch (NodeSetupException e) {

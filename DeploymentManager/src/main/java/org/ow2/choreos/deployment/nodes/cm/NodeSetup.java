@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -20,26 +21,27 @@ public class NodeSetup {
     public static boolean testing = false;
 
     private static final int trials = 3;
-    private static final int trialTimeout = 10;
 
     private CloudNode node;
     private String scriptFileName;
     private Map<String, String> substitutions;
+    private int timeoutMinutes;
 
     private String script;
 
     private Logger logger = Logger.getLogger(NodeSetup.class);
 
-    public static NodeSetup getInstance(CloudNode node, String scriptFileName, Map<String, String> substitutions) {
+    public static NodeSetup getInstance(CloudNode node, String scriptFileName, int timeoutMinutes, Map<String, String> substitutions) {
 	if (!testing)
-	    return new NodeSetup(node, scriptFileName, substitutions);
+	    return new NodeSetup(node, scriptFileName, timeoutMinutes, substitutions);
 	else
 	    return setupForTest;
     }
 
-    private NodeSetup(CloudNode node, String scriptFileName, Map<String, String> substitutions) {
+    private NodeSetup(CloudNode node, String scriptFileName, int timeoutMinutes, Map<String, String> substitutions) {
 	this.node = node;
 	this.scriptFileName = scriptFileName;
+	this.timeoutMinutes = timeoutMinutes;
 	this.substitutions = substitutions;
     }
 
@@ -63,7 +65,7 @@ public class NodeSetup {
 
     public void setup() throws NodeSetupException {
 	NodeSetupTask task = new NodeSetupTask();
-	Invoker<String> invoker = new InvokerBuilder<String>(task, trialTimeout).trials(trials).build();
+	Invoker<String> invoker = new InvokerBuilder<String>(task, timeoutMinutes).trials(trials).timeUnit(TimeUnit.MINUTES).build();
 	getScript();
 	applySubstitutions();
 	try {
@@ -74,7 +76,6 @@ public class NodeSetup {
     }
 
     private class NodeSetupTask implements Callable<String> {
-
 	@Override
 	public String call() throws Exception {
 	    SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
@@ -82,7 +83,6 @@ public class NodeSetup {
 	    ssh.disconnect();
 	    return output;
 	}
-
     }
 
 }
