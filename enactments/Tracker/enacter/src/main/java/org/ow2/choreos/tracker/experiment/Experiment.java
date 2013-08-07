@@ -18,7 +18,7 @@ public class Experiment {
     public static final int VM_LIMIT = Integer.parseInt(ExperimentConfiguration.get("VM_LIMIT"));
     public static final int CHORS_QTY = Integer.parseInt(ExperimentConfiguration.get("CHORS_QTY"));
 
-    public static final int ENACTMENT_TIMEOUT = 25;
+    public static final int ENACTMENT_TIMEOUT = 30;
     public static final int VERIFY_TIMEOUT = 15;
     
     private Report report;

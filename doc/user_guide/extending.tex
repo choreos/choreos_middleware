@@ -1,0 +1,58 @@
+
+\chapter{Extending \ee}
+
+\section{Introduction}
+
+Current PaaS solutions available on market are well known for their low flexibility. Some of them work only on a specific cloud environment, others only with a few development frameworks. \ee\ tries to overcome this issue by providing an extensible architecture. Although the out-of-box version of \ee\ is quite limited, with some programming is possible to extend it to provide support to new \emph{i)} cloud providers, \emph{ii)} package types, \emph{iii)} service types, and \emph{iv)} node selection policies. By ``extending'' we mean no current \ee\ code need to be changed, and that each new extension can be implemented by the means of a well-defined process, which are now described in this section.
+
+\section{Supporting new cloud providers}
+
+In \ee, cloud providers are just a source of virtual machines provisioning. Any technology able to create new virtual machines may be used as ``cloud provider''. 
+
+To implement a new cloud provider, it is necessary to implement the \textsf{CloudProvider} interface (Listing~\ref{lst:cloud_provider}). Current implementations are \textsf{AWSCloudProvider} (that uses EC2 service), \textsf{OpenStackKeystoneCloudProvider}, and \textsf{FixedCloudProvider} (that always points to the same user-defined VMs). An example of new cloud provider implementation could be the \textsf{VirtualBoxCloudProvider}, that would use VirtualBox on the developer machine to create new VMs (this is an example more suited to test environments).
+
+\lstset{
+language=Java,
+numbers=left
+}
+
+{\footnotesize
+\begin{lstlisting}[caption=\textsf{CloudProvider} interface, label=lst:cloud_provider]
+public interface CloudProvider {
+
+    public String getCloudProviderName();
+
+    public CloudNode createNode(NodeSpec nodeSpec) 
+    	throws NodeNotCreatedException;
+
+    public CloudNode getNode(String nodeId) 
+    	throws NodeNotFoundException;
+
+    public List<CloudNode> getNodes();
+
+    public void destroyNode(String id) 
+    	throws NodeNotDestroyed, NodeNotFoundException;
+
+    public CloudNode createOrUseExistingNode(NodeSpec nodeSpec) 
+    	throws NodeNotCreatedException;
+}
+\end{lstlisting}
+}
+
+\emph{Important note}: in the current implementation, \ee\ is tailored to work with nodes running \emph{Ubuntu 12.04}. Therefore, \textsf{CloudProvider} implementors should provide Ubuntu 12.04 nodes. 
+
+The next step is to edit the \texttt{cloud\_providers.properties} file, located on DeploymentManager resources folder. You must add a line in the format \verb!NAME=full.qualified.class.name!, where the key is just an alias that you can freely define (since it does not conflict with other existing keys on the same file), and the value is the full qualified name of the \textsf{CloudProvider} implementing class. It is also necessary to recompile the DeploymentManager project in such way it can access the implementing class.
+
+Finally, to use your new cloud provider, it is enough to configure the \texttt{deployment.properties}: add the line \verb!CLOUD_PROVIDER=NAME!, where \verb!NAME! is the \verb!NAME! defined in the \texttt{cloud\_providers.properties} file (be sure there is no other line defining the \verb!CLOUD_PROVIDER! property).
+
+\section{Supporting new package types}
+
+Coming soon.
+
+\section{Supporting new service types}
+
+Coming soon.
+
+\section{Supporting new node selection policies}
+
+Coming soon.
