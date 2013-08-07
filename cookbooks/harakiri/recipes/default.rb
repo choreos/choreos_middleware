@@ -23,6 +23,7 @@ cron "run_chef_solo" do
   action :create
   hour "*"
   minute harakiri_minute
+  user "ubuntu"
   command "chef-solo -c #{ENV['HOME']}/chef-solo/solo.rb >> /tmp/chef-solo-harakiri.log 2>&1"
 end
 
