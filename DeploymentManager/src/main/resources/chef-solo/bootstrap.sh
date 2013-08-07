@@ -3,6 +3,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+COOKBOOKS_URL=$THE_COOKBOOKS_URL
+
 function install_chef_solo() {
 	if which chef-solo >/dev/null; then
 		echo "Chef-solo already installed."
@@ -33,7 +35,7 @@ function prepare_node() {
 	
 		# create cookbooks repo
 		cd $HOME/chef-solo
-	    wget -O - http://valinhos.ime.usp.br:54080/choreos/cookbooks.tar.gz | tar xzf -
+	    wget -O - $COOKBOOKS_URL | tar xzf -
 
 		#create solo.rb file
 		cp /usr/share/chef/solo.rb .

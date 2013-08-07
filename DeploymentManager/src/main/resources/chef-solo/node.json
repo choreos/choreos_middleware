@@ -1,5 +1,10 @@
 {
         "run_list" : [
                 "recipe[apt]"
-        ]
+        ],
+        "ganglia": {
+        	"cluster_name": "CHOReOS",
+        	"unicast": true,
+        	"server_addresses": [ "localhost" ]
+		}
 }

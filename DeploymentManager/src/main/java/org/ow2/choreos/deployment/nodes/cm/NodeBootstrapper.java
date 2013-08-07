@@ -5,23 +5,18 @@
 package org.ow2.choreos.deployment.nodes.cm;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.utils.Scp;
 import org.ow2.choreos.utils.ScpFailed;
-import org.ow2.choreos.utils.SshCommandFailed;
-import org.ow2.choreos.utils.SshNotConnected;
-import org.ow2.choreos.utils.SshUtil;
 import org.ow2.choreos.utils.SshWaiter;
-import org.ow2.choreos.utils.TimeoutsAndTrials;
-
-import com.jcraft.jsch.JSchException;
+import org.ow2.choreos.utils.URLUtils;
 
 /**
  * 
@@ -32,6 +27,7 @@ public class NodeBootstrapper {
 
     public static final String BOOTSTRAP_SCRIPT = "chef-solo/bootstrap.sh";
     public static final String SETUP_HARAKIRI_SCRIPT = "chef-solo/setup_harakiri.sh";
+    public static final String SETUP_MONITORING_SCRIPT = "chef-solo/setup_ganglia.sh";
     public static final String INITIAL_NODE_JSON = "chef-solo/node.json";
     public static final String PREPARE_DEPLOYMENT_SCRIPT = "chef-solo/prepare_deployment.sh";
     public static final String PREPARE_UNDEPLOYMENT_SCRIPT = "chef-solo/prepare_undeployment.sh";
@@ -40,6 +36,7 @@ public class NodeBootstrapper {
 
     private CloudNode node;
     private boolean usingHarakiri = false;
+    private boolean usingMonitoring = false;
     SshWaiter sshWaiter = new SshWaiter();
 
     private Logger logger = Logger.getLogger(NodeBootstrapper.class);
@@ -47,6 +44,7 @@ public class NodeBootstrapper {
     public NodeBootstrapper(CloudNode node) {
 	this.node = node;
 	this.usingHarakiri = Boolean.parseBoolean(DeploymentManagerConfiguration.get("HARAKIRI"));
+	this.usingMonitoring = Boolean.parseBoolean(DeploymentManagerConfiguration.get("MONITORING"));
     }
 
     public void bootstrapNode() throws NodeNotAccessibleException, NodeNotBootstrappedException {
@@ -60,81 +58,51 @@ public class NodeBootstrapper {
 	if (usingHarakiri) {
 	    setUpHarakiri();
 	}
+	if (usingMonitoring) {
+	    setUpMonitoring();
+	}
 	logger.info("Bootstrap completed at " + this.node);
     }
 
     private void setUpHarakiri() {
+	Map<String, String> substitutions = new HashMap<String, String>();
+	String externalDeplManURL = DeploymentManagerConfiguration.get("EXTERNAL_DEPLOYMENT_MANAGER_URL");
+	substitutions.put("$THE_URL", externalDeplManURL);
+	substitutions.put("$THE_ID", node.getId());
+	NodeSetup harakiriSetup = NodeSetup.getInstance(node, SETUP_HARAKIRI_SCRIPT, substitutions);
 	try {
-	    SshUtil ssh = getSsh();
-	    String setUpHarakiriScript = getSetUpHarakiriScript();
-	    ssh.runCommand(setUpHarakiriScript);
-	    ssh.disconnect();
-	} catch (SshNotConnected e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	} catch (JSchException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	} catch (SshCommandFailed e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    harakiriSetup.setup();
+	} catch (NodeSetupException e) {
+	    logger.error("Could not properly setup harakiri on node " + node.getId());
 	}
     }
 
-    private String getSetUpHarakiriScript() {
-	URL scriptFile;
-	scriptFile = this.getClass().getClassLoader().getResource(SETUP_HARAKIRI_SCRIPT);
-	String script = null;
+    private void setUpMonitoring() {
+	Map<String, String> substitutions = new HashMap<String, String>();
+	String externalDeplManURL = DeploymentManagerConfiguration.get("EXTERNAL_DEPLOYMENT_MANAGER_URL");
+	String ip = URLUtils.extractIpFromURL(externalDeplManURL);
+	substitutions.put("$THE_IP", ip);
+	NodeSetup monitoringSetup = NodeSetup.getInstance(node, SETUP_MONITORING_SCRIPT, substitutions);
 	try {
-	    script = FileUtils.readFileToString(new File(scriptFile.getFile()));
-	    String externalDeplManURL = DeploymentManagerConfiguration.get("EXTERNAL_DEPLOYMENT_MANAGER_URL");
-	    script.replace("$THE_URL", externalDeplManURL).replace("$THE_ID", node.getId());
-	} catch (IOException e) {
-	    logger.error("Should not happen!", e);
-	    throw new IllegalStateException();
+	    monitoringSetup.setup();
+	} catch (NodeSetupException e) {
+	    logger.error("Could not properly setup monitoring on node " + node.getId());
 	}
-	return script;
     }
 
     private void executeBootstrapCommand() throws NodeNotBootstrappedException {
+	Map<String, String> substitutions = new HashMap<String, String>();
+	String cookbooksUrl = DeploymentManagerConfiguration.get("COOKBOOKS_URL");
+	if (cookbooksUrl == null || cookbooksUrl.isEmpty())
+	    throw new NodeNotBootstrappedException(node.getId());
+	substitutions.put("$THE_COOKBOOKS_URL", cookbooksUrl);
+	NodeSetup bootstrapSetup = NodeSetup.getInstance(node, BOOTSTRAP_SCRIPT, substitutions);
 	try {
-	    SshUtil ssh = getSsh();
-	    String bootstrapScript = getBootStrapScript();
-	    ssh.runCommand(bootstrapScript);
-	    ssh.disconnect();
-	} catch (SshNotConnected e) {
-	    logFailMessage();
-	    throw new NodeNotBootstrappedException(node.getId());
-	} catch (JSchException e) {
-	    logFailMessage();
-	    throw new NodeNotBootstrappedException(node.getId());
-	} catch (SshCommandFailed e) {
-	    logFailMessage();
+	    bootstrapSetup.setup();
+	} catch (NodeSetupException e) {
+	    logger.error("Could not bootstrap node " + node.getId());
 	    throw new NodeNotBootstrappedException(node.getId());
 	}
-    }
-
-    private SshUtil getSsh() throws SshNotConnected {
-	int timeout = TimeoutsAndTrials.get("CONNECT_SSH_TIMEOUT");
-	SshUtil ssh = sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
-	return ssh;
-    }
-
-    private String getBootStrapScript() {
-	URL scriptFile;
-	scriptFile = this.getClass().getClassLoader().getResource(BOOTSTRAP_SCRIPT);
-	String script = null;
-	try {
-	    script = FileUtils.readFileToString(new File(scriptFile.getFile()));
-	} catch (IOException e) {
-	    logger.error("Should not happen!", e);
-	    throw new IllegalStateException();
-	}
-	return script;
-    }
-
-    private void logFailMessage() {
-	logger.error("Node " + node.getId() + " not bootstrapped");
     }
 
     private void saveFile(String source, String target) {
