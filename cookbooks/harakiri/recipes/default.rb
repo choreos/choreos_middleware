@@ -29,7 +29,7 @@ end
 #UUID = /\A([0-9a-fA-F]{32}|[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\z/
 
 http_request "http_delete" do
-  action :nothing
+  action :delete
   message ""
   url "#node{['CHOReOSData']['nodeData']['deploymentManagerURL']}/nodes/#node{['CHOReOSData']['nodeData']['nodeID']}"
   only_if do
