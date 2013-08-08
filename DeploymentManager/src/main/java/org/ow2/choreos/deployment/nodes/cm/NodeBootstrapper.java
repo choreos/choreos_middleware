@@ -16,7 +16,6 @@ import org.ow2.choreos.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.utils.Scp;
 import org.ow2.choreos.utils.ScpFailed;
-import org.ow2.choreos.utils.SshWaiter;
 import org.ow2.choreos.utils.URLUtils;
 
 /**
@@ -38,7 +37,6 @@ public class NodeBootstrapper {
     private CloudNode node;
     private boolean usingHarakiri = false;
     private boolean usingMonitoring = false;
-    SshWaiter sshWaiter = new SshWaiter();
 
     private Logger logger = Logger.getLogger(NodeBootstrapper.class);
 

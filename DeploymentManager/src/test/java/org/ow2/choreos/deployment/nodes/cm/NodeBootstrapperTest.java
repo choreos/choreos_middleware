@@ -1,31 +1,24 @@
 package org.ow2.choreos.deployment.nodes.cm;
 
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.net.URL;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.utils.Scp;
-import org.ow2.choreos.utils.SshNotConnected;
-import org.ow2.choreos.utils.SshUtil;
-import org.ow2.choreos.utils.SshWaiter;
 
 public class NodeBootstrapperTest {
 
     private String initialNodeJsonPath;
     private String prepareDeploymentScriptPath;
     private CloudNode node;
-    private SshUtil ssh;
-    private SshWaiter waiter;
     private Scp scp;
     private NodeSetup nodeSetup;
 
@@ -39,11 +32,10 @@ public class NodeBootstrapperTest {
     public void setUp() throws Exception {
 	setFiles();
 	setNode();
-	setSsh();
 	setScp();
 	setNodeSetup();
     }
-
+    
     private void setFiles() throws IOException {
 	URL url = this.getClass().getClassLoader().getResource(NodeBootstrapper.BOOTSTRAP_SCRIPT);
 	url = this.getClass().getClassLoader().getResource(NodeBootstrapper.INITIAL_NODE_JSON);
@@ -59,12 +51,6 @@ public class NodeBootstrapperTest {
 	node.setPrivateKey("ubuntu.pem");
     }
 
-    private void setSsh() throws SshNotConnected {
-	ssh = mock(SshUtil.class);
-	waiter = mock(SshWaiter.class);
-	when(waiter.waitSsh(anyString(), anyString(), anyString(), anyInt())).thenReturn(ssh);
-    }
-
     private void setScp() {
 	scp = mock(Scp.class);
 	Scp.scpForTest = scp;
@@ -76,11 +62,16 @@ public class NodeBootstrapperTest {
 	NodeSetup.setupForTest = nodeSetup;
 	NodeSetup.testing = true;
     }
+    
+    @After
+    public void tearDown() {
+        NodeSetup.testing = false;
+        Scp.testing = false;
+    }
 
     @Test
     public void shouldRunBootstrapThroughSshAndSendFiles() throws Exception {
 	NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
-	bootstrapper.sshWaiter = waiter;
 	bootstrapper.bootstrapNode();
 	verify(nodeSetup).setup();
 	verify(scp).sendFile(initialNodeJsonPath, NodeBootstrapper.CHEF_SOLO_FOLDER);
