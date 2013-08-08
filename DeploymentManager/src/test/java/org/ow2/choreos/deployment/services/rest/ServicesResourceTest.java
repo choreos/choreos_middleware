@@ -78,7 +78,7 @@ public class ServicesResourceTest {
         when(uriBuilder.path(any(String.class))).thenReturn(uriBuilder);
         when(uriBuilder.build()).thenReturn(new URI(uri));
 
-        Response response = this.servicesResources.deployService(serviceSpec, uriInfo);
+        Response response = this.servicesResources.createService(serviceSpec, uriInfo);
 
         assertEquals(201, response.getStatus());
         Service entity = (Service) response.getEntity();

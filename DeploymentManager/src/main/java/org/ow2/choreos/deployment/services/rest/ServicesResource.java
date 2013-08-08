@@ -33,7 +33,7 @@ import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 
 /**
- * Service Deployer REST API Resource: services
+ * Services REST API
  * 
  * @author alfonso, leonardo, nelson
  * 
@@ -41,8 +41,9 @@ import org.ow2.choreos.services.datamodel.ServiceInstance;
 @Path("services")
 public class ServicesResource {
 
-    private Logger logger = Logger.getLogger(ServicesResource.class);
     protected ServicesManager servicesManager;
+
+    private Logger logger = Logger.getLogger(ServicesResource.class);
 
     public ServicesResource() {
         ServicesManager servicesManager = new ServicesManagerImpl();
@@ -55,10 +56,15 @@ public class ServicesResource {
     }
 
     /**
-     * Deploys a service
+     * Creates a service representation in the Deployment Manager.
      * 
-     * @param serviceSpecXML
-     *            Request's body content with a ServiceSpec XML
+     * A node will be selected to host the create service. However, the service
+     * will be only deployed when such selected node is updated. More than one
+     * node shall be selected if the service must have several instances.
+     * 
+     * @param serviceSpec
+     *            Request's body content with a XML representation of a
+     *            DeployableServiceSpec
      * @return HTTP code 201 and Location header if the service was successfully
      *         deployed; HTTP code 400 if request can not be properly parsed;
      *         HTTP code 500 if any other error occurs.
@@ -66,7 +72,7 @@ public class ServicesResource {
     @POST
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    public Response deployService(DeployableServiceSpec serviceSpec, @Context UriInfo uriInfo) {
+    public Response createService(DeployableServiceSpec serviceSpec, @Context UriInfo uriInfo) {
 
         if (serviceSpec.getPackageUri() == null || serviceSpec.getPackageUri().isEmpty()
                 || serviceSpec.getPackageType() == null)
@@ -204,13 +210,17 @@ public class ServicesResource {
     }
 
     /**
-     * Update a service
+     * Update a service specification.
      * 
-     * @param serviceSpecXML
-     *            Request's body content with a ServiceSpec XML
+     * Changes will be applied in real running services, just when concerning
+     * nodes receive update requests.
+     * 
+     * @param serviceSpec
+     *            Request's body content with a XML representation of a
+     *            DeployableServiceSpec
      * @return HTTP code 201 and Location header if the service was successfully
-     *         deployed; HTTP code 400 if request can not be properly parsed;
-     *         HTTP code 500 if any other error occurs.
+     *         update; HTTP code 400 if request can not be properly parsed; HTTP
+     *         code 500 if any other error occurs.
      * @throws UnhandledModificationException
      */
     @POST
