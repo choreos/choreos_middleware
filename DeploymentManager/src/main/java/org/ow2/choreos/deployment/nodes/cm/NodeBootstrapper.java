@@ -56,12 +56,10 @@ public class NodeBootstrapper {
 	saveFile(ADD_RECIPE_SCRIPT, CHEF_SOLO_FOLDER);
 	saveFile(INITIAL_NODE_JSON, CHEF_SOLO_FOLDER);
 	saveFile(INITIAL_NODE_JSON, CHEF_SOLO_FOLDER + "/node.json.backup");
-	if (usingHarakiri) {
+	if (usingHarakiri) 
 	    setUpHarakiri();
-	}
-	if (usingMonitoring) {
+	if (usingMonitoring) 
 	    setUpMonitoring();
-	}
 	logger.info("Bootstrap completed at " + this.node);
     }
     
@@ -111,14 +109,14 @@ public class NodeBootstrapper {
 	}
     }
 
-    private void saveFile(String source, String target) {
+    private void saveFile(String source, String target) throws NodeNotBootstrappedException {
 	Scp scp = Scp.getInstance(node.getIp(), node.getUser(), node.getPrivateKeyFile());
 	File file = getFile(source);
 	try {
 	    scp.sendFile(file.getAbsolutePath(), target);
 	} catch (ScpFailed e) {
 	    logger.error("It was not possible to save " + file.getName() + " on node " + node.getId());
-	    throw new IllegalStateException();
+	    throw new NodeNotBootstrappedException(node.getId());
 	}
     }
 
