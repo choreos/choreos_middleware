@@ -6,14 +6,12 @@ public class PortRetriever {
     private static final int EASYESB_PORT = 8180;
 
     public int getPortByPackageType(PackageType packageType) {
-        switch (packageType) {
-        case TOMCAT:
+        if (packageType.equals(PackageType.TOMCAT))
             return TOMCAT_PORT;
-        case EASY_ESB:
+        else if (packageType.equals(PackageType.EASY_ESB))
             return EASYESB_PORT;
-        default:
-            throw new IllegalArgumentException("Port not known for package " + packageType);
-        }
+        else
+            throw new IllegalArgumentException("Port not known for package type " + packageType);        
     }
 
 }

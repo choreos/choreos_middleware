@@ -48,7 +48,6 @@ public class SimpleChorEnactmentTest {
 
     @Before
     public void setUp() {
-
         ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "false");
         ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
         chorSpec = models.getChorSpec();

@@ -182,7 +182,10 @@ public class DeployableServiceSpec extends ServiceSpec implements Serializable {
                 return false;
         } else if (!owner.equals(other.owner))
             return false;
-        if (packageType != other.packageType)
+        if (packageType == null) {
+            if (other.packageType != null)
+                return false;
+        } else if (!packageType.equals(other.packageType))
             return false;
         if (packageUri == null) {
             if (other.packageUri != null)

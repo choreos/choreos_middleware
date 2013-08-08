@@ -14,7 +14,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
-import org.ow2.choreos.deployment.Locations;
+import org.ow2.choreos.deployment.LocationsTest;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.services.ServicesManagerImpl;
@@ -35,7 +35,7 @@ public class WARDeployTest {
     private Logger logger = Logger.getLogger(WARDeployTest.class);
 
     // a known war file
-    public static String WAR_LOCATION = Locations.get("AIRLINE_WAR");
+    public static String WAR_LOCATION = LocationsTest.get("AIRLINE_WAR");
     public static String ENDPOINT_NAME = "airline";
 
     private String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
@@ -58,7 +58,7 @@ public class WARDeployTest {
         specWar.setPackageType(PackageType.TOMCAT);
         specWar.setResourceImpact(resourceImpact);
     }
-
+    
     @Test
     public void shouldDeployAWarServiceInANode() throws Exception {
 

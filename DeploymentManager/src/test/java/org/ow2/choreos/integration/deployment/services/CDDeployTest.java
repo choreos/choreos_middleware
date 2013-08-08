@@ -15,7 +15,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
-import org.ow2.choreos.deployment.Locations;
+import org.ow2.choreos.deployment.LocationsTest;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.services.ServicesManagerImpl;
@@ -33,7 +33,7 @@ import org.ow2.choreos.utils.LogConfigurator;
 public class CDDeployTest {
 
     // a known CD configuration file
-    public static String CD_LOCATION = Locations.get("CD_WEATHER_LOCATION");
+    public static String CD_LOCATION = LocationsTest.get("CD_WEATHER_LOCATION");
 
     private String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
     private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));

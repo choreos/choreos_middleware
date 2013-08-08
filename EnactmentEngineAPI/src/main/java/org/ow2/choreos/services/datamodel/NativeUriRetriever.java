@@ -24,17 +24,15 @@ public class NativeUriRetriever {
     }
 
     private String getUriContext() {
-        switch (spec.getPackageType()) {
-        case TOMCAT:
-            return instanceId + "/" + spec.getEndpointName();
-        case COMMAND_LINE:
+        if (spec.getPackageType().equals(PackageType.COMMAND_LINE))
             return spec.getEndpointName() + "/";
-        case EASY_ESB:
+        else if (spec.getPackageType().equals(PackageType.TOMCAT))
+            return instanceId + "/" + spec.getEndpointName();
+        else if (spec.getPackageType().equals(PackageType.EASY_ESB))
             return "services/" + spec.getEndpointName() + "ClientProxyEndpoint/";
-        default:
+        else
             throw new IllegalStateException("Sorry, I don't know how to provide an URL to a " + spec.getPackageType()
-                    + " service.");
-        }
+                    + " package type.");
     }
 
     private String getUriWithPort(String uriContext) {

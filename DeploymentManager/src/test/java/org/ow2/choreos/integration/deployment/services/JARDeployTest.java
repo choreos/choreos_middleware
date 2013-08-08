@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.ow2.choreos.deployment.LocationsTest;
 import org.ow2.choreos.deployment.nodes.NPMFactory;
 import org.ow2.choreos.deployment.services.ServicesManagerImpl;
 import org.ow2.choreos.nodes.NodePoolManager;
@@ -30,8 +31,8 @@ import org.ow2.choreos.utils.LogConfigurator;
 @Category(IntegrationTest.class)
 public class JARDeployTest {
 
-    public static final String JAR_LOCATION = "http://valinhos.ime.usp.br:54080/services/airline-service.jar";
-
+    public static final String JAR_LOCATION = LocationsTest.get("AIRLINE_JAR");
+    
     private NodePoolManager npm = NPMFactory.getNewNPMInstance();
     private ServicesManager deployer = new ServicesManagerImpl();
 

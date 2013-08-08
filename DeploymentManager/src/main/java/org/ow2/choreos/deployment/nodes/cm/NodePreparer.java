@@ -101,7 +101,6 @@ public class NodePreparer {
 	    DeploymentPrepareNodeTask task = new DeploymentPrepareNodeTask(packageUri, cookbookTemplateName);
 	    Invoker<String> invoker = new Invoker<String>(task, trials, timeout, 0, TimeUnit.SECONDS);
 	    String instanceId = invoker.invoke();
-	    System.out.println(instanceId);
 	    return instanceId;
 	}
     }
