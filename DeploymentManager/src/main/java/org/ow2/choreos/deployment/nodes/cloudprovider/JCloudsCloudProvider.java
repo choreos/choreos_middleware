@@ -73,6 +73,9 @@ public abstract class JCloudsCloudProvider implements CloudProvider {
         } catch (org.jclouds.rest.AuthorizationException e) {
             logger.error("Authorization failed. Provided user doesn't have authorization to create a new node.");
             throw new NodeNotCreatedException();
+        } catch (IllegalStateException e) {
+            logger.error(e);
+            throw new NodeNotCreatedException();
         }
     }
 
