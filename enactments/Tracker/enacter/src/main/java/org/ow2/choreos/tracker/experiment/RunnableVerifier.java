@@ -40,7 +40,11 @@ class RunnableVerifier implements Runnable {
                 logger.info("All " + all + " services working on enacter " + enacter.getId());
                 servicesWorking.set(all);
             } else {
-                verifyServicePerService();
+                int deployedSize = enacter.getChoreography().getDeployableServices().size();
+                if (deployedSize > 0)
+                    verifyServicePerService();
+                else
+                    logger.warn("No services deployed at " + enacter.getId());
             }
         } catch (MalformedURLException e) {
             logger.error("Ops, this problem should not occur with Enacter#" + enacter.getId());
