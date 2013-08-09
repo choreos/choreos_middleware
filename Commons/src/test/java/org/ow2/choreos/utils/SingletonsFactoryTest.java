@@ -72,7 +72,7 @@ public class SingletonsFactoryTest {
             Future<String> f = executor.submit(task);
             futures.add(f);
         }
-        Concurrency.waitExecutor(executor, 1);
+        Concurrency.waitExecutor(executor, 1, "pam!");
 
         String previousObject = futures.get(0).get();
         for (Future<String> f : futures) {

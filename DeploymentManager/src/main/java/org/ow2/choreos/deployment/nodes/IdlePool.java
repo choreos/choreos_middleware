@@ -185,7 +185,7 @@ public class IdlePool {
                     VMCreator vmCreator = new VMCreator(nodeCreator);
                     executor.execute(vmCreator);
                 }
-                Concurrency.waitExecutor(executor, FILLING_POOL_TIMEOUT_MINUTES);
+                Concurrency.waitExecutor(executor, FILLING_POOL_TIMEOUT_MINUTES, "Could not properly fill the pool.");
             }
         }
     }

@@ -66,7 +66,6 @@ public class Configuration {
             }
             return value.trim();
         } else {
-            logger.warn(key + " not found in " + properties.getFileName());
             return value;
         }
     }

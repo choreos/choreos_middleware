@@ -78,8 +78,6 @@ public class ServicesResource {
                 || serviceSpec.getPackageType() == null)
             return Response.status(Status.BAD_REQUEST).build();
         
-        System.out.println("*** package type: " + serviceSpec.getPackageType());
-
         logger.debug("Request to deploy " + serviceSpec.getPackageUri());
 
         DeployableService service;

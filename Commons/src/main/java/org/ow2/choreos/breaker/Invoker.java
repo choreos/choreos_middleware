@@ -53,7 +53,8 @@ public class Invoker<T> {
     private T tryToInvoke() throws Exception {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<T> future = executor.submit(task);
-        Concurrency.waitExecutor(executor, trialTimeout, timeUnit, logger);
+        String errorMessage = "Invoker could not properly invoke " + this.task.getClass().getName();
+        Concurrency.waitExecutor(executor, trialTimeout, timeUnit, logger, errorMessage);
         try {
             return Concurrency.checkAndGetFromFuture(future);
         } catch (ExecutionException e) {

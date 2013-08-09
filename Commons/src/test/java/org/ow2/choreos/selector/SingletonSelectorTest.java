@@ -47,7 +47,7 @@ public class SingletonSelectorTest {
             Future<String> f = executor.submit(task);
             futures.add(f);
         }
-        Concurrency.waitExecutor(executor, factory.getTimeoutInSeconds(), TimeUnit.SECONDS, logger);
+        Concurrency.waitExecutor(executor, factory.getTimeoutInSeconds(), TimeUnit.SECONDS, logger, "pam!");
 
         String previousObject = futures.get(0).get();
         for (Future<String> f : futures) {

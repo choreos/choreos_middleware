@@ -63,7 +63,7 @@ public class NodesUpdater {
     }
 
     private void waitUpdates() {
-        Concurrency.waitExecutor(executor, TIMEOUT);
+        Concurrency.waitExecutor(executor, TIMEOUT, "Could not properly update all the nodes of chor " + chorId);
     }
 
     private class NodeUpdater implements Runnable {

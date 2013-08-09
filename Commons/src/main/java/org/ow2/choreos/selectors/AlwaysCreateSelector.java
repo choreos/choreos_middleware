@@ -47,7 +47,7 @@ public class AlwaysCreateSelector<T, R> implements Selector<T, R> {
         }
 
         int timeout = objectFactory.getTimeoutInSeconds();
-        Concurrency.waitExecutor(executor, timeout, TimeUnit.SECONDS, logger);
+        Concurrency.waitExecutor(executor, timeout, TimeUnit.SECONDS, logger, "AlwaysCreateSelector could not properly create object.");
 
         List<T> selectedObjects = new ArrayList<T>();
         for (Future<T> f : futures) {

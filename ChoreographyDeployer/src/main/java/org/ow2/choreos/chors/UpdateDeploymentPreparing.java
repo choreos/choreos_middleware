@@ -64,7 +64,7 @@ public class UpdateDeploymentPreparing {
             futures.add(future);
         }
 
-        Concurrency.waitExecutor(executor, TIMEOUT);
+        Concurrency.waitExecutor(executor, TIMEOUT, "Could not properly update all the services of chor" + chorId);
 
         configuredServices = new ArrayList<DeployableService>();
         for (Future<DeployableService> future : futures) {

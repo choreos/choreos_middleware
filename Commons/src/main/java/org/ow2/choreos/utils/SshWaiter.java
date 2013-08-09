@@ -32,7 +32,7 @@ public class SshWaiter {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<SshUtil> future = executor.submit(callable);
 
-        Concurrency.waitExecutor(executor, timeoutSeconds, TimeUnit.SECONDS, logger);
+        Concurrency.waitExecutor(executor, timeoutSeconds, TimeUnit.SECONDS, logger, "Could not ssh into node" + ip);
 
         try {
             SshUtil ssh = Concurrency.checkAndGetFromFuture(future);

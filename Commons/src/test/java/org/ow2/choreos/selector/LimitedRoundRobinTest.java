@@ -93,7 +93,7 @@ public class LimitedRoundRobinTest {
             futures.add(f);
         }
 
-        Concurrency.waitExecutor(executor, 1);
+        Concurrency.waitExecutor(executor, 1, "pam!");
 
         int count = 0, count0 = 0, count1 = 0, count2 = 0;
         for (Future<String> f : futures) {

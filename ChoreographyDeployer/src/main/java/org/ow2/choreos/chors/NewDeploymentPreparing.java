@@ -60,7 +60,7 @@ public class NewDeploymentPreparing {
     }
 
     private void waitConfigureTasks() {
-        Concurrency.waitExecutor(executor, TIMEOUT);
+        Concurrency.waitExecutor(executor, TIMEOUT, "Coud not properly configure all the services of chor " + chorId);
     }
 
     private void retrieveConfiguredServices() {

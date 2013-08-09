@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 
 public class Concurrency {
 
-    public static void waitExecutor(ExecutorService executor, int timeoutMinutes, TimeUnit timeUnit, Logger logger) {
+    public static void waitExecutor(ExecutorService executor, int timeoutMinutes, TimeUnit timeUnit, Logger logger, String errorMessage) {
         executor.shutdown();
         boolean status = false;
         try {
@@ -24,17 +24,17 @@ public class Concurrency {
             logErrorMessage("Interrupted thread! Should not happen!", logger);
         }
         if (!status) {
-            logErrorMessage("Executor status is False. Probably there is some problem!", logger);
+            logErrorMessage(errorMessage, logger);
         }
         executor.shutdownNow();
     }
 
-    public static void waitExecutor(ExecutorService executor, int timeoutMinutes) {
-        waitExecutor(executor, timeoutMinutes, TimeUnit.MINUTES, null);
+    public static void waitExecutor(ExecutorService executor, int timeoutMinutes, String errorMessage) {
+        waitExecutor(executor, timeoutMinutes, TimeUnit.MINUTES, null, errorMessage);
     }
 
-    public static void waitExecutor(ExecutorService executor, int timeoutMinutes, Logger logger) {
-        waitExecutor(executor, timeoutMinutes, TimeUnit.MINUTES, logger);
+    public static void waitExecutor(ExecutorService executor, int timeoutMinutes, Logger logger, String errorMessage) {
+        waitExecutor(executor, timeoutMinutes, TimeUnit.MINUTES, logger, errorMessage);
     }
 
     private static void logErrorMessage(String msg, Logger logger) {

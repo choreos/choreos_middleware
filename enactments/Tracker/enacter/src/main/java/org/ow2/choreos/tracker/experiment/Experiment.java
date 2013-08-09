@@ -68,7 +68,7 @@ public class Experiment {
             executor.submit(runnable);
         }
 
-        Concurrency.waitExecutor(executor, ENACTMENT_TIMEOUT);
+        Concurrency.waitExecutor(executor, ENACTMENT_TIMEOUT, "Could not properly enact all the chors");
         long tf = System.nanoTime();
         report.setChorsEnactmentTotalTime(tf - t0);
     }
@@ -82,7 +82,7 @@ public class Experiment {
             verifiers.add(verifier);
             executor.submit(verifier);
         }
-        Concurrency.waitExecutor(executor, VERIFY_TIMEOUT);
+        Concurrency.waitExecutor(executor, VERIFY_TIMEOUT, "Could not properly verify all the chors");
         long tf = System.nanoTime();
         report.setCheckTotalTime(tf - t0);
     }
