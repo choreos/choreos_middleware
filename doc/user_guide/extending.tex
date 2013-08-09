@@ -56,12 +56,17 @@ e \$PACKAGE\_URL e \$NAME nos atributos
 editar cookbooks.properties
 
 nativeUri -> vai ter q criar mais uma classe pra ser extendida
-defaultPort -> criar arquivo de portas padrões, ou colocar essa info 
-na mesma classe que resolve o nativeUri
+e é preciso um arquivo mapeando o packageType pra classe que define as uris (uricontexts)
+defaultPort -> criar arquivo de portas padrões (ports)
+Tanto uricontexts quanto ports são arquivos que vão ser lidos pelas classes em EnactmentEngineAPI
+Mas se os arquivos ficarem nesse projeto, aí eles não serão lidos corretamente quando 
+essas classes forem chamadas no DeploymentManager.
+Que fazer? =T
 
 usando novo package type no service spec
 
 dica: pode ser interessante criar uma nova imagem
+com o middleware do pacote correspondente já instalado
 
 
 \section{Supporting new service types}
