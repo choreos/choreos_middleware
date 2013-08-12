@@ -11,6 +11,8 @@ import org.ow2.choreos.deployment.services.rest.ServicesResource;
 import org.ow2.choreos.rest.RESTServer;
 import org.ow2.choreos.utils.LogConfigurator;
 
+import eu.choreos.monitoring.platform.daemon.ThresholdEvalDaemonService;
+
 /**
  * Stand alone server that makes the REST API available to clients.
  * 
@@ -22,32 +24,42 @@ public class DeploymentManagerServer {
     public final String NAME = "Deployment Manager";
     public static String URL;
     private RESTServer restServer;
+    private ThresholdEvalDaemonService monitoringService;
 
     static {
-        String port = DeploymentManagerConfiguration.get("DEPLOYMENT_MANAGER_PORT");
-        URL = "http://0.0.0.0:" + port + "/deploymentmanager/";
+	String port = DeploymentManagerConfiguration.get("DEPLOYMENT_MANAGER_PORT");
+	URL = "http://0.0.0.0:" + port + "/deploymentmanager/";
     }
 
     public DeploymentManagerServer() {
 
-        this.restServer = new RESTServer(NAME, URL, new Class[] { NodesResource.class, RunListResource.class,
-                ServicesResource.class });
+	this.monitoringService = new ThresholdEvalDaemonService();
+	this.restServer = new RESTServer(NAME, URL, new Class[] { NodesResource.class, RunListResource.class,
+		ServicesResource.class });
     }
 
     public void start() {
 
-        this.restServer.start();
+	this.restServer.start();
+
+	if (Boolean.parseBoolean(DeploymentManagerConfiguration.get("MONITORING"))) {
+	    this.monitoringService.start();
+	}
     }
 
     public void stop() {
 
-        this.restServer.stop();
+	this.restServer.stop();
+
+	if (this.monitoringService.status()) {
+	    this.monitoringService.stop();
+	}
     }
 
     public static void main(String[] args) {
 
-        LogConfigurator.configLog();
-        DeploymentManagerServer server = new DeploymentManagerServer();
-        server.start();
+	LogConfigurator.configLog();
+	DeploymentManagerServer server = new DeploymentManagerServer();
+	server.start();
     }
 }

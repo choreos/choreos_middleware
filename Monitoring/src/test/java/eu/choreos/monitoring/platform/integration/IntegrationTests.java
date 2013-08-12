@@ -11,7 +11,7 @@ import org.junit.Before;
 import eu.choreos.monitoring.platform.daemon.HostManager;
 import eu.choreos.monitoring.platform.daemon.SingleThreshold;
 import eu.choreos.monitoring.platform.daemon.ThresholdEvalDaemon;
-import eu.choreos.monitoring.platform.daemon.ThresholdEvalDaemonWrapper;
+import eu.choreos.monitoring.platform.daemon.ThresholdEvalDaemonService;
 import eu.choreos.monitoring.platform.exception.GangliaException;
 import eu.choreos.monitoring.platform.utils.GmondDataReader;
 
@@ -42,7 +42,7 @@ public class IntegrationTests {
 	
 	//@Test
 	public void shouldEvaluateAThreshold() throws GangliaException{
-		Properties settings = new ThresholdEvalDaemonWrapper() .getProperties();
+		Properties settings = new ThresholdEvalDaemonService() .getProperties();
 		thresholdManager = new ThresholdEvalDaemon(settings ,"localhost", 8649);
 		
 		SingleThreshold shouldBeSurpassed = new SingleThreshold("load_one", SingleThreshold.MAX, 0);

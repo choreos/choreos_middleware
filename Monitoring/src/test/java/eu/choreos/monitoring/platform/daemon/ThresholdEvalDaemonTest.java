@@ -23,69 +23,55 @@ import eu.choreos.monitoring.platform.exception.MessageHandlingFault;
 
 public class ThresholdEvalDaemonTest {
 
-	private ThresholdEvalDaemon daemon;
-	private GlimpseBaseEventChoreos<String> message;
-	private GlimpseMessageHandler msgHandler;
-	private String javaNamingProviderUrl;
-	
-	
-	private ThresholdManager thresholdManager;
+    private ThresholdEvalDaemon daemon;
+    private GlimpseBaseEventChoreos<String> message;
+    private GlimpseMessageHandler msgHandler;
+    private String javaNamingProviderUrl;
 
-	@Before
-	public void setUp() throws Exception {
-		thresholdManager = mock(ThresholdManager.class);
-		when(thresholdManager.thereAreSurpassedThresholds()).thenReturn(true);
-		
-		List<AbstractThreshold> host1ThresholdsList = new ArrayList<AbstractThreshold>();
-		host1ThresholdsList.add(new SingleThreshold("load_one", SingleThreshold.MAX, 3));
-		host1ThresholdsList.add(new SingleThreshold("load_five", SingleThreshold.MAX, 3));
-		
-		Map<String, List<AbstractThreshold>> thresholdsMap = new HashMap<String, List<AbstractThreshold>>();
-		thresholdsMap.put("host1", host1ThresholdsList);
-		
-		when(thresholdManager.getSurpassedThresholds()).thenReturn(thresholdsMap);
-		
-		
-		javaNamingProviderUrl = "tcp://dsbchoreos.petalslink.org:61616";
-		message = getDefaultMessage();
-		msgHandler = mock(GlimpseMessageHandler.class);
-		daemon = new ThresholdEvalDaemon(getProperties(), "localhost", 8649,
-				msgHandler, thresholdManager);
+    private ThresholdManager thresholdManager;
 
-	}
+    @Before
+    public void setUp() throws Exception {
+	thresholdManager = mock(ThresholdManager.class);
+	when(thresholdManager.thereAreSurpassedThresholds()).thenReturn(true);
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void shouldSendAllThresholdsMessage() throws GangliaException, MessageHandlingFault {
-		daemon.addThreshold("default", new SingleThreshold("load_one", SingleThreshold.MAX, 1.0));
-		daemon.addThreshold("default", new SingleThreshold("load_five", SingleThreshold.MIN, 1.0));
-		
-		daemon.evaluateThresholdsSendMessagesAndSleep(message, 0);
-		
-		verify(msgHandler, times(2)).sendMessage(
-				any(GlimpseBaseEventChoreos.class));
-	}
+	List<AbstractThreshold> host1ThresholdsList = new ArrayList<AbstractThreshold>();
+	host1ThresholdsList.add(new SingleThreshold("load_one", SingleThreshold.MAX, 3));
+	host1ThresholdsList.add(new SingleThreshold("load_five", SingleThreshold.MAX, 3));
 
-	
-	private GlimpseBaseEventChoreos<String> getDefaultMessage() {
-		return new GlimpseBaseEventChoreos<String>(
-				"thresholdAlarm", 
-				System.currentTimeMillis(), 
-				"", 
-				false, 
-				"chor", 
-				"service", 
-				"10.10.10.101");
-	}
-	
-	private Properties getProperties() {
-		Properties createProbeSettingsPropertiesObject = Manager
-				.createProbeSettingsPropertiesObject(
-						"org.apache.activemq.jndi.ActiveMQInitialContextFactory",
-						javaNamingProviderUrl, "system", "manager",
-						"GangliaFactory", "jms.probeTopic", true, "probeName",
-						"probeTopic");
-		return createProbeSettingsPropertiesObject;
-	}
-	
+	Map<String, List<AbstractThreshold>> thresholdsMap = new HashMap<String, List<AbstractThreshold>>();
+	thresholdsMap.put("host1", host1ThresholdsList);
+
+	when(thresholdManager.getSurpassedThresholds()).thenReturn(thresholdsMap);
+
+	javaNamingProviderUrl = "tcp://dsbchoreos.petalslink.org:61616";
+	message = getDefaultMessage();
+	msgHandler = mock(GlimpseMessageHandler.class);
+	daemon = new ThresholdEvalDaemon(getProperties(), "localhost", 8649, msgHandler, thresholdManager);
+
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void shouldSendAllThresholdsMessage() throws GangliaException, MessageHandlingFault {
+	daemon.addThreshold("default", new SingleThreshold("load_one", SingleThreshold.MAX, 1.0));
+	daemon.addThreshold("default", new SingleThreshold("load_five", SingleThreshold.MIN, 1.0));
+
+	daemon.evaluateThresholdsSendMessagesAndSleep(message);
+
+	verify(msgHandler, times(2)).sendMessage(any(GlimpseBaseEventChoreos.class));
+    }
+
+    private GlimpseBaseEventChoreos<String> getDefaultMessage() {
+	return new GlimpseBaseEventChoreos<String>("thresholdAlarm", System.currentTimeMillis(), "", false, "chor",
+		"service", "10.10.10.101");
+    }
+
+    private Properties getProperties() {
+	Properties createProbeSettingsPropertiesObject = Manager.createProbeSettingsPropertiesObject(
+		"org.apache.activemq.jndi.ActiveMQInitialContextFactory", javaNamingProviderUrl, "system", "manager",
+		"GangliaFactory", "jms.probeTopic", true, "probeName", "probeTopic");
+	return createProbeSettingsPropertiesObject;
+    }
+
 }
