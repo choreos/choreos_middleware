@@ -38,9 +38,8 @@ public class ServicesManagerImpl implements ServicesManager {
 	    service = new DeployableService(serviceSpec);
 	    service.generateUUID();
 	} catch (IllegalArgumentException e1) {
-	    ServiceNotCreatedException e = new ServiceNotCreatedException(serviceSpec.getName());
-	    logger.error(e.getMessage());
-	    throw e;
+	    logger.error("Could not create service " + serviceSpec.getName());
+	    throw new ServiceNotCreatedException(serviceSpec.getName());
 	}
 
 	Set<CloudNode> selectedNodes = prepareDeployment(serviceSpec, service.getUUID());
@@ -59,9 +58,8 @@ public class ServicesManagerImpl implements ServicesManager {
 	try {
 	    return deploymentPreparer.prepareDeployment();
 	} catch (PrepareDeploymentFailedException e1) {
-	    ServiceNotCreatedException e = new ServiceNotCreatedException(spec.getName());
-	    logger.error(e.getMessage());
-	    throw e;
+	    logger.error("Could not prepare the deployment of the service " + serviceUUID + " (" + spec.getName() + ")");
+	    throw new ServiceNotCreatedException(spec.getName());
 	}
     }
 

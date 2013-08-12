@@ -34,27 +34,27 @@ public class NPMImpl implements NodePoolManager {
     private CloudProvider cloudProvider;
     private NodeRegistry nodeRegistry;
     private NodeCreator nodeCreator;
+    private boolean useThePool;
     private IdlePool idlePool;
 
     public NPMImpl(CloudProvider provider) {
-        int poolSize = loadPoolSize();
         cloudProvider = provider;
         nodeRegistry = NodeRegistry.getInstance();
         nodeCreator = new NodeCreator(cloudProvider);
-        idlePool = IdlePool.getInstance(poolSize, nodeCreator);
+        loadPool();
     }
 
-    private int loadPoolSize() {
+    private void loadPool() {
         int poolSize = 0;
         try {
-            boolean useThePool = Boolean.parseBoolean(DeploymentManagerConfiguration.get("IDLE_POOL"));
+            useThePool = Boolean.parseBoolean(DeploymentManagerConfiguration.get("IDLE_POOL"));
             if (useThePool) {
                 poolSize = Integer.parseInt(DeploymentManagerConfiguration.get("IDLE_POOL_SIZE"));
             }
         } catch (NumberFormatException e) {
             ; // no problem, poolSize is zero
         }
-        return poolSize;
+        idlePool = IdlePool.getInstance(poolSize, nodeCreator);
     }
 
     public NPMImpl(CloudProvider provider, NodeCreator creator, IdlePool pool) {
@@ -72,19 +72,23 @@ public class NPMImpl implements NodePoolManager {
         } catch (NodeNotCreatedException e1) {
             // if node creation has failed, let's retrieve a node from the pool
             // since waiting for a new node would take too much time!
-            // TODO: maybe the failed node only took too much time to be ready;
-            // in such situation, this node could go to the pool!
-            try {
-                logger.warn("*** Node creation failed, let's retrieve a node from the pool ***");
-                node = idlePool.retriveNode();
-            } catch (NodeNotCreatedException e2) {
-                // OK, now we give up =/
-                throw new NodeNotCreatedException(node.getId());
+            if (useThePool) {
+                try {
+                    logger.warn("Node creation failed, let's retrieve a node from the pool");
+                    node = idlePool.retriveNode();
+                } catch (NodeNotCreatedException e2) {
+                    throw new NodeNotCreatedException();
+                }
+            } else {
+                throw new NodeNotCreatedException();
             }
         }
         nodeRegistry.putNode(node);
-        idlePool.fillPool(); // we want the pool to be always filled
-        // whenever requests are coming
+        if (useThePool) {
+            // we want the pool to be always filled
+            // whenever requests are coming
+            idlePool.fillPool();
+        }
         return node;
     }
 

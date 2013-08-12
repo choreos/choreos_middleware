@@ -56,9 +56,9 @@ public class AlwaysCreateSelector<T, R> implements Selector<T, R> {
                 obj = f.get();
                 selectedObjects.add(obj);
             } catch (InterruptedException e) {
-                logger.error("One was not created");
+                logger.error("Object not created");
             } catch (ExecutionException e) {
-                logger.error("One was not created");
+                logger.error("Object not created");
             }
         }
 

@@ -21,7 +21,7 @@ public class Concurrency {
         try {
             status = executor.awaitTermination(timeoutMinutes, timeUnit);
         } catch (InterruptedException e) {
-            logErrorMessage("Interrupted thread! Should not happen!", logger);
+            logErrorMessage(errorMessage, logger);
         }
         if (!status) {
             logErrorMessage(errorMessage, logger);

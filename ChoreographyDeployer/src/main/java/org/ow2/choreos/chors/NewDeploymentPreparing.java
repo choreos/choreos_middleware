@@ -12,28 +12,36 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
+import org.ow2.choreos.breaker.Invoker;
+import org.ow2.choreos.breaker.InvokerBuilder;
 import org.ow2.choreos.chors.rest.RESTClientsRetriever;
 import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.utils.Concurrency;
+import org.ow2.choreos.utils.TimeoutsAndTrials;
 
 public class NewDeploymentPreparing {
-
-    private static final int TIMEOUT = 30; // it may encompasses bootstrap time
 
     private String chorId;
     private List<DeployableServiceSpec> specs;
     private ExecutorService executor;
     private Map<DeployableServiceSpec, Future<DeployableService>> futures;
     private List<DeployableService> configuredServices;
+    
+    private int timeout, trials, pause, totalTimeout;
 
     private Logger logger = Logger.getLogger(NewDeploymentPreparing.class);
 
     public NewDeploymentPreparing(String chorId, List<DeployableServiceSpec> specs) {
         this.chorId = chorId;
         this.specs = specs;
+        this.timeout = TimeoutsAndTrials.get("CREATE_SERVICE_TIMEOUT");
+        this.trials = TimeoutsAndTrials.get("CREATE_SERVICE_TRIALS");
+        this.pause = TimeoutsAndTrials.get("CREATE_SERVICE_PAUSE"); 
+        this.totalTimeout = (timeout+pause)*trials;
+        this.totalTimeout += totalTimeout * 0.1; 
     }
 
     public List<DeployableService> prepare() throws EnactmentException {
@@ -53,14 +61,14 @@ public class NewDeploymentPreparing {
         executor = Executors.newFixedThreadPool(N);
         futures = new HashMap<DeployableServiceSpec, Future<DeployableService>>();
         for (DeployableServiceSpec choreographyServiceSpec : specs) {
-            ServicesManagerInvoker invoker = new ServicesManagerInvoker(choreographyServiceSpec);
+            CreateServiceInvoker invoker = new CreateServiceInvoker(choreographyServiceSpec);
             Future<DeployableService> future = executor.submit(invoker);
             futures.put(choreographyServiceSpec, future);
         }
     }
 
     private void waitConfigureTasks() {
-        Concurrency.waitExecutor(executor, TIMEOUT, "Coud not properly configure all the services of chor " + chorId);
+        Concurrency.waitExecutor(executor, totalTimeout, "Coud not properly configure all the services of chor " + chorId);
     }
 
     private void retrieveConfiguredServices() {
@@ -87,11 +95,25 @@ public class NewDeploymentPreparing {
         }
     }
 
-    private class ServicesManagerInvoker implements Callable<DeployableService> {
+    private class CreateServiceInvoker implements Callable<DeployableService> {
 
         DeployableServiceSpec spec;
+        public CreateServiceInvoker(DeployableServiceSpec serviceSpec) {
+            this.spec = serviceSpec;
+        }
+        
+        @Override
+        public DeployableService call() throws Exception {
+            CreateServiceTask task = new CreateServiceTask(spec);
+            Invoker<DeployableService> invoker = new InvokerBuilder<DeployableService>(task, timeout).pauseBetweenTrials(pause).trials(trials).build();
+            return invoker.invoke();
+        }
+    }
+    
+    private class CreateServiceTask implements Callable<DeployableService> {
 
-        public ServicesManagerInvoker(DeployableServiceSpec serviceSpec) {
+        DeployableServiceSpec spec;
+        public CreateServiceTask(DeployableServiceSpec serviceSpec) {
             this.spec = serviceSpec;
         }
 

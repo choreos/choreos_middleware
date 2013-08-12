@@ -7,10 +7,10 @@ import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.selectors.ObjectCreationException;
 import org.ow2.choreos.selectors.ObjectFactory;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
+import org.ow2.choreos.utils.TimeoutsAndTrials;
 
 class NodeFactory implements ObjectFactory<CloudNode, DeployableServiceSpec> {
 
-    private static final int TIMEOUT_SECONDS = 5 * 60;
     private NodePoolManager npm;
 
     public NodeFactory(NodePoolManager npm) {
@@ -30,7 +30,14 @@ class NodeFactory implements ObjectFactory<CloudNode, DeployableServiceSpec> {
 
     @Override
     public int getTimeoutInSeconds() {
-        return TIMEOUT_SECONDS;
+        int nodeCreationTimeout = TimeoutsAndTrials.get("NODE_CREATION_TIMEOUT");
+        int nodeCreationTrials = TimeoutsAndTrials.get("NODE_CREATION_TRIALS");
+        int firstSshTimeout = TimeoutsAndTrials.get("FIRST_CONNECT_SSH_TIMEOUT");
+        int bootstrapTimeout = TimeoutsAndTrials.get("BOOTSTRAP_TIMEOUT");
+        int bootstrapTrials = TimeoutsAndTrials.get("BOOTSTRAP_TRIALS");
+        int timeout = nodeCreationTimeout * nodeCreationTrials + firstSshTimeout + bootstrapTimeout * bootstrapTrials;
+        timeout += timeout*0.2;
+        return timeout;
     }
 
 }
