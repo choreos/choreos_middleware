@@ -20,6 +20,7 @@ import org.ow2.choreos.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.utils.Scp;
 import org.ow2.choreos.utils.ScpFailed;
+import org.ow2.choreos.utils.TimeoutsAndTrials;
 import org.ow2.choreos.utils.URLUtils;
 
 /**
@@ -113,7 +114,9 @@ public class NodeBootstrapper {
 
     private void saveFile(String source, String target) throws NodeNotBootstrappedException {
         ScpTask task = new ScpTask(source, target);
-        Invoker<Void> invoker = new InvokerBuilder<Void>(task, 60).trials(3).pauseBetweenTrials(10).build();
+        int timeout = TimeoutsAndTrials.get("SCP_TIMEOUT");
+        int trials = TimeoutsAndTrials.get("SCP_TRIALS");
+        Invoker<Void> invoker = new InvokerBuilder<Void>(task, timeout).trials(trials).pauseBetweenTrials(10).build();
         try {
             invoker.invoke();
         } catch (InvokerException e) {
