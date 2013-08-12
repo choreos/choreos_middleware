@@ -20,15 +20,6 @@ public class ThresholdEvalDaemonWrapper implements Runnable {
     public Properties getProperties() {
 
 	if (probeSettingsProperties == null) {
-	    /*
-	     * probeSettingsProperties =
-	     * Manager.createProbeSettingsPropertiesObject(
-	     * javaNamingFactoryInitial, javaNamingProviderUrl,
-	     * javaNamingSecurityPrincipal, javaNamingSecurityCredential,
-	     * connectionFactoryNames, topicProbeTopic, debug, probeName,
-	     * probeChannel);
-	     */
-
 	    probeSettingsProperties = Manager.createProbeSettingsPropertiesObject(
 		    "org.apache.activemq.jndi.ActiveMQInitialContextFactory", javaNamingProviderUrl, "system",
 		    "manager", "TopicCF", "jms.probeTopic", false, "probeName", "probeTopic");
@@ -39,14 +30,7 @@ public class ThresholdEvalDaemonWrapper implements Runnable {
     }
 
     private GlimpseBaseEventChoreos<String> getBaseEvent() {
-	return (new GlimpseBaseEventChoreos<String>("", // event data
-		System.currentTimeMillis(), // timestamp of event
-		"", // the event name
-		false, // is exception?
-		"", // choreography source (of event)
-		"", // service source (of event)
-		"" // host address
-	));
+	return (new GlimpseBaseEventChoreos<String>("", System.currentTimeMillis(), "", false, "", "", ""));
     }
 
     private boolean readConfig() {
@@ -62,7 +46,7 @@ public class ThresholdEvalDaemonWrapper implements Runnable {
 
 	host = props.getProperty("Monitoring.gangliaLocation", "localhost");
 	port = Integer.parseInt(props.getProperty("Monitoring.gangliaPort", "8649"));
-	javaNamingProviderUrl = props.getProperty("Monitoring.javaNamingProviderUrl", "tcp://eclipse.ime.usp.br:61616");
+	javaNamingProviderUrl = props.getProperty("Monitoring.javaNamingProviderUrl", "tcp://localhost:61616");
 	thresholdListFileName = props.getProperty("Monitoring.thresholdFileListName", null);
 
 	if (thresholdListFileName == null)
