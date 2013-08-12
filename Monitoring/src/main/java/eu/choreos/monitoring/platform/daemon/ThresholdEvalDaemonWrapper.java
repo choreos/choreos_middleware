@@ -8,98 +8,87 @@ import java.util.Properties;
 
 import eu.choreos.monitoring.platform.exception.GangliaException;
 
-public class ThresholdEvalDaemonWrapper {
+public class ThresholdEvalDaemonWrapper implements Runnable {
 
-	private String host;
-	private int port;
-	private String javaNamingProviderUrl = null;
-	private String thresholdListFileName = null;
-	private ThresholdEvalDaemon daemon;
-	private Properties probeSettingsProperties = null;
+    private String host;
+    private int port;
+    private String javaNamingProviderUrl = null;
+    private String thresholdListFileName = null;
+    private ThresholdEvalDaemon daemon;
+    private Properties probeSettingsProperties = null;
 
-	public Properties getProperties() {
+    public Properties getProperties() {
 
-		if(probeSettingsProperties == null) {
-			/*
-			probeSettingsProperties = Manager.createProbeSettingsPropertiesObject(
-					javaNamingFactoryInitial, 
-					javaNamingProviderUrl, 
-					javaNamingSecurityPrincipal, 
-					javaNamingSecurityCredential, 
-					connectionFactoryNames, 
-					topicProbeTopic, 
-					debug, 
-					probeName, 
-					probeChannel);	*/
-			
-			probeSettingsProperties = Manager
-					.createProbeSettingsPropertiesObject(
-							"org.apache.activemq.jndi.ActiveMQInitialContextFactory",
-							javaNamingProviderUrl, 
-							"system", 
-							"manager",
-							"TopicCF", 
-							"jms.probeTopic", 
-							false, 
-							"probeName",
-							"probeTopic");
-		}
+	if (probeSettingsProperties == null) {
+	    /*
+	     * probeSettingsProperties =
+	     * Manager.createProbeSettingsPropertiesObject(
+	     * javaNamingFactoryInitial, javaNamingProviderUrl,
+	     * javaNamingSecurityPrincipal, javaNamingSecurityCredential,
+	     * connectionFactoryNames, topicProbeTopic, debug, probeName,
+	     * probeChannel);
+	     */
 
-		return probeSettingsProperties;
-
+	    probeSettingsProperties = Manager.createProbeSettingsPropertiesObject(
+		    "org.apache.activemq.jndi.ActiveMQInitialContextFactory", javaNamingProviderUrl, "system",
+		    "manager", "TopicCF", "jms.probeTopic", false, "probeName", "probeTopic");
 	}
 
-	private GlimpseBaseEventChoreos<String> getBaseEvent() {
-		return (new GlimpseBaseEventChoreos<String>(
-				"", // event data
-				System.currentTimeMillis(), // timestamp of event 
-				"", // the event name 
-				false, // is exception? 
-				"", // choreography source (of event) 
-				"", // service source (of event) 
-				"" // host address
-				));						
+	return probeSettingsProperties;
+
+    }
+
+    private GlimpseBaseEventChoreos<String> getBaseEvent() {
+	return (new GlimpseBaseEventChoreos<String>("", // event data
+		System.currentTimeMillis(), // timestamp of event
+		"", // the event name
+		false, // is exception?
+		"", // choreography source (of event)
+		"", // service source (of event)
+		"" // host address
+	));
+    }
+
+    private boolean readConfig() {
+
+	Properties props = new Properties();
+
+	try {
+	    props.load(ClassLoader.getSystemResourceAsStream("monitoring.properties"));
+	} catch (IOException e) {
+	    System.err.println("Error while loading configuration");
+	    return false;
 	}
 
-	private boolean readConfig() {
+	host = props.getProperty("Monitoring.gangliaLocation", "localhost");
+	port = Integer.parseInt(props.getProperty("Monitoring.gangliaPort", "8649"));
+	javaNamingProviderUrl = props.getProperty("Monitoring.javaNamingProviderUrl", "tcp://eclipse.ime.usp.br:61616");
+	thresholdListFileName = props.getProperty("Monitoring.thresholdFileListName", null);
 
-		Properties props = new Properties();
+	if (thresholdListFileName == null)
+	    System.out.println("Loading default configuration...");
 
-		try {
-			props.load(ClassLoader.getSystemResourceAsStream("monitoring.properties"));
-		} catch (IOException e) {
-			System.err.println("Error while loading configuration");
-			return false;
-		}
+	return true;
+    }
 
-		host = props.getProperty("Monitoring.gangliaLocation", "localhost");
-		port = Integer.parseInt(props.getProperty("Monitoring.gangliaPort", "8649"));
-		javaNamingProviderUrl = props.getProperty("Monitoring.javaNamingProviderUrl", "tcp://eclipse.ime.usp.br:61616");
-		thresholdListFileName = props.getProperty("Monitoring.thresholdFileListName", null); 
-
-		if(thresholdListFileName == null)
-			System.out.println("Loading default configuration...");
-
-		return true;
+    @Override
+    public void run() {
+	if (!readConfig()) {
+	    throw new IllegalArgumentException();
 	}
 
-	public void exec() {
-		if(!readConfig()) {
-			throw new IllegalArgumentException();
-		}
+	daemon = null;
 
-		daemon = null;
-
-		try {
-			daemon = new ThresholdEvalDaemon(getProperties(), host, port);
-		} catch (GangliaException e) {
-			e.printStackTrace();
-		}
-
-		Config config = Config.getInstance(thresholdListFileName);
-
-		daemon.setConfig(config);
-
-		daemon.continuouslyEvaluateThresholdsAndSendMessages(getBaseEvent());
+	try {
+	    daemon = new ThresholdEvalDaemon(getProperties(), host, port);
+	} catch (GangliaException e) {
+	    e.printStackTrace();
 	}
+
+	Config config = Config.getInstance(thresholdListFileName);
+
+	daemon.setConfig(config);
+
+	daemon.continuouslyEvaluateThresholdsAndSendMessages(getBaseEvent());
+    }
 }

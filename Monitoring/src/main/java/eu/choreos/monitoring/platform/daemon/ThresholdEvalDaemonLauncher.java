@@ -4,10 +4,9 @@ import java.io.IOException;
 
 public class ThresholdEvalDaemonLauncher {
 
-	public static void main(String[] args) throws InterruptedException, IOException {
-		
-		ThresholdEvalDaemonWrapper wrapper = new ThresholdEvalDaemonWrapper();
-		wrapper.exec();
-		
-	}
+    public static void main(String[] args) throws InterruptedException, IOException {
+
+	new Thread(new ThresholdEvalDaemonWrapper()).start();
+
+    }
 }
