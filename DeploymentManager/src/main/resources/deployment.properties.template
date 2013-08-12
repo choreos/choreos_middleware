@@ -48,5 +48,5 @@ OPENSTACK_FLAVOR_NAME=
 
 # creates a pool of extra VMs to make the deployment faster and more scalable
 # the trade-off is the cost of some more VMs
-# if you do not want to use the pool, leave IDLE_POOL_SIZE as zero.
+IDLE_POOL=false
 IDLE_POOL_SIZE=0

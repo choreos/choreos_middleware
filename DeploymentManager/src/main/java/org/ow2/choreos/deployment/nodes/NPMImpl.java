@@ -37,18 +37,24 @@ public class NPMImpl implements NodePoolManager {
     private IdlePool idlePool;
 
     public NPMImpl(CloudProvider provider) {
-
-        int poolSize = 0;
-        try {
-            poolSize = Integer.parseInt(DeploymentManagerConfiguration.get("IDLE_POOL_SIZE"));
-        } catch (NumberFormatException e) {
-            ; // no problem, poolSize is zero
-        }
-
+        int poolSize = loadPoolSize();
         cloudProvider = provider;
         nodeRegistry = NodeRegistry.getInstance();
         nodeCreator = new NodeCreator(cloudProvider);
         idlePool = IdlePool.getInstance(poolSize, nodeCreator);
+    }
+
+    private int loadPoolSize() {
+        int poolSize = 0;
+        try {
+            boolean useThePool = Boolean.parseBoolean(DeploymentManagerConfiguration.get("IDLE_POOL"));
+            if (useThePool) {
+                poolSize = Integer.parseInt(DeploymentManagerConfiguration.get("IDLE_POOL_SIZE"));
+            }
+        } catch (NumberFormatException e) {
+            ; // no problem, poolSize is zero
+        }
+        return poolSize;
     }
 
     public NPMImpl(CloudProvider provider, NodeCreator creator, IdlePool pool) {
