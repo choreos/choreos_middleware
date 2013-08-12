@@ -6,9 +6,13 @@ import it.cnr.isti.labse.glimpse.utils.Manager;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 import eu.choreos.monitoring.platform.exception.GangliaException;
 
-public class ThresholdEvalDaemonWrapper implements Runnable {
+public class ThresholdEvalDaemonService implements Runnable {
+
+    private Logger logger = Logger.getLogger(ThresholdEvalDaemonService.class);
 
     private String host;
     private int port;
@@ -16,6 +20,7 @@ public class ThresholdEvalDaemonWrapper implements Runnable {
     private String thresholdListFileName = null;
     private ThresholdEvalDaemon daemon;
     private Properties probeSettingsProperties = null;
+    private boolean running = false;
 
     public Properties getProperties() {
 
@@ -55,6 +60,25 @@ public class ThresholdEvalDaemonWrapper implements Runnable {
 	return true;
     }
 
+    public void start() {
+	new Thread(this).start();
+	while (!running) {
+	    try {
+		Thread.sleep(1);
+	    } catch (InterruptedException e) {
+		logger.error(e);
+	    }
+	}
+    }
+
+    public void stop() {
+	running = false;
+    }
+
+    public boolean status() {
+	return running;
+    }
+
     @Override
     public void run() {
 	if (!readConfig()) {
@@ -73,6 +97,21 @@ public class ThresholdEvalDaemonWrapper implements Runnable {
 
 	daemon.setConfig(config);
 
-	daemon.continuouslyEvaluateThresholdsAndSendMessages(getBaseEvent());
+	running = true;
+
+	int sleepTime = ThresholdEvalDaemon.getNotificationInterval();
+
+	while (running) {
+	    try {
+		daemon.evaluateThresholdsSendMessagesAndSleep(getBaseEvent());
+	    } catch (GangliaException e) {
+		e.handleException();
+		try {
+		    Thread.sleep(sleepTime);
+		} catch (InterruptedException e1) {
+		    logger.error("It should not have happened!");
+		}
+	    }
+	}
     }
 }

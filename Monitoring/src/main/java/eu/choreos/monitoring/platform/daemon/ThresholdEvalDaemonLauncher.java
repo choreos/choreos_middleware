@@ -6,7 +6,7 @@ public class ThresholdEvalDaemonLauncher {
 
     public static void main(String[] args) throws InterruptedException, IOException {
 
-	new Thread(new ThresholdEvalDaemonWrapper()).start();
+	new ThresholdEvalDaemonService().start();
 
     }
 }
