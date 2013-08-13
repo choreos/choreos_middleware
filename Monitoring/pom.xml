@@ -107,6 +107,18 @@
 					</include>
 				</includes>
 			</resource> 
+		    <resource>
+                <directory>${basedir}/src/test/resources</directory>
+ 				<targetPath>.</targetPath>
+				<includes>
+					<include>
+						*.properties
+					</include>
+					<include>
+						threshold_specs/*.yml
+					</include>
+				</includes>
+			</resource> 
 
 		</resources>
 
