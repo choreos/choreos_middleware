@@ -1,0 +1,34 @@
+{
+  "name": "activemq",
+  "description": "Installs activemq and sets it up as service",
+  "long_description": "Description\n===========\n\nInstalls activemq and sets up a service using the init script that comes with it.\n\nRequirements\n============\n\n## Platform:\n\nTested on Ubuntu 10.04 and CentOS 5.5. Should work on any Debian or Red Hat family distributions.\n\n## Cookbooks:\n\n* java\n\nAttributes\n==========\n\n* `node['activemq']['mirror']` - download URL up to the activemq/apache-activemq directory.\n* `node['activemq']['version']` - version to install.\n* `node['activemq']['home']` - directory to deploy to (/opt by default)\n* `node['activemq']['wrapper']['max_memory']` - maximum amount of memory to use for activemq.\n* `node['activemq']['wrapper']['useDedicatedTaskRunner']` - whether to use the dedicated task runner\n\nUsage\n=====\n\nSimply add `recipe[activemq]` to a run list.\n\nLicense and Author\n==================\n\nAuthor:: Joshua Timberman (<joshua@opscode.com>)\n\nCopyright:: 2009-2011, Opscode, Inc\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n",
+  "maintainer": "Opscode, Inc.",
+  "maintainer_email": "cookbooks@opscode.com",
+  "license": "Apache 2.0",
+  "platforms": {
+    "ubuntu": ">= 0.0.0",
+    "debian": ">= 0.0.0",
+    "redhat": ">= 0.0.0",
+    "centos": ">= 0.0.0"
+  },
+  "dependencies": {
+    "java": ">= 0.0.0"
+  },
+  "recommendations": {
+  },
+  "suggestions": {
+  },
+  "conflicting": {
+  },
+  "providing": {
+  },
+  "replacing": {
+  },
+  "attributes": {
+  },
+  "groupings": {
+  },
+  "recipes": {
+  },
+  "version": "1.1.0"
+}
