@@ -19,11 +19,11 @@ public class Enacter {
     private static transient String warFileArg;
     private static final String CHOR_DEPLOYER = "http://localhost:9102/choreographydeployer/";
 
-    private int enacterId;
-    private int chorSize;
-    private Choreography choreography;
+    private transient final int enacterId;
+    private transient int chorSize;
+    private transient Choreography choreography;
 
-    private Logger logger = Logger.getLogger(Enacter.class);
+    private static final Logger LOG = Logger.getLogger(Enacter.class);
 
     public static void main(final String[] args) throws EnactmentException, ChoreographyNotFoundException,
             IllegalArgumentException, MalformedURLException {
@@ -42,8 +42,8 @@ public class Enacter {
         chorSizeArg = Integer.parseInt(args[1]);
     }
 
-    public Enacter(int id) {
-        this.enacterId = id;
+    public Enacter(final int enacterId) {
+        this.enacterId = enacterId;
     }
 
     public int getId() {
@@ -75,6 +75,10 @@ public class Enacter {
         return deployer.enactChoreography(chorId);
     }
 
+    /*
+     * Last Tracker cannot deduce its id from its dependency because it has not
+     * any dependency.
+     */
     private void setLastServiceId() throws MalformedURLException {
         final int trackerNumber = chorSize - 1;
         final Tracker tracker = getTracker(trackerNumber);
@@ -93,14 +97,18 @@ public class Enacter {
     }
 
     public boolean verifyAnswer() throws MalformedURLException {
-        VerifyTask task = new VerifyTask();
-        int timeout = 10;
-        Invoker<Boolean> invoker = new InvokerBuilder<Boolean>(task, timeout).trials(3).pauseBetweenTrials(30).build();
+        final VerifyTask task = new VerifyTask();
+        final int timeout = 10;
+        final Invoker<Boolean> invoker = new InvokerBuilder<Boolean>(task, timeout).trials(3).pauseBetweenTrials(30)
+                .build();
+        boolean answerIsCorrect;
         try {
-            return invoker.invoke();
+            answerIsCorrect = invoker.invoke();
         } catch (InvokerException e) {
-            return false;
+            answerIsCorrect = false;
         }
+
+        return answerIsCorrect;
     }
 
     private String getExpectedPathIds() {
@@ -110,15 +118,15 @@ public class Enacter {
 
     private class VerifyTask implements Callable<Boolean> {
         @Override
-        public Boolean call() throws Exception {
+        public Boolean call() throws MalformedURLException {
             final Tracker firstTracker = getTracker(0);
             final String actual = firstTracker.getPathIds();
             final String expected = getExpectedPathIds();
-            boolean ok = expected.equals(actual);
-            if (!ok) {
-                logger.error(String.format("Expected '%s' but got '%s' at Enacter#'%d'.", expected, actual, enacterId));
+            final boolean answerIsCorrect = actual.equals(expected);
+            if (!answerIsCorrect) {
+                LOG.error(String.format("Expected '%s' but got '%s' at Enacter#'%d'.", expected, actual, enacterId));
             }
-            return ok;
+            return answerIsCorrect;
         }
     }
 }
