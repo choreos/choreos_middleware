@@ -30,7 +30,7 @@ public class Publisher {
 	}
 
 	public String publishTracker(final int instance) {
-		final Tracker tracker = new TrackerImpl();
+		final Tracker tracker = new AbstractTracker();
 		final String address = "http://127.0.0.1:" + PORT + "/tracker"
 				+ instance;
 		final Endpoint endpoint = Endpoint.publish(address, tracker);

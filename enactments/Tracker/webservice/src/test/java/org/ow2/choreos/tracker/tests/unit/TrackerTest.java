@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 import org.ow2.choreos.tracker.Tracker;
-import org.ow2.choreos.tracker.TrackerImpl;
+import org.ow2.choreos.tracker.AbstractTracker;
 
 public class TrackerTest {
 
@@ -17,7 +17,7 @@ public class TrackerTest {
 
 	@Before
 	public void setUp() {
-		tracker = new TrackerImpl();
+		tracker = new AbstractTracker();
 	}
 
 	@Test

@@ -40,6 +40,15 @@ public class Enacter {
 
         warFileArg = args[0];
         chorSizeArg = Integer.parseInt(args[1]);
+
+        verifyChoreographySize(chorSizeArg);
+    }
+
+    private static void verifyChoreographySize(final int chorSize) {
+        if (chorSize % 5 > 0) {
+            throw new IllegalArgumentException(
+                    "Please, follow the rhyme:\nthe composition size\nmust be multiple of 5.");
+        }
     }
 
     public Enacter(final int enacterId) {
@@ -56,6 +65,7 @@ public class Enacter {
 
     public void enact(final String warFile, final int chorSize) throws EnactmentException,
             ChoreographyNotFoundException, MalformedURLException {
+        verifyChoreographySize(chorSize);
         ChorSpecCreator.setWarFile(warFile);
         this.chorSize = chorSize;
         this.choreography = createChoreography();
@@ -111,22 +121,14 @@ public class Enacter {
         return answerIsCorrect;
     }
 
-    private String getExpectedPathIds() {
-        final TrackerInfo trackerInfo = new TrackerInfo();
-        return trackerInfo.getExpectedPathIds(chorSize);
-    }
-
     private class VerifyTask implements Callable<Boolean> {
         @Override
         public Boolean call() throws MalformedURLException {
             final Tracker firstTracker = getTracker(0);
-            final String actual = firstTracker.getPathIds();
-            final String expected = getExpectedPathIds();
-            final boolean answerIsCorrect = actual.equals(expected);
-            if (!answerIsCorrect) {
-                LOG.error(String.format("Expected '%s' but got '%s' at Enacter#'%d'.", expected, actual, enacterId));
-            }
-            return answerIsCorrect;
+            final String answer = firstTracker.getPathIds();
+
+            final TrackerInfo trackerInfo = new TrackerInfo();
+            return trackerInfo.isAnswerCorrect(answer);
         }
     }
 }

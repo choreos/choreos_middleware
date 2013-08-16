@@ -11,16 +11,27 @@ Inc.//DTD Web Application 2.3//EN"
 	</listener>
 
 	<servlet>
-		<servlet-name>Tracker</servlet-name>
+		<servlet-name>White</servlet-name>
 		<servlet-class>
 			com.sun.xml.ws.transport.http.servlet.WSServlet
 		</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-
+	<servlet>
+		<servlet-name>Black</servlet-name>
+		<servlet-class>
+			com.sun.xml.ws.transport.http.servlet.WSServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
 	<servlet-mapping>
-		<servlet-name>Tracker</servlet-name>
-		<url-pattern>/endpoint</url-pattern>
+		<servlet-name>White</servlet-name>
+		<url-pattern>/white</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Black</servlet-name>
+		<url-pattern>/black</url-pattern>
 	</servlet-mapping>
 
 	<session-config>

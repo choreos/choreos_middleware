@@ -1,5 +1,6 @@
 package org.ow2.choreos.tracker;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -13,46 +14,69 @@ public class TrackerInfo {
     private transient Choreography chor = null;
 
     public void setChoreography(final Choreography chor) {
-	this.chor = chor;
+        this.chor = chor;
     }
 
     public String getName(final int trackerNumber) {
-	return SERVICE_NAME_PRE + trackerNumber;
+        return SERVICE_NAME_PRE + trackerNumber;
     }
 
     public String getWsdl(final int trackerNumber) {
-	if (chor == null) {
-	    throw new IllegalStateException("Choreography not set.");
-	}
+        if (chor == null) {
+            throw new IllegalStateException("Choreography not set.");
+        }
 
-	final String wanted = getName(trackerNumber);
-	final List<DeployableService> chorServices = chor.getDeployableServices();
-	String current;
+        final String wanted = getName(trackerNumber);
+        final List<DeployableService> chorServices = chor.getDeployableServices();
+        String current;
 
-	if (chorServices != null) {
-	    for (DeployableService chorService : chorServices) {
-		current = chorService.getSpec().getName();
-		if (wanted.equals(current)) {
-		    return chorService.getUris().get(0) + "?wsdl";
-		}
-	    }
-	}
+        if (chorServices != null) {
+            for (DeployableService chorService : chorServices) {
+                current = chorService.getSpec().getName();
+                if (wanted.equals(current)) {
+                    return chorService.getUris().get(0) + "?wsdl";
+                }
+            }
+        }
 
-	throw new NoSuchElementException("Tracker not found: " + wanted);
+        throw new NoSuchElementException("Tracker not found: " + wanted);
     }
 
-    public String getExpectedPathIds(final int chorSize) {
-	final StringBuffer answer = new StringBuffer();
+    public boolean isAnswerCorrect(final String answer) {
+        return isAnswerCorrect(answer, 0);
+    }
 
-	for (int i = 0; i < chorSize; i++) {
-	    answer.append(i);
-	    answer.append(' ');
-	}
+    public boolean isAnswerCorrect(final String answer, final int trackerNumber) {
+        boolean isCorrect = true;
+        final List<Integer> numbers = getAnswerAsIntegers(answer);
 
-	if (answer.length() > 0) {
-	    answer.deleteCharAt(answer.length() - 1);
-	}
+        for (int i = 0; i < numbers.size(); i += 6) {
+            if (!isGroupAnswerCorrect(numbers, i)) {
+                isCorrect = false;
+                break;
+            }
+        }
 
-	return answer.toString();
+        return isCorrect;
+    }
+
+    private List<Integer> getAnswerAsIntegers(final String answer) {
+        final String[] numberStrings = answer.split(" ");
+        final List<Integer> numbers = new ArrayList<Integer>(numberStrings.length);
+
+        for (String numberString : numberStrings) {
+            numbers.add(Integer.parseInt(numberString));
+        }
+
+        return numbers;
+    }
+
+    private boolean isGroupAnswerCorrect(final List<Integer> numbers, final int firstOfGroupIndex) {
+        final int firstOfGroup = firstOfGroupIndex - (firstOfGroupIndex / 5);
+        return (numbers.get(firstOfGroupIndex) == firstOfGroup
+                && numbers.get(firstOfGroupIndex + 1) == firstOfGroup + 1
+                && numbers.get(firstOfGroupIndex + 2) == firstOfGroup + 2
+                && numbers.get(firstOfGroupIndex + 3) == firstOfGroup + 3
+                && numbers.get(firstOfGroupIndex + 4) == firstOfGroup + 4 && numbers.get(firstOfGroupIndex + 5) == firstOfGroup + 3);
     }
 }

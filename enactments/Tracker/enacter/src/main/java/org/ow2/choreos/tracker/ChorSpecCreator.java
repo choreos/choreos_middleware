@@ -47,21 +47,58 @@ public class ChorSpecCreator {
     }
 
     private void setDependencies() {
-        String calleeServiceName;
-        ServiceDependency dependency;
-        DeployableServiceSpec callerService;
-        final TrackerInfo trackerInfo = new TrackerInfo(); // NOPMD
+        final int groupSize = 5; // NOPMD
 
-        for (int i = 0; i < chorServiceSpecs.size() - 1; i++) {
-            calleeServiceName = trackerInfo.getName(i + 1);
-            dependency = getDependency(calleeServiceName);
+        for (int i = 0; i < chorServiceSpecs.size(); i += groupSize) {
+            final List<DeployableServiceSpec> dependents = getDeployableServiceSpecs(i, groupSize);
+            final List<ServiceDependency> dependencies = getDependencies(i, groupSize);
 
-            callerService = chorServiceSpecs.get(i);
-            callerService.addDependency(dependency);
+            dependents.get(0).addDependency(dependencies.get(1));
+            dependents.get(1).addDependency(dependencies.get(2));
+            dependents.get(2).addDependency(dependencies.get(3));
+            dependents.get(4).addDependency(dependencies.get(3));
+
+            dependents.get(1).addDependency(dependencies.get(4));
+
+            connectGroups(i - groupSize, dependencies.get(0));
         }
     }
 
-    private ServiceDependency getDependency(final String calleeServiceName) {
+    private void connectGroups(final int dependentIndex, final ServiceDependency dependency) {
+        if (dependentIndex > 0) {
+            final DeployableServiceSpec dependent = chorServiceSpecs.get(dependentIndex);
+            dependent.addDependency(dependency);
+        }
+    }
+
+    private List<DeployableServiceSpec> getDeployableServiceSpecs(final int start, final int length) {
+        final List<DeployableServiceSpec> specs = new ArrayList<DeployableServiceSpec>(length);
+        DeployableServiceSpec spec;
+
+        for (int i = 0; i < length; i++) {
+            spec = chorServiceSpecs.get(start + i);
+            specs.add(spec);
+        }
+
+        return specs;
+    }
+
+    private List<ServiceDependency> getDependencies(final int start, final int length) {
+        final List<ServiceDependency> dependencies = new ArrayList<ServiceDependency>(length);
+        final TrackerInfo trackerInfo = new TrackerInfo();
+        String serviceSpecName;
+        ServiceDependency dependency;
+
+        for (int i = 0; i < length; i++) {
+            serviceSpecName = trackerInfo.getName(start + i);
+            dependency = createDependency(serviceSpecName);
+            dependencies.add(dependency);
+        }
+
+        return dependencies;
+    }
+
+    private ServiceDependency createDependency(final String calleeServiceName) {
         final ServiceDependency dependency = new ServiceDependency();
         dependency.setServiceSpecName(calleeServiceName);
         dependency.setServiceSpecRole(TrackerInfo.ROLE);
