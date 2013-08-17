@@ -13,10 +13,10 @@ import org.ow2.choreos.services.datamodel.ServiceType;
 public class ChorSpecCreator {
 
     private static String warFile;
-    private static final String ENDPOINT = "endpoint";
     private static final int INSTANCES = 1;
 
     private transient List<DeployableServiceSpec> chorServiceSpecs;
+    private transient final TrackerProperties trackerProps = new TrackerProperties();
 
     public static void setWarFile(final String uri) {
         warFile = uri;
@@ -28,22 +28,38 @@ public class ChorSpecCreator {
         return createChorSpec();
     }
 
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private List<DeployableServiceSpec> createServiceSpecs(final int chorSize) {
         final List<DeployableServiceSpec> serviceSpecs = new ArrayList<DeployableServiceSpec>(chorSize);
-        final TrackerInfo trackerInfo = new TrackerInfo();
+
         for (int i = 0; i < chorSize; i++) {
-            final DeployableServiceSpec spec = new DeployableServiceSpec();
-            spec.setName(trackerInfo.getName(i));
-            spec.setServiceType(ServiceType.SOAP);
-            spec.setRoles(Collections.singletonList(TrackerInfo.ROLE));
-            spec.setPackageUri(warFile);
-            spec.setPackageType(PackageType.TOMCAT);
-            spec.setEndpointName(ENDPOINT);
-            spec.setNumberOfInstances(INSTANCES);
+            final DeployableServiceSpec spec = getServiceSpec(i);
             serviceSpecs.add(spec);
         }
+
         return serviceSpecs;
+    }
+
+    private DeployableServiceSpec getServiceSpec(final int trackerNumber) {
+        final DeployableServiceSpec spec = new DeployableServiceSpec();
+
+        setCommonAttributes(spec, trackerNumber);
+        setSpecificAttributes(spec, trackerNumber);
+
+        return spec;
+    }
+
+    private void setCommonAttributes(final DeployableServiceSpec spec, final int trackerNumber) {
+        spec.setName(trackerProps.getName(trackerNumber));
+        spec.setServiceType(ServiceType.SOAP);
+        spec.setPackageUri(warFile);
+        spec.setPackageType(PackageType.TOMCAT);
+        spec.setNumberOfInstances(INSTANCES);
+    }
+
+    private void setSpecificAttributes(final DeployableServiceSpec spec, final int trackerNumber) {
+        final TrackerType type = trackerProps.getType(trackerNumber);
+        spec.setRoles(Collections.singletonList(type.toString()));
+        spec.setEndpointName(trackerProps.getEndpoint(type));
     }
 
     private void setDependencies() {
@@ -55,10 +71,9 @@ public class ChorSpecCreator {
 
             dependents.get(0).addDependency(dependencies.get(1));
             dependents.get(1).addDependency(dependencies.get(2));
+            dependents.get(1).addDependency(dependencies.get(4));
             dependents.get(2).addDependency(dependencies.get(3));
             dependents.get(4).addDependency(dependencies.get(3));
-
-            dependents.get(1).addDependency(dependencies.get(4));
 
             connectGroups(i - groupSize, dependencies.get(0));
         }
@@ -85,23 +100,24 @@ public class ChorSpecCreator {
 
     private List<ServiceDependency> getDependencies(final int start, final int length) {
         final List<ServiceDependency> dependencies = new ArrayList<ServiceDependency>(length);
-        final TrackerInfo trackerInfo = new TrackerInfo();
-        String serviceSpecName;
         ServiceDependency dependency;
 
         for (int i = 0; i < length; i++) {
-            serviceSpecName = trackerInfo.getName(start + i);
-            dependency = createDependency(serviceSpecName);
+            dependency = createDependency(start + i);
             dependencies.add(dependency);
         }
 
         return dependencies;
     }
 
-    private ServiceDependency createDependency(final String calleeServiceName) {
+    private ServiceDependency createDependency(final int trackerNumber) {
+        final String name = trackerProps.getName(trackerNumber);
+        final TrackerType type = trackerProps.getType(trackerNumber);
+
         final ServiceDependency dependency = new ServiceDependency();
-        dependency.setServiceSpecName(calleeServiceName);
-        dependency.setServiceSpecRole(TrackerInfo.ROLE);
+        dependency.setServiceSpecName(name);
+        dependency.setServiceSpecRole(type.toString());
+
         return dependency;
     }
 

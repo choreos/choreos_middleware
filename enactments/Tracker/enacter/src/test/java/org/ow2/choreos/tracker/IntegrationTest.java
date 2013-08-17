@@ -28,7 +28,7 @@ public class IntegrationTest {
 	// Unfortunately, it fails.
 	public void shouldCreateProxy() throws MalformedURLException {
 		final ProxyCreator creator = new ProxyCreator();
-		final Tracker tracker = creator.getProxy(wsdl);
+		final Tracker tracker = creator.getProxy(wsdl, TrackerType.WHITE);
 		final String pathIds = tracker.getPathIds();
 		assertFalse(pathIds.isEmpty());
 	}

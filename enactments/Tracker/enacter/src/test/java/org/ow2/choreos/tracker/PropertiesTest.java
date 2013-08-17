@@ -11,50 +11,52 @@ import org.junit.Before;
 import org.junit.Test;
 import org.ow2.choreos.chors.datamodel.Choreography;
 
-public class TrackerInfoTest {
+public class PropertiesTest {
 
-    private transient TrackerInfo trackerInfo;
+    private transient TrackerProperties trackerProps;
+    private transient ChorProperties chorProps;
 
     @Before
     public void setUp() {
-        trackerInfo = new TrackerInfo();
+        trackerProps = new TrackerProperties();
+        chorProps = new ChorProperties();
     }
 
     @Test
     public void testTrackerName() {
-        assertEquals("tracker42", trackerInfo.getName(42));
+        assertEquals("tracker42", trackerProps.getName(42));
     }
 
     @Test(expected = IllegalStateException.class)
     public void shouldThrowIllegalStateExceptionIfgettingWsdlWithoutChorSet() {
-        trackerInfo.getWsdl(0);
+        chorProps.getWsdl(0);
         fail();
     }
 
     @Test(expected = NoSuchElementException.class)
     public void shouldThrowNoSuchElementExceptionIfNoServiceIsFound() {
-        trackerInfo.setChoreography(new Choreography());
-        trackerInfo.getWsdl(0);
+        chorProps.setChoreography(new Choreography());
+        chorProps.getWsdl(0);
     }
 
     @Test
     public void test5TrackerAnswer() {
-        assertTrue(trackerInfo.isAnswerCorrect("0 1 2 3 4 3"));
+        assertTrue(chorProps.isAnswerCorrect("0 1 2 3 4 3"));
     }
 
     @Test
     public void test5TrackerWrongAnswer() {
-        assertFalse(trackerInfo.isAnswerCorrect("0 1 2 3 4 5"));
+        assertFalse(chorProps.isAnswerCorrect("0 1 2 3 4 5"));
     }
 
     @Test
     public void test10TrackerAnswer() {
-        assertTrue(trackerInfo.isAnswerCorrect("0 1 2 3 4 3 5 6 7 8 9 8"));
+        assertTrue(chorProps.isAnswerCorrect("0 1 2 3 4 3 5 6 7 8 9 8"));
     }
 
     @Test
     public void test15TrackerAnswer() {
-        assertTrue(trackerInfo.isAnswerCorrect("0 1 2 3 4 3 5 6 7 8 9 8 10 11 12 13 14 13"));
+        assertTrue(chorProps.isAnswerCorrect("0 1 2 3 4 3 5 6 7 8 9 8 10 11 12 13 14 13"));
     }
 
 }

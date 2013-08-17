@@ -3,7 +3,6 @@ package org.ow2.choreos.tracker;
 import java.net.MalformedURLException;
 import java.util.concurrent.Callable;
 
-import org.apache.log4j.Logger;
 import org.ow2.choreos.breaker.Invoker;
 import org.ow2.choreos.breaker.InvokerBuilder;
 import org.ow2.choreos.breaker.InvokerException;
@@ -22,8 +21,6 @@ public class Enacter {
     private transient final int enacterId;
     private transient int chorSize;
     private transient Choreography choreography;
-
-    private static final Logger LOG = Logger.getLogger(Enacter.class);
 
     public static void main(final String[] args) throws EnactmentException, ChoreographyNotFoundException,
             IllegalArgumentException, MalformedURLException {
@@ -101,7 +98,7 @@ public class Enacter {
     }
 
     private String getTrackerWsdl(final int trackerNumber) {
-        final TrackerInfo trackerInfo = new TrackerInfo();
+        final ChorProperties trackerInfo = new ChorProperties();
         trackerInfo.setChoreography(choreography);
         return trackerInfo.getWsdl(trackerNumber);
     }
@@ -127,7 +124,7 @@ public class Enacter {
             final Tracker firstTracker = getTracker(0);
             final String answer = firstTracker.getPathIds();
 
-            final TrackerInfo trackerInfo = new TrackerInfo();
+            final ChorProperties trackerInfo = new ChorProperties();
             return trackerInfo.isAnswerCorrect(answer);
         }
     }

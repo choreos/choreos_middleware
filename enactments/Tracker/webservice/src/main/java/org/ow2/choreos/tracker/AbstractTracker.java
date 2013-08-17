@@ -2,16 +2,14 @@ package org.ow2.choreos.tracker;
 
 import java.net.MalformedURLException;
 import java.security.InvalidParameterException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.jws.WebService;
-
 @SuppressWarnings("PMD.ShortVariable")
-@WebService(endpointInterface = "org.ow2.choreos.tracker.Tracker")
 public abstract class AbstractTracker implements Tracker {
 
 	protected transient int id = -1;
@@ -23,11 +21,17 @@ public abstract class AbstractTracker implements Tracker {
 	public void setInvocationAddress(final String role, final String name,
 			final List<String> endpoints) {
 		final int targetId = parseIdFromName(name);
-		targets.put(targetId, endpoints.get(0));
-		updateMyId();
+		if (!endpoints.isEmpty()) { // To ease tests
+			targets.put(targetId, endpoints.get(0));
+		}
+		updateMyId(targetId);
 	}
 
-	protected abstract void updateMyId();
+	protected void updateMyId(final int targetId) {
+		if (id == -1 || id > targetId - 1) {
+			id = targetId - 1;
+		}
+	}
 
 	private int parseIdFromName(final String name) {
 		final Pattern pattern = Pattern.compile("\\D+(\\d+)");
@@ -61,15 +65,27 @@ public abstract class AbstractTracker implements Tracker {
 
 	private String getTargetPathIds() throws MalformedURLException {
 		final StringBuffer targetPathIds = new StringBuffer();
-		final ProxyCreator proxyCreator = new ProxyCreator();
-		Tracker target;
+		final Iterator<String> iterator = targets.values().iterator();
 
-		for (String wsdl : targets.values()) {
-			targetPathIds.append(' ');
-			target = proxyCreator.getProxy(wsdl);
-			targetPathIds.append(target.getPathIds());
+		targetPathIds.append(getOneTargetPathIds(iterator.next(),
+				TrackerType.WHITE));
+		if (iterator.hasNext()) {
+			targetPathIds.append(getOneTargetPathIds(iterator.next(),
+					TrackerType.BLACK));
 		}
 
 		return targetPathIds.toString();
+	}
+
+	private StringBuffer getOneTargetPathIds(final String wsdl,
+			final TrackerType type) throws MalformedURLException {
+		final StringBuffer pathIds = new StringBuffer();
+		final ProxyCreator proxyCreator = new ProxyCreator();
+		final Tracker target = proxyCreator.getProxy(wsdl, type);
+
+		pathIds.append(' ');
+		pathIds.append(target.getPathIds());
+
+		return pathIds;
 	}
 }
