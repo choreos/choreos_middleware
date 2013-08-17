@@ -60,10 +60,16 @@ public class PropertiesTest {
         chorProps.setChoreography(createChorWithNServices(10));
         assertTrue(chorProps.isAnswerCorrect("0 1 2 3 4 3 5 6 7 8 9 8"));
     }
+    
+    @Test
+    public void test10TrackerWrongAnswer() {
+        chorProps.setChoreography(createChorWithNServices(10));
+        assertFalse(chorProps.isAnswerCorrect("0 1 2 3 4 3"));
+    }
 
     @Test
     public void test15TrackerAnswer() {
-        chorProps.setChoreography(createChorWithNServices(10));
+        chorProps.setChoreography(createChorWithNServices(15));
         assertTrue(chorProps.isAnswerCorrect("0 1 2 3 4 3 5 6 7 8 9 8 10 11 12 13 14 13"));
     }
     
