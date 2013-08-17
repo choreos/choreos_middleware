@@ -128,4 +128,10 @@ public class ChorSpecCreator {
         }
         return chorSpec;
     }
+    
+    public static void main(String[] args) {
+        ChorSpecCreator creator = new ChorSpecCreator();
+        ChoreographySpec chorSpec = creator.create(10);
+        chorSpec.printDependenciesMap();
+    }
 }

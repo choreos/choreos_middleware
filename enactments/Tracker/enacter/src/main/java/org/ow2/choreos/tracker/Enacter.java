@@ -124,6 +124,7 @@ public class Enacter {
             final Tracker firstTracker = getTracker(0);
             final String answer = firstTracker.getPathIds();
             final ChorProperties trackerInfo = new ChorProperties();
+            trackerInfo.setChoreography(choreography);
             return trackerInfo.isAnswerCorrect(answer);
         }
     }
