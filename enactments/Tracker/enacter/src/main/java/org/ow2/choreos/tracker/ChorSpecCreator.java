@@ -131,7 +131,7 @@ public class ChorSpecCreator {
 
     public static void main(String[] args) {
         ChorSpecCreator creator = new ChorSpecCreator();
-        ChoreographySpec chorSpec = creator.create(10);
+        ChoreographySpec chorSpec = creator.create(5);
         chorSpec.printDependenciesMap();
     }
 }
