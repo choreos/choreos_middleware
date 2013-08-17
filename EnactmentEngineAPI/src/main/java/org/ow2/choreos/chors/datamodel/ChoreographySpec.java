@@ -11,6 +11,7 @@ import java.util.NoSuchElementException;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
+import org.ow2.choreos.services.datamodel.ServiceDependency;
 import org.ow2.choreos.services.datamodel.ServiceSpec;
 
 @XmlRootElement
@@ -90,6 +91,18 @@ public class ChoreographySpec {
     public String toString() {
         return "ChoreographySpec [deployableServiceSpecs=" + deployableServiceSpecs + ", legacyServiceSpecs="
                 + legacyServiceSpecs + "]";
+    }
+    
+    public void printDependenciesMap() {
+        for (DeployableServiceSpec spec: deployableServiceSpecs) {
+            System.out.print(spec.getName() + ": ");
+            if (spec.getDependencies() != null) {
+                for (ServiceDependency dep: spec.getDependencies()) {
+                    System.out.print(dep.getServiceSpecName() + " ");
+                }
+            }
+            System.out.println("");
+        }
     }
 
 }

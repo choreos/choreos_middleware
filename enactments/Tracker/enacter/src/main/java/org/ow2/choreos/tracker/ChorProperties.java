@@ -45,10 +45,18 @@ public class ChorProperties {
         boolean isCorrect = true;
         final List<Integer> numbers = getAnswerAsIntegers(answer);
 
-        for (int i = 0; i < numbers.size(); i += 6) {
-            if (!isGroupAnswerCorrect(numbers, i)) {
-                isCorrect = false;
-                break;
+        final int chorSize = chor.getChoreographySpec().getDeployableServiceSpecs().size();
+        final int numberOfGroups = chorSize/5; 
+        if (numbers.size() != 6 * numberOfGroups) {
+            isCorrect = false;
+        } 
+
+        if (isCorrect) {
+            for (int i = 0; i < numbers.size(); i += 6) {
+                if (!isGroupAnswerCorrect(numbers, i)) {
+                    isCorrect = false;
+                    break;
+                }
             }
         }
 

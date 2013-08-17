@@ -30,6 +30,8 @@ class RunnableVerifier implements Runnable {
     @Override
     public void run() {
         logger.info("Verifying Enacter#" + enacter.getId());
+        DeployableService tracker0 = enacter.getChoreography().getMapOfDeployableServicesBySpecNames().get("tracker0");
+        logger.info("Tracker0 of enacter " + enacter.getId() + ":" + tracker0.getUris());
         try {
             long t0 = System.nanoTime();
             ok = enacter.verifyAnswer();
