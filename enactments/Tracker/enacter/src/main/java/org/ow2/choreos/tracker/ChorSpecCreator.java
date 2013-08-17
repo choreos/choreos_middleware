@@ -80,7 +80,7 @@ public class ChorSpecCreator {
     }
 
     private void connectGroups(final int dependentIndex, final ServiceDependency dependency) {
-        if (dependentIndex > 0) {
+        if (dependentIndex >= 0) {
             final DeployableServiceSpec dependent = chorServiceSpecs.get(dependentIndex);
             dependent.addDependency(dependency);
         }
@@ -128,7 +128,7 @@ public class ChorSpecCreator {
         }
         return chorSpec;
     }
-    
+
     public static void main(String[] args) {
         ChorSpecCreator creator = new ChorSpecCreator();
         ChoreographySpec chorSpec = creator.create(10);

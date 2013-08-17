@@ -12,7 +12,7 @@ public class ChorSpecCreatorTest {
     @Test
     public void shouldCreateSpecWithSize5() {
         ChorSpecCreator creator = new ChorSpecCreator();
-        ChoreographySpec chorSpec = creator.create(10);
+        ChoreographySpec chorSpec = creator.create(5);
         verifyTracker0SpecForSize5(chorSpec.getServiceSpecByName("tracker0"));
         verifyTracker1Spec(chorSpec.getServiceSpecByName("tracker1"));
         verifyTracker2Spec(chorSpec.getServiceSpecByName("tracker2"));
@@ -99,6 +99,39 @@ public class ChorSpecCreatorTest {
     
     private void verifyTracker8Spec(ServiceSpec spec) {
         assertTrue(spec.getDependencies() == null);
+    }
+    
+    @Test
+    public void shouldCreateSpecWithSize15() {
+        ChorSpecCreator creator = new ChorSpecCreator();
+        ChoreographySpec chorSpec = creator.create(15);
+        verifyTracker0SpecForSize15(chorSpec.getServiceSpecByName("tracker0"));
+        verifyTracker5SpecForSize15(chorSpec.getServiceSpecByName("tracker5"));
+        verifyTracker10SpecForSize15(chorSpec.getServiceSpecByName("tracker10"));
+    }
+    
+    private void verifyTracker0SpecForSize15(ServiceSpec spec) {
+        assertEquals(2, spec.getDependencies().size());
+        String dep1 = spec.getDependencies().get(0).getServiceSpecName();
+        String dep2 = spec.getDependencies().get(1).getServiceSpecName();
+        assertTrue(!dep1.equals(dep2));
+        assertTrue(dep1.equals("tracker1") || dep2.equals("tracker1"));
+        assertTrue(dep1.equals("tracker5") || dep2.equals("tracker5"));
+    }
+    
+    private void verifyTracker5SpecForSize15(ServiceSpec spec) {
+        assertEquals(2, spec.getDependencies().size());
+        String dep1 = spec.getDependencies().get(0).getServiceSpecName();
+        String dep2 = spec.getDependencies().get(1).getServiceSpecName();
+        assertTrue(!dep1.equals(dep2));
+        assertTrue(dep1.equals("tracker6") || dep2.equals("tracker6"));
+        assertTrue(dep1.equals("tracker10") || dep2.equals("tracker10"));
+    }
+    
+    private void verifyTracker10SpecForSize15(ServiceSpec spec) {
+        assertEquals(1, spec.getDependencies().size());
+        assertEquals("tracker11", spec.getDependencies().get(0).getServiceSpecName());
+
     }
 
 
