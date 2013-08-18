@@ -46,10 +46,10 @@ public class ChorProperties {
         final List<Integer> numbers = getAnswerAsIntegers(answer);
 
         final int chorSize = chor.getChoreographySpec().getDeployableServiceSpecs().size();
-        final int numberOfGroups = chorSize/5; 
+        final int numberOfGroups = chorSize / 5;
         if (numbers.size() != 6 * numberOfGroups) {
             isCorrect = false;
-        } 
+        }
 
         if (isCorrect) {
             for (int i = 0; i < numbers.size(); i += 6) {

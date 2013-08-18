@@ -21,7 +21,7 @@ public class Enacter {
     private transient final int enacterId;
     private transient int chorSize;
     private transient Choreography choreography;
-    
+
     public static void main(final String[] args) throws EnactmentException, ChoreographyNotFoundException,
             IllegalArgumentException, MalformedURLException {
         readArgs(args);
@@ -123,9 +123,9 @@ public class Enacter {
         public Boolean call() throws MalformedURLException {
             final Tracker firstTracker = getTracker(0);
             final String answer = firstTracker.getPathIds();
-            final ChorProperties trackerInfo = new ChorProperties();
-            trackerInfo.setChoreography(choreography);
-            return trackerInfo.isAnswerCorrect(answer);
+            final ChorProperties chorProps = new ChorProperties();
+            chorProps.setChoreography(choreography);
+            return chorProps.isAnswerCorrect(answer);
         }
     }
 }

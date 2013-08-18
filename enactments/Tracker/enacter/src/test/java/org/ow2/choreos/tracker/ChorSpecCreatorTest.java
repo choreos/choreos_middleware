@@ -1,6 +1,8 @@
 package org.ow2.choreos.tracker;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -11,47 +13,47 @@ public class ChorSpecCreatorTest {
 
     @Test
     public void shouldCreateSpecWithSize5() {
-        ChorSpecCreator creator = new ChorSpecCreator();
-        ChoreographySpec chorSpec = creator.create(5);
+        final ChorSpecCreator creator = new ChorSpecCreator();
+        final ChoreographySpec chorSpec = creator.create(5);
         verifyTracker0SpecForSize5(chorSpec.getServiceSpecByName("tracker0"));
         verifyTracker1Spec(chorSpec.getServiceSpecByName("tracker1"));
         verifyTracker2Spec(chorSpec.getServiceSpecByName("tracker2"));
         verifyTracker3Spec(chorSpec.getServiceSpecByName("tracker3"));
         verifyTracker4Spec(chorSpec.getServiceSpecByName("tracker4"));
     }
-    
-    private void verifyTracker0SpecForSize5(ServiceSpec spec) {
+
+    private void verifyTracker0SpecForSize5(final ServiceSpec spec) {
         assertEquals(1, spec.getDependencies().size());
         assertEquals("tracker1", spec.getDependencies().get(0).getServiceSpecName());
     }
-    
-    private void verifyTracker1Spec(ServiceSpec spec) {
+
+    private void verifyTracker1Spec(final ServiceSpec spec) {
         assertEquals(2, spec.getDependencies().size());
-        String dep1 = spec.getDependencies().get(0).getServiceSpecName();
-        String dep2 = spec.getDependencies().get(1).getServiceSpecName();
-        assertTrue(!dep1.equals(dep2));
-        assertTrue(dep1.equals("tracker2") || dep2.equals("tracker2"));
-        assertTrue(dep1.equals("tracker4") || dep2.equals("tracker4"));
+        final String dep1 = spec.getDependencies().get(0).getServiceSpecName();
+        final String dep2 = spec.getDependencies().get(1).getServiceSpecName();
+        assertFalse(dep1.equals(dep2));
+        assertTrue("tracker2".equals(dep1) || "tracker2".equals(dep2));
+        assertTrue("tracker4".equals(dep1) || "tracker4".equals(dep2));
     }
-    
-    private void verifyTracker2Spec(ServiceSpec spec) {
+
+    private void verifyTracker2Spec(final ServiceSpec spec) {
         assertEquals(1, spec.getDependencies().size());
         assertEquals("tracker3", spec.getDependencies().get(0).getServiceSpecName());
     }
-    
-    private void verifyTracker4Spec(ServiceSpec spec) {
+
+    private void verifyTracker4Spec(final ServiceSpec spec) {
         assertEquals(1, spec.getDependencies().size());
         assertEquals("tracker3", spec.getDependencies().get(0).getServiceSpecName());
     }
-    
-    private void verifyTracker3Spec(ServiceSpec spec) {
-        assertTrue(spec.getDependencies() == null);
+
+    private void verifyTracker3Spec(final ServiceSpec spec) {
+        assertNull(spec.getDependencies());
     }
-    
+
     @Test
     public void shouldCreateSpecWithSize10() {
-        ChorSpecCreator creator = new ChorSpecCreator();
-        ChoreographySpec chorSpec = creator.create(10);
+        final ChorSpecCreator creator = new ChorSpecCreator();
+        final ChoreographySpec chorSpec = creator.create(10);
         verifyTracker0SpecForSize10(chorSpec.getServiceSpecByName("tracker0"));
         verifyTracker1Spec(chorSpec.getServiceSpecByName("tracker1"));
         verifyTracker2Spec(chorSpec.getServiceSpecByName("tracker2"));
@@ -61,78 +63,77 @@ public class ChorSpecCreatorTest {
         verifyTracker6Spec(chorSpec.getServiceSpecByName("tracker6"));
         verifyTracker7Spec(chorSpec.getServiceSpecByName("tracker7"));
         verifyTracker8Spec(chorSpec.getServiceSpecByName("tracker8"));
-        verifyTracker9Spec(chorSpec.getServiceSpecByName("tracker9"));        
+        verifyTracker9Spec(chorSpec.getServiceSpecByName("tracker9"));
     }
-    
-    private void verifyTracker0SpecForSize10(ServiceSpec spec) {
+
+    private void verifyTracker0SpecForSize10(final ServiceSpec spec) {
         assertEquals(2, spec.getDependencies().size());
-        String dep1 = spec.getDependencies().get(0).getServiceSpecName();
-        String dep2 = spec.getDependencies().get(1).getServiceSpecName();
-        assertTrue(!dep1.equals(dep2));
-        assertTrue(dep1.equals("tracker1") || dep2.equals("tracker1"));
-        assertTrue(dep1.equals("tracker5") || dep2.equals("tracker5"));
+        final String dep1 = spec.getDependencies().get(0).getServiceSpecName();
+        final String dep2 = spec.getDependencies().get(1).getServiceSpecName();
+        assertFalse(dep1.equals(dep2));
+        assertTrue("tracker1".equals(dep1) || "tracker1".equals(dep2));
+        assertTrue("tracker5".equals(dep1) || "tracker5".equals(dep2));
     }
-    
-    private void verifyTracker5Spec(ServiceSpec spec) {
+
+    private void verifyTracker5Spec(final ServiceSpec spec) {
         assertEquals(1, spec.getDependencies().size());
         assertEquals("tracker6", spec.getDependencies().get(0).getServiceSpecName());
     }
-    
-    private void verifyTracker6Spec(ServiceSpec spec) {
+
+    private void verifyTracker6Spec(final ServiceSpec spec) {
         assertEquals(2, spec.getDependencies().size());
-        String dep1 = spec.getDependencies().get(0).getServiceSpecName();
-        String dep2 = spec.getDependencies().get(1).getServiceSpecName();
-        assertTrue(!dep1.equals(dep2));
-        assertTrue(dep1.equals("tracker7") || dep2.equals("tracker7"));
-        assertTrue(dep1.equals("tracker9") || dep2.equals("tracker9"));
+        final String dep1 = spec.getDependencies().get(0).getServiceSpecName();
+        final String dep2 = spec.getDependencies().get(1).getServiceSpecName();
+        assertFalse(dep1.equals(dep2));
+        assertTrue("tracker7".equals(dep1) || "tracker7".equals(dep2));
+        assertTrue("tracker9".equals(dep1) || "tracker9".equals(dep2));
     }
-    
-    private void verifyTracker7Spec(ServiceSpec spec) {
+
+    private void verifyTracker7Spec(final ServiceSpec spec) {
         assertEquals(1, spec.getDependencies().size());
         assertEquals("tracker8", spec.getDependencies().get(0).getServiceSpecName());
     }
-    
-    private void verifyTracker9Spec(ServiceSpec spec) {
+
+    private void verifyTracker9Spec(final ServiceSpec spec) {
         assertEquals(1, spec.getDependencies().size());
         assertEquals("tracker8", spec.getDependencies().get(0).getServiceSpecName());
     }
-    
-    private void verifyTracker8Spec(ServiceSpec spec) {
-        assertTrue(spec.getDependencies() == null);
+
+    private void verifyTracker8Spec(final ServiceSpec spec) {
+        assertNull(spec.getDependencies());
     }
-    
+
     @Test
     public void shouldCreateSpecWithSize15() {
-        ChorSpecCreator creator = new ChorSpecCreator();
-        ChoreographySpec chorSpec = creator.create(15);
+        final ChorSpecCreator creator = new ChorSpecCreator();
+        final ChoreographySpec chorSpec = creator.create(15);
         verifyTracker0SpecForSize15(chorSpec.getServiceSpecByName("tracker0"));
         verifyTracker5SpecForSize15(chorSpec.getServiceSpecByName("tracker5"));
         verifyTracker10SpecForSize15(chorSpec.getServiceSpecByName("tracker10"));
     }
-    
-    private void verifyTracker0SpecForSize15(ServiceSpec spec) {
+
+    private void verifyTracker0SpecForSize15(final ServiceSpec spec) {
         assertEquals(2, spec.getDependencies().size());
-        String dep1 = spec.getDependencies().get(0).getServiceSpecName();
-        String dep2 = spec.getDependencies().get(1).getServiceSpecName();
-        assertTrue(!dep1.equals(dep2));
-        assertTrue(dep1.equals("tracker1") || dep2.equals("tracker1"));
-        assertTrue(dep1.equals("tracker5") || dep2.equals("tracker5"));
+        final String dep1 = spec.getDependencies().get(0).getServiceSpecName();
+        final String dep2 = spec.getDependencies().get(1).getServiceSpecName();
+        assertFalse(dep1.equals(dep2));
+        assertTrue("tracker1".equals(dep1) || "tracker1".equals(dep2));
+        assertTrue("tracker5".equals(dep1) || "tracker5".equals(dep2));
     }
-    
-    private void verifyTracker5SpecForSize15(ServiceSpec spec) {
+
+    private void verifyTracker5SpecForSize15(final ServiceSpec spec) {
         assertEquals(2, spec.getDependencies().size());
-        String dep1 = spec.getDependencies().get(0).getServiceSpecName();
-        String dep2 = spec.getDependencies().get(1).getServiceSpecName();
-        assertTrue(!dep1.equals(dep2));
-        assertTrue(dep1.equals("tracker6") || dep2.equals("tracker6"));
-        assertTrue(dep1.equals("tracker10") || dep2.equals("tracker10"));
+        final String dep1 = spec.getDependencies().get(0).getServiceSpecName();
+        final String dep2 = spec.getDependencies().get(1).getServiceSpecName();
+        assertFalse(dep1.equals(dep2));
+        assertTrue("tracker6".equals(dep1) || "tracker6".equals(dep2));
+        assertTrue("tracker10".equals(dep1) || "tracker10".equals(dep2));
     }
-    
-    private void verifyTracker10SpecForSize15(ServiceSpec spec) {
+
+    private void verifyTracker10SpecForSize15(final ServiceSpec spec) {
         assertEquals(1, spec.getDependencies().size());
         assertEquals("tracker11", spec.getDependencies().get(0).getServiceSpecName());
 
     }
-
 
 }

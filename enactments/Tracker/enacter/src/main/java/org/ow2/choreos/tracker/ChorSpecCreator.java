@@ -129,9 +129,9 @@ public class ChorSpecCreator {
         return chorSpec;
     }
 
-    public static void main(String[] args) {
-        ChorSpecCreator creator = new ChorSpecCreator();
-        ChoreographySpec chorSpec = creator.create(5);
+    public static void main(final String[] args) {
+        final ChorSpecCreator creator = new ChorSpecCreator();
+        final ChoreographySpec chorSpec = creator.create(5);
         chorSpec.printDependenciesMap();
     }
 }

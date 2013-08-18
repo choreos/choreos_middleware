@@ -92,12 +92,12 @@ public class ChoreographySpec {
         return "ChoreographySpec [deployableServiceSpecs=" + deployableServiceSpecs + ", legacyServiceSpecs="
                 + legacyServiceSpecs + "]";
     }
-    
+
     public void printDependenciesMap() {
-        for (DeployableServiceSpec spec: deployableServiceSpecs) {
+        for (DeployableServiceSpec spec : deployableServiceSpecs) {
             System.out.print(spec.getName() + ": ");
             if (spec.getDependencies() != null) {
-                for (ServiceDependency dep: spec.getDependencies()) {
+                for (ServiceDependency dep : spec.getDependencies()) {
                     System.out.print(dep.getServiceSpecName() + " ");
                 }
             }

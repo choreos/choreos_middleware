@@ -20,16 +20,16 @@ public abstract class AbstractTracker implements Tracker {
     // key is tracker id and value is tracker wsdl
     protected transient SortedMap<Integer, String> targets = new TreeMap<Integer, String>();
 
-    private Logger logger = Logger.getLogger(AbstractTracker.class);
-    
+    private final static Logger LOG = Logger.getLogger(AbstractTracker.class);
+
     static {
         LogConfigurator.configLog();
     }
-    
+
     @Override
     public void setInvocationAddress(final String role, final String name, final List<String> endpoints) {
         final int targetId = parseIdFromName(name);
-        logger.info("Receiving target " + name);
+        LOG.info("Receiving target " + name);
         if (!endpoints.isEmpty()) { // To ease tests
             targets.put(targetId, endpoints.get(0));
         }
@@ -40,7 +40,7 @@ public abstract class AbstractTracker implements Tracker {
         if (id == -1 || id > targetId - 1) {
             id = targetId - 1;
         }
-        logger.info("My id now is " + id + " (due to setInvocationAddress)");
+        LOG.info("My id now is " + id + " (due to setInvocationAddress)");
     }
 
     private int parseIdFromName(final String name) {
@@ -50,8 +50,8 @@ public abstract class AbstractTracker implements Tracker {
         if (matcher.find() && matcher.groupCount() > 0) {
             return Integer.parseInt(matcher.group(1));
         } else {
-            String msg = "setInvocationAddress name must be \\D+\\d+";
-            logger.error(msg);
+            final String msg = "setInvocationAddress name must be \\D+\\d+";
+            LOG.error(msg);
             throw new InvalidParameterException(msg);
         }
     }
@@ -59,7 +59,7 @@ public abstract class AbstractTracker implements Tracker {
     @Override
     public void setId(final int id) {
         this.id = id;
-        logger.info("My id now is " + id + " (dur to setId)");
+        LOG.info("My id now is " + id + " (dur to setId)");
     }
 
     @Override
@@ -72,7 +72,7 @@ public abstract class AbstractTracker implements Tracker {
             pathIds = Integer.toString(id) + getTargetPathIds();
         }
 
-        logger.info("Returned pathIds: " + pathIds);
+        LOG.info("Returned pathIds: " + pathIds);
         return pathIds;
     }
 
@@ -89,8 +89,8 @@ public abstract class AbstractTracker implements Tracker {
     }
 
     private StringBuffer getOneTargetPathIds(final String wsdl, final TrackerType type) throws MalformedURLException {
-        logger.info("Invoking my friend " + wsdl);
-        
+        LOG.info("Invoking my friend " + wsdl);
+
         final StringBuffer pathIds = new StringBuffer();
         final ProxyCreator proxyCreator = new ProxyCreator();
         final Tracker target = proxyCreator.getProxy(wsdl, type);

@@ -1,12 +1,11 @@
 package org.ow2.choreos.tracker;
 
-
 public class TrackerProperties {
 
     private static final String NAME_PREFIX = "tracker";
     private static final String BLACK_LP = "TrackerBlackService";
     private static final String WHITE_LP = "TrackerWhiteService";
-    
+
     public String getName(final int trackerNumber) {
         return NAME_PREFIX + trackerNumber;
     }
@@ -33,7 +32,7 @@ public class TrackerProperties {
 
         return type;
     }
-    
+
     public String getLocalPart(final TrackerType type) {
         String localPart;
         if (TrackerType.WHITE.equals(type)) {

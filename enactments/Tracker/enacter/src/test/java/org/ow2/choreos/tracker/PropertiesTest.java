@@ -60,7 +60,7 @@ public class PropertiesTest {
         chorProps.setChoreography(createChorWithNServices(10));
         assertTrue(chorProps.isAnswerCorrect("0 1 2 3 4 3 5 6 7 8 9 8"));
     }
-    
+
     @Test
     public void test10TrackerWrongAnswer() {
         chorProps.setChoreography(createChorWithNServices(10));
@@ -72,16 +72,20 @@ public class PropertiesTest {
         chorProps.setChoreography(createChorWithNServices(15));
         assertTrue(chorProps.isAnswerCorrect("0 1 2 3 4 3 5 6 7 8 9 8 10 11 12 13 14 13"));
     }
-    
+
     private Choreography createChorWithNServices(final int N) {
-        Choreography chor = new Choreography();
+        final Choreography chor = new Choreography();
         chor.setChoreographySpec(new ChoreographySpec());
-        for (int i=0; i<N; i++) {
-            DeployableServiceSpec servSpec = new DeployableServiceSpec(); 
+        DeployableServiceSpec servSpec;
+        DeployableService serv;
+
+        for (int i = 0; i < N; i++) {
+            servSpec = new DeployableServiceSpec();
             chor.getChoreographySpec().addServiceSpec(servSpec);
-            DeployableService serv = new DeployableService(); 
+            serv = new DeployableService();
             chor.addService(serv);
         }
+
         return chor;
     }
 
