@@ -14,7 +14,7 @@ public class TrackerWhite extends AbstractTracker {
     @Override
     public void setInvocationAddress(final String role, final String name, final List<String> endpoints) {
         super.setInvocationAddress(role, name, endpoints);
-        if (endpoints.size() == 2) {
+        if (targets.size() == 2) {
             secondTargetType = TrackerType.valueOf(role);
         }
     }

@@ -95,7 +95,7 @@ public class ChoreographySpec {
 
     public void printDependenciesMap() {
         for (DeployableServiceSpec spec : deployableServiceSpecs) {
-            System.out.print(spec.getName() + ": ");
+            System.out.print(spec.getName() + " (" + spec.getEndpointName() + "): ");
             if (spec.getDependencies() != null) {
                 for (ServiceDependency dep : spec.getDependencies()) {
                     System.out.print(dep.getServiceSpecName() + " ");
