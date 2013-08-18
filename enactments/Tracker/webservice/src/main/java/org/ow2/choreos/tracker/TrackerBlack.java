@@ -13,13 +13,20 @@ import org.ow2.choreos.breaker.InvokerException;
 @WebService(endpointInterface = "org.ow2.choreos.tracker.Tracker")
 public class TrackerBlack extends AbstractTracker {
 
-    private static Logger logger = Logger.getLogger(TrackerBlack.class);
+    private static final Logger LOG = Logger.getLogger(TrackerBlack.class);
 
     @Override
     protected void updateMyId(final int targetId) {
         id = targetId + 1;
-        logger.info("My id now is " + id + " (due to setInvocationAddress)");
+        LOG.info("My id now is " + id + " (due to setInvocationAddress)");
         setTargetId();
+    }
+
+    @Override
+    protected String getTargetPathIds() throws MalformedURLException {
+        final String firstTargetWsdl = targets.values().iterator().next();
+        final StringBuffer firstTargetPath = super.getOneTargetPathIds(firstTargetWsdl, TrackerType.WHITE);
+        return firstTargetPath.toString();
     }
 
     private void setTargetId() {
@@ -28,7 +35,7 @@ public class TrackerBlack extends AbstractTracker {
         try {
             invoker.invoke();
         } catch (InvokerException e) {
-            logger.error("Could not set the id of my friend");
+            LOG.error("Could not set the id of my friend");
         }
     }
 
@@ -39,7 +46,7 @@ public class TrackerBlack extends AbstractTracker {
             final String targetWsdl = targets.values().iterator().next();
             final Tracker target = proxyCreator.getProxy(targetWsdl, TrackerType.WHITE);
             final int targetId = id - 1;
-            logger.info("Setting the id of my friend " + targetId);
+            LOG.info("Setting the id of my friend " + targetId);
             target.setId(targetId);
             return null;
         }

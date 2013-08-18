@@ -2,7 +2,6 @@ package org.ow2.choreos.tracker;
 
 import java.net.MalformedURLException;
 import java.security.InvalidParameterException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -76,19 +75,9 @@ public abstract class AbstractTracker implements Tracker {
         return pathIds;
     }
 
-    private String getTargetPathIds() throws MalformedURLException {
-        final StringBuffer targetPathIds = new StringBuffer();
-        final Iterator<String> iterator = targets.values().iterator();
+    abstract protected String getTargetPathIds() throws MalformedURLException;
 
-        targetPathIds.append(getOneTargetPathIds(iterator.next(), TrackerType.WHITE));
-        if (iterator.hasNext()) {
-            targetPathIds.append(getOneTargetPathIds(iterator.next(), TrackerType.BLACK));
-        }
-
-        return targetPathIds.toString();
-    }
-
-    private StringBuffer getOneTargetPathIds(final String wsdl, final TrackerType type) throws MalformedURLException {
+    protected StringBuffer getOneTargetPathIds(final String wsdl, final TrackerType type) throws MalformedURLException {
         LOG.info("Invoking my friend " + wsdl);
 
         final StringBuffer pathIds = new StringBuffer();
