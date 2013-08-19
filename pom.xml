@@ -84,8 +84,8 @@
 		<module>DeploymentManager</module>
 		<module>ChoreographyDeployer</module>
 		<module>EnactmentEngineAPI</module>
-	        <module>Monitoring</module>
-		<!-- <module>StorageFactory</module> <module>choreos-web</module> -->
+	    <module>Monitoring</module>
+		<!-- <module>StorageFactory</module>  -->
 	</modules>
 
 	<repositories>

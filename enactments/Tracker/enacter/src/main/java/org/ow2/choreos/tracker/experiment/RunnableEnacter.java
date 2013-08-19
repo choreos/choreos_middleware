@@ -9,7 +9,7 @@ import org.ow2.choreos.tracker.Enacter;
 
 class RunnableEnacter implements Runnable {
 
-    private static final String TRACKER_WAR_URL = "http://valinhos.ime.usp.br:54080/services/tracker.war";
+    private static final String TRACKER_WAR_URL = "http://valinhos.ime.usp.br:54080/services/tracker2.0.war";
     
     Enacter enacter;
     Report report;

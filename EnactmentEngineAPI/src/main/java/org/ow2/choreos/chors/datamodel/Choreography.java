@@ -162,4 +162,10 @@ public class Choreography {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Choreography [id=" + id + ", choreographySpec=" + choreographySpec + ", deployableServices="
+                + deployableServices + ", legacyServices=" + legacyServices + "]";
+    }
+
 }

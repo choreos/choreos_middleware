@@ -8,13 +8,15 @@ import javax.xml.ws.Service;
 
 public class ProxyCreator {
 
-	private static final String NAMESPACE = "http://tracker.choreos.ow2.org/";
-	private static final String LOCAL_PART = "TrackerImplService";
+    private static final String NAMESPACE = "http://tracker.choreos.ow2.org/";
 
-	public Tracker getProxy(final String wsdl) throws MalformedURLException {
-		final QName qname = new QName(NAMESPACE, LOCAL_PART);
-		final URL url = new URL(wsdl);
-		final Service service = Service.create(url, qname);
-		return service.getPort(Tracker.class);
-	}
+    public Tracker getProxy(final String wsdl, final TrackerType type) throws MalformedURLException {
+        final TrackerProperties trackerProps = new TrackerProperties();
+        final String localPart = trackerProps.getLocalPart(type);
+
+        final QName qname = new QName(NAMESPACE, localPart);
+        final URL url = new URL(wsdl);
+        final Service service = Service.create(url, qname);
+        return service.getPort(Tracker.class);
+    }
 }

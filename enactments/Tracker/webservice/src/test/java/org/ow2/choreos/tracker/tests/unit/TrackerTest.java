@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 import org.ow2.choreos.tracker.Tracker;
-import org.ow2.choreos.tracker.TrackerImpl;
+import org.ow2.choreos.tracker.TrackerWhite;
 
 public class TrackerTest {
 
@@ -17,7 +17,7 @@ public class TrackerTest {
 
 	@Before
 	public void setUp() {
-		tracker = new TrackerImpl();
+		tracker = new TrackerWhite();
 	}
 
 	@Test
@@ -32,6 +32,7 @@ public class TrackerTest {
 		tracker.setInvocationAddress(null, "name1", new ArrayList<String>());
 		assertEquals("0", tracker.getPathIds());
 
+		tracker = new TrackerWhite();
 		tracker.setInvocationAddress(null, "name42", new ArrayList<String>());
 		assertEquals("41", tracker.getPathIds());
 	}
