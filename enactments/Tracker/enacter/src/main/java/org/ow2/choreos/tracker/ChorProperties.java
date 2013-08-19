@@ -75,11 +75,12 @@ public class ChorProperties {
     }
 
     private boolean isGroupAnswerCorrect(final List<Integer> numbers, final int firstOfGroupIndex) {
-        final int firstOfGroup = firstOfGroupIndex - (firstOfGroupIndex / 5);
+        final int firstOfGroup = firstOfGroupIndex - (firstOfGroupIndex / 6);
         return (numbers.get(firstOfGroupIndex) == firstOfGroup
                 && numbers.get(firstOfGroupIndex + 1) == firstOfGroup + 1
                 && numbers.get(firstOfGroupIndex + 2) == firstOfGroup + 2
                 && numbers.get(firstOfGroupIndex + 3) == firstOfGroup + 3
                 && numbers.get(firstOfGroupIndex + 4) == firstOfGroup + 4 && numbers.get(firstOfGroupIndex + 5) == firstOfGroup + 3);
     }
+    
 }

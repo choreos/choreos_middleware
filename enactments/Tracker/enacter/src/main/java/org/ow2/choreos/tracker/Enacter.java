@@ -105,8 +105,8 @@ public class Enacter {
 
     public boolean verifyAnswer() throws MalformedURLException {
         final VerifyTask task = new VerifyTask();
-        final int timeout = 10;
-        final Invoker<Boolean> invoker = new InvokerBuilder<Boolean>(task, timeout).trials(3).pauseBetweenTrials(30)
+        final int timeout = 15;
+        final Invoker<Boolean> invoker = new InvokerBuilder<Boolean>(task, timeout).trials(3).pauseBetweenTrials(60)
                 .build();
         boolean answerIsCorrect;
         try {
