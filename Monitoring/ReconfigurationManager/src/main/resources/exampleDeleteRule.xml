@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ComplexEventRuleActionList xmlns="http://labse.isti.cnr.it/glimpse/xml/ComplexEventRule"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://labse.isti.cnr.it/glimpse/xml/ComplexEventRule ./ComplexEventRule.xsd">
+<Delete RuleType="drools">
+	<RuleName>SecurityRule</RuleName>
+        <RuleBody>
+        </RuleBody>
+	</Delete>
+</ComplexEventRuleActionList>
