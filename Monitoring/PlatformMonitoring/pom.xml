@@ -91,81 +91,47 @@
 	
 	 <build>
 		<defaultGoal>package</defaultGoal>
-
-		<resources>
-
-			<resource>
-                <directory>${basedir}/src/main/resources</directory>
- 				<targetPath>.</targetPath>
-				<includes>
-					<include>
-						*.properties
-					</include>
-					<include>
-						threshold_specs/*.yml
-					</include>
-				</includes>
-			</resource> 
-		    <resource>
-                <directory>${basedir}/src/test/resources</directory>
- 				<targetPath>.</targetPath>
-				<includes>
-					<include>
-						*.properties
-					</include>
-					<include>
-						threshold_specs/*.yml
-					</include>
-				</includes>
-			</resource> 
-
-		</resources>
-
-
-		<plugins>
-
-			 <plugin>
-			 	<artifactId>maven-assembly-plugin</artifactId> 
-			 	<configuration> 
-					<descriptorRefs> 
-						<descriptorRef>jar-with-dependencies</descriptorRef> 
-					</descriptorRefs> 
-					<archive> 
-						<manifest> 
-							<mainClass>eu.choreos.monitoring.platform.daemon.ThresholdEvalDaemonLauncher</mainClass> 
-						</manifest> 
-					</archive> 
-				</configuration> 
-				<executions> 
+	 	<plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>${basedir}/src/main/assembly/assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions> 
 					<execution> 
-						<id>make-my-jar-with-dependencies</id> 
 						<phase>package</phase> 
 						<goals> 
 							<goal>single</goal> 
 						</goals> 
 					</execution> 
 				</executions> 
-			</plugin>
-
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>user_distribution</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<configuration>
-							<descriptors>
-								<descriptor>src/main/assembly/zip.xml</descriptor>
-							</descriptors>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-
+            </plugin>
+            
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>eu.choreos.monitoring.platform.daemon.ThresholdEvalDaemonLauncher</mainClass>
+                        </manifest>
+                        <manifestEntries>
+            				<Class-Path>conf/</Class-Path>
+        				</manifestEntries>
+                    </archive>
+              		<excludes>
+              			<exclude>threshold_specs/*</exclude>
+              			<exclude>threshold_specs</exclude>
+              			<exclude>*.properties</exclude>
+              			<exclude>*.sh</exclude>
+              			<exclude>*.properties.template</exclude>
+              			<exclude>.gitignore</exclude>
+              		</excludes>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build> 
 
