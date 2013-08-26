@@ -41,7 +41,7 @@ public class NewDeploymentPreparing {
         this.trials = TimeoutsAndTrials.get("CREATE_SERVICE_TRIALS");
         this.pause = TimeoutsAndTrials.get("CREATE_SERVICE_PAUSE"); 
         this.totalTimeout = (timeout+pause)*trials;
-        this.totalTimeout += totalTimeout * 0.1; 
+        this.totalTimeout += totalTimeout * 0.2; 
     }
 
     public List<DeployableService> prepare() throws EnactmentException {
