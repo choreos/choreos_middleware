@@ -71,6 +71,7 @@
                     <encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
+
 			<plugin> <!-- this was supposed to be inherited from parent pom -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -89,6 +90,7 @@
 					<excludedGroups>org.ow2.choreos.tests.IntegrationTest</excludedGroups>
 				</configuration>
             </plugin> 
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -96,6 +98,45 @@
                     <mainClass>org.ow2.choreos.deployment.rest.DeploymentManagerServer</mainClass>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>${basedir}/src/main/assembly/assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions> 
+					<execution> 
+						<phase>package</phase> 
+						<goals> 
+							<goal>single</goal> 
+						</goals> 
+					</execution> 
+				</executions> 
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>org.ow2.choreos.deployment.rest.DeploymentManagerServer</mainClass>
+                        </manifest>
+                        <manifestEntries>
+            				<Class-Path>conf/</Class-Path>
+        				</manifestEntries>
+                    </archive>
+              		<excludes>
+              			<exclude>*.properties</exclude>
+              			<exclude>*.properties.template</exclude>
+              			<exclude>.gitignore</exclude>
+              		</excludes>
+                </configuration>
+            </plugin>
+
 		</plugins>
 	</build>
 
