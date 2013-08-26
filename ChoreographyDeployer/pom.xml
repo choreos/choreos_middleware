@@ -109,6 +109,11 @@
 			</exclusions>
 		</dependency>
 
+		<dependency>
+			<groupId>eu.choreos</groupId>
+			<artifactId>ReconfigurationManager</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<pluginRepositories>

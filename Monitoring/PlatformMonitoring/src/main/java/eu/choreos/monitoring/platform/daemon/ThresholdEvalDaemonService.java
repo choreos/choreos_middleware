@@ -4,6 +4,7 @@ import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventChoreos;
 import it.cnr.isti.labse.glimpse.utils.Manager;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -43,7 +44,7 @@ public class ThresholdEvalDaemonService implements Runnable {
 	Properties props = new Properties();
 
 	try {
-	    props.load(ClassLoader.getSystemResourceAsStream("monitoring.properties"));
+	    props.load(getResource("monitoring.properties"));
 	} catch (IOException e) {
 	    System.err.println("Error while loading configuration");
 	    return false;
@@ -58,6 +59,29 @@ public class ThresholdEvalDaemonService implements Runnable {
 	    System.out.println("Loading default configuration...");
 
 	return true;
+    }
+
+    private InputStream getResource(String resource) {
+
+	ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+	InputStream is;
+	if (classLoader != null) {
+	    is = classLoader.getResourceAsStream(resource);
+	    if (is != null) {
+		return is;
+	    }
+	}
+
+	classLoader = ThresholdEvalDaemonService.class.getClassLoader();
+	if (classLoader != null) {
+	    is = classLoader.getResourceAsStream(resource);
+	    if (is != null) {
+		return is;
+	    }
+	}
+
+	return ClassLoader.getSystemResourceAsStream(resource);
+
     }
 
     public void start() {
