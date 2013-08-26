@@ -137,6 +137,7 @@
 					<excludedGroups>org.ow2.choreos.tests.IntegrationTest</excludedGroups>
 				</configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -154,6 +155,45 @@
 					<mainClass>org.ow2.choreos.chors.rest.ChorDeployerServer</mainClass>
 				</configuration>
 			</plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>${basedir}/src/main/assembly/assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions> 
+					<execution> 
+						<phase>package</phase> 
+						<goals> 
+							<goal>single</goal> 
+						</goals> 
+					</execution> 
+				</executions> 
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+        					<mainClass>org.ow2.choreos.chors.rest.ChorDeployerServer</mainClass>
+                        </manifest>
+                        <manifestEntries>
+            				<Class-Path>conf/</Class-Path>
+        				</manifestEntries>
+                    </archive>
+              		<excludes>
+              			<exclude>*.properties</exclude>
+              			<exclude>*.properties.template</exclude>
+              			<exclude>.gitignore</exclude>
+              		</excludes>
+                </configuration>
+            </plugin>
+
 		</plugins>
 	</build>
 
