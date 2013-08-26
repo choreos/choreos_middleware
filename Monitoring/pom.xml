@@ -9,7 +9,6 @@
 		<groupId>org.ow2.choreos</groupId>
         	<artifactId>middleware</artifactId>
         	<version>0.2-SNAPSHOT</version>
-        	<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<modules>
