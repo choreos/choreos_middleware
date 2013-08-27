@@ -9,10 +9,14 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.DeploymentManagerPreferences;
+import org.ow2.choreos.deployment.nodes.NPMFactory;
 import org.ow2.choreos.deployment.nodes.rest.NodesResource;
 import org.ow2.choreos.deployment.nodes.rest.RunListResource;
 import org.ow2.choreos.deployment.services.InfrastructureMonitoringConfigurator;
 import org.ow2.choreos.deployment.services.rest.ServicesResource;
+import org.ow2.choreos.nodes.NodeNotDestroyed;
+import org.ow2.choreos.nodes.NodeNotFoundException;
+import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.rest.RESTServer;
 import org.ow2.choreos.utils.LogConfigurator;
@@ -55,14 +59,29 @@ public class DeploymentManagerServer {
     public void stop() {
 	this.restServer.stop();
 	if (deleteMonitoringNode()) {
-	    prefs.getPrefs().remove(MONITORING_NODE);
-	    // TERMINATE INFRASTRUCTURE MONITORING NODE
+	    logger.info("Flushing monitoring preferences...");
+	    boolean nodeDestroyed = false;
+	    NodePoolManager npm = NPMFactory.getNewNPMInstance();
+	    try {
+		npm.destroyNode(infrastructureMonitoringNode.getId());
+		nodeDestroyed = true;
+	    } catch (NodeNotDestroyed e) {
+		logger.warn("Could not destroy node");
+	    } catch (NodeNotFoundException e) {
+		logger.warn("Could not destroy node");
+	    }
+	    if (nodeDestroyed)
+		prefs.getPrefs().remove(MONITORING_NODE);
 	}
+    }
+
+    protected void finalize() throws Throwable {
+	stop();
     }
 
     private void loadMonitoring() {
 	if (usingMonitoring()) {
-	    logger.info("Monitoring is enabled. Setting up it now!");
+	    logger.info("Monitoring is enabled. Setting it up now!");
 	    if (!deleteMonitoringNode()) {
 		logger.info("Keep monitoring node is enabled");
 		try {
