@@ -6,9 +6,9 @@
 
 	<parent>
                 <groupId>org.ow2.choreos</groupId>
-                <artifactId>Monitoring</artifactId>
+                <artifactId>middleware</artifactId>
                 <version>0.2-SNAPSHOT</version>
-	</parent>
+        </parent>
 
 
 	<repositories>

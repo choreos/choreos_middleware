@@ -22,14 +22,34 @@ include_recipe "java"
 case node[:platform]
 when "ubuntu", "debian"
 
+# Install activemq
 package "activemq" do
 	action :install
 end
 
+# Create choreos broker file
+execute "mkdir -p /etc/activemq/instances-available/choreos" do
+	not_if { ::File.exists?("/etc/activemq/instances-available/choreos") }
+end
+
+template "/etc/activemq/instances-available/choreos/activemq.xml" do
+	mode 0755
+	source "choreos.activemq.erb"
+	variables({
+		:ip=> "0.0.0.0"
+	})
+end
+
+template "/etc/activemq/instances-available/choreos/log4j.properties" do
+	mode 0755
+	source "choreos.log4j.erb"
+end
+
+# Enable choreos broker file
 execute "broker-symlink" do
-	command "sudo ln -s /etc/activemq/instances-available/main/ /etc/activemq/instances-enabled/main; sudo service activemq restart"
+	command "sudo ln -s /etc/activemq/instances-available/choreos/ /etc/activemq/instances-enabled/choreos; sudo service activemq restart"
 	action :run
-	not_if ::File.exists?("/etc/activemq/instances-enabled/main")
+	not_if { ::File.exists?("/etc/activemq/instances-enabled/choreos") }
 end
 
 else
@@ -91,3 +111,4 @@ template "#{activemq_home}/bin/linux/wrapper.conf" do
 end
 
 end
+
