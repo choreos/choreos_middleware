@@ -1,4 +1,4 @@
-package monitoring.glimpse.consumer.daemon;
+package org.ow2.choreos.chors.reconfiguration;
 
 import it.cnr.isti.labse.glimpse.utils.Manager;
 
