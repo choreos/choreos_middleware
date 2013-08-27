@@ -31,7 +31,7 @@ import org.ow2.choreos.utils.SshWaiter;
  */
 public class DeploymentManagerServer {
 
-    private static final String MONITORING_NODE = "infraMonitoringNode";
+    public static final String MONITORING_NODE = "infraMonitoringNode";
     public final String NAME = "Deployment Manager";
     public static String URL;
     private RESTServer restServer;
@@ -46,7 +46,7 @@ public class DeploymentManagerServer {
     }
 
     public DeploymentManagerServer() {
-	prefs = new DeploymentManagerPreferences();
+	prefs = DeploymentManagerPreferences.getInstance();
 	loadMonitoring();
 	this.restServer = new RESTServer(NAME, URL, new Class[] { NodesResource.class, RunListResource.class,
 		ServicesResource.class });

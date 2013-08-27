@@ -10,12 +10,20 @@ public class DeploymentManagerPreferences {
 
     Preferences prefs;
 
+    private static DeploymentManagerPreferences INSTANCE = null;
+
+    private DeploymentManagerPreferences() {
+	prefs = Preferences.userNodeForPackage(getClass());
+    }
+
     public Preferences getPrefs() {
 	return prefs;
     }
 
-    public DeploymentManagerPreferences() {
-	prefs = Preferences.userNodeForPackage(getClass());
+    public static synchronized DeploymentManagerPreferences getInstance() {
+	if (INSTANCE == null)
+	    INSTANCE = new DeploymentManagerPreferences();
+	return INSTANCE;
     }
 
     public void putObject(String key, CloudNode node) throws IOException {
