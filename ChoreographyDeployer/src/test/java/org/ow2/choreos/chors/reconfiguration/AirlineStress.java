@@ -7,6 +7,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.chors.ChoreographyDeployerImpl;
@@ -53,6 +54,7 @@ public class AirlineStress {
     }
 
     @Test
+    @Ignore
     public void shouldEnactChoreography() throws Exception {
 	String host = ChorDeployerServer.URL;
 	// ChoreographyDeployer ee = new ChorDeployerClient(host);
