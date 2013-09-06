@@ -47,26 +47,28 @@ Finally, to use your new cloud provider, it is enough to configure the \texttt{d
 
 \section{Supporting new package types}
 
-criar receita, tipo a do jar
-variáveis que serão susbtituídas:
-\$NAME na receita
-e \$PACKAGE\_URL e \$NAME nos atributos
-(no futuro devemos passar todos os atributos do service spec)
+Coming soon.
 
-editar cookbooks.properties
-
-nativeUri -> vai ter q criar mais uma classe pra ser extendida
-e é preciso um arquivo mapeando o packageType pra classe que define as uris (uricontexts)
-defaultPort -> criar arquivo de portas padrões (ports)
-Tanto uricontexts quanto ports são arquivos que vão ser lidos pelas classes em EnactmentEngineAPI
-Mas se os arquivos ficarem nesse projeto, aí eles não serão lidos corretamente quando 
-essas classes forem chamadas no DeploymentManager.
-Que fazer? =T
-
-usando novo package type no service spec
-
-dica: pode ser interessante criar uma nova imagem
-com o middleware do pacote correspondente já instalado
+%criar receita, tipo a do jar
+%variáveis que serão susbtituídas:
+%\$NAME na receita
+%e \$PACKAGE\_URL e \$NAME nos atributos
+%(no futuro devemos passar todos os atributos do service spec)
+%
+%editar cookbooks.properties
+%
+%nativeUri -> vai ter q criar mais uma classe pra ser extendida
+%e é preciso um arquivo mapeando o packageType pra classe que define as uris (uricontexts)
+%defaultPort -> criar arquivo de portas padrões (ports)
+%Tanto uricontexts quanto ports são arquivos que vão ser lidos pelas classes em EnactmentEngineAPI
+%Mas se os arquivos ficarem nesse projeto, aí eles não serão lidos corretamente quando 
+%essas classes forem chamadas no DeploymentManager.
+%Que fazer? =T
+%
+%usando novo package type no service spec
+%
+%dica: pode ser interessante criar uma nova imagem
+%com o middleware do pacote correspondente já instalado
 
 
 \section{Supporting new service types}

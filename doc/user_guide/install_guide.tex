@@ -44,7 +44,7 @@ Before you run \ee, you will need:
 
 A \textsf{CloudProvider} is an \ee\ interface that specifies methods to CRUD virtual machines. It is expected that a \textsf{Cloud Provider} implementations will act just as a client of some Cloud Gateway. In this section we describe the currently available \textsf{CloudProvider} implementations and how to use them. New \textsf{CloudProvider}s may be implemented to support other virtualization tools. One example would be creating a \textsf{VirtualBoxCloudProvider} to create VMs using VirtualBox.
 
-Whatever the cloud provider you choose, ensure that the required TCP ports of the created VMs are unblocked. Required ports: 22 to SSH, 8080 to Tomcat, the Chef Server port (for us it is 40000), the ports used by your JAR services, and the port 8180 to EasyESB.
+Whatever the cloud provider you choose, ensure that the required TCP ports of the created VMs are unblocked. Required ports: 22 to SSH, 8080, 8009, and 8005 to Tomcat, the ports used by your JAR services, and the port 8180 to EasyESB.
 
 \subsection{Amazon EC2}
 
