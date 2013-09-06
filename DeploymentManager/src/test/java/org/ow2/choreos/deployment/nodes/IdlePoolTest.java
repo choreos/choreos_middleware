@@ -21,6 +21,7 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.mockito.stubbing.OngoingStubbing;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
@@ -127,6 +128,7 @@ public class IdlePoolTest {
     }
 
     @Test(timeout = 1000)
+    @Ignore
     public void multipleRequestsShouldLeaveThePoolFull() throws InterruptedException {
 
         int N = 5;

@@ -25,10 +25,11 @@ public class ModelsForTest {
 
     public static final String AIRLINE = "airline";
     public static final String TRAVEL_AGENCY = "travelagency";
-    public static final String AIRLINE_JAR = "http://valinhos.ime.usp.br:54080/enact_test/v2-2/airline-service.jar";
-    public static final String TRAVEL_AGENCY_JAR = "http://valinhos.ime.usp.br:54080/enact_test/v2-2/travel-agency-service.jar";
-    public static final String AIRLINE_WAR = "http://valinhos.ime.usp.br:54080/enact_test/v2-2/airline.war";
-    public static final String TRAVEL_AGENCY_WAR = "http://valinhos.ime.usp.br:54080/enact_test/v2-2/travelagency.war";
+
+    public static final String AIRLINE_JAR = "http://www.ime.usp.br/~tfurtado/downloads/airline.jar";
+    public static final String TRAVEL_AGENCY_JAR = "http://www.ime.usp.br/~tfurtado/downloads/travelagency.jar";
+    public static final String AIRLINE_WAR = "http://www.ime.usp.br/~tfurtado/downloads/airline.war";
+    public static final String TRAVEL_AGENCY_WAR = "http://www.ime.usp.br/~tfurtado/downloads/travelagency.war";
 
     public static final String AIRLINE_IP = "192.168.56.101";
     public static final String TRAVEL_AGENCY_IP = "192.168.56.102";
@@ -36,7 +37,7 @@ public class ModelsForTest {
     public static final int TRAVEL_AGENCY_PORT = 1235;
     public static final String AIRLINE_URI = "http://" + AIRLINE_IP + ":" + AIRLINE_PORT + "/" + AIRLINE + "/";
     public static final String TRAVEL_AGENCY_URI = "http://" + TRAVEL_AGENCY_IP + ":" + TRAVEL_AGENCY_PORT + "/"
-            + TRAVEL_AGENCY + "/";
+	    + TRAVEL_AGENCY + "/";
 
     private final String serviceVersion = "0.1";
     private final int numberOfTravelInstances = 1;
@@ -56,137 +57,137 @@ public class ModelsForTest {
     private DeployableService travelService;
 
     public ModelsForTest(ServiceType serviceType, PackageType packageType) {
-        this.packageType = packageType;
-        this.serviceType = serviceType;
-        initAirlineSpec();
-        initAirlineService();
-        initTravelSpec();
-        initTravelService();
-        createChorSpec();
-        createChoreography();
+	this.packageType = packageType;
+	this.serviceType = serviceType;
+	initAirlineSpec();
+	initAirlineService();
+	initTravelSpec();
+	initTravelService();
+	createChorSpec();
+	createChoreography();
     }
 
     public ModelsForTest(ServiceType serviceType, PackageType packageType, int numberOfAirlineServices) {
-        this.packageType = packageType;
-        this.serviceType = serviceType;
-        this.numberOfAirlineServices = numberOfAirlineServices;
-        initAirlineSpec();
-        initAirlineService();
-        initTravelSpec();
-        initTravelService();
-        createChorSpec();
-        createChoreography();
+	this.packageType = packageType;
+	this.serviceType = serviceType;
+	this.numberOfAirlineServices = numberOfAirlineServices;
+	initAirlineSpec();
+	initAirlineService();
+	initTravelSpec();
+	initTravelService();
+	createChorSpec();
+	createChoreography();
     }
 
     public ModelsForTest(ServiceType serviceType, PackageType packageType, ResourceImpact resourceImpact) {
-        this.packageType = packageType;
-        this.serviceType = serviceType;
-        this.resourceImpact = resourceImpact;
-        initAirlineSpec();
-        initAirlineService();
-        initTravelSpec();
-        initTravelService();
-        createChorSpec();
-        createChoreography();
+	this.packageType = packageType;
+	this.serviceType = serviceType;
+	this.resourceImpact = resourceImpact;
+	initAirlineSpec();
+	initAirlineService();
+	initTravelSpec();
+	initTravelService();
+	createChorSpec();
+	createChoreography();
     }
 
     public DeployableServiceSpec getAirlineSpec() {
-        return airlineSpec;
+	return airlineSpec;
     }
 
     public DeployableServiceSpec getTravelSpec() {
-        return travelSpec;
+	return travelSpec;
     }
 
     public DeployableService getTravelService() {
-        return travelService;
+	return travelService;
     }
 
     public DeployableService getAirlineService() {
-        return airlineService;
+	return airlineService;
     }
 
     public ChoreographySpec getChorSpec() {
-        return this.chorSpec;
+	return this.chorSpec;
     }
 
     public Choreography getChoreography() {
-        return this.chor;
+	return this.chor;
     }
 
     private void createChorSpec() {
-        this.chorSpec = new ChoreographySpec(this.airlineSpec, this.travelSpec);
+	this.chorSpec = new ChoreographySpec(this.airlineSpec, this.travelSpec);
     }
 
     private void initAirlineSpec() {
-        if (packageType == PackageType.COMMAND_LINE) {
-            airlineSpec = new DeployableServiceSpec(AIRLINE, serviceType, packageType, resourceImpact, serviceVersion,
-                    AIRLINE_JAR, AIRLINE_PORT, AIRLINE, numberOfAirlineServices);
-        } else {
-            airlineSpec = new DeployableServiceSpec(AIRLINE, serviceType, packageType, resourceImpact, serviceVersion,
-                    AIRLINE_WAR, AIRLINE, numberOfAirlineServices);
-        }
-        airlineSpec.setRoles(Collections.singletonList(AIRLINE));
+	if (packageType == PackageType.COMMAND_LINE) {
+	    airlineSpec = new DeployableServiceSpec(AIRLINE, serviceType, packageType, resourceImpact, serviceVersion,
+		    AIRLINE_JAR, AIRLINE_PORT, AIRLINE, numberOfAirlineServices);
+	} else {
+	    airlineSpec = new DeployableServiceSpec(AIRLINE, serviceType, packageType, resourceImpact, serviceVersion,
+		    AIRLINE_WAR, AIRLINE, numberOfAirlineServices);
+	}
+	airlineSpec.setRoles(Collections.singletonList(AIRLINE));
     }
 
     private void initTravelSpec() {
-        if (packageType == PackageType.COMMAND_LINE) {
-            travelSpec = new DeployableServiceSpec(TRAVEL_AGENCY, serviceType, packageType, resourceImpact,
-                    serviceVersion, TRAVEL_AGENCY_JAR, TRAVEL_AGENCY_PORT, TRAVEL_AGENCY, numberOfTravelInstances);
-        } else {
-            travelSpec = new DeployableServiceSpec(TRAVEL_AGENCY, serviceType, packageType, resourceImpact,
-                    serviceVersion, TRAVEL_AGENCY_WAR, TRAVEL_AGENCY, numberOfTravelInstances);
-        }
-        travelSpec.setRoles(Collections.singletonList(TRAVEL_AGENCY));
-        travelSpec.addDependency(new ServiceDependency(AIRLINE, AIRLINE));
+	if (packageType == PackageType.COMMAND_LINE) {
+	    travelSpec = new DeployableServiceSpec(TRAVEL_AGENCY, serviceType, packageType, resourceImpact,
+		    serviceVersion, TRAVEL_AGENCY_JAR, TRAVEL_AGENCY_PORT, TRAVEL_AGENCY, numberOfTravelInstances);
+	} else {
+	    travelSpec = new DeployableServiceSpec(TRAVEL_AGENCY, serviceType, packageType, resourceImpact,
+		    serviceVersion, TRAVEL_AGENCY_WAR, TRAVEL_AGENCY, numberOfTravelInstances);
+	}
+	travelSpec.setRoles(Collections.singletonList(TRAVEL_AGENCY));
+	travelSpec.addDependency(new ServiceDependency(AIRLINE, AIRLINE));
     }
 
     public void initTravelService() {
-        CloudNode node = createNode("2", TRAVEL_AGENCY_IP, "choreos-node");
-        travelService = new DeployableService(this.travelSpec);
-        travelService.generateUUID();
-        travelService.setSelectedNodes(Sets.newHashSet(node));
-        ServiceInstance instance = new ServiceInstance(node);
-        instance.setInstanceId(TRAVEL_AGENCY + "1");
-        instance.setServiceSpec(this.travelSpec);
-        travelService.setServiceInstances(Collections.singletonList(instance));
+	CloudNode node = createNode("2", TRAVEL_AGENCY_IP, "choreos-node");
+	travelService = new DeployableService(this.travelSpec);
+	travelService.generateUUID();
+	travelService.setSelectedNodes(Sets.newHashSet(node));
+	ServiceInstance instance = new ServiceInstance(node);
+	instance.setInstanceId(TRAVEL_AGENCY + "1");
+	instance.setServiceSpec(this.travelSpec);
+	travelService.setServiceInstances(Collections.singletonList(instance));
     }
 
     public void initAirlineService() {
-        airlineService = new DeployableService(this.airlineSpec);
-        airlineService.generateUUID();
-        CloudNode node = createNode("1", AIRLINE_IP, "choreos-node"); // TODO
-        // instances
-        // should be in
-        // different
-        // nodes
-        airlineService.setSelectedNodes(Sets.newHashSet(node));
-        List<ServiceInstance> instances = new ArrayList<ServiceInstance>();
-        for (int i = 0; i < numberOfAirlineServices; i++) {
-            ServiceInstance instance = new ServiceInstance(node);
-            instance.setInstanceId(AIRLINE + i);
-            instance.setServiceSpec(this.airlineSpec);
-            instances.add(instance);
-        }
-        airlineService.setServiceInstances(instances);
+	airlineService = new DeployableService(this.airlineSpec);
+	airlineService.generateUUID();
+	CloudNode node = createNode("1", AIRLINE_IP, "choreos-node"); // TODO
+	// instances
+	// should be in
+	// different
+	// nodes
+	airlineService.setSelectedNodes(Sets.newHashSet(node));
+	List<ServiceInstance> instances = new ArrayList<ServiceInstance>();
+	for (int i = 0; i < numberOfAirlineServices; i++) {
+	    ServiceInstance instance = new ServiceInstance(node);
+	    instance.setInstanceId(AIRLINE + i);
+	    instance.setServiceSpec(this.airlineSpec);
+	    instances.add(instance);
+	}
+	airlineService.setServiceInstances(instances);
     }
 
     private void createChoreography() {
-        if (chorSpec == null)
-            createChorSpec();
-        this.chor = new Choreography();
-        this.chor.setId("1");
-        this.chor.setChoreographySpec(this.chorSpec);
-        this.chor.addService(travelService);
-        this.chor.addService(airlineService);
+	if (chorSpec == null)
+	    createChorSpec();
+	this.chor = new Choreography();
+	this.chor.setId("1");
+	this.chor.setChoreographySpec(this.chorSpec);
+	this.chor.addService(travelService);
+	this.chor.addService(airlineService);
     }
 
     private CloudNode createNode(String id, String ip, String hostname) {
-        CloudNode node1 = new CloudNode();
-        node1.setId(id);
-        node1.setIp(ip);
-        node1.setHostname(hostname);
-        return node1;
+	CloudNode node1 = new CloudNode();
+	node1.setId(id);
+	node1.setIp(ip);
+	node1.setHostname(hostname);
+	return node1;
     }
 
 }

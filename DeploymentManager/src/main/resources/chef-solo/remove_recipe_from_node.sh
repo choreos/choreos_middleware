@@ -8,11 +8,11 @@
 function edit_json() {
     cd $HOME/chef-solo
     echo 'previous node.json:'
-    cat node.json 
-    sed -i -r 's/.*\"run_list\" : \[/\t\"run_list\" : \[\n\t\t\"recipe\['"$1"']\",/' node.json
+    cat node.json
+	sed -i '/'"$1"'/d' ./chef-solo/node.json
     echo 'node.json edited:'
     cat node.json
 	cd ~
 }
 
-edit_json $1 >> /tmp/chef-solo-prepare.log  2>&1
+edit_json $1 >> /tmp/chef-solo-remove-recipe.log  2>&1
