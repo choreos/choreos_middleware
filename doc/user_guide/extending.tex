@@ -47,32 +47,116 @@ Finally, to use your new cloud provider, it is enough to configure the \texttt{d
 
 \section{Supporting new package types}
 
-criar receita, tipo a do jar
-variáveis que serão susbtituídas:
-\$NAME na receita
-e \$PACKAGE\_URL e \$NAME nos atributos
-(no futuro devemos passar todos os atributos do service spec)
+Services may be delivered in different package types, such as JARs, WARs, etc.
+Each package type has its own specific deployment procedures, as well its specific process to start the service.
+When using different technologies, such as Python, to write new services, you will need to define a new package type,
+as well the deployment procedure associated with it. Such procedure is specified in Chef recipe. 
 
-editar cookbooks.properties
+So, the first step is to create a new Chef recipe similar to the ``jar'' and ``war'' recipes already provided by \ee.
+This recipes are actually templates that \ee\ will use to create specific recipes to each service to be deployed.
+You may use the the constants \$PACKAGE\_URL and \$NAME within your recipe, they will be injected by \ee to each specific recipe.
+After writing the new recipe, you must associate this recipe to the new package type by editing the \texttt{cookbooks.properties} file.
 
-nativeUri -> vai ter q criar mais uma classe pra ser extendida
-e é preciso um arquivo mapeando o packageType pra classe que define as uris (uricontexts)
-defaultPort -> criar arquivo de portas padrões (ports)
-Tanto uricontexts quanto ports são arquivos que vão ser lidos pelas classes em EnactmentEngineAPI
-Mas se os arquivos ficarem nesse projeto, aí eles não serão lidos corretamente quando 
-essas classes forem chamadas no DeploymentManager.
-Que fazer? =T
+% TODO nativeUri! 
 
-usando novo package type no service spec
-
-dica: pode ser interessante criar uma nova imagem
-com o middleware do pacote correspondente já instalado
+%criar receita, tipo a do jar
+%variáveis que serão susbtituídas:
+%\$NAME na receita
+%e \$PACKAGE\_URL e \$NAME nos atributos
+%(no futuro devemos passar todos os atributos do service spec)
+%
+%editar cookbooks.properties
+%
+%nativeUri -> vai ter q criar mais uma classe pra ser extendida
+%e é preciso um arquivo mapeando o packageType pra classe que define as uris (uricontexts)
+%defaultPort -> criar arquivo de portas padrões (ports)
+%Tanto uricontexts quanto ports são arquivos que vão ser lidos pelas classes em EnactmentEngineAPI
+%Mas se os arquivos ficarem nesse projeto, aí eles não serão lidos corretamente quando 
+%essas classes forem chamadas no DeploymentManager.
+%Que fazer? =T
+%
+%usando novo package type no service spec
+%
+%dica: pode ser interessante criar uma nova imagem
+%com o middleware do pacote correspondente já instalado
 
 
 \section{Supporting new service types}
 
-Coming soon.
+Although web services came to tackle the interoperability issue, today we have a couple of technologies implementing the concept of services.
+The main technologies in this context are SOAP and RESTful services, but other technologies could be used to implement services, such as JMS.
+
+In the \ee\ context, the service type affects only how the \texttt{setInvocationAddress} is invoked.
+Therefore, to support a new service type, you have only to write a new \textsf{ContextSender} (Listing~\ref{lst:context_sender}) implementation.
+
+{\footnotesize
+\begin{lstlisting}[caption=\textsf{ContextSender} interface, label=lst:context_sender]
+public interface ContextSender {
+
+    /**
+     * Calls setInvokationAddress operation on service in the serviceEndpoint.
+     * So, the service in endpoint will know that its partner named partnerName
+     * with partnerRole is realized by instances in partnerEndpoints.
+     * 
+     */
+    public void sendContext(String serviceEndpoint, String partnerRole, String partnerName,
+            List<String> partnerEndpoints) throws ContextNotSentException;
+}
+\end{lstlisting}
+}
+
 
 \section{Supporting new node selection policies}
 
-Coming soon.
+A node selection policy defines the \emph{mapping} of services to cloud nodes.
+Since cloud nodes are dynamically created, node selection policies must be flexible, and not rely on hard-coded IPs.
+A node selection policy may define nodes to be used based on services non-functional properties.
+To create a new node selector, you must create a new \textsf{NodeSelector} (Listing~\ref{lst:node_selector}) implementation.
+Pay attention that such implementation must be thread-safe, since multiple threads will invoke concurrently the method \texttt{select}.
+
+{\footnotesize
+\begin{lstlisting}[caption=\textsf{NodeSelector} interface, label=lst:node_selector]
+/**
+ * Selects a node to apply a given configuration
+ * 
+ * The selection can consider functional requirements, which is provided by
+ * spec.resourceImpact. Implementing classes must use the NodePoolManager to
+ * retrieve nodes AND/OR create new nodes. NodeSelectors are always accessed as
+ * singletons. Implementing classes must consider concurrent access to the
+ * select method.
+ * 
+ * @author leonardo
+ * 
+ */
+public interface NodeSelector extends Selector<CloudNode, DeployableServiceSpec> {
+
+}
+
+/**
+ * Selects objects from a given source according to the requirements. If
+ * necessary, creates new objects using a given factory.
+ * 
+ * @author leonardo
+ * 
+ * @param <T>
+ *            the class of the selected resource
+ * @param <R>
+ *            the class of the requirements
+ */
+public interface Selector<T, R> {
+
+    public List<T> select(R requirements, int objectsQuantity) throws NotSelectedException;
+
+}
+\end{lstlisting}
+}
+
+After writing the new node selector, you must associate this selector to a label by editing the \texttt{node\_selector.properties} file.
+To use the new selector, finally, you must attribute the defined label to the NODE\_SELECTOR property on the \texttt{deployment.properties} file.
+
+
+
+
+
+
+
