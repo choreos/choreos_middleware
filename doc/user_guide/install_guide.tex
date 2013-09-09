@@ -143,6 +143,7 @@ AMAZON_ACCESS_KEY_ID=SECRET
 AMAZON_SECRET_KEY=SECRET
 AMAZON_KEY_PAIR=leoflaws
 AMAZON_PRIVATE_SSH_KEY=/home/leonardo/.ssh/leoflaws.pem
+AMAZON_IMAGE_ID=us-east-1/ami-1ccc8875
 
 OPENSTACK_KEY_PAIR=leofl
 OPENSTACK_PRIVATE_SSH_KEY=/home/leonardo/.ssh/nopass
@@ -168,6 +169,8 @@ The options to NODE\_SELECTOR are:
 \end{description}
 
 The IDLE\_POOL\_SIZE makes the Deployment Manager operate with a pool of idle nodes, which makes the node retrieval to be faster when some IaaS fault occurs. The use of this pool makes the deployment process more scalable, however the trade-off is the cost of some more VMs created by the infrastructure provider. 
+
+The AMAZON\_IMAGE\_ID enables you to specify a customized image to be used by \ee. This feature is intended to use an image of a node already bootstrapped. In this way, the bootstrap process becomes much faster. The same may be applied to the OPENSTACK\_IMAGE\_ID. But in both cases, the image must still provide an Ubuntu Server 12.04 system.
 
 Other options are explained in the \texttt{deployment.properties.template} file.
 
