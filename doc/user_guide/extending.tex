@@ -73,7 +73,28 @@ Coming soon.
 
 \section{Supporting new service types}
 
-Coming soon.
+Although web services came to tackle the interoperability issue, today we have a couple of technologies implementing the concept of services.
+The main technologies in this context are SOAP and RESTful services, but other technologies could be used to implement services, such as JMS.
+
+In the \ee\ context, the service type affects only how the \texttt{setInvocationAddress} is invoked.
+Therefore, to support a new service type, you have only to write a new \textsf{ContextSender} (Listing~\ref{lst:context_sender}) implementation.
+
+{\footnotesize
+\begin{lstlisting}[caption=\textsf{ContextSender} interface, label=lst:context_sender]
+public interface ContextSender {
+
+    /**
+     * Calls setInvokationAddress operation on service in the serviceEndpoint.
+     * So, the service in endpoint will know that its partner named partnerName
+     * with partnerRole is realized by instances in partnerEndpoints.
+     * 
+     */
+    public void sendContext(String serviceEndpoint, String partnerRole, String partnerName,
+            List<String> partnerEndpoints) throws ContextNotSentException;
+}
+\end{lstlisting}
+}
+
 
 \section{Supporting new node selection policies}
 
