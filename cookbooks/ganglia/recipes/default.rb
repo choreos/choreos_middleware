@@ -18,19 +18,15 @@
 # limitations under the License.
 #
 
+apt_repository "valinhos" do
+  uri "http://valinhos.ime.usp.br:54080/choreos/ubuntu/amd64/ ./"
+  action :add
+end
+
 execute "apt-get-update" do
     command "apt-get --allow-unauthenticated update"
     action :nothing
 end
-
-cookbook_file "/etc/apt/sources.list.d/ganglia.list" do
-      source "ganglia.list"
-      owner "root"
-      group "root"
-      mode 0644
-      notifies :run, "execute[apt-get-update]", :immediately
-end
-
 
 service "ganglia-monitor" do
   pattern "gmond"

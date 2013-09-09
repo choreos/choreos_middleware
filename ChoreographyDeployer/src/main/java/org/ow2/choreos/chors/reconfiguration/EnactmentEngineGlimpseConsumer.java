@@ -7,12 +7,17 @@ import it.cnr.isti.labse.glimpse.xml.complexEventResponse.ComplexEventResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
 
-import org.apache.log4j.Logger;
+import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.ChoreographyNotFoundException;
 import org.ow2.choreos.chors.EnactmentException;
 import org.ow2.choreos.chors.client.ChorDeployerClient;
@@ -26,14 +31,16 @@ import org.ow2.choreos.services.client.ServicesClient;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
-public class MyGlimpseConsumer extends GlimpseAbstractConsumer {
+public class EnactmentEngineGlimpseConsumer extends GlimpseAbstractConsumer {
 
     private NodePoolManager nodesClient;
     private ServicesManager servicesClient;
 
-    private Logger logger = Logger.getLogger(MyGlimpseConsumer.class);
+    private List<HandlingEvent> handlingEvents = new ArrayList<HandlingEvent>();
 
-    public MyGlimpseConsumer(Properties settings, String plainTextRule) {
+    private SimpleLogger logger = new SimpleLoggerImpl("consumer.log");
+
+    public EnactmentEngineGlimpseConsumer(Properties settings, String plainTextRule) {
 	super(settings, plainTextRule);
     }
 
@@ -42,18 +49,22 @@ public class MyGlimpseConsumer extends GlimpseAbstractConsumer {
 	logger.info("Captured response message");
 	try {
 	    ObjectMessage responseFromMonitoring = (ObjectMessage) arg0;
+
 	    if (responseFromMonitoring.getObject() instanceof ComplexEventException) {
 
+		logger.debug("Handling expection " + responseFromMonitoring);
 		handleComplexEventException(responseFromMonitoring);
 
 	    } else {
-
+		// logger.debug("Handling event " + responseFromMonitoring);
+		// System.out.println(">>>>> " +
+		// responseFromMonitoring.getObject().toString());
 		handleComplexEventReceived(responseFromMonitoring);
 
 	    }
 	} catch (ClassCastException asd) {
 
-	    asd.printStackTrace();
+	    logger.error(asd.getMessage());
 
 	}
     }
@@ -65,8 +76,25 @@ public class MyGlimpseConsumer extends GlimpseAbstractConsumer {
 
     }
 
+    private boolean eventIsBeingHandling(HandlingEvent ev) {
+	for (HandlingEvent e : handlingEvents) {
+	    if (ev.getNode().equals(e.getNode()))
+		return true;
+	}
+	return false;
+    }
+
     private void handleComplexEventReceived(ObjectMessage responseFromMonitoring) throws JMSException {
+
 	ComplexEventResponse resp = (ComplexEventResponse) responseFromMonitoring.getObject();
+
+	HandlingEvent ev = new HandlingEvent(resp.getResponseKey(), resp.getResponseValue());
+
+	if (eventIsBeingHandling(ev))
+	    return;
+	else
+	    handlingEvents.add(ev);
+
 	logger.debug("Response value: " + resp.getResponseKey() + " : " + resp.getResponseValue());
 
 	// get deployable service on node resp.getResponseValue()
@@ -74,7 +102,18 @@ public class MyGlimpseConsumer extends GlimpseAbstractConsumer {
 	nodesClient = new NodesClient(uri);
 	servicesClient = new ServicesClient(uri);
 
-	List<DeployableService> services = getServicesHostedOn(resp.getResponseValue());
+	Pattern ipPattern = Pattern.compile("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}");
+
+	Matcher m = ipPattern.matcher(resp.getResponseValue());
+
+	if (!m.find())
+	    logger.error("Deu merda!");
+
+	String hostt = m.group(0);
+
+	logger.info(">>>>>>>>>>" + hostt);
+
+	List<DeployableService> services = getServicesHostedOn(hostt);
 
 	if (services.isEmpty()) {
 	    logger.warn("Ooops! This node was created by enactment engine?");
@@ -82,7 +121,7 @@ public class MyGlimpseConsumer extends GlimpseAbstractConsumer {
 	}
 
 	// get service spec
-	logger.debug("Getting specs of services hosted on " + resp.getResponseValue());
+	logger.debug("Getting specs of services hosted on " + hostt);
 	List<DeployableServiceSpec> serviceSpecs = getServiceSpecsForServices(services);
 
 	// inscrease number of instances (for now, only testing, there
@@ -103,22 +142,41 @@ public class MyGlimpseConsumer extends GlimpseAbstractConsumer {
 
 	// call choreography deployer to update chor
 	try {
-	    logger.debug("Going to update chor with spec: " + cSpec);
+	    logger.info("Going to update chor with spec: " + cSpec);
 	    getChorClient().updateChoreography("1", cSpec);
 	} catch (ChoreographyNotFoundException e) {
-	    logger.fatal(e);
+	    logger.error(e.getMessage());
 	} catch (EnactmentException e) {
-	    logger.fatal(e);
+	    logger.error(e.getMessage());
 	}
 
 	try {
-	    logger.debug("Enacting choreography");
+	    logger.info("Enacting choreography");
 	    getChorClient().enactChoreography("1");
 	} catch (EnactmentException e) {
-	    logger.fatal(e);
+	    logger.error(e.getMessage());
 	} catch (ChoreographyNotFoundException e) {
-	    logger.fatal(e);
+	    logger.error(e.getMessage());
 	}
+
+	scheduleRemoveEvent(ev);
+	logger.info("Finished update");
+    }
+
+    private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
+
+    private void scheduleRemoveEvent(final HandlingEvent ev) {
+
+	Runnable task = new Runnable() {
+
+	    @Override
+	    public void run() {
+		logger.info("Removing handled event");
+		handlingEvents.remove(ev);
+	    }
+	};
+	worker.schedule(task, 1, TimeUnit.MINUTES);
+
     }
 
     private List<DeployableServiceSpec> getServiceSpecsForServices(List<DeployableService> services) {
@@ -150,7 +208,7 @@ public class MyGlimpseConsumer extends GlimpseAbstractConsumer {
 
 	String chorId = "1"; // i know that
 
-	ChorDeployerClient chorClient = getChorClient();
+	ChoreographyDeployer chorClient = getChorClient();
 
 	Choreography chor = null;
 	try {
@@ -161,9 +219,8 @@ public class MyGlimpseConsumer extends GlimpseAbstractConsumer {
 	return chor;
     }
 
-    private ChorDeployerClient getChorClient() {
+    private ChoreographyDeployer getChorClient() {
 	String uri = "http://localhost:9102/choreographydeployer/";
-
 	ChorDeployerClient chorClient = new ChorDeployerClient(uri);
 	return chorClient;
     }

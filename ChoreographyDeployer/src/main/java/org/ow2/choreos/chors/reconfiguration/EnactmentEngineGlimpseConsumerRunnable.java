@@ -2,14 +2,30 @@ package org.ow2.choreos.chors.reconfiguration;
 
 import it.cnr.isti.labse.glimpse.utils.Manager;
 
-public class MyGlimpseConsumerLauncher {
+import java.util.Properties;
 
-    public static void main(String[] args) {
+public class EnactmentEngineGlimpseConsumerRunnable implements Runnable {
 
-	new MyGlimpseConsumer(
+    private static final String namingURL = "tcp://10.0.0.2:61616";
 
-	Manager.createConsumerSettingsPropertiesObject("org.apache.activemq.jndi.ActiveMQInitialContextFactory",
-		"tcp://10.0.0.8:61616", "system", "manager", "TopicCF", "jms.serviceTopic", true, "consumerTest"),
-		Manager.ReadTextFromFile(ClassLoader.getSystemResource("SLAViolations.xml").getFile()));
+    private Properties getConsumerProperties() {
+	return Manager.createConsumerSettingsPropertiesObject("org.apache.activemq.jndi.ActiveMQInitialContextFactory",
+		namingURL, "system", "manager", "TopicCF", "jms.serviceTopic", true, "consumerTest");
+
     }
+
+    private String getConsumerRules() {
+	return Manager.ReadTextFromFile(this.getClass().getClassLoader().getResource("rules/SLAViolations.xml")
+		.getFile());
+    }
+
+    public void createConsumer() {
+	new EnactmentEngineGlimpseConsumer(getConsumerProperties(), getConsumerRules());
+    }
+
+    @Override
+    public void run() {
+	createConsumer();
+    }
+
 }

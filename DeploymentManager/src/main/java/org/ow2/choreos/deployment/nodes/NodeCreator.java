@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import org.ow2.choreos.breaker.Invoker;
 import org.ow2.choreos.breaker.InvokerException;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
+import org.ow2.choreos.deployment.nodes.cm.InfrastructureMonitoringNodeBootstrapper;
 import org.ow2.choreos.deployment.nodes.cm.NodeBootstrapper;
 import org.ow2.choreos.deployment.nodes.cm.NodeNotBootstrappedException;
 import org.ow2.choreos.nodes.NodeNotAccessibleException;
@@ -32,87 +33,128 @@ public class NodeCreator {
     private CloudProvider cp;
 
     public NodeCreator(CloudProvider cp) {
-        this.cp = cp;
+	this.cp = cp;
     }
 
     public CloudNode createBootstrappedNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
-        CloudNode node = createCloudNode(nodeSpec);
-        waitFirstSsh(node);
-        bootstrapNode(node);
-        return node;
+	CloudNode node = createCloudNode(nodeSpec);
+	waitFirstSsh(node);
+	bootstrapNode(node);
+	return node;
+    }
+
+    public CloudNode createBootstrappedMonitoringNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
+	CloudNode node = createCloudNode(nodeSpec);
+	waitFirstSsh(node);
+	bootstrapMonitoringNode(node);
+	return node;
     }
 
     private CloudNode createCloudNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
-        CloudNodeCreationTask task = new CloudNodeCreationTask(nodeSpec);
-        int timeout = TimeoutsAndTrials.get("NODE_CREATION_TIMEOUT");
-        int trials = TimeoutsAndTrials.get("NODE_CREATION_TRIALS");
-        Invoker<CloudNode> invoker = new Invoker<CloudNode>(task, trials, timeout, 0, TimeUnit.SECONDS);
-        try {
-            CloudNode node = invoker.invoke();
-            return node;
-        } catch (InvokerException e) {
-            throw new NodeNotCreatedException();
-        }
+	CloudNodeCreationTask task = new CloudNodeCreationTask(nodeSpec);
+	int timeout = TimeoutsAndTrials.get("NODE_CREATION_TIMEOUT");
+	int trials = TimeoutsAndTrials.get("NODE_CREATION_TRIALS");
+	Invoker<CloudNode> invoker = new Invoker<CloudNode>(task, trials, timeout, 0, TimeUnit.SECONDS);
+	try {
+	    CloudNode node = invoker.invoke();
+	    return node;
+	} catch (InvokerException e) {
+	    throw new NodeNotCreatedException();
+	}
     }
 
     private void waitFirstSsh(CloudNode node) throws NodeNotCreatedException {
-        int timeout = TimeoutsAndTrials.get("FIRST_CONNECT_SSH_TIMEOUT");
-        SshWaiter sshWaiter = new SshWaiter();
-        try {
-            SshUtil ssh = sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
-            ssh.disconnect();
-        } catch (SshNotConnected e) {
-            throw new NodeNotCreatedException();
-        }
+	int timeout = TimeoutsAndTrials.get("FIRST_CONNECT_SSH_TIMEOUT");
+	SshWaiter sshWaiter = new SshWaiter();
+	try {
+	    SshUtil ssh = sshWaiter.waitSsh(node.getIp(), node.getUser(), node.getPrivateKeyFile(), timeout);
+	    ssh.disconnect();
+	} catch (SshNotConnected e) {
+	    throw new NodeNotCreatedException();
+	}
     }
 
     private void bootstrapNode(CloudNode node) throws NodeNotCreatedException {
-        BootstrapTask task = new BootstrapTask(node);
-        int timeout = TimeoutsAndTrials.get("BOOTSTRAP_TIMEOUT");
-        int trials = TimeoutsAndTrials.get("BOOTSTRAP_TRIALS");
-        Invoker<Void> invoker = new Invoker<Void>(task, trials, timeout, 0, TimeUnit.SECONDS);
-        try {
-            invoker.invoke();
-        } catch (InvokerException e) {
-            throw new NodeNotCreatedException();
-        }
+	BootstrapTask task = new BootstrapTask(node);
+	int timeout = TimeoutsAndTrials.get("BOOTSTRAP_TIMEOUT");
+	int trials = TimeoutsAndTrials.get("BOOTSTRAP_TRIALS");
+	Invoker<Void> invoker = new Invoker<Void>(task, trials, timeout, 0, TimeUnit.SECONDS);
+	try {
+	    invoker.invoke();
+	} catch (InvokerException e) {
+	    throw new NodeNotCreatedException();
+	}
+    }
+
+    private void bootstrapMonitoringNode(CloudNode node) throws NodeNotCreatedException {
+	MonitoringBootstrapTask task = new MonitoringBootstrapTask(node);
+	int timeout = TimeoutsAndTrials.get("BOOTSTRAP_TIMEOUT");
+	int trials = TimeoutsAndTrials.get("BOOTSTRAP_TRIALS");
+	Invoker<Void> invoker = new Invoker<Void>(task, trials, timeout, 0, TimeUnit.SECONDS);
+	try {
+	    invoker.invoke();
+	} catch (InvokerException e) {
+	    throw new NodeNotCreatedException();
+	}
     }
 
     private class CloudNodeCreationTask implements Callable<CloudNode> {
 
-        NodeSpec nodeSpec;
+	NodeSpec nodeSpec;
 
-        CloudNodeCreationTask(NodeSpec nodeSpec) {
-            this.nodeSpec = nodeSpec;
-        }
+	CloudNodeCreationTask(NodeSpec nodeSpec) {
+	    this.nodeSpec = nodeSpec;
+	}
 
-        @Override
-        public CloudNode call() throws Exception {
-            CloudNode node = cp.createNode(nodeSpec);
-            return node;
-        }
+	@Override
+	public CloudNode call() throws Exception {
+	    CloudNode node = cp.createNode(nodeSpec);
+	    return node;
+	}
     }
 
     private class BootstrapTask implements Callable<Void> {
 
-        CloudNode node;
+	CloudNode node;
 
-        BootstrapTask(CloudNode node) {
-            this.node = node;
-        }
+	BootstrapTask(CloudNode node) {
+	    this.node = node;
+	}
 
-        @Override
-        public Void call() throws Exception {
-            try {
-                NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
-                bootstrapper.bootstrapNode();
-            } catch (NodeNotBootstrappedException e) {
-                throw new NodeNotCreatedException(node.getId());
-            } catch (NodeNotAccessibleException e) {
-                throw new NodeNotCreatedException(node.getId());
-            }
-            return null;
-        }
+	@Override
+	public Void call() throws Exception {
+	    try {
+		NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
+		bootstrapper.bootstrapNode();
+	    } catch (NodeNotBootstrappedException e) {
+		throw new NodeNotCreatedException(node.getId());
+	    } catch (NodeNotAccessibleException e) {
+		throw new NodeNotCreatedException(node.getId());
+	    }
+	    return null;
+	}
     }
 
+    private class MonitoringBootstrapTask implements Callable<Void> {
+
+	CloudNode node;
+
+	MonitoringBootstrapTask(CloudNode node) {
+	    this.node = node;
+	}
+
+	@Override
+	public Void call() throws Exception {
+	    try {
+		InfrastructureMonitoringNodeBootstrapper bootstrapper = new InfrastructureMonitoringNodeBootstrapper(
+			node);
+		bootstrapper.bootstrapNode();
+	    } catch (NodeNotBootstrappedException e) {
+		throw new NodeNotCreatedException(node.getId());
+	    } catch (NodeNotAccessibleException e) {
+		throw new NodeNotCreatedException(node.getId());
+	    }
+	    return null;
+	}
+    }
 }
