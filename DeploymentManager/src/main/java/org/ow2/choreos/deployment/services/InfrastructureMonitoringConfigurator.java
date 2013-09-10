@@ -42,7 +42,7 @@ public class InfrastructureMonitoringConfigurator {
 	NodeCreator nodeCreator = new NodeCreator(CloudProviderFactory.getInstance(cloudProviderProperty));
 	CloudNode infrastructureMonitoringNode = null;
 	try {
-	    infrastructureMonitoringNode = nodeCreator.createBootstrappedNode(new NodeSpec());
+	    infrastructureMonitoringNode = nodeCreator.createBootstrappedMonitoringNode(new NodeSpec());
 	} catch (NodeNotCreatedException e) {
 	    logger.warn("Could not set up infrastruture monitoring");
 	}
@@ -55,7 +55,7 @@ public class InfrastructureMonitoringConfigurator {
 	try {
 	    invoker.invoke();
 	} catch (InvokerException e) {
-	    logger.warn("Could not add glimpse recipe to node " + infrastructureMonitoringNode.getId());
+	    logger.warn("Could not add glimpse recipe to node " + infrastructureMonitoringNode.getId() + " \n" + e);
 	}
     }
 
@@ -78,13 +78,11 @@ public class InfrastructureMonitoringConfigurator {
     private class InfrastructureMonitoringPreparerTask implements Callable<String> {
 
 	private final static String monitoringInstallCommand = ". chef-solo/add_recipe_to_node.sh monitoring";
-	private final static String harakiriUninstallCommand = ". chef-solo/remove_recipe_from_node.sh harakiri";
 
 	@Override
 	public String call() throws Exception {
 	    SshUtil ssh = getSsh();
-	    String output = ssh.runCommand(harakiriUninstallCommand);
-	    output += "\n" + ssh.runCommand(monitoringInstallCommand);
+	    String output = ssh.runCommand(monitoringInstallCommand);
 	    return output;
 	}
 

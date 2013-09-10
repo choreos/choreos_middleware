@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://labse.isti.cnr.it/glimpse/xml/ComplexEventRule ./ComplexEventRule.xsd">
 	<Insert RuleType="drools">
-		<RuleName>CPULoadSLAViolation</RuleName>
+		<RuleName>cpu_user</RuleName>
 		<RuleBody>
 			import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventChoreos;
 			import it.cnr.isti.labse.glimpse.manager.ResponseDispatcher;
@@ -15,13 +15,13 @@
 				@timestamp( timeStamp )
 			end
 
-			rule "load-one-limit"
+			rule "cpu-user-limit"
 			no-loop
 			salience 999
 			dialect "java"
 			
 			when
-				$bEvent : GlimpseBaseEventChoreos(this.getEventName == "load_one", this.isConsumed == false);
+				$bEvent : GlimpseBaseEventChoreos(this.getEventName == "cpu_user", this.isConsumed == false);
 			then
 				ResponseDispatcher.NotifyMeValue(drools.getRule().getName(), "consumerTest", $bEvent.getEventName(), (String) $bEvent.getEventData());
 				
