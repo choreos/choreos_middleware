@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.chors.bus.EasyESBNode;
+import org.ow2.choreos.chors.rest.Owners;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.client.NodesClient;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;
@@ -12,14 +13,13 @@ import org.ow2.choreos.selectors.NotSelectedException;
 
 public class LimitedRoundRobinESBNodeSelector implements ESBNodeSelector {
 
-    private static final String DEPLOYMENT_MANAGER_URI_PROPERTY = "DEPLOYMENT_MANAGER_URI";
     private static final String ESB_NODES_LIMIT_PROPERTY = "ESB_NODES_LIMIT";
 
     private LimitedRoundRobinSelector<EasyESBNode, ResourceImpact> selector;
 
     public LimitedRoundRobinESBNodeSelector() {
         int nodeLimit = this.getNodeLimit();
-        String npmUri = ChoreographyDeployerConfiguration.get(DEPLOYMENT_MANAGER_URI_PROPERTY);
+        String npmUri = Owners.getDefault();
         NodePoolManager npm = new NodesClient(npmUri);
         ESBNodeFactory factory = new ESBNodeFactory(npm);
         ESBNodeRetriever retriever = new ESBNodeRetriever();
