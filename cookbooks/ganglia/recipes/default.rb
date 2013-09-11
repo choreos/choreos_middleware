@@ -77,3 +77,16 @@ end
 service "ganglia-monitor" do
   action [ :enable, :start ]
 end
+
+template "#{ENV['HOME']}/gmetric-free-ram.sh" do 
+	source "gmetric-free-ram.sh.erb"
+	owner "ubuntu"
+	group "ubuntu"
+	mode 0755
+end
+
+execute "gmetric-free-ram" do
+	command ". #{ENV['HOME']}/gmetric-free-ram.sh &"
+	creates "/var/run/gmetric-memory-collector"
+	action :run
+end

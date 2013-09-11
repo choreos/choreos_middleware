@@ -1,0 +1,11 @@
+#!/bin/bash
+touch /var/run/gmetric-memory-collector
+while true; do
+
+
+/usr/bin/gmetric -n free_ram -v "`free -b | sed -n -e 's/^.* \+//g' -e 3p`" -t uint32 -u bytes
+
+
+sleep 5;
+done
+
