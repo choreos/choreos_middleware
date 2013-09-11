@@ -28,10 +28,13 @@ import esstar.petalslink.com.service.management._1_0.ManagementException;
  */
 public class EasyESBNodeImpl implements EasyESBNode {
 
-    private Logger logger = Logger.getLogger(EasyESBNodeImpl.class);
+    private static final String IP_PATTERN = "(\\d{1,3}\\.){3}\\d{1,3}";
 
     private final String adminEndpoint;
     private final String nodeIp;
+    private LinagoraFactory linagoraFactory = LinagoraFactory.getFactory();
+
+    private Logger logger = Logger.getLogger(EasyESBNodeImpl.class);
 
     static {
 	EasyAPILoader.loadEasyAPI();
@@ -41,6 +44,12 @@ public class EasyESBNodeImpl implements EasyESBNode {
 	this.adminEndpoint = adminEndpoint;
 	this.nodeIp = URLUtils.extractIpFromURL(adminEndpoint);
     }
+    
+    EasyESBNodeImpl(String adminEndpoint, LinagoraFactory linagoraFactory) {
+        this.adminEndpoint = adminEndpoint;
+        this.nodeIp = URLUtils.extractIpFromURL(adminEndpoint);
+        this.linagoraFactory = linagoraFactory;
+    }
 
     @Override
     public String getAdminEndpoint() {
@@ -49,15 +58,25 @@ public class EasyESBNodeImpl implements EasyESBNode {
 
     @Override
     public String proxifyService(String serviceUrl, String serviceWsdl) throws EasyESBException {
-	UserManagementClient cli = new UserManagementClient(this.adminEndpoint);
+	UserManagementClient cli = linagoraFactory.getUserManagementClient(adminEndpoint);
 	String response = null;
 	try {
 	    response = cli.proxify(serviceUrl, serviceWsdl);
 	} catch (ManagementException e) {
-	    fail("Proxifying " + serviceUrl + " in the bus " + this.adminEndpoint + " failed.");
+	    fail("Proxifying " + serviceUrl + " in the bus " + adminEndpoint + " failed.");
 	}
-	String proxifiedUri = response.replace("localhost", this.nodeIp);
+	String proxifiedUri = fixIP(response, nodeIp);
 	return proxifiedUri;
+    }
+    
+    private String fixIP(String proxifiedUri, String ip) {
+        if (!proxifiedUri.contains(ip)) {
+            // avoid returning private ip
+            proxifiedUri = proxifiedUri.replaceAll(IP_PATTERN, ip);
+            // avoid returning localhost
+            proxifiedUri = proxifiedUri.replace("localhost", nodeIp);
+        }
+        return proxifiedUri;
     }
 
     @Override

@@ -7,6 +7,16 @@ package org.ow2.choreos.chors.bus;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceType;
 
+/**
+ * Proxify a service instance.
+ * 
+ * Side effects: besides the proxification itself, the proxified address is set
+ * on the esbUris(SOAP) property on the instance object, and the ESB node
+ * endpoint is set on the instance easyEsbNodeAdminEndpoint property. 
+ * 
+ * @author leonardo
+ * 
+ */
 public class ServiceInstanceProxifier {
 
     public String proxify(ServiceInstance serviceInstance, EasyESBNode esbNode) throws EasyESBException {
@@ -20,7 +30,11 @@ public class ServiceInstanceProxifier {
         url = url.replaceAll("/$", "");
         String wsdl = url + "?wsdl";
 
-        return esbNode.proxifyService(url, wsdl);
+        String proxifiedAddress = esbNode.proxifyService(url, wsdl);
+        serviceInstance.setBusUri(ServiceType.SOAP, proxifiedAddress);
+        serviceInstance.setEasyEsbNodeAdminEndpoint(esbNode.getAdminEndpoint());
+
+        return proxifiedAddress;
     }
 
 }

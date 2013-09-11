@@ -65,6 +65,7 @@ public class IdlePoolTest {
     }
 
     @Test(timeout = 1000)
+    @Ignore // #87
     public void shouldFillThePool() throws InterruptedException {
 
         int N = 3;
@@ -128,7 +129,7 @@ public class IdlePoolTest {
     }
 
     @Test(timeout = 1000)
-    @Ignore
+    @Ignore // #87
     public void multipleRequestsShouldLeaveThePoolFull() throws InterruptedException {
 
         int N = 5;
