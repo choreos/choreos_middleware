@@ -17,9 +17,10 @@ public class ServiceInstancesProxifier {
     /**
      * Proxifies all the instances.
      * 
-     * Side effect: the proxified address is set on the esbUris(SOAP) property
-     * on the instance object. If a instance can be not proxified, an error
-     * message is logged.
+     * Side effects: the proxified address is set on the esbUris(SOAP) property
+     * on the instance object, and the ESB node endpoint is set on the instance
+     * easyEsbNodeAdminEndpoint property. If a instance can be not proxified, an
+     * error message is logged.
      * 
      * @param instancesNodesMap
      */
@@ -33,6 +34,7 @@ public class ServiceInstancesProxifier {
             try {
                 String proxifiedAddress = proxifier.proxify(instance, esbNode);
                 instance.setBusUri(ServiceType.SOAP, proxifiedAddress);
+                instance.setEasyEsbNodeAdminEndpoint(esbNode.getAdminEndpoint());
                 logger.info(svcName + " instance proxified");
             } catch (EasyESBException e) {
                 logger.error(svcName + " could not be proxified");
