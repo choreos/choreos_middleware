@@ -5,7 +5,6 @@
 package org.ow2.choreos.deployment.nodes.cm;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,9 +15,7 @@ import org.ow2.choreos.breaker.Invoker;
 import org.ow2.choreos.breaker.InvokerBuilder;
 import org.ow2.choreos.breaker.InvokerException;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
-import org.ow2.choreos.deployment.DeploymentManagerPreferences;
 import org.ow2.choreos.deployment.Locations;
-import org.ow2.choreos.deployment.rest.DeploymentManagerServer;
 import org.ow2.choreos.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.utils.Scp;
@@ -104,17 +101,7 @@ public class NodeBootstrapper {
 
     private void setUpMonitoring() {
 	Map<String, String> substitutions = new HashMap<String, String>();
-	String externalDeplManURL = DeploymentManagerConfiguration.get("EXTERNAL_DEPLOYMENT_MANAGER_URL");
-	// String ip = URLUtils.extractIpFromURL(externalDeplManURL);
-	try {
-	    substitutions.put("$THE_IP",
-		    DeploymentManagerPreferences.getInstance().getObject(DeploymentManagerServer.MONITORING_NODE)
-			    .getIp());
-	} catch (IOException e1) {
-	    logger.error("Could not properly setup monitoring on node " + node.getId());
-	} catch (ClassNotFoundException e1) {
-	    logger.error("Could not properly setup monitoring on node " + node.getId());
-	}
+	substitutions.put("$THE_IP", DeploymentManagerConfiguration.get("RESOURCE_METRIC_AGGREGATOR"));
 	int timeout = 1;
 	NodeSetup monitoringSetup = NodeSetup.getInstance(node, SETUP_MONITORING_SCRIPT, timeout, substitutions);
 	try {
