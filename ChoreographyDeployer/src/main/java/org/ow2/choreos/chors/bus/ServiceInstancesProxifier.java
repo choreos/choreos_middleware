@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
-import org.ow2.choreos.services.datamodel.ServiceType;
 
 public class ServiceInstancesProxifier {
 
@@ -17,24 +16,17 @@ public class ServiceInstancesProxifier {
     /**
      * Proxifies all the instances.
      * 
-     * Side effects: the proxified address is set on the esbUris(SOAP) property
-     * on the instance object, and the ESB node endpoint is set on the instance
-     * easyEsbNodeAdminEndpoint property. If a instance can be not proxified, an
-     * error message is logged.
+     * If a instance can be not proxified, an error message is logged.
      * 
      * @param instancesNodesMap
      */
     public void proxify(Map<ServiceInstance, EasyESBNode> instancesNodesMap) {
-
         for (ServiceInstance instance : instancesNodesMap.keySet()) {
-
             EasyESBNode esbNode = instancesNodesMap.get(instance);
             ServiceInstanceProxifier proxifier = new ServiceInstanceProxifier();
             String svcName = instance.getServiceSpec().getName();
             try {
-                String proxifiedAddress = proxifier.proxify(instance, esbNode);
-                instance.setBusUri(ServiceType.SOAP, proxifiedAddress);
-                instance.setEasyEsbNodeAdminEndpoint(esbNode.getAdminEndpoint());
+                proxifier.proxify(instance, esbNode);
                 logger.info(svcName + " instance proxified");
             } catch (EasyESBException e) {
                 logger.error(svcName + " could not be proxified");

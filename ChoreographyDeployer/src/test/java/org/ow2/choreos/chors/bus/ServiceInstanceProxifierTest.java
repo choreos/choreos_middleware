@@ -20,6 +20,7 @@ import org.ow2.choreos.tests.ModelsForTest;
 public class ServiceInstanceProxifierTest {
 
     private ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
+    private static final String BUS_ADDRESS = "http://localhost:8180/services/adminExternalEndpoint";
     private static final String PROXIFIED_ADDRESS = "http://localhost:8180/services/AirlineServicePortClientProxyEndpoint";
 
     private ServiceInstance getServiceInstance() {
@@ -35,18 +36,21 @@ public class ServiceInstanceProxifierTest {
 
         EasyESBNode esbNode = mock(EasyESBNodeImpl.class);
         when(esbNode.proxifyService(any(String.class), any(String.class))).thenReturn(PROXIFIED_ADDRESS);
+        when(esbNode.getAdminEndpoint()).thenReturn(BUS_ADDRESS);
         return esbNode;
     }
 
     @Test
     public void test() throws EasyESBException {
 
-        ServiceInstance svc = this.getServiceInstance();
+        ServiceInstance instance = this.getServiceInstance();
         EasyESBNode esbNode = this.getEsbNode();
 
         ServiceInstanceProxifier proxifier = new ServiceInstanceProxifier();
-        String proxifiedAddress = proxifier.proxify(svc, esbNode);
+        String proxifiedAddress = proxifier.proxify(instance, esbNode);
         assertEquals(PROXIFIED_ADDRESS, proxifiedAddress);
+        assertEquals(PROXIFIED_ADDRESS, instance.getBusUri(ServiceType.SOAP));
+        assertEquals(BUS_ADDRESS, instance.getEasyEsbNodeAdminEndpoint());
     }
 
 }
