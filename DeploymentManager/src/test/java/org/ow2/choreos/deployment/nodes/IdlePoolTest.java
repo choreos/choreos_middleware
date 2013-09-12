@@ -21,7 +21,6 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.Ignore;
 import org.mockito.stubbing.OngoingStubbing;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
@@ -64,8 +63,7 @@ public class IdlePoolTest {
         assertEquals(howManyVMs, idlePool.size());
     }
 
-    @Test(timeout = 1000)
-    @Ignore // #87
+    @Test(timeout = 2000)
     public void shouldFillThePool() throws InterruptedException {
 
         int N = 3;
@@ -75,7 +73,7 @@ public class IdlePoolTest {
 
         while (true) {
             if (pool.isFull())
-                break; // pas the test
+                break; // pass the test
             Thread.sleep(50);
         }
     }
@@ -128,8 +126,7 @@ public class IdlePoolTest {
         }
     }
 
-    @Test(timeout = 1000)
-    @Ignore // #87
+    @Test(timeout = 2000)
     public void multipleRequestsShouldLeaveThePoolFull() throws InterruptedException {
 
         int N = 5;
