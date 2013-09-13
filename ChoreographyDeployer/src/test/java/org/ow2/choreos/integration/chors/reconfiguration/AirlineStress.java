@@ -16,6 +16,7 @@ import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.chors.client.ChorDeployerClient;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
+import org.ow2.choreos.chors.reconfiguration.EnactmentEngineGlimpseConsumerService;
 import org.ow2.choreos.chors.reconfiguration.SimpleLogger;
 import org.ow2.choreos.chors.reconfiguration.SimpleLoggerImpl;
 import org.ow2.choreos.chors.rest.ChorDeployerServer;
@@ -64,6 +65,8 @@ public class AirlineStress {
 	enactmentEngine = new ChorDeployerClient("http://localhost:9102/choreographydeployer/");
 	// glimpseConsumerService = new EnactmentEngineGlimpseConsumerService();
 	// glimpseConsumerService.execute();
+	String[] args = null;
+	EnactmentEngineGlimpseConsumerService.main(args);
 
 	models = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT);
 	chorSpec = models.getChorSpec();
@@ -89,7 +92,7 @@ public class AirlineStress {
 	String travelAgencyURI = ((DeployableService) chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY))
 		.getInstances().get(0).getNativeUri();
 
-	long TIME_UNIT_IN_MS = 30 * 1000; // 60 * 1000 = 1 minute; 12 * 1000 =
+	long TIME_UNIT_IN_MS = 12 * 1000; // 60 * 1000 = 1 minute; 12 * 1000 =
 					  // 12
 					  // minutes
 
@@ -105,11 +108,12 @@ public class AirlineStress {
 	    long time = rateVector[j][1];
 
 	    long timeCounter = 0;
+	    WSClient wsClient = new WSClient(travelAgencyURI + "?wsdl");
 
 	    logger.info("Starting loop; rate = " + rate + "ms; time = " + time);
 	    while (timeCounter < time * TIME_UNIT_IN_MS) {
 		timeCounter += rate;
-		new WSClient(travelAgencyURI + "?wsdl").request("buyTrip").getChild("return").getContent();
+		wsClient.request("buyTrip").getChild("return").getContent();
 		Thread.sleep(rate);
 	    }
 	    logger.info("Finished loop; rate = " + rate + "ms; time = " + time);

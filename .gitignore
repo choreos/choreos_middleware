@@ -1,6 +1,7 @@
 bin/
 *.jar
 *.log
+*.log.*
 *.swp
 .classpath
 */.metadata

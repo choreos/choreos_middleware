@@ -31,7 +31,7 @@ public class ChorRegistry {
     }
 
     public static ChorRegistry getInstance() {
-        return instance;
+	return instance;
     }
 
     /**
@@ -40,20 +40,23 @@ public class ChorRegistry {
      * @return the just registred choreography ID
      */
     public String create(ChoreographySpec chorSpec) {
-        String id = Integer.toString(counter.incrementAndGet());
-        Choreography chor = new Choreography();
-        chor.setId(id);
-        chor.setChoreographySpec(chorSpec);
-        chors.put(id, chor);
-        return id;
+	String id = Integer.toString(counter.incrementAndGet());
+	Choreography chor = new Choreography();
+	chor.setId(id);
+	chor.setChoreographySpec(chorSpec);
+	chors.put(id, chor);
+	return id;
     }
 
     public Choreography get(String chorId) {
-        return chors.get(chorId);
+	return chors.get(chorId);
     }
 
     public boolean contains(String chorId) {
-        return chors.containsKey(chorId);
+	return chors.containsKey(chorId);
     }
 
+    public Map<String, Choreography> getAll() {
+	return chors;
+    }
 }
