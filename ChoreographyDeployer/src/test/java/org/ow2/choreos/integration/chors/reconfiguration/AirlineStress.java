@@ -43,7 +43,7 @@ public class AirlineStress {
     private ModelsForTest models;
     private Choreography chor;
 
-    SimpleLogger logger = new SimpleLoggerImpl("experiments.log");
+    SimpleLogger logger = new SimpleLoggerImpl("airline_stree.log");
 
     private static ChorDeployerServer server;
 
