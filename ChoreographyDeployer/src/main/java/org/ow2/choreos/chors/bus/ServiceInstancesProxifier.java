@@ -26,8 +26,8 @@ public class ServiceInstancesProxifier {
             ServiceInstanceProxifier proxifier = new ServiceInstanceProxifier();
             String svcName = instance.getServiceSpec().getName();
             try {
-                proxifier.proxify(instance, esbNode);
-                logger.info(svcName + " instance proxified");
+                String proxifiedAddress = proxifier.proxify(instance, esbNode);
+                logger.info(svcName + " instance proxified (" + proxifiedAddress + ")");
             } catch (EasyESBException e) {
                 logger.error(svcName + " could not be proxified");
             }
