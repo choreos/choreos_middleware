@@ -3,7 +3,10 @@ package org.ow2.choreos.integration.chors.reconfiguration;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Scanner;
+
+import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlException;
 import org.junit.AfterClass;
@@ -20,13 +23,14 @@ import org.ow2.choreos.chors.reconfiguration.EnactmentEngineGlimpseConsumerServi
 import org.ow2.choreos.chors.reconfiguration.SimpleLogger;
 import org.ow2.choreos.chors.reconfiguration.SimpleLoggerImpl;
 import org.ow2.choreos.chors.rest.ChorDeployerServer;
+import org.ow2.choreos.integration.chors.reconfiguration.travelagency.TravelAgencyService;
+import org.ow2.choreos.integration.chors.reconfiguration.travelagency.TravelAgencyServiceService;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.tests.ModelsForTest;
 
-import eu.choreos.vv.clientgenerator.WSClient;
 import eu.choreos.vv.exceptions.FrameworkException;
 import eu.choreos.vv.exceptions.InvalidOperationNameException;
 import eu.choreos.vv.exceptions.WSDLException;
@@ -87,7 +91,6 @@ public class AirlineStress {
 	    InvalidOperationNameException, InterruptedException, NoSuchFieldException {
 
 	Scanner scanner = new Scanner(System.in);
-	Scanner sc = scanner;
 
 	String travelAgencyURI = ((DeployableService) chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY))
 		.getInstances().get(0).getNativeUri();
@@ -108,12 +111,20 @@ public class AirlineStress {
 	    long time = rateVector[j][1];
 
 	    long timeCounter = 0;
-	    WSClient wsClient = new WSClient(travelAgencyURI + "?wsdl");
+	    String travelAgencyWsdlLocation = travelAgencyURI + "?wsdl";
+	    String namespace = "http://choreos.ow2.org/";
+	    String local = "TravelAgencyServiceService";
+
+	    QName travelAgencyNamespace = new QName(namespace, local);
+	    TravelAgencyServiceService travel = new TravelAgencyServiceService(new URL(travelAgencyWsdlLocation),
+		    travelAgencyNamespace);
+
+	    TravelAgencyService wsClient = travel.getTravelAgencyServicePort();
 
 	    logger.info("Starting loop; rate = " + rate + "ms; time = " + time);
 	    while (timeCounter < time * TIME_UNIT_IN_MS) {
 		timeCounter += rate;
-		wsClient.request("buyTrip").getChild("return").getContent();
+		wsClient.buyTrip();
 		Thread.sleep(rate);
 	    }
 	    logger.info("Finished loop; rate = " + rate + "ms; time = " + time);
