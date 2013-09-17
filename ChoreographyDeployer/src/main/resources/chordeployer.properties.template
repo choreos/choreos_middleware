@@ -10,4 +10,4 @@ BUS_POLICY=SINGLE_NODE
 ESB_NODES_LIMIT=0 
 
 # optional, in case you want to monitor EasyESB nodes with EasierBSM
-EASIER_BSM_ADMIN_ENDPOINT=
+EASIER_BSM_ADMIN_ENDPOINT=http://host:8180/services/bsmadminExternalEndpoint
