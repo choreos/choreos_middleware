@@ -1,13 +1,13 @@
-package org.ow2.choreos.integration.chors.reconfiguration;
+package org.ow2.choreos.experiments.travelagency;
 
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Scanner;
 
 import javax.xml.namespace.QName;
 
+import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlException;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -20,11 +20,9 @@ import org.ow2.choreos.chors.client.ChorDeployerClient;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.chors.reconfiguration.EnactmentEngineGlimpseConsumerService;
-import org.ow2.choreos.chors.reconfiguration.SimpleLogger;
-import org.ow2.choreos.chors.reconfiguration.SimpleLoggerImpl;
 import org.ow2.choreos.chors.rest.ChorDeployerServer;
-import org.ow2.choreos.integration.chors.reconfiguration.travelagency.TravelAgencyService;
-import org.ow2.choreos.integration.chors.reconfiguration.travelagency.TravelAgencyServiceService;
+import org.ow2.choreos.experiments.travelagency.client.TravelAgencyService;
+import org.ow2.choreos.experiments.travelagency.client.TravelAgencyServiceService;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceType;
@@ -47,7 +45,7 @@ public class AirlineStress {
     private ModelsForTest models;
     private Choreography chor;
 
-    SimpleLogger logger = new SimpleLoggerImpl("airline_stree.log");
+    Logger logger = Logger.getLogger(AirlineStress.class);
 
     private static ChorDeployerServer server;
 
@@ -90,8 +88,6 @@ public class AirlineStress {
     private void runExperiment() throws XmlException, IOException, FrameworkException, WSDLException,
 	    InvalidOperationNameException, InterruptedException, NoSuchFieldException {
 
-	Scanner scanner = new Scanner(System.in);
-
 	String travelAgencyURI = ((DeployableService) chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY))
 		.getInstances().get(0).getNativeUri();
 
@@ -99,8 +95,8 @@ public class AirlineStress {
 					  // 12
 					  // minutes
 
-	long rateVector[][] = { { 2000, 30 }, { 1900, 10 }, { 1800, 10 }, { 1500, 10 }, { 1300, 15 }, { 1100, 15 },
-		{ 1200, 15 }, { 1500, 15 }, { 1700, 30 }, { 2000, 15 }, { 2800, 15 }, { 3000, 10 } };
+	long rateVector[][] = { { 1800, 30 }, { 1500, 10 }, { 1300, 10 }, { 1100, 10 }, { 900, 15 }, { 700, 15 },
+		{ 1000, 15 }, { 1500, 15 }, { 1700, 30 }, { 2000, 15 }, { 2800, 15 }, { 3000, 10 } };
 
 	System.out.println("Press ENTER to start experiment:");
 	System.in.read();

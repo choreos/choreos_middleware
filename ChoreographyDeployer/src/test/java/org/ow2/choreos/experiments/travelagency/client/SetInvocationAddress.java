@@ -1,4 +1,4 @@
-package org.ow2.choreos.integration.chors.reconfiguration.travelagency;
+package org.ow2.choreos.experiments.travelagency.client;
 
 import java.util.ArrayList;
 import java.util.List;
