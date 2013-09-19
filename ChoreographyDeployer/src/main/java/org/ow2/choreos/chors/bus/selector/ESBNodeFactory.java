@@ -1,5 +1,6 @@
 package org.ow2.choreos.chors.bus.selector;
 
+import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.chors.bus.ESBRegister;
 import org.ow2.choreos.chors.bus.EasyESBException;
@@ -28,6 +29,8 @@ public class ESBNodeFactory implements ObjectFactory<EasyESBNode, ResourceImpact
     private NodePoolManager npm;
     private CloudNode node;
     private EasyESBNode esbNode;
+    
+    private Logger logger = Logger.getLogger(ESBNodeFactory.class);    
 
     public ESBNodeFactory(NodePoolManager npm) {
         this.npm = npm;
@@ -39,6 +42,7 @@ public class ESBNodeFactory implements ObjectFactory<EasyESBNode, ResourceImpact
         createNewESBNode();
         notifyBSM();
         ESBRegister.addEsbNode(esbNode);
+        logger.info("Created EasyESB node " + esbNode.getAdminEndpoint());
         return esbNode;
     }
     

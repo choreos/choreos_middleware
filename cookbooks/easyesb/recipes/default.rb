@@ -34,8 +34,8 @@ script "wait_easyesb_start" do
   interpreter "bash"
   code <<-EOH
   echo "Waiting for EasyESB start by monitoring its log: #{node['easyesb']['log_file']}"
-  message='<sequence>18</sequence>'
-  while ! cat #{node['easyesb']['log_file']} | grep -q "$message"
+  message='<message>new service deployed at: http://([0-9]{1,3}\.){3}[0-9]{1,3}:[0-9]{1,5}/services/adminExternalEndpoint</message>'
+  while ! cat #{node['easyesb']['log_file']} | egrep -q "$message"
   do
     sleep 1
   done
