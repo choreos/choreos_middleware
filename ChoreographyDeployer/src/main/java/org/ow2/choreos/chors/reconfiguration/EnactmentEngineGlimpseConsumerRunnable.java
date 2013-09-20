@@ -1,6 +1,6 @@
 package org.ow2.choreos.chors.reconfiguration;
 
-import it.cnr.isti.labse.glimpse.utils.Manager;
+import it.cnr.isti.labsedc.glimpse.utils.Manager;
 
 import java.util.Properties;
 

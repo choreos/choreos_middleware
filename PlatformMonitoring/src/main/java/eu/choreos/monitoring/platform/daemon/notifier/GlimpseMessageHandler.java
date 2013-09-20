@@ -1,8 +1,8 @@
 package eu.choreos.monitoring.platform.daemon.notifier;
 
-import it.cnr.isti.labse.glimpse.event.GlimpseBaseEvent;
-import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventChoreos;
-import it.cnr.isti.labse.glimpse.probe.GlimpseAbstractProbe;
+import it.cnr.isti.labsedc.glimpse.event.GlimpseBaseEvent;
+import it.cnr.isti.labsedc.glimpse.event.GlimpseBaseEventChoreos;
+import it.cnr.isti.labsedc.glimpse.probe.GlimpseAbstractProbe;
 
 import java.util.Properties;
 
@@ -13,24 +13,25 @@ import eu.choreos.monitoring.platform.exception.MessageHandlingFault;
 
 public class GlimpseMessageHandler extends GlimpseAbstractProbe {
 
-	public GlimpseMessageHandler(Properties settings) {
-		super(settings);
-	}
+    public GlimpseMessageHandler(Properties settings) {
+	super(settings);
+    }
 
-	public GlimpseBaseEventChoreos<String> sendMessage(GlimpseBaseEventChoreos<String> event) throws MessageHandlingFault {
-		try {
-			this.sendEventMessage(event, false);
-		} catch (JMSException e) {
-			throw new MessageHandlingFault("JMS Exception");
-		} catch (NamingException e) {
-			throw new MessageHandlingFault("Naming Exception");
-		}
-		return event;
+    public GlimpseBaseEventChoreos<String> sendMessage(GlimpseBaseEventChoreos<String> event)
+	    throws MessageHandlingFault {
+	try {
+	    this.sendEventMessage(event, false);
+	} catch (JMSException e) {
+	    throw new MessageHandlingFault("JMS Exception");
+	} catch (NamingException e) {
+	    throw new MessageHandlingFault("Naming Exception");
 	}
+	return event;
+    }
 
-	@Override
-	public void sendMessage(GlimpseBaseEvent<?> message, boolean debug) {
+    @Override
+    public void sendMessage(GlimpseBaseEvent<?> message, boolean debug) {
 
-	}
+    }
 
 }
