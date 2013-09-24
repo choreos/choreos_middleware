@@ -4,9 +4,6 @@
 
 package org.ow2.choreos.services.datamodel;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 
 public class ServiceInstance {
@@ -15,9 +12,7 @@ public class ServiceInstance {
     private String nativeUri; // URI for access instance directly
     private CloudNode node; // The hosting node
 
-    // Map containing all URIs for access instance through the bus
-    private Map<ServiceType, String> busUris = new HashMap<ServiceType, String>();
-    private String easyEsbNodeAdminEndpoint; // The node that handles bus calls
+    private Proxification proxification;
 
     private DeployableServiceSpec serviceSpec;
 
@@ -28,14 +23,6 @@ public class ServiceInstance {
 
     public ServiceInstance(CloudNode node) {
         this.setNode(node);
-    }
-
-    public Map<ServiceType, String> getBusUris() {
-        return busUris;
-    }
-
-    public void setBusUris(Map<ServiceType, String> busUris) {
-        this.busUris = busUris;
     }
 
     public DeployableServiceSpec getServiceSpec() {
@@ -54,14 +41,6 @@ public class ServiceInstance {
         this.node = node;
     }
 
-    public String getBusUri(ServiceType type) {
-        return this.busUris.get(type);
-    }
-
-    public void setBusUri(ServiceType type, String uri) {
-        this.busUris.put(type, uri);
-    }
-
     public String getInstanceId() {
         return instanceId;
     }
@@ -69,11 +48,19 @@ public class ServiceInstance {
     public void setInstanceId(String instanceId) {
         this.instanceId = instanceId;
     }
+    
+    public Proxification getProxification() {
+        return proxification;
+    }
+
+    public void setProxification(Proxification proxification) {
+        this.proxification = proxification;
+    }
 
     public void setNativeUri(String uri) {
         this.nativeUri = uri;
     }
-
+    
     public String getNativeUri() {
         if (nativeUriIsDefined()) {
             return nativeUri;
@@ -89,14 +76,6 @@ public class ServiceInstance {
     private String getDefaultnativeUri() {
         NativeUriRetriever retriever = new NativeUriRetriever(this);
         return retriever.getDefaultnativeUri();
-    }
-
-    public String getEasyEsbNodeAdminEndpoint() {
-        return easyEsbNodeAdminEndpoint;
-    }
-
-    public void setEasyEsbNodeAdminEndpoint(String easyEsbNodeAdminEndpoint) {
-        this.easyEsbNodeAdminEndpoint = easyEsbNodeAdminEndpoint;
     }
 
     @Override

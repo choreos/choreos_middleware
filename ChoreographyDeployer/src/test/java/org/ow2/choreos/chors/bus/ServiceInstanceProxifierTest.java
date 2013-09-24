@@ -49,8 +49,8 @@ public class ServiceInstanceProxifierTest {
         ServiceInstanceProxifier proxifier = new ServiceInstanceProxifier();
         String proxifiedAddress = proxifier.proxify(instance, esbNode);
         assertEquals(PROXIFIED_ADDRESS, proxifiedAddress);
-        assertEquals(PROXIFIED_ADDRESS, instance.getBusUri(ServiceType.SOAP));
-        assertEquals(BUS_ADDRESS, instance.getEasyEsbNodeAdminEndpoint());
+        assertEquals(PROXIFIED_ADDRESS, instance.getProxification().getBusUri(ServiceType.SOAP));
+        assertEquals(BUS_ADDRESS, instance.getProxification().getEasyEsbNodeAdminEndpoint());
     }
 
 }

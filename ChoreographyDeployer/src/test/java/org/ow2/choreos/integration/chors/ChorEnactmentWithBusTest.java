@@ -70,8 +70,8 @@ public class ChorEnactmentWithBusTest {
         DeployableService travelService = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
         ServiceInstance airlineInstance = airlineService.getInstances().get(0);
         ServiceInstance travelInstance = travelService.getInstances().get(0);
-        String airlineProxifiedUri = airlineInstance.getBusUri(ServiceType.SOAP);
-        String travelProxifiedUri = travelInstance.getBusUri(ServiceType.SOAP);
+        String airlineProxifiedUri = airlineInstance.getProxification().getBusUri(ServiceType.SOAP);
+        String travelProxifiedUri = travelInstance.getProxification().getBusUri(ServiceType.SOAP);
         System.out.println("airline proxified: " + airlineProxifiedUri);
         System.out.println("travel agency proxified: " + travelProxifiedUri);
         assertNotNull(airlineProxifiedUri);

@@ -34,14 +34,14 @@ public class TopologyConfigurator {
     public void configureTopology() throws TopologyNotConfigureException {
         for (DeployableService service : chor.getDeployableServices()) {
             for (ServiceInstance instance : service.getInstances()) {
-                EasyESBNode esbNode = getESBNode(instance.getEasyEsbNodeAdminEndpoint());
+                EasyESBNode esbNode = getESBNode(instance.getProxification().getEasyEsbNodeAdminEndpoint());
                 List<ServiceDependency> dependencies = service.getSpec().getDependencies();
                 if (dependencies != null) {
                     for (ServiceDependency dependency : dependencies) {
                         DeployableService providingService = chor.getDeployableServiceBySpecName(dependency
                                 .getServiceSpecName());
                         for (ServiceInstance providingInstance : providingService.getInstances()) {
-                            EasyESBNode neighbourEsbNode = getESBNode(providingInstance.getEasyEsbNodeAdminEndpoint());
+                            EasyESBNode neighbourEsbNode = getESBNode(providingInstance.getProxification().getEasyEsbNodeAdminEndpoint());
                             try {
                                 esbNode.addNeighbour(neighbourEsbNode);
                                 neighbourEsbNode.addNeighbour(esbNode);

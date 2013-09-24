@@ -15,6 +15,7 @@ import org.ow2.choreos.breaker.InvokerBuilder;
 import org.ow2.choreos.breaker.InvokerException;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.Proxification;
 import org.ow2.choreos.services.datamodel.Service;
 import org.ow2.choreos.services.datamodel.ServiceDependency;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
@@ -101,8 +102,10 @@ public class ContextCaster {
     private List<String> getUris(Service providerService) {
         List<String> uris = new ArrayList<String>();
         for (ServiceInstance instance : ((DeployableService) providerService).getInstances()) {
-            String proxifiedUri = instance.getBusUri(ServiceType.SOAP);
-            if (proxifiedUri != null) {
+            Proxification prox = instance.getProxification();
+            boolean isProxified = prox != null && prox.getBusUri(ServiceType.SOAP) != null; 
+            if (isProxified) {
+                String proxifiedUri = prox.getBusUri(ServiceType.SOAP);
                 uris.add(proxifiedUri);
             } else {
                 uris.add(instance.getNativeUri());

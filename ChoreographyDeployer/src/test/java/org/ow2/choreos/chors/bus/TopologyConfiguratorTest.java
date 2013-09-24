@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
+import org.ow2.choreos.services.datamodel.Proxification;
 import org.ow2.choreos.services.datamodel.ServiceDependency;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 
@@ -47,10 +48,14 @@ public class TopologyConfiguratorTest {
         DeployableService sA = new DeployableService();
         sA.setSpec(specA);
         ServiceInstance siA1 = new ServiceInstance();
-        siA1.setEasyEsbNodeAdminEndpoint(getAdminEndpoint(HOST1));
+        Proxification prox = new Proxification(); 
+        prox.setEasyEsbNodeAdminEndpoint(getAdminEndpoint(HOST1));
+        siA1.setProxification(prox);
         sA.addInstance(siA1);
         ServiceInstance siA2 = new ServiceInstance();
-        siA2.setEasyEsbNodeAdminEndpoint(getAdminEndpoint(HOST1));
+        prox = new Proxification(); 
+        prox.setEasyEsbNodeAdminEndpoint(getAdminEndpoint(HOST1));        
+        siA2.setProxification(prox);
         sA.addInstance(siA2);
         chor.addService(sA);
         
@@ -61,7 +66,9 @@ public class TopologyConfiguratorTest {
         DeployableService sB = new DeployableService();
         sB.setSpec(specB);
         ServiceInstance siB = new ServiceInstance();
-        siB.setEasyEsbNodeAdminEndpoint(getAdminEndpoint(HOST2));
+        prox = new Proxification(); 
+        prox.setEasyEsbNodeAdminEndpoint(getAdminEndpoint(HOST2));        
+        siB.setProxification(prox);
         sB.addInstance(siB);
         chor.addService(sB);
         
@@ -74,7 +81,9 @@ public class TopologyConfiguratorTest {
         DeployableService sC = new DeployableService();
         sC.setSpec(specC);
         ServiceInstance siC = new ServiceInstance();
-        siC.setEasyEsbNodeAdminEndpoint(getAdminEndpoint(HOST3));
+        prox = new Proxification(); 
+        prox.setEasyEsbNodeAdminEndpoint(getAdminEndpoint(HOST3));                
+        siC.setProxification(prox);
         sC.addInstance(siC);
         chor.addService(sC);
         
@@ -85,7 +94,9 @@ public class TopologyConfiguratorTest {
         DeployableService sD = new DeployableService();
         sD.setSpec(specD);
         ServiceInstance siD = new ServiceInstance();
-        siD.setEasyEsbNodeAdminEndpoint(getAdminEndpoint(HOST4));
+        prox = new Proxification(); 
+        prox.setEasyEsbNodeAdminEndpoint(getAdminEndpoint(HOST4));                
+        siD.setProxification(prox);
         sD.addInstance(siD);
         chor.addService(sD);
     }

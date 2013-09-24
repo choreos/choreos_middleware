@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.ow2.choreos.services.ServiceInstanceNotFoundException;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.PackageType;
+import org.ow2.choreos.services.datamodel.Proxification;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.ModelsForTest;
@@ -62,10 +63,15 @@ public class ContextCasterTest {
     
     private void setUpBusUris() throws ServiceInstanceNotFoundException {
 
-        ServiceInstance airlineInstance = ((DeployableService) (deployedServices.get(AIRLINE))).getInstances().get(0);
-        airlineInstance.setBusUri(ServiceType.SOAP, AIRLINE_PROXIFIED_URI);
+        ServiceInstance airlineInstance = deployedServices.get(AIRLINE).getInstances().get(0);
+        Proxification prox = new Proxification();
+        prox.setBusUri(ServiceType.SOAP, AIRLINE_PROXIFIED_URI);
+        airlineInstance.setProxification(prox);
+        
         ServiceInstance travelInstance = deployedServices.get(TRAVEL_AGENCY).getInstances().get(0);
-        travelInstance.setBusUri(ServiceType.SOAP, TRAVEL_AGENCY_PROXIFIED_URI);
+        prox = new Proxification();
+        prox.setBusUri(ServiceType.SOAP, TRAVEL_AGENCY_PROXIFIED_URI);
+        travelInstance.setProxification(prox);
     }
 
     @Test

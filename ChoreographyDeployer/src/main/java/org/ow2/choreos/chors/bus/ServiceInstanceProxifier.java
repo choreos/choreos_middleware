@@ -4,6 +4,7 @@
 
 package org.ow2.choreos.chors.bus;
 
+import org.ow2.choreos.services.datamodel.Proxification;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceType;
 
@@ -31,8 +32,10 @@ public class ServiceInstanceProxifier {
         String wsdl = url + "?wsdl";
 
         String proxifiedAddress = esbNode.proxifyService(url, wsdl);
-        serviceInstance.setBusUri(ServiceType.SOAP, proxifiedAddress);
-        serviceInstance.setEasyEsbNodeAdminEndpoint(esbNode.getAdminEndpoint());
+        Proxification proxification = new Proxification(); 
+        proxification.setBusUri(ServiceType.SOAP, proxifiedAddress);
+        proxification.setEasyEsbNodeAdminEndpoint(esbNode.getAdminEndpoint());
+        serviceInstance.setProxification(proxification);
 
         return proxifiedAddress;
     }
