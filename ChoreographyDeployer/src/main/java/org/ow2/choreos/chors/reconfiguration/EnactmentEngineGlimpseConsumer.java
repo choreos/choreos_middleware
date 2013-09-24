@@ -1,7 +1,7 @@
 package org.ow2.choreos.chors.reconfiguration;
 
-import it.cnr.isti.labse.glimpse.consumer.GlimpseAbstractConsumer;
 import it.cnr.isti.labse.glimpse.xml.complexEventException.ComplexEventException;
+import it.cnr.isti.labsedc.glimpse.consumer.GlimpseAbstractConsumer;
 
 import java.util.Properties;
 

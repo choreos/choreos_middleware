@@ -1,6 +1,6 @@
 package eu.choreos.monitoring.platform.daemon;
 
-import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventChoreos;
+import it.cnr.isti.labsedc.glimpse.event.GlimpseBaseEventChoreos;
 
 import java.util.List;
 import java.util.Map;
