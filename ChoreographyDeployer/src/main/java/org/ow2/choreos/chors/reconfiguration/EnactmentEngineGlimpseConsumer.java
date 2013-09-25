@@ -30,8 +30,7 @@ public class EnactmentEngineGlimpseConsumer extends GlimpseAbstractConsumer {
 	    if (responseFromMonitoring.getObject() instanceof ComplexEventException) {
 		complexEventExceptionHandler.handle(responseFromMonitoring);
 	    } else {
-		ComplexEventHandler eventHandler = new ComplexEventHandler();
-		ComplexEventResponseHandler complexEventResponseHandler = new ComplexEventResponseHandler(eventHandler);
+		ComplexEventResponseHandler complexEventResponseHandler = new ComplexEventResponseHandler();
 		complexEventResponseHandler.handle(responseFromMonitoring);
 	    }
 	} catch (ClassCastException asd) {

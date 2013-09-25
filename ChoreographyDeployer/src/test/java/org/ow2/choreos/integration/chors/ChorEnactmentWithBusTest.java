@@ -47,43 +47,43 @@ public class ChorEnactmentWithBusTest {
 
     @BeforeClass
     public static void startServers() {
-        LogConfigurator.configLog();
+	LogConfigurator.configLog();
     }
 
     @Before
     public void setUp() {
 
-        ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "true");
-        ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-        chorSpec = models.getChorSpec();
+	ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "true");
+	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT, 2);
+	chorSpec = models.getChorSpec();
     }
 
     @Test
     public void shouldEnactChoreography() throws Exception {
 
-        ChoreographyDeployer ee = new ChoreographyDeployerImpl();
+	ChoreographyDeployer ee = new ChoreographyDeployerImpl();
 
-        String chorId = ee.createChoreography(chorSpec);
-        Choreography chor = ee.enactChoreography(chorId);
+	String chorId = ee.createChoreography(chorSpec);
+	Choreography chor = ee.enactChoreography(chorId);
 
-        DeployableService airlineService = chor.getDeployableServiceBySpecName(ModelsForTest.AIRLINE);
-        DeployableService travelService = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
-        ServiceInstance airlineInstance = airlineService.getInstances().get(0);
-        ServiceInstance travelInstance = travelService.getInstances().get(0);
-        String airlineProxifiedUri = airlineInstance.getBusUri(ServiceType.SOAP);
-        String travelProxifiedUri = travelInstance.getBusUri(ServiceType.SOAP);
-        System.out.println("airline proxified: " + airlineProxifiedUri);
-        System.out.println("travel agency proxified: " + travelProxifiedUri);
-        assertNotNull(airlineProxifiedUri);
-        assertNotNull(travelProxifiedUri);
-        assertTrue(airlineProxifiedUri.contains(":8180/services/AirlineServicePortClientProxyEndpoint"));
-        assertTrue(travelProxifiedUri.contains(":8180/services/TravelAgencyServicePortClientProxyEndpoint"));
+	DeployableService airlineService = chor.getDeployableServiceBySpecName(ModelsForTest.AIRLINE);
+	DeployableService travelService = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
+	ServiceInstance airlineInstance = airlineService.getInstances().get(0);
+	ServiceInstance travelInstance = travelService.getInstances().get(0);
+	String airlineProxifiedUri = airlineInstance.getBusUri(ServiceType.SOAP);
+	String travelProxifiedUri = travelInstance.getBusUri(ServiceType.SOAP);
+	System.out.println("airline proxified: " + airlineProxifiedUri);
+	System.out.println("travel agency proxified: " + travelProxifiedUri);
+	assertNotNull(airlineProxifiedUri);
+	assertNotNull(travelProxifiedUri);
+	assertTrue(airlineProxifiedUri.contains(":8180/services/AirlineServicePortClientProxyEndpoint"));
+	assertTrue(travelProxifiedUri.contains(":8180/services/TravelAgencyServicePortClientProxyEndpoint"));
 
-        WSClient client = new WSClient(travelProxifiedUri + "?wsdl");
-        client.setEndpoint(travelProxifiedUri);
-        Item response = client.request("buyTrip");
-        String codes = response.getChild("return").getContent();
-        assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
+	WSClient client = new WSClient(travelProxifiedUri + "?wsdl");
+	client.setEndpoint(travelProxifiedUri);
+	Item response = client.request("buyTrip");
+	String codes = response.getChild("return").getContent();
+	assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
 
     }
 }
