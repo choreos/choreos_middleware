@@ -4,4 +4,4 @@
 
 default['monitoring']['tarball_server']  = "http://valinhos.ime.usp.br:54080/choreos"
 default['monitoring']['tarball_name']    = "PlatformMonitoring"
-default['monitoring']['tarball_version'] = "0.1-SNAPSHOT"
+default['monitoring']['tarball_version'] = "0.2-SNAPSHOT"

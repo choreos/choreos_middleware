@@ -10,7 +10,7 @@ public class EnactmentEngineGlimpseConsumerRunnable implements Runnable {
 
     private Properties getConsumerProperties() {
 	return Manager.createConsumerSettingsPropertiesObject("org.apache.activemq.jndi.ActiveMQInitialContextFactory",
-		namingURL, "system", "manager", "TopicCF", "jms.serviceTopic", true, "consumerTest");
+		namingURL, "system", "manager", "TopicCF", "jms.serviceTopic", false, "eeConsumer");
 
     }
 

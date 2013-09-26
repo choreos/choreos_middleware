@@ -54,7 +54,7 @@ public class ChorEnactmentWithBusTest {
     public void setUp() {
 
         ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "true");
-        ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
+        ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT, 2);
         chorSpec = models.getChorSpec();
     }
 
@@ -84,6 +84,5 @@ public class ChorEnactmentWithBusTest {
         Item response = client.request("buyTrip");
         String codes = response.getChild("return").getContent();
         assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
-
     }
 }

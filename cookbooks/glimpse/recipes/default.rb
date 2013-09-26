@@ -5,7 +5,7 @@
 include_recipe "activemq"
 
 settings_file = "systemSettings"
-glimpse_name = "glimpse-manager.0.3"
+glimpse_name = "glimpse-manager.0.4"
 glimpse_filename = "#{ENV['HOME']}/#{glimpse_name}"
 glimpse_tarballname = "#{glimpse_filename}.tar.gz"
 glimpse_install_path = "#{glimpse_filename}"
@@ -59,18 +59,9 @@ template "#{glimpse_install_path}/#{manager}" do
   })
 end
 
-template "#{glimpse_install_path}/#{settings_file}" do
-  source "systemSettings.erb"
-  variables({
-	 :environment_file => "#{glimpse_install_path}/#{environment}",
-	 :drools_file => "#{glimpse_install_path}/#{drools}",
-	 :manager_file => "#{glimpse_install_path}/#{manager}"
-  })
-end
-
 service "#{glimpse_name}" do
         # Dirty trick to save the java pid to a file
-        start_command "start-stop-daemon -b --start --quiet --oknodo --pidfile /var/run/#{glimpse_name}.pid --exec /bin/bash -- -c \"echo \\$\\$ > /var/run/#{glimpse_name}.pid ; exec java -jar #{glimpse_install_path}/glimpse-manager.jar #{glimpse_install_path}/#{settings_file}\""
+        start_command "start-stop-daemon -b --start --quiet --oknodo --pidfile /var/run/#{glimpse_name}.pid --exec /bin/bash -- -c \"echo \\$\\$ > /var/run/#{glimpse_name}.pid ; exec java -jar #{glimpse_install_path}/#{glimpse_name}.jar #{glimpse_install_path}/#{settings_file}\""
         stop_command "start-stop-daemon --stop --signal 15 --quiet --oknodo --pidfile /var/run/#{glimpse_name}.pid"
         action :start
         status_command "if ps -p `cat /var/run/#{glimpse_name}.pid` > /dev/null  ; then exit 0; else exit 1; fi"

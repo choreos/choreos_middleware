@@ -26,10 +26,19 @@ public class ModelsForTest {
     public static final String AIRLINE = "airline";
     public static final String TRAVEL_AGENCY = "travelagency";
 
-    public static final String AIRLINE_JAR = "http://valinhos.ime.usp.br:54080/enact_test/v2-2/airline-service.jar";
-    public static final String TRAVEL_AGENCY_JAR = "http://valinhos.ime.usp.br:54080/enact_test/v2-2/travel-agency-service.jar";
-    public static final String AIRLINE_WAR = "http://valinhos.ime.usp.br:54080/enact_test/v2-2/airline.war";
-    public static final String TRAVEL_AGENCY_WAR = "http://valinhos.ime.usp.br:54080/enact_test/v2-2/travelagency.war";
+    public static final String AIRLINE_JAR = "http://www.ime.usp.br/~tfurtado/downloads/airline.jar";
+    public static final String TRAVEL_AGENCY_JAR = "http://www.ime.usp.br/~tfurtado/downloads/travelagency.jar";
+    public static final String AIRLINE_WAR = "http://www.ime.usp.br/~tfurtado/downloads/airline.war";
+    public static final String TRAVEL_AGENCY_WAR = "http://www.ime.usp.br/~tfurtado/downloads/travelagency.war";
+
+    // public static final String AIRLINE_JAR =
+    // "http://valinhos.ime.usp.br:54080/enact_test/v2-2/airline-service.jar";
+    // public static final String TRAVEL_AGENCY_JAR =
+    // "http://valinhos.ime.usp.br:54080/enact_test/v2-2/travel-agency-service.jar";
+    // public static final String AIRLINE_WAR =
+    // "http://valinhos.ime.usp.br:54080/enact_test/v2-2/airline.war";
+    // public static final String TRAVEL_AGENCY_WAR =
+    // "http://valinhos.ime.usp.br:54080/enact_test/v2-2/travelagency.war";
 
     public static final String AIRLINE_IP = "192.168.56.101";
     public static final String TRAVEL_AGENCY_IP = "192.168.56.102";

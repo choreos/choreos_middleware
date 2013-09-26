@@ -11,7 +11,7 @@ public class TravelAgencyClient {
     final static Logger logger = Logger.getLogger(TravelAgencyClient.class.getName());
 
     public static void main(String[] args) {
-	String wsdl = "http://10.0.0.13:8080/a77fe330-f025-461e-895f-7d02ae2ae185/travelagency?wsdl";
+	String wsdl = "http://54.211.147.13:1235/travelagency/?wsdl";
 	String namespace = "http://choreos.ow2.org/";
 	String local = "TravelAgencyServiceService";
 

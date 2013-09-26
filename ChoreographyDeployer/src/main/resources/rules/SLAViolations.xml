@@ -1,33 +1,124 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ComplexEventRuleActionList
-	xmlns="http://labse.isti.cnr.it/glimpse/xml/ComplexEventRule"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://labse.isti.cnr.it/glimpse/xml/ComplexEventRule ./ComplexEventRule.xsd">
-	<Insert RuleType="drools">
-		<RuleName>cpu_user</RuleName>
-		<RuleBody>
-			import it.cnr.isti.labse.glimpse.event.GlimpseBaseEventChoreos;
-			import it.cnr.isti.labse.glimpse.manager.ResponseDispatcher;
-			import it.cnr.isti.labse.glimpse.utils.NotifierUtils;
-
-			declare GlimpseBaseEventChoreos
-				@role( event )
-				@timestamp( timeStamp )
-			end
-
-			rule "cpu-user-limit"
-			no-loop
-			salience 999
-			dialect "java"
+<ComplexEventRuleActionList xmlns="http://labse.isti.cnr.it/glimpse/xml/ComplexEventRule"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://labse.isti.cnr.it/glimpse/xml/ComplexEventRule ./ComplexEventRule.xsd">
+<Insert RuleType="drools">
+	<RuleName>CpuUserEventDetected</RuleName>
+    <RuleBody>
+        import it.cnr.isti.labsedc.glimpse.event.GlimpseBaseEventChoreos;
+        import it.cnr.isti.labsedc.glimpse.manager.ResponseDispatcher;
+		import java.util.regex.Matcher;
+		import java.util.regex.Pattern;
+        
+        declare GlimpseBaseEventChoreos
+	        @role( event )
+	        @timestamp( timeStamp )
+        end
+        
+        declare CPUEvent
+        	@role(event)
+        	value : float
+        	ip : String
+        end
+                
+		rule "cpu_user_event"
+		no-loop true
+		salience 20
+		dialect "mvel"
+		
+		when
+			$aEvent : GlimpseBaseEventChoreos(this.isConsumed == false, 
+			this.isException == false, 
+			this.getEventName == "cpu_user");
+		then
+			$aEvent.setConsumed(true);
+			update($aEvent);
 			
-			when
-				$bEvent : GlimpseBaseEventChoreos(this.getEventName == "cpu_user", this.isConsumed == false);
-			then
-				ResponseDispatcher.NotifyMeValue(drools.getRule().getName(), "consumerTest", $bEvent.getEventName(), (String) $bEvent.getEventData());
-				
-				$bEvent.setConsumed(true);
-				update( $bEvent );
-			end
-		</RuleBody>
-	</Insert>
+			Pattern p = Pattern.compile("Measured: ([0-9.]+)");
+			Matcher m1 = p.matcher((String) $aEvent.getEventData());
+			
+			float f = -1;
+			if (m1.find())
+				f = Float.parseFloat(m1.group(0).split(": ")[1]);		
+			
+			insert (new CPUEvent(f,$aEvent.getMachineIP()));
+
+			ResponseDispatcher.LogViolation(drools.getRule().getName(),
+			"RMA",
+			"\nSLA resources violation detected on: " + $aEvent.getMachineIP());
+			
+			retract ($aEvent);
+		end
+    </RuleBody>
+</Insert>
+<Insert RuleType="drools">
+	<RuleName>HighCpuUserEvent</RuleName>
+    <RuleBody>
+        import it.cnr.isti.labsedc.glimpse.manager.ResponseDispatcher;
+        
+        declare CPUEvent
+        	@role(event)
+        	value : float
+        	ip : String
+        end
+                
+		rule "high_cpu_user_event"
+		no-loop true
+		salience 20
+		dialect "mvel"
+		
+		when
+			$event : CPUEvent(this.value > 90);
+			$lastEvent : CPUEvent(this.value > 90, this after[25s,35s] $event)
+		then
+			update($event);
+			update($lastEvent);
+
+			ResponseDispatcher.LogViolation(drools.getRule().getName(),
+			"Consumer Rule",
+			"\nSLA resource violation occurred on: " + $event.ip);
+			
+			ResponseDispatcher.NotifyMeValue(drools.getRule().getName(),
+			"eeConsumer", "cpu_user", (String) $event.ip);
+			
+			retract($event);
+			retract($lastEvent);
+		end
+    </RuleBody>
+</Insert>
+<Insert RuleType="drools">
+	<RuleName>LowCpuUserEvent</RuleName>
+    <RuleBody>
+        import it.cnr.isti.labsedc.glimpse.manager.ResponseDispatcher;
+        
+        declare CPUEvent
+        	@role(event)
+        	value : float
+        	ip : String
+        end
+                
+		rule "low_cpu_user_event"
+		no-loop true
+		salience 20
+		dialect "mvel"
+		
+		when
+			$event : CPUEvent(this.value &lt; 35);
+			$lastEvent : CPUEvent(this.value &lt; 35, this after[25s,35s] $event)
+		then
+			update($event);
+			update($lastEvent);
+
+			ResponseDispatcher.LogViolation(drools.getRule().getName(),
+			"Consumer Rule",
+			"\nSLA resource violation occurred on: " + $event.ip);
+			
+			ResponseDispatcher.NotifyMeValue(drools.getRule().getName(),
+			"eeConsumer", "cpu_user", (String) $event.ip);
+			
+			retract($event);
+			retract($lastEvent);
+		end
+    </RuleBody>
+</Insert>
 </ComplexEventRuleActionList>

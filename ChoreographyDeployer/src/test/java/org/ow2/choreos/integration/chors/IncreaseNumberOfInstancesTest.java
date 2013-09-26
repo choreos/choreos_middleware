@@ -80,6 +80,8 @@ public class IncreaseNumberOfInstancesTest {
 	assertTrue(codes2.startsWith("33") && codes2.endsWith("--22"));
 	assertFalse(codes.equals(codes2));
 
+	System.in.read();
+
 	ee.updateChoreography(chorId, newSpec);
 	chor = ee.enactChoreography(chorId);
 
