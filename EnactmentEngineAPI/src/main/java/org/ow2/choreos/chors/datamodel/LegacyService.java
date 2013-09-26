@@ -17,7 +17,7 @@ import org.ow2.choreos.services.datamodel.Service;
  */
 public class LegacyService extends Service {
 
-    List<String> URIs;
+    private List<String> URIs;
 
     public LegacyService(LegacyServiceSpec serviceSpec) {
         super(serviceSpec);
