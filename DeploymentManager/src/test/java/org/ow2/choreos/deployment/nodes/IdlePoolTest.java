@@ -78,7 +78,7 @@ public class IdlePoolTest {
         }
     }
 
-    @Test(timeout = 1000)
+    @Test(timeout = 2000)
     public void shouldFillThePoolConcurrently() throws InterruptedException {
 
         int N = 5;
