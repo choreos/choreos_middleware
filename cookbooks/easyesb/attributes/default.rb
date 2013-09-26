@@ -3,7 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/. 
 
 # Easy ESB Server
-default['easyesb']['url'] = "http://valinhos.ime.usp.br:54080/easyesb/easyesb-cd-xsb-18.09.13.tar.gz"
+default['easyesb']['url'] = "http://valinhos.ime.usp.br:54080/easyesb/easyesb-cd-18.09.13.tar.gz"
 default['easyesb']['work_dir'] = ENV['HOME']
 default['easyesb']['downloaded_file'] = "#{ENV['HOME']}/easyesb-cd-xsb-18.09.13.tar.gz"
 default['easyesb']['executable_jar'] = "#{ENV['HOME']}/esb-choreos-distribution-1.0-SNAPSHOT/bin/server.jar"
