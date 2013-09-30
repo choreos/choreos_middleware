@@ -22,7 +22,6 @@ public class InstancesFilter {
      * @return
      */
     public List<ServiceInstance> filter(List<Service> list) {
-
         List<ServiceInstance> instances = new ArrayList<ServiceInstance>();
         for (Service svc : list) {
             if (((DeployableServiceSpec) svc.getSpec()).getPackageType() != PackageType.EASY_ESB) {

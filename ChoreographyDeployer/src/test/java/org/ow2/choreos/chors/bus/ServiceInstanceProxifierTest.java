@@ -10,30 +10,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.junit.Test;
-import org.ow2.choreos.services.datamodel.DeployableService;
-import org.ow2.choreos.services.datamodel.PackageType;
-import org.ow2.choreos.services.datamodel.Service;
-import org.ow2.choreos.services.datamodel.ServiceInstance;
+import org.ow2.choreos.services.datamodel.Proxification;
 import org.ow2.choreos.services.datamodel.ServiceType;
-import org.ow2.choreos.tests.ModelsForTest;
 
 public class ServiceInstanceProxifierTest {
 
-    private ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
+    private static final String SERVICE_NAME = "airline";
+    private static final String NATIVE_URI = "http://localhost:1234/airline/";
     private static final String BUS_ADDRESS = "http://localhost:8180/services/adminExternalEndpoint";
     private static final String PROXIFIED_ADDRESS = "http://localhost:8180/services/AirlineServicePortClientProxyEndpoint";
 
-    private ServiceInstance getServiceInstance() {
-
-        Service airlineService = models.getAirlineService();
-        ServiceInstance instance = ((DeployableService) airlineService).getInstances().get(0);
-        instance.setNativeUri("http://localhost:1234/airline/");
-
-        return instance;
-    }
-
     private EasyESBNode getEsbNode() throws EasyESBException {
-
         EasyESBNode esbNode = mock(EasyESBNodeImpl.class);
         when(esbNode.proxifyService(any(String.class), any(String.class))).thenReturn(PROXIFIED_ADDRESS);
         when(esbNode.getAdminEndpoint()).thenReturn(BUS_ADDRESS);
@@ -42,15 +29,13 @@ public class ServiceInstanceProxifierTest {
 
     @Test
     public void test() throws EasyESBException {
-
-        ServiceInstance instance = this.getServiceInstance();
         EasyESBNode esbNode = this.getEsbNode();
-
-        ServiceInstanceProxifier proxifier = new ServiceInstanceProxifier();
-        String proxifiedAddress = proxifier.proxify(instance, esbNode);
+        Proxification proxification = new Proxification();
+        ProxificationTask task = new ProxificationTask(SERVICE_NAME, NATIVE_URI, proxification, esbNode);
+        String proxifiedAddress = task.call();
         assertEquals(PROXIFIED_ADDRESS, proxifiedAddress);
-        assertEquals(PROXIFIED_ADDRESS, instance.getProxification().getBusUri(ServiceType.SOAP));
-        assertEquals(BUS_ADDRESS, instance.getProxification().getEasyEsbNodeAdminEndpoint());
+        assertEquals(PROXIFIED_ADDRESS, proxification.getBusUri(ServiceType.SOAP));
+        assertEquals(BUS_ADDRESS, proxification.getEasyEsbNodeAdminEndpoint());
     }
 
 }

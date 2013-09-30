@@ -54,7 +54,7 @@ public class ChorEnactmentWithBusTest {
     public void setUp() {
 
         ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "true");
-        ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT, 2);
+        ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT);
         chorSpec = models.getChorSpec();
     }
 

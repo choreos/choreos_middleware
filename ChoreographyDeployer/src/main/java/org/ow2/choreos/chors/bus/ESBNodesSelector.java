@@ -4,9 +4,8 @@
 
 package org.ow2.choreos.chors.bus;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.bus.selector.ESBNodeSelector;
@@ -14,6 +13,7 @@ import org.ow2.choreos.chors.bus.selector.ESBNodeSelectorFactory;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.selectors.NotSelectedException;
+import org.ow2.choreos.services.datamodel.Proxification;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 
 /**
@@ -30,27 +30,39 @@ public class ESBNodesSelector {
      * services (CDs) will be not proxified.
      * 
      * @param choreography
-     * @return a map whose key is a serviceInstance and the value is the EasyESB
-     *         node that must be used to proxify the serviceInstance; if it was
-     *         not possible to select an esb node to a specific instance, there
-     *         will be not a key to this instance.
+     * @return a list of proxification tasks, where nativeUri and easyEsbNode
+     *         are inputs, and the result of the task must be saved on the
+     *         provided proxification object; if it was not possible to select
+     *         an esb node to a specific instance, there will be not a key to
+     *         this instance.
      */
-    public Map<ServiceInstance, EasyESBNode> selectESBNodes(Choreography choreography) {
-        Map<ServiceInstance, EasyESBNode> selectedESBNodes = new HashMap<ServiceInstance, EasyESBNode>();
+    public List<ProxificationTask> selectESBNodes(Choreography choreography) {
+        List<ProxificationTask> proxificationTasks = new ArrayList<ProxificationTask>();
         ESBNodeSelector selector = ESBNodeSelectorFactory.getFactoryInstance().getNodeSelectorInstance();
+
         InstancesFilter filter = new InstancesFilter();
         List<ServiceInstance> instancesToBeProxified = filter.filter(choreography.getServices());
         for (ServiceInstance serviceInstance : instancesToBeProxified) {
             ResourceImpact resourceImpact = serviceInstance.getServiceSpec().getResourceImpact();
             try {
                 EasyESBNode esbNode = selector.select(resourceImpact, 1).get(0);
-                selectedESBNodes.put(serviceInstance, esbNode);
+                ProxificationTask proxTask = createProxificationTask(serviceInstance, esbNode);
+                proxificationTasks.add(proxTask);
             } catch (NotSelectedException e) {
                 logger.error("Could not select ESB node to an instance of "
                         + serviceInstance.getServiceSpec().getName());
             }
         }
-        return selectedESBNodes;
+        return proxificationTasks;
+    }
+    
+    private ProxificationTask createProxificationTask(ServiceInstance serviceInstance, EasyESBNode esbNode) {
+        String svcName = serviceInstance.getServiceSpec().getName();
+        String nativeUri = serviceInstance.getNativeUri();
+        Proxification prox = new Proxification();
+        serviceInstance.setProxification(prox);
+        ProxificationTask proxTask = new ProxificationTask(svcName, nativeUri, prox, esbNode);
+        return proxTask;
     }
 
 }

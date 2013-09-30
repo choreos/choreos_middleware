@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.bus.EasyESBException;
 import org.ow2.choreos.chors.bus.EasyESBNode;
-import org.ow2.choreos.chors.bus.ServiceInstanceProxifier;
+import org.ow2.choreos.chors.bus.ProxificationTask;
 import org.ow2.choreos.chors.bus.selector.ESBNodeFactory;
 import org.ow2.choreos.chors.rest.Owners;
 import org.ow2.choreos.nodes.NodeNotFoundException;
@@ -37,6 +37,7 @@ import org.ow2.choreos.services.client.ServicesClient;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
+import org.ow2.choreos.services.datamodel.Proxification;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
@@ -90,7 +91,8 @@ public class ProxifyServiceTest {
         invokeService();
     }
 
-    private void deployService() throws ServiceNotCreatedException, NodeNotUpdatedException, NodeNotFoundException, ServiceNotFoundException {
+    private void deployService() throws ServiceNotCreatedException, NodeNotUpdatedException, NodeNotFoundException,
+            ServiceNotFoundException {
         DeployableServiceSpec airlineSpec = models.getAirlineSpec();
         DeployableService service = sm.createService(airlineSpec);
         CloudNode node = service.getSelectedNodes().iterator().next();
@@ -104,9 +106,11 @@ public class ProxifyServiceTest {
     }
 
     private void proxifyService() {
-        ServiceInstanceProxifier proxifier = new ServiceInstanceProxifier();
+        Proxification proxification = new Proxification();
+        ProxificationTask task = new ProxificationTask(serviceInstance.getServiceSpec().getName(),
+                serviceInstance.getNativeUri(), proxification, esbNode);
         try {
-            proxifiedUrl = proxifier.proxify(serviceInstance, esbNode);
+            proxifiedUrl = task.call();
         } catch (EasyESBException e) {
             System.out.println(e);
             fail();
