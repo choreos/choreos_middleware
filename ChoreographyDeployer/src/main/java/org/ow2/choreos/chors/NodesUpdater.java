@@ -1,5 +1,6 @@
 package org.ow2.choreos.chors;
 
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -10,10 +11,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.breaker.Invoker;
-import org.ow2.choreos.breaker.InvokerBuilder;
-import org.ow2.choreos.breaker.InvokerException;
 import org.ow2.choreos.chors.rest.RESTClientsRetriever;
+import org.ow2.choreos.invoker.Invoker;
+import org.ow2.choreos.invoker.InvokerBuilder;
+import org.ow2.choreos.invoker.InvokerException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.services.datamodel.DeployableService;

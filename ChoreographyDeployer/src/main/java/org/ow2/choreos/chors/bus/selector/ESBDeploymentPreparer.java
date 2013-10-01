@@ -1,10 +1,11 @@
 package org.ow2.choreos.chors.bus.selector;
 
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import org.ow2.choreos.breaker.Invoker;
-import org.ow2.choreos.breaker.InvokerException;
+import org.ow2.choreos.invoker.Invoker;
+import org.ow2.choreos.invoker.InvokerException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.utils.SshUtil;
 import org.ow2.choreos.utils.SshWaiter;

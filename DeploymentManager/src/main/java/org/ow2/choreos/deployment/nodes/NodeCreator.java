@@ -4,14 +4,15 @@
 
 package org.ow2.choreos.deployment.nodes;
 
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import org.ow2.choreos.breaker.Invoker;
-import org.ow2.choreos.breaker.InvokerException;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cm.NodeBootstrapper;
 import org.ow2.choreos.deployment.nodes.cm.NodeNotBootstrappedException;
+import org.ow2.choreos.invoker.Invoker;
+import org.ow2.choreos.invoker.InvokerException;
 import org.ow2.choreos.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
