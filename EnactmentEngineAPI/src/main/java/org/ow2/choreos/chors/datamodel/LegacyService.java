@@ -27,6 +27,7 @@ public class LegacyService extends Service {
         for (String uri: serviceSpec.getNativeURIs()) {
             LegacyServiceInstance legacyInstance = new LegacyServiceInstance();
             legacyInstance.setUri(uri);
+            legacyInstance.setSpec(serviceSpec);
             legacyServiceInstances.add(legacyInstance);
         }
     }

@@ -6,6 +6,7 @@ public class LegacyServiceInstance {
 
     private String uri;
     private Proxification proxification;
+    private LegacyServiceSpec spec;
     
     public String getUri() {
         return uri;
@@ -22,6 +23,14 @@ public class LegacyServiceInstance {
     public void setProxification(Proxification proxification) {
         this.proxification = proxification;
     }
+    
+    public LegacyServiceSpec getSpec() {
+        return spec;
+    }
+
+    public void setSpec(LegacyServiceSpec spec) {
+        this.spec = spec;
+    }
 
     @Override
     public int hashCode() {
@@ -30,7 +39,7 @@ public class LegacyServiceInstance {
         result = prime * result + ((uri == null) ? 0 : uri.hashCode());
         return result;
     }
-
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
