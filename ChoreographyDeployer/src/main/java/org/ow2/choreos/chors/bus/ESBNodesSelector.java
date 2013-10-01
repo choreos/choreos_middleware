@@ -29,7 +29,7 @@ public class ESBNodesSelector {
     private static Logger logger = Logger.getLogger(ESBNodesSelector.class);
 
     private List<ProxificationTask> proxificationTasks = new ArrayList<ProxificationTask>();
-    private ESBNodeSelector selector = ESBNodeSelectorFactory.getFactoryInstance().getNodeSelectorInstance();
+    private ESBNodeSelector selector;
     
 
     void setSelector(ESBNodeSelector selector) {
@@ -48,6 +48,8 @@ public class ESBNodesSelector {
      *         this instance.
      */
     public List<ProxificationTask> selectESBNodes(Choreography choreography) {
+	if (selector == null)
+	    selector = ESBNodeSelectorFactory.getFactoryInstance().getNodeSelectorInstance();
         List<DeployableService> deployableServices = choreography.getDeployableServices();
         if (deployableServices != null && !deployableServices.isEmpty())
             createTasksForDeployableServices(choreography);
