@@ -36,7 +36,9 @@ We proceed with a brief explanation about each class:
 \item [LegacyService:] provides information about a legacy service;
 \item [DeployableService:] provides information about a deployed service;
 \item [ServiceInstance:] provides information about a specific instance, also called replica, of a deployed service (URI, node data etc.). 
+\item [LegacyServiceInstance:] provides information about a specific instance of a legacy service. 
 \item [Node:] information about the node, including IP address, where a service instance is running.
+\item [Proxification:] provides information about how an instance can be accessed through an EasyESB node. Provides also the address of the ESB node itself, so monitoring tasks may be performed.
 \end{description}
 
 To request a choreography enactment, it is important to understand very well the \verb!ServiceSpec!, \verb!DeployableServiceSpec!, and the \verb!LegacyServiceSpec! classes. Therefore, the description of them follows:
