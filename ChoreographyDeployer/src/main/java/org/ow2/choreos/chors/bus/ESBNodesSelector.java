@@ -23,7 +23,10 @@ import org.ow2.choreos.services.datamodel.ServiceInstance;
  */
 public class ESBNodesSelector {
 
-    private Logger logger = Logger.getLogger(ESBNodesSelector.class);
+    private static Logger logger = Logger.getLogger(ESBNodesSelector.class);
+
+    private ESBNodeSelector selector = ESBNodeSelectorFactory.getFactoryInstance().getNodeSelectorInstance();
+    
 
     /**
      * Selects EasyESB nodes to each one of the service instances. EASY_ESB
@@ -38,7 +41,6 @@ public class ESBNodesSelector {
      */
     public List<ProxificationTask> selectESBNodes(Choreography choreography) {
         List<ProxificationTask> proxificationTasks = new ArrayList<ProxificationTask>();
-        ESBNodeSelector selector = ESBNodeSelectorFactory.getFactoryInstance().getNodeSelectorInstance();
 
         InstancesFilter filter = new InstancesFilter();
         List<ServiceInstance> instancesToBeProxified = filter.filter(choreography.getServices());
@@ -63,6 +65,10 @@ public class ESBNodesSelector {
         serviceInstance.setProxification(prox);
         ProxificationTask proxTask = new ProxificationTask(svcName, nativeUri, prox, esbNode);
         return proxTask;
+    }
+
+    void setSelector(ESBNodeSelector selector) {
+        this.selector = selector;
     }
 
 }
