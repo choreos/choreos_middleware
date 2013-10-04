@@ -207,15 +207,15 @@ public class DeployableServiceSpec extends ServiceSpec implements Serializable {
         return true;
     }
 
+    public DeployableServiceSpec clone() {
+        return (DeployableServiceSpec) SerializationUtils.clone(this);
+    }
+    
     @Override
     public String toString() {
         return "DeployableServiceSpec [name=" + super.name + ", packageUri=" + packageUri + ", packageType=" + packageType + ", endpointName="
                 + endpointName + ", port=" + port + ", owner=" + owner + ", group=" + group + ", numberOfInstances="
                 + numberOfInstances + ", version=" + version + "]";
-    }
-    
-    public DeployableServiceSpec clone() {
-        return (DeployableServiceSpec) SerializationUtils.clone(this);
     }
 
 }

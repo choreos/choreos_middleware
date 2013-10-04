@@ -1,12 +1,15 @@
-package org.ow2.choreos.breaker;
+package org.ow2.choreos.invoker;
 
 import static org.junit.Assert.assertEquals;
+
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
+import org.ow2.choreos.invoker.Invoker;
+import org.ow2.choreos.invoker.InvokerException;
 
 public class InvokerTest {
     

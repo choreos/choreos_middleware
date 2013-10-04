@@ -1,11 +1,12 @@
 package org.ow2.choreos.deployment.nodes;
 
+
 import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.breaker.Invoker;
-import org.ow2.choreos.breaker.InvokerBuilder;
-import org.ow2.choreos.breaker.InvokerException;
+import org.ow2.choreos.invoker.Invoker;
+import org.ow2.choreos.invoker.InvokerBuilder;
+import org.ow2.choreos.invoker.InvokerException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;

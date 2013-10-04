@@ -1,12 +1,13 @@
 package org.ow2.choreos.chors.bus;
 
+
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.breaker.Invoker;
-import org.ow2.choreos.breaker.InvokerBuilder;
-import org.ow2.choreos.breaker.InvokerException;
 import org.ow2.choreos.chors.datamodel.Choreography;
+import org.ow2.choreos.invoker.Invoker;
+import org.ow2.choreos.invoker.InvokerBuilder;
+import org.ow2.choreos.invoker.InvokerException;
 import org.ow2.choreos.utils.TimeoutsAndTrials;
 
 public class ServicesProxifier {

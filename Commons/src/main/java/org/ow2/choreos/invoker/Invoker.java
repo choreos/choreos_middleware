@@ -1,4 +1,4 @@
-package org.ow2.choreos.breaker;
+package org.ow2.choreos.invoker;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;

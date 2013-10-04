@@ -105,6 +105,7 @@ public interface ContextSender {
 \end{lstlisting}
 }
 
+The final step is to edit the \texttt{context\_sender.properties} file, located on ChoreographyDeployer resources folder. You must add a line in the format \verb!SERVICE_TYPE=full.qualified.class.name!, where the key is the name of the new service type, and the value is the full qualified name of the \textsf{ContextSender} implementing class. It is also necessary to recompile the DeploymentManager project in such way it can access the implementing class. Now you can create new service specs using the just-created service type!
 
 \section{Supporting new node selection policies}
 

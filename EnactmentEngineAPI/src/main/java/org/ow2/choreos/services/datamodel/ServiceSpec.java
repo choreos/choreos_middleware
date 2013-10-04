@@ -95,7 +95,10 @@ public abstract class ServiceSpec implements Serializable {
                 return false;
         } else if (!roles.equals(other.roles))
             return false;
-        if (serviceType != other.serviceType)
+        if (serviceType == null) {
+            if (other.serviceType != null)
+                return false;
+        } else if (!serviceType.equals(other.serviceType))
             return false;
         return true;
     }

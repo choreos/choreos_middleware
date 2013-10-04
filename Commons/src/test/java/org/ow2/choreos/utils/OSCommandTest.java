@@ -4,9 +4,7 @@
 
 package org.ow2.choreos.utils;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.Calendar;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -14,11 +12,9 @@ public class OSCommandTest {
 
     @Test
     public void testRunLocalCommand() throws CommandLineException {
-        OSCommand com = new OSCommand("date");
+        OSCommand com = new OSCommand("echo 42");
         String result = com.execute();
-        Calendar cal = Calendar.getInstance();
-        int today = cal.get(Calendar.DAY_OF_MONTH);
-        assertTrue(result.contains(Integer.toString(today)));
+        assertEquals("42", result.replace("\n", ""));
     }
 
     @Test(expected = CommandLineException.class)

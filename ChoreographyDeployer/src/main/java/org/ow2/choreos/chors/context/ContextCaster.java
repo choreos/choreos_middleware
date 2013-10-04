@@ -4,16 +4,17 @@
 
 package org.ow2.choreos.chors.context;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.breaker.Invoker;
-import org.ow2.choreos.breaker.InvokerBuilder;
-import org.ow2.choreos.breaker.InvokerException;
 import org.ow2.choreos.chors.datamodel.Choreography;
+import org.ow2.choreos.invoker.Invoker;
+import org.ow2.choreos.invoker.InvokerBuilder;
+import org.ow2.choreos.invoker.InvokerException;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.Proxification;
 import org.ow2.choreos.services.datamodel.Service;
