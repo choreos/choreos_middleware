@@ -43,19 +43,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link SetInvocationAddress }
-     * 
-     */
-    public SetInvocationAddress createSetInvocationAddress() {
-	return new SetInvocationAddress();
-    }
-
-    /**
      * Create an instance of {@link SetInvocationAddressResponse }
      * 
      */
     public SetInvocationAddressResponse createSetInvocationAddressResponse() {
 	return new SetInvocationAddressResponse();
+    }
+
+    /**
+     * Create an instance of {@link SetInvocationAddress }
+     * 
+     */
+    public SetInvocationAddress createSetInvocationAddress() {
+	return new SetInvocationAddress();
     }
 
     /**

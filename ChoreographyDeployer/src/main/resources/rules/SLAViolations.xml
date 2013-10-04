@@ -62,7 +62,7 @@
         	ip : String
         end
                 
-		rule "high_cpu_user_event"
+		rule "HighCpuUserEvent"
 		no-loop true
 		salience 20
 		dialect "mvel"
@@ -97,7 +97,7 @@
         	ip : String
         end
                 
-		rule "low_cpu_user_event"
+		rule "LowCpuUserEvent"
 		no-loop true
 		salience 20
 		dialect "mvel"

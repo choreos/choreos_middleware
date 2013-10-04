@@ -15,10 +15,10 @@ import javax.xml.ws.WebServiceFeature;
  * version: 2.1
  * 
  */
-@WebServiceClient(name = "TravelAgencyServiceService", targetNamespace = "http://choreos.ow2.org/", wsdlLocation = TravelAgencyServiceService.TRAVELAGENCY_WSDL)
+@WebServiceClient(name = "TravelAgencyServiceService", targetNamespace = "http://choreos.ow2.org/", wsdlLocation = TravelAgencyServiceService.TRAVELAGENCYSERVICESERVICE_WSDL_LOCATION)
 public class TravelAgencyServiceService extends Service {
 
-    static final String TRAVELAGENCY_WSDL = "http://10.0.0.8:8080/11d96c72-fcb6-4bbc-92a4-28c66d14ae08/travelagency?wsdl";
+    static final String TRAVELAGENCYSERVICESERVICE_WSDL_LOCATION = "http://10.0.0.16:8080/69c4e58b-34db-4b07-a44c-e325830b171f/travelagency?wsdl";
     private final static Logger logger = Logger.getLogger(TravelAgencyServiceService.class.getName());
 
     static {
@@ -26,9 +26,9 @@ public class TravelAgencyServiceService extends Service {
 	try {
 	    URL baseUrl;
 	    baseUrl = TravelAgencyServiceService.class.getResource(".");
-	    url = new URL(baseUrl, TRAVELAGENCY_WSDL);
+	    url = new URL(baseUrl, TRAVELAGENCYSERVICESERVICE_WSDL_LOCATION);
 	} catch (MalformedURLException e) {
-	    logger.warning("Failed to create URL for the wsdl Location: 'http://10.0.0.8:8080/11d96c72-fcb6-4bbc-92a4-28c66d14ae08/travelagency?wsdl', retrying as a local file");
+	    logger.warning("Failed to create URL for the wsdl Location: 'http://10.0.0.16:8080/69c4e58b-34db-4b07-a44c-e325830b171f/travelagency?wsdl', retrying as a local file");
 	    logger.warning(e.getMessage());
 	}
     }

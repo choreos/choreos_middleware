@@ -38,7 +38,6 @@ public class AirlineStress {
 
     private static final String BUS_PROPERTY = "BUS";
 
-    // private EnactmentEngineGlimpseConsumerService glimpseConsumerService;
     private ChoreographyDeployer enactmentEngine;
 
     private ChoreographySpec chorSpec;
@@ -51,6 +50,11 @@ public class AirlineStress {
 
     @BeforeClass
     public static void startConfig() {
+	ModelsForTest.AIRLINE_JAR = "http://www.ime.usp.br/~tfurtado/downloads/airline.jar";
+	ModelsForTest.TRAVEL_AGENCY_JAR = "http://www.ime.usp.br/~tfurtado/downloads/travelagency.jar";
+	ModelsForTest.AIRLINE_WAR = "http://www.ime.usp.br/~tfurtado/downloads/airline.war";
+	ModelsForTest.TRAVEL_AGENCY_WAR = "http://www.ime.usp.br/~tfurtado/downloads/travelagency.war";
+
 	server = new ChorDeployerServer();
 	server.start();
     }
@@ -65,12 +69,11 @@ public class AirlineStress {
 	ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "false");
 
 	enactmentEngine = new ChorDeployerClient("http://localhost:9102/choreographydeployer/");
-	// glimpseConsumerService = new EnactmentEngineGlimpseConsumerService();
-	// glimpseConsumerService.execute();
 	String[] args = null;
 	EnactmentEngineGlimpseConsumerService.main(args);
 
 	models = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT);
+
 	chorSpec = models.getChorSpec();
     }
 
@@ -108,6 +111,7 @@ public class AirlineStress {
 
 	    long timeCounter = 0;
 	    String travelAgencyWsdlLocation = travelAgencyURI + "?wsdl";
+
 	    String namespace = "http://choreos.ow2.org/";
 	    String local = "TravelAgencyServiceService";
 
