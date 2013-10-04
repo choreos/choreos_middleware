@@ -1,4 +1,4 @@
-package org.ow2.choreos.chors.reconfiguration;
+package org.ow2.choreos.chors.reconfiguration.events;
 
 import java.util.List;
 
@@ -7,10 +7,12 @@ import org.ow2.choreos.chors.ChoreographyNotFoundException;
 import org.ow2.choreos.chors.EnactmentException;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
+import org.ow2.choreos.chors.reconfiguration.ComplexEventHandler;
+import org.ow2.choreos.chors.reconfiguration.HandlingEvent;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
-public class HighCpuUserEvent extends ComplexEventHandler {
+public class LowCpuUserEvent extends ComplexEventHandler {
 
     Logger logger = Logger.getLogger(this.getClass());
 
@@ -32,7 +34,8 @@ public class HighCpuUserEvent extends ComplexEventHandler {
 	    for (DeployableServiceSpec s : cSpec.getDeployableServiceSpecs()) {
 		if (s.getName().equals(spec.getName())) {
 		    logger.debug("Found service spec. Going to increase number of instances");
-		    s.setNumberOfInstances(s.getNumberOfInstances() + 1);
+		    if (s.getNumberOfInstances() > 1)
+			s.setNumberOfInstances(s.getNumberOfInstances() - 1);
 		    break;
 		}
 	    }
@@ -56,7 +59,6 @@ public class HighCpuUserEvent extends ComplexEventHandler {
 	    }
 
 	}
-
     }
 
 }
