@@ -33,7 +33,9 @@ public class ChorDifferTest {
         newChorSpec = models2.getChorSpec();
         includesOneMoreSpec();
         changesOneSpec();
-        chor.setChoreographySpec(newChorSpec);
+        ChorRegistry reg = ChorRegistry.getInstance();
+        reg.addChoreography(chor);
+        reg.getContext(chor.getId()).setRequestedChoreographySpec(newChorSpec);
     }
     
     private void changesOneSpec() {

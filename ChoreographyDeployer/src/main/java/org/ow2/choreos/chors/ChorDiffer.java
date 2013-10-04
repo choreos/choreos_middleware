@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ow2.choreos.chors.datamodel.Choreography;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
@@ -44,7 +45,9 @@ public class ChorDiffer {
         toUpdate = new HashMap<DeployableService, DeployableServiceSpec>();
         notModify = new ArrayList<DeployableService>();
         
-        List<DeployableServiceSpec> specsList = chor.getRequestedChoreographySpec().getDeployableServiceSpecs();
+        ChorRegistry reg = ChorRegistry.getInstance();
+        ChoreographySpec requestedChoreographySpec = reg.getRequestedChoreographySpec(chor.getId());
+        List<DeployableServiceSpec> specsList = requestedChoreographySpec.getDeployableServiceSpecs();
         Map<String, DeployableServiceSpec> requestedSpecMap = makeMapFromServiceList(specsList);
         Map<String, DeployableService> currentServices = getServicesForChor();
 

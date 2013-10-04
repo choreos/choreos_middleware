@@ -13,6 +13,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.ChoreographyDeployer;
+import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.chors.ChoreographyDeployerImpl;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
@@ -21,6 +22,7 @@ import org.ow2.choreos.services.datamodel.Service;
 import org.ow2.choreos.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.tests.ModelsForTest;
+import org.ow2.choreos.utils.Alarm;
 import org.ow2.choreos.utils.LogConfigurator;
 
 import eu.choreos.vv.clientgenerator.Item;
@@ -37,6 +39,8 @@ import eu.choreos.vv.clientgenerator.WSClient;
  */
 @Category(IntegrationTest.class)
 public class IncreaseNumberOfInstancesTest {
+    
+    private static final String BUS_PROPERTY = "BUS";
 
     private ChoreographySpec spec;
     private ChoreographySpec newSpec;
@@ -48,7 +52,7 @@ public class IncreaseNumberOfInstancesTest {
 
     @Before
     public void setUp() {
-
+        ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "false");
 	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT, 2);
 	spec = models.getChorSpec();
 	ModelsForTest newModels = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT, 3);
@@ -103,6 +107,9 @@ public class IncreaseNumberOfInstancesTest {
 	assertFalse(codes.equals(codes2));
 	assertFalse(codes3.equals(codes));
 	assertFalse(codes3.equals(codes2));
+	
+	Alarm alarm = new Alarm();
+	alarm.play();
 
     }
 

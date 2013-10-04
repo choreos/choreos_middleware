@@ -8,6 +8,7 @@ import org.ow2.choreos.chors.bus.TopologyConfigurator;
 import org.ow2.choreos.chors.bus.TopologyNotConfigureException;
 import org.ow2.choreos.chors.context.ContextCaster;
 import org.ow2.choreos.chors.datamodel.Choreography;
+import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.chors.datamodel.LegacyService;
 import org.ow2.choreos.services.datamodel.DeployableService;
 
@@ -15,9 +16,11 @@ public class ChoreographyEnacter {
     
     private static final String BUS_PROPERTY = "BUS";
 
+    private static Logger logger = Logger.getLogger(ChoreographyEnacter.class);
+
     private Choreography chor;
 
-    private Logger logger = Logger.getLogger(ChoreographyEnacter.class);
+    private ChorRegistry reg = ChorRegistry.getInstance();
 
     public ChoreographyEnacter(Choreography chor) {
         this.chor = chor;
@@ -32,15 +35,17 @@ public class ChoreographyEnacter {
             configureESBTopology();
         }
         castContext();
-        chor.enactmentFinished();
+        finish();
         logEnd();
         return chor;
     }
 
     private void logBegin() {
-        if (chor.getChoreographySpec() == chor.getRequestedChoreographySpec())
+        ChoreographyContext ctx = reg.getContext(chor.getId());
+        ChoreographySpec requestedChoreographySpec = ctx.getRequestedChoreographySpec();
+        if (chor.getChoreographySpec() == requestedChoreographySpec)
             logger.info("Starting enactment; chorId= " + chor.getId());
-        else if (chor.getChoreographySpec() == chor.getRequestedChoreographySpec())
+        else if (chor.getChoreographySpec() == requestedChoreographySpec)
             logger.info("Starting enactment for requested update; chorId= " + chor.getId());
     }
 
@@ -77,6 +82,11 @@ public class ChoreographyEnacter {
     private void castContext() {
         ContextCaster caster = new ContextCaster();
         caster.cast(chor);
+    }
+
+    private void finish() {
+        ChoreographyContext ctx = reg.getContext(chor.getId());
+        ctx.enactmentFinished();
     }
 
     private void logEnd() {

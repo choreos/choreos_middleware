@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.Service;
@@ -27,9 +26,6 @@ public class Choreography {
     // nor at any constructor (JAXB weirdness)
     private List<DeployableService> deployableServices;
     private List<LegacyService> legacyServices;
-
-    @XmlTransient
-    private ChoreographySpec requestedChoreographySpec;
 
     public DeployableService getDeployableServiceBySpecName(String specName) {
         List<DeployableService> services = getDeployableServices();
@@ -106,15 +102,8 @@ public class Choreography {
         return choreographySpec;
     }
 
-    public ChoreographySpec getRequestedChoreographySpec() {
-        return requestedChoreographySpec;
-    }
-
     public void setChoreographySpec(ChoreographySpec spec) {
-        if (choreographySpec == null) {
-            this.choreographySpec = spec;
-        }
-        this.requestedChoreographySpec = spec;
+        this.choreographySpec = spec;
     }
 
     public List<DeployableService> getDeployableServices() {
@@ -131,10 +120,6 @@ public class Choreography {
 
     public void setLegacyServices(List<LegacyService> legacyServices) {
         this.legacyServices = legacyServices;
-    }
-
-    public void enactmentFinished() {
-        this.choreographySpec = this.requestedChoreographySpec;
     }
 
     @Override
