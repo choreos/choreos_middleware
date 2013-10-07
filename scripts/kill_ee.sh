@@ -1,4 +1,5 @@
 #!/bin/bash
 
-ps -ef | grep exec:java | sed '/grep/d' | cut -d' ' -f2 | xargs kill -9
+ps -ef | grep exec:java | sed '/grep/d' | tr -s ' ' | cut -d' ' -f2 | xargs kill -9
+
 
