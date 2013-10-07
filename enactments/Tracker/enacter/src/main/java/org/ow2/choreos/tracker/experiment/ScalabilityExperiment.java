@@ -52,7 +52,7 @@ public class ScalabilityExperiment {
         cleanAmazon();
         startEE();
         Experiment exp = new Experiment(def);
-        exp.run();
+        exp.run(); // TODO set timeout
         stopEE();
     }
 
