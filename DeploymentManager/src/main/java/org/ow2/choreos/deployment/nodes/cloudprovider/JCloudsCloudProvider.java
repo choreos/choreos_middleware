@@ -110,7 +110,12 @@ public abstract class JCloudsCloudProvider implements CloudProvider {
 
         TemplateBuilder builder = client.templateBuilder().imageId(imageId);
         builder.hardwareId(hardwareId);
-        Template template = builder.build();
+        Template template = null;
+        try {
+            template = builder.build();
+        } catch (Exception e) {
+            logger.error("Could not build template because: " + e.getMessage());
+        }
         configureTemplateOptions(template.getOptions());
         return template;
     }
