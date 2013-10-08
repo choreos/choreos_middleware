@@ -83,12 +83,7 @@ public abstract class JCloudsCloudProvider implements CloudProvider {
         ContextBuilder builder = ContextBuilder.newBuilder(provider).credentials(identity, credential)
                 .overrides(properties);
         ComputeService compute = null;
-        try {
-            compute = builder.buildView(ComputeServiceContext.class).getComputeService();
-        } catch (Exception e) {
-            System.out.println("Exception whwn building compute service");
-            e.printStackTrace();
-        }
+        compute = builder.buildView(ComputeServiceContext.class).getComputeService();
         return compute;
     }
 
@@ -162,21 +157,16 @@ public abstract class JCloudsCloudProvider implements CloudProvider {
     @Override
     public List<CloudNode> getNodes() {
         List<CloudNode> nodeList = new ArrayList<CloudNode>();
-        try {
-            ComputeService client = getComputeService();
-            Set<? extends ComputeMetadata> cloudNodes = client.listNodes();
-            for (ComputeMetadata computeMetadata : cloudNodes) {
-                NodeMetadata nodeMetadata = client.getNodeMetadata(computeMetadata.getId());
-                CloudNode node = getCloudNodeFromMetadata(nodeMetadata);
-                if (node.getState() != 1 && node.hasIp()) {
-                    nodeList.add(node);
-                }
+        ComputeService client = getComputeService();
+        Set<? extends ComputeMetadata> cloudNodes = client.listNodes();
+        for (ComputeMetadata computeMetadata : cloudNodes) {
+            NodeMetadata nodeMetadata = client.getNodeMetadata(computeMetadata.getId());
+            CloudNode node = getCloudNodeFromMetadata(nodeMetadata);
+            if (node.getState() != 1 && node.hasIp()) {
+                nodeList.add(node);
             }
-            client.getContext().close();
-        } catch (Exception e) {
-            System.out.println("Pam!");
-            e.printStackTrace();
         }
+        client.getContext().close();
         return nodeList;
     }
 
