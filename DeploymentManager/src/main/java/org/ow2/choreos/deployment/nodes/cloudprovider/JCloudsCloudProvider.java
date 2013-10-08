@@ -82,7 +82,13 @@ public abstract class JCloudsCloudProvider implements CloudProvider {
     protected ComputeService getComputeService() {
         ContextBuilder builder = ContextBuilder.newBuilder(provider).credentials(identity, credential)
                 .overrides(properties);
-        ComputeService compute = builder.buildView(ComputeServiceContext.class).getComputeService();
+        ComputeService compute = null;
+        try {
+            compute = builder.buildView(ComputeServiceContext.class).getComputeService();
+        } catch (Exception e) {
+            System.out.println("Exception whwn building compute service");
+            e.printStackTrace();
+        }
         return compute;
     }
 
