@@ -5,9 +5,12 @@
 package org.ow2.choreos.deployment.rest;
 
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
+import org.ow2.choreos.deployment.nodes.cloudprovider.AWSCloudProvider;
+import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.rest.NodesResource;
 import org.ow2.choreos.deployment.nodes.rest.RunListResource;
 import org.ow2.choreos.deployment.services.rest.ServicesResource;
+import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.rest.RESTServer;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -29,6 +32,13 @@ public class DeploymentManagerServer {
     }
 
     public DeploymentManagerServer() {
+        
+        CloudProvider cp = new AWSCloudProvider();
+        System.out.println("Running nodes:");
+        for (CloudNode node: cp.getNodes()){
+            System.out.println(node);
+        }
+        
 	this.restServer = new RESTServer(NAME, URL, new Class[] { NodesResource.class, RunListResource.class,
 		ServicesResource.class });
     }

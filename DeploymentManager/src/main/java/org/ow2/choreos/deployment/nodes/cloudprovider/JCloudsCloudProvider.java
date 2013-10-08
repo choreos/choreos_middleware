@@ -156,16 +156,21 @@ public abstract class JCloudsCloudProvider implements CloudProvider {
     @Override
     public List<CloudNode> getNodes() {
         List<CloudNode> nodeList = new ArrayList<CloudNode>();
-        ComputeService client = getComputeService();
-        Set<? extends ComputeMetadata> cloudNodes = client.listNodes();
-        for (ComputeMetadata computeMetadata : cloudNodes) {
-            NodeMetadata nodeMetadata = client.getNodeMetadata(computeMetadata.getId());
-            CloudNode node = getCloudNodeFromMetadata(nodeMetadata);
-            if (node.getState() != 1 && node.hasIp()) {
-                nodeList.add(node);
+        try {
+            ComputeService client = getComputeService();
+            Set<? extends ComputeMetadata> cloudNodes = client.listNodes();
+            for (ComputeMetadata computeMetadata : cloudNodes) {
+                NodeMetadata nodeMetadata = client.getNodeMetadata(computeMetadata.getId());
+                CloudNode node = getCloudNodeFromMetadata(nodeMetadata);
+                if (node.getState() != 1 && node.hasIp()) {
+                    nodeList.add(node);
+                }
             }
+            client.getContext().close();
+        } catch (Exception e) {
+            System.out.println("Pam!");
+            e.printStackTrace();
         }
-        client.getContext().close();
         return nodeList;
     }
 
