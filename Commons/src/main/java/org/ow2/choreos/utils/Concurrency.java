@@ -15,11 +15,11 @@ import org.apache.log4j.Logger;
 
 public class Concurrency {
 
-    public static void waitExecutor(ExecutorService executor, int timeoutMinutes, TimeUnit timeUnit, Logger logger, String errorMessage) {
+    public static void waitExecutor(ExecutorService executor, int timeout, TimeUnit timeUnit, Logger logger, String errorMessage) {
         executor.shutdown();
         boolean status = false;
         try {
-            status = executor.awaitTermination(timeoutMinutes, timeUnit);
+            status = executor.awaitTermination(timeout, timeUnit);
         } catch (InterruptedException e) {
             logErrorMessage(errorMessage, logger);
         }

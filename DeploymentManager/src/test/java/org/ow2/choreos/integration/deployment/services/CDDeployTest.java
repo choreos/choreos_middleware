@@ -5,7 +5,6 @@
 package org.ow2.choreos.integration.deployment.services;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 import javax.ws.rs.core.Response;
 
@@ -33,7 +32,7 @@ import org.ow2.choreos.utils.LogConfigurator;
 public class CDDeployTest {
 
     // a known CD configuration file
-    public static String CD_LOCATION = LocationsTest.get("CD_WEATHER_LOCATION");
+    public static String CD_LOCATION = LocationsTest.get("CD_LOCATION");
 
     private String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
     private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
@@ -52,18 +51,13 @@ public class CDDeployTest {
         spec.setName("MyCD");
         spec.setPackageUri(CD_LOCATION);
         spec.setPackageType(PackageType.EASY_ESB);
-        spec.setEndpointName("CDWeatherForecastServicePort"); // configured in
-        // the config.xml
+        spec.setEndpointName("CD-client-selfcheckoutmachine"); // configured in the config.xml
     }
 
-    // should display each instance of the service
     @Test
     public void shouldDeployCDInEasyESBNode() throws Exception {
 
         DeployableService service = deployer.createService(spec);
-        assertNotNull(service);
-        System.out.println(">>>> " + service.toString());
-
         CloudNode node = service.getSelectedNodes().iterator().next();
         npm.updateNode(node.getId());
         Thread.sleep(5000);
