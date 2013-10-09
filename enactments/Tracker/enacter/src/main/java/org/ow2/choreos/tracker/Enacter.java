@@ -111,10 +111,8 @@ public class Enacter {
         boolean answerIsCorrect;
         try {
             answerIsCorrect = invoker.invoke();
-            System.out.println("answerIsCorrect= " + answerIsCorrect);
         } catch (InvokerException e) {
             answerIsCorrect = false;
-            System.out.println("answer not correct= " + answerIsCorrect);
         }
 
         return answerIsCorrect;
@@ -125,12 +123,9 @@ public class Enacter {
         public Boolean call() throws MalformedURLException {
             final Tracker firstTracker = getTracker(0);
             final String answer = firstTracker.getPathIds();
-            System.out.println("answer= " + answer);
             final ChorProperties chorProps = new ChorProperties();
             chorProps.setChoreography(choreography);
-            System.out.println("Verifying correctness");
             boolean ok = chorProps.isAnswerCorrect(answer);
-            System.out.println("ok= " + ok);
             return ok;
         }
     }

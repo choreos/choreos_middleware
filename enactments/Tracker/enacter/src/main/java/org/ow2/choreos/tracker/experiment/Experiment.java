@@ -99,9 +99,7 @@ public class Experiment {
             executor.submit(verifier);
             logger.info("Verifier " + enacter.enacter.getId() + " submitted!");
         }
-        logger.info("**not-verified**");
         Concurrency.waitExecutor(executor, VERIFY_TIMEOUT, TimeUnit.MINUTES, logger, "Could not properly verify all the chors");
-        logger.info("**verified**");
         long tf = System.nanoTime();
         report.setCheckTotalTime(tf - t0);
     }

@@ -34,9 +34,7 @@ class RunnableVerifier implements Runnable {
         logger.info("Tracker0 of enacter " + enacter.getId() + ":" + tracker0.getUris());
         try {
             long t0 = System.nanoTime();
-            logger.info("line 37");
             ok = enacter.verifyAnswer();
-            logger.info("line 39");
             long tf = System.nanoTime();
             report.addCheckTime(tf - t0);
             if (ok) {
