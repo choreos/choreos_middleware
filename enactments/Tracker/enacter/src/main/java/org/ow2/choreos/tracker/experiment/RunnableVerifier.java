@@ -34,7 +34,9 @@ class RunnableVerifier implements Runnable {
         logger.info("Tracker0 of enacter " + enacter.getId() + ":" + tracker0.getUris());
         try {
             long t0 = System.nanoTime();
+            logger.info("line 37");
             ok = enacter.verifyAnswer();
+            logger.info("line 39");
             long tf = System.nanoTime();
             report.addCheckTime(tf - t0);
             if (ok) {
@@ -100,7 +102,7 @@ class RunnableVerifier implements Runnable {
     }
     
     public static void main(String[] args) {
-        String wsdl = "http://54.227.32.32:8080/e5f5f8f0-b720-4582-bc41-0a9819bf4440/endpoint?wsdl";
+        String wsdl = "http://54.242.118.223:8080/7e8f190b-20da-49f5-a11f-dc3986baabc9/white?wsdl";
         WSDLChecker checker = new WSDLChecker(wsdl);
         System.out.println(checker.check());
     }

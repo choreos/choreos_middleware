@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.tracker.Enacter;
@@ -96,8 +97,11 @@ public class Experiment {
             RunnableVerifier verifier = new RunnableVerifier(enacter.enacter, report);
             verifiers.add(verifier);
             executor.submit(verifier);
+            logger.info("Verifier " + enacter.enacter.getId() + " submitted!");
         }
-        Concurrency.waitExecutor(executor, VERIFY_TIMEOUT, "Could not properly verify all the chors");
+        logger.info("**not-verified**");
+        Concurrency.waitExecutor(executor, VERIFY_TIMEOUT, TimeUnit.MINUTES, logger, "Could not properly verify all the chors");
+        logger.info("**verified**");
         long tf = System.nanoTime();
         report.setCheckTotalTime(tf - t0);
     }

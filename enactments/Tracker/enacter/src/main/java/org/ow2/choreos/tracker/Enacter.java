@@ -3,14 +3,14 @@ package org.ow2.choreos.tracker;
 import java.net.MalformedURLException;
 import java.util.concurrent.Callable;
 
-import org.ow2.choreos.breaker.Invoker;
-import org.ow2.choreos.breaker.InvokerBuilder;
-import org.ow2.choreos.breaker.InvokerException;
 import org.ow2.choreos.chors.ChoreographyNotFoundException;
 import org.ow2.choreos.chors.EnactmentException;
 import org.ow2.choreos.chors.client.ChorDeployerClient;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
+import org.ow2.choreos.invoker.Invoker;
+import org.ow2.choreos.invoker.InvokerBuilder;
+import org.ow2.choreos.invoker.InvokerException;
 
 public class Enacter {
 
@@ -111,8 +111,10 @@ public class Enacter {
         boolean answerIsCorrect;
         try {
             answerIsCorrect = invoker.invoke();
+            System.out.println("answerIsCorrect= " + answerIsCorrect);
         } catch (InvokerException e) {
             answerIsCorrect = false;
+            System.out.println("answer not correct= " + answerIsCorrect);
         }
 
         return answerIsCorrect;
@@ -123,9 +125,13 @@ public class Enacter {
         public Boolean call() throws MalformedURLException {
             final Tracker firstTracker = getTracker(0);
             final String answer = firstTracker.getPathIds();
+            System.out.println("answer= " + answer);
             final ChorProperties chorProps = new ChorProperties();
             chorProps.setChoreography(choreography);
-            return chorProps.isAnswerCorrect(answer);
+            System.out.println("Verifying correctness");
+            boolean ok = chorProps.isAnswerCorrect(answer);
+            System.out.println("ok= " + ok);
+            return ok;
         }
     }
 }

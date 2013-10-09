@@ -5,9 +5,9 @@ import java.util.concurrent.Callable;
 import javax.ws.rs.WebApplicationException;
 
 import org.apache.cxf.jaxrs.client.WebClient;
-import org.ow2.choreos.breaker.Invoker;
-import org.ow2.choreos.breaker.InvokerBuilder;
-import org.ow2.choreos.breaker.InvokerException;
+import org.ow2.choreos.invoker.Invoker;
+import org.ow2.choreos.invoker.InvokerBuilder;
+import org.ow2.choreos.invoker.InvokerException;
 
 public class WSDLChecker {
 
