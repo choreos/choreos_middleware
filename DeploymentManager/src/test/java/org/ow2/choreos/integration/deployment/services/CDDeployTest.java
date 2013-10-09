@@ -51,7 +51,7 @@ public class CDDeployTest {
         spec.setName("MyCD");
         spec.setPackageUri(CD_LOCATION);
         spec.setPackageType(PackageType.EASY_ESB);
-        spec.setEndpointName("CD-client-selfcheckoutmachine"); // configured in the config.xml
+        spec.setEndpointName("CD-client-selfcheckoutmachine"); // must match with the port name defined on the WSDL
     }
 
     @Test
