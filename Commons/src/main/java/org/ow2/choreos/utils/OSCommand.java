@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 
@@ -72,23 +75,50 @@ public class OSCommand {
      *             if exit status > 0 or some other bad thing happens
      */
     public String execute() throws CommandLineException {
-        try {
-            if (verbose) {
-                logger.info(command);
-            }
-            executeCommand();
-            readCommandOutput();
-            checkExitStatus();
-        } catch (IOException e) {
-            logger.error("Error while executing " + command);
-            throw new CommandLineException("Command failed: " + command);
-        }
+        executeCommand();
+        CommandResultRetriever retriever = new CommandResultRetriever();
+        retriever.call();
         return result;
     }
 
-    private void executeCommand() throws IOException {
+    public void executeAssync() throws CommandLineException {
+        executeCommand();
+        CommandResultRetriever task = new CommandResultRetriever();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(task);
+    }
+
+    private class CommandResultRetriever implements Callable<Void> {
+        @Override
+        public Void call() throws CommandLineException {
+            try {
+                readCommandOutput();
+                checkExitStatus();
+            } catch (IOException e) {
+                logger.error("Error while executing " + command);
+                throw new CommandLineException("Command failed: " + command);
+            } catch (CommandLineException e) {
+                logger.error("Error while executing " + command);
+                throw new CommandLineException("Command failed: " + command);
+            }
+            return null;
+        }
+    }
+
+    public void killProcess() {
+        process.destroy();
+    }
+
+    private void executeCommand() throws CommandLineException {
+        if (verbose) {
+            logger.info(command);
+        }
         File wd = new File(workingDirectory);
-        process = Runtime.getRuntime().exec(command, null, wd);
+        try {
+            process = Runtime.getRuntime().exec(command, null, wd);
+        } catch (IOException e) {
+            fail();
+        }
     }
 
     private String readCommandOutput() throws IOException {
@@ -118,6 +148,11 @@ public class OSCommand {
     @Override
     public String toString() {
         return command;
+    }
+
+    private void fail() throws CommandLineException {
+        logger.error("Error while executing " + command);
+        throw new CommandLineException("Command failed: " + command);
     }
 
 }
