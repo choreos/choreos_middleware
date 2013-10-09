@@ -25,7 +25,7 @@ public class ScalabilityExperiment {
 //    public static final int[] VMS_LIMITS = new int[] { 10, 30, 50, 70, 90 };
 
     private static final int TIME_TO_WAIT_EE_START_MILLISEC = 1 * 60 * 1000;
-    private static final String CHOREOS_MIDDLEWARE_FOLDER = "/home/leonardo/workspaces/choreos/choreos_middleware";
+    private static final String CHOREOS_MIDDLEWARE_FOLDER = "/home/ubuntu/choreos_middleware";
 
     private static Logger logger = Logger.getLogger(ScalabilityExperiment.class);
 
