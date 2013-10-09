@@ -77,7 +77,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>org.ow2.choreos.tracker.experiment.Experiment</mainClass>
+                    <mainClass>org.ow2.choreos.tracker.experiment.ScalabilityExperiment</mainClass>
                 </configuration>
             </plugin>
 		</plugins>
