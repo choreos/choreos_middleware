@@ -97,7 +97,6 @@ public class Experiment {
             RunnableVerifier verifier = new RunnableVerifier(enacter.enacter, report, chorsQty, chorsSize);
             verifiers.add(verifier);
             executor.submit(verifier);
-            logger.info("Verifier " + enacter.enacter.getId() + " submitted!");
         }
         Concurrency.waitExecutor(executor, VERIFY_TIMEOUT, TimeUnit.MINUTES, logger, "Could not properly verify all the chors");
         long tf = System.nanoTime();

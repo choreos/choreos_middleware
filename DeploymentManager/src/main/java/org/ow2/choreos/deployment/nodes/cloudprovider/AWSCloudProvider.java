@@ -43,6 +43,12 @@ public class AWSCloudProvider extends JCloudsCloudProvider {
         oneRequestPerSecondEnforcer.enforceRule();
         return super.createNode(nodeSpec);
     }
+    
+    @Override
+    public void destroyNode(String nodeId) {
+        oneRequestPerSecondEnforcer.enforceRule();
+        super.destroyNode(nodeId);
+    }
 
     @Override
     protected String getDefaultImageId() {
