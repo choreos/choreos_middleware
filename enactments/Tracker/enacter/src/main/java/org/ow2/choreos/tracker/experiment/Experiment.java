@@ -79,7 +79,7 @@ public class Experiment {
         long t0 = System.nanoTime();
         for (int i = 0; i < chorsQty; i++) {
             Enacter enacter = new Enacter(i);
-            RunnableEnacter runnable = new RunnableEnacter(enacter, report);
+            RunnableEnacter runnable = new RunnableEnacter(enacter, report, chorsSize);
             enacters.add(runnable);
             executor.submit(runnable);
         }
@@ -94,7 +94,7 @@ public class Experiment {
         verifiers = new ArrayList<RunnableVerifier>();
         long t0 = System.nanoTime();
         for (RunnableEnacter enacter : enacters) {
-            RunnableVerifier verifier = new RunnableVerifier(enacter.enacter, report);
+            RunnableVerifier verifier = new RunnableVerifier(enacter.enacter, report, chorsQty, chorsSize);
             verifiers.add(verifier);
             executor.submit(verifier);
             logger.info("Verifier " + enacter.enacter.getId() + " submitted!");

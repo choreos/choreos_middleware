@@ -13,13 +13,15 @@ class RunnableEnacter implements Runnable {
     
     Enacter enacter;
     Report report;
+    int chorsSize;
     boolean ok = false;
     
     private static Logger logger = Logger.getLogger(RunnableEnacter.class);
 
-    RunnableEnacter(Enacter enacter, Report report) {
+    RunnableEnacter(Enacter enacter, Report report, int chorsSize) {
         this.enacter = enacter;
         this.report = report;
+        this.chorsSize = chorsSize;
     }
 
     @Override
@@ -27,7 +29,7 @@ class RunnableEnacter implements Runnable {
         logger.info("Enacting Enacter#" + enacter.getId());
         try {
             long t0 = System.nanoTime();
-            enacter.enact(TRACKER_WAR_URL, Experiment.CHORS_SIZE);
+            enacter.enact(TRACKER_WAR_URL, chorsSize);
             long tf = System.nanoTime();
             report.addChorEnactmentTime(tf - t0);
             ok = true;

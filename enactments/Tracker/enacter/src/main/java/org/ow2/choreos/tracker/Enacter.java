@@ -59,6 +59,10 @@ public class Enacter {
     public Choreography getChoreography() {
         return choreography;
     }
+    
+    public int getChorSize() {
+        return chorSize;
+    }
 
     public void enact(final String warFile, final int chorSize) throws EnactmentException,
             ChoreographyNotFoundException, MalformedURLException {

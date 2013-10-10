@@ -16,15 +16,18 @@ import org.ow2.choreos.utils.Concurrency;
 class RunnableVerifier implements Runnable {
 
     Enacter enacter;
+    int chorsQty, chorsSize;
     Report report;
     boolean ok = false;
     AtomicInteger servicesWorking = new AtomicInteger();
     
     private static Logger logger = Logger.getLogger(RunnableVerifier.class);
 
-    RunnableVerifier(Enacter enacter, Report report) {
+    RunnableVerifier(Enacter enacter, Report report, int chorsQty, int chorsSize) {
         this.enacter = enacter;
         this.report = report;
+        this.chorsQty = chorsQty;
+        this.chorsSize = chorsSize;
     }
 
     @Override
@@ -38,7 +41,7 @@ class RunnableVerifier implements Runnable {
             long tf = System.nanoTime();
             report.addCheckTime(tf - t0);
             if (ok) {
-                int all = Experiment.CHORS_SIZE;
+                int all = chorsSize;
                 logger.info("All " + all + " services working on enacter " + enacter.getId());
                 servicesWorking.set(all);
             } else {
@@ -56,7 +59,7 @@ class RunnableVerifier implements Runnable {
     }
 
     private void verifyServicePerService() {
-        int NUM_THREADS = 200 / Experiment.CHORS_QTY;
+        int NUM_THREADS = 200 / chorsQty;
         ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
         Choreography chor = enacter.getChoreography();
         int len = chor.getServices().size();

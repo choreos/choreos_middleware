@@ -17,10 +17,10 @@ import org.ow2.choreos.utils.OSCommand;
 
 public class ScalabilityExperiment {
 
-    public static final int NUM_EXECUTIONS = 3;
-    public static final int CHORS_QUANTITY = 1;
-    public static final int[] CHORS_SIZES = new int[] { 20, 30 };
-    public static final int[] VMS_LIMITS = new int[] { 5, 10 };
+    private static final int NUM_EXECUTIONS = 2;
+    private static final int CHORS_QUANTITY = 1;
+    private static final int[] CHORS_SIZES = new int[] { 5, 10 };
+    private static final int[] VMS_LIMITS = new int[] { 1, 2 };
 //    public static final int[] CHORS_SIZES = new int[] { 200, 600, 1000, 1400, 1800 };
 //    public static final int[] VMS_LIMITS = new int[] { 10, 30, 50, 70, 90 };
 
