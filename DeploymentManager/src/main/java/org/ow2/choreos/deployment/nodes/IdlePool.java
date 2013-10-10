@@ -13,6 +13,7 @@ import java.util.concurrent.Executors;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
+import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.utils.Concurrency;
@@ -38,15 +39,17 @@ public class IdlePool {
 
     private Set<CloudNode> idleNodes = new HashSet<CloudNode>();
     private NodeCreator nodeCreator;
+    private NodeDestroyerFactory nodeDestroyerFactory;
     private int poolSize;
     private ExecutorService fillerExecutor = Executors.newSingleThreadExecutor();
 
-    private IdlePool(int poolSize, NodeCreator nodeCreator) {
+    private IdlePool(int poolSize, NodeCreator nodeCreator, NodeDestroyerFactory nodeDestroyerFactory) {
         this.poolSize = poolSize;
         this.nodeCreator = nodeCreator;
+        this.nodeDestroyerFactory = nodeDestroyerFactory;
     }
 
-    public static IdlePool getInstance(NodeCreator nodeCreator) {
+    public static IdlePool getInstance(NodeCreator nodeCreator, NodeDestroyerFactory nodeDestroyerFactory) {
         int poolSize = 0;
         try {
             poolSize = Integer.parseInt(DeploymentManagerConfiguration.get("POOL_SIZE"));
@@ -55,7 +58,7 @@ public class IdlePool {
             logger.error(msg);
             throw new IllegalStateException(msg);
         }
-        return getInstance(poolSize, nodeCreator);
+        return getInstance(poolSize, nodeCreator, nodeDestroyerFactory);
     }
 
     /**
@@ -65,10 +68,10 @@ public class IdlePool {
      * @param nodeCreator
      * @return
      */
-    public static IdlePool getInstance(int poolSize, NodeCreator nodeCreator) {
+    public static IdlePool getInstance(int poolSize, NodeCreator nodeCreator, NodeDestroyerFactory nodeDestroyerFactory) {
         synchronized (IdlePool.class) {
             if (instance == null) {
-                instance = new IdlePool(poolSize, nodeCreator);
+                instance = new IdlePool(poolSize, nodeCreator, nodeDestroyerFactory);
             }
         }
         return instance;
@@ -81,8 +84,8 @@ public class IdlePool {
      * @param nodeCreator
      * @return
      */
-    public static IdlePool getCleanInstance(int poolSize, NodeCreator nodeCreator) {
-        instance = new IdlePool(poolSize, nodeCreator);
+    public static IdlePool getCleanInstance(int poolSize, NodeCreator nodeCreator, NodeDestroyerFactory nodeDestroyerFactory) {
+        instance = new IdlePool(poolSize, nodeCreator, nodeDestroyerFactory);
         return instance;
     }
 
@@ -128,7 +131,6 @@ public class IdlePool {
      * @param nodeCreator
      */
     public void createExtraVMs(int howManyVMs) {
-
         for (int i = 0; i < howManyVMs; i++) {
             VMCreator vmCreator = new VMCreator(nodeCreator);
             Thread thrd = new Thread(vmCreator);
@@ -145,9 +147,13 @@ public class IdlePool {
      * client will not wait for the pool be filled.
      */
     public void fillPool() {
-
         PoolFiller filler = new PoolFiller();
         this.fillerExecutor.execute(filler);
+    }
+    
+    public void emptyPool() throws NodeNotDestroyed {
+        NodesDestroyer destroyer = new NodesDestroyer(idleNodes, nodeDestroyerFactory);
+        destroyer.destroyNodes();
     }
 
     private class VMCreator implements Runnable {

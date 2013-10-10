@@ -17,6 +17,8 @@ import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import static org.mockito.Mockito.mock;
 
 public class NPMImplTest {
+    
+    private NodeDestroyerFactory nodeDestroyerFactory = null;
 
     @Test
     public void shouldCreateNode() throws Exception {
@@ -26,7 +28,7 @@ public class NPMImplTest {
 
         CloudProvider cp = mock(CloudProvider.class);
         NodeCreator creator = NodeCreatorMocks.getGoodMock();
-        IdlePool pool = IdlePool.getCleanInstance(1, creator);
+        IdlePool pool = IdlePool.getCleanInstance(1, creator, nodeDestroyerFactory);
 
         NodePoolManager npm = new NPMImpl(cp, creator, pool);
 
@@ -45,7 +47,7 @@ public class NPMImplTest {
 
         CloudProvider cp = mock(CloudProvider.class);
         NodeCreator creator = NodeCreatorMocks.getGoodMock();
-        IdlePool pool = IdlePool.getCleanInstance(1, creator);
+        IdlePool pool = IdlePool.getCleanInstance(1, creator, nodeDestroyerFactory);
 
         NodePoolManager npm = new NPMImpl(cp, creator, pool);
 
@@ -67,7 +69,7 @@ public class NPMImplTest {
 
         CloudProvider cp1 = mock(CloudProvider.class);
         NodeCreator creator1 = NodeCreatorMocks.getGoodMock();
-        IdlePool pool1 = IdlePool.getCleanInstance(1, creator1);
+        IdlePool pool1 = IdlePool.getCleanInstance(1, creator1, nodeDestroyerFactory);
         NodePoolManager npm1 = new NPMImpl(cp1, creator1, pool1);
 
         CloudNode createdNode = npm1.createNode(new NodeSpec());
@@ -75,7 +77,7 @@ public class NPMImplTest {
 
         CloudProvider cp2 = mock(CloudProvider.class);
         NodeCreator creator2 = NodeCreatorMocks.getGoodMock();
-        IdlePool pool2 = IdlePool.getCleanInstance(1, creator2);
+        IdlePool pool2 = IdlePool.getCleanInstance(1, creator2, nodeDestroyerFactory);
         NodePoolManager npm2 = new NPMImpl(cp2, creator2, pool2);
 
         CloudNode fromOtherNPM = npm2.getNode(createdNode.getId());

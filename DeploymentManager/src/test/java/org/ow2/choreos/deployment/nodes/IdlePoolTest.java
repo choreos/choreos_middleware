@@ -30,6 +30,7 @@ import org.ow2.choreos.utils.LogConfigurator;
 public class IdlePoolTest {
 
     private NodeCreator nodeCreator;
+    private NodeDestroyerFactory nodeDestroyerFactory = null;
 
     @BeforeClass
     public static void setUpClass() {
@@ -53,7 +54,7 @@ public class IdlePoolTest {
     public void shouldCreateExtraVMs() throws InterruptedException {
 
         int N = 3;
-        IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
+        IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator, nodeDestroyerFactory);
         int howManyVMs = N;
         pool.createExtraVMs(howManyVMs);
 
@@ -67,7 +68,7 @@ public class IdlePoolTest {
     public void shouldFillThePool() throws InterruptedException {
 
         int N = 3;
-        IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
+        IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator, nodeDestroyerFactory);
         pool.createExtraVMs(1);
         pool.fillPool();
 
@@ -82,7 +83,7 @@ public class IdlePoolTest {
     public void shouldFillThePoolConcurrently() throws InterruptedException {
 
         int N = 5;
-        IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
+        IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator, nodeDestroyerFactory);
         pool.createExtraVMs(1);
         Thread.sleep(100);
         for (int i = 0; i < 3; i++) {
@@ -102,7 +103,7 @@ public class IdlePoolTest {
     public void multipleClientsShouldNotRetrieveTheSameNode() throws InterruptedException {
 
         int N = 5;
-        IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
+        IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator, nodeDestroyerFactory);
         pool.fillPool();
         Thread.sleep(100);
         List<PoolClient> clients = new ArrayList<PoolClient>();
@@ -130,7 +131,7 @@ public class IdlePoolTest {
     public void multipleRequestsShouldLeaveThePoolFull() throws InterruptedException {
 
         int N = 5;
-        IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
+        IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator, nodeDestroyerFactory);
         pool.fillPool();
         Thread.sleep(100);
         for (int i = 0; i < 3; i++) {
@@ -150,7 +151,7 @@ public class IdlePoolTest {
     public void shouldRetrieveANodeEvenWithAnEmptyPool() throws NodeNotCreatedException {
 
         int N = 5;
-        IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
+        IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator, nodeDestroyerFactory);
         CloudNode node = pool.retriveNode();
         assertNotNull(node);
         assertNotNull(node.getId());
@@ -161,7 +162,7 @@ public class IdlePoolTest {
     public void shouldRetrieveANodeThatWasAlreadyInThePool() throws NodeNotCreatedException, InterruptedException {
 
         int N = 5;
-        IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
+        IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator, nodeDestroyerFactory);
         pool.fillPool();
 
         Thread.sleep(200);
@@ -182,7 +183,7 @@ public class IdlePoolTest {
     public void multipleClientsShouldRetrieveNodesEvenWithAnEmptyPool() throws InterruptedException {
 
         int N = 5;
-        IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator);
+        IdlePool pool = IdlePool.getCleanInstance(N, nodeCreator, nodeDestroyerFactory);
         List<PoolClient> clients = new ArrayList<PoolClient>();
         for (int i = 0; i < 3; i++) {
             PoolClient client = new PoolClient(pool);

@@ -4,7 +4,6 @@
 
 package org.ow2.choreos.deployment.nodes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -20,7 +19,6 @@ import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
-import org.ow2.choreos.utils.Concurrency;
 
 /**
  * 
@@ -54,7 +52,8 @@ public class NPMImpl implements NodePoolManager {
         } catch (NumberFormatException e) {
             ; // no problem, poolSize is zero
         }
-        idlePool = IdlePool.getInstance(poolSize, nodeCreator);
+        NodeDestroyerFactory nodeDestroyerFactory = new NodeDestroyerFactory(cloudProvider);
+        idlePool = IdlePool.getInstance(poolSize, nodeCreator, nodeDestroyerFactory);
     }
 
     public NPMImpl(CloudProvider provider, NodeCreator creator, IdlePool pool) {
@@ -131,26 +130,9 @@ public class NPMImpl implements NodePoolManager {
 
     @Override
     public void destroyNodes() throws NodeNotDestroyed {
-
-        List<Thread> trds = new ArrayList<Thread>();
-        List<NodeDestroyer> destroyers = new ArrayList<NodeDestroyer>();
-
-        for (CloudNode node : this.getNodes()) {
-            NodeDestroyer destroyer = new NodeDestroyer(node, this.cloudProvider);
-            Thread trd = new Thread(destroyer);
-            destroyers.add(destroyer);
-            trds.add(trd);
-            trd.start();
-        }
-
-        Concurrency.waitThreads(trds);
-
-        for (NodeDestroyer destroyer : destroyers) {
-            if (destroyer.isOK()) {
-                this.nodeRegistry.deleteNode(destroyer.getNode().getId());
-            } else {
-                throw new NodeNotDestroyed(destroyer.getNode().getId());
-            }
-        }
+        NodeDestroyerFactory nodeDestroyerFactory = new NodeDestroyerFactory(cloudProvider); 
+        NodesDestroyer destroyer = new NodesDestroyer(this.getNodes(), nodeDestroyerFactory);
+        destroyer.destroyNodes();
+        idlePool.emptyPool();
     }
 }
