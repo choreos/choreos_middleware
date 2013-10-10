@@ -24,6 +24,7 @@ import javax.ws.rs.core.UriInfo;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.NPMImpl;
+import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
@@ -37,7 +38,8 @@ import org.ow2.choreos.nodes.datamodel.NodeSpec;
 public class NodesResource {
 
     private String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
-    private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
+    private CloudProvider cp = CloudProviderFactory.getInstance(cloudProviderType);
+    private NodePoolManager npm = new NPMImpl(cp);
 
     private Logger logger = Logger.getLogger(NodesResource.class);
 
@@ -153,7 +155,7 @@ public class NodesResource {
     @Path("{node_id:.+}")
     public Response deleteNode(@PathParam("node_id") String nodeId) {
 
-	logger.debug("Request to delete node");
+	logger.debug("Request to delete node " + nodeId);
 
 	Response response;
 	try {
@@ -169,6 +171,17 @@ public class NodesResource {
 	}
 
 	return response;
+    }
+    
+    @DELETE
+    public Response deleteNodes() {
+        logger.info("Request to delete all the nodes");
+        try {
+            npm.destroyNodes();
+            return Response.ok().build();
+        } catch (NodeNotDestroyed e) {
+            return Response.serverError().build();
+        }
     }
 
 }

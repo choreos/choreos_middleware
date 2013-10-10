@@ -2,15 +2,14 @@ package org.ow2.choreos.tracker.experiment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import javax.ws.rs.core.MediaType;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.log4j.Logger;
-import org.ow2.choreos.invoker.Invoker;
-import org.ow2.choreos.invoker.InvokerBuilder;
-import org.ow2.choreos.invoker.InvokerException;
+import org.ow2.choreos.nodes.NodeNotDestroyed;
+import org.ow2.choreos.nodes.NodePoolManager;
+import org.ow2.choreos.nodes.client.NodesClient;
 import org.ow2.choreos.utils.CommandLineException;
 import org.ow2.choreos.utils.LogConfigurator;
 import org.ow2.choreos.utils.OSCommand;
@@ -71,16 +70,16 @@ public class ScalabilityExperiment {
     }
 
     private void cleanAmazon() {
-        OSCommand command = new OSCommand("sh " + CHOREOS_MIDDLEWARE_FOLDER + "/scripts/clean_aws.sh");
-        CommandTask task = new CommandTask(command);
-        Invoker<String> invoker = new InvokerBuilder<String>(task, 120).trials(5).pauseBetweenTrials(30).build();
+        logger.info("Destroying EC2 instances...");
+        String host = "http://0.0.0.0:9100/deploymentmanager";
+        NodePoolManager npm = new NodesClient(host);
         try {
-            invoker.invoke();
-        } catch (InvokerException e) {
-            logger.error("Could not kill EC2 instances!!!");
+            npm.destroyNodes();
+            logger.info("EC2 instances destroyed");
+        } catch (NodeNotDestroyed e) {
+            logger.info("Could not destroy all EC2 instances!");
             System.exit(-1);
         }
-        logger.info("EC2 instances destroyed");
     }
 
     private void startEE() {
@@ -116,21 +115,6 @@ public class ScalabilityExperiment {
         dmCommand.killProcess();
         cdCommand.killProcess();
         logger.info("EE killed");
-    }
-
-    private class CommandTask implements Callable<String> {
-
-        OSCommand command;
-
-        public CommandTask(OSCommand command) {
-            this.command = command;
-        }
-
-        @Override
-        public String call() throws Exception {
-            return command.execute();
-        }
-
     }
 
 }

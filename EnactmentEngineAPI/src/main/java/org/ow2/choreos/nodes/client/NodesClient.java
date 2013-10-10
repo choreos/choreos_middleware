@@ -93,13 +93,11 @@ public class NodesClient implements NodePoolManager {
 
     @Override
     public void updateNode(String nodeId) throws NodeNotUpdatedException {
-
         WebClient client = setupClient();
         client.path("nodes");
         client.path(nodeId);
         client.path("update");
         Response response = client.post(null);
-
         if (response.getStatus() != 200) {
             throw new NodeNotUpdatedException(nodeId);
         }
@@ -117,7 +115,12 @@ public class NodesClient implements NodePoolManager {
 
     @Override
     public void destroyNodes() throws NodeNotDestroyed {
-        throw new UnsupportedOperationException();
+        WebClient client = setupClient();
+        client.path("nodes");
+        Response response = client.delete();
+        if (response.getStatus() != 200) {
+            throw new NodeNotDestroyed("?");
+        }        
     }
 
 }
