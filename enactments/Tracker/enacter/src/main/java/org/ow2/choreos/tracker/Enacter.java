@@ -59,7 +59,7 @@ public class Enacter {
     public Choreography getChoreography() {
         return choreography;
     }
-    
+
     public int getChorSize() {
         return chorSize;
     }
@@ -109,8 +109,8 @@ public class Enacter {
 
     public boolean verifyAnswer() throws MalformedURLException {
         final VerifyTask task = new VerifyTask();
-        final int timeout = 15;
-        final Invoker<Boolean> invoker = new InvokerBuilder<Boolean>(task, timeout).trials(3).pauseBetweenTrials(60)
+        final int timeout = 100;
+        final Invoker<Boolean> invoker = new InvokerBuilder<Boolean>(task, timeout).trials(3).pauseBetweenTrials(40)
                 .build();
         boolean answerIsCorrect;
         try {

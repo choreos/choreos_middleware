@@ -16,14 +16,13 @@ import org.ow2.choreos.utils.OSCommand;
 
 public class ScalabilityExperiment {
 
-    private static final int NUM_EXECUTIONS = 2;
+    private static final int NUM_EXECUTIONS = 10;
     private static final int CHORS_QUANTITY = 1;
-    public static final int[] CHORS_SIZES = new int[] { 600, 1000 };
-    public static final int[] VMS_LIMITS = new int[] { 30, 50 };
-//    public static final int[] CHORS_SIZES = new int[] { 200, 600, 1000, 1400, 1800 };
-//    public static final int[] VMS_LIMITS = new int[] { 10, 30, 50, 70, 90 };
+    public static final int[] CHORS_SIZES = new int[] { 200, 600, 1000, 1400, 1800 };
+    public static final int[] VMS_LIMITS = new int[] { 10, 30, 50, 70, 90 };
 
     private static final int TIME_TO_WAIT_EE_START_MILLISEC = 1 * 60 * 1000;
+//    private static final String CHOREOS_MIDDLEWARE_FOLDER = "/home/leonardo/workspaces/choreos/choreos_middleware";
     private static final String CHOREOS_MIDDLEWARE_FOLDER = "/home/ubuntu/choreos_middleware";
 
     private static Logger logger = Logger.getLogger(ScalabilityExperiment.class);
