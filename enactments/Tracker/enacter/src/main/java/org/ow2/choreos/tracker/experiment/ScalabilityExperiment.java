@@ -45,7 +45,6 @@ public class ScalabilityExperiment {
             currentDefinition = def;
             executeDefinition(def);
         }
-        cleanAmazon();
     }
 
     private void createDefinitions() {
@@ -61,11 +60,11 @@ public class ScalabilityExperiment {
 
     private void executeDefinition(ExperimentDefinition def) {
         logger.info("Executing definition " + def);
-        cleanAmazon();
         startEE();
         configureEE();
         Experiment exp = new Experiment(def);
         exp.run();
+        cleanAmazon();
         stopEE();
     }
 
