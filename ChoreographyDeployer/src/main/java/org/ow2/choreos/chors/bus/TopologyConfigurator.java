@@ -15,6 +15,8 @@ public class TopologyConfigurator {
     private Logger logger = Logger.getLogger(TopologyConfigurator.class);
 
     /**
+     * Configure topology (add neighbors) among deployed EasyESB nodes. 
+     * Note: This action is not related with EasyESB nodes used to run CDs.
      * 
      * @param chor
      *            Choreography whose service instances already have the
@@ -34,14 +36,14 @@ public class TopologyConfigurator {
     public void configureTopology() throws TopologyNotConfigureException {
         for (DeployableService service : chor.getDeployableServices()) {
             for (ServiceInstance instance : service.getInstances()) {
-                EasyESBNode esbNode = getESBNode(instance.getProxification().getEasyEsbNodeAdminEndpoint());
+                EasyESBNode esbNode = getESBNode(instance);
                 List<ServiceDependency> dependencies = service.getSpec().getDependencies();
                 if (dependencies != null) {
                     for (ServiceDependency dependency : dependencies) {
                         DeployableService providingService = chor.getDeployableServiceBySpecName(dependency
                                 .getServiceSpecName());
                         for (ServiceInstance providingInstance : providingService.getInstances()) {
-                            EasyESBNode neighbourEsbNode = getESBNode(providingInstance.getProxification().getEasyEsbNodeAdminEndpoint());
+                            EasyESBNode neighbourEsbNode = getESBNode(providingInstance);
                             try {
                                 esbNode.addNeighbour(neighbourEsbNode);
                                 neighbourEsbNode.addNeighbour(esbNode);
@@ -55,7 +57,8 @@ public class TopologyConfigurator {
         }
     }
 
-    private EasyESBNode getESBNode(String adminEndpoint) {
+    private EasyESBNode getESBNode(ServiceInstance instance) {
+        String adminEndpoint = instance.getProxification().getEasyEsbNodeAdminEndpoint();
         EasyESBNode esbNode = ESBRegister.getEsbNode(adminEndpoint);
         if (esbNode == null) {
             logger.error("Could not retrieve EasyESBNode " + adminEndpoint + " from ESB Register");
