@@ -13,7 +13,7 @@ import org.apache.log4j.PropertyConfigurator;
 
 public class LogConfigurator {
 
-    private static String LOG_CONFIG_FILE = "log.properties";
+    private static String LOG_CONFIG_FILE = "log4j.properties";
 
     public static void configLog() {
 
