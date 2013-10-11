@@ -41,10 +41,6 @@ public class DeploymentManagerServer {
 	this.restServer.stop();
     }
 
-    protected void finalize() throws Throwable {
-	stop();
-    }
-
     public static void main(String[] args) {
 	LogConfigurator.configLog();
 	DeploymentManagerServer server = new DeploymentManagerServer();
