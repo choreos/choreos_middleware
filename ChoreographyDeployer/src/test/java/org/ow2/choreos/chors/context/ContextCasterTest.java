@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,10 +17,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.services.ServiceInstanceNotFoundException;
 import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.Proxification;
+import org.ow2.choreos.services.datamodel.ServiceDependency;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.ModelsForTest;
@@ -52,22 +56,22 @@ public class ContextCasterTest {
 
     @Before
     public void setUp() {
+        LogConfigurator.configLog();
         models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
         travelService = models.getTravelService();
         airlineService = models.getAirlineService();
-
         this.deployedServices = new HashMap<String, DeployableService>();
         this.deployedServices.put(AIRLINE, airlineService);
         this.deployedServices.put(TRAVEL_AGENCY, travelService);
     }
-    
+
     private void setUpBusUris() throws ServiceInstanceNotFoundException {
 
         ServiceInstance airlineInstance = deployedServices.get(AIRLINE).getInstances().get(0);
         Proxification prox = new Proxification();
         prox.setBusUri(ServiceType.SOAP, AIRLINE_PROXIFIED_URI);
         airlineInstance.setProxification(prox);
-        
+
         ServiceInstance travelInstance = deployedServices.get(TRAVEL_AGENCY).getInstances().get(0);
         prox = new Proxification();
         prox.setBusUri(ServiceType.SOAP, TRAVEL_AGENCY_PROXIFIED_URI);
@@ -106,11 +110,33 @@ public class ContextCasterTest {
         verify(sender).sendContext(TRAVEL_AGENCY_URI, AIRLINE, AIRLINE, expectedAirlineUrisList);
     }
 
+    @Test
+    public void shouldCastContextToSampleChor() throws ContextNotSentException {
+
+        SampleChoreography sample = new SampleChoreography();
+        Choreography chor = sample.getChoreography();
+        ContextSender sender = mock(ContextSender.class);
+        ContextSenderFactory.testing = true;
+        ContextSenderFactory.senderForTesting = sender;
+        ContextCaster caster = new ContextCaster(chor);
+        caster.cast();
+
+        for (DeployableServiceSpec spec : chor.getChoreographySpec().getDeployableServiceSpecs()) {
+            String consumerUri = sample.getUri(spec.getName());
+            if (spec.getDependencies() != null) {
+                for (ServiceDependency dep : spec.getDependencies()) {
+                    String providerName = dep.getServiceSpecName();
+                    String providerUri = sample.getUri(providerName);
+                    verify(sender).sendContext(consumerUri, sample.getRole(), providerName,
+                            Collections.singletonList(providerUri));
+                }
+            }
+        }
+    }
+
     @After
     public void tearDown() {
         ContextSenderFactory.testing = false;
-        System.out.println("Cleaning fixtures!"); // By Léo: ???
-        models = null; // By Léo: ???
     }
 
 }

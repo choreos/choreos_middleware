@@ -179,6 +179,7 @@ public class ContextCaster {
 
         @Override
         public Void call() throws Exception {
+            logger.info("Casting " + providerName + " to " + consumerEndpoint);
             ContextSender sender = ContextSenderFactory.getNewInstance(consumerType);
             sender.sendContext(consumerEndpoint, providerRole, providerName, providerEndpoints);
             return null;
