@@ -34,6 +34,8 @@ public class NodesDestroyer {
     }
 
     private void destroy() {
+        if (nodesToDestroy == null || nodesToDestroy.isEmpty())
+            return;
         executor = Executors.newFixedThreadPool(nodesToDestroy.size());
         destroyers = new ArrayList<NodeDestroyer>();
         for (CloudNode node : nodesToDestroy) {
