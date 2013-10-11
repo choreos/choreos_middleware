@@ -56,11 +56,11 @@ public class ScalabilityExperiment {
 
     private void createDefinitions() {
         definitions = new ArrayList<ExperimentDefinition>();
-        for (int s = 0; s < CHORS_SIZES.length; s++) {
-            for (int i = 0; i < NUM_EXECUTIONS; i++) {
+        for (int i = 0; i < NUM_EXECUTIONS; i++) {
+            for (int s = 0; s < CHORS_SIZES.length; s++) {
                 int size = CHORS_SIZES[s];
                 int vmsLimit = VMS_LIMITS[s];
-                definitions.add(new ExperimentDefinition(i + 1, CHORS_QUANTITY, size, vmsLimit));
+                definitions.add(new ExperimentDefinition(i+1, CHORS_QUANTITY, size, vmsLimit));
             }
         }
     }
