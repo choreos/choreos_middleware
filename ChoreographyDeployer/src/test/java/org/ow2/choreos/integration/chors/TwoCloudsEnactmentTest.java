@@ -29,8 +29,6 @@ import org.ow2.choreos.utils.LogConfigurator;
 @Category(IntegrationTest.class)
 public class TwoCloudsEnactmentTest extends SimpleChorEnactmentTest {
 
-    private static final String BUS_PROPERTY = "BUS";
-
     private static final String DEPLOYER1 = "Deployer1";
     private static final String DEPLOYER2 = "Deployer2";
     private static final String DM_URI_1 = "http://localhost:9100/deploymentmanager";
@@ -44,8 +42,8 @@ public class TwoCloudsEnactmentTest extends SimpleChorEnactmentTest {
     @Before
     @Override
     public void setUp() {
-
-        ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "false");
+        ChoreographyDeployerConfiguration.set("BUS", "false");
+        ChoreographyDeployerConfiguration.set("IDLE_POOL", "false");
         ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
         DeployableServiceSpec airlineSpec = models.getAirlineSpec();
         DeployableServiceSpec travelSpec = models.getTravelSpec();

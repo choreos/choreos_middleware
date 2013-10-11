@@ -37,8 +37,6 @@ import eu.choreos.vv.clientgenerator.WSClient;
 @Category(IntegrationTest.class)
 public class SimpleChorEnactmentTest {
 
-    private static final String BUS_PROPERTY = "BUS";
-
     protected ChoreographySpec chorSpec;
 
     @BeforeClass
@@ -48,7 +46,8 @@ public class SimpleChorEnactmentTest {
 
     @Before
     public void setUp() {
-        ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "false");
+        ChoreographyDeployerConfiguration.set("BUS", "false");
+        ChoreographyDeployerConfiguration.set("IDLE_POOL", "false");
         ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
         chorSpec = models.getChorSpec();
     }

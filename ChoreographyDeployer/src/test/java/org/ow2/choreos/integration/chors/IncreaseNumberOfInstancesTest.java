@@ -40,8 +40,6 @@ import eu.choreos.vv.clientgenerator.WSClient;
 @Category(IntegrationTest.class)
 public class IncreaseNumberOfInstancesTest {
     
-    private static final String BUS_PROPERTY = "BUS";
-
     private ChoreographySpec spec;
     private ChoreographySpec newSpec;
 
@@ -52,7 +50,8 @@ public class IncreaseNumberOfInstancesTest {
 
     @Before
     public void setUp() {
-        ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "false");
+        ChoreographyDeployerConfiguration.set("BUS", "false");
+        ChoreographyDeployerConfiguration.set("IDLE_POOL", "false");
 	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT, 2);
 	spec = models.getChorSpec();
 	ModelsForTest newModels = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT, 3);

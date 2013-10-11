@@ -43,8 +43,6 @@ import eu.choreos.vv.clientgenerator.WSClient;
 @Category(IntegrationTest.class)
 public class RestEnactmentTest {
 
-    private static final String BUS_PROPERTY = "BUS";
-
     private static final String AIRLINE = ModelsForTest.AIRLINE;
     private static final String TRAVEL_AGENCY = ModelsForTest.TRAVEL_AGENCY;
 
@@ -67,8 +65,8 @@ public class RestEnactmentTest {
 
     @Before
     public void setUp() {
-
-        ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "false");
+        ChoreographyDeployerConfiguration.set("BUS", "false");
+        ChoreographyDeployerConfiguration.set("IDLE_POOL", "false");
         models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
         chorSpec = models.getChorSpec();
     }

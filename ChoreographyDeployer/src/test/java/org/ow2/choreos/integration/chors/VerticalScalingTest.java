@@ -16,6 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.ChoreographyDeployer;
+import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.chors.ChoreographyDeployerImpl;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
@@ -55,6 +56,9 @@ public class VerticalScalingTest {
 
     @Before
     public void setUp() {
+
+        ChoreographyDeployerConfiguration.set("BUS", "false");
+        ChoreographyDeployerConfiguration.set("IDLE_POOL", "false");
 
         ResourceImpact smallImpact = new ResourceImpact();
         smallImpact.setMemory(MemoryType.SMALL);

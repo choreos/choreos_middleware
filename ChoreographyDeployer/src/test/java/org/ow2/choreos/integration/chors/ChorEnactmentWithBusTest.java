@@ -41,8 +41,6 @@ import eu.choreos.vv.clientgenerator.WSClient;
 @Category(IntegrationTest.class)
 public class ChorEnactmentWithBusTest {
 
-    private static final String BUS_PROPERTY = "BUS";
-
     private ChoreographySpec chorSpec;
 
     @BeforeClass
@@ -52,8 +50,8 @@ public class ChorEnactmentWithBusTest {
 
     @Before
     public void setUp() {
-
-        ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "true");
+        ChoreographyDeployerConfiguration.set("BUS", "true");
+        ChoreographyDeployerConfiguration.set("IDLE_POOL", "false");
         ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT);
         chorSpec = models.getChorSpec();
     }

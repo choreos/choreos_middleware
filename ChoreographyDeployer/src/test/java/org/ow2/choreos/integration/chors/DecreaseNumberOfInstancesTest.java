@@ -49,8 +49,6 @@ import eu.choreos.vv.exceptions.WSDLException;
 @Category(IntegrationTest.class)
 public class DecreaseNumberOfInstancesTest {
     
-    private static final String BUS_PROPERTY = "BUS";
-
     private ChoreographySpec spec;
     private ChoreographySpec newSpec;
 
@@ -61,7 +59,8 @@ public class DecreaseNumberOfInstancesTest {
 
     @Before
     public void setUp() {
-        ChoreographyDeployerConfiguration.set(BUS_PROPERTY, "false");
+        ChoreographyDeployerConfiguration.set("BUS", "false");
+        ChoreographyDeployerConfiguration.set("IDLE_POOL", "false");
         ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE, 3);
         spec = models.getChorSpec();
         ModelsForTest newModels = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE, 2);
