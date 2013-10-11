@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.datamodel.Choreography;
@@ -21,6 +24,7 @@ import org.ow2.choreos.services.datamodel.Service;
 import org.ow2.choreos.services.datamodel.ServiceDependency;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceType;
+import org.ow2.choreos.utils.Concurrency;
 import org.ow2.choreos.utils.TimeoutsAndTrials;
 
 public class ContextCaster {
@@ -33,24 +37,42 @@ public class ContextCaster {
     private DeployableService consumer, provider;
     private Map<String, DeployableService> deployedServicesMap;
     private String providerRole, providerName, consumerName;
+    private ExecutorService executor;
 
     private Logger logger = Logger.getLogger(ContextCaster.class);
 
-    public ContextCaster() {
+    public ContextCaster(Choreography chor) {
         this.timeout = TimeoutsAndTrials.get("SET_INVOCATION_ADDRESS_TIMEOUT");
         this.trials = TimeoutsAndTrials.get("SET_INVOCATION_ADDRESS_TRIALS");
         this.pauseBetweenTrials = TimeoutsAndTrials.get("SET_INVOCATION_ADDRESS_PAUSE");
+        this.chor = chor;
     }
 
-    public void cast(Choreography chor) {
+    public void cast() {
+        if (!inputOK()) {
+            logger.warn("No deployed services founf. Not going to cast cotnext.");
+            return;
+        }
+        int nThreads = chor.getDeployableServices().size();
+        this.executor = Executors.newFixedThreadPool(nThreads); 
         logger.info("Passing context to deployed services on choreograghy " + chor.getId());
-        this.chor = chor;
         deployedServicesMap = chor.getMapOfDeployableServicesBySpecNames();
         for (DeployableService service : chor.getDeployableServices()) {
             consumer = service;
             consumerName = consumer.getSpec().getName();
             castContextsToConsumer();
         }
+        waitContextCasting();
+    }
+
+    private boolean inputOK() {
+        return chor.getDeployableServices() != null && !chor.getDeployableServices().isEmpty();
+    }
+    
+    private void waitContextCasting() {
+        int totalTimeout = trials * (timeout + pauseBetweenTrials);
+        totalTimeout += 0.3 * totalTimeout;
+        Concurrency.waitExecutor(executor, totalTimeout, TimeUnit.SECONDS, logger, "Could not wait context casting");
     }
 
     private void castContextsToConsumer() {
@@ -78,19 +100,12 @@ public class ContextCaster {
         List<String> consumerUris = consumer.getUris();
         List<String> providerUris = this.getUris(provider);
         for (String consumerEndpoint : consumerUris) {
-            ContextSenderTask task = new ContextSenderTask(consumerType, consumerEndpoint, providerRole, providerName,
+            InvokeContextSenderTask task = new InvokeContextSenderTask(consumerType, consumerEndpoint, providerRole, providerName,
                     providerUris);
-            Invoker<Void> invoker = new InvokerBuilder<Void>(task, timeout).trials(trials)
-                    .pauseBetweenTrials(pauseBetweenTrials).build();
-            try {
-                invoker.invoke();
-            } catch (InvokerException e) {
-                logger.error("Could not set " + providerName + " as " + providerRole + " to " + consumerName
-                        + " on chor " + chor.getId());
-            }
+            executor.submit(task);
         }
     }
-
+    
     /**
      * Get URIs from service that will be used in the setInvocationAddress.
      * 
@@ -113,6 +128,38 @@ public class ContextCaster {
             }
         }
         return uris;
+    }
+    
+    private class InvokeContextSenderTask implements Callable<Void> {
+
+        ServiceType consumerType;
+        String consumerEndpoint, providerRole, providerName;
+        List<String> providerEndpoints;
+
+        public InvokeContextSenderTask(ServiceType consumerType, String consumerEndpoint, String providerRole,
+                String providerName, List<String> providerEndpoints) {
+            this.consumerType = consumerType;
+            this.consumerEndpoint = consumerEndpoint;
+            this.providerRole = providerRole;
+            this.providerName = providerName;
+            this.providerEndpoints = providerEndpoints;
+        }
+        
+        @Override
+        public Void call() throws Exception {
+            ContextSenderTask task = new ContextSenderTask(consumerType, consumerEndpoint, providerRole, providerName,
+                    providerEndpoints);
+            Invoker<Void> invoker = new InvokerBuilder<Void>(task, timeout).trials(trials)
+                    .pauseBetweenTrials(pauseBetweenTrials).build();
+            try {
+                invoker.invoke();
+            } catch (InvokerException e) {
+                logger.error("Could not set " + providerName + " as " + providerRole + " to " + consumerName
+                        + " on chor " + chor.getId());
+            }
+            return null;
+        }
+        
     }
 
     private class ContextSenderTask implements Callable<Void> {

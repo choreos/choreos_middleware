@@ -80,8 +80,8 @@ public class ChoreographyEnacter {
     }
 
     private void castContext() {
-        ContextCaster caster = new ContextCaster();
-        caster.cast(chor);
+        ContextCaster caster = new ContextCaster(chor);
+        caster.cast();
     }
 
     private void finish() {

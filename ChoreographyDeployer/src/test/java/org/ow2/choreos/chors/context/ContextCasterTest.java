@@ -83,8 +83,8 @@ public class ContextCasterTest {
         ContextSender sender = mock(ContextSender.class);
         ContextSenderFactory.testing = true;
         ContextSenderFactory.senderForTesting = sender;
-        ContextCaster caster = new ContextCaster();
-        caster.cast(models.getChoreography());
+        ContextCaster caster = new ContextCaster(models.getChoreography());
+        caster.cast();
 
         List<String> expectedAirlineUrisList = new ArrayList<String>();
         expectedAirlineUrisList.add(AIRLINE_PROXIFIED_URI);
@@ -98,8 +98,8 @@ public class ContextCasterTest {
         ContextSender sender = mock(ContextSender.class);
         ContextSenderFactory.testing = true;
         ContextSenderFactory.senderForTesting = sender;
-        ContextCaster caster = new ContextCaster();
-        caster.cast(models.getChoreography());
+        ContextCaster caster = new ContextCaster(models.getChoreography());
+        caster.cast();
 
         List<String> expectedAirlineUrisList = new ArrayList<String>();
         expectedAirlineUrisList.add(AIRLINE_URI);
