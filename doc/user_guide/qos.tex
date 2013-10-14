@@ -1,0 +1,115 @@
+\chapter{Elasticity and QoS management}
+\chaptermark{Elasticity QoS Management}
+
+As mentioned in section \ref{chap:rest-api}, the \ee is able to modify a
+choreography that is currently running.
+%
+For instance, one may decide to switch from using a service offered by one
+provider to a compatible service by a different provider, or to
+increase/decrease the number of deployed replicas of a given service in order
+to adapt to fluctuations in usage load.
+%
+To do this, the user simply uses the API again to submit an updated version of the
+choreography specification to the \ee and requests the reenactment of the
+choreography.
+%
+The \ee, in turn, detects the modifications made to the choreography and
+performs the requested modifications, by deploying new versions of services,
+removing service replicas etc.
+
+This capability, together with the flexibility offered by the CHOReOS
+monitoring subsystem, presents the user with the framework necessary to adjust
+the run-time environment of the choreography according to QoS parameters and
+constraints, such as response time or cost.
+%
+In order to accomplish this, the user needs to create a separate daemon that
+acts both as a monitoring client and as a client for the \ee.
+%
+As a client for the monitoring system, this daemon uploads rules to the
+Glimpse Monitoring CEP and awaits for notifications from it whenever such
+rules are triggered;
+%
+as a client for the \ee, it requests modifications to running choreographies
+by sumitting updated Choreography Deployers when notifications are received
+from the monitoring subsystem.
+
+An example of such a daemon is available in the \ee source code repository,
+in the ``reconfiguration'' directory. We show below some code snippets from
+this example daemon and explain its general mechanism.
+
+During startup, the daemon loads predefined rules from a static file and
+submits them to the Glimpse monitor:
+
+\begin{verbatim}
+public static void main(String[] args) {
+    String rules = Manager.ReadTextFromFile(
+        this.getClass().getClassLoader().getResource("rules/SLAViolations.xml").getFile());
+    new EnactmentEngineGlimpseConsumer([... properties ...], rules);
+}
+\end{verbatim}
+
+Whenever a rule is triggered, the daemon is notified and runs the code
+from a class whose name is contained in the notification event:
+
+\begin{verbatim}
+public void messageReceived(Message arg0) { 
+    ObjectMessage responseFromMonitoring = (ObjectMessage) arg0;
+    response = (ComplexEventResponse) responseFromMonitoring.getObject();
+    event = new HandlingEvent(response.getResponseValue(), response.getRuleName());
+    Class<ComplexEventHandler> theClass;
+    theClass = (Class<ComplexEventHandler>) Class.forName(
+        "org.ow2.choreos.chors.reconfiguration.events." + event.getEventData());
+    handler = theClass.newInstance();
+    handler.handleEvent(event);
+}
+\end{verbatim}
+
+The submitted example rules define that whenever more than 5\% of requests
+during the last 2 minutes have a response time above 120 miliseconds, new replicas of
+the service should be created (the class \textsf{AddReplica} should be run):
+
+\begin{verbatim}
+    when
+        $ev : ResponseTimeEvent() over window:time(2m);
+        
+        Number( $eventSum : doubleValue ) from accumulate(
+            $event : ResponseTimeEvent($ev.service == service, $ev.chor == chor, $ev.ip == ip)
+                over window:time(2m), count($event)
+        );
+            
+        Number( intValue > $eventSum*0.05 ) from accumulate(
+            $sEvent : ResponseTimeEvent(
+                value > 120, $ev.service == service, $ev.chor == chor, $ev.ip == ip)
+                over window:time(2m), count($sEvent)
+        );
+
+    then
+        ResponseDispatcher.NotifyMeValue("AddReplica",
+            "eeConsumer", (String) $ev.ip, (String) $ev.service);
+    end
+\end{verbatim}
+
+Finally, the \textsf{AddReplica} class then interacts with the \ee to update the
+number of replicas of the service:
+
+\begin{verbatim}
+public void handleEvent(HandlingEvent event) {
+    List<DeployableService> services = registryHelper.getServicesHostedOn(event.getNode());
+    List<DeployableServiceSpec> serviceSpecs = registryHelper.getServiceSpecsForServices(services);
+
+    Choreography c = registryHelper.getChor(event.getNode());
+    ChoreographySpec cSpec = c.getChoreographySpec();
+
+    for (DeployableServiceSpec spec : serviceSpecs) {
+        for (DeployableServiceSpec s : cSpec.getDeployableServiceSpecs()) {
+            if (s.getName().equals(spec.getName())) {
+                s.setNumberOfInstances(s.getNumberOfInstances() + 1);
+                break;
+            }
+        }
+    }
+
+    registryHelper.getChorClient().updateChoreography([... id ...], cSpec);
+    registryHelper.getChorClient().enactChoreography([... id ...]);
+}
+\end{verbatim}
