@@ -99,7 +99,7 @@ public class ScalabilityExperiment {
             logger.error("Killed while sleeping!");
         }
     }
-    
+
     private boolean pingEE() {
         EEPingTask task = new EEPingTask();
         Invoker<Integer> invoker = new InvokerBuilder<Integer>(task, 10).trials(20).pauseBetweenTrials(30).build();
@@ -124,7 +124,8 @@ public class ScalabilityExperiment {
     private void cleanAmazon() {
         logger.info("Destroying EC2 instances...");
         CleanAmazonTask task = new CleanAmazonTask();
-        Invoker<Void> invoker = new InvokerBuilder<Void>(task, 3).timeUnit(TimeUnit.MINUTES).trials(3).build();
+        Invoker<Void> invoker = new InvokerBuilder<Void>(task, 5).timeUnit(TimeUnit.MINUTES).trials(3)
+                .pauseBetweenTrials(1).build();
         try {
             invoker.invoke();
             logger.info("EC2 instances destroyed");
@@ -132,7 +133,7 @@ public class ScalabilityExperiment {
             abortExecution("Could not destroy all EC2 instances!");
         }
     }
-    
+
     private void stopEE() {
         dmCommand.killProcess();
         cdCommand.killProcess();
@@ -149,12 +150,12 @@ public class ScalabilityExperiment {
             return response.getStatus();
         }
     }
-    
+
     private void abortExecution(String error) {
         logger.error("Aborting execution: " + error);
         System.exit(-1);
     }
-    
+
     private class CleanAmazonTask implements Callable<Void> {
         @Override
         public Void call() throws Exception {
