@@ -3,6 +3,7 @@ package org.ow2.choreos.tracker.experiment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -12,7 +13,6 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.invoker.Invoker;
 import org.ow2.choreos.invoker.InvokerBuilder;
 import org.ow2.choreos.invoker.InvokerException;
-import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.client.NodesClient;
 import org.ow2.choreos.utils.CommandLineException;
@@ -123,12 +123,12 @@ public class ScalabilityExperiment {
 
     private void cleanAmazon() {
         logger.info("Destroying EC2 instances...");
-        String host = "http://0.0.0.0:9100/deploymentmanager";
-        NodePoolManager npm = new NodesClient(host);
+        CleanAmazonTask task = new CleanAmazonTask();
+        Invoker<Void> invoker = new InvokerBuilder<Void>(task, 3).timeUnit(TimeUnit.MINUTES).trials(3).build();
         try {
-            npm.destroyNodes();
+            invoker.invoke();
             logger.info("EC2 instances destroyed");
-        } catch (NodeNotDestroyed e) {
+        } catch (InvokerException e) {
             abortExecution("Could not destroy all EC2 instances!");
         }
     }
@@ -153,6 +153,16 @@ public class ScalabilityExperiment {
     private void abortExecution(String error) {
         logger.error("Aborting execution: " + error);
         System.exit(-1);
+    }
+    
+    private class CleanAmazonTask implements Callable<Void> {
+        @Override
+        public Void call() throws Exception {
+            String host = "http://0.0.0.0:9100/deploymentmanager";
+            NodePoolManager npm = new NodesClient(host);
+            npm.destroyNodes();
+            return null;
+        }
     }
 
 }
