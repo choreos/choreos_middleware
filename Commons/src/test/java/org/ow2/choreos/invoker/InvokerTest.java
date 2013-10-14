@@ -81,7 +81,7 @@ public class InvokerTest {
 
         VoidTask task = new VoidTask();
         int trials = 1;
-        int timeout = 20;
+        int timeout = 100;
 
         Invoker<Void> invoker = new Invoker<Void>(task, trials, timeout, pauseBetweenTrials, TimeUnit.MILLISECONDS);
         invoker.invoke();
