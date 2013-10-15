@@ -21,10 +21,12 @@ import org.ow2.choreos.utils.OSCommand;
 
 public class ScalabilityExperiment {
 
-    private static final int NUM_EXECUTIONS = 6;
+    private static final int NUM_EXECUTIONS = 8;
     private static final int CHORS_QUANTITY = 1;
-    public static final int[] CHORS_SIZES = new int[] { 200, 600, 1000, 1400, 1800 };
-    public static final int[] VMS_LIMITS = new int[] { 10, 30, 50, 70, 90 };
+    public static final int[] CHORS_SIZES = new int[] { 1400, 1800 };
+    public static final int[] VMS_LIMITS = new int[] { 70, 90 };
+//    public static final int[] CHORS_SIZES = new int[] { 200, 600, 1000, 1400, 1800 };
+//    public static final int[] VMS_LIMITS = new int[] { 10, 30, 50, 70, 90 };
 
     private static final int TIME_TO_WAIT_EE_START_MILLISEC = 1 * 60 * 1000;
     // private static final String CHOREOS_MIDDLEWARE_FOLDER =
@@ -124,7 +126,7 @@ public class ScalabilityExperiment {
     private void cleanAmazon() {
         logger.info("Destroying EC2 instances...");
         CleanAmazonTask task = new CleanAmazonTask();
-        Invoker<Void> invoker = new InvokerBuilder<Void>(task, 5).timeUnit(TimeUnit.MINUTES).trials(3)
+        Invoker<Void> invoker = new InvokerBuilder<Void>(task, 4).timeUnit(TimeUnit.MINUTES).trials(3)
                 .pauseBetweenTrials(1).build();
         try {
             invoker.invoke();
