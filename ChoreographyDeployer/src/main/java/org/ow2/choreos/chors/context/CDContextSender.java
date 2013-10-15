@@ -14,18 +14,19 @@ public class CDContextSender implements ContextSender {
             List<String> partnerEndpoints) throws ContextNotSentException {
         String adminEndpoint = getAdminEndpoint(serviceEndpoint);
         EasyESBNode esb = new EasyESBNodeImpl(adminEndpoint);
-        for (String partnerEndpoint: partnerEndpoints) {
+        for (String partnerEndpoint : partnerEndpoints) {
             String neighbourAdminEndpoint = getAdminEndpoint(partnerEndpoint);
-            EasyESBNode neighbour = new EasyESBNodeImpl(neighbourAdminEndpoint);
-            try {
-                esb.addNeighbour(neighbour);
-            } catch (EasyESBException e) {
-                throw new ContextNotSentException(serviceEndpoint, partnerRole, partnerName, partnerEndpoints);
+            if (!neighbourAdminEndpoint.equals(adminEndpoint)) {
+                EasyESBNode neighbour = new EasyESBNodeImpl(neighbourAdminEndpoint);
+                try {
+                    esb.addNeighbour(neighbour);
+                } catch (EasyESBException e) {
+                    throw new ContextNotSentException(serviceEndpoint, partnerRole, partnerName, partnerEndpoints);
+                }
             }
         }
     }
-    
-    
+
     private String getAdminEndpoint(String cdEndpoint) {
         String ip = URLUtils.extractIpFromURL(cdEndpoint);
         return "http://" + ip + ":8180/services/adminExternalEndpoint";

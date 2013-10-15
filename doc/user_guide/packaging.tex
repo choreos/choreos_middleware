@@ -322,7 +322,7 @@ A service choreography can be composed of services that are running before the c
 
 \section{SOAP service type}
 
-The only service type currently supported by the \ee\ is the SOAP service type. By convention, services of this type must provide an operation named ``\texttt{setInvocationAddress}''; this operation is used to inform the service about the remote service endpoints that implement the various \emph{roles} it depends on.  The \texttt{setInvocationAddress} arguments are the following:
+By convention, services of this type must provide an operation named ``\texttt{setInvocationAddress}''; this operation is used to inform the service about the remote service endpoints that implement the various \emph{roles} it depends on.  The \texttt{setInvocationAddress} arguments are the following:
 
 \begin{description}
 \item [dependency role:] defines the operations provided by the dependency. A service may depend on multiple services with different roles, so this argument is necessary to the service know how to use the received dependency. It is a requirement that the service must to know the available operations of each role from which it depends. The role of each service must be also defined in the choreography specification, that is the \ee\ input.
@@ -384,10 +384,23 @@ public class SomeWebServiceClass {
     @WebMethod
     public void setInvocationAddress(String role, String name, List<String> endpoints) {
 		...
-    }
+    }UPDATE_STATE(), WAIT(), NOTIFY()
 }
 \end{lstlisting}
 }
+
+\section{COORDEL service type}
+
+This service type must be used when declaring service specifications to CHOReOS Coordination Delegates (CDs).
+Although a coordination delegate proxifies all the operations of a SOAP service, the proxified \texttt{setInvocationAddress}
+operation will be not invoked. If a coordination delegate cdA is declared to depend on a coordination delegate cdB,
+the \ee\ will link the EasyESB nodes hosting the coordination delegates by invoking the \texttt{addNeighbour} operation of the EasyESB
+hosting cdA passing as neighbor the EasyESB node hosting cdB. Such operation enables coordination delegates to communicate directly among them
+by using the primitives (UPDATE\_STATE(), WAIT(), NOTIFY()) provided by the CD-component running on EasyESB nodes.
+Every CD depend on some business service (SOAP service). But this dependency must be not declared on the service specification.
+It is a implicit dependency that must be declared on the config.xml file of the correspondent CD.
+Finally, when some SOAP service is declared to depend on some CD, the SOAP service will receive through \texttt{setInvocationAddress} the CD endpoint exposed by the bus. Such CD endpoint proxifies the service related to the CD.
+
 
 \section{Coding guidelines}
 
