@@ -11,7 +11,6 @@ import org.ow2.choreos.chors.datamodel.LegacyService;
 import org.ow2.choreos.chors.datamodel.LegacyServiceInstance;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
-import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceType;
 
@@ -27,7 +26,7 @@ public class InstancesFilter {
         List<ServiceInstance> instances = new ArrayList<ServiceInstance>();
         for (DeployableService svc : list) {
             DeployableServiceSpec spec = svc.getSpec();
-            if (spec.getPackageType() != PackageType.EASY_ESB && spec.getServiceType() == ServiceType.SOAP) {
+            if (spec.getServiceType().equals(ServiceType.SOAP)) {
                 instances.addAll(svc.getInstances());
             }
         }

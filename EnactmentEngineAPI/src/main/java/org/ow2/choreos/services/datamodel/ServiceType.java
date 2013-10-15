@@ -18,6 +18,7 @@ public class ServiceType implements Serializable {
     
     public static ServiceType SOAP;    
     public static ServiceType REST;
+    public static ServiceType COORDEL;
     
     private static Map<String, ServiceType> serviceTypes;
     

@@ -15,7 +15,6 @@ import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.services.ServiceInstanceNotFoundException;
@@ -48,11 +47,6 @@ public class ContextCasterTest {
     private ModelsForTest models;
     private DeployableService travelService;
     private DeployableService airlineService;
-
-    @BeforeClass
-    public static void configLog() {
-        LogConfigurator.configLog();
-    }
 
     @Before
     public void setUp() {

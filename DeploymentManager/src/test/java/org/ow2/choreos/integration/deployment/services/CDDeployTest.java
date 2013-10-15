@@ -25,6 +25,7 @@ import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
+import org.ow2.choreos.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -51,6 +52,7 @@ public class CDDeployTest {
         spec.setName("MyCD");
         spec.setPackageUri(CD_LOCATION);
         spec.setPackageType(PackageType.EASY_ESB);
+        spec.setServiceType(ServiceType.COORDEL);
         spec.setEndpointName("CD-client-selfcheckoutmachine"); 
         // endpointName must match with the port name defined on the WSDL
         // and the EndpointName defined on the config.xml

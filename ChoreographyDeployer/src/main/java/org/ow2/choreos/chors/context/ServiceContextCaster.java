@@ -12,7 +12,6 @@ import org.ow2.choreos.invoker.InvokerBuilder;
 import org.ow2.choreos.invoker.InvokerException;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.Proxification;
-import org.ow2.choreos.services.datamodel.Service;
 import org.ow2.choreos.services.datamodel.ServiceDependency;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceType;
@@ -64,7 +63,7 @@ public class ServiceContextCaster {
                 if (provider.getSpec().getRoles().contains(providerRole))
                     sendProviderContextToConsumer();
                 else
-                    logger.error("Service " + providerName + " does not have role + " + providerRole
+                    logger.error("Service " + providerName + " does not have role " + providerRole
                             + "; not going to pass it to service " + consumerName + " on chor " + chor.getId());
             }
         }        
@@ -102,9 +101,9 @@ public class ServiceContextCaster {
      * @param providerService
      * @return
      */
-    private List<String> getUris(Service providerService) {
+    private List<String> getUris(DeployableService providerService) {
         List<String> uris = new ArrayList<String>();
-        for (ServiceInstance instance : ((DeployableService) providerService).getInstances()) {
+        for (ServiceInstance instance : providerService.getInstances()) {
             Proxification prox = instance.getProxification();
             boolean isProxified = prox != null && prox.getBusUri(ServiceType.SOAP) != null;
             if (isProxified) {

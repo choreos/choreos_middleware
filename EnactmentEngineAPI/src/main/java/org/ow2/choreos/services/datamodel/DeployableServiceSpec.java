@@ -215,7 +215,7 @@ public class DeployableServiceSpec extends ServiceSpec implements Serializable {
     public String toString() {
         return "DeployableServiceSpec [name=" + super.name + ", packageUri=" + packageUri + ", packageType=" + packageType + ", endpointName="
                 + endpointName + ", port=" + port + ", owner=" + owner + ", group=" + group + ", numberOfInstances="
-                + numberOfInstances + ", version=" + version + "]";
+                + numberOfInstances + ", version=" + version + ", roles= " + super.roles + "]";
     }
 
 }
