@@ -118,14 +118,9 @@ public class NPMImpl implements NodePoolManager {
 
     @Override
     public void destroyNode(String nodeId) throws NodeNotDestroyed, NodeNotFoundException {
-        try {
-            this.cloudProvider.destroyNode(nodeId);
-            this.nodeRegistry.deleteNode(nodeId);
-        } catch (NodeNotDestroyed e) {
-            throw e;
-        } catch (NodeNotFoundException e) {
-            throw e;
-        }
+        NodeDestroyerFactory nodeDestroyerFactory = new NodeDestroyerFactory(cloudProvider);
+        NodeDestroyer destroyer = nodeDestroyerFactory.getNewInstance(nodeId);
+        destroyer.destroyNode();
     }
 
     @Override

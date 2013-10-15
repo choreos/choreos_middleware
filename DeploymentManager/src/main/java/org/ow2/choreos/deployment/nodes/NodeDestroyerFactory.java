@@ -12,7 +12,11 @@ public class NodeDestroyerFactory {
     }
 
     public NodeDestroyer getNewInstance(CloudNode node) {
-        return new NodeDestroyer(node, cp);
+        return new NodeDestroyer(node.getId(), cp);
+    }
+    
+    public NodeDestroyer getNewInstance(String nodeId) {
+        return new NodeDestroyer(nodeId, cp);
     }
     
 }

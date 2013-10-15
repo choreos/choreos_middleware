@@ -7,24 +7,27 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.ow2.choreos.nodes.NodeNotDestroyed;
+import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.utils.Concurrency;
+import org.ow2.choreos.utils.TimeoutsAndTrials;
 
 public class NodesDestroyer {
 
-    private static final int TIMEOUT_MINUTES = 3;
-    
     private Collection<CloudNode> nodesToDestroy;
     private NodeDestroyerFactory nodeDestroyerFactory;
-    private NodeRegistry nodeRegistry;
 
-    private List<NodeDestroyer> destroyers = new ArrayList<NodeDestroyer>();
+    private List<DestroyTask> tasks = new ArrayList<DestroyTask>();
     private ExecutorService executor;
     
+    private final int timeout;
+    private final int trials;
+
     public NodesDestroyer(Collection<CloudNode> nodesToDestroy, NodeDestroyerFactory nodeDestroyerFactory) {
         this.nodesToDestroy = nodesToDestroy;
-        this.nodeDestroyerFactory= nodeDestroyerFactory; 
-        nodeRegistry = NodeRegistry.getInstance();
+        this.nodeDestroyerFactory= nodeDestroyerFactory;
+        this.timeout = TimeoutsAndTrials.get("NODE_DELETION_TIMEOUT");
+        this.trials = TimeoutsAndTrials.get("NODE_DELETION_TRIALS");        
     }
 
     public void destroyNodes() throws NodeNotDestroyed {
@@ -37,25 +40,48 @@ public class NodesDestroyer {
         if (nodesToDestroy == null || nodesToDestroy.isEmpty())
             return;
         executor = Executors.newFixedThreadPool(nodesToDestroy.size());
-        destroyers = new ArrayList<NodeDestroyer>();
+        tasks = new ArrayList<DestroyTask>();
         for (CloudNode node : nodesToDestroy) {
-            NodeDestroyer destroyer = nodeDestroyerFactory.getNewInstance(node);
-            destroyers.add(destroyer);
-            executor.submit(destroyer);
+            DestroyTask task = new DestroyTask(node);
+            tasks.add(task);
+            executor.submit(task);
         }
     }
 
     private void waitDestroy() {
         String erMsg = "Could not wait for nodes destroyment";
-        Concurrency.waitExecutor(executor, TIMEOUT_MINUTES, erMsg);
+        int totalTimeout = timeout*trials;
+        totalTimeout += totalTimeout*0.2;
+        Concurrency.waitExecutor(executor, totalTimeout, erMsg);
     }
 
     private void checkDestroyed() throws NodeNotDestroyed {
-        for (NodeDestroyer destroyer : destroyers) {
-            if (destroyer.isOK()) {
-                this.nodeRegistry.deleteNode(destroyer.getNode().getId());
-            } else {
-                throw new NodeNotDestroyed(destroyer.getNode().getId());
+        for (DestroyTask task : tasks) {
+            if (!task.ok) {
+                throw new NodeNotDestroyed(task.node.getId());
+            }
+        }
+    }
+    
+    private class DestroyTask implements Runnable {
+        
+        private CloudNode node;
+        private boolean ok;
+
+        public DestroyTask(CloudNode node) {
+            this.node = node;
+        }
+
+        @Override
+        public void run() {
+            NodeDestroyer destroyer = nodeDestroyerFactory.getNewInstance(node);
+            try {
+                destroyer.destroyNode();
+                ok = true;
+            } catch (NodeNotDestroyed e) {
+                ok = false;
+            } catch (NodeNotFoundException e) {
+                ok = false;
             }
         }
     }
