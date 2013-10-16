@@ -12,9 +12,7 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.deployment.nodes.NPMImpl;
-import org.ow2.choreos.deployment.nodes.cloudprovider.AWSCloudProvider;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
+import org.ow2.choreos.deployment.nodes.NPMFactory;
 import org.ow2.choreos.deployment.nodes.cm.BootstrapChecker;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
@@ -38,8 +36,7 @@ import org.ow2.choreos.utils.LogConfigurator;
 public class MultipleAWSNodesCreationTest {
 
     public static final int BUNCH_SIZE = 25;
-    private CloudProvider cp = new AWSCloudProvider();
-    private NodePoolManager npm = new NPMImpl(cp);
+    private final NodePoolManager npm = NPMFactory.getNewNPMInstance();
 
     @BeforeClass
     public static void setUpClass() {

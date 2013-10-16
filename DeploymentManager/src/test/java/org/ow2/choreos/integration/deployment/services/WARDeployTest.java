@@ -13,10 +13,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.LocationsTest;
-import org.ow2.choreos.deployment.nodes.NPMImpl;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
+import org.ow2.choreos.deployment.nodes.NPMFactory;
 import org.ow2.choreos.deployment.services.ServicesManagerImpl;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
@@ -38,8 +36,7 @@ public class WARDeployTest {
     public static String WAR_LOCATION = LocationsTest.get("AIRLINE_WAR");
     public static String ENDPOINT_NAME = "airline";
 
-    private String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
-    private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
+    private final NodePoolManager npm = NPMFactory.getNewNPMInstance();
     private ServicesManager deployer = new ServicesManagerImpl();
 
     private WebClient client;

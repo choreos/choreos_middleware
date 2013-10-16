@@ -1,8 +1,6 @@
 package org.ow2.choreos.deployment.nodes.cm;
 
 import org.ow2.choreos.deployment.nodes.NodeCreator;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
@@ -21,7 +19,6 @@ import com.jcraft.jsch.JSchException;
  */
 public class VMForImageCreator {
     
-    private static final String CLOUD = "AWS";
     public static final String CHEF_SOLO_FOLDER = "chef-solo";
     public static final String EASY_ESB_PACKAGE_URL = "http://valinhos.ime.usp.br:54080/easyesb/easyesb-cd-08.10.13.tar.gz";
     public static final String EASY_ESB_CLI_PACKAGE_URL = "http://valinhos.ime.usp.br:54080/easyesb/easyesb-cli-08.10.13.tar.gz";
@@ -41,8 +38,7 @@ public class VMForImageCreator {
     }
     
     private void createNode() throws NodeNotCreatedException {
-        CloudProvider cp = CloudProviderFactory.getInstance(CLOUD);
-        NodeCreator nodeCreator = new NodeCreator(cp);
+        NodeCreator nodeCreator = new NodeCreator();
         node = nodeCreator.createBootstrappedNode(new NodeSpec());
     }
 

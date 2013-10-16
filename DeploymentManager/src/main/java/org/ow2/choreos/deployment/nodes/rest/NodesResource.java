@@ -23,9 +23,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
-import org.ow2.choreos.deployment.nodes.NPMImpl;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
+import org.ow2.choreos.deployment.nodes.NPMFactory;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
@@ -37,11 +35,9 @@ import org.ow2.choreos.nodes.datamodel.NodeSpec;
 @Path("nodes")
 public class NodesResource {
 
-    private String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
-    private CloudProvider cp = CloudProviderFactory.getInstance(cloudProviderType);
-    private NodePoolManager npm = new NPMImpl(cp);
+    private static final Logger logger = Logger.getLogger(NodesResource.class);
 
-    private Logger logger = Logger.getLogger(NodesResource.class);
+    private final NodePoolManager npm = NPMFactory.getNewNPMInstance();
 
     /**
      * POST /nodes

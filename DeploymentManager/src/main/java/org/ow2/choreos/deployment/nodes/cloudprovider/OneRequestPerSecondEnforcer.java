@@ -13,11 +13,11 @@ import org.apache.log4j.Logger;
  */
 public class OneRequestPerSecondEnforcer {
 
-    // only threads with the creationToken can create new nodes
-    private boolean creationToken = true;
-    private Random random = new Random();
+    private static Logger logger = Logger.getLogger(OneRequestPerSecondEnforcer.class);
 
-    private Logger logger = Logger.getLogger(OneRequestPerSecondEnforcer.class);
+    // only threads with the token can make requests
+    private boolean token = true;
+    private Random random = new Random();
 
     public void enforceRule() {
 
@@ -38,22 +38,22 @@ public class OneRequestPerSecondEnforcer {
             logger.error("Exception at sleeping =/");
         }
 
-        releasesToken();
+        releaseToken();
     }
 
     private boolean getToken() {
         boolean ok = false;
         synchronized (this) {
-            ok = creationToken;
+            ok = token;
             if (ok) {
-                creationToken = false;
+                token = false;
             }
         }
         return ok;
     }
 
-    private void releasesToken() {
-        creationToken = true;
+    private void releaseToken() {
+        token = true;
     }
 
 }

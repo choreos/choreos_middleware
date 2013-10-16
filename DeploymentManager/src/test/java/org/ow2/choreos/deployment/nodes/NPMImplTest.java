@@ -6,31 +6,31 @@ package org.ow2.choreos.deployment.nodes;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 
+import org.junit.After;
 import org.junit.Test;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
+import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
-import static org.mockito.Mockito.mock;
-
 public class NPMImplTest {
     
-    private NodeDestroyerFactory nodeDestroyerFactory = null;
-
     @Test
     public void shouldCreateNode() throws Exception {
 
         NodeRegistry reg = NodeRegistry.getInstance();
         reg.clear();
 
-        CloudProvider cp = mock(CloudProvider.class);
         NodeCreator creator = NodeCreatorMocks.getGoodMock();
-        IdlePool pool = IdlePool.getCleanInstance(1, creator, nodeDestroyerFactory);
+        NodeCreatorFactory.nodeCreatorForTesting = creator;
+        NodeCreatorFactory.testing = true;
+        IdlePool pool = IdlePool.getCleanInstance(1);
 
-        NodePoolManager npm = new NPMImpl(cp, creator, pool);
+        NodePoolManager npm = NPMFactory.getNewNPMInstance(pool);
 
         CloudNode createdNode = npm.createNode(new NodeSpec());
         assertTrue(isNodeOK(createdNode));
@@ -46,10 +46,16 @@ public class NPMImplTest {
         reg.clear();
 
         CloudProvider cp = mock(CloudProvider.class);
+        CloudProviderFactory.cloudProviderForTesting = cp;
+        CloudProviderFactory.testing = true;
+        
         NodeCreator creator = NodeCreatorMocks.getGoodMock();
-        IdlePool pool = IdlePool.getCleanInstance(1, creator, nodeDestroyerFactory);
+        NodeCreatorFactory.nodeCreatorForTesting = creator;
+        NodeCreatorFactory.testing = true;
+        
+        IdlePool pool = IdlePool.getCleanInstance(1);
 
-        NodePoolManager npm = new NPMImpl(cp, creator, pool);
+        NodePoolManager npm = NPMFactory.getNewNPMInstance(pool);
 
         CloudNode createdNode = npm.createNode(new NodeSpec());
         assertTrue(isNodeOK(createdNode));
@@ -66,19 +72,26 @@ public class NPMImplTest {
 
         NodeRegistry reg = NodeRegistry.getInstance();
         reg.clear();
+        
+        CloudProvider cp = mock(CloudProvider.class);
+        CloudProviderFactory.cloudProviderForTesting = cp;
+        CloudProviderFactory.testing = true;
 
-        CloudProvider cp1 = mock(CloudProvider.class);
         NodeCreator creator1 = NodeCreatorMocks.getGoodMock();
-        IdlePool pool1 = IdlePool.getCleanInstance(1, creator1, nodeDestroyerFactory);
-        NodePoolManager npm1 = new NPMImpl(cp1, creator1, pool1);
+        NodeCreatorFactory.nodeCreatorForTesting = creator1;
+        NodeCreatorFactory.testing = true;        
+        IdlePool pool1 = IdlePool.getCleanInstance(1);
+        NodePoolManager npm1 = NPMFactory.getNewNPMInstance(pool1);
 
         CloudNode createdNode = npm1.createNode(new NodeSpec());
         assertTrue(isNodeOK(createdNode));
 
-        CloudProvider cp2 = mock(CloudProvider.class);
         NodeCreator creator2 = NodeCreatorMocks.getGoodMock();
-        IdlePool pool2 = IdlePool.getCleanInstance(1, creator2, nodeDestroyerFactory);
-        NodePoolManager npm2 = new NPMImpl(cp2, creator2, pool2);
+        NodeCreatorFactory.nodeCreatorForTesting = creator2;
+        NodeCreatorFactory.testing = true;       
+        
+        IdlePool pool2 = IdlePool.getCleanInstance(1);
+        NodePoolManager npm2 = NPMFactory.getNewNPMInstance(pool2);
 
         CloudNode fromOtherNPM = npm2.getNode(createdNode.getId());
         assertTrue(isNodeOK(fromOtherNPM));
@@ -86,7 +99,12 @@ public class NPMImplTest {
     }
 
     private boolean isNodeOK(CloudNode node) {
-
         return (node != null) && (node.getId() != null) && (!node.getId().isEmpty());
+    }
+    
+    @After
+    public void tearDown() {
+        NodeCreatorFactory.testing = false;
+        CloudProviderFactory.testing = false;
     }
 }

@@ -35,7 +35,7 @@ public class VMsCreator {
      */
     public List<Long> createVMs(int N, String cpType) {
 
-        CloudProvider cp = CloudProviderFactory.getInstance(cpType);
+        CloudProvider cp = CloudProviderFactory.getFactoryInstance().getCloudProviderInstance(cpType);
         ExecutorService executor = Executors.newFixedThreadPool(N);
         List<Future<Long>> futures = new ArrayList<Future<Long>>();
         for (int i = 0; i < N; i++) {

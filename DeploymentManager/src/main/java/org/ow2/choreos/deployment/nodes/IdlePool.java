@@ -37,19 +37,15 @@ public class IdlePool {
 
     private static Logger logger = Logger.getLogger(IdlePool.class);
 
-    private Set<CloudNode> idleNodes = new HashSet<CloudNode>();
-    private NodeCreator nodeCreator;
-    private NodeDestroyerFactory nodeDestroyerFactory;
     private int poolSize;
+    private Set<CloudNode> idleNodes = new HashSet<CloudNode>();
     private ExecutorService fillerExecutor = Executors.newSingleThreadExecutor();
 
-    private IdlePool(int poolSize, NodeCreator nodeCreator, NodeDestroyerFactory nodeDestroyerFactory) {
+    private IdlePool(int poolSize) {
         this.poolSize = poolSize;
-        this.nodeCreator = nodeCreator;
-        this.nodeDestroyerFactory = nodeDestroyerFactory;
     }
 
-    public static IdlePool getInstance(NodeCreator nodeCreator, NodeDestroyerFactory nodeDestroyerFactory) {
+    public static IdlePool getInstance() {
         int poolSize = 0;
         try {
             poolSize = Integer.parseInt(DeploymentManagerConfiguration.get("POOL_SIZE"));
@@ -58,7 +54,7 @@ public class IdlePool {
             logger.error(msg);
             throw new IllegalStateException(msg);
         }
-        return getInstance(poolSize, nodeCreator, nodeDestroyerFactory);
+        return getInstance(poolSize);
     }
 
     /**
@@ -68,10 +64,10 @@ public class IdlePool {
      * @param nodeCreator
      * @return
      */
-    public static IdlePool getInstance(int poolSize, NodeCreator nodeCreator, NodeDestroyerFactory nodeDestroyerFactory) {
+    public static IdlePool getInstance(int poolSize) {
         synchronized (IdlePool.class) {
             if (instance == null) {
-                instance = new IdlePool(poolSize, nodeCreator, nodeDestroyerFactory);
+                instance = new IdlePool(poolSize);
             }
         }
         return instance;
@@ -84,8 +80,8 @@ public class IdlePool {
      * @param nodeCreator
      * @return
      */
-    public static IdlePool getCleanInstance(int poolSize, NodeCreator nodeCreator, NodeDestroyerFactory nodeDestroyerFactory) {
-        instance = new IdlePool(poolSize, nodeCreator, nodeDestroyerFactory);
+    public static IdlePool getCleanInstance(int poolSize) {
+        instance = new IdlePool(poolSize);
         return instance;
     }
 
@@ -110,7 +106,7 @@ public class IdlePool {
     public CloudNode retriveNode() throws NodeNotCreatedException {
 
         if (idleNodes.isEmpty()) {
-            VMCreator vmCreator = new VMCreator(nodeCreator);
+            VMCreator vmCreator = new VMCreator();
             vmCreator.run();
             if (!vmCreator.ok) {
                 throw new NodeNotCreatedException("");
@@ -132,7 +128,7 @@ public class IdlePool {
      */
     public void createExtraVMs(int howManyVMs) {
         for (int i = 0; i < howManyVMs; i++) {
-            VMCreator vmCreator = new VMCreator(nodeCreator);
+            VMCreator vmCreator = new VMCreator();
             Thread thrd = new Thread(vmCreator);
             thrd.start();
         }
@@ -152,22 +148,19 @@ public class IdlePool {
     }
     
     public void emptyPool() throws NodeNotDestroyed {
-        NodesDestroyer destroyer = new NodesDestroyer(idleNodes, nodeDestroyerFactory);
+        NodesDestroyer destroyer = new NodesDestroyer(idleNodes);
         destroyer.destroyNodes();
     }
 
     private class VMCreator implements Runnable {
 
-        NodeCreator nodeCreator;
         boolean ok;
-
-        public VMCreator(NodeCreator nodeCreator) {
-            this.nodeCreator = nodeCreator;
-        }
 
         @Override
         public void run() {
             try {
+                NodeCreatorFactory factory = new NodeCreatorFactory();
+                NodeCreator nodeCreator = factory.getNewNodeCreator();
                 CloudNode node = nodeCreator.createBootstrappedNode(new NodeSpec());
                 ok = true;
                 synchronized (IdlePool.this) {
@@ -188,7 +181,7 @@ public class IdlePool {
             if (extra > 0) {
                 ExecutorService executor = Executors.newFixedThreadPool(extra);
                 for (int i = 0; i < extra; i++) {
-                    VMCreator vmCreator = new VMCreator(nodeCreator);
+                    VMCreator vmCreator = new VMCreator();
                     executor.execute(vmCreator);
                 }
                 Concurrency.waitExecutor(executor, FILLING_POOL_TIMEOUT_MINUTES, "Could not properly fill the pool.");

@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
+import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpdater;
 import org.ow2.choreos.deployment.nodes.cm.NodeUpdaters;
@@ -27,45 +28,40 @@ import org.ow2.choreos.nodes.datamodel.NodeSpec;
  */
 public class NPMImpl implements NodePoolManager {
 
-    private Logger logger = Logger.getLogger(NPMImpl.class);
+    private static final Logger logger = Logger.getLogger(NPMImpl.class);
 
     private CloudProvider cloudProvider;
     private NodeRegistry nodeRegistry;
-    private NodeCreator nodeCreator;
     private boolean useThePool;
     private IdlePool idlePool;
 
-    public NPMImpl(CloudProvider provider) {
-        cloudProvider = provider;
+    public NPMImpl() {
+        String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
+        cloudProvider = CloudProviderFactory.getFactoryInstance().getCloudProviderInstance(cloudProviderType);
         nodeRegistry = NodeRegistry.getInstance();
-        nodeCreator = new NodeCreator(cloudProvider);
         loadPool();
     }
 
     private void loadPool() {
-        int poolSize = 0;
-        try {
-            useThePool = Boolean.parseBoolean(DeploymentManagerConfiguration.get("IDLE_POOL"));
-            if (useThePool) {
-                poolSize = Integer.parseInt(DeploymentManagerConfiguration.get("IDLE_POOL_SIZE"));
-            }
-        } catch (NumberFormatException e) {
-            ; // no problem, poolSize is zero
+        useThePool = Boolean.parseBoolean(DeploymentManagerConfiguration.get("IDLE_POOL"));
+        if (useThePool) {
+            IdlePoolFactory factory = new IdlePoolFactory();
+            idlePool = factory.getNewIdlePool();
         }
-        NodeDestroyerFactory nodeDestroyerFactory = new NodeDestroyerFactory(cloudProvider);
-        idlePool = IdlePool.getInstance(poolSize, nodeCreator, nodeDestroyerFactory);
     }
 
-    public NPMImpl(CloudProvider provider, NodeCreator creator, IdlePool pool) {
-        cloudProvider = provider;
+    public NPMImpl(IdlePool pool) {
+        String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
+        cloudProvider = CloudProviderFactory.getFactoryInstance().getCloudProviderInstance(cloudProviderType);
         nodeRegistry = NodeRegistry.getInstance();
-        nodeCreator = creator;
         idlePool = pool;
     }
 
     @Override
     public CloudNode createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
         CloudNode node = new CloudNode();
+        NodeCreatorFactory factory = new NodeCreatorFactory(); 
+        NodeCreator nodeCreator = factory.getNewNodeCreator();
         try {
             node = nodeCreator.createBootstrappedNode(nodeSpec);
         } catch (NodeNotCreatedException e1) {
@@ -118,16 +114,19 @@ public class NPMImpl implements NodePoolManager {
 
     @Override
     public void destroyNode(String nodeId) throws NodeNotDestroyed, NodeNotFoundException {
-        NodeDestroyerFactory nodeDestroyerFactory = new NodeDestroyerFactory(cloudProvider);
+        NodeDestroyerFactory nodeDestroyerFactory = new NodeDestroyerFactory();
         NodeDestroyer destroyer = nodeDestroyerFactory.getNewInstance(nodeId);
         destroyer.destroyNode();
     }
 
     @Override
     public void destroyNodes() throws NodeNotDestroyed {
-        NodeDestroyerFactory nodeDestroyerFactory = new NodeDestroyerFactory(cloudProvider); 
-        NodesDestroyer destroyer = new NodesDestroyer(this.getNodes(), nodeDestroyerFactory);
+        try {
+            idlePool.emptyPool();
+        } catch (NodeNotDestroyed e) {
+            logger.error("Could not empty idle pool");
+        }
+        NodesDestroyer destroyer = new NodesDestroyer(this.getNodes());
         destroyer.destroyNodes();
-        idlePool.emptyPool();
     }
 }

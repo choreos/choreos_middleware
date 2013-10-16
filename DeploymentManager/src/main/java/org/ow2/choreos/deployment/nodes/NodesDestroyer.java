@@ -14,18 +14,17 @@ import org.ow2.choreos.utils.TimeoutsAndTrials;
 
 public class NodesDestroyer {
 
-    private Collection<CloudNode> nodesToDestroy;
-    private NodeDestroyerFactory nodeDestroyerFactory;
+    private final Collection<CloudNode> nodesToDestroy;
 
+    private NodeDestroyerFactory nodeDestroyerFactory = new NodeDestroyerFactory();
     private List<DestroyTask> tasks = new ArrayList<DestroyTask>();
     private ExecutorService executor;
     
     private final int timeout;
     private final int trials;
 
-    public NodesDestroyer(Collection<CloudNode> nodesToDestroy, NodeDestroyerFactory nodeDestroyerFactory) {
+    public NodesDestroyer(Collection<CloudNode> nodesToDestroy) {
         this.nodesToDestroy = nodesToDestroy;
-        this.nodeDestroyerFactory= nodeDestroyerFactory;
         this.timeout = TimeoutsAndTrials.get("NODE_DELETION_TIMEOUT");
         this.trials = TimeoutsAndTrials.get("NODE_DELETION_TRIALS");        
     }

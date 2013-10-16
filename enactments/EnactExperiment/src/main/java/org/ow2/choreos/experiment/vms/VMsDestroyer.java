@@ -23,7 +23,7 @@ public class VMsDestroyer {
     private Logger logger = Logger.getLogger(VMsDestroyer.class);
 
     public VMsDestroyer(String cpType) {
-        this.cp = CloudProviderFactory.getInstance(cpType);
+        this.cp = CloudProviderFactory.getFactoryInstance().getCloudProviderInstance(cpType);
     }
 
     public void destroyAll() {

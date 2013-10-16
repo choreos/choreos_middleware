@@ -7,7 +7,9 @@ package org.ow2.choreos.deployment.nodes;
 import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
+import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.invoker.Invoker;
 import org.ow2.choreos.invoker.InvokerBuilder;
 import org.ow2.choreos.invoker.InvokerException;
@@ -31,11 +33,12 @@ public class NodeDestroyer {
     private final int timeout;
     private final int trials;
 
-    public NodeDestroyer(String nodeId, CloudProvider cp) {
+    public NodeDestroyer(String nodeId) {
         this.nodeId = nodeId;
-        this.cp = cp;
         this.timeout = TimeoutsAndTrials.get("NODE_DELETION_TIMEOUT");
         this.trials = TimeoutsAndTrials.get("NODE_DELETION_TRIALS");
+        String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
+        this.cp = CloudProviderFactory.getFactoryInstance().getCloudProviderInstance(cloudProviderType);
         this.nodeRegistry = NodeRegistry.getInstance();
     }
 

@@ -8,7 +8,9 @@ package org.ow2.choreos.deployment.nodes;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
+import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.cm.NodeBootstrapper;
 import org.ow2.choreos.deployment.nodes.cm.NodeNotBootstrappedException;
 import org.ow2.choreos.invoker.Invoker;
@@ -32,8 +34,9 @@ public class NodeCreator {
 
     private CloudProvider cp;
 
-    public NodeCreator(CloudProvider cp) {
-	this.cp = cp;
+    public NodeCreator() {
+        String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
+	this.cp = CloudProviderFactory.getFactoryInstance().getCloudProviderInstance(cloudProviderType);
     }
 
     public CloudNode createBootstrappedNode(NodeSpec nodeSpec) throws NodeNotCreatedException {

@@ -4,39 +4,50 @@
 
 package org.ow2.choreos.deployment.nodes.cloudprovider;
 
+import org.apache.log4j.Logger;
 import org.ow2.choreos.utils.Configuration;
+import org.ow2.choreos.utils.SingletonsFactory;
 
-public class CloudProviderFactory {
+public class CloudProviderFactory extends SingletonsFactory<CloudProvider> {
 
     private static final String CLASS_MAP_FILE_PATH = "cloud_providers.properties";
 
-    private static Configuration classMap;
-    
-    static {
-        classMap = new Configuration(CLASS_MAP_FILE_PATH);
-    }
-    
-    public static CloudProvider getInstance(String type) {
-        String className = classMap.get(type);
-        CloudProvider singleton = null;
-        try {
-            @SuppressWarnings("unchecked")
-            // catches handle the problem
-            Class<CloudProvider> clazz = (Class<CloudProvider>) Class.forName(className);
-            singleton = clazz.newInstance();
-        } catch (ClassNotFoundException e) {
-            creationFailed(type);
-        } catch (InstantiationException e) {
-            creationFailed(type);
-        } catch (IllegalAccessException e) {
-            creationFailed(type);
-        } catch (ClassCastException e) {
-            creationFailed(type);
+    private static final Logger logger = Logger.getLogger(CloudProviderFactory.class);
+
+    private static CloudProviderFactory INSTANCE;
+
+    public static CloudProvider cloudProviderForTesting;
+    public static boolean testing;
+
+    public static CloudProviderFactory getFactoryInstance() {
+        if (INSTANCE == null) {
+            synchronized (CloudProviderFactory.class) {
+                if (INSTANCE == null)
+                    createNewInstance();
+            }
         }
-        return singleton;
+        return INSTANCE;
     }
-    
-    private static void creationFailed(String type) {
-        throw new IllegalStateException("Invalid CLOUD_PROVIDER: " + type);
+
+    private static void createNewInstance() {
+        Configuration conf = new Configuration(CLASS_MAP_FILE_PATH);
+        INSTANCE = new CloudProviderFactory(conf);
     }
+
+    public CloudProviderFactory(Configuration classMap) {
+        super(classMap);
+    }
+
+    public CloudProvider getCloudProviderInstance(String type) {
+        if (testing) {
+            return cloudProviderForTesting;
+        } else {
+            if (type == null) {
+                logger.error("CLOUD_PROVIDER property not set on properties file!");
+                throw new IllegalArgumentException();
+            }
+            return getInstance(type);
+        }
+    }
+
 }

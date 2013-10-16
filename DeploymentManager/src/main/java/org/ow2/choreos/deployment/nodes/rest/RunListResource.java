@@ -8,9 +8,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
-import org.ow2.choreos.deployment.nodes.NPMImpl;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
+import org.ow2.choreos.deployment.nodes.NPMFactory;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
@@ -19,10 +17,10 @@ import org.ow2.choreos.nodes.datamodel.RunList;
 @Path("nodes/{node_id:.+}/runlist")
 public class RunListResource {
 
-    private String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
-    private NodePoolManager npm = new NPMImpl(CloudProviderFactory.getInstance(cloudProviderType));
+    private static final Logger logger = Logger.getLogger(RunListResource.class);
 
-    private Logger logger = Logger.getLogger(RunListResource.class);
+    private final NodePoolManager npm = NPMFactory.getNewNPMInstance();
+
 
     @GET
     @Produces("application/json")
