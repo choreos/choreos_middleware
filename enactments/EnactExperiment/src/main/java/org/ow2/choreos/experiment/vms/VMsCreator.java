@@ -26,8 +26,8 @@ public class VMsCreator {
     private static final int TIMEOUT = 60; // minutes
 
     /**
-     * Create N VMs using the given cloud provider
-     * waitExecutor
+     * Create N VMs using the given cloud provider waitExecutor
+     * 
      * @param N
      * @param cp
      * @return an ordered list with the times necessary to create each VM. If a

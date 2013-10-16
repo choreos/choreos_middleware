@@ -18,7 +18,7 @@ import org.ow2.choreos.utils.LogConfigurator;
  */
 public class Experiment {
 
-    private static final int[] Ns = new int[] { 2 };
+    private static final int[] Ns = new int[] { 100 };
     private static final int EXECUTIONS_PER_N = 1; // how many times each N is executed
     private static final int FIRST_EXECUTION = 0; // where the "exec" index start
     private static final String CLOUD_PROVIDER_TYPE = "AWS";
