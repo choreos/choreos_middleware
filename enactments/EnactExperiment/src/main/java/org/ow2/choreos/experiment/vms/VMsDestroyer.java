@@ -8,7 +8,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory.CloudProviderType;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
@@ -23,7 +22,7 @@ public class VMsDestroyer {
 
 	private Logger logger = Logger.getLogger(VMsDestroyer.class);
 
-	public VMsDestroyer(CloudProviderType cpType) {
+	public VMsDestroyer(String cpType) {
 		this.cp = CloudProviderFactory.getInstance(cpType);
 	}
 	
@@ -40,7 +39,7 @@ public class VMsDestroyer {
 			this.sleepForAws();
 		}
 		
-		Concurrency.waitExecutor(executor, TIMEOUT);
+		Concurrency.waitExecutor(executor, TIMEOUT, "pam!");
 		System.out.println("");
 	}
 	

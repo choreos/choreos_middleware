@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory.CloudProviderType;
 import org.ow2.choreos.utils.LogConfigurator;
 
 /**
@@ -22,7 +21,7 @@ public class Experiment {
     private static final int[] Ns = new int[] { 2 };
     private static final int EXECUTIONS_PER_N = 1; // how many times each N is executed
     private static final int FIRST_EXECUTION = 0; // where the "exec" index start
-    private static final CloudProviderType CLOUD_PROVIDER_TYPE = CloudProviderType.AWS;
+    private static final String CLOUD_PROVIDER_TYPE = "AWS";
 
     private Logger logger = Logger.getLogger(Experiment.class);
 
@@ -54,8 +53,8 @@ public class Experiment {
                 int fails = n - times.size();
                 logger.info("Failures: " + fails);
 
-//                VMsDestroyer destroyer = new VMsDestroyer(CLOUD_PROVIDER_TYPE);
-//                destroyer.destroyAll();
+                VMsDestroyer destroyer = new VMsDestroyer(CLOUD_PROVIDER_TYPE);
+                destroyer.destroyAll();
             }
         }
     }
