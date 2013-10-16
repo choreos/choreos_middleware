@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
-import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory.CloudProviderType;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.utils.Concurrency;
@@ -28,13 +27,13 @@ public class VMsCreator {
 
     /**
      * Create N VMs using the given cloud provider
-     * 
+     * waitExecutor
      * @param N
      * @param cp
      * @return an ordered list with the times necessary to create each VM. If a
      *         VM is not created, the size of the returned list is less then N.
      */
-    public List<Long> createVMs(int N, CloudProviderType cpType) {
+    public List<Long> createVMs(int N, String cpType) {
 
         CloudProvider cp = CloudProviderFactory.getInstance(cpType);
         ExecutorService executor = Executors.newFixedThreadPool(N);
@@ -44,7 +43,7 @@ public class VMsCreator {
             futures.add(future);
         }
 
-        Concurrency.waitExecutor(executor, TIMEOUT);
+        Concurrency.waitExecutor(executor, TIMEOUT, "pam!");
         System.out.println("");
 
         List<Long> times = new ArrayList<Long>();
