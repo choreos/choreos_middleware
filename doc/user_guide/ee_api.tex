@@ -545,23 +545,20 @@ public class ChorSpecExample {
 
 \lstset{language=XML}
 
-\begin{lstlisting}[caption=, label=lst:chor_xsd]
+\begin{lstlisting}[caption=, label=lst:chor_xsd, breaklines]
 ChorSpec XSD:
-<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:element name="choreographySpec" type="choreographySpec"/>
-    <xs:element name="deployableServiceSpec" type="deployableServiceSpec"/>
-    <xs:element name="legacyServiceSpec" type="legacyServiceSpec"/>
-    <xs:element name="resourceImpact" type="resourceImpact"/>
-    <xs:complexType name="choreographySpec">
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
+<xs:element name="choreographySpec" type="choreographySpec"/>
+<xs:element name="deployableServiceSpec" type="deployableServiceSpec"/>
+<xs:element name="legacyServiceSpec" type="legacyServiceSpec"/>
+<xs:element name="resourceImpact" type="resourceImpact"/>
+<xs:complexType name="choreographySpec">
         <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0"
-                name="deployableServiceSpecs" nillable="true" type="deployableServiceSpec"/>
-            <xs:element maxOccurs="unbounded" minOccurs="0"
-                name="legacyServiceSpecs" nillable="true" type="legacyServiceSpec"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="deployableServiceSpecs" nillable="true" type="deployableServiceSpec"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="legacyServiceSpecs" nillable="true" type="legacyServiceSpec"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="deployableServiceSpec">
+<xs:complexType name="deployableServiceSpec">
         <xs:complexContent>
             <xs:extension base="serviceSpec">
                 <xs:sequence>
@@ -578,17 +575,20 @@ ChorSpec XSD:
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:complexType abstract="true" name="serviceSpec">
+<xs:complexType abstract="true" name="serviceSpec">
         <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0"
-                name="dependencies" nillable="true" type="serviceDependency"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="dependencies" nillable="true" type="serviceDependency"/>
             <xs:element minOccurs="0" name="name" type="xs:string"/>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="roles"
-                nillable="true" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="roles" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="serviceType" type="serviceType"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="resourceImpact">
+<xs:complexType name="packageType">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="type" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+<xs:complexType name="resourceImpact">
         <xs:sequence>
             <xs:element minOccurs="0" name="memory" type="memoryType"/>
             <xs:element minOccurs="0" name="cpu" type="xs:string"/>
@@ -596,75 +596,59 @@ ChorSpec XSD:
             <xs:element minOccurs="0" name="network" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="serviceDependency">
+<xs:complexType name="serviceDependency">
         <xs:sequence>
             <xs:element minOccurs="0" name="serviceSpecName" type="xs:string"/>
             <xs:element minOccurs="0" name="serviceSpecRole" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="legacyServiceSpec">
+<xs:complexType name="serviceType">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="type" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+<xs:complexType name="legacyServiceSpec">
         <xs:complexContent>
             <xs:extension base="serviceSpec">
                 <xs:sequence>
-                    <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="nativeURIs" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="nativeURIs" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:simpleType name="packageType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="COMMAND_LINE"/>
-            <xs:enumeration value="TOMCAT"/>
-            <xs:enumeration value="EASY_ESB"/>
-            <xs:enumeration value="OTHER"/>
-        </xs:restriction>
-    </xs:simpleType>
-    <xs:simpleType name="memoryType">
+<xs:simpleType name="memoryType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="SMALL"/>
             <xs:enumeration value="MEDIUM"/>
             <xs:enumeration value="LARGE"/>
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType name="serviceType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="SOAP"/>
-            <xs:enumeration value="REST"/>
-        </xs:restriction>
-    </xs:simpleType>
 </xs:schema>
 
-
 Choreography XSD:
-<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:element name="choreography" type="choreography"/>
-    <xs:element name="choreographySpec" type="choreographySpec"/>
-    <xs:element name="cloudNode" type="cloudNode"/>
-    <xs:element name="deployableService" type="deployableService"/>
-    <xs:element name="deployableServiceSpec" type="deployableServiceSpec"/>
-    <xs:element name="legacyServiceSpec" type="legacyServiceSpec"/>
-    <xs:element name="resourceImpact" type="resourceImpact"/>
-    <xs:complexType name="choreography">
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
+<xs:element name="choreography" type="choreography"/>
+<xs:element name="choreographySpec" type="choreographySpec"/>
+<xs:element name="cloudNode" type="cloudNode"/>
+<xs:element name="deployableService" type="deployableService"/>
+<xs:element name="deployableServiceSpec" type="deployableServiceSpec"/>
+<xs:element name="legacyServiceSpec" type="legacyServiceSpec"/>
+<xs:element name="resourceImpact" type="resourceImpact"/>
+<xs:complexType name="choreography">
         <xs:sequence>
             <xs:element minOccurs="0" ref="choreographySpec"/>
-            <xs:element maxOccurs="unbounded" minOccurs="0"
-                name="deployableServices" nillable="true" type="deployableService"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="deployableServices" nillable="true" type="deployableService"/>
             <xs:element minOccurs="0" name="id" type="xs:string"/>
-            <xs:element maxOccurs="unbounded" minOccurs="0"
-                name="legacyServices" nillable="true" type="legacyService"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="legacyServices" nillable="true" type="legacyService"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="choreographySpec">
+<xs:complexType name="choreographySpec">
         <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0"
-                name="deployableServiceSpecs" nillable="true" type="deployableServiceSpec"/>
-            <xs:element maxOccurs="unbounded" minOccurs="0"
-                name="legacyServiceSpecs" nillable="true" type="legacyServiceSpec"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="deployableServiceSpecs" nillable="true" type="deployableServiceSpec"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="legacyServiceSpecs" nillable="true" type="legacyServiceSpec"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="deployableServiceSpec">
+<xs:complexType name="deployableServiceSpec">
         <xs:complexContent>
             <xs:extension base="serviceSpec">
                 <xs:sequence>
@@ -681,17 +665,20 @@ Choreography XSD:
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:complexType abstract="true" name="serviceSpec">
+<xs:complexType abstract="true" name="serviceSpec">
         <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0"
-                name="dependencies" nillable="true" type="serviceDependency"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="dependencies" nillable="true" type="serviceDependency"/>
             <xs:element minOccurs="0" name="name" type="xs:string"/>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="roles"
-                nillable="true" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="roles" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="serviceType" type="serviceType"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="resourceImpact">
+<xs:complexType name="packageType">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="type" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+<xs:complexType name="resourceImpact">
         <xs:sequence>
             <xs:element minOccurs="0" name="memory" type="memoryType"/>
             <xs:element minOccurs="0" name="cpu" type="xs:string"/>
@@ -699,55 +686,57 @@ Choreography XSD:
             <xs:element minOccurs="0" name="network" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="serviceDependency">
+<xs:complexType name="serviceDependency">
         <xs:sequence>
             <xs:element minOccurs="0" name="serviceSpecName" type="xs:string"/>
             <xs:element minOccurs="0" name="serviceSpecRole" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="legacyServiceSpec">
+<xs:complexType name="serviceType">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="type" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+<xs:complexType name="legacyServiceSpec">
         <xs:complexContent>
             <xs:extension base="serviceSpec">
                 <xs:sequence>
-                    <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="nativeURIs" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="nativeURIs" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:complexType name="deployableService">
+<xs:complexType name="deployableService">
         <xs:complexContent>
             <xs:extension base="service">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="recipeBundle" type="recipeBundle"/>
-                    <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="selectedNodes" nillable="true" type="cloudNode"/>
-                    <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="serviceInstances" nillable="true" type="serviceInstance"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="selectedNodes" nillable="true" type="cloudNode"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="serviceInstances" nillable="true" type="serviceInstance"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:complexType abstract="true" name="service">
+<xs:complexType abstract="true" name="service">
         <xs:sequence>
             <xs:element minOccurs="0" name="spec" type="serviceSpec"/>
             <xs:element minOccurs="0" name="UUID" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="recipeBundle">
+<xs:complexType name="recipeBundle">
         <xs:sequence>
             <xs:element minOccurs="0" name="cookbookFolder" type="xs:string"/>
             <xs:element minOccurs="0" name="deactivateRecipe" type="recipe"/>
             <xs:element minOccurs="0" name="serviceRecipe" type="recipe"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="recipe">
+<xs:complexType name="recipe">
         <xs:sequence>
             <xs:element minOccurs="0" name="cookbookName" type="xs:string"/>
             <xs:element minOccurs="0" name="name" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="cloudNode">
+<xs:complexType name="cloudNode">
         <xs:sequence>
             <xs:element minOccurs="0" name="cpus" type="xs:int"/>
             <xs:element minOccurs="0" name="hostname" type="xs:string"/>
@@ -764,10 +753,19 @@ Choreography XSD:
             <xs:element minOccurs="0" name="zone" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="runList">
+<xs:complexType name="runList">
         <xs:sequence/>
     </xs:complexType>
-    <xs:complexType name="serviceInstance">
+<xs:complexType name="serviceInstance">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="instanceId" type="xs:string"/>
+            <xs:element minOccurs="0" name="nativeUri" type="xs:string"/>
+            <xs:element minOccurs="0" name="node" type="cloudNode"/>
+            <xs:element minOccurs="0" name="proxification" type="proxification"/>
+            <xs:element minOccurs="0" name="serviceSpec" type="deployableServiceSpec"/>
+        </xs:sequence>
+    </xs:complexType>
+<xs:complexType name="proxification">
         <xs:sequence>
             <xs:element name="busUris">
                 <xs:complexType>
@@ -776,8 +774,7 @@ Choreography XSD:
                             <xs:complexType>
                                 <xs:sequence>
                                     <xs:element minOccurs="0" name="key" type="serviceType"/>
-                                    <xs:element minOccurs="0"
-                                    name="value" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="value" type="xs:string"/>
                                 </xs:sequence>
                             </xs:complexType>
                         </xs:element>
@@ -785,38 +782,29 @@ Choreography XSD:
                 </xs:complexType>
             </xs:element>
             <xs:element minOccurs="0" name="easyEsbNodeAdminEndpoint" type="xs:string"/>
-            <xs:element minOccurs="0" name="instanceId" type="xs:string"/>
-            <xs:element minOccurs="0" name="nativeUri" type="xs:string"/>
-            <xs:element minOccurs="0" name="node" type="cloudNode"/>
-            <xs:element minOccurs="0" name="serviceSpec" type="deployableServiceSpec"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="legacyService">
+<xs:complexType name="legacyService">
         <xs:complexContent>
             <xs:extension base="service">
-                <xs:sequence/>
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="legacyServiceInstances" nillable="true" type="legacyServiceInstance"/>
+                </xs:sequence>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:simpleType name="packageType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="COMMAND_LINE"/>
-            <xs:enumeration value="TOMCAT"/>
-            <xs:enumeration value="EASY_ESB"/>
-            <xs:enumeration value="OTHER"/>
-        </xs:restriction>
-    </xs:simpleType>
-    <xs:simpleType name="memoryType">
+<xs:complexType name="legacyServiceInstance">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="proxification" type="proxification"/>
+            <xs:element minOccurs="0" name="spec" type="legacyServiceSpec"/>
+            <xs:element minOccurs="0" name="uri" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+<xs:simpleType name="memoryType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="SMALL"/>
             <xs:enumeration value="MEDIUM"/>
             <xs:enumeration value="LARGE"/>
-        </xs:restriction>
-    </xs:simpleType>
-    <xs:simpleType name="serviceType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="SOAP"/>
-            <xs:enumeration value="REST"/>
         </xs:restriction>
     </xs:simpleType>
 </xs:schema>
