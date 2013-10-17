@@ -24,6 +24,10 @@ public class NPMImplTest {
 
         NodeRegistry reg = NodeRegistry.getInstance();
         reg.clear();
+        
+        CloudProvider cp = mock(CloudProvider.class);
+        CloudProviderFactory.cloudProviderForTesting = cp;
+        CloudProviderFactory.testing = true;
 
         NodeCreator creator = NodeCreatorMocks.getGoodMock();
         NodeCreatorFactory.nodeCreatorForTesting = creator;
