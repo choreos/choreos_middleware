@@ -7,11 +7,14 @@ import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.datamodel.Choreography;
+import org.ow2.choreos.chors.datamodel.LegacyService;
+import org.ow2.choreos.chors.datamodel.LegacyServiceInstance;
 import org.ow2.choreos.invoker.Invoker;
 import org.ow2.choreos.invoker.InvokerBuilder;
 import org.ow2.choreos.invoker.InvokerException;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.Proxification;
+import org.ow2.choreos.services.datamodel.Service;
 import org.ow2.choreos.services.datamodel.ServiceDependency;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceType;
@@ -27,17 +30,17 @@ public class ServiceContextCaster {
     private static Logger logger = Logger.getLogger(ServiceContextCaster.class);
 
     private final Choreography chor;
-    private final DeployableService consumer;
+    private final Service consumer;
     private final String consumerName;
     
     private final int timeout;
     private final int trials;
     private final int pauseBetweenTrials;
     
-    private DeployableService provider;
+    private Service provider;
     private String providerName, providerRole;
 
-    public ServiceContextCaster(Choreography chor, DeployableService consumer) {
+    public ServiceContextCaster(Choreography chor, Service consumer) {
         this.chor = chor;
         this.consumer = consumer;
         this.consumerName = consumer.getSpec().getName();
@@ -51,7 +54,7 @@ public class ServiceContextCaster {
         if (!isConsumerOK())
             return;
         
-        Map<String, DeployableService> deployedServicesMap = chor.getMapOfDeployableServicesBySpecNames();
+        Map<String, Service> deployedServicesMap = chor.getMapOfServicesBySpecNames();
         for (ServiceDependency dep : consumer.getSpec().getDependencies()) {
             providerName = dep.getServiceSpecName();
             providerRole = dep.getServiceSpecRole();
@@ -101,7 +104,16 @@ public class ServiceContextCaster {
      * @param providerService
      * @return
      */
-    private List<String> getUris(DeployableService providerService) {
+    private List<String> getUris(Service service) {
+        if (service instanceof DeployableService) {
+            return getUrisFromDeployable((DeployableService) service);
+        } else if (service instanceof LegacyService) {
+            return getUrisFromLegacy((LegacyService) service);
+        }
+        throw new IllegalArgumentException("Invalid service " + service);
+    }
+    
+    private List<String> getUrisFromDeployable(DeployableService providerService) {
         List<String> uris = new ArrayList<String>();
         for (ServiceInstance instance : providerService.getInstances()) {
             Proxification prox = instance.getProxification();
@@ -115,7 +127,23 @@ public class ServiceContextCaster {
         }
         return uris;
     }
+    
+    // TODO: eliminate replication by building an abstract ServiceInstance
 
+    private List<String> getUrisFromLegacy(LegacyService providerService) {
+        List<String> uris = new ArrayList<String>();
+        for (LegacyServiceInstance instance : providerService.getLegacyServiceInstances()) {
+            Proxification prox = instance.getProxification();
+            boolean isProxified = prox != null && prox.getBusUri(ServiceType.SOAP) != null;
+            if (isProxified) {
+                String proxifiedUri = prox.getBusUri(ServiceType.SOAP);
+                uris.add(proxifiedUri);
+            } else {
+                uris.add(instance.getUri());
+            }
+        }
+        return uris;
+    }
     
     private class ContextSenderTask implements Callable<Void> {
 

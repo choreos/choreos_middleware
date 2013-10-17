@@ -65,13 +65,33 @@ public class Choreography {
 
     /**
      * 
-     * @return a map whose keys are service specs and values are the respective
+     * @return a map whose keys are spec names and values are the respective
      *         deployable services
      */
     public Map<String, DeployableService> getMapOfDeployableServicesBySpecNames() {
         Map<String, DeployableService> map = new HashMap<String, DeployableService>();
         if (deployableServices != null) {
             for (DeployableService svc : deployableServices) {
+                map.put(svc.getSpec().getName(), svc);
+            }
+        }
+        return map;
+    }
+
+    /**
+     * 
+     * @return a map whose keys are spec names and values are the respective
+     *         services
+     */
+    public Map<String, Service> getMapOfServicesBySpecNames() {
+        Map<String, Service> map = new HashMap<String, Service>();
+        if (deployableServices != null) {
+            for (Service svc : deployableServices) {
+                map.put(svc.getSpec().getName(), svc);
+            }
+        }
+        if (legacyServices != null) {
+            for (Service svc : legacyServices) {
                 map.put(svc.getSpec().getName(), svc);
             }
         }

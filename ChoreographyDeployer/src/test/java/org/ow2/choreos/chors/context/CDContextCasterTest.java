@@ -16,7 +16,6 @@ import org.ow2.choreos.services.datamodel.ServiceDependency;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.ModelsForTest;
-import org.ow2.choreos.utils.LogConfigurator;
 
 public class CDContextCasterTest {
 
@@ -32,10 +31,10 @@ public class CDContextCasterTest {
     private DeployableServiceSpec travelSpec, airlineCDSpec, travelCDSpec;
     private DeployableService travelService, travelCD, airlineCD;
     private CloudNode cdsNode;
+    private ContextSender senderMock;
     
     @Before
     public void setUp() {
-        LogConfigurator.configLog();
         models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
         travelSpec = models.getTravelSpec();
         travelService = models.getTravelService();
@@ -43,6 +42,7 @@ public class CDContextCasterTest {
         createdAirlineCD();
         createdTravelCD();
         createDependencies();
+        configureMock();
     }
 
     private void createCDsNode() {
@@ -99,23 +99,27 @@ public class CDContextCasterTest {
         // obs: airline-cd --> airline is a implicit dependency (must be configure on config.xml)
     }
     
+    private ContextSender configureMock() {
+        senderMock = mock(ContextSender.class);
+        ContextSenderFactory.testing = true;
+        ContextSenderFactory.senderForTesting = senderMock;
+        return senderMock;
+    }
+    
     @Test
     public void shouldCastCDsContext() throws ContextNotSentException {
         
-        ContextSender sender = mock(ContextSender.class);
-        ContextSenderFactory.testing = true;
-        ContextSenderFactory.senderForTesting = sender;
         ContextCaster caster = new ContextCaster(models.getChoreography());
         caster.cast();
 
         String travelUri = travelService.getUris().get(0);
         String cdAirlineUri = airlineCD.getUris().get(0);
         String cdTravelUri = travelCD.getUris().get(0);
-        verify(sender).sendContext(travelUri, CD_AIRLINE_ROLE, CD_AIRLINE_NAME, airlineCD.getUris());
-        verify(sender).sendContext(cdAirlineUri, CD_TRAVEL_ROLE, CD_TRAVEL_NAME, travelCD.getUris());
-        verify(sender).sendContext(cdTravelUri, CD_AIRLINE_ROLE, CD_AIRLINE_NAME, airlineCD.getUris());
+        verify(senderMock).sendContext(travelUri, CD_AIRLINE_ROLE, CD_AIRLINE_NAME, airlineCD.getUris());
+        verify(senderMock).sendContext(cdAirlineUri, CD_TRAVEL_ROLE, CD_TRAVEL_NAME, travelCD.getUris());
+        verify(senderMock).sendContext(cdTravelUri, CD_AIRLINE_ROLE, CD_AIRLINE_NAME, airlineCD.getUris());
     }
-    
+
     @After
     public void tearDown() {
         ContextSenderFactory.testing = false;

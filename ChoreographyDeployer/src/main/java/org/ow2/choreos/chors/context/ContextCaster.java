@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.datamodel.Choreography;
-import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.Service;
 import org.ow2.choreos.utils.Concurrency;
 import org.ow2.choreos.utils.TimeoutsAndTrials;
 
@@ -48,7 +48,7 @@ public class ContextCaster {
         int nThreads = getNThreads();
         this.executor = Executors.newFixedThreadPool(nThreads);
         logger.info("Passing context to deployed services on choreograghy " + chor.getId());
-        for (DeployableService consumer : chor.getDeployableServices()) {
+        for (Service consumer : chor.getServices()) {
             castContextsToConsumer(consumer);
         }
         waitContextCasting();
@@ -63,7 +63,7 @@ public class ContextCaster {
         return size > MAX_THREADS ? MAX_THREADS : size;
     }
 
-    private void castContextsToConsumer(DeployableService consumer) {
+    private void castContextsToConsumer(Service consumer) {
         ServiceContextCaster serviceContextCaster = new ServiceContextCaster(chor, consumer);
         ServiceContextCasterTask task = new ServiceContextCasterTask(serviceContextCaster);
         executor.submit(task);
