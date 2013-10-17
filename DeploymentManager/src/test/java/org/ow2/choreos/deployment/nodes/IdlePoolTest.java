@@ -128,7 +128,7 @@ public class IdlePoolTest {
         }
     }
 
-    @Test(timeout = 2000)
+    @Test(timeout = 3000)
     public void multipleRequestsShouldLeaveThePoolFull() throws InterruptedException {
 
         int N = 5;
