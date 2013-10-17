@@ -34,6 +34,7 @@ public class ChorDifferTest {
         includesOneMoreSpec();
         changesOneSpec();
         ChorRegistry reg = ChorRegistry.getInstance();
+        reg.clean();
         reg.addChoreography(chor);
         reg.getContext(chor.getId()).setRequestedChoreographySpec(newChorSpec);
     }

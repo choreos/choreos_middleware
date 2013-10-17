@@ -5,6 +5,7 @@
 package org.ow2.choreos.chors;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -76,5 +77,13 @@ public class ChorRegistry {
             chors.put(ctx.getChoreography().getId(), ctx.getChoreography());
         }
         return chors;
+    }
+    
+    public void clean() {
+        Iterator<String> it = chorsContexts.keySet().iterator();
+        while (it.hasNext()) {
+            String key = it.next();
+            chorsContexts.remove(key);
+        }
     }
 }
