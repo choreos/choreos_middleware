@@ -38,7 +38,7 @@ class NodeFactory implements ObjectFactory<CloudNode, DeployableServiceSpec> {
         int oneReqPerSec = 2 * 100;
         int timeout = nodeCreationTimeout * nodeCreationTrials + firstSshTimeout + bootstrapTimeout * bootstrapTrials
                 + oneReqPerSec;
-        timeout += timeout * 0.2;
+        timeout += timeout * 0.3;
         return timeout;
     }
 
