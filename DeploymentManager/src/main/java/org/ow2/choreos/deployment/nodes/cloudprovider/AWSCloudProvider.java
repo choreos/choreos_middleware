@@ -13,6 +13,7 @@ import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.ec2.domain.InstanceType;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
+import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
@@ -47,7 +48,7 @@ public class AWSCloudProvider extends JCloudsCloudProvider {
     }
 
     @Override
-    public void destroyNode(String nodeId) {
+    public void destroyNode(String nodeId) throws NodeNotDestroyed {
         delayedRequestsEnforcer.enforceRule();
         super.destroyNode(nodeId);
     }

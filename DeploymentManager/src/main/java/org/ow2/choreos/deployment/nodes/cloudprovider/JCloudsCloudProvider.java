@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
 import org.jclouds.ContextBuilder;
@@ -16,11 +17,16 @@ import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.ec2.domain.InstanceType;
+import org.ow2.choreos.invoker.Invoker;
+import org.ow2.choreos.invoker.InvokerBuilder;
+import org.ow2.choreos.invoker.InvokerException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
+import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;
+import org.ow2.choreos.utils.TimeoutsAndTrials;
 
 import com.google.common.collect.Iterables;
 
@@ -171,10 +177,16 @@ public abstract class JCloudsCloudProvider implements CloudProvider {
     }
 
     @Override
-    public void destroyNode(String nodeId) {
-        ComputeService client = getComputeService();
-        client.destroyNode(nodeId);
-        client.getContext().close();
+    public void destroyNode(String nodeId) throws NodeNotDestroyed {
+        int timeout = TimeoutsAndTrials.get("NODE_DELETION_TIMEOUT");
+        int trials = TimeoutsAndTrials.get("NODE_DELETION_TRIALS");
+        DestroyNodeTask task = new DestroyNodeTask(nodeId);
+        Invoker<Void> invoker = new InvokerBuilder<Void>(task, timeout).trials(trials).build();
+        try {
+            invoker.invoke();
+        } catch (InvokerException e) {
+            throw new NodeNotDestroyed(nodeId);
+        }
     }
 
     @Override
@@ -184,6 +196,24 @@ public abstract class JCloudsCloudProvider implements CloudProvider {
             return nodes.get(0);
         else
             return createNode(nodeSpec);
+    }
+    
+    private class DestroyNodeTask implements Callable<Void> {
+
+        String nodeId;
+        
+        public DestroyNodeTask(String nodeId) {
+            this.nodeId = nodeId;
+        }
+
+        @Override
+        public Void call() {
+            ComputeService client = getComputeService();
+            client.destroyNode(nodeId);
+            client.getContext().close();            
+            return null;
+        }
+        
     }
 
 }
