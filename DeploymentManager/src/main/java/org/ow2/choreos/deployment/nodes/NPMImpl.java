@@ -60,7 +60,7 @@ public class NPMImpl implements NodePoolManager {
     @Override
     public CloudNode createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
         CloudNode node = new CloudNode();
-        NodeCreatorFactory factory = new NodeCreatorFactory(); 
+        NodeCreatorFactory factory = new NodeCreatorFactory();
         NodeCreator nodeCreator = factory.getNewNodeCreator();
         try {
             node = nodeCreator.createBootstrappedNode(nodeSpec);
@@ -114,9 +114,11 @@ public class NPMImpl implements NodePoolManager {
 
     @Override
     public void destroyNode(String nodeId) throws NodeNotDestroyed, NodeNotFoundException {
-        NodeDestroyerFactory nodeDestroyerFactory = new NodeDestroyerFactory();
-        NodeDestroyer destroyer = nodeDestroyerFactory.getNewInstance(nodeId);
-        destroyer.destroyNode();
+        if (nodeRegistry.getNode(nodeId) == null)
+            throw new NodeNotFoundException(nodeId);
+        cloudProvider.destroyNode(nodeId);
+        nodeRegistry.deleteNode(nodeId);
+        logger.info("Node " + nodeId + " destroyed");
     }
 
     @Override
@@ -124,9 +126,18 @@ public class NPMImpl implements NodePoolManager {
         try {
             idlePool.emptyPool();
         } catch (NodeNotDestroyed e) {
-            logger.error("Could not empty idle pool");
+            logger.error("Could not destroy all the idle nodes");
+            throw e;
         }
         NodesDestroyer destroyer = new NodesDestroyer(this.getNodes());
-        destroyer.destroyNodes();
+        try {
+            List<CloudNode> destroyedNodes = destroyer.destroyNodes();
+            nodeRegistry.deleteNodes(destroyedNodes);
+        } catch (NodeNotDestroyed e) {
+            logger.error("Could not destroy all the nodes");
+            nodeRegistry.deleteNodes(destroyer.getDestroyedNodes());
+            throw e;
+        }
     }
+    
 }

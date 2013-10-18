@@ -49,6 +49,11 @@ public class NodeRegistry {
     public void deleteNode(String nodeId) {
         this.nodes.remove(nodeId);
     }
+    
+    public void deleteNodes(List<CloudNode> nodes) {
+        for (CloudNode node: nodes) 
+            this.nodes.remove(node.getId());
+    }
 
     public List<CloudNode> getNodes() {
         return new ArrayList<CloudNode>(this.nodes.values());

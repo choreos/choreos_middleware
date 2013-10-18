@@ -126,7 +126,7 @@ public class ScalabilityExperiment {
     private void cleanAmazon() {
         logger.info("Destroying EC2 instances...");
         CleanAmazonTask task = new CleanAmazonTask();
-        Invoker<Void> invoker = new InvokerBuilder<Void>(task, 4).timeUnit(TimeUnit.MINUTES).trials(3)
+        Invoker<Void> invoker = new InvokerBuilder<Void>(task, 5).timeUnit(TimeUnit.MINUTES).trials(3)
                 .pauseBetweenTrials(1).build();
         try {
             invoker.invoke();

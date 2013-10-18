@@ -3,11 +3,15 @@ package org.ow2.choreos.deployment.nodes;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
+import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
+import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
@@ -17,26 +21,43 @@ import org.ow2.choreos.utils.TimeoutsAndTrials;
 public class NodesDestroyer {
 
     private static Logger logger = Logger.getLogger(NodesDestroyer.class);
-    
+
     private final Collection<CloudNode> nodesToDestroy;
 
-    private NodeDestroyerFactory nodeDestroyerFactory = new NodeDestroyerFactory();
+    private CloudProvider cp;
     private List<DestroyTask> tasks = new ArrayList<DestroyTask>();
     private ExecutorService executor;
-    
+
     private final int timeout;
     private final int trials;
+
+    private List<CloudNode> destroyedNodes = new ArrayList<CloudNode>();
 
     public NodesDestroyer(Collection<CloudNode> nodesToDestroy) {
         this.nodesToDestroy = nodesToDestroy;
         this.timeout = TimeoutsAndTrials.get("NODE_DELETION_TIMEOUT");
-        this.trials = TimeoutsAndTrials.get("NODE_DELETION_TRIALS");        
+        this.trials = TimeoutsAndTrials.get("NODE_DELETION_TRIALS");
+        String cloudProviderType = DeploymentManagerConfiguration.get("CLOUD_PROVIDER");
+        this.cp = CloudProviderFactory.getFactoryInstance().getCloudProviderInstance(cloudProviderType);
     }
 
-    public void destroyNodes() throws NodeNotDestroyed {
+    /**
+     * 
+     * @throws NodeNotDestroyed if some node was not destroyed
+     */
+    public List<CloudNode> destroyNodes() throws NodeNotDestroyed {
         destroy();
         waitDestroy();
-        checkDestroyed();
+        check();
+        return destroyedNodes;
+    }
+    
+    public List<CloudNode> getDestroyedNodes() {
+        return destroyedNodes;
+    }
+
+    public void setDestroyedNodes(List<CloudNode> destroyedNodes) {
+        this.destroyedNodes = destroyedNodes;
     }
 
     private void destroy() {
@@ -53,41 +74,34 @@ public class NodesDestroyer {
 
     private void waitDestroy() {
         String erMsg = "Could not wait for nodes destroyment";
-        int totalTimeout = timeout*trials;
-        totalTimeout += totalTimeout*0.2;
+        int totalTimeout = timeout * trials;
+        totalTimeout += totalTimeout * 0.2;
         int n = nodesToDestroy.size();
         totalTimeout += 2000 * n; // one req/sec rule
         Concurrency.waitExecutor(executor, totalTimeout, TimeUnit.SECONDS, logger, erMsg);
     }
 
-    private void checkDestroyed() throws NodeNotDestroyed {
-        for (DestroyTask task : tasks) {
-            if (!task.ok) {
-                throw new NodeNotDestroyed(task.node.getId());
-            }
-        }
+    private void check() throws NodeNotDestroyed {
+        int originalSize = nodesToDestroy.size();
+        int finalSize = destroyedNodes.size();
+        if (finalSize < originalSize) 
+            throw new NodeNotDestroyed("???");
     }
-    
-    private class DestroyTask implements Runnable {
-        
+
+    private class DestroyTask implements Callable<Void> {
+
         private CloudNode node;
-        private boolean ok;
 
         public DestroyTask(CloudNode node) {
             this.node = node;
         }
 
         @Override
-        public void run() {
-            NodeDestroyer destroyer = nodeDestroyerFactory.getNewInstance(node);
-            try {
-                destroyer.destroyNode();
-                ok = true;
-            } catch (NodeNotDestroyed e) {
-                ok = false;
-            } catch (NodeNotFoundException e) {
-                ok = false;
-            }
+        public Void call() throws NodeNotDestroyed, NodeNotFoundException {
+            cp.destroyNode(node.getId());
+            logger.info(node + " destroyed");
+            destroyedNodes.add(node);
+            return null;
         }
     }
 
