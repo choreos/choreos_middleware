@@ -40,23 +40,10 @@ public class NodeCreator {
     }
 
     public CloudNode createBootstrappedNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
-	CloudNode node = createCloudNode(nodeSpec);
+	CloudNode node = cp.createNode(nodeSpec);
 	waitFirstSsh(node);
 	bootstrapNode(node);
 	return node;
-    }
-
-    private CloudNode createCloudNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
-	CloudNodeCreationTask task = new CloudNodeCreationTask(nodeSpec);
-	int timeout = TimeoutsAndTrials.get("NODE_CREATION_TIMEOUT");
-	int trials = TimeoutsAndTrials.get("NODE_CREATION_TRIALS");
-	Invoker<CloudNode> invoker = new Invoker<CloudNode>(task, trials, timeout, 0, TimeUnit.SECONDS);
-	try {
-	    CloudNode node = invoker.invoke();
-	    return node;
-	} catch (InvokerException e) {
-	    throw new NodeNotCreatedException();
-	}
     }
 
     private void waitFirstSsh(CloudNode node) throws NodeNotCreatedException {
@@ -79,21 +66,6 @@ public class NodeCreator {
 	    invoker.invoke();
 	} catch (InvokerException e) {
 	    throw new NodeNotCreatedException();
-	}
-    }
-
-    private class CloudNodeCreationTask implements Callable<CloudNode> {
-
-	NodeSpec nodeSpec;
-
-	CloudNodeCreationTask(NodeSpec nodeSpec) {
-	    this.nodeSpec = nodeSpec;
-	}
-
-	@Override
-	public CloudNode call() throws Exception {
-	    CloudNode node = cp.createNode(nodeSpec);
-	    return node;
 	}
     }
 

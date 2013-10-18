@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.jclouds.ContextBuilder;
@@ -58,29 +59,15 @@ public abstract class JCloudsCloudProvider implements CloudProvider {
 
     @Override
     public CloudNode createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
-
         logger.debug("Creating node...");
-
-        ComputeService computeService = getComputeService();
+        CreateNodeTask task = new CreateNodeTask(nodeSpec);
+        int timeout = TimeoutsAndTrials.get("NODE_CREATION_TIMEOUT");
+        int trials = TimeoutsAndTrials.get("NODE_CREATION_TRIALS");
+        Invoker<CloudNode> invoker = new Invoker<CloudNode>(task, trials, timeout, 0, TimeUnit.SECONDS);
         try {
-            Template template = getTemplate(computeService, nodeSpec);
-            Set<? extends NodeMetadata> createdNodes = computeService.createNodesInGroup("default", 1, template);
-            NodeMetadata nodeMetadata = Iterables.get(createdNodes, 0);
-            CloudNode node = getCloudNodeFromMetadata(nodeMetadata);
-            if (!node.hasIp()) {
-                throw new NodeNotCreatedException("Could not retrieve IP from just created node.");
-            }
-            logger.debug(node + " created");
-            computeService.getContext().close();
+            CloudNode node = invoker.invoke();
             return node;
-        } catch (RunNodesException e) {
-            logger.error("Node creation failed: " + e.getMessage());
-            throw new NodeNotCreatedException();
-        } catch (org.jclouds.rest.AuthorizationException e) {
-            logger.error("Authorization failed. Provided user doesn't have authorization to create a new node.");
-            throw new NodeNotCreatedException();
-        } catch (IllegalStateException e) {
-            logger.error(e);
+        } catch (InvokerException e) {
             throw new NodeNotCreatedException();
         }
     }
@@ -197,11 +184,47 @@ public abstract class JCloudsCloudProvider implements CloudProvider {
         else
             return createNode(nodeSpec);
     }
-    
+
+    private class CreateNodeTask implements Callable<CloudNode> {
+
+        NodeSpec nodeSpec;
+
+        public CreateNodeTask(NodeSpec nodeSpec) {
+            this.nodeSpec = nodeSpec;
+        }
+
+        @Override
+        public CloudNode call() throws Exception {
+            ComputeService computeService = getComputeService();
+            try {
+                Template template = getTemplate(computeService, nodeSpec);
+                Set<? extends NodeMetadata> createdNodes = computeService.createNodesInGroup("default", 1, template);
+                NodeMetadata nodeMetadata = Iterables.get(createdNodes, 0);
+                CloudNode node = getCloudNodeFromMetadata(nodeMetadata);
+                if (!node.hasIp()) {
+                    throw new NodeNotCreatedException("Could not retrieve IP from just created node.");
+                }
+                logger.debug(node + " created");
+                computeService.getContext().close();
+                return node;
+            } catch (RunNodesException e) {
+                logger.error("Node creation failed: " + e.getMessage());
+                throw new NodeNotCreatedException();
+            } catch (org.jclouds.rest.AuthorizationException e) {
+                logger.error("Authorization failed. Provided user doesn't have authorization to create a new node.");
+                throw new NodeNotCreatedException();
+            } catch (IllegalStateException e) {
+                logger.error(e);
+                throw new NodeNotCreatedException();
+            }
+        }
+
+    }
+
     private class DestroyNodeTask implements Callable<Void> {
 
         String nodeId;
-        
+
         public DestroyNodeTask(String nodeId) {
             this.nodeId = nodeId;
         }
@@ -210,10 +233,10 @@ public abstract class JCloudsCloudProvider implements CloudProvider {
         public Void call() {
             ComputeService client = getComputeService();
             client.destroyNode(nodeId);
-            client.getContext().close();            
+            client.getContext().close();
             return null;
         }
-        
+
     }
 
 }

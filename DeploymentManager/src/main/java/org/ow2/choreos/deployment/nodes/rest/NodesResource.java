@@ -69,8 +69,6 @@ public class NodesResource {
 	    return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 	}
 
-	logger.info(node + " created");
-
 	UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
 	uriBuilder = uriBuilder.path(NodesResource.class).path(node.getId());
 	URI uri = uriBuilder.build();

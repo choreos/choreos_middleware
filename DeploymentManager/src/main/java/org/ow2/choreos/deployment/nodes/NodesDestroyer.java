@@ -77,7 +77,7 @@ public class NodesDestroyer {
         int totalTimeout = timeout * trials;
         totalTimeout += totalTimeout * 0.2;
         int n = nodesToDestroy.size();
-        totalTimeout += 2000 * n; // one req/sec rule
+        totalTimeout += 2 * n; // one req/sec rule
         Concurrency.waitExecutor(executor, totalTimeout, TimeUnit.SECONDS, logger, erMsg);
     }
 

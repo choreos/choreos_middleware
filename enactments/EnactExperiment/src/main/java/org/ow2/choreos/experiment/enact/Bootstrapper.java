@@ -79,20 +79,11 @@ public class Bootstrapper {
                 }
             });
             trds[i].start();
-            waitOneSec();            
         }
 
         waitThreads(trds);
 
         return vms;
-    }
-
-    private void waitOneSec() {
-        try {
-            Thread.sleep(2000); // coping with 1 req/sec rule
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     private void waitThreads(Thread[] trds) {
