@@ -5,7 +5,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
@@ -14,6 +16,8 @@ import org.ow2.choreos.utils.TimeoutsAndTrials;
 
 public class NodesDestroyer {
 
+    private static Logger logger = Logger.getLogger(NodesDestroyer.class);
+    
     private final Collection<CloudNode> nodesToDestroy;
 
     private NodeDestroyerFactory nodeDestroyerFactory = new NodeDestroyerFactory();
@@ -51,7 +55,7 @@ public class NodesDestroyer {
         String erMsg = "Could not wait for nodes destroyment";
         int totalTimeout = timeout*trials;
         totalTimeout += totalTimeout*0.2;
-        Concurrency.waitExecutor(executor, totalTimeout, erMsg);
+        Concurrency.waitExecutor(executor, totalTimeout, TimeUnit.SECONDS, logger, erMsg);
     }
 
     private void checkDestroyed() throws NodeNotDestroyed {

@@ -6,15 +6,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
-public class OneRequestPerSecondEnforcerTest {
+public class DelayedRequestsEnforcerTest {
 
-    private OneRequestPerSecondEnforcer enforcer = new OneRequestPerSecondEnforcer();
+    private static final int WAIT_TIME = 100;
+
+    private DelayedRequestEnforcer enforcer = new DelayedRequestEnforcer(WAIT_TIME);
     private AtomicInteger counter = new AtomicInteger();
 
     @Test
     public void shouldEnforceRule() {
 
-        final int N = 4;
+        final int N = 30;
         for (int i = 0; i < N; i++) {
             Task task = new Task();
             Thread trd = new Thread(task);
@@ -23,19 +25,20 @@ public class OneRequestPerSecondEnforcerTest {
 
         int previous = 0;
         int value = counter.get();
-        while (value < N - 1) {
+        while (value < N - 1) { // FIXME: if enforcer was a short circuit, test
+                                // would pass because this condition.
             if (value > previous + 2)
                 fail();
-            waitOneSecond();
+            waitTimeBetweenRequests();
             if (value > previous)
                 previous = value;
             value = counter.get();
         }
     }
 
-    private void waitOneSecond() {
+    private void waitTimeBetweenRequests() {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(WAIT_TIME);
         } catch (InterruptedException e) {
             ;
         }

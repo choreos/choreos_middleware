@@ -24,11 +24,13 @@ public class AWSCloudProvider extends JCloudsCloudProvider {
     private static final String DEFAULT_USER = "ubuntu";
     private static final String DEFAULT_PRIVATE_KEY = DeploymentManagerConfiguration.get("AMAZON_PRIVATE_SSH_KEY");
     private static final String PROVIDER = "aws-ec2";
-    private static final String DEFAULT_IMAGE = "us-east-1/ami-3b4ff252"; // Ubuntu 12.04
+    private static final String DEFAULT_IMAGE = "us-east-1/ami-3b4ff252"; // Ubuntu
+                                                                          // 12.04
     private static final String DEFAULT_INSTANCE_TYPE = InstanceType.M1_SMALL;
-    
-    
-    private static final OneRequestPerSecondEnforcer oneRequestPerSecondEnforcer = new OneRequestPerSecondEnforcer();
+
+    private static final int TIME_BETWEEN_REQUESTS_MILLIS = 2000;
+    private static final DelayedRequestEnforcer delayedRequestsEnforcer = new DelayedRequestEnforcer(
+            TIME_BETWEEN_REQUESTS_MILLIS);
 
     public AWSCloudProvider() {
         super(IDENTITY, CREDENTIAL, PROVIDER, PROPERTIES);
@@ -40,21 +42,22 @@ public class AWSCloudProvider extends JCloudsCloudProvider {
 
     @Override
     public CloudNode createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
-        oneRequestPerSecondEnforcer.enforceRule();
+        delayedRequestsEnforcer.enforceRule();
         return super.createNode(nodeSpec);
     }
-    
+
     @Override
     public void destroyNode(String nodeId) {
-        oneRequestPerSecondEnforcer.enforceRule();
+        delayedRequestsEnforcer.enforceRule();
         super.destroyNode(nodeId);
     }
 
     @Override
     protected String getDefaultImageId() {
-        String imageId = DeploymentManagerConfiguration.get("AMAZON_IMAGE_ID");;
+        String imageId = DeploymentManagerConfiguration.get("AMAZON_IMAGE_ID");
+        ;
         if (imageId == null || imageId.trim().isEmpty())
-            imageId = DEFAULT_IMAGE; 
+            imageId = DEFAULT_IMAGE;
         return imageId;
     }
 
