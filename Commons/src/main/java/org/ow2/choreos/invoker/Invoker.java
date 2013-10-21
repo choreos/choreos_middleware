@@ -13,12 +13,12 @@ import org.ow2.choreos.utils.Concurrency;
 /**
  * You should use this this class to invoke external systems.
  * 
- * TODO: use a received circuit breaker
- * 
  * @author leonardo
  * 
  */
 public class Invoker<T> {
+
+    private static Logger logger = Logger.getLogger(Invoker.class);
 
     private final String taskName;
     private final Callable<T> task;
@@ -26,8 +26,7 @@ public class Invoker<T> {
     private final int trialTimeout;
     private final int pauseBetweenTrials;
     private final TimeUnit timeUnit;
-
-    private Logger logger = Logger.getLogger(Invoker.class);
+    private final InvokerHistory history = InvokerHistory.getInstance();
 
     Invoker(String taskName, Callable<T> task, int trials, int trialTimeout, int pauseBetweenTrials, TimeUnit timeUnit) {
         this.taskName = taskName;
@@ -56,7 +55,10 @@ public class Invoker<T> {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<T> future = executor.submit(task);
         String errorMessage = "Invoker could not properly invoke " + taskName;
+        long t0 = System.nanoTime();
         Concurrency.waitExecutor(executor, trialTimeout, timeUnit, logger, errorMessage);
+        long tf = System.nanoTime();
+        logHistory(t0, tf);
         try {
             return Concurrency.checkAndGetFromFuture(future);
         } catch (ExecutionException e) {
@@ -66,6 +68,11 @@ public class Invoker<T> {
             else
                 throw e;
         }
+    }
+
+    private void logHistory(long t0, long tf) {
+        long delta = (tf - t0) / 1000000000;
+        history.addTime(taskName, delta);
     }
 
     private void pause() throws InvokerException {
