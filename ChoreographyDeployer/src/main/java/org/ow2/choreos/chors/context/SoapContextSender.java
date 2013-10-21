@@ -54,8 +54,8 @@ public class SoapContextSender implements ContextSender {
             if (event.isStartElement()) {
                 element = event.asStartElement();
                 elementName = element.getName().getLocalPart();
-                if ("definitions".equals(elementName)) {
-                    final QName qname = new QName("targetNamespace"); // NOPMD
+                if ("import".equals(elementName)) {
+                    final QName qname = new QName("namespace"); // NOPMD
                     namespace = element.getAttributeByName(qname).getValue();
                     break;
                 }
