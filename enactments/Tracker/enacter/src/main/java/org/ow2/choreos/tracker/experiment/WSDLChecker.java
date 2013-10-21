@@ -12,24 +12,25 @@ import org.ow2.choreos.invoker.InvokerException;
 public class WSDLChecker {
 
     private static final String WSDL_EXCERPT = "portType";
-    
+
     private String wsdl;
 
     public WSDLChecker(String wsdl) {
         this.wsdl = wsdl;
     }
-    
+
     public boolean check() {
         CheckerTask task = new CheckerTask();
         int timeout = 10;
-        Invoker<Boolean> invoker = new InvokerBuilder<Boolean>(task, timeout).trials(3).pauseBetweenTrials(20).build();
+        Invoker<Boolean> invoker = new InvokerBuilder<Boolean>("CheckerTask", task, timeout).trials(3)
+                .pauseBetweenTrials(20).build();
         try {
             return invoker.invoke();
         } catch (InvokerException e) {
             return false;
         }
     }
-    
+
     private class CheckerTask implements Callable<Boolean> {
         @Override
         public Boolean call() throws Exception {
@@ -44,5 +45,5 @@ public class WSDLChecker {
             }
         }
     }
-    
+
 }

@@ -1,6 +1,5 @@
 package org.ow2.choreos.deployment.nodes.cm;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -32,58 +31,60 @@ public class NodeSetup {
 
     private Logger logger = Logger.getLogger(NodeSetup.class);
 
-    public static NodeSetup getInstance(CloudNode node, String scriptFileName, int timeoutMinutes, Map<String, String> substitutions) {
-	if (!testing)
-	    return new NodeSetup(node, scriptFileName, timeoutMinutes, substitutions);
-	else
-	    return setupForTest;
+    public static NodeSetup getInstance(CloudNode node, String scriptFileName, int timeoutMinutes,
+            Map<String, String> substitutions) {
+        if (!testing)
+            return new NodeSetup(node, scriptFileName, timeoutMinutes, substitutions);
+        else
+            return setupForTest;
     }
 
     private NodeSetup(CloudNode node, String scriptFileName, int timeoutMinutes, Map<String, String> substitutions) {
-	this.node = node;
-	this.scriptFileName = scriptFileName;
-	this.timeoutMinutes = timeoutMinutes;
-	this.substitutions = substitutions;
+        this.node = node;
+        this.scriptFileName = scriptFileName;
+        this.timeoutMinutes = timeoutMinutes;
+        this.substitutions = substitutions;
     }
 
     private void applySubstitutions() {
-	for (Map.Entry<String, String> substitution : substitutions.entrySet()) {
-	    script = script.replace(substitution.getKey(), substitution.getValue());
-	}
+        for (Map.Entry<String, String> substitution : substitutions.entrySet()) {
+            script = script.replace(substitution.getKey(), substitution.getValue());
+        }
     }
 
     private void getScript() {
-	URL scriptFile;
-	scriptFile = this.getClass().getClassLoader().getResource(scriptFileName);
-	script = null;
-	try {
-	    script = FileUtils.readFileToString(new File(scriptFile.getFile()));
-	} catch (IOException e) {
-	    logger.error("Could not retrieve script " + scriptFileName);
-	    throw new IllegalStateException();
-	}
+        URL scriptFile;
+        scriptFile = this.getClass().getClassLoader().getResource(scriptFileName);
+        script = null;
+        try {
+            script = FileUtils.readFileToString(new File(scriptFile.getFile()));
+        } catch (IOException e) {
+            logger.error("Could not retrieve script " + scriptFileName);
+            throw new IllegalStateException();
+        }
     }
 
     public void setup() throws NodeSetupException {
-	NodeSetupTask task = new NodeSetupTask();
-	Invoker<String> invoker = new InvokerBuilder<String>(task, timeoutMinutes).trials(trials).timeUnit(TimeUnit.MINUTES).build();
-	getScript();
-	applySubstitutions();
-	try {
-	    invoker.invoke();
-	} catch (InvokerException e) {
-	    throw new NodeSetupException();
-	}
+        NodeSetupTask task = new NodeSetupTask();
+        Invoker<String> invoker = new InvokerBuilder<String>("NodeSetupTask", task, timeoutMinutes).trials(trials)
+                .timeUnit(TimeUnit.MINUTES).build();
+        getScript();
+        applySubstitutions();
+        try {
+            invoker.invoke();
+        } catch (InvokerException e) {
+            throw new NodeSetupException();
+        }
     }
 
     private class NodeSetupTask implements Callable<String> {
-	@Override
-	public String call() throws Exception {
-	    SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-	    String output = ssh.runCommand(script);
-	    ssh.disconnect();
-	    return output;
-	}
+        @Override
+        public String call() throws Exception {
+            SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
+            String output = ssh.runCommand(script);
+            ssh.disconnect();
+            return output;
+        }
     }
 
 }

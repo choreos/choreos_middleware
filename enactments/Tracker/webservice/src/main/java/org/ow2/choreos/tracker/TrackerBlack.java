@@ -31,7 +31,8 @@ public class TrackerBlack extends AbstractTracker {
 
     private void setTargetId() {
         final SetDependencyIdTask task = new SetDependencyIdTask();
-        final Invoker<Void> invoker = new InvokerBuilder<Void>(task, 15).trials(7).pauseBetweenTrials(10).build();
+        final Invoker<Void> invoker = new InvokerBuilder<Void>("SetDependencyIdTask", task, 15).trials(7)
+                .pauseBetweenTrials(10).build();
         try {
             invoker.invoke();
         } catch (InvokerException e) {

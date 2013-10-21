@@ -23,14 +23,18 @@ public class TimeoutsAndTrials {
 
     public static int get(String key) {
         try {
-            return Integer.parseInt(INSTANCE.configuration.get(key).trim());
+            String valueStr = INSTANCE.configuration.get(key);
+            if (valueStr != null)
+                return Integer.parseInt(valueStr.trim());
+            else
+                throw new IllegalArgumentException(key + " not configured on " + FILE_PATH);
         } catch (NumberFormatException e) {
-            throw new IllegalStateException(key + " not configured on " + FILE_PATH);
-        }
+            throw new IllegalArgumentException(key + " not configured on " + FILE_PATH);
+        } 
     }
 
     public static void set(String key, int value) {
         INSTANCE.configuration.set(key, Integer.toString(value));
     }
-
+    
 }

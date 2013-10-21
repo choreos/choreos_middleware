@@ -117,7 +117,8 @@ public class DecreaseNumberOfInstancesTest {
 
     private Invoker<String> getBuyTripInvoker(DeployableService travelAgency) {
         BuyTripTask task = new BuyTripTask(travelAgency);
-        Invoker<String> invoker = new InvokerBuilder<String>(task, 10).trials(2).pauseBetweenTrials(10).build();
+        String taskName = "BuyTripInvokerTask";
+        Invoker<String> invoker = new InvokerBuilder<String>(taskName, task, 10).trials(2).pauseBetweenTrials(10).build();
         return invoker;
     }
 

@@ -13,8 +13,8 @@ import java.util.concurrent.Executors;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.rest.RESTClientsRetriever;
 import org.ow2.choreos.invoker.Invoker;
-import org.ow2.choreos.invoker.InvokerBuilder;
 import org.ow2.choreos.invoker.InvokerException;
+import org.ow2.choreos.invoker.InvokerFactory;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.services.datamodel.DeployableService;
@@ -23,22 +23,24 @@ import org.ow2.choreos.utils.TimeoutsAndTrials;
 
 public class NodesUpdater {
 
+    private static final String TASK_NAME = "UPDATE_NODE";
+    
     private List<DeployableService> services;
     private String chorId;
     private Set<CloudNode> nodesToUpdate;
     private Map<CloudNode, String> owners = new HashMap<CloudNode, String>();
     private ExecutorService executor;
     
-    private int timeout, trials, pause, totalTimeout;
+    private int totalTimeout;
 
     private Logger logger = Logger.getLogger(NodesUpdater.class);
 
     public NodesUpdater(List<DeployableService> services, String chorId) {
         this.services = services;
         this.chorId = chorId;
-        this.timeout = TimeoutsAndTrials.get("UPDATE_NODE_TIMEOUT");
-        this.trials = TimeoutsAndTrials.get("UPDATE_NODE_TRIALS");
-        this.pause = TimeoutsAndTrials.get("UPDATE_NODE_PAUSE"); 
+        int timeout = TimeoutsAndTrials.get("UPDATE_NODE_TIMEOUT");
+        int trials = TimeoutsAndTrials.get("UPDATE_NODE_TRIALS");
+        int pause = TimeoutsAndTrials.get("UPDATE_NODE_PAUSE"); 
         this.totalTimeout = (timeout+pause)*trials;
         this.totalTimeout += totalTimeout * 0.1;         
     }
@@ -87,7 +89,8 @@ public class NodesUpdater {
         @Override
         public Void call() {
             UpdateNodeTask task = new UpdateNodeTask(nodeId, owner);
-            Invoker<Void> invoker = new InvokerBuilder<Void>(task, timeout).pauseBetweenTrials(pause).trials(trials).build();
+            InvokerFactory<Void> factory = new InvokerFactory<Void>();
+            Invoker<Void> invoker = factory.geNewInvokerInstance(TASK_NAME, task);
             try {
                 invoker.invoke();
             } catch (InvokerException e) {

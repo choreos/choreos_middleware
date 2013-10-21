@@ -108,7 +108,8 @@ public class ScalabilityExperiment {
 
     private boolean pingEE() {
         EEPingTask task = new EEPingTask();
-        Invoker<Integer> invoker = new InvokerBuilder<Integer>(task, 10).trials(20).pauseBetweenTrials(30).build();
+        Invoker<Integer> invoker = new InvokerBuilder<Integer>("EEPingTask", task, 10).trials(20)
+                .pauseBetweenTrials(30).build();
         try {
             int status = invoker.invoke();
             return status == 404;
@@ -130,8 +131,8 @@ public class ScalabilityExperiment {
     private void cleanAmazon() {
         logger.info("Destroying EC2 instances...");
         CleanAmazonTask task = new CleanAmazonTask();
-        Invoker<Void> invoker = new InvokerBuilder<Void>(task, 5).timeUnit(TimeUnit.MINUTES).trials(3)
-                .pauseBetweenTrials(1).build();
+        Invoker<Void> invoker = new InvokerBuilder<Void>("CleanAmazonTask", task, 5).timeUnit(TimeUnit.MINUTES)
+                .trials(3).pauseBetweenTrials(1).build();
         try {
             invoker.invoke();
             logger.info("EC2 instances destroyed");
@@ -145,7 +146,7 @@ public class ScalabilityExperiment {
         cdCommand.killProcess();
         logger.info("EE killed");
     }
-    
+
     private void sendProgressMail() {
         ProgressMail mail = new ProgressMail(currentDefinition);
         try {
@@ -171,7 +172,7 @@ public class ScalabilityExperiment {
         sendErrorMail(error);
         System.exit(-1);
     }
-    
+
     private void sendErrorMail(String error) {
         ErrorMail mail = new ErrorMail(error);
         try {
@@ -179,7 +180,7 @@ public class ScalabilityExperiment {
         } catch (EmailException e) {
             logger.warn("Not possible to send error email");
         }
-    }    
+    }
 
     private class CleanAmazonTask implements Callable<Void> {
         @Override
@@ -198,5 +199,5 @@ public class ScalabilityExperiment {
         } catch (EmailException e) {
             logger.warn("Not possible to send finished email");
         }
-    } 
+    }
 }

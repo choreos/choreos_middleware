@@ -15,7 +15,7 @@ import java.util.concurrent.Future;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.rest.RESTClientsRetriever;
 import org.ow2.choreos.invoker.Invoker;
-import org.ow2.choreos.invoker.InvokerBuilder;
+import org.ow2.choreos.invoker.InvokerFactory;
 import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.datamodel.DeployableService;
@@ -25,22 +25,24 @@ import org.ow2.choreos.utils.TimeoutsAndTrials;
 
 public class NewDeploymentPreparing {
 
+    private static final String TASK_NAME = "CREATE_SERVICE";
+    
     private String chorId;
     private List<DeployableServiceSpec> specs;
     private ExecutorService executor;
     private Map<DeployableServiceSpec, Future<DeployableService>> futures;
     private List<DeployableService> configuredServices;
     
-    private int timeout, trials, pause, totalTimeout;
+    private int totalTimeout;
 
     private Logger logger = Logger.getLogger(NewDeploymentPreparing.class);
 
     public NewDeploymentPreparing(String chorId, List<DeployableServiceSpec> specs) {
         this.chorId = chorId;
         this.specs = specs;
-        this.timeout = TimeoutsAndTrials.get("CREATE_SERVICE_TIMEOUT");
-        this.trials = TimeoutsAndTrials.get("CREATE_SERVICE_TRIALS");
-        this.pause = TimeoutsAndTrials.get("CREATE_SERVICE_PAUSE"); 
+        int timeout = TimeoutsAndTrials.get("CREATE_SERVICE_TIMEOUT");
+        int trials = TimeoutsAndTrials.get("CREATE_SERVICE_TRIALS");
+        int pause = TimeoutsAndTrials.get("CREATE_SERVICE_PAUSE"); 
         this.totalTimeout = (timeout+pause)*trials;
         this.totalTimeout += totalTimeout * 0.2; 
     }
@@ -106,7 +108,8 @@ public class NewDeploymentPreparing {
         @Override
         public DeployableService call() throws Exception {
             CreateServiceTask task = new CreateServiceTask(spec);
-            Invoker<DeployableService> invoker = new InvokerBuilder<DeployableService>(task, timeout).pauseBetweenTrials(pause).trials(trials).build();
+            InvokerFactory<DeployableService> factory = new InvokerFactory<DeployableService>();
+            Invoker<DeployableService> invoker = factory.geNewInvokerInstance(TASK_NAME, task);
             return invoker.invoke();
         }
     }

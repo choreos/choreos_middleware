@@ -6,7 +6,6 @@ package org.ow2.choreos.deployment.nodes;
 
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
@@ -15,6 +14,7 @@ import org.ow2.choreos.deployment.nodes.cm.NodeBootstrapper;
 import org.ow2.choreos.deployment.nodes.cm.NodeNotBootstrappedException;
 import org.ow2.choreos.invoker.Invoker;
 import org.ow2.choreos.invoker.InvokerException;
+import org.ow2.choreos.invoker.InvokerFactory;
 import org.ow2.choreos.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
@@ -32,6 +32,8 @@ import org.ow2.choreos.utils.TimeoutsAndTrials;
  */
 public class NodeCreator {
 
+    private static final String TASK_NAME = "BOOTSTRAP";
+    
     private CloudProvider cp;
 
     public NodeCreator() {
@@ -59,9 +61,8 @@ public class NodeCreator {
 
     private void bootstrapNode(CloudNode node) throws NodeNotCreatedException {
 	BootstrapTask task = new BootstrapTask(node);
-	int timeout = TimeoutsAndTrials.get("BOOTSTRAP_TIMEOUT");
-	int trials = TimeoutsAndTrials.get("BOOTSTRAP_TRIALS");
-	Invoker<Void> invoker = new Invoker<Void>(task, trials, timeout, 0, TimeUnit.SECONDS);
+	InvokerFactory<Void> factory = new InvokerFactory<Void>();
+	Invoker<Void> invoker = factory.geNewInvokerInstance(TASK_NAME, task);
 	try {
 	    invoker.invoke();
 	} catch (InvokerException e) {

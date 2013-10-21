@@ -2,7 +2,6 @@ package org.ow2.choreos.invoker;
 
 import static org.junit.Assert.assertEquals;
 
-
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -12,7 +11,7 @@ import org.ow2.choreos.invoker.Invoker;
 import org.ow2.choreos.invoker.InvokerException;
 
 public class InvokerTest {
-    
+
     private final int pauseBetweenTrials = 0;
 
     @Test
@@ -22,7 +21,8 @@ public class InvokerTest {
         int trials = 1;
         int timeout = 1;
 
-        Invoker<String> invoker = new Invoker<String>(task, trials, timeout, pauseBetweenTrials, TimeUnit.SECONDS);
+        Invoker<String> invoker = new Invoker<String>("AlwaysWork", task, trials, timeout, pauseBetweenTrials,
+                TimeUnit.SECONDS);
         String result = invoker.invoke();
 
         assertEquals("0", result);
@@ -35,7 +35,8 @@ public class InvokerTest {
         int trials = 2;
         int timeout = 1;
 
-        Invoker<String> invoker = new Invoker<String>(task, trials, timeout, pauseBetweenTrials, TimeUnit.SECONDS);
+        Invoker<String> invoker = new Invoker<String>("WorksInTheSecond", task, trials, timeout, pauseBetweenTrials,
+                TimeUnit.SECONDS);
         String result = invoker.invoke();
 
         assertEquals("0", result);
@@ -48,7 +49,8 @@ public class InvokerTest {
         int trials = 1;
         int timeout = 1;
 
-        Invoker<String> invoker = new Invoker<String>(task, trials, timeout, pauseBetweenTrials, TimeUnit.SECONDS);
+        Invoker<String> invoker = new Invoker<String>("WorksInTheSecond", task, trials, timeout, pauseBetweenTrials,
+                TimeUnit.SECONDS);
         invoker.invoke();
     }
 
@@ -59,7 +61,8 @@ public class InvokerTest {
         int trials = 1;
         int timeout = 500;
 
-        Invoker<String> invoker = new Invoker<String>(task, trials, timeout, pauseBetweenTrials, TimeUnit.MILLISECONDS);
+        Invoker<String> invoker = new Invoker<String>("TakesHundredMilliSecToWork", task, trials, timeout,
+                pauseBetweenTrials, TimeUnit.MILLISECONDS);
         String result = invoker.invoke();
 
         assertEquals("0", result);
@@ -72,7 +75,8 @@ public class InvokerTest {
         int trials = 1;
         int timeout = 5;
 
-        Invoker<String> invoker = new Invoker<String>(task, trials, timeout, pauseBetweenTrials, TimeUnit.MILLISECONDS);
+        Invoker<String> invoker = new Invoker<String>("TakesHundredMilliSecToWork", task, trials, timeout,
+                pauseBetweenTrials, TimeUnit.MILLISECONDS);
         invoker.invoke();
     }
 
@@ -83,7 +87,8 @@ public class InvokerTest {
         int trials = 1;
         int timeout = 100;
 
-        Invoker<Void> invoker = new Invoker<Void>(task, trials, timeout, pauseBetweenTrials, TimeUnit.MILLISECONDS);
+        Invoker<Void> invoker = new Invoker<Void>("VoidTask", task, trials, timeout, pauseBetweenTrials,
+                TimeUnit.MILLISECONDS);
         invoker.invoke();
 
         boolean done = task.done;

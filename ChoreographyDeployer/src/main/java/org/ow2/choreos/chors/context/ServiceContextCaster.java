@@ -10,33 +10,31 @@ import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.LegacyService;
 import org.ow2.choreos.chors.datamodel.LegacyServiceInstance;
 import org.ow2.choreos.invoker.Invoker;
-import org.ow2.choreos.invoker.InvokerBuilder;
 import org.ow2.choreos.invoker.InvokerException;
+import org.ow2.choreos.invoker.InvokerFactory;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.Proxification;
 import org.ow2.choreos.services.datamodel.Service;
 import org.ow2.choreos.services.datamodel.ServiceDependency;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceType;
-import org.ow2.choreos.utils.TimeoutsAndTrials;
 
 /**
  * Cast choreography context to a single service.
+ * 
  * @author leonardo
- *
+ * 
  */
 public class ServiceContextCaster {
-    
+
+    private static final String TASK_NAME = "SET_INVOCATION_ADDRESS";
+
     private static Logger logger = Logger.getLogger(ServiceContextCaster.class);
 
     private final Choreography chor;
     private final Service consumer;
     private final String consumerName;
-    
-    private final int timeout;
-    private final int trials;
-    private final int pauseBetweenTrials;
-    
+
     private Service provider;
     private String providerName, providerRole;
 
@@ -44,16 +42,13 @@ public class ServiceContextCaster {
         this.chor = chor;
         this.consumer = consumer;
         this.consumerName = consumer.getSpec().getName();
-        this.timeout = TimeoutsAndTrials.get("SET_INVOCATION_ADDRESS_TIMEOUT");
-        this.trials = TimeoutsAndTrials.get("SET_INVOCATION_ADDRESS_TRIALS");
-        this.pauseBetweenTrials = TimeoutsAndTrials.get("SET_INVOCATION_ADDRESS_PAUSE");
     }
-    
+
     public void cast() {
-        
+
         if (!isConsumerOK())
             return;
-        
+
         Map<String, Service> deployedServicesMap = chor.getMapOfServicesBySpecNames();
         for (ServiceDependency dep : consumer.getSpec().getDependencies()) {
             providerName = dep.getServiceSpecName();
@@ -69,23 +64,23 @@ public class ServiceContextCaster {
                     logger.error("Service " + providerName + " does not have role " + providerRole
                             + "; not going to pass it to service " + consumerName + " on chor " + chor.getId());
             }
-        }        
+        }
     }
-    
+
     private boolean isConsumerOK() {
         List<ServiceDependency> dependencies = consumer.getSpec().getDependencies();
         return dependencies != null && !dependencies.isEmpty();
     }
 
-    public void sendProviderContextToConsumer()  {
+    public void sendProviderContextToConsumer() {
         ServiceType consumerType = consumer.getSpec().getServiceType();
         List<String> consumerUris = consumer.getUris();
         List<String> providerUris = this.getUris(provider);
         for (String consumerEndpoint : consumerUris) {
-            ContextSenderTask task = new ContextSenderTask(consumerType, consumerEndpoint, providerRole,
-                    providerName, providerUris);
-            Invoker<Void> invoker = new InvokerBuilder<Void>(task, timeout).trials(trials)
-                    .pauseBetweenTrials(pauseBetweenTrials).build();
+            ContextSenderTask task = new ContextSenderTask(consumerType, consumerEndpoint, providerRole, providerName,
+                    providerUris);
+            InvokerFactory<Void> factory = new InvokerFactory<Void>();
+            Invoker<Void> invoker = factory.geNewInvokerInstance(TASK_NAME, task);
             try {
                 invoker.invoke();
             } catch (InvokerException e) {
@@ -94,7 +89,7 @@ public class ServiceContextCaster {
             }
         }
     }
-    
+
     /**
      * Get URIs from service that will be used in the setInvocationAddress.
      * 
@@ -112,7 +107,7 @@ public class ServiceContextCaster {
         }
         throw new IllegalArgumentException("Invalid service " + service);
     }
-    
+
     private List<String> getUrisFromDeployable(DeployableService providerService) {
         List<String> uris = new ArrayList<String>();
         for (ServiceInstance instance : providerService.getInstances()) {
@@ -127,7 +122,7 @@ public class ServiceContextCaster {
         }
         return uris;
     }
-    
+
     // TODO: eliminate replication by building an abstract ServiceInstance
 
     private List<String> getUrisFromLegacy(LegacyService providerService) {
@@ -144,15 +139,15 @@ public class ServiceContextCaster {
         }
         return uris;
     }
-    
+
     private class ContextSenderTask implements Callable<Void> {
 
         ServiceType consumerType;
         String consumerEndpoint, providerRole, providerName;
         List<String> providerEndpoints;
 
-        public ContextSenderTask(ServiceType consumerType, String consumerEndpoint,
-                String providerRole, String providerName, List<String> providerEndpoints) {
+        public ContextSenderTask(ServiceType consumerType, String consumerEndpoint, String providerRole,
+                String providerName, List<String> providerEndpoints) {
             this.consumerType = consumerType;
             this.consumerEndpoint = consumerEndpoint;
             this.providerRole = providerRole;
@@ -167,6 +162,5 @@ public class ServiceContextCaster {
             return null;
         }
     }
-
 
 }

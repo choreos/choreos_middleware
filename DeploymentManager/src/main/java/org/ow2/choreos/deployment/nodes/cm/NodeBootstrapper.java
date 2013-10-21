@@ -15,13 +15,12 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.deployment.Locations;
 import org.ow2.choreos.invoker.Invoker;
-import org.ow2.choreos.invoker.InvokerBuilder;
 import org.ow2.choreos.invoker.InvokerException;
+import org.ow2.choreos.invoker.InvokerFactory;
 import org.ow2.choreos.nodes.NodeNotAccessibleException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.utils.Scp;
 import org.ow2.choreos.utils.ScpFailed;
-import org.ow2.choreos.utils.TimeoutsAndTrials;
 
 /**
  * 
@@ -114,9 +113,8 @@ public class NodeBootstrapper {
 
     private void saveFile(String source, String target) throws NodeNotBootstrappedException {
 	ScpTask task = new ScpTask(source, target);
-	int timeout = TimeoutsAndTrials.get("SCP_TIMEOUT");
-	int trials = TimeoutsAndTrials.get("SCP_TRIALS");
-	Invoker<Void> invoker = new InvokerBuilder<Void>(task, timeout).trials(trials).pauseBetweenTrials(10).build();
+        InvokerFactory<Void> factory = new InvokerFactory<Void>();
+        Invoker<Void> invoker = factory.geNewInvokerInstance("SCP", task);
 	try {
 	    invoker.invoke();
 	} catch (InvokerException e) {

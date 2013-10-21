@@ -20,6 +20,7 @@ import org.ow2.choreos.utils.Concurrency;
  */
 public class Invoker<T> {
 
+    private final String taskName;
     private final Callable<T> task;
     private final int trials;
     private final int trialTimeout;
@@ -28,7 +29,8 @@ public class Invoker<T> {
 
     private Logger logger = Logger.getLogger(Invoker.class);
 
-    public Invoker(Callable<T> task, int trials, int trialTimeout, int pauseBetweenTrials, TimeUnit timeUnit) {
+    Invoker(String taskName, Callable<T> task, int trials, int trialTimeout, int pauseBetweenTrials, TimeUnit timeUnit) {
+        this.taskName = taskName;
         this.task = task;
         this.trials = trials;
         this.trialTimeout = trialTimeout;
@@ -53,7 +55,7 @@ public class Invoker<T> {
     private T tryToInvoke() throws Exception {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<T> future = executor.submit(task);
-        String errorMessage = "Invoker could not properly invoke " + this.task.getClass().getName();
+        String errorMessage = "Invoker could not properly invoke " + taskName;
         Concurrency.waitExecutor(executor, trialTimeout, timeUnit, logger, errorMessage);
         try {
             return Concurrency.checkAndGetFromFuture(future);

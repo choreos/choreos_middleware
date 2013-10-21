@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.jclouds.ContextBuilder;
@@ -19,20 +18,22 @@ import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.ec2.domain.InstanceType;
 import org.ow2.choreos.invoker.Invoker;
-import org.ow2.choreos.invoker.InvokerBuilder;
 import org.ow2.choreos.invoker.InvokerException;
+import org.ow2.choreos.invoker.InvokerFactory;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;
-import org.ow2.choreos.utils.TimeoutsAndTrials;
 
 import com.google.common.collect.Iterables;
 
 public abstract class JCloudsCloudProvider implements CloudProvider {
 
+    private static final String CREATION_TASK_NAME = "NODE_CREATION";
+    private static final String DELETION_TASK_NAME = "NODE_DELETION";
+    
     private String identity, credential, provider;
     private Properties properties;
 
@@ -61,9 +62,8 @@ public abstract class JCloudsCloudProvider implements CloudProvider {
     public CloudNode createNode(NodeSpec nodeSpec) throws NodeNotCreatedException {
         logger.debug("Creating node...");
         CreateNodeTask task = new CreateNodeTask(nodeSpec);
-        int timeout = TimeoutsAndTrials.get("NODE_CREATION_TIMEOUT");
-        int trials = TimeoutsAndTrials.get("NODE_CREATION_TRIALS");
-        Invoker<CloudNode> invoker = new Invoker<CloudNode>(task, trials, timeout, 0, TimeUnit.SECONDS);
+        InvokerFactory<CloudNode> factory = new InvokerFactory<CloudNode>();
+        Invoker<CloudNode> invoker = factory.geNewInvokerInstance(CREATION_TASK_NAME, task);
         try {
             CloudNode node = invoker.invoke();
             return node;
@@ -165,10 +165,9 @@ public abstract class JCloudsCloudProvider implements CloudProvider {
 
     @Override
     public void destroyNode(String nodeId) throws NodeNotDestroyed {
-        int timeout = TimeoutsAndTrials.get("NODE_DELETION_TIMEOUT");
-        int trials = TimeoutsAndTrials.get("NODE_DELETION_TRIALS");
         DestroyNodeTask task = new DestroyNodeTask(nodeId);
-        Invoker<Void> invoker = new InvokerBuilder<Void>(task, timeout).trials(trials).build();
+        InvokerFactory<Void> factory = new InvokerFactory<Void>();
+        Invoker<Void> invoker = factory.geNewInvokerInstance(DELETION_TASK_NAME, task);
         try {
             invoker.invoke();
         } catch (InvokerException e) {

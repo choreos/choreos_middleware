@@ -2,10 +2,10 @@ package org.ow2.choreos.chors.bus.selector;
 
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import org.ow2.choreos.invoker.Invoker;
 import org.ow2.choreos.invoker.InvokerException;
+import org.ow2.choreos.invoker.InvokerFactory;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.utils.SshUtil;
 import org.ow2.choreos.utils.SshWaiter;
@@ -13,6 +13,7 @@ import org.ow2.choreos.utils.SshWaiter;
 public class ESBDeploymentPreparer {
 
     public static final String COMMAND = ". $HOME/chef-solo/add_recipe_to_node.sh easyesb";
+    private static final String TASK_NAME = "ESB_DEPLOYMENT_PREPARE";
     
     private CloudNode node;
     SshWaiter sshWaiter = new SshWaiter();
@@ -23,10 +24,8 @@ public class ESBDeploymentPreparer {
 
     public void prepareESBDeployment() throws BusNotPreparedException {
         PreparerTask task = new PreparerTask();
-        // TODO
-        int timeout = 60;
-        int trials = 3;
-        Invoker<Void> invoker = new Invoker<Void>(task, trials, timeout, 0, TimeUnit.SECONDS);
+        InvokerFactory<Void> factory = new InvokerFactory<Void>();
+        Invoker<Void> invoker = factory.geNewInvokerInstance(TASK_NAME, task);
         try {
             invoker.invoke();
         } catch (InvokerException e) {
