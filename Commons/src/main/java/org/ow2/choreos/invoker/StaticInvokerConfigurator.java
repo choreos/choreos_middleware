@@ -11,7 +11,7 @@ import org.ow2.choreos.utils.TimeoutsAndTrials;
  * 
  * @param <T>
  */
-public class SimpleInvokerConfigurator<T> implements InvokerConfigurator<T> {
+public class StaticInvokerConfigurator<T> implements InvokerConfigurator<T> {
 
     private String taskName;
     private Callable<T> task;

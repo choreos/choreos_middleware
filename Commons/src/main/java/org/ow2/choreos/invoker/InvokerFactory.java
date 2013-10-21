@@ -5,7 +5,7 @@ import java.util.concurrent.Callable;
 public class InvokerFactory<T> {
 
     public Invoker<T> geNewInvokerInstance(String taskName, Callable<T> task) {
-        InvokerConfigurator<T> invokerConfigurator = new SimpleInvokerConfigurator<T>();
+        InvokerConfigurator<T> invokerConfigurator = new AdaptiveInvokerConfigurator<T>();
         InvokerBuilder<T> builder = invokerConfigurator.getConfiguredInvokerBuilder(taskName, task);
         return builder.build();
     }
