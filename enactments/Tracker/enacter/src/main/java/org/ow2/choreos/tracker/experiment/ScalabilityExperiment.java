@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.mail.EmailException;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.invoker.Invoker;
@@ -15,14 +16,17 @@ import org.ow2.choreos.invoker.InvokerBuilder;
 import org.ow2.choreos.invoker.InvokerException;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.client.NodesClient;
+import org.ow2.choreos.tracker.experiment.mail.ErrorMail;
+import org.ow2.choreos.tracker.experiment.mail.FinishedMail;
+import org.ow2.choreos.tracker.experiment.mail.ProgressMail;
 import org.ow2.choreos.utils.CommandLineException;
 import org.ow2.choreos.utils.LogConfigurator;
 import org.ow2.choreos.utils.OSCommand;
 
 public class ScalabilityExperiment {
 
-    private static final int NUM_EXECUTIONS = 8;
-    private static final int CHORS_QUANTITY = 1;
+    public static final int NUM_EXECUTIONS = 8;
+    public static final int CHORS_QUANTITY = 1;
     public static final int[] CHORS_SIZES = new int[] { 1400, 1800 };
     public static final int[] VMS_LIMITS = new int[] { 70, 90 };
 //    public static final int[] CHORS_SIZES = new int[] { 200, 600, 1000, 1400, 1800 };
@@ -52,6 +56,7 @@ public class ScalabilityExperiment {
             currentDefinition = def;
             executeDefinition(def);
         }
+        sendFinishedMail();
     }
 
     private void createDefinitions() {
@@ -73,6 +78,7 @@ public class ScalabilityExperiment {
         exp.run();
         cleanAmazon();
         stopEE();
+        sendProgressMail();
     }
 
     private void startEE() {
@@ -141,6 +147,15 @@ public class ScalabilityExperiment {
         cdCommand.killProcess();
         logger.info("EE killed");
     }
+    
+    private void sendProgressMail() {
+        ProgressMail mail = new ProgressMail(currentDefinition);
+        try {
+            mail.send();
+        } catch (EmailException e) {
+            logger.warn("Not possible to send progress email");
+        }
+    }
 
     private class EEPingTask implements Callable<Integer> {
         @Override
@@ -155,8 +170,18 @@ public class ScalabilityExperiment {
 
     private void abortExecution(String error) {
         logger.error("Aborting execution: " + error);
+        sendErrorMail(error);
         System.exit(-1);
     }
+    
+    private void sendErrorMail(String error) {
+        ErrorMail mail = new ErrorMail(error);
+        try {
+            mail.send();
+        } catch (EmailException e) {
+            logger.warn("Not possible to send error email");
+        }
+    }    
 
     private class CleanAmazonTask implements Callable<Void> {
         @Override
@@ -168,4 +193,12 @@ public class ScalabilityExperiment {
         }
     }
 
+    private void sendFinishedMail() {
+        FinishedMail mail = new FinishedMail();
+        try {
+            mail.send();
+        } catch (EmailException e) {
+            logger.warn("Not possible to send finished email");
+        }
+    } 
 }
