@@ -22,6 +22,7 @@ public class GmailAuthentication {
         email.setSmtpPort(465);
         email.setAuthenticator(new DefaultAuthenticator(username, password));
         email.setSSL(true);
+        email.setTLS(true);
         return email;
     }
 
