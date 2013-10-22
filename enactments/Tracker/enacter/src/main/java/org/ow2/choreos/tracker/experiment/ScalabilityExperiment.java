@@ -148,12 +148,15 @@ public class ScalabilityExperiment {
     }
 
     private void sendProgressMail() {
+        logger.info("Sending progress email");
         ProgressMail mail = new ProgressMail(currentDefinition);
         try {
             mail.send();
         } catch (EmailException e) {
             logger.warn("Not possible to send progress email");
+            e.printStackTrace();
         }
+        logger.info("Progress email sent");
     }
 
     private class EEPingTask implements Callable<Integer> {
@@ -174,12 +177,14 @@ public class ScalabilityExperiment {
     }
 
     private void sendErrorMail(String error) {
+        logger.info("Sending error email");
         ErrorMail mail = new ErrorMail(error);
         try {
             mail.send();
         } catch (EmailException e) {
             logger.warn("Not possible to send error email");
         }
+        logger.info("Error email sent");
     }
 
     private class CleanAmazonTask implements Callable<Void> {
@@ -193,11 +198,13 @@ public class ScalabilityExperiment {
     }
 
     private void sendFinishedMail() {
+        logger.info("Sending finished email");
         FinishedMail mail = new FinishedMail();
         try {
             mail.send();
         } catch (EmailException e) {
             logger.warn("Not possible to send finished email");
         }
+        logger.info("Finished email sent");
     }
 }
