@@ -156,7 +156,6 @@ public class ScalabilityExperiment {
             mail.send();
         } catch (EmailException e) {
             logger.warn("Not possible to send progress email");
-            e.printStackTrace();
         }
         logger.info("Progress email sent");
     }

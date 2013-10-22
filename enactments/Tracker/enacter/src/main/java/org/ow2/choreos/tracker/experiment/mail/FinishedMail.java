@@ -26,4 +26,7 @@ public class FinishedMail {
         email.send();
     }
 
+    public static void main(String[] args) throws EmailException {
+        new FinishedMail().send();
+    }
 }
