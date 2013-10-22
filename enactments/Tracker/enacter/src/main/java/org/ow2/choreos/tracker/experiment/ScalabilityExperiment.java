@@ -59,7 +59,7 @@ public class ScalabilityExperiment {
 
     private void createDefinitions() {
         definitions = new ArrayList<ExperimentDefinition>();
-        for (int i = NUM_EXECUTsrc/main/java/org/ow2src/main/java/org/ow2/choreos/tracker/experiment/mail/GmailAuthentication.java/choreos/tracker/experiment/mail/GmailAuthentication.javaIONS; i > 0; i--) {
+        for (int i = NUM_EXECUTIONS; i > 0; i--) {
             for (int s = 0; s < CHORS_SIZES.length; s++) {
                 int size = CHORS_SIZES[s];
                 int vmsLimit = VMS_LIMITS[s];
