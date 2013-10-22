@@ -19,10 +19,9 @@ public class GmailAuthentication {
     public MultiPartEmail getAuthenticatedEmail() {
         MultiPartEmail email = new MultiPartEmail();
         email.setHostName("smtp.googlemail.com");
-        email.setSmtpPort(465);
+        email.setSmtpPort(587);
         email.setAuthenticator(new DefaultAuthenticator(username, password));
         email.setSSL(true);
-        email.setTLS(true);
         return email;
     }
 
