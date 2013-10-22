@@ -32,7 +32,7 @@ public class InvokerHistoryTest {
     
     @Test
     public void shouldNotRecordInHistoryIfFailed() {
-        String taskName = "TakesTwoSecondsTask";
+        String taskName = "TakesOneSecondsAndFailsTask";
         int timeout = 3;
         int trials = 1;
         int pause = 0;
@@ -45,6 +45,25 @@ public class InvokerHistoryTest {
         }
         List<Long> history = InvokerHistory.getInstance().getHistory(taskName);
         assertTrue(history.isEmpty());
+    }
+    
+    //@Test ???
+    public void shouldRecordInHistoryTimeoutedTaskIfSuccessfull() throws InterruptedException {
+        String taskName = "TakesTwoSecondsTask";
+        int timeout = 1;
+        int trials = 1;
+        int pause = 0;
+        TakesTwoSecondsTask task = new TakesTwoSecondsTask();
+        Invoker<String> invoker = new Invoker<String>(taskName, task, trials, timeout, pause, TimeUnit.SECONDS);
+        try {
+            invoker.invoke();
+        } catch (InvokerException e) {
+            // expected because timeout
+        }
+        Thread.sleep(1500);
+        List<Long> history = InvokerHistory.getInstance().getHistory(taskName);
+        assertEquals(1, history.size());
+        assertTrue(history.get(0) >= 2);
     }
     
     private class TakesTwoSecondsTask implements Callable<String> {
