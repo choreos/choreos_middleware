@@ -19,6 +19,9 @@ import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
 public class NPMImplTest {
     
+    private static final int POOL_INITIAL_SIZE = 1;
+    private static final int POOL_THRESHOLD = -1;
+    
     @Test
     public void shouldCreateNode() throws Exception {
 
@@ -32,7 +35,7 @@ public class NPMImplTest {
         NodeCreator creator = NodeCreatorMocks.getGoodMock();
         NodeCreatorFactory.nodeCreatorForTesting = creator;
         NodeCreatorFactory.testing = true;
-        IdlePool pool = IdlePool.getCleanInstance(1);
+        IdlePool pool = IdlePool.getCleanInstance(POOL_INITIAL_SIZE, POOL_THRESHOLD);
 
         NodePoolManager npm = NPMFactory.getNewNPMInstance(pool);
 
@@ -57,7 +60,7 @@ public class NPMImplTest {
         NodeCreatorFactory.nodeCreatorForTesting = creator;
         NodeCreatorFactory.testing = true;
         
-        IdlePool pool = IdlePool.getCleanInstance(1);
+        IdlePool pool = IdlePool.getCleanInstance(POOL_INITIAL_SIZE, POOL_THRESHOLD);
 
         NodePoolManager npm = NPMFactory.getNewNPMInstance(pool);
 
@@ -84,7 +87,7 @@ public class NPMImplTest {
         NodeCreator creator1 = NodeCreatorMocks.getGoodMock();
         NodeCreatorFactory.nodeCreatorForTesting = creator1;
         NodeCreatorFactory.testing = true;        
-        IdlePool pool1 = IdlePool.getCleanInstance(1);
+        IdlePool pool1 = IdlePool.getCleanInstance(POOL_INITIAL_SIZE, POOL_THRESHOLD);
         NodePoolManager npm1 = NPMFactory.getNewNPMInstance(pool1);
 
         CloudNode createdNode = npm1.createNode(new NodeSpec());
@@ -94,7 +97,7 @@ public class NPMImplTest {
         NodeCreatorFactory.nodeCreatorForTesting = creator2;
         NodeCreatorFactory.testing = true;       
         
-        IdlePool pool2 = IdlePool.getCleanInstance(1);
+        IdlePool pool2 = IdlePool.getCleanInstance(POOL_INITIAL_SIZE, POOL_THRESHOLD);
         NodePoolManager npm2 = NPMFactory.getNewNPMInstance(pool2);
 
         CloudNode fromOtherNPM = npm2.getNode(createdNode.getId());

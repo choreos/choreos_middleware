@@ -11,7 +11,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
@@ -33,28 +32,18 @@ public class IdlePool {
 
     private static final int FILLING_POOL_TIMEOUT_MINUTES = 10;
 
-    private static IdlePool instance;
+    private static IdlePool INSTANCE;
 
     private static Logger logger = Logger.getLogger(IdlePool.class);
 
     private int poolSize;
+    private int threshold;
     private Set<CloudNode> idleNodes = new HashSet<CloudNode>();
     private ExecutorService fillerExecutor = Executors.newSingleThreadExecutor();
 
-    private IdlePool(int poolSize) {
+    private IdlePool(int poolSize, int threshold) {
         this.poolSize = poolSize;
-    }
-
-    public static IdlePool getInstance() {
-        int poolSize = 0;
-        try {
-            poolSize = Integer.parseInt(DeploymentManagerConfiguration.get("POOL_SIZE"));
-        } catch (NumberFormatException e) {
-            String msg = "You should set POOL_SIZE on the property files";
-            logger.error(msg);
-            throw new IllegalStateException(msg);
-        }
-        return getInstance(poolSize);
+        this.threshold = threshold;
     }
 
     /**
@@ -64,13 +53,13 @@ public class IdlePool {
      * @param nodeCreator
      * @return
      */
-    public static IdlePool getInstance(int poolSize) {
+    public static IdlePool getInstance(int poolSize, int threshold) {
         synchronized (IdlePool.class) {
-            if (instance == null) {
-                instance = new IdlePool(poolSize);
+            if (INSTANCE == null) {
+                INSTANCE = new IdlePool(poolSize, threshold);
             }
         }
-        return instance;
+        return INSTANCE;
     }
 
     /**
@@ -80,9 +69,17 @@ public class IdlePool {
      * @param nodeCreator
      * @return
      */
-    public static IdlePool getCleanInstance(int poolSize) {
-        instance = new IdlePool(poolSize);
-        return instance;
+    public static IdlePool getCleanInstance(int poolSize, int threshold) {
+        INSTANCE = new IdlePool(poolSize, threshold);
+        return INSTANCE;
+    }
+
+    public int getSize() {
+        return poolSize;
+    }
+
+    public int getThreshold() {
+        return threshold;
     }
 
     /**
@@ -116,8 +113,14 @@ public class IdlePool {
         synchronized (this) {
             CloudNode node = idleNodes.iterator().next();
             idleNodes.remove(node);
+            adaptPoolSize();
             return node;
         }
+    }
+
+    private void adaptPoolSize() {
+        if (idleNodes.size() <= threshold)
+            poolSize++;
     }
 
     /**

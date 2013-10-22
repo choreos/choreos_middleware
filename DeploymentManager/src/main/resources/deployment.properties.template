@@ -48,7 +48,13 @@ OPENSTACK_IMAGE_ID=RegionOne/1654b5b6-49b7-4039-b7b7-0e42e85480f4
 # optional
 OPENSTACK_FLAVOR_NAME=
 
-# creates a pool of extra VMs to make the deployment faster and more scalable
-# the trade-off is the cost of some more VMs
+# Creates a pool of extra VMs to make the deployment faster and more scalable.
+# The trade-off is the cost of some more VMs.
+# If the pool size reaches the threshold, the pool size is increased by one.
+# To not increase your pool size, set threshold as negative or greater than the initial pool size.
 IDLE_POOL=false
-IDLE_POOL_SIZE=0
+IDLE_POOL_INITIAL_SIZE=0
+IDLE_POOL_THRESHOLD=-1
+
+
+
