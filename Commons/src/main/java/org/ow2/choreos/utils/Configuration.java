@@ -90,4 +90,14 @@ public class Configuration {
             properties.setProperty(key, values);
     }
 
+    public void save() {
+        if (properties != null) {
+            try {
+                properties.save();
+            } catch (ConfigurationException e) {
+                logger.error("Coud not save properties on " + properties.getFileName());
+            }
+        }
+    }
+
 }
