@@ -42,7 +42,6 @@ public class ProgressMail {
         int run = experimentDefinition.getRun();
         int vm = experimentDefinition.getVmLimit();
         String path = "results/chor" + qty + "x" + size + "_" + vm + "vms_" + run + "run.txt";
-        System.out.println("Attaching " + path);
         EmailAttachment attachment = new EmailAttachment();
         attachment.setPath(path);
         attachment.setDisposition(EmailAttachment.ATTACHMENT);

@@ -119,8 +119,10 @@ public class IdlePool {
     }
 
     private void adaptPoolSize() {
-        if (idleNodes.size() <= threshold)
-            poolSize++;
+        if (idleNodes.size() <= threshold) {
+            poolSize *= 2;
+            logger.info("Idle pool size has increased to " + poolSize);
+        }
     }
 
     /**
