@@ -27,17 +27,16 @@ public class InvokerHistoryTest {
         invoker.invoke();
         List<Long> history = InvokerHistory.getInstance().getHistory(taskName);
         assertEquals(1, history.size());
-        System.out.println(history);
         assertTrue(history.get(0) >= 2);
     }
     
     @Test
-    public void shouldRecordInHistoryEvenWithFailure() {
+    public void shouldNotRecordInHistoryIfFailed() {
         String taskName = "TakesTwoSecondsTask";
         int timeout = 3;
         int trials = 1;
         int pause = 0;
-        TakesTwoSecondsAndFailsTask task = new TakesTwoSecondsAndFailsTask();
+        TakesOneSecondsAndFailsTask task = new TakesOneSecondsAndFailsTask();
         Invoker<String> invoker = new Invoker<String>(taskName, task, trials, timeout, pause, TimeUnit.SECONDS);
         try {
             invoker.invoke();
@@ -45,9 +44,7 @@ public class InvokerHistoryTest {
             // expected
         }
         List<Long> history = InvokerHistory.getInstance().getHistory(taskName);
-        assertEquals(1, history.size());
-        System.out.println(history);
-        assertTrue(history.get(0) >= 2);
+        assertTrue(history.isEmpty());
     }
     
     private class TakesTwoSecondsTask implements Callable<String> {
@@ -58,10 +55,10 @@ public class InvokerHistoryTest {
         }
     }
     
-    private class TakesTwoSecondsAndFailsTask implements Callable<String> {
+    private class TakesOneSecondsAndFailsTask implements Callable<String> {
         @Override
         public String call() throws Exception {
-            Thread.sleep(2000);
+            Thread.sleep(1000);
             throw new Exception("Bye world!");
         }
     }

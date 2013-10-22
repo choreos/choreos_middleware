@@ -58,9 +58,10 @@ public class Invoker<T> {
         long t0 = System.nanoTime();
         Concurrency.waitExecutor(executor, trialTimeout, timeUnit, logger, errorMessage);
         long tf = System.nanoTime();
-        logHistory(t0, tf);
         try {
-            return Concurrency.checkAndGetFromFuture(future);
+            T result = Concurrency.checkAndGetFromFuture(future);
+            logHistory(t0, tf);
+            return result;
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof Exception)
