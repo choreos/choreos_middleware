@@ -225,7 +225,7 @@ public class IdlePoolTest {
         }
         assertEquals(N, pool.getSize());
         pool.retriveNode();
-        assertEquals(2*N, pool.getSize());
+        assertEquals(N+1, pool.getSize());
     }
 
     private class PoolFiller implements Runnable {
