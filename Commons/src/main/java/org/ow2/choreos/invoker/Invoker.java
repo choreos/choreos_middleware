@@ -18,6 +18,8 @@ import org.ow2.choreos.utils.Concurrency;
  */
 public class Invoker<T> {
 
+    public static boolean SAVE_HISTORY = false;
+
     private static Logger logger = Logger.getLogger(Invoker.class);
 
     private final String taskName;
@@ -71,9 +73,12 @@ public class Invoker<T> {
         }
     }
 
+    // problem(?): do not logging history of successful timeouted invocations
     private void logHistory(long t0, long tf) {
-        long delta = (tf - t0) / 1000000000;
-        history.addTime(taskName, delta);
+        if (SAVE_HISTORY) {
+            long delta = (tf - t0) / 1000000000;
+            history.addTime(taskName, delta);
+        }
     }
 
     private void pause() throws InvokerException {

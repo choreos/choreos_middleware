@@ -13,6 +13,7 @@ public class InvokerHistoryTest {
 
     @Before
     public void setUp() {
+        Invoker.SAVE_HISTORY = true;
         InvokerHistory.getInstance().clear();
     }
     
