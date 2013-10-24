@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 public class ComplexEventExceptionHandler {
 
-    Logger logger = Logger.getLogger(ComplexEventExceptionHandler.class);
+    Logger logger = Logger.getLogger("reconfLogger");
 
     public void handle(ObjectMessage responseFromMonitoring) throws JMSException {
 	ComplexEventException exceptionReceived = (ComplexEventException) responseFromMonitoring.getObject();

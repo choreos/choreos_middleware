@@ -2,9 +2,13 @@
 <ComplexEventRuleActionList xmlns="http://labse.isti.cnr.it/glimpse/xml/ComplexEventRule"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://labse.isti.cnr.it/glimpse/xml/ComplexEventRule ./ComplexEventRule.xsd">
+
+<!--
+
+-->
 <Insert RuleType="drools">
-	<RuleName>CpuUserEventDetected</RuleName>
-    <RuleBody>
+	<RuleName>QoSMeasuring</RuleName>
+	<RuleBody>
         import it.cnr.isti.labsedc.glimpse.event.GlimpseBaseEventChoreos;
         import it.cnr.isti.labsedc.glimpse.manager.ResponseDispatcher;
 		import java.util.regex.Matcher;
@@ -15,13 +19,60 @@
 	        @timestamp( timeStamp )
         end
         
-        declare CPUEvent
+        declare ResponseTimeEvent
         	@role(event)
+        	@expires (2m)
+        	value : float
+        	ip : String
+        	service: String
+        	chor: String
+        end
+        
+        declare CpuUserEvent
+        	@role(event)
+        	@expires (5m)
         	value : float
         	ip : String
         end
+
+        declare AddReplica
+        	@role(event)
+        	@expires( 10m )
+        	service : String
+        end 
+        
+        declare RemReplica
+        	@role(event)
+        	@expires ( 6m )
+        	service : String
+        end 
+        
                 
-		rule "cpu_user_event"
+                
+		rule "ResponseTime"
+		no-loop true
+		salience 20
+		dialect "mvel"
+		
+		when
+			$aEvent : GlimpseBaseEventChoreos(this.isConsumed == false, 
+			this.isException == false,
+			this.getEventName == "response_time");
+		then
+			$aEvent.setConsumed(true);
+			update($aEvent);
+			
+			float meas = Float.parseFloat((String) $aEvent.getEventData());
+			
+			insert (new ResponseTimeEvent(meas,
+			(String) $aEvent.getMachineIP(),
+			(String) $aEvent.getServiceSource(),
+			(String) $aEvent.getChoreographySource()));
+			
+			retract ($aEvent);
+		end
+		
+		rule "CpuUser"
 		no-loop true
 		salience 20
 		dialect "mvel"
@@ -41,84 +92,90 @@
 			if (m1.find())
 				f = Float.parseFloat(m1.group(0).split(": ")[1]);		
 			
-			insert (new CPUEvent(f,$aEvent.getMachineIP()));
-
+			insert (new CpuUserEvent(f,$aEvent.getMachineIP()));
+			
 			ResponseDispatcher.LogViolation(drools.getRule().getName(),
 			"RMA",
-			"\nSLA resources violation detected on: " + $aEvent.getMachineIP());
-			
-			retract ($aEvent);
+			"\nSLA resource violation: " + (String) $aEvent.getMachineIP() + " " + f);
+
 		end
-    </RuleBody>
-</Insert>
-<Insert RuleType="drools">
-	<RuleName>HighCpuUserEvent</RuleName>
-    <RuleBody>
-        import it.cnr.isti.labsedc.glimpse.manager.ResponseDispatcher;
-        
-        declare CPUEvent
-        	@role(event)
-        	value : float
-        	ip : String
-        end
-                
-		rule "HighCpuUserEvent"
+		
+		rule "HighResponseTime"
+		no-loop true
+		salience 30
+		dialect "mvel"
+		
+		when
+			$ev : ResponseTimeEvent();
+			
+			Number( $eventSum : doubleValue ) from accumulate( 
+				$event : ResponseTimeEvent($ev.service == service, $ev.chor == chor, $ev.ip == ip), 
+					count($event) 
+			);
+				
+			Number( intValue > $eventSum*0.05 ) from accumulate(
+				$sEvent : ResponseTimeEvent(value > 120, $ev.service == service, $ev.chor == chor, $ev.ip == ip), 
+					count($sEvent)
+			);
+			
+			Number( doubleValue > 90 )
+				from accumulate( CpuUserEvent($ev.ip == ip, $val : value),
+					average($val)
+			);
+			
+			not AddReplica(service == $ev.service);
+							
+		then
+			insert(new AddReplica($ev.service));
+
+			ResponseDispatcher.LogViolation(drools.getRule().getName(),
+			"QoS Drools Rules",
+			"\nSLA QoS violation detected on: " + $ev.service);
+			
+			ResponseDispatcher.NotifyMeValue(drools.getRule().getName(),
+				"eeConsumer", (String) $ev.ip, (String) $ev.service);
+			
+		end
+		
+		rule "LowCpuUser"
 		no-loop true
 		salience 20
 		dialect "mvel"
 		
 		when
-			$event : CPUEvent(this.value > 90);
-			$lastEvent : CPUEvent(this.value > 90, this after[25s,35s] $event)
+			$ev : ResponseTimeEvent();
+			
+			Number( $eventSum : doubleValue ) from accumulate( 
+				$event : ResponseTimeEvent($ev.service == service, $ev.chor == chor, $ev.ip == ip), 
+					count($event) 
+			); 	
+				
+			Number( intValue > $eventSum*0.95 ) from accumulate(
+				$sEvent : ResponseTimeEvent(75 > value, $ev.service == service, $ev.chor == chor, $ev.ip == ip), 
+					count($sEvent)
+			);
+
+			$rs : Number(35 > doubleValue) from accumulate(
+				CpuUserEvent($ev.ip == ip, $val : value), 
+					average($val)
+			);
+			
+			not RemReplica(service == $ev.service);
+							
 		then
-			update($event);
-			update($lastEvent);
+			insert(new RemReplica($ev.service));
 
 			ResponseDispatcher.LogViolation(drools.getRule().getName(),
-			"Consumer Rule",
-			"\nSLA resource violation occurred on: " + $event.ip);
+			"QoS Drools Rules",
+			"\nSLA QoS violation detected on: " + $ev.service);
 			
 			ResponseDispatcher.NotifyMeValue(drools.getRule().getName(),
-			"eeConsumer", "cpu_user", (String) $event.ip);
-			
-			retract($event);
-			retract($lastEvent);
+				"eeConsumer", (String) $ev.ip, (String) $ev.service);
+				
 		end
-    </RuleBody>
-</Insert>
-<Insert RuleType="drools">
-	<RuleName>LowCpuUserEvent</RuleName>
-    <RuleBody>
-        import it.cnr.isti.labsedc.glimpse.manager.ResponseDispatcher;
-        
-        declare CPUEvent
-        	@role(event)
-        	value : float
-        	ip : String
-        end
-                
-		rule "LowCpuUserEvent"
-		no-loop true
-		salience 20
-		dialect "mvel"
 		
-		when
-			$event : CPUEvent(this.value &lt; 35);
-			$lastEvent : CPUEvent(this.value &lt; 35, this after[25s,35s] $event)
-		then
-			update($event);
-			update($lastEvent);
-
-			ResponseDispatcher.LogViolation(drools.getRule().getName(),
-			"Consumer Rule",
-			"\nSLA resource violation occurred on: " + $event.ip);
-			
-			ResponseDispatcher.NotifyMeValue(drools.getRule().getName(),
-			"eeConsumer", "cpu_user", (String) $event.ip);
-			
-			retract($event);
-			retract($lastEvent);
-		end
     </RuleBody>
 </Insert>
+
+
 </ComplexEventRuleActionList>

@@ -12,12 +12,13 @@ import org.ow2.choreos.chors.reconfiguration.HandlingEvent;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
-public class LowCpuUserEvent extends ComplexEventHandler {
+public class LowCpuUser extends ComplexEventHandler {
 
     Logger logger = Logger.getLogger(this.getClass());
 
     @Override
     public void handleEvent(HandlingEvent event) {
+
 	List<DeployableService> services = registryHelper.getServicesHostedOn(event.getNode());
 
 	if (services.isEmpty()) {
@@ -59,6 +60,37 @@ public class LowCpuUserEvent extends ComplexEventHandler {
 	    }
 
 	}
-    }
 
+	/*
+	 * String node = event.getNode(); String service = event.getService();
+	 * 
+	 * Choreography choreography = registryHelper.getChoreography(node,
+	 * service);
+	 * 
+	 * if (choreography == null) return;
+	 * 
+	 * ChoreographySpec choreographySpec =
+	 * choreography.getChoreographySpec();
+	 * 
+	 * for (DeployableServiceSpec s :
+	 * choreographySpec.getDeployableServiceSpecs()) { if
+	 * (s.getName().equals(service)) {
+	 * logger.debug("Found service spec. Going to increase number of instances"
+	 * ); if (s.getNumberOfInstances() > 1)
+	 * s.setNumberOfInstances(s.getNumberOfInstances() - 1); break; } }
+	 * 
+	 * try { logger.info("Going to update chor with spec: " +
+	 * choreographySpec);
+	 * registryHelper.getChorClient().updateChoreography("1",
+	 * choreographySpec); } catch (ChoreographyNotFoundException e) {
+	 * logger.error(e.getMessage()); } catch (EnactmentException e) {
+	 * logger.error(e.getMessage()); }
+	 * 
+	 * try { logger.info("Enacting choreography");
+	 * registryHelper.getChorClient().enactChoreography("1"); } catch
+	 * (EnactmentException e) { logger.error(e.getMessage()); } catch
+	 * (ChoreographyNotFoundException e) { logger.error(e.getMessage()); }
+	 */
+
+    }
 }

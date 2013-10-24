@@ -15,7 +15,7 @@ public class EnactmentEngineGlimpseConsumer extends GlimpseAbstractConsumer {
 
     private ComplexEventExceptionHandler complexEventExceptionHandler;
 
-    private Logger logger = Logger.getLogger(EnactmentEngineGlimpseConsumer.class);
+    private Logger logger = Logger.getLogger("reconfLogger");
 
     public EnactmentEngineGlimpseConsumer(Properties settings, String plainTextRule) {
 	super(settings, plainTextRule);
