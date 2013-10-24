@@ -2,17 +2,23 @@ package org.ow2.choreos.chors.reconfiguration;
 
 public class HandlingEvent {
 
+    String rule;
     String node;
-    String eventData;
+    String service;
 
-    /**
-     * @param node
-     * @param eventData
-     */
-    public HandlingEvent(String node, String eventData) {
+    public HandlingEvent(String rule, String node, String service) {
 	super();
+	this.rule = rule;
 	this.node = node;
-	this.eventData = eventData;
+	this.service = service;
+    }
+
+    public String getRule() {
+	return rule;
+    }
+
+    public void setRule(String rule) {
+	this.rule = rule;
     }
 
     public String getNode() {
@@ -23,20 +29,21 @@ public class HandlingEvent {
 	this.node = node;
     }
 
-    public String getEventData() {
-	return eventData;
+    public String getService() {
+	return service;
     }
 
     public void setEventData(String eventData) {
-	this.eventData = eventData;
+	this.service = eventData;
     }
 
     @Override
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
-	result = prime * result + ((eventData == null) ? 0 : eventData.hashCode());
 	result = prime * result + ((node == null) ? 0 : node.hashCode());
+	result = prime * result + ((rule == null) ? 0 : rule.hashCode());
+	result = prime * result + ((service == null) ? 0 : service.hashCode());
 	return result;
     }
 
@@ -49,15 +56,20 @@ public class HandlingEvent {
 	if (getClass() != obj.getClass())
 	    return false;
 	HandlingEvent other = (HandlingEvent) obj;
-	if (eventData == null) {
-	    if (other.eventData != null)
-		return false;
-	} else if (!eventData.equals(other.eventData))
-	    return false;
 	if (node == null) {
 	    if (other.node != null)
 		return false;
 	} else if (!node.equals(other.node))
+	    return false;
+	if (rule == null) {
+	    if (other.rule != null)
+		return false;
+	} else if (!rule.equals(other.rule))
+	    return false;
+	if (service == null) {
+	    if (other.service != null)
+		return false;
+	} else if (!service.equals(other.service))
 	    return false;
 	return true;
     }

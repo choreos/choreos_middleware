@@ -4,10 +4,10 @@ import org.apache.log4j.Logger;
 
 public class EnactmentEngineGlimpseConsumerService {
 
-    Logger logger = Logger.getLogger(EnactmentEngineGlimpseConsumerService.class);
+    Logger logger = Logger.getLogger("reconfLogger");
 
     public void execute() {
-	logger.info("Creating consumer...");
+	logger.info("Creating GLIMPSE consumer...");
 	EnactmentEngineGlimpseConsumerRunnable consumer = new EnactmentEngineGlimpseConsumerRunnable();
 	Thread t = new Thread(consumer);
 	t.start();

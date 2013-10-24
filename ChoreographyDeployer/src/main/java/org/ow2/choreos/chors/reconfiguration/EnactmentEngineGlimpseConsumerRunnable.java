@@ -6,7 +6,7 @@ import java.util.Properties;
 
 public class EnactmentEngineGlimpseConsumerRunnable implements Runnable {
 
-    private static final String namingURL = "tcp://10.0.0.2:61616";
+    private static final String namingURL = "tcp://10.0.0.15:61616";
 
     private Properties getConsumerProperties() {
 	return Manager.createConsumerSettingsPropertiesObject("org.apache.activemq.jndi.ActiveMQInitialContextFactory",

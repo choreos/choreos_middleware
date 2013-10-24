@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.ChorRegistry;
 import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.ChoreographyNotFoundException;
@@ -17,11 +16,9 @@ import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 public class ChoreographyRegistryHelper {
 
     private static final String CHOR_DEPLOYER_URI = "http://localhost:9102/choreographydeployer/";
-    private static final String DEPLOYMENT_MANAGER_URI = "http://localhost:9100/deploymentmanager/";
 
     private ChorRegistry registry = ChorRegistry.getInstance();
 
-    private Logger logger = Logger.getLogger(ChoreographyRegistryHelper.class);
     private ChoreographyDeployer chorClient;
 
     public ChoreographyRegistryHelper() {
@@ -88,5 +85,25 @@ public class ChoreographyRegistryHelper {
 	    }
 	}
 	return "";
+    }
+
+    public Choreography getChoreography(String node, String service) {
+
+	for (Entry<String, Choreography> chor : registry.getAll().entrySet()) {
+
+	    for (DeployableService s : chor.getValue().getDeployableServices()) {
+
+		if (s.getSpec().getName().equals(service)) {
+
+		    for (CloudNode n : s.getSelectedNodes()) {
+
+			if (n.getIp().equals(node)) {
+			    return chor.getValue();
+			}
+		    }
+		}
+	    }
+	}
+	return null;
     }
 }
