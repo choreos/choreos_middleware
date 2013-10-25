@@ -26,7 +26,7 @@ import org.ow2.choreos.utils.OSCommand;
 public class ScalabilityExperiment {
 
     public static final int NUM_EXECUTIONS = 4;
-    public static final int CHORS_QUANTITY = 1;
+    public static final int[] CHORS_QUANTITIES = new int[] { 1, 1, 1, 1, 1 };
     public static final int[] CHORS_SIZES = new int[] { 200, 600, 1000, 1400, 1800 };
     public static final int[] VMS_LIMITS = new int[] { 10, 30, 50, 70, 90 };
 
@@ -63,7 +63,8 @@ public class ScalabilityExperiment {
             for (int s = 0; s < CHORS_SIZES.length; s++) {
                 int size = CHORS_SIZES[s];
                 int vmsLimit = VMS_LIMITS[s];
-                definitions.add(new ExperimentDefinition(i, CHORS_QUANTITY, size, vmsLimit));
+                int chorsQuantity = CHORS_QUANTITIES[s];
+                definitions.add(new ExperimentDefinition(i, chorsQuantity, size, vmsLimit));
             }
         }
     }
