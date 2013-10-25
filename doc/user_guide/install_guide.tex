@@ -79,7 +79,9 @@ Some hints:
 
 \subsection{Fixed cloud provider}
 
-If you are learning how to use the \ee\ and want just to experiment it, the \textsf{FixedCloudProvider} may be the most suitable option to you. With it you are responsible to manually crating and setting virtual machines and telling to \ee\ which machines must be used by it. This avoids the overhead of dealing with a cloud environment. 
+If you are learning how to use the \ee\ and want just to experiment it, the \textsf{FixedCloudProvider} may be the most suitable option to you. 
+It is also useful if you want to use \ee\ with your own already existing cluster machines.
+With it you are responsible to manually crating and setting virtual machines and telling to \ee\ which machines must be used by it. This avoids the overhead of dealing with a cloud environment. 
 
 When creating a virtual machine to be used by the \ee, be sure:
 \begin{itemize}
@@ -89,13 +91,12 @@ When creating a virtual machine to be used by the \ee, be sure:
 \item to synchronize the machine clock: \texttt{\#ntpdate ccsl.ime.usp.br};
 \end{itemize}
 
-Configure the \texttt{deployment.properties} file settings according to the template.
+Configure the \texttt{deployment.properties} file settings, according to the template, to indicate which machines will be used by \ee.
 
 To verify if your VM was properly set, you may run the \\ \textsf{org.ow2.choreos.deployment.nodes.cloudprovider.FixedConnectionTest} test.
 
-When you use the \ee\ to install a service in your VM, the \ee\ will take care of bootstrapping (installing Chef) on your VM. The bootstrap process may take a few minutes. Therefore, saving a VM snapshot just after the bootstrap may save you a lot of time, since you can quickly restore your VM to a clear state. You may also bootstrap your VM by running the \textsf{ow2.choreos.deployment.nodes.NodeBootstrapperTest} test.
-
-After testing and installing some recipes in the VM, you can restore the bootstrapped snapshot (as well as any other you have) by manually doing it in your preferred virtualization software (e.g. VirtualBox) and resetting the chef node run list. The last step can be easily done using the script \texttt{chef-repo/run\_list\_reset.sh}. You must create the \texttt{chef-repo/run\_list\_reset.conf} script according to the template (\texttt{run\_list\_reset.conf.template}).
+The \ee\ \emph{will not} take care of bootstrapping (installing Chef) on your machines, since this process is taken only when creating new machines. 
+You \emph{must} bootstrap your machines by running the \textsf{ow2.choreos.deployment.nodes.cm.BootstrapFixedMachines} class.
 
 Depending on how you create your VMs, some network configuration may be needed. In case of using VirtualBox, you can refer to \url{http://ccsl.ime.usp.br/foswiki/bin/view/Choreos/VMs}.
 
