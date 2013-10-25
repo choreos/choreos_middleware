@@ -1,6 +1,8 @@
-package org.ow2.choreos.deployment.nodes.cm;
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import static org.junit.Assert.assertTrue;
+package org.ow2.choreos.deployment.nodes.cm;
 
 import java.util.List;
 
@@ -27,8 +29,11 @@ public class BootstrapFixedMachines {
             NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
             bootstrapper.bootstrapNode();
             System.out.println("Checking if bootstrap was OK");
-            assertTrue(checker.isBootstrapped(node));
-            System.out.println("Bootstrap OK for " + node);
+            if (checker.isBootstrapped(node)) {
+                System.out.println("Bootstrap OK for " + node);
+            } else {
+                System.out.println("Bootstrap NOT OK for " + node);
+            }
         } else {
             System.out.println(node + " was already bootstrapped");
         }
