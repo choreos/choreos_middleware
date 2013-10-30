@@ -11,16 +11,17 @@ import javax.jms.ObjectMessage;
 
 import org.apache.log4j.Logger;
 
-public class EnactmentEngineGlimpseConsumer extends GlimpseAbstractConsumer {
-
-    private ComplexEventExceptionHandler complexEventExceptionHandler;
+class ChorGlimpseConsumer extends GlimpseAbstractConsumer {
 
     private Logger logger = Logger.getLogger("reconfLogger");
 
-    public EnactmentEngineGlimpseConsumer(Properties settings, String plainTextRule) {
-	super(settings, plainTextRule);
+    private ComplexEventExceptionHandler complexEventExceptionHandler;
+    private ComplexEventResponseHandler complexEventResponseHandler;
 
+    public ChorGlimpseConsumer(Properties settings, String plainTextRule) {
+	super(settings, plainTextRule);
 	complexEventExceptionHandler = new ComplexEventExceptionHandler();
+	complexEventResponseHandler = new ComplexEventResponseHandler();
     }
 
     @Override
@@ -30,7 +31,6 @@ public class EnactmentEngineGlimpseConsumer extends GlimpseAbstractConsumer {
 	    if (responseFromMonitoring.getObject() instanceof ComplexEventException) {
 		complexEventExceptionHandler.handle(responseFromMonitoring);
 	    } else {
-		ComplexEventResponseHandler complexEventResponseHandler = new ComplexEventResponseHandler();
 		complexEventResponseHandler.handle(responseFromMonitoring);
 	    }
 	} catch (ClassCastException asd) {

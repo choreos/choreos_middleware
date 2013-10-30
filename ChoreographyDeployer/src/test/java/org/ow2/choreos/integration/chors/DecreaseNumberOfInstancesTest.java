@@ -48,103 +48,104 @@ import eu.choreos.vv.exceptions.WSDLException;
  */
 @Category(IntegrationTest.class)
 public class DecreaseNumberOfInstancesTest {
-    
+
     private ChoreographySpec spec;
     private ChoreographySpec newSpec;
 
     @BeforeClass
     public static void startServers() {
-        LogConfigurator.configLog();
+	LogConfigurator.configLog();
     }
 
     @Before
     public void setUp() {
-        ChoreographyDeployerConfiguration.set("BUS", "false");
-        ChoreographyDeployerConfiguration.set("IDLE_POOL", "false");
-        ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE, 3);
-        spec = models.getChorSpec();
-        ModelsForTest newModels = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE, 2);
-        newSpec = newModels.getChorSpec();
+	ChoreographyDeployerConfiguration.set("BUS", "false");
+	ChoreographyDeployerConfiguration.set("IDLE_POOL", "false");
+	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT, 3);
+	spec = models.getChorSpec();
+	ModelsForTest newModels = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT, 2);
+	newSpec = newModels.getChorSpec();
     }
 
     @Test
     public void shouldEnactChoreographyWithTwoAirlineServicesAndChangeToThree() throws Exception {
 
-        ChoreographyDeployer ee = new ChoreographyDeployerImpl();
+	ChoreographyDeployer ee = new ChoreographyDeployerImpl();
 
-        String chorId = ee.createChoreography(spec);
-        Choreography chor = ee.enactChoreography(chorId);
+	String chorId = ee.createChoreography(spec);
+	Choreography chor = ee.enactChoreography(chorId);
 
-        Service airline = chor.getDeployableServiceBySpecName(ModelsForTest.AIRLINE);
+	Service airline = chor.getDeployableServiceBySpecName(ModelsForTest.AIRLINE);
 
-        DeployableService travel = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
+	DeployableService travel = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
 
-        Invoker<String> invoker = getBuyTripInvoker(travel);
+	Invoker<String> invoker = getBuyTripInvoker(travel);
 
-        String codes, codes2, codes3 = "";
+	String codes, codes2, codes3 = "";
 
-        codes = invoker.invoke();
-        codes2 = invoker.invoke();
-        codes3 = invoker.invoke();
+	codes = invoker.invoke();
+	codes2 = invoker.invoke();
+	codes3 = invoker.invoke();
 
-        assertEquals(3, airline.getUris().size());
-        assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
-        assertTrue(codes2.startsWith("33") && codes2.endsWith("--22"));
-        assertTrue(codes3.startsWith("33") && codes3.endsWith("--22"));
-        assertFalse(codes.equals(codes2));
-        assertFalse(codes3.equals(codes));
-        assertFalse(codes3.equals(codes2));
+	assertEquals(3, airline.getUris().size());
+	assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
+	assertTrue(codes2.startsWith("33") && codes2.endsWith("--22"));
+	assertTrue(codes3.startsWith("33") && codes3.endsWith("--22"));
+	assertFalse(codes.equals(codes2));
+	assertFalse(codes3.equals(codes));
+	assertFalse(codes3.equals(codes2));
 
-        ee.updateChoreography(chorId, newSpec);
-        chor = ee.enactChoreography(chorId);
+	ee.updateChoreography(chorId, newSpec);
+	chor = ee.enactChoreography(chorId);
 
-        airline = chor.getDeployableServiceBySpecName(ModelsForTest.AIRLINE);
-        travel = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
-        invoker = getBuyTripInvoker(travel);
+	airline = chor.getDeployableServiceBySpecName(ModelsForTest.AIRLINE);
+	travel = chor.getDeployableServiceBySpecName(ModelsForTest.TRAVEL_AGENCY);
+	invoker = getBuyTripInvoker(travel);
 
-        codes = invoker.invoke();
-        codes2 = invoker.invoke();
+	codes = invoker.invoke();
+	codes2 = invoker.invoke();
 
-        assertEquals(2, airline.getUris().size());
-        assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
-        assertTrue(codes2.startsWith("33") && codes2.endsWith("--22"));
-        assertFalse(codes.equals(codes2));
+	assertEquals(2, airline.getUris().size());
+	assertTrue(codes.startsWith("33") && codes.endsWith("--22"));
+	assertTrue(codes2.startsWith("33") && codes2.endsWith("--22"));
+	assertFalse(codes.equals(codes2));
 
-        Alarm alarm = new Alarm();
-        alarm.play();
+	Alarm alarm = new Alarm();
+	alarm.play();
 
     }
 
     private Invoker<String> getBuyTripInvoker(DeployableService travelAgency) {
-        BuyTripTask task = new BuyTripTask(travelAgency);
-        String taskName = "BuyTripInvokerTask";
-        Invoker<String> invoker = new InvokerBuilder<String>(taskName, task, 10).trials(2).pauseBetweenTrials(10).build();
-        return invoker;
+	BuyTripTask task = new BuyTripTask(travelAgency);
+	String taskName = "BuyTripInvokerTask";
+	Invoker<String> invoker = new InvokerBuilder<String>(taskName, task, 10).trials(2).pauseBetweenTrials(10)
+		.build();
+	return invoker;
     }
 
     private class BuyTripTask implements Callable<String> {
 
-        private WSClient client;
+	private WSClient client;
 
-        public BuyTripTask(DeployableService travelAgency) {
-            try {
-                client = new WSClient(travelAgency.getUris().get(0) + "?wsdl");
-            } catch (WSDLException e) {
-                e.printStackTrace();
-            } catch (XmlException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (FrameworkException e) {
-                e.printStackTrace();
-            }
-        }
+	public BuyTripTask(DeployableService travelAgency) {
+	    try {
+		client = new WSClient(travelAgency.getUris().get(0) + "?wsdl");
+	    } catch (WSDLException e) {
+		e.printStackTrace();
+	    } catch (XmlException e) {
+		e.printStackTrace();
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    } catch (FrameworkException e) {
+		e.printStackTrace();
+	    }
+	}
 
-        @Override
-        public String call() throws Exception {
-            Item response = client.request("buyTrip");
-            return response.getChild("return").getContent();
-        }
+	@Override
+	public String call() throws Exception {
+	    Item response = client.request("buyTrip");
+	    return response.getChild("return").getContent();
+	}
 
     }
 

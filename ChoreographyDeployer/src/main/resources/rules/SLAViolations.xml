@@ -44,7 +44,7 @@
         declare RemReplica
         	@role(event)
         	@expires ( 6m )
-        	service : String
+        	ip : String
         end 
         
                 
@@ -143,34 +143,24 @@
 		dialect "mvel"
 		
 		when
-			$ev : ResponseTimeEvent();
+			$ev : CpuUserEvent();
 			
-			Number( $eventSum : doubleValue ) from accumulate( 
-				$event : ResponseTimeEvent($ev.service == service, $ev.chor == chor, $ev.ip == ip), 
-					count($event) 
-			); 	
-				
-			Number( intValue > $eventSum*0.95 ) from accumulate(
-				$sEvent : ResponseTimeEvent(75 > value, $ev.service == service, $ev.chor == chor, $ev.ip == ip), 
-					count($sEvent)
-			);
-
 			$rs : Number(35 > doubleValue) from accumulate(
 				CpuUserEvent($ev.ip == ip, $val : value), 
 					average($val)
 			);
 			
-			not RemReplica(service == $ev.service);
+			not RemReplica(ip == $ev.ip);
 							
 		then
-			insert(new RemReplica($ev.service));
+			insert(new RemReplica($ev.ip));
 
 			ResponseDispatcher.LogViolation(drools.getRule().getName(),
 			"QoS Drools Rules",
-			"\nSLA QoS violation detected on: " + $ev.service);
+			"\nSLA QoS violation detected on: " + $ev.ip);
 			
 			ResponseDispatcher.NotifyMeValue(drools.getRule().getName(),
-				"eeConsumer", (String) $ev.ip, (String) $ev.service);
+				"eeConsumer", (String) $ev.ip, "all");
 				
 		end
 		

@@ -1,0 +1,6 @@
+#! /bin/bash
+
+cd <%= @home %>
+sed -i '/$1::remove/d' ./chef-solo/node.json
+rm -rf chef-solo/cookbooks/$1
+rm -rf <%= @tomcat_file%>

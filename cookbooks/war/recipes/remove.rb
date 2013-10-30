@@ -20,7 +20,11 @@ template "#{ENV['HOME']}/schedule-removal.sh" do
     source "schedule-removal.erb"
     owner "ubuntu"
     group "ubuntu"
-    mode 0755
+    mode 0775
+    variables({
+        :home => "#{ENV['HOME']}",
+	:tomcat_file => "#{node['tomcat']['webapp_dir']}/$NAME.war"
+    })
 end
 
 execute "schedule-removal" do

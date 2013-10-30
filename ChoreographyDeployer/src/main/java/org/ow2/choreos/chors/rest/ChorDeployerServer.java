@@ -5,7 +5,6 @@
 package org.ow2.choreos.chors.rest;
 
 import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
-import org.ow2.choreos.chors.reconfiguration.EnactmentEngineGlimpseConsumerService;
 import org.ow2.choreos.rest.RESTServer;
 import org.ow2.choreos.utils.LogConfigurator;
 
@@ -45,8 +44,6 @@ public class ChorDeployerServer {
 
 	LogConfigurator.configLog();
 	ChorDeployerServer server = new ChorDeployerServer();
-	if (Boolean.parseBoolean(ChoreographyDeployerConfiguration.get("QOS_MGMT")))
-	    EnactmentEngineGlimpseConsumerService.main(args);
 	server.start();
     }
 }
