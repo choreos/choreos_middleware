@@ -29,23 +29,20 @@ public class Configuration {
      * @param filePath
      *            relative to resources folder.
      */
-    public Configuration(String filePath) {
+    public Configuration(String resourceName) {
 
         PropertiesConfiguration tmp = null;
         try {
-            // TODO try getResourceAsStrem; the current line does not works when
-            // the class is loaded
-            // by other application (not the DeploymentManager itself)
-            URL fileUrl = this.getClass().getClassLoader().getResource(filePath);
+            URL fileUrl = this.getClass().getClassLoader().getResource(resourceName);
             if (fileUrl != null) {
                 File propertiesFile = new File(fileUrl.getFile());
                 tmp = new PropertiesConfiguration(propertiesFile);
             } else {
-                logger.error("Could not load properties from " + filePath);
+                logger.error("Could not load properties from " + resourceName);
                 tmp = new PropertiesConfiguration();
             }
         } catch (ConfigurationException e) {
-            logger.error("Could not load properties from " + filePath);
+            logger.error("Could not load properties from " + resourceName);
             tmp = new PropertiesConfiguration();
         }
         this.properties = tmp;
