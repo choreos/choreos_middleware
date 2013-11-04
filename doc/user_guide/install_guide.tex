@@ -96,7 +96,7 @@ Configure the \texttt{deployment.properties} file settings, according to the tem
 To verify if your VM was properly set, you may run the \\ \textsf{org.ow2.choreos.deployment.nodes.cloudprovider.FixedConnectionTest} test.
 
 The \ee\ \emph{will not} take care of bootstrapping (installing Chef) on your machines, since this process is taken only when creating new machines. 
-You \emph{must} bootstrap your machines by running the \textsf{ow2.choreos.deployment.nodes.cm.BootstrapFixedMachines} class.
+You \emph{must} bootstrap your machines by running the \textsf{org.ow2.choreos.deployment.nodes.cm.BootstrapFixedMachines} class.
 
 Depending on how you create your VMs, some network configuration may be needed. In case of using VirtualBox, you can refer to \url{http://ccsl.ime.usp.br/foswiki/bin/view/Choreos/VMs}.
 
