@@ -15,11 +15,11 @@ public class ChoreographyContext {
     public ChoreographyContext(Choreography chor) {
 	this.chor = chor;
 	this.requestedChoreographySpec = this.chor.getChoreographySpec();
-	this.glimpseConsumer = new GlimpseConsumer(this);
     }
 
     public void startMonitoring() {
 	if (qosMgMt) {
+	    this.glimpseConsumer = new GlimpseConsumer(this);
 	    glimpseConsumer.start();
 	}
     }

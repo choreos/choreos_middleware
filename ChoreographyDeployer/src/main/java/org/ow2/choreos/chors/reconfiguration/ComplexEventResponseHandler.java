@@ -3,7 +3,6 @@ package org.ow2.choreos.chors.reconfiguration;
 import it.cnr.isti.labse.glimpse.xml.complexEventResponse.ComplexEventResponse;
 
 import javax.jms.JMSException;
-import javax.jms.ObjectMessage;
 
 import org.apache.log4j.Logger;
 
@@ -15,7 +14,7 @@ public class ComplexEventResponseHandler {
     private ComplexEventResponse response;
     private HandlingEvent event;
 
-    public void handle(ObjectMessage responseFromMonitoring) throws JMSException {
+    public void handle(ComplexEventResponse responseFromMonitoring) throws JMSException {
 	setUp(responseFromMonitoring);
 	loadHandler();
 	handles();
@@ -33,8 +32,8 @@ public class ComplexEventResponseHandler {
 	logger.debug("Event handled!\n\n>>>");
     }
 
-    private void setUp(ObjectMessage responseFromMonitoring) throws JMSException {
-	response = (ComplexEventResponse) responseFromMonitoring.getObject();
+    private void setUp(ComplexEventResponse responseFromMonitoring) throws JMSException {
+	response = responseFromMonitoring;
 	String ruleMatched = response.getRuleName();
 	String node = response.getResponseKey();
 	String serviceName = response.getResponseValue();

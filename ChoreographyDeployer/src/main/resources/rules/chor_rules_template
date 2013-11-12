@@ -1,0 +1,43 @@
+<RuleName>Choreography_@{chor_id}</RuleName>
+<RuleBody>
+import it.cnr.isti.labsedc.glimpse.event.GlimpseBaseEventChoreos;
+import it.cnr.isti.labsedc.glimpse.manager.ResponseDispatcher;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+declare GlimpseBaseEventChoreos
+	@role( event )
+	@timestamp( timeStamp )
+end
+
+declare ResponseTimeEvent
+	@role(event)
+	@expires (2m)
+	value : float
+	ip : String
+	service: String
+	chor: String
+end
+
+declare CpuUserEvent
+	@role(event)
+	@expires (5m)
+	value : float
+	ip : String
+end
+
+declare AddReplica
+	@role(event)
+	@expires( 10m )
+	service : String
+end
+
+declare RemReplica
+	@role(event)
+	@expires ( 6m )
+	ip : String
+end
+
+@{services_rules}
+
+</RuleBody>

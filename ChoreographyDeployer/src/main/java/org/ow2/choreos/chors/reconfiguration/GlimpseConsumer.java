@@ -2,11 +2,8 @@ package org.ow2.choreos.chors.reconfiguration;
 
 import it.cnr.isti.labsedc.glimpse.utils.Manager;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Properties;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.ChoreographyContext;
 
@@ -36,12 +33,10 @@ public class GlimpseConsumer implements Runnable {
 
     private String getConsumerRules() {
 	String fileContent = null;
-	try {
-	    fileContent = FileUtils.readFileToString(new File(getClass().getClassLoader()
-		    .getResource("rules/SLAViolations.xml").getFile()));
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
+
+	fileContent = new ChorRulesBuilder().assemblyGlimpseRules(this.context.getChoreography());
+	logger.debug(fileContent);
+
 	return fileContent;
     }
 
@@ -49,7 +44,7 @@ public class GlimpseConsumer implements Runnable {
     public void run() {
 
 	logger.info("Starting running glimpse consumer for chor " + context.getChoreography().getId());
-	new ChorGlimpseConsumer(this.properties, this.rules);
+	new ChorGlimpseConsumer(this.properties, this.rules, context.getChoreography());
 
 	logger.info("Glimpse consumer stated!");
 	running = true;

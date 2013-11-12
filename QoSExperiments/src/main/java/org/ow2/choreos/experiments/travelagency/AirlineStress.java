@@ -15,8 +15,11 @@ import org.ow2.choreos.experiments.travelagency.client.TravelAgencyServiceServic
 import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.client.ServicesClient;
 import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceType;
+import org.ow2.choreos.services.datamodel.qos.DesiredQoS;
+import org.ow2.choreos.services.datamodel.qos.ResponseTimeMetric;
 import org.ow2.choreos.tests.ModelsForTest;
 
 public class AirlineStress {
@@ -45,6 +48,15 @@ public class AirlineStress {
     public void setUp() {
 	models = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT);
 	chorSpec = models.getChorSpec();
+
+	DesiredQoS desiredQoS = new DesiredQoS();
+	ResponseTimeMetric responseTime = new ResponseTimeMetric();
+	responseTime.setAcceptablePercentage(0.05f);
+	responseTime.setMaxDesiredResponseTime(120f);
+	desiredQoS.setResponseTimeMetric(responseTime);
+
+	((DeployableServiceSpec) chorSpec.getServiceSpecByName("airline")).setDesiredQoS(desiredQoS);
+
     }
 
     public void shouldRunExperiment() throws Exception {
