@@ -2,48 +2,42 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-package org.ow2.choreos.chors.rest;
+package org.ow2.choreos.rest;
 
-import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
-import org.ow2.choreos.rest.RESTServer;
+import org.ow2.choreos.chors.rest.ChorResource;
+import org.ow2.choreos.deployment.nodes.rest.NodesResource;
+import org.ow2.choreos.deployment.nodes.rest.RunListResource;
 import org.ow2.choreos.utils.LogConfigurator;
 
-public class ChorDeployerServer {
+public class EnactmentEngineServer {
 
     public static final String NAME = "Choreography Deployer";
     public static String URL;
 
-    private static final String CHOR_DEPLOYER_PORT_PROPERTY = "CHOR_DEPLOYER_PORT";
+    private static final String ENACTMENT_ENGINE_PORT = "9100";
 
     private RESTServer restServer;
 
     static {
-	String port = ChoreographyDeployerConfiguration.get(CHOR_DEPLOYER_PORT_PROPERTY);
-	URL = "http://0.0.0.0:" + port + "/choreographydeployer/";
+	URL = "http://0.0.0.0:" + ENACTMENT_ENGINE_PORT + "/enactmentengine/";
     }
 
-    public ChorDeployerServer() {
-
-	this.restServer = new RESTServer(NAME, URL, new Class[] { ChorResource.class });
-
+    public EnactmentEngineServer() {
+	this.restServer = new RESTServer(NAME, URL, new Class[] { ChorResource.class, NodesResource.class,
+		RunListResource.class });
     }
 
     public void start() {
-
 	this.restServer.start();
-
     }
 
     public void stop() {
-
 	this.restServer.stop();
-
     }
 
     public static void main(String[] args) throws InterruptedException {
-
 	LogConfigurator.configLog();
-	ChorDeployerServer server = new ChorDeployerServer();
+	EnactmentEngineServer server = new EnactmentEngineServer();
 	server.start();
     }
 }

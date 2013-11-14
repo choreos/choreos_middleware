@@ -23,6 +23,7 @@ import org.ow2.choreos.chors.bus.EasyESBNode;
 import org.ow2.choreos.chors.bus.ProxificationTask;
 import org.ow2.choreos.chors.bus.selector.ESBNodeFactory;
 import org.ow2.choreos.chors.rest.Owners;
+import org.ow2.choreos.deployment.services.ServicesManagerImpl;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
@@ -33,7 +34,6 @@ import org.ow2.choreos.selectors.ObjectCreationException;
 import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServiceNotFoundException;
 import org.ow2.choreos.services.ServicesManager;
-import org.ow2.choreos.services.client.ServicesClient;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
@@ -69,71 +69,71 @@ public class ProxifyServiceTest {
 
     @BeforeClass
     public static void configureLog() {
-        LogConfigurator.configLog();
+	LogConfigurator.configLog();
     }
 
     @Before
     public void setup() {
-        models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-        String host = Owners.getDefault();
-        npm = new NodesClient(host);
-        sm = new ServicesClient(host);
+	models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
+	String host = Owners.getDefault();
+	npm = new NodesClient(host);
+	sm = new ServicesManagerImpl();
     }
 
     @Test
     public void shouldProxifyAService() throws Exception {
 
-        deployService();
-        deployEsbNode();
-        proxifyService();
+	deployService();
+	deployEsbNode();
+	proxifyService();
 
-        checkProxifiedWSDLIsOnline();
-        invokeService();
+	checkProxifiedWSDLIsOnline();
+	invokeService();
     }
 
     private void deployService() throws ServiceNotCreatedException, NodeNotUpdatedException, NodeNotFoundException,
-            ServiceNotFoundException {
-        DeployableServiceSpec airlineSpec = models.getAirlineSpec();
-        DeployableService service = sm.createService(airlineSpec);
-        CloudNode node = service.getSelectedNodes().iterator().next();
-        npm.updateNode(node.getId());
-        serviceInstance = sm.getService(service.getUUID()).getInstances().get(0);
+	    ServiceNotFoundException {
+	DeployableServiceSpec airlineSpec = models.getAirlineSpec();
+	DeployableService service = sm.createService(airlineSpec);
+	CloudNode node = service.getSelectedNodes().iterator().next();
+	npm.updateNode(node.getId());
+	serviceInstance = sm.getService(service.getUUID()).getInstances().get(0);
     }
 
     private void deployEsbNode() throws ObjectCreationException {
-        ESBNodeFactory factory = new ESBNodeFactory(npm);
-        esbNode = factory.createNewInstance(new ResourceImpact());
+	ESBNodeFactory factory = new ESBNodeFactory(npm);
+	esbNode = factory.createNewInstance(new ResourceImpact());
     }
 
     private void proxifyService() {
-        Proxification proxification = new Proxification();
-        ProxificationTask task = new ProxificationTask(serviceInstance.getServiceSpec().getName(),
-                serviceInstance.getNativeUri(), proxification, esbNode);
-        try {
-            proxifiedUrl = task.call();
-        } catch (EasyESBException e) {
-            System.out.println(e);
-            fail();
-        }
+	Proxification proxification = new Proxification();
+	ProxificationTask task = new ProxificationTask(serviceInstance.getServiceSpec().getName(),
+		serviceInstance.getNativeUri(), proxification, esbNode);
+	try {
+	    proxifiedUrl = task.call();
+	} catch (EasyESBException e) {
+	    System.out.println(e);
+	    fail();
+	}
     }
 
     private void checkProxifiedWSDLIsOnline() {
-        String wsdl = proxifiedUrl + "?wsdl";
-        System.out.println("Accessing " + wsdl);
-        WebClient client = WebClient.create(wsdl);
-        Response response = client.get();
-        assertEquals(200, response.getStatus());
+	String wsdl = proxifiedUrl + "?wsdl";
+	System.out.println("Accessing " + wsdl);
+	WebClient client = WebClient.create(wsdl);
+	Response response = client.get();
+	assertEquals(200, response.getStatus());
     }
 
     private void invokeService() throws XmlException, IOException, FrameworkException, WSDLException,
-            InvalidOperationNameException, NoSuchFieldException {
-        String wsdl = proxifiedUrl + "?wsdl";
-        WSClient wsClient = new WSClient(wsdl);
-        wsClient.setEndpoint(proxifiedUrl);
-        System.out.println("Accessing buyFlight of " + wsdl);
-        Item responseItem = wsClient.request("buyFlight");
-        String ticketNumber = responseItem.getChild("return").getContent();
-        assertTrue(ticketNumber.startsWith("33"));
+	    InvalidOperationNameException, NoSuchFieldException {
+	String wsdl = proxifiedUrl + "?wsdl";
+	WSClient wsClient = new WSClient(wsdl);
+	wsClient.setEndpoint(proxifiedUrl);
+	System.out.println("Accessing buyFlight of " + wsdl);
+	Item responseItem = wsClient.request("buyFlight");
+	String ticketNumber = responseItem.getChild("return").getContent();
+	assertTrue(ticketNumber.startsWith("33"));
     }
 
 }

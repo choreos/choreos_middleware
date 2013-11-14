@@ -17,7 +17,7 @@ import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.chors.client.ChorDeployerClient;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
-import org.ow2.choreos.chors.rest.ChorDeployerServer;
+import org.ow2.choreos.rest.EnactmentEngineServer;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceSpec;
@@ -46,7 +46,7 @@ public class RestEnactmentTest {
     private static final String AIRLINE = ModelsForTest.AIRLINE;
     private static final String TRAVEL_AGENCY = ModelsForTest.TRAVEL_AGENCY;
 
-    private static ChorDeployerServer server;
+    private static EnactmentEngineServer server;
     private ChoreographySpec chorSpec;
 
     private ModelsForTest models;
@@ -54,7 +54,7 @@ public class RestEnactmentTest {
     @BeforeClass
     public static void startServers() {
         LogConfigurator.configLog();
-        server = new ChorDeployerServer();
+        server = new EnactmentEngineServer();
         server.start();
     }
 
@@ -74,7 +74,7 @@ public class RestEnactmentTest {
     @Test
     public void shouldConfigureAChoreography() throws Exception {
 
-        String host = ChorDeployerServer.URL;
+        String host = EnactmentEngineServer.URL;
         ChoreographyDeployer ee = new ChorDeployerClient(host);
         String chorId = ee.createChoreography(chorSpec);
 
@@ -84,7 +84,7 @@ public class RestEnactmentTest {
     @Test
     public void shouldRetrieveChoreographySpec() throws Exception {
 
-        String host = ChorDeployerServer.URL;
+        String host = EnactmentEngineServer.URL;
         ChoreographyDeployer ee = new ChorDeployerClient(host);
         String chorId = ee.createChoreography(chorSpec);
         Choreography chor = ee.getChoreography(chorId);
@@ -99,7 +99,7 @@ public class RestEnactmentTest {
     @Test
     public void shouldEnactChoreography() throws Exception {
 
-        String host = ChorDeployerServer.URL;
+        String host = EnactmentEngineServer.URL;
         ChoreographyDeployer ee = new ChorDeployerClient(host);
         String chorId = ee.createChoreography(chorSpec);
         Choreography chor = ee.enactChoreography(chorId);

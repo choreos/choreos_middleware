@@ -4,10 +4,10 @@
 
 package org.ow2.choreos.chors.rest;
 
+import org.ow2.choreos.deployment.nodes.NPMImpl;
+import org.ow2.choreos.deployment.services.ServicesManagerImpl;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.client.NodesClient;
 import org.ow2.choreos.services.ServicesManager;
-import org.ow2.choreos.services.client.ServicesClient;
 
 /**
  * Retrieve DeploymentManager clients using the URIs configured on
@@ -22,23 +22,21 @@ public class RESTClientsRetriever {
     public static ServicesManager servicesManagerForTest;
     public static boolean testing = false;
 
-    public static ServicesManager getServicesClient(String owner) {
-        if (!testing) {
-            String uri = Owners.get(owner);
-            ServicesManager client = new ServicesClient(uri);
-            return client;
-        } else {
-            return servicesManagerForTest;
-        }
+    public static ServicesManager getServicesManager() {
+	if (!testing) {
+	    ServicesManager servicesManager = new ServicesManagerImpl();
+	    return servicesManager;
+	} else {
+	    return servicesManagerForTest;
+	}
     }
 
-    public static NodePoolManager getNodesClient(String owner) {
-        if (!testing) {
-            String uri = Owners.get(owner);
-            NodePoolManager client = new NodesClient(uri);
-            return client;
-        } else {
-            return npmForTest;
-        }
+    public static NodePoolManager getNodePoolManager() {
+	if (!testing) {
+	    NodePoolManager nodePoolManager = new NPMImpl();
+	    return nodePoolManager;
+	} else {
+	    return npmForTest;
+	}
     }
 }
