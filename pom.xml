@@ -71,11 +71,9 @@
   </distributionManagement>
   <modules>
     <module>Commons</module>
-    <module>DeploymentManager</module>
-    <module>ChoreographyDeployer</module>
+	<module>EnactmentEngine</module>
     <module>EnactmentEngineAPI</module>
     <module>PlatformMonitoring</module>
-    <!-- <module>StorageFactory</module>  -->
   </modules>
   <repositories>
     <repository>
