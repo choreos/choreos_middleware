@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.services.datamodel.DeployableService;
+import org.ow2.choreos.services.datamodel.ServiceInstance;
 
 class ChorGlimpseConsumer extends GlimpseAbstractConsumer {
 
@@ -37,23 +38,35 @@ class ChorGlimpseConsumer extends GlimpseAbstractConsumer {
 	try {
 	    ObjectMessage responseFromMonitoring = (ObjectMessage) arg0;
 
-	    logger.debug(">>>>>>> outer \n" + responseFromMonitoring.getObject());
-
 	    if (responseFromMonitoring.getObject() instanceof ComplexEventException) {
 		complexEventExceptionHandler.handle(responseFromMonitoring);
 	    } else {
 
 		ComplexEventResponse respObject = (ComplexEventResponse) responseFromMonitoring.getObject();
 
-		logger.debug(">>>>>>> inner \n" + respObject);
-
 		if (isQoSComplexEvent(respObject) && isServiceKnown(respObject) && isCloudNodeKnown(respObject)) {
+		    String serviceId = findService(respObject.getResponseValue());
+		    if (serviceId == null)
+			return;
+		    respObject.setResponseValue(serviceId); // resets
+							    // serviceName to
+		    // serviceId
 		    complexEventResponseHandler.handle(respObject);
 		}
 	    }
 	} catch (ClassCastException asd) {
 	    logger.error("Error while casting message received. It is not a ObjectMessage instance");
 	}
+    }
+
+    private String findService(String instanceId) {
+	for (DeployableService s : chor.getDeployableServices()) {
+	    for (ServiceInstance i : s.getInstances()) {
+		if (i.getInstanceId().equals(instanceId))
+		    return s.getUUID();
+	    }
+	}
+	return null;
     }
 
     private boolean isServiceKnown(ComplexEventResponse respObject) {

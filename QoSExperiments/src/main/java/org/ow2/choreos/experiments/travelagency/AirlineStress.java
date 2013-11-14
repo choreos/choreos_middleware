@@ -34,11 +34,6 @@ public class AirlineStress {
     Logger logger = Logger.getLogger(AirlineStress.class);
 
     static {
-	ModelsForTest.AIRLINE_JAR = "http://www.ime.usp.br/~tfurtado/downloads/airline.jar";
-	ModelsForTest.TRAVEL_AGENCY_JAR = "http://www.ime.usp.br/~tfurtado/downloads/travelagency.jar";
-	ModelsForTest.AIRLINE_WAR = "http://www.ime.usp.br/~tfurtado/downloads/airline.war";
-	ModelsForTest.TRAVEL_AGENCY_WAR = "http://www.ime.usp.br/~tfurtado/downloads/travelagency.war";
-
 	// Deployment Manager should be running
 	enactmentEngine = new ChorDeployerClient("http://localhost:9102/choreographydeployer/");
 	// Choreography Deployer should be running

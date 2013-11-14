@@ -7,6 +7,7 @@ import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
 import org.ow2.choreos.chors.reconfiguration.ComplexEventHandler;
 import org.ow2.choreos.chors.reconfiguration.HandlingEvent;
+import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 
 public class HighResponseTime extends ComplexEventHandler {
@@ -21,13 +22,18 @@ public class HighResponseTime extends ComplexEventHandler {
 
 	Choreography choreography = registryHelper.getChoreography(node, service);
 
-	if (choreography == null)
+	String serviceName = null;
+	for (DeployableService s : choreography.getDeployableServices()) {
+	    if (s.getUUID().equals(service))
+		serviceName = s.getSpec().getName();
+	}
+
+	if (choreography == null || serviceName == null)
 	    return;
 
 	ChoreographySpec choreographySpec = choreography.getChoreographySpec();
 
 	for (DeployableServiceSpec s : choreographySpec.getDeployableServiceSpecs()) {
-
 	    if (s.getName().equals(service)) {
 		logger.debug("Found service spec. Going to increase number of instances");
 		s.setNumberOfInstances(s.getNumberOfInstances() + 1);
@@ -54,5 +60,4 @@ public class HighResponseTime extends ComplexEventHandler {
 	}
 
     }
-
 }
