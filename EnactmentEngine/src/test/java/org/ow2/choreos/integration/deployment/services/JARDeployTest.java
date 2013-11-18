@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.ow2.choreos.deployment.CloudConfiguration;
 import org.ow2.choreos.deployment.LocationsTest;
 import org.ow2.choreos.deployment.nodes.NPMFactory;
 import org.ow2.choreos.deployment.services.ServicesManagerImpl;
@@ -32,8 +33,13 @@ import org.ow2.choreos.utils.LogConfigurator;
 public class JARDeployTest {
 
     public static final String JAR_LOCATION = LocationsTest.get("AIRLINE_JAR");
-    
-    private NodePoolManager npm = NPMFactory.getNewNPMInstance();
+
+    /*
+     * You may edit this attr to the actual cloud account you want to use
+     */
+    private static final String CLOUD_ACCOUNT = CloudConfiguration.DEFAULT;
+
+    private NodePoolManager npm = NPMFactory.getNewNPMInstance(CLOUD_ACCOUNT);
     private ServicesManager deployer = new ServicesManagerImpl();
 
     private WebClient client;
@@ -41,34 +47,34 @@ public class JARDeployTest {
 
     @BeforeClass
     public static void configureLog() {
-        LogConfigurator.configLog();
+	LogConfigurator.configLog();
     }
 
     @Before
     public void setUp() throws Exception {
-        spec.setPackageUri(JAR_LOCATION);
-        spec.setPackageType(PackageType.COMMAND_LINE);
-        spec.setEndpointName("airline");
-        spec.setPort(1234);
+	spec.setPackageUri(JAR_LOCATION);
+	spec.setPackageType(PackageType.COMMAND_LINE);
+	spec.setEndpointName("airline");
+	spec.setPort(1234);
     }
 
     @Test
     public void shouldDeployAJarServiceInANode() throws Exception {
 
-        DeployableService service = deployer.createService(spec);
-        assertNull(service.getInstances());
-        CloudNode node = service.getSelectedNodes().iterator().next();
-        npm.updateNode(node.getId());
-        Thread.sleep(1000);
+	DeployableService service = deployer.createService(spec);
+	assertNull(service.getInstances());
+	CloudNode node = service.getSelectedNodes().iterator().next();
+	npm.updateNode(node.getId());
+	Thread.sleep(1000);
 
-        assertEquals(1, service.getInstances().size());
-        ServiceInstance instance = service.getInstances().get(0);
-        String url = instance.getNativeUri();
-        assertNotNull(url);
-        String wsdl = url.replaceAll("/$", "").concat("?wsdl");
-        System.out.println("Service at " + wsdl);
-        client = WebClient.create(wsdl);
-        Response response = client.get();
-        assertEquals(200, response.getStatus());
+	assertEquals(1, service.getInstances().size());
+	ServiceInstance instance = service.getInstances().get(0);
+	String url = instance.getNativeUri();
+	assertNotNull(url);
+	String wsdl = url.replaceAll("/$", "").concat("?wsdl");
+	System.out.println("Service at " + wsdl);
+	client = WebClient.create(wsdl);
+	Response response = client.get();
+	assertEquals(200, response.getStatus());
     }
 }

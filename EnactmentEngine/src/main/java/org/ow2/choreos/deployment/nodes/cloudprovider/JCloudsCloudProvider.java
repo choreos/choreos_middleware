@@ -34,17 +34,10 @@ public abstract class JCloudsCloudProvider implements CloudProvider {
     private static final String CREATION_TASK_NAME = "NODE_CREATION";
     private static final String DELETION_TASK_NAME = "NODE_DELETION";
 
-    private String identity, credential, provider;
-    private Properties properties;
+    protected String identity, credential, provider;
+    protected Properties properties;
 
     private Logger logger = Logger.getLogger(JCloudsCloudProvider.class);
-
-    public JCloudsCloudProvider(String identity, String credential, String provider, Properties properties) {
-	this.identity = identity;
-	this.credential = credential;
-	this.provider = provider;
-	this.properties = properties;
-    }
 
     protected abstract String getDefaultImageId();
 

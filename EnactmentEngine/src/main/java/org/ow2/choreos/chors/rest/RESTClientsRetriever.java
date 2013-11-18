@@ -4,7 +4,7 @@
 
 package org.ow2.choreos.chors.rest;
 
-import org.ow2.choreos.deployment.nodes.NPMImpl;
+import org.ow2.choreos.deployment.nodes.NPMFactory;
 import org.ow2.choreos.deployment.services.ServicesManagerImpl;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.services.ServicesManager;
@@ -31,9 +31,9 @@ public class RESTClientsRetriever {
 	}
     }
 
-    public static NodePoolManager getNodePoolManager() {
+    public static NodePoolManager getNodePoolManager(String owner) {
 	if (!testing) {
-	    NodePoolManager nodePoolManager = new NPMImpl();
+	    NodePoolManager nodePoolManager = NPMFactory.getNewNPMInstance(owner);
 	    return nodePoolManager;
 	} else {
 	    return npmForTest;

@@ -6,7 +6,6 @@ package org.ow2.choreos.rest;
 
 import org.ow2.choreos.chors.rest.ChorResource;
 import org.ow2.choreos.deployment.nodes.rest.NodesResource;
-import org.ow2.choreos.deployment.nodes.rest.RunListResource;
 import org.ow2.choreos.utils.LogConfigurator;
 
 public class EnactmentEngineServer {
@@ -23,8 +22,7 @@ public class EnactmentEngineServer {
     }
 
     public EnactmentEngineServer() {
-	this.restServer = new RESTServer(NAME, URL, new Class[] { ChorResource.class, NodesResource.class,
-		RunListResource.class });
+	this.restServer = new RESTServer(NAME, URL, new Class[] { ChorResource.class, NodesResource.class });
     }
 
     public void start() {

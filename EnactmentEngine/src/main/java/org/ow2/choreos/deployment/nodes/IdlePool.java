@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
+import org.ow2.choreos.deployment.CloudConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
@@ -40,46 +41,20 @@ public class IdlePool {
     private int threshold;
     private Set<CloudNode> idleNodes = new HashSet<CloudNode>();
     private ExecutorService fillerExecutor = Executors.newSingleThreadExecutor();
+    private CloudConfiguration cloudConfiguration;
 
-    private IdlePool(int poolSize, int threshold) {
-        this.poolSize = poolSize;
-        this.threshold = threshold;
-    }
-
-    /**
-     * Thread safe
-     * 
-     * @param poolSize
-     * @param nodeCreator
-     * @return
-     */
-    public static IdlePool getInstance(int poolSize, int threshold) {
-        synchronized (IdlePool.class) {
-            if (INSTANCE == null) {
-                INSTANCE = new IdlePool(poolSize, threshold);
-            }
-        }
-        return INSTANCE;
-    }
-
-    /**
-     * Not thread safe
-     * 
-     * @param poolSize
-     * @param nodeCreator
-     * @return
-     */
-    public static IdlePool getCleanInstance(int poolSize, int threshold) {
-        INSTANCE = new IdlePool(poolSize, threshold);
-        return INSTANCE;
+    IdlePool(CloudConfiguration cloudConfiguration, int poolSize, int threshold) {
+	this.poolSize = poolSize;
+	this.threshold = threshold;
+	this.cloudConfiguration = cloudConfiguration;
     }
 
     public int getSize() {
-        return poolSize;
+	return poolSize;
     }
 
     public int getThreshold() {
-        return threshold;
+	return threshold;
     }
 
     /**
@@ -87,7 +62,7 @@ public class IdlePool {
      * @return an unmodifiable list with the ids of the nodes in the idle pool
      */
     Set<CloudNode> getIdleNodes() {
-        return Collections.unmodifiableSet(idleNodes);
+	return Collections.unmodifiableSet(idleNodes);
     }
 
     /**
@@ -102,27 +77,27 @@ public class IdlePool {
      */
     public CloudNode retriveNode() throws NodeNotCreatedException {
 
-        if (idleNodes.isEmpty()) {
-            VMCreator vmCreator = new VMCreator();
-            vmCreator.run();
-            if (!vmCreator.ok) {
-                throw new NodeNotCreatedException("");
-            }
-        }
+	if (idleNodes.isEmpty()) {
+	    VMCreator vmCreator = new VMCreator();
+	    vmCreator.run();
+	    if (!vmCreator.ok) {
+		throw new NodeNotCreatedException("");
+	    }
+	}
 
-        synchronized (this) {
-            CloudNode node = idleNodes.iterator().next();
-            idleNodes.remove(node);
-            adaptPoolSize();
-            return node;
-        }
+	synchronized (this) {
+	    CloudNode node = idleNodes.iterator().next();
+	    idleNodes.remove(node);
+	    adaptPoolSize();
+	    return node;
+	}
     }
 
     private void adaptPoolSize() {
-        if (idleNodes.size() <= threshold) {
-            poolSize++;
-            logger.info("Idle pool size has increased to " + poolSize);
-        }
+	if (idleNodes.size() <= threshold) {
+	    poolSize++;
+	    logger.info("Idle pool size has increased to " + poolSize);
+	}
     }
 
     /**
@@ -132,15 +107,15 @@ public class IdlePool {
      * @param nodeCreator
      */
     public void createExtraVMs(int howManyVMs) {
-        for (int i = 0; i < howManyVMs; i++) {
-            VMCreator vmCreator = new VMCreator();
-            Thread thrd = new Thread(vmCreator);
-            thrd.start();
-        }
+	for (int i = 0; i < howManyVMs; i++) {
+	    VMCreator vmCreator = new VMCreator();
+	    Thread thrd = new Thread(vmCreator);
+	    thrd.start();
+	}
     }
 
     public boolean isFull() {
-        return idleNodes.size() >= poolSize;
+	return idleNodes.size() >= poolSize;
     }
 
     /**
@@ -148,49 +123,49 @@ public class IdlePool {
      * client will not wait for the pool be filled.
      */
     public void fillPool() {
-        PoolFiller filler = new PoolFiller();
-        this.fillerExecutor.execute(filler);
+	PoolFiller filler = new PoolFiller();
+	this.fillerExecutor.execute(filler);
     }
-    
+
     public void emptyPool() throws NodeNotDestroyed {
-        NodesDestroyer destroyer = new NodesDestroyer(idleNodes);
-        destroyer.destroyNodes();
+	NodesDestroyer destroyer = new NodesDestroyer(cloudConfiguration, idleNodes);
+	destroyer.destroyNodes();
     }
 
     private class VMCreator implements Runnable {
 
-        boolean ok;
+	boolean ok;
 
-        @Override
-        public void run() {
-            try {
-                NodeCreatorFactory factory = new NodeCreatorFactory();
-                NodeCreator nodeCreator = factory.getNewNodeCreator();
-                CloudNode node = nodeCreator.createBootstrappedNode(new NodeSpec());
-                ok = true;
-                synchronized (IdlePool.this) {
-                    idleNodes.add(node);
-                }
-            } catch (NodeNotCreatedException e) {
-                logger.error("Could not create a VM by the pool");
-                ok = false;
-            }
-        }
+	@Override
+	public void run() {
+	    try {
+		NodeCreatorFactory factory = new NodeCreatorFactory();
+		NodeCreator nodeCreator = factory.getNewNodeCreator(cloudConfiguration);
+		CloudNode node = nodeCreator.createBootstrappedNode(new NodeSpec());
+		ok = true;
+		synchronized (IdlePool.this) {
+		    idleNodes.add(node);
+		}
+	    } catch (NodeNotCreatedException e) {
+		logger.error("Could not create a VM by the pool");
+		ok = false;
+	    }
+	}
     }
 
     private class PoolFiller implements Runnable {
 
-        @Override
-        public void run() {
-            int extra = poolSize - idleNodes.size();
-            if (extra > 0) {
-                ExecutorService executor = Executors.newFixedThreadPool(extra);
-                for (int i = 0; i < extra; i++) {
-                    VMCreator vmCreator = new VMCreator();
-                    executor.execute(vmCreator);
-                }
-                Concurrency.waitExecutor(executor, FILLING_POOL_TIMEOUT_MINUTES, "Could not properly fill the pool.");
-            }
-        }
+	@Override
+	public void run() {
+	    int extra = poolSize - idleNodes.size();
+	    if (extra > 0) {
+		ExecutorService executor = Executors.newFixedThreadPool(extra);
+		for (int i = 0; i < extra; i++) {
+		    VMCreator vmCreator = new VMCreator();
+		    executor.execute(vmCreator);
+		}
+		Concurrency.waitExecutor(executor, FILLING_POOL_TIMEOUT_MINUTES, "Could not properly fill the pool.");
+	    }
+	}
     }
 }

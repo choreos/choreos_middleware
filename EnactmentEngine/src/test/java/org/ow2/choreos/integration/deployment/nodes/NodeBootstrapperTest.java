@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.deployment.DeploymentManagerConfiguration;
+import org.ow2.choreos.deployment.CloudConfiguration;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.deployment.nodes.cm.BootstrapChecker;
@@ -33,9 +33,14 @@ public class NodeBootstrapperTest {
 
     protected CloudNode node;
 
+    /*
+     * You may edit this attr to the actual cloud account you want to use
+     */
+    private static final String CLOUD_ACCOUNT = CloudConfiguration.DEFAULT;
+
     @Before
     public void setUp() {
-        LogConfigurator.configLog();
+	LogConfigurator.configLog();
     }
 
     /**
@@ -46,22 +51,22 @@ public class NodeBootstrapperTest {
     @Test
     public void shouldLeaveNodeBootstraped() throws Exception {
 
-        CloudProviderFactory factory = CloudProviderFactory.getFactoryInstance();
-        CloudProvider cp = factory.getCloudProviderInstance(DeploymentManagerConfiguration.get("CLOUD_PROVIDER"));
-        node = cp.createNode(new NodeSpec());
-        System.out.println(node);
+	CloudProviderFactory factory = CloudProviderFactory.getFactoryInstance();
+	CloudConfiguration cloudConfigurationInstance = CloudConfiguration.getCloudConfigurationInstance(CLOUD_ACCOUNT);
+	CloudProvider cp = factory.getCloudProviderInstance(cloudConfigurationInstance);
+	node = cp.createNode(new NodeSpec());
+	System.out.println(node);
 
-        BootstrapChecker checker = new BootstrapChecker();
-        if (!checker.isBootstrapped(node)) {
-            System.out.println("Going to bootstrap the node");
-            NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
-            bootstrapper.bootstrapNode();
-            System.out.println("Checking if bootstrap was OK");
-            assertTrue(checker.isBootstrapped(node));
-            System.out.println("OK!");
-        } else {
-            System.out.println("Node was already bootstrapped");
-        }
+	BootstrapChecker checker = new BootstrapChecker();
+	if (!checker.isBootstrapped(node)) {
+	    System.out.println("Going to bootstrap the node");
+	    NodeBootstrapper bootstrapper = new NodeBootstrapper(node);
+	    bootstrapper.bootstrapNode();
+	    System.out.println("Checking if bootstrap was OK");
+	    assertTrue(checker.isBootstrapped(node));
+	    System.out.println("OK!");
+	} else {
+	    System.out.println("Node was already bootstrapped");
+	}
     }
-
 }

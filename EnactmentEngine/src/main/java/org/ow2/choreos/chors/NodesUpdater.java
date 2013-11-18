@@ -110,7 +110,7 @@ public class NodesUpdater {
 
 	@Override
 	public Void call() throws Exception {
-	    NodePoolManager npm = RESTClientsRetriever.getNodePoolManager();
+	    NodePoolManager npm = RESTClientsRetriever.getNodePoolManager(owner);
 	    npm.updateNode(nodeId);
 	    return null;
 	}

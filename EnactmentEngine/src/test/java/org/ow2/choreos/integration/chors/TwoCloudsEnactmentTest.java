@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
-import org.ow2.choreos.chors.rest.Owners;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceType;
@@ -20,8 +19,9 @@ import org.ow2.choreos.utils.LogConfigurator;
  * This test will enact a choreography with two services, with a service
  * depending on the other.
  * 
- * Before the test, start two DeploymentManager servers: one in the port 9100
- * and the other in the port 9101
+ * Before the test, make sure that you have two owners configured in
+ * clouds.properties named according the values of the constants
+ * OWNER_FOR_AIRLINE and OWNER_FOR_TRAVEL
  * 
  * @author leonardo
  * 
@@ -29,28 +29,24 @@ import org.ow2.choreos.utils.LogConfigurator;
 @Category(IntegrationTest.class)
 public class TwoCloudsEnactmentTest extends SimpleChorEnactmentTest {
 
-    private static final String DEPLOYER1 = "Deployer1";
-    private static final String DEPLOYER2 = "Deployer2";
-    private static final String DM_URI_1 = "http://localhost:9100/deploymentmanager";
-    private static final String DM_URI_2 = "http://localhost:9101/deploymentmanager";
+    private static final String OWNER_FOR_TRAVEL = "MY_AWS";
+    private static final String OWNER_FOR_AIRLINE = "MY_OPENSTACK";
 
     @BeforeClass
     public static void startServers() {
-        LogConfigurator.configLog();
+	LogConfigurator.configLog();
     }
 
     @Before
     @Override
     public void setUp() {
-        ChoreographyDeployerConfiguration.set("BUS", "false");
-        ChoreographyDeployerConfiguration.set("IDLE_POOL", "false");
-        ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-        DeployableServiceSpec airlineSpec = models.getAirlineSpec();
-        DeployableServiceSpec travelSpec = models.getTravelSpec();
+	ChoreographyDeployerConfiguration.set("BUS", "false");
+	ChoreographyDeployerConfiguration.set("IDLE_POOL", "false");
+	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
+	DeployableServiceSpec airlineSpec = models.getAirlineSpec();
+	DeployableServiceSpec travelSpec = models.getTravelSpec();
 
-        travelSpec.setOwner(DEPLOYER2);
-        airlineSpec.setOwner(DEPLOYER1);
-        Owners.set(DEPLOYER1, DM_URI_1);
-        Owners.set(DEPLOYER2, DM_URI_2);
+	travelSpec.setOwner(OWNER_FOR_TRAVEL);
+	airlineSpec.setOwner(OWNER_FOR_AIRLINE);
     }
 }

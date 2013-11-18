@@ -1,5 +1,6 @@
 package org.ow2.choreos.deployment.nodes.cm;
 
+import org.ow2.choreos.deployment.CloudConfiguration;
 import org.ow2.choreos.deployment.nodes.NodeCreator;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;
@@ -18,46 +19,51 @@ import com.jcraft.jsch.JSchException;
  * 
  */
 public class VMForImageCreator {
-    
+    /*
+     * You may edit this attr to the actual cloud account you want to use
+     */
+    private static final String CLOUD_ACCOUNT = CloudConfiguration.DEFAULT;
+
     public static final String CHEF_SOLO_FOLDER = "chef-solo";
     public static final String EASY_ESB_PACKAGE_URL = "http://valinhos.ime.usp.br:54080/easyesb/easyesb-cd-08.10.13.tar.gz";
     public static final String EASY_ESB_CLI_PACKAGE_URL = "http://valinhos.ime.usp.br:54080/easyesb/easyesb-cli-08.10.13.tar.gz";
-    
+
     private CloudNode node;
 
     public static void main(String[] args) throws Exception {
-        VMForImageCreator creator = new VMForImageCreator();
-        creator.run();
+	VMForImageCreator creator = new VMForImageCreator();
+	creator.run();
     }
 
     public void run() throws Exception {
-        createNode();
-        installTomcat();
-        clearChefFolder();
-        downloadEasyESB();
+	createNode();
+	installTomcat();
+	clearChefFolder();
+	downloadEasyESB();
     }
-    
+
     private void createNode() throws NodeNotCreatedException {
-        NodeCreator nodeCreator = new NodeCreator();
-        node = nodeCreator.createBootstrappedNode(new NodeSpec());
+	CloudConfiguration cloudConfiguration = CloudConfiguration.getCloudConfigurationInstance(CLOUD_ACCOUNT);
+	NodeCreator nodeCreator = new NodeCreator(cloudConfiguration);
+	node = nodeCreator.createBootstrappedNode(new NodeSpec());
     }
 
     private void installTomcat() throws JSchException, SshCommandFailed, NodeNotUpdatedException {
-        SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-        ssh.runCommand("chmod +x " + CHEF_SOLO_FOLDER + "/add_recipe_to_node.sh");
-        ssh.runCommand("./" + CHEF_SOLO_FOLDER + "/add_recipe_to_node.sh tomcat::choreos");
-        NodeUpdater updater = NodeUpdaters.getUpdaterFor(node);
-        updater.update();
+	SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
+	ssh.runCommand("chmod +x " + CHEF_SOLO_FOLDER + "/add_recipe_to_node.sh");
+	ssh.runCommand("./" + CHEF_SOLO_FOLDER + "/add_recipe_to_node.sh tomcat::choreos");
+	NodeUpdater updater = NodeUpdaters.getUpdaterFor(node);
+	updater.update();
     }
 
     private void clearChefFolder() throws JSchException, SshCommandFailed {
-        SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-        ssh.runCommand("rm -rf " + CHEF_SOLO_FOLDER);
+	SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
+	ssh.runCommand("rm -rf " + CHEF_SOLO_FOLDER);
     }
 
     private void downloadEasyESB() throws JSchException, SshCommandFailed {
-        SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-        ssh.runCommand("wget " + EASY_ESB_PACKAGE_URL);
-        ssh.runCommand("wget " + EASY_ESB_CLI_PACKAGE_URL);
+	SshUtil ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
+	ssh.runCommand("wget " + EASY_ESB_PACKAGE_URL);
+	ssh.runCommand("wget " + EASY_ESB_CLI_PACKAGE_URL);
     }
 }

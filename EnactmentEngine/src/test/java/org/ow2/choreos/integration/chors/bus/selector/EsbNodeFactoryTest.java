@@ -14,9 +14,9 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.chors.bus.EasyESBNode;
 import org.ow2.choreos.chors.bus.selector.ESBNodeFactory;
-import org.ow2.choreos.chors.rest.Owners;
+import org.ow2.choreos.deployment.CloudConfiguration;
+import org.ow2.choreos.deployment.nodes.NPMFactory;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.client.NodesClient;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.selectors.ObjectCreationException;
 import org.ow2.choreos.tests.IntegrationTest;
@@ -32,23 +32,24 @@ import org.ow2.choreos.utils.LogConfigurator;
 @Category(IntegrationTest.class)
 public class EsbNodeFactoryTest {
 
+    private static final String CLOUD_ACCOUNT = CloudConfiguration.DEFAULT;
+
     @BeforeClass
     public static void configureLog() {
-        LogConfigurator.configLog();
+	LogConfigurator.configLog();
     }
 
     @Test
     public void sholdCreateEasyESBNode() throws ObjectCreationException {
-        String npmUri = Owners.getDefault();
-        NodePoolManager npm = new NodesClient(npmUri);
-        ESBNodeFactory factory = new ESBNodeFactory(npm);
-        EasyESBNode esbNode = factory.createNewInstance(new ResourceImpact());
-        String endpoint = esbNode.getAdminEndpoint();
-        String url = endpoint + "?wsdl";
-        System.out.println("Acessando " + url);
-        WebClient client = WebClient.create(url);
-        Response response = client.get();
-        assertEquals(200, response.getStatus());
+	NodePoolManager npm = NPMFactory.getNewNPMInstance(CLOUD_ACCOUNT);
+	ESBNodeFactory factory = new ESBNodeFactory(npm);
+	EasyESBNode esbNode = factory.createNewInstance(new ResourceImpact());
+	String endpoint = esbNode.getAdminEndpoint();
+	String url = endpoint + "?wsdl";
+	System.out.println("Acessando " + url);
+	WebClient client = WebClient.create(url);
+	Response response = client.get();
+	assertEquals(200, response.getStatus());
     }
 
 }

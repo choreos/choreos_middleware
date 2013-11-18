@@ -6,6 +6,7 @@ package org.ow2.choreos.deployment.nodes.cloudprovider;
 
 import java.util.List;
 
+import org.ow2.choreos.deployment.CloudConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;
@@ -34,5 +35,7 @@ public interface CloudProvider {
     public void destroyNode(String id) throws NodeNotDestroyed, NodeNotFoundException;
 
     public CloudNode createOrUseExistingNode(NodeSpec nodeSpec) throws NodeNotCreatedException;
+
+    public void setCloudConfiguration(CloudConfiguration cloudConfiguration);
 
 }

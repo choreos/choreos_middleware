@@ -22,12 +22,12 @@ import org.ow2.choreos.chors.bus.EasyESBException;
 import org.ow2.choreos.chors.bus.EasyESBNode;
 import org.ow2.choreos.chors.bus.ProxificationTask;
 import org.ow2.choreos.chors.bus.selector.ESBNodeFactory;
-import org.ow2.choreos.chors.rest.Owners;
+import org.ow2.choreos.deployment.CloudConfiguration;
+import org.ow2.choreos.deployment.nodes.NPMFactory;
 import org.ow2.choreos.deployment.services.ServicesManagerImpl;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.nodes.client.NodesClient;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.selectors.ObjectCreationException;
@@ -67,6 +67,8 @@ public class ProxifyServiceTest {
     private EasyESBNode esbNode;
     private String proxifiedUrl;
 
+    private static final String CLOUD_ACCOUNT = CloudConfiguration.DEFAULT;
+
     @BeforeClass
     public static void configureLog() {
 	LogConfigurator.configLog();
@@ -75,8 +77,7 @@ public class ProxifyServiceTest {
     @Before
     public void setup() {
 	models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-	String host = Owners.getDefault();
-	npm = new NodesClient(host);
+	npm = NPMFactory.getNewNPMInstance(CLOUD_ACCOUNT);
 	sm = new ServicesManagerImpl();
     }
 

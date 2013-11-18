@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.ow2.choreos.deployment.CloudConfiguration;
 import org.ow2.choreos.deployment.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.deployment.nodes.cloudprovider.FixedCloudProvider;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
@@ -26,21 +27,24 @@ import org.ow2.choreos.utils.SshUtil;
 @Category(IntegrationTest.class)
 public class FixedConnectionTest {
 
+    private static final String CLOUD_ACCOUNT = CloudConfiguration.DEFAULT;
+
     @BeforeClass
     public static void setupClass() {
-        LogConfigurator.configLog();
+	LogConfigurator.configLog();
     }
 
     @Test
     public void shouldConnectToTheNode() throws NodeNotCreatedException {
 
-        CloudProvider cp = new FixedCloudProvider();
-        CloudNode node = cp.createOrUseExistingNode(new NodeSpec());
+	CloudProvider cp = new FixedCloudProvider();
+	cp.setCloudConfiguration(CloudConfiguration.getCloudConfigurationInstance(CLOUD_ACCOUNT));
+	CloudNode node = cp.createOrUseExistingNode(new NodeSpec());
 
-        SshUtil ssh = null;
-        ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
-        assertTrue(ssh.isAccessible());
-        ssh.disconnect();
+	SshUtil ssh = null;
+	ssh = new SshUtil(node.getIp(), node.getUser(), node.getPrivateKeyFile());
+	assertTrue(ssh.isAccessible());
+	ssh.disconnect();
     }
 
 }

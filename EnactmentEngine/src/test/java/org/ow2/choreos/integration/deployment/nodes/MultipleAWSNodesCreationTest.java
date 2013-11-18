@@ -12,6 +12,7 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.ow2.choreos.deployment.CloudConfiguration;
 import org.ow2.choreos.deployment.nodes.NPMFactory;
 import org.ow2.choreos.deployment.nodes.cm.BootstrapChecker;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
@@ -36,59 +37,65 @@ import org.ow2.choreos.utils.LogConfigurator;
 public class MultipleAWSNodesCreationTest {
 
     public static final int BUNCH_SIZE = 25;
-    private final NodePoolManager npm = NPMFactory.getNewNPMInstance();
+
+    /*
+     * You may edit this attr to the actual cloud account you want to use
+     */
+    private static final String CLOUD_ACCOUNT = CloudConfiguration.DEFAULT;
+
+    private final NodePoolManager npm = NPMFactory.getNewNPMInstance(CLOUD_ACCOUNT);
 
     @BeforeClass
     public static void setUpClass() {
-        LogConfigurator.configLog();
+	LogConfigurator.configLog();
     }
 
     @Test
     public void shouldLeaveNodesBootstraped() throws Exception {
 
-        List<Thread> trds = new ArrayList<Thread>();
-        List<SingleTest> tests = new ArrayList<SingleTest>();
-        for (int i = 0; i < BUNCH_SIZE; i++) {
-            SingleTest singleTest = new SingleTest(i);
-            Thread t = new Thread(singleTest);
-            trds.add(t);
-            tests.add(singleTest);
-            t.start();
-        }
+	List<Thread> trds = new ArrayList<Thread>();
+	List<SingleTest> tests = new ArrayList<SingleTest>();
+	for (int i = 0; i < BUNCH_SIZE; i++) {
+	    SingleTest singleTest = new SingleTest(i);
+	    Thread t = new Thread(singleTest);
+	    trds.add(t);
+	    tests.add(singleTest);
+	    t.start();
+	}
 
-        for (Thread t : trds) {
-            t.join();
-        }
+	for (Thread t : trds) {
+	    t.join();
+	}
 
-        for (SingleTest test : tests) {
-            assertTrue("Node not created in test " + test.index, test.created);
-            assertTrue("Node not bootstrapped " + test.index, test.bootstrapped);
-            System.out.println("Test " + test.index + " OK.");
-        }
+	for (SingleTest test : tests) {
+	    assertTrue("Node not created in test " + test.index, test.created);
+	    assertTrue("Node not bootstrapped " + test.index, test.bootstrapped);
+	    System.out.println("Test " + test.index + " OK.");
+	}
     }
 
     private class SingleTest implements Runnable {
 
-        int index;
-        boolean created;
-        boolean bootstrapped;
+	int index;
+	boolean created;
+	boolean bootstrapped;
 
-        public SingleTest(int index) {
-            this.index = index;
-        }
+	public SingleTest(int index) {
+	    this.index = index;
+	}
 
-        @Override
-        public void run() {
+	@Override
+	public void run() {
 
-            try {
-                CloudNode node = npm.createNode(new NodeSpec());
-                created = true;
-                BootstrapChecker checker = new BootstrapChecker();
-                bootstrapped = checker.isBootstrapped(node);
-            } catch (NodeNotCreatedException e) {
-                System.out.println("Node not created in " + index + " because " + e.getMessage());
-            }
-        }
+	    try {
+		CloudNode node = npm.createNode(new NodeSpec());
+		created = true;
+		BootstrapChecker checker = new BootstrapChecker();
+		bootstrapped = checker.isBootstrapped(node);
+	    } catch (NodeNotCreatedException e) {
+		System.out.println("Node not created in " + index + " because " + e.getMessage());
+	    }
+	}
 
     }
 

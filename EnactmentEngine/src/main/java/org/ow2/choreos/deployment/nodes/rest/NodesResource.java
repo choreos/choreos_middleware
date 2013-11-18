@@ -32,19 +32,15 @@ import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.nodes.datamodel.NodeSpec;
 
-@Path("nodes")
+@Path("{cloud_account:.+}/nodes")
 public class NodesResource {
 
     private static final Logger logger = Logger.getLogger(NodesResource.class);
 
-    private final NodePoolManager npm = NPMFactory.getNewNPMInstance();
-
     /**
      * POST /nodes
      * 
-     * Create an active node.
-     * 
-     * Body: node spec
+     * Create an active node. selector Body: node spec
      * 
      * @param nodeSpec
      *            passed in the body
@@ -57,12 +53,14 @@ public class NodesResource {
      */
     @POST
     @Consumes(MediaType.APPLICATION_XML)
-    public Response createNode(NodeSpec nodeSpec, @Context UriInfo uriInfo) throws URISyntaxException {
+    public Response createNode(@PathParam("cloud_accout") String cloudAccount, NodeSpec nodeSpec,
+	    @Context UriInfo uriInfo) throws URISyntaxException {
 
 	logger.debug("Request to create node");
 
 	CloudNode node = null;
 	try {
+	    NodePoolManager npm = NPMFactory.getNewNPMInstance(cloudAccount);
 	    node = npm.createNode(nodeSpec);
 	} catch (NodeNotCreatedException e) {
 	    logger.warn("Node not created", e);
@@ -74,15 +72,16 @@ public class NodesResource {
 	URI uri = uriBuilder.build();
 	return Response.created(uri).entity(node).build();
     }
-    
+
     // hack to help in varying EE conf during experiments
     @PUT
     @Path("vm_limit")
     @Consumes(MediaType.TEXT_PLAIN)
-    public Response setVMLimit(String vmLimit, @Context UriInfo uriInfo) throws URISyntaxException {
-        logger.debug("Changing VM Limit to " + vmLimit);
-        DeploymentManagerConfiguration.set("VM_LIMIT", vmLimit);
-        return Response.ok().build();
+    public Response setVMLimit(@PathParam("cloud_accout") String cloudAccount, String vmLimit, @Context UriInfo uriInfo)
+	    throws URISyntaxException {
+	logger.debug("Changing VM Limit to " + vmLimit);
+	DeploymentManagerConfiguration.set("VM_LIMIT", vmLimit);
+	return Response.ok().build();
     }
 
     /**
@@ -97,12 +96,13 @@ public class NodesResource {
      */
     @GET
     @Path("{node_id:.+}")
-    public Response getNode(@PathParam("node_id") String nodeId) {
+    public Response getNode(@PathParam("cloud_accout") String cloudAccount, @PathParam("node_id") String nodeId) {
 
 	logger.debug("Request to get node " + nodeId);
 
 	Response response;
 	try {
+	    NodePoolManager npm = NPMFactory.getNewNPMInstance(cloudAccount);
 	    CloudNode node = npm.getNode(nodeId);
 	    response = Response.ok(node).build();
 	} catch (NodeNotFoundException e) {
@@ -125,12 +125,13 @@ public class NodesResource {
      */
     @POST
     @Path("{node_id:.+}/update")
-    public Response updateNode(@PathParam("node_id") String nodeId) {
+    public Response updateNode(@PathParam("cloud_accout") String cloudAccount, @PathParam("node_id") String nodeId) {
 
 	logger.debug("Request to update node " + nodeId);
 
 	Response response;
 	try {
+	    NodePoolManager npm = NPMFactory.getNewNPMInstance(cloudAccount);
 	    npm.updateNode(nodeId);
 	    logger.info("Node " + nodeId + " updated");
 	    response = Response.status(Status.OK).build();
@@ -147,13 +148,14 @@ public class NodesResource {
 
     @DELETE
     @Path("{node_id:.+}")
-    public Response deleteNode(@PathParam("node_id") String nodeId) {
+    public Response deleteNode(@PathParam("cloud_accout") String cloudAccount, @PathParam("node_id") String nodeId) {
 
 	logger.debug("Request to delete node " + nodeId);
 
 	Response response;
 	try {
-	    this.npm.destroyNode(nodeId);
+	    NodePoolManager npm = NPMFactory.getNewNPMInstance(cloudAccount);
+	    npm.destroyNode(nodeId);
 	    response = Response.status(Status.OK).build();
 	    logger.info("Node " + nodeId + " deleted");
 	} catch (NodeNotDestroyed e) {
@@ -166,16 +168,17 @@ public class NodesResource {
 
 	return response;
     }
-    
+
     @DELETE
-    public Response deleteNodes() {
-        logger.info("Request to delete all the nodes");
-        try {
-            npm.destroyNodes();
-            return Response.ok().build();
-        } catch (NodeNotDestroyed e) {
-            return Response.serverError().build();
-        }
+    public Response deleteNodes(@PathParam("cloud_accout") String cloudAccount) {
+	logger.info("Request to delete all the nodes");
+	try {
+	    NodePoolManager npm = NPMFactory.getNewNPMInstance(cloudAccount);
+	    npm.destroyNodes();
+	    return Response.ok().build();
+	} catch (NodeNotDestroyed e) {
+	    return Response.serverError().build();
+	}
     }
 
 }
