@@ -7,7 +7,6 @@ package org.ow2.choreos.integration.chors;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.chors.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceType;
@@ -29,8 +28,8 @@ import org.ow2.choreos.utils.LogConfigurator;
 @Category(IntegrationTest.class)
 public class TwoCloudsEnactmentTest extends SimpleChorEnactmentTest {
 
-    private static final String OWNER_FOR_TRAVEL = "MY_AWS";
-    private static final String OWNER_FOR_AIRLINE = "MY_OPENSTACK";
+    private static final String OWNER_FOR_TRAVEL = "AWS_ACCOUNT";
+    private static final String OWNER_FOR_AIRLINE = "AWS_ACCOUNT_COPY";
 
     @BeforeClass
     public static void startServers() {
@@ -40,8 +39,7 @@ public class TwoCloudsEnactmentTest extends SimpleChorEnactmentTest {
     @Before
     @Override
     public void setUp() {
-	ChoreographyDeployerConfiguration.set("BUS", "false");
-	ChoreographyDeployerConfiguration.set("IDLE_POOL", "false");
+	super.setUp();
 	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
 	DeployableServiceSpec airlineSpec = models.getAirlineSpec();
 	DeployableServiceSpec travelSpec = models.getTravelSpec();
