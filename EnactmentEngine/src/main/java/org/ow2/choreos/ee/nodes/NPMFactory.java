@@ -1,6 +1,6 @@
 package org.ow2.choreos.ee.nodes;
 
-import org.ow2.choreos.ee.CloudConfiguration;
+import org.ow2.choreos.ee.config.CloudConfiguration;
 import org.ow2.choreos.nodes.NodePoolManager;
 
 public class NPMFactory {

@@ -7,8 +7,8 @@ package org.ow2.choreos.ee.nodes;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.ee.CloudConfiguration;
-import org.ow2.choreos.ee.DeploymentManagerConfiguration;
+import org.ow2.choreos.ee.config.CloudConfiguration;
+import org.ow2.choreos.ee.config.DeploymentManagerConfiguration;
 import org.ow2.choreos.ee.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.ee.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.ee.nodes.cloudprovider.FixedCloudProvider;

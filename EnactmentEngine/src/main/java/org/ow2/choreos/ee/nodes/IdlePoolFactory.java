@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.ee.CloudConfiguration;
-import org.ow2.choreos.ee.DeploymentManagerConfiguration;
+import org.ow2.choreos.ee.config.CloudConfiguration;
+import org.ow2.choreos.ee.config.DeploymentManagerConfiguration;
 
 public class IdlePoolFactory {
 

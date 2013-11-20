@@ -13,9 +13,8 @@ import java.util.regex.Pattern;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.ow2.choreos.ee.CloudConfiguration;
-import org.ow2.choreos.ee.nodes.cloudprovider.CloudProvider;
-import org.ow2.choreos.ee.nodes.cloudprovider.FixedCloudProvider;
+import org.ow2.choreos.ee.config.CloudConfiguration;
+import org.ow2.choreos.ee.config.QoSManagementConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
@@ -31,6 +30,7 @@ public class FixedCloudProviderTest {
     public void setUp() {
 	LogConfigurator.configLog();
 	cloudConfiguration = CloudConfiguration.getCloudConfigurationInstance(DEFAULT_CLOUD_ACCOUNT);
+	QoSManagementConfiguration.set(QoSManagementConfiguration.MAPPER_POLICY, "ANY_FIT");
     }
 
     @Test
@@ -61,7 +61,6 @@ public class FixedCloudProviderTest {
 	cloudConfiguration.set("FIXED_VM_PRIVATE_SSH_KEYS", "key, samekey");
 	cloudConfiguration.set("FIXED_VM_USERS", "choreos, choreos");
 	cloudConfiguration.set("FIXED_VM_TYPES", "SMALL, SMALL");
-	cloudConfiguration.set("MAPPER_POLICY", "ANY_FIT");
 
 	CloudProvider cp = new FixedCloudProvider();
 	cp.setCloudConfiguration(cloudConfiguration);

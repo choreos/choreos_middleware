@@ -4,7 +4,6 @@
 
 package org.ow2.choreos.ee.nodes.cm;
 
-
 import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
@@ -12,8 +11,8 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.ee.DeploymentManagerConfiguration;
-import org.ow2.choreos.ee.Locations;
+import org.ow2.choreos.ee.config.Locations;
+import org.ow2.choreos.ee.config.QoSManagementConfiguration;
 import org.ow2.choreos.invoker.Invoker;
 import org.ow2.choreos.invoker.InvokerException;
 import org.ow2.choreos.invoker.InvokerFactory;
@@ -40,15 +39,14 @@ public class NodeBootstrapper {
     public static final String CHEF_SOLO_FOLDER = "chef-solo";
 
     private CloudNode node;
-    private boolean usingHarakiri = false;
-    private boolean usingMonitoring = false;
+    private boolean usingQoSManagement = false;
 
     private Logger logger = Logger.getLogger(NodeBootstrapper.class);
 
     public NodeBootstrapper(CloudNode node) {
 	this.node = node;
-	this.usingHarakiri = Boolean.parseBoolean(DeploymentManagerConfiguration.get("HARAKIRI"));
-	this.usingMonitoring = Boolean.parseBoolean(DeploymentManagerConfiguration.get("MONITORING"));
+	this.usingQoSManagement = Boolean.parseBoolean(QoSManagementConfiguration
+		.get(QoSManagementConfiguration.QOS_MGMT));
     }
 
     public void bootstrapNode() throws NodeNotAccessibleException, NodeNotBootstrappedException {
@@ -60,10 +58,10 @@ public class NodeBootstrapper {
 	saveFile(REMOVE_RECIPE_FROM_NODE, CHEF_SOLO_FOLDER);
 	saveFile(INITIAL_NODE_JSON, CHEF_SOLO_FOLDER);
 	saveFile(INITIAL_NODE_JSON, CHEF_SOLO_FOLDER + "/node.json.backup");
-	if (usingHarakiri)
+	if (usingQoSManagement) {
 	    setUpHarakiri();
-	if (usingMonitoring)
 	    setUpMonitoring();
+	}
 	logger.info("Bootstrap completed at " + this.node);
     }
 
@@ -87,8 +85,8 @@ public class NodeBootstrapper {
 
     private void setUpHarakiri() {
 	Map<String, String> substitutions = new HashMap<String, String>();
-	String externalDeplManURL = DeploymentManagerConfiguration.get("EXTERNAL_DEPLOYMENT_MANAGER_URL");
-	substitutions.put("$THE_URL", externalDeplManURL);
+	String enactmentEngineURL = QoSManagementConfiguration.get(QoSManagementConfiguration.ENACTMENT_ENGINE_URL);
+	substitutions.put("$THE_URL", enactmentEngineURL);
 	substitutions.put("$THE_ID", node.getId());
 	int timeout = 1;
 	NodeSetup harakiriSetup = NodeSetup.getInstance(node, SETUP_HARAKIRI_SCRIPT, timeout, substitutions);
@@ -101,7 +99,8 @@ public class NodeBootstrapper {
 
     private void setUpMonitoring() {
 	Map<String, String> substitutions = new HashMap<String, String>();
-	substitutions.put("$THE_IP", DeploymentManagerConfiguration.get("RESOURCE_METRIC_AGGREGATOR"));
+	substitutions.put("$THE_IP",
+		QoSManagementConfiguration.get(QoSManagementConfiguration.RESOURCE_METRIC_AGGREGATOR));
 	int timeout = 1;
 	NodeSetup monitoringSetup = NodeSetup.getInstance(node, SETUP_MONITORING_SCRIPT, timeout, substitutions);
 	try {
@@ -113,8 +112,8 @@ public class NodeBootstrapper {
 
     private void saveFile(String source, String target) throws NodeNotBootstrappedException {
 	ScpTask task = new ScpTask(source, target);
-        InvokerFactory<Void> factory = new InvokerFactory<Void>();
-        Invoker<Void> invoker = factory.geNewInvokerInstance("SCP", task);
+	InvokerFactory<Void> factory = new InvokerFactory<Void>();
+	Invoker<Void> invoker = factory.geNewInvokerInstance("SCP", task);
 	try {
 	    invoker.invoke();
 	} catch (InvokerException e) {

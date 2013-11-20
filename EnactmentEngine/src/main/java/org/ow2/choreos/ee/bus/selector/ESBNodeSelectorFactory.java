@@ -1,7 +1,7 @@
 package org.ow2.choreos.ee.bus.selector;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.ee.ChoreographyDeployerConfiguration;
+import org.ow2.choreos.ee.config.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.utils.Configuration;
 import org.ow2.choreos.utils.SingletonsFactory;
 

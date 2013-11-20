@@ -1,6 +1,6 @@
 package org.ow2.choreos.ee.nodes.cm;
 
-import org.ow2.choreos.ee.CloudConfiguration;
+import org.ow2.choreos.ee.config.CloudConfiguration;
 import org.ow2.choreos.ee.nodes.NodeCreator;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;

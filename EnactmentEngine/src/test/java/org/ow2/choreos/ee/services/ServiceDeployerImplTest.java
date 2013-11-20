@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.ow2.choreos.ee.DeploymentManagerConfiguration;
+import org.ow2.choreos.ee.config.DeploymentManagerConfiguration;
 import org.ow2.choreos.ee.services.ServicesManagerImpl;
 import org.ow2.choreos.ee.services.preparer.PrepareDeploymentFailedException;
 import org.ow2.choreos.ee.services.preparer.ServiceDeploymentPreparer;

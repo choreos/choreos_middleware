@@ -7,7 +7,7 @@ package org.ow2.choreos.integration.ee;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.ee.ChoreographyDeployerConfiguration;
+import org.ow2.choreos.ee.config.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;

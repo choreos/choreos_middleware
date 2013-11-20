@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.ee.CloudConfiguration;
+import org.ow2.choreos.ee.config.CloudConfiguration;
 import org.ow2.choreos.ee.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.ee.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.nodes.NodeNotDestroyed;

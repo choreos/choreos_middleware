@@ -10,6 +10,7 @@ import org.ow2.choreos.chors.datamodel.LegacyService;
 import org.ow2.choreos.ee.bus.ServicesProxifier;
 import org.ow2.choreos.ee.bus.TopologyConfigurator;
 import org.ow2.choreos.ee.bus.TopologyNotConfigureException;
+import org.ow2.choreos.ee.config.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.ee.context.ContextCaster;
 import org.ow2.choreos.services.datamodel.DeployableService;
 

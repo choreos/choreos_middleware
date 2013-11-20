@@ -5,7 +5,7 @@
 package org.ow2.choreos.ee.nodes.cloudprovider;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.ee.CloudConfiguration;
+import org.ow2.choreos.ee.config.CloudConfiguration;
 import org.ow2.choreos.utils.Configuration;
 import org.ow2.choreos.utils.SingletonsFactory;
 

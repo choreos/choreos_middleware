@@ -2,9 +2,9 @@ package org.ow2.choreos.ee.bus.selector;
 
 import java.util.List;
 
-import org.ow2.choreos.ee.ChoreographyDeployerConfiguration;
-import org.ow2.choreos.ee.CloudConfiguration;
 import org.ow2.choreos.ee.bus.EasyESBNode;
+import org.ow2.choreos.ee.config.ChoreographyDeployerConfiguration;
+import org.ow2.choreos.ee.config.CloudConfiguration;
 import org.ow2.choreos.ee.nodes.NPMFactory;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.ResourceImpact;

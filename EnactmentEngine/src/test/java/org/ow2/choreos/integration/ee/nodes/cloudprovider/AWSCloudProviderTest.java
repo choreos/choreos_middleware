@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.ee.DeploymentManagerConfiguration;
+import org.ow2.choreos.ee.config.DeploymentManagerConfiguration;
 import org.ow2.choreos.ee.nodes.cloudprovider.AWSCloudProvider;
 import org.ow2.choreos.ee.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.nodes.NodeNotCreatedException;

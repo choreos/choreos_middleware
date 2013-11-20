@@ -6,7 +6,7 @@ package org.ow2.choreos.ee.nodes.cloudprovider;
 
 import java.util.List;
 
-import org.ow2.choreos.ee.CloudConfiguration;
+import org.ow2.choreos.ee.config.CloudConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotDestroyed;
 import org.ow2.choreos.nodes.NodeNotFoundException;

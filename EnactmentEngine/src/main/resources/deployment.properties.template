@@ -1,18 +1,8 @@
-DEPLOYMENT_MANAGER_PORT=9100
-EXTERNAL_DEPLOYMENT_MANAGER_URL=http://192.168.48.115:9100/deploymentmanager
-HARAKIRI=false
-MONITORING=false
-DELETE_GLIMPSE_NODE_ON_STOP_SERVER=false
-
 # Values in node_selector.properties
 NODE_SELECTOR=ALWAYS_CREATE
 # set if using LIMITED_ROUND_ROBIN 
 VM_LIMIT=0 
 
-# User defined machine sizes to be used on FIXED_VM_TYPES
-NODE_TYPES=SMALL,MEDIUM,LARGE
-# Can be also ANY_FIT 
-MAPPER_POLICY=EXACT_FIT 
 # Maximum number of VMs that can be created (like AWS VM limit)
 VM_LIMIT=5 
 

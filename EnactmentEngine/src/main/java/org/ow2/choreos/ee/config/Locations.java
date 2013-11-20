@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-package org.ow2.choreos.ee;
+package org.ow2.choreos.ee.config;
 
 import java.io.IOException;
 import java.util.Properties;

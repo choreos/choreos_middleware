@@ -10,7 +10,7 @@ import static org.mockito.Mockito.mock;
 
 import org.junit.After;
 import org.junit.Test;
-import org.ow2.choreos.ee.CloudConfiguration;
+import org.ow2.choreos.ee.config.CloudConfiguration;
 import org.ow2.choreos.ee.nodes.IdlePool;
 import org.ow2.choreos.ee.nodes.IdlePoolFactory;
 import org.ow2.choreos.ee.nodes.NPMFactory;

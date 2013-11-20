@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ow2.choreos.ee.DeploymentManagerConfiguration;
+import org.ow2.choreos.ee.config.DeploymentManagerConfiguration;
 import org.ow2.choreos.ee.nodes.NPMFactory;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.CloudNode;

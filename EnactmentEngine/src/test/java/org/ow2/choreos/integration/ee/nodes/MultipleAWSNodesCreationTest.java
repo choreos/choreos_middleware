@@ -12,7 +12,7 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.ow2.choreos.ee.CloudConfiguration;
+import org.ow2.choreos.ee.config.CloudConfiguration;
 import org.ow2.choreos.ee.nodes.NPMFactory;
 import org.ow2.choreos.ee.nodes.cm.BootstrapChecker;
 import org.ow2.choreos.nodes.NodeNotCreatedException;

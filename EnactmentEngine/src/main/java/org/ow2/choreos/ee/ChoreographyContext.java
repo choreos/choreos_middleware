@@ -2,11 +2,13 @@ package org.ow2.choreos.ee;
 
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
+import org.ow2.choreos.ee.config.QoSManagementConfiguration;
 import org.ow2.choreos.ee.reconfiguration.GlimpseConsumer;
 
 public class ChoreographyContext {
 
-    private static final boolean qosMgMt = Boolean.parseBoolean(ChoreographyDeployerConfiguration.get("QOS_MGMT"));
+    private static final boolean qosMgMt = Boolean.parseBoolean(QoSManagementConfiguration
+	    .get(QoSManagementConfiguration.QOS_MGMT));
 
     private Choreography chor;
     private ChoreographySpec requestedChoreographySpec;

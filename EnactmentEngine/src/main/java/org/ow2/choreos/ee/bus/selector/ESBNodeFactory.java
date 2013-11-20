@@ -1,11 +1,11 @@
 package org.ow2.choreos.ee.bus.selector;
 
 import org.apache.log4j.Logger;
-import org.ow2.choreos.ee.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.ee.bus.ESBRegister;
 import org.ow2.choreos.ee.bus.EasyESBException;
 import org.ow2.choreos.ee.bus.EasyESBNode;
 import org.ow2.choreos.ee.bus.EasyESBNodeImpl;
+import org.ow2.choreos.ee.config.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.nodes.NodeNotCreatedException;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;

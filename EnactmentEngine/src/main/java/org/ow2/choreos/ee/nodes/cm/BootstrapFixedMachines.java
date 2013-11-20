@@ -6,7 +6,7 @@ package org.ow2.choreos.ee.nodes.cm;
 
 import java.util.List;
 
-import org.ow2.choreos.ee.CloudConfiguration;
+import org.ow2.choreos.ee.config.CloudConfiguration;
 import org.ow2.choreos.ee.nodes.cloudprovider.CloudProvider;
 import org.ow2.choreos.ee.nodes.cloudprovider.CloudProviderFactory;
 import org.ow2.choreos.nodes.NodeNotAccessibleException;

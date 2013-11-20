@@ -10,7 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.ow2.choreos.ee.DeploymentManagerConfiguration;
+import org.ow2.choreos.ee.config.DeploymentManagerConfiguration;
 import org.ow2.choreos.ee.nodes.cm.NodeBootstrapper;
 import org.ow2.choreos.ee.nodes.cm.NodeSetup;
 import org.ow2.choreos.nodes.datamodel.CloudNode;

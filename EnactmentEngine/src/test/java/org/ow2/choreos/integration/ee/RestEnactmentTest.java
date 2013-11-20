@@ -16,7 +16,7 @@ import org.ow2.choreos.chors.ChoreographyDeployer;
 import org.ow2.choreos.chors.client.ChorDeployerClient;
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
-import org.ow2.choreos.ee.ChoreographyDeployerConfiguration;
+import org.ow2.choreos.ee.config.ChoreographyDeployerConfiguration;
 import org.ow2.choreos.ee.rest.EnactmentEngineServer;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.PackageType;
