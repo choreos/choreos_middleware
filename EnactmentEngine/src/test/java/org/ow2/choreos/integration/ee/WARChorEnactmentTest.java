@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Category;
 import org.ow2.choreos.ee.config.ChoreographyDeployerConfiguration;
+import org.ow2.choreos.ee.config.QoSManagementConfiguration;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceType;
 import org.ow2.choreos.tests.IntegrationTest;
@@ -28,16 +29,17 @@ public class WARChorEnactmentTest extends SimpleChorEnactmentTest {
 
     @BeforeClass
     public static void startServers() {
-        LogConfigurator.configLog();
+	LogConfigurator.configLog();
     }
 
     @Before
     @Override
     public void setUp() {
-        ChoreographyDeployerConfiguration.set("BUS", "false");
-        ChoreographyDeployerConfiguration.set("IDLE_POOL", "false");
-        ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT);
-        super.chorSpec = models.getChorSpec();
+	ChoreographyDeployerConfiguration.set("BUS", "false");
+	ChoreographyDeployerConfiguration.set("IDLE_POOL", "false");
+	QoSManagementConfiguration.set(QoSManagementConfiguration.QOS_MGMT, "False");
+	ModelsForTest models = new ModelsForTest(ServiceType.SOAP, PackageType.TOMCAT);
+	super.chorSpec = models.getChorSpec();
     }
 
 }

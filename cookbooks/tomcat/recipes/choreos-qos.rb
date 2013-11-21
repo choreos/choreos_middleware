@@ -28,3 +28,14 @@ execute 'set_permissions' do
   action :run
   notifies :restart, resources(:service => "tomcat")
 end
+
+template "/etc/tomcat6/server.xml" do
+  source "server-choreos.xml.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+  variables({
+     :glimpseHost => "81.200.35.154"
+  })
+  notifies :restart, resources(:service => "tomcat")
+end
