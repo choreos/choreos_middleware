@@ -5,6 +5,7 @@
 
 # arg $1 package URL
 # arg $2 cookbook template name
+# arg $3 no-qos or qos
 
 function copy_template() {
     cd $HOME/chef-solo
@@ -14,12 +15,19 @@ function copy_template() {
 
 function edit_recipe() {
     # edit recipe replacing: $NAME, $PACKAGE_URL
-    cd cookbooks/$3
+    cd cookbooks/$4
     sed -i '/\$PACKAGE_URL/ s##'"$1"'#g' attributes/default.rb
-    sed -i '/\$NAME/ s##'"$3"'#g' attributes/default.rb
-    sed -i '/\$NAME/ s##'"$3"'#g' recipes/default.rb	
-    sed -i '/\$NAME/ s##'"$3"'#g' recipes/remove.rb
-    echo "Cookbook $3 edited"
+    sed -i '/\$NAME/ s##'"$4"'#g' attributes/default.rb
+    sed -i '/\$NAME/ s##'"$4"'#g' recipes/default.rb
+    sed -i '/\$NAME/ s##'"$4"'#g' recipes/remove.rb
+	
+	if [ "$3" == "qos" ]
+	then
+	    echo "Setting up tomcat recipe with QoS"
+		sed -i 's/tomcat::choreos/tomcat::choreos-qos/' recipes/default.rb
+	fi
+
+    echo "Cookbook $4 edited"
 }
 
 function edit_json() {
@@ -32,11 +40,11 @@ function prepare() {
     echo '==========================='
     echo "Preparing $2 deployment of $instance_uuid at `date`"
     copy_template $1 $2 $instance_uuid
-    edit_recipe $1 $2 $instance_uuid
+    edit_recipe $1 $2 $3 $instance_uuid
     edit_json $1 $2 $instance_uuid
     echo "Instance $instance_uuid is prepared"
 }
 
-prepare $1 $2 >> /tmp/chef-solo-prepare.log  2>&1 
+prepare $1 $2 $3 >> /tmp/chef-solo-prepare.log  2>&1 
 echo $instance_uuid | tr -d '\n'
 

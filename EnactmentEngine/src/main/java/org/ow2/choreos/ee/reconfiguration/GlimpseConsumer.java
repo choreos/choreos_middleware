@@ -6,10 +6,12 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.ee.ChoreographyContext;
+import org.ow2.choreos.ee.config.QoSManagementConfiguration;
 
 public class GlimpseConsumer implements Runnable {
 
-    private static final String namingURL = "tcp://10.0.0.15:61616";
+    private static final String namingURL = "tcp://"
+	    + QoSManagementConfiguration.get(QoSManagementConfiguration.RESOURCE_METRIC_AGGREGATOR) + ":61616";
 
     private final ChoreographyContext context;
 

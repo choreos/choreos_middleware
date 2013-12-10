@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.ow2.choreos.ee.nodes.cm.NodePreparer;
+import org.ow2.choreos.ee.config.QoSManagementConfiguration;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
 import org.ow2.choreos.utils.SshCommandFailed;
 import org.ow2.choreos.utils.SshNotConnected;
@@ -28,6 +28,7 @@ public class NodePreparerTest {
 
     @Before
     public void setUp() throws Exception {
+	QoSManagementConfiguration.set(QoSManagementConfiguration.QOS_MGMT, "False");
 	setNode();
 	setSsh();
     }
@@ -50,7 +51,8 @@ public class NodePreparerTest {
     public void shouldRunPrepareScript() throws Exception {
 	final String packageUri = "http://choreos.eu/airline.jar";
 	final String cookbookTemplateName = "jar";
-	final String expectedCommand = ". chef-solo/prepare_deployment.sh " + packageUri + " " + cookbookTemplateName;
+	final String expectedCommand = ". chef-solo/prepare_deployment.sh " + packageUri + " " + cookbookTemplateName
+		+ " no-qos";
 	NodePreparer preparer = new NodePreparer(node);
 	preparer.sshWaiter = waiter;
 	String instanceId = preparer.prepareNodeForDeployment(packageUri, cookbookTemplateName);

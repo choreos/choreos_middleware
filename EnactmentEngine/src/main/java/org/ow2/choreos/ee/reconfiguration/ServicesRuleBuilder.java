@@ -20,6 +20,7 @@ public class ServicesRuleBuilder {
 
     private static final String SERVICE_ID_PLACEHOLDER = "@{service_id}";
     private static final String CHOR_ID_PLACEHOLDER = "@{chor_id}";
+    private static final String SERVICE_NODE = "@{service_node}";
     private static final String ACCEPTABLE_PERCENTAGE_RESPONSE_TIME_PLACEHOLDER = "@{acceptable_precentage}";
     private static final String MAX_RESPONSE_TIME_PLACEHOLDER = "@{max_response_time}";
     private static final String MAX_CPU_USAGE_PLACEHOLDER = "@{max_cpu_usage}";
@@ -64,6 +65,7 @@ public class ServicesRuleBuilder {
 
 	    String instanceRule = tmp
 		    .toString()
+		    .replace(SERVICE_NODE, instance.getNode().getIp())
 		    .replace(SERVICE_ID_PLACEHOLDER, instance.getInstanceId())
 		    .replace(CHOR_ID_PLACEHOLDER, chorID)
 		    .replace(ACCEPTABLE_PERCENTAGE_RESPONSE_TIME_PLACEHOLDER,

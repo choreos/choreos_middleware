@@ -12,7 +12,6 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.ow2.choreos.ee.config.CloudConfiguration;
-import org.ow2.choreos.ee.config.DeploymentManagerConfiguration;
 
 public class OpenStackKeystoneCloudProvider extends JCloudsCloudProvider {
 
@@ -67,7 +66,7 @@ public class OpenStackKeystoneCloudProvider extends JCloudsCloudProvider {
 
     @Override
     protected String getHardwareId() {
-	String flavorName = DeploymentManagerConfiguration.get("OPENSTACK_FLAVOR_NAME");
+	String flavorName = cloudConfiguration.get("OPENSTACK_FLAVOR_NAME");
 	if (flavorName == null || flavorName.isEmpty())
 	    flavorName = DEFAULT_FLAVOR_NAME;
 	for (Hardware profile : getComputeService().listHardwareProfiles()) {
@@ -91,7 +90,7 @@ public class OpenStackKeystoneCloudProvider extends JCloudsCloudProvider {
     @Override
     protected void configureTemplateOptions(TemplateOptions templateOptions) {
 	NovaTemplateOptions options = templateOptions.as(NovaTemplateOptions.class);
-	options.keyPairName(DeploymentManagerConfiguration.get("OPENSTACK_KEY_PAIR"));
+	options.keyPairName(cloudConfiguration.get("OPENSTACK_KEY_PAIR"));
 	options.securityGroupNames("default");
     }
 

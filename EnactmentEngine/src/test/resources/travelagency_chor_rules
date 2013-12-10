@@ -68,6 +68,10 @@ then
 		(String) $aEvent.getServiceSource(),
 		(String) $aEvent.getChoreographySource())
 	);
+	ResponseDispatcher.LogViolation(
+		drools.getRule().getName(),
+		"Resource Metric Aggregator",
+		"SLA resource measurement: " + (String) $aEvent.getServiceSource());
 	retract ($aEvent);
 end
 
@@ -170,6 +174,10 @@ then
 		(String) $aEvent.getServiceSource(),
 		(String) $aEvent.getChoreographySource())
 	);
+	ResponseDispatcher.LogViolation(
+		drools.getRule().getName(),
+		"Resource Metric Aggregator",
+		"SLA resource measurement: " + (String) $aEvent.getServiceSource());
 	retract ($aEvent);
 end
 
