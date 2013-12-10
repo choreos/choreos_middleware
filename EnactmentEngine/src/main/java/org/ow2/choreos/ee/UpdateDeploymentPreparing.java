@@ -11,10 +11,9 @@ import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.EnactmentException;
-import org.ow2.choreos.ee.rest.RESTClientsRetriever;
+import org.ow2.choreos.ee.services.update.ServiceUpdater;
 import org.ow2.choreos.services.ServiceNotFoundException;
 import org.ow2.choreos.services.ServiceNotModifiedException;
-import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.UnhandledModificationException;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
@@ -58,9 +57,8 @@ public class UpdateDeploymentPreparing {
 	for (Entry<DeployableService, DeployableServiceSpec> entry : toUpdate.entrySet()) {
 	    DeployableService service = entry.getKey();
 	    DeployableServiceSpec spec = entry.getValue();
-	    String uuid = service.getUUID();
 	    logger.debug("Requesting update of " + spec);
-	    ServiceUpdateInvoker invoker = new ServiceUpdateInvoker(uuid, spec);
+	    ServiceUpdateInvoker invoker = new ServiceUpdateInvoker(service, spec);
 	    Future<DeployableService> future = executor.submit(invoker);
 	    futures.add(future);
 	}
@@ -84,31 +82,23 @@ public class UpdateDeploymentPreparing {
     private class ServiceUpdateInvoker implements Callable<DeployableService> {
 
 	private DeployableServiceSpec serviceSpec;
-	private String serviceUUID;
+	private DeployableService service;
 
-	public ServiceUpdateInvoker(String serviceUUID, DeployableServiceSpec serviceSpec) {
+	public ServiceUpdateInvoker(DeployableService service, DeployableServiceSpec serviceSpec) {
 	    this.serviceSpec = serviceSpec;
-	    this.serviceUUID = serviceUUID;
+	    this.service = service;
 	}
 
 	@Override
 	public DeployableService call() throws UnhandledModificationException, ServiceNotFoundException,
 		ServiceNotModifiedException {
-
-	    String owner = serviceSpec.getOwner();
-	    ServicesManager servicesManager = RESTClientsRetriever.getServicesManager();
+	    ServiceUpdater servicesManager = new ServiceUpdater(service, serviceSpec);
 
 	    try {
-		DeployableService service = servicesManager.updateService(serviceUUID, serviceSpec);
+		servicesManager.updateService();
 		logger.debug("Service updated: " + service);
 		return service;
 	    } catch (UnhandledModificationException e) {
-		logger.error(e.getMessage());
-		throw e;
-	    } catch (ServiceNotFoundException e) {
-		logger.error(e.getMessage());
-		throw e;
-	    } catch (ServiceNotModifiedException e) {
 		logger.error(e.getMessage());
 		throw e;
 	    }

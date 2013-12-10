@@ -22,8 +22,8 @@ public class ServiceUndeploymentPreparer {
 	    delta = service.getServiceInstances().size();
 
 	for (int i = 0; i < delta; i++) {
-	    InstanceUndeploymentPreparer instanceUndeploymentPreparer = new InstanceUndeploymentPreparer(
-		    service.getUUID(), service.getServiceInstances().get(i));
+	    InstanceUndeploymentPreparer instanceUndeploymentPreparer = new InstanceUndeploymentPreparer(service,
+		    service.getServiceInstances().get(i));
 	    instanceUndeploymentPreparer.prepareUndeployment();
 	}
 

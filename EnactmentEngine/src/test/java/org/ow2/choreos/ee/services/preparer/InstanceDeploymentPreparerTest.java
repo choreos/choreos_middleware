@@ -11,9 +11,8 @@ import org.ow2.choreos.ee.nodes.cm.NodePreparer;
 import org.ow2.choreos.ee.nodes.cm.NodePreparers;
 import org.ow2.choreos.ee.nodes.cm.NodeUpdater;
 import org.ow2.choreos.ee.nodes.cm.NodeUpdaters;
-import org.ow2.choreos.ee.services.preparer.InstanceCreatorUpdateHandler;
-import org.ow2.choreos.ee.services.preparer.InstanceDeploymentPreparer;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
+import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceType;
@@ -21,8 +20,6 @@ import org.ow2.choreos.tests.ModelsForTest;
 
 public class InstanceDeploymentPreparerTest {
 
-    private static final String SERVICE_UUID = "1";
-    
     private ModelsForTest models;
     private CloudNode node;
     private NodePreparer nodePreparer;
@@ -30,45 +27,47 @@ public class InstanceDeploymentPreparerTest {
 
     @Before
     public void setUp() throws Exception {
-        models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
-        setNode();
-        setPreparer();
-        setUpdater();
+	models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
+	setNode();
+	setPreparer();
+	setUpdater();
     }
-    
+
     @After
     public void tearDown() {
-        NodeUpdaters.testing = false;
-        NodePreparers.testing = false;
+	NodeUpdaters.testing = false;
+	NodePreparers.testing = false;
     }
-    
+
     private void setNode() {
-        node = new CloudNode();
-        node.setId("1");
-        node.setIp("192.168.56.101");
-        node.setUser("ubuntu");
-        node.setPrivateKey("ubuntu.pem");
+	node = new CloudNode();
+	node.setId("1");
+	node.setIp("192.168.56.101");
+	node.setUser("ubuntu");
+	node.setPrivateKey("ubuntu.pem");
     }
-    
+
     private void setPreparer() {
-        nodePreparer = mock(NodePreparer.class);
-        NodePreparers.preparerForTest = nodePreparer;
-        NodePreparers.testing = true;
+	nodePreparer = mock(NodePreparer.class);
+	NodePreparers.preparerForTest = nodePreparer;
+	NodePreparers.testing = true;
     }
-    
+
     private void setUpdater() {
-        nodeUpdater = mock(NodeUpdater.class);
-        NodeUpdaters.updaterForTest = nodeUpdater;
-        NodeUpdaters.testing = true;
+	nodeUpdater = mock(NodeUpdater.class);
+	NodeUpdaters.updaterForTest = nodeUpdater;
+	NodeUpdaters.testing = true;
     }
-    
+
     @Test
     public void shouldRunDeploymentPrepareOnNodeAndAddHandler() throws Exception {
-        DeployableServiceSpec spec = models.getAirlineSpec();
-        InstanceDeploymentPreparer instanceDeploymentPreparer = new InstanceDeploymentPreparer(spec, SERVICE_UUID, node);
-        instanceDeploymentPreparer.prepareDeployment();
-        verify(nodePreparer).prepareNodeForDeployment(spec.getPackageUri(), "jar");
-        verify(nodeUpdater).addHandler(any(InstanceCreatorUpdateHandler.class));
+	DeployableServiceSpec spec = models.getAirlineSpec();
+	DeployableService airlineService = models.getAirlineService();
+	InstanceDeploymentPreparer instanceDeploymentPreparer = new InstanceDeploymentPreparer(spec, airlineService,
+		node);
+	instanceDeploymentPreparer.prepareDeployment();
+	verify(nodePreparer).prepareNodeForDeployment(spec.getPackageUri(), "jar");
+	verify(nodeUpdater).addHandler(any(InstanceCreatorUpdateHandler.class));
     }
 
 }

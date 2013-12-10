@@ -7,22 +7,23 @@ import org.ow2.choreos.ee.nodes.cm.NodeUpdater;
 import org.ow2.choreos.ee.nodes.cm.NodeUpdaters;
 import org.ow2.choreos.ee.nodes.cm.PackageTypeToCookbook;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
+import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.utils.SshWaiter;
 
 public class InstanceDeploymentPreparer {
 
-    private String serviceUUID;
-    private DeployableServiceSpec spec;
+    private DeployableService service;
     private CloudNode node;
+    private DeployableServiceSpec newSpec;
 
     private String instanceId;
 
     SshWaiter sshWaiter = new SshWaiter();
 
-    public InstanceDeploymentPreparer(DeployableServiceSpec spec, String serviceUUID, CloudNode node) {
-	this.spec = spec;
-	this.serviceUUID = serviceUUID;
+    public InstanceDeploymentPreparer(DeployableServiceSpec newSpec, DeployableService service, CloudNode node) {
+	this.newSpec = newSpec;
+	this.service = service;
 	this.node = node;
     }
 
@@ -33,17 +34,17 @@ public class InstanceDeploymentPreparer {
 
     private void runDeploymentPrepare() throws PrepareDeploymentFailedException {
 	NodePreparer nodePreparer = NodePreparers.getPreparerFor(node);
-	String packageUri = spec.getPackageUri();
-	String cookbookTemplateName = PackageTypeToCookbook.getCookbookName(spec.getPackageType());
+	String packageUri = newSpec.getPackageUri();
+	String cookbookTemplateName = PackageTypeToCookbook.getCookbookName(newSpec.getPackageType());
 	try {
 	    instanceId = nodePreparer.prepareNodeForDeployment(packageUri, cookbookTemplateName);
 	} catch (NodeNotPreparedException e1) {
-	    throw new PrepareDeploymentFailedException(spec.getName(), node);
+	    throw new PrepareDeploymentFailedException(newSpec.getName(), node);
 	}
     }
 
     private void scheduleHandler() {
-	InstanceCreatorUpdateHandler handler = new InstanceCreatorUpdateHandler(serviceUUID, instanceId, spec, node);
+	InstanceCreatorUpdateHandler handler = new InstanceCreatorUpdateHandler(service, instanceId, node);
 	NodeUpdater nodeUpdater = NodeUpdaters.getUpdaterFor(node);
 	nodeUpdater.addHandler(handler);
     }

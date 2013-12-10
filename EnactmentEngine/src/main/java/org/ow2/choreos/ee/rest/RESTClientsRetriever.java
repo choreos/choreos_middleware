@@ -5,9 +5,7 @@
 package org.ow2.choreos.ee.rest;
 
 import org.ow2.choreos.ee.nodes.NPMFactory;
-import org.ow2.choreos.ee.services.ServicesManagerImpl;
 import org.ow2.choreos.nodes.NodePoolManager;
-import org.ow2.choreos.services.ServicesManager;
 
 /**
  * Retrieve DeploymentManager clients using the URIs configured on
@@ -19,17 +17,7 @@ import org.ow2.choreos.services.ServicesManager;
 public class RESTClientsRetriever {
 
     public static NodePoolManager npmForTest;
-    public static ServicesManager servicesManagerForTest;
     public static boolean testing = false;
-
-    public static ServicesManager getServicesManager() {
-	if (!testing) {
-	    ServicesManager servicesManager = new ServicesManagerImpl();
-	    return servicesManager;
-	} else {
-	    return servicesManagerForTest;
-	}
-    }
 
     public static NodePoolManager getNodePoolManager(String owner) {
 	if (!testing) {

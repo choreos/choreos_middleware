@@ -24,7 +24,8 @@ import org.ow2.choreos.ee.bus.ProxificationTask;
 import org.ow2.choreos.ee.bus.selector.ESBNodeFactory;
 import org.ow2.choreos.ee.config.CloudConfiguration;
 import org.ow2.choreos.ee.nodes.NPMFactory;
-import org.ow2.choreos.ee.services.ServicesManagerImpl;
+import org.ow2.choreos.ee.services.ServiceCreator;
+import org.ow2.choreos.ee.services.ServiceCreatorFactory;
 import org.ow2.choreos.nodes.NodeNotFoundException;
 import org.ow2.choreos.nodes.NodeNotUpdatedException;
 import org.ow2.choreos.nodes.NodePoolManager;
@@ -33,7 +34,6 @@ import org.ow2.choreos.nodes.datamodel.ResourceImpact;
 import org.ow2.choreos.selectors.ObjectCreationException;
 import org.ow2.choreos.services.ServiceNotCreatedException;
 import org.ow2.choreos.services.ServiceNotFoundException;
-import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
@@ -62,7 +62,7 @@ public class ProxifyServiceTest {
 
     private ModelsForTest models;
     private NodePoolManager npm;
-    private ServicesManager sm;
+    private ServiceCreator serviceCreator;
     private ServiceInstance serviceInstance;
     private EasyESBNode esbNode;
     private String proxifiedUrl;
@@ -78,7 +78,7 @@ public class ProxifyServiceTest {
     public void setup() {
 	models = new ModelsForTest(ServiceType.SOAP, PackageType.COMMAND_LINE);
 	npm = NPMFactory.getNewNPMInstance(CLOUD_ACCOUNT);
-	sm = new ServicesManagerImpl();
+	serviceCreator = ServiceCreatorFactory.getNewInstance();
     }
 
     @Test
@@ -95,10 +95,10 @@ public class ProxifyServiceTest {
     private void deployService() throws ServiceNotCreatedException, NodeNotUpdatedException, NodeNotFoundException,
 	    ServiceNotFoundException {
 	DeployableServiceSpec airlineSpec = models.getAirlineSpec();
-	DeployableService service = sm.createService(airlineSpec);
+	DeployableService service = serviceCreator.createService(airlineSpec);
 	CloudNode node = service.getSelectedNodes().iterator().next();
 	npm.updateNode(node.getId());
-	serviceInstance = sm.getService(service.getUUID()).getInstances().get(0);
+	serviceInstance = service.getInstances().get(0);
     }
 
     private void deployEsbNode() throws ObjectCreationException {

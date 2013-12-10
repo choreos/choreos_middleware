@@ -16,10 +16,10 @@ import org.junit.experimental.categories.Category;
 import org.ow2.choreos.ee.LocationsTest;
 import org.ow2.choreos.ee.config.CloudConfiguration;
 import org.ow2.choreos.ee.nodes.NPMFactory;
-import org.ow2.choreos.ee.services.ServicesManagerImpl;
+import org.ow2.choreos.ee.services.ServiceCreator;
+import org.ow2.choreos.ee.services.ServiceCreatorFactory;
 import org.ow2.choreos.nodes.NodePoolManager;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
-import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.services.datamodel.PackageType;
@@ -40,7 +40,7 @@ public class CDDeployTest {
     private static final String CLOUD_ACCOUNT = CloudConfiguration.DEFAULT;
 
     private final NodePoolManager npm = NPMFactory.getNewNPMInstance(CLOUD_ACCOUNT);
-    private ServicesManager deployer = new ServicesManagerImpl();
+    private ServiceCreator serviceCreator = ServiceCreatorFactory.getNewInstance();
 
     private WebClient client;
     private DeployableServiceSpec spec = new DeployableServiceSpec();
@@ -64,7 +64,7 @@ public class CDDeployTest {
     @Test
     public void shouldDeployCDInEasyESBNode() throws Exception {
 
-	DeployableService service = deployer.createService(spec);
+	DeployableService service = serviceCreator.createService(spec);
 	CloudNode node = service.getSelectedNodes().iterator().next();
 	npm.updateNode(node.getId());
 	Thread.sleep(5000);

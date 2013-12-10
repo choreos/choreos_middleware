@@ -13,11 +13,11 @@ import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
 import org.ow2.choreos.chors.EnactmentException;
-import org.ow2.choreos.ee.rest.RESTClientsRetriever;
+import org.ow2.choreos.ee.services.ServiceCreator;
+import org.ow2.choreos.ee.services.ServiceCreatorFactory;
 import org.ow2.choreos.invoker.Invoker;
 import org.ow2.choreos.invoker.InvokerFactory;
 import org.ow2.choreos.services.ServiceNotCreatedException;
-import org.ow2.choreos.services.ServicesManager;
 import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 import org.ow2.choreos.utils.Concurrency;
@@ -71,7 +71,7 @@ public class NewDeploymentPreparing {
     }
 
     private void waitConfigureTasks() {
-	Concurrency.waitExecutor(executor, totalTimeout, "Coud not properly configure all the services of chor "
+	Concurrency.waitExecutor(executor, totalTimeout, "Could not properly configure all the services of chor "
 		+ chorId);
     }
 
@@ -126,10 +126,9 @@ public class NewDeploymentPreparing {
 
 	@Override
 	public DeployableService call() throws Exception {
-	    String owner = spec.getOwner();
-	    ServicesManager servicesManager = RESTClientsRetriever.getServicesManager();
+	    ServiceCreator serviceCreator = ServiceCreatorFactory.getNewInstance();
 	    try {
-		DeployableService deployedService = servicesManager.createService(spec);
+		DeployableService deployedService = serviceCreator.createService(spec);
 		return deployedService;
 	    } catch (ServiceNotCreatedException e) {
 		logger.error("Service " + spec.getName() + " not created!");

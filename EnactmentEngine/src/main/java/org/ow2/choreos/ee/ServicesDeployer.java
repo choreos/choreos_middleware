@@ -16,53 +16,54 @@ import org.ow2.choreos.services.datamodel.DeployableServiceSpec;
 public class ServicesDeployer {
 
     private Choreography chor;
-    
-    private List<DeployableService> configuredServices;
+
     private List<DeployableService> notModifiedServices;
-    private List<DeployableService> deployedServices;
+    private List<DeployableService> servicesToDeploy;
 
     public ServicesDeployer(Choreography chor) {
-        this.chor = chor;
+	this.chor = chor;
     }
 
     /**
      * 
-     * @return all the choreography deployed services (not only the just deployed)
+     * @return all the choreography deployed services (not only the just
+     *         deployed)
      * @throws EnactmentException
      */
     public List<DeployableService> deployServices() throws EnactmentException {
-        prepare();
-        updateNodes();
-        retrieveModifiedServices();
-        deployedServices.addAll(notModifiedServices);
-        return deployedServices;
+	prepare();
+	updateNodes();
+
+	List<DeployableService> deployedServices = getDeployedServices();
+	return deployedServices;
+    }
+
+    private List<DeployableService> getDeployedServices() {
+	List<DeployableService> deployedServices = new ArrayList<DeployableService>(servicesToDeploy);
+	deployedServices.addAll(notModifiedServices);
+	return deployedServices;
     }
 
     private void prepare() throws EnactmentException {
-        
-        ChorDiffer differ = new ChorDiffer(chor);
-        List<DeployableServiceSpec> toCreate = differ.getNewServiceSpecs();
-        Map<DeployableService, DeployableServiceSpec> toUpdate = differ.getServicesToUpdate();
-        notModifiedServices = differ.getNotModifiedServices();
 
-        NewDeploymentPreparing newPreparer = new NewDeploymentPreparing(chor.getId(), toCreate);
-        List<DeployableService> newServices = newPreparer.prepare();
+	ChorDiffer differ = new ChorDiffer(chor);
+	List<DeployableServiceSpec> toCreate = differ.getNewServiceSpecs();
+	Map<DeployableService, DeployableServiceSpec> toUpdate = differ.getServicesToUpdate();
+	notModifiedServices = differ.getNotModifiedServices();
 
-        UpdateDeploymentPreparing preparer = new UpdateDeploymentPreparing(chor.getId(), toUpdate);
-        List<DeployableService> updatedServices = preparer.prepare();
-        
-        configuredServices = new ArrayList<DeployableService>(newServices);
-        configuredServices.addAll(updatedServices);
+	NewDeploymentPreparing newPreparer = new NewDeploymentPreparing(chor.getId(), toCreate);
+	List<DeployableService> newServices = newPreparer.prepare();
+
+	UpdateDeploymentPreparing preparer = new UpdateDeploymentPreparing(chor.getId(), toUpdate);
+	List<DeployableService> updatedServices = preparer.prepare();
+
+	servicesToDeploy = new ArrayList<DeployableService>(newServices);
+	servicesToDeploy.addAll(updatedServices);
     }
 
     private void updateNodes() throws EnactmentException {
-        NodesUpdater nodesUpdater = new NodesUpdater(configuredServices, chor.getId());
-        nodesUpdater.updateNodes();
-    }    
-    
-    private void retrieveModifiedServices() {
-        DeployedServicesRetriever retriever = new DeployedServicesRetriever(configuredServices);
-        deployedServices = retriever.retrieveDeployedServicesFromDeploymentManager();
+	NodesUpdater nodesUpdater = new NodesUpdater(servicesToDeploy, chor.getId());
+	nodesUpdater.updateNodes();
     }
-    
+
 }

@@ -6,16 +6,17 @@ import org.ow2.choreos.ee.nodes.cm.NodePreparers;
 import org.ow2.choreos.ee.nodes.cm.NodeUpdater;
 import org.ow2.choreos.ee.nodes.cm.NodeUpdaters;
 import org.ow2.choreos.nodes.datamodel.CloudNode;
+import org.ow2.choreos.services.datamodel.DeployableService;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 
 public class InstanceUndeploymentPreparer {
 
     private ServiceInstance instance;
     private CloudNode node;
-    private String serviceUUID;
+    private DeployableService service;
 
-    public InstanceUndeploymentPreparer(String serviceUUID, ServiceInstance serviceInstance) {
-	this.serviceUUID = serviceUUID;
+    public InstanceUndeploymentPreparer(DeployableService service, ServiceInstance serviceInstance) {
+	this.service = service;
 	this.instance = serviceInstance;
 	this.node = instance.getNode();
     }
@@ -35,10 +36,8 @@ public class InstanceUndeploymentPreparer {
     }
 
     private void scheduleHandler() {
-	InstanceRemoverUpdateHandler handler = new InstanceRemoverUpdateHandler(serviceUUID, instance);
+	InstanceRemoverUpdateHandler handler = new InstanceRemoverUpdateHandler(service, instance);
 	NodeUpdater nodeUpdater = NodeUpdaters.getUpdaterFor(node);
 	nodeUpdater.addHandler(handler);
-
     }
-
 }
