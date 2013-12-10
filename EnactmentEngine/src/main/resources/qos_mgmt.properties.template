@@ -1,0 +1,9 @@
+ENACTMENT_ENGINE_URL=http://localhost:9102/enactmentengine
+QOS_MGMT=False
+
+# the ip of the machine that runs GLIMPSE
+RESOURCE_METRIC_AGGREGATOR=
+
+NODE_TYPES=SMALL,MEDIUM,LARGE
+# options : EXACT_FIT, ANY_FIT
+MAPPER_POLICY=EXACT_FIT

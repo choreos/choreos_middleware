@@ -1,0 +1,16 @@
+# Values in node_selector.properties
+NODE_SELECTOR=ALWAYS_CREATE
+# set if using LIMITED_ROUND_ROBIN 
+VM_LIMIT=0 
+
+# Maximum number of VMs that can be created (like AWS VM limit)
+VM_LIMIT=5 
+
+# Creates a pool of extra VMs to make the deployment faster and more scalable.
+# The trade-off is the cost of some more VMs.
+# If the pool size reaches the threshold, the pool size is increased by one.
+# To not increase your pool size, set threshold as negative or greater than the initial pool size.
+IDLE_POOL=false
+IDLE_POOL_INITIAL_SIZE=0
+IDLE_POOL_THRESHOLD=-1
+

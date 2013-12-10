@@ -11,11 +11,6 @@
 
 include_recipe "tomcat::default"
 
-execute "delete_previous_file" do
-  command "rm #{node['tomcat']['lib_dir']}/#{node['tomcat']['libs_file']}"
-  action :run
-end
-
 remote_file "#{node['tomcat']['lib_dir']}/#{node['tomcat']['libs_file']}" do
   source "#{node['tomcat']['libs_url']}"
   action :create
@@ -31,16 +26,5 @@ end
 execute 'set_permissions' do
   command "chmod o+r #{node['tomcat']['lib_dir']}/*.jar"
   action :run
-  notifies :restart, resources(:service => "tomcat")
-end
-
-template "/etc/tomcat6/server.xml" do
-  source "server-choreos.xml.erb"
-  owner "root"
-  group "root"
-  mode "0644"
-  variables({
-     :glimpseHost => "10.0.0.15"
-  })
   notifies :restart, resources(:service => "tomcat")
 end

@@ -6,7 +6,9 @@ package org.ow2.choreos.tests;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.ow2.choreos.chors.datamodel.Choreography;
 import org.ow2.choreos.chors.datamodel.ChoreographySpec;
@@ -18,8 +20,6 @@ import org.ow2.choreos.services.datamodel.PackageType;
 import org.ow2.choreos.services.datamodel.ServiceDependency;
 import org.ow2.choreos.services.datamodel.ServiceInstance;
 import org.ow2.choreos.services.datamodel.ServiceType;
-
-import com.google.common.collect.Sets;
 
 public class ModelsForTest {
 
@@ -146,7 +146,9 @@ public class ModelsForTest {
 	CloudNode node = createNode("2", TRAVEL_AGENCY_IP, "choreos-node");
 	travelService = new DeployableService(this.travelSpec);
 	travelService.generateUUID();
-	travelService.setSelectedNodes(Sets.newHashSet(node));
+	Set<CloudNode> nodes = new HashSet<CloudNode>();
+	nodes.add(node);
+	travelService.setSelectedNodes(nodes);
 	ServiceInstance instance = new ServiceInstance(node);
 	instance.setInstanceId(TRAVEL_AGENCY + "1");
 	instance.setServiceSpec(this.travelSpec);
@@ -161,7 +163,9 @@ public class ModelsForTest {
 	// should be in
 	// different
 	// nodes
-	airlineService.setSelectedNodes(Sets.newHashSet(node));
+	Set<CloudNode> nodes = new HashSet<CloudNode>();
+	nodes.add(node);
+	airlineService.setSelectedNodes(nodes);
 	List<ServiceInstance> instances = new ArrayList<ServiceInstance>();
 	for (int i = 0; i < numberOfAirlineServices; i++) {
 	    ServiceInstance instance = new ServiceInstance(node);

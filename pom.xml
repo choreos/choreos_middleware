@@ -71,11 +71,9 @@
   </distributionManagement>
   <modules>
     <module>Commons</module>
-    <module>DeploymentManager</module>
-    <module>ChoreographyDeployer</module>
+	<module>EnactmentEngine</module>
     <module>EnactmentEngineAPI</module>
     <module>PlatformMonitoring</module>
-    <!-- <module>StorageFactory</module>  -->
   </modules>
   <repositories>
     <repository>
@@ -156,11 +154,11 @@
       <artifactId>commons-io</artifactId>
       <version>2.4</version>
     </dependency>
-    <dependency>
+    <!--= <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava-collections</artifactId>
       <version>r03</version>
-    </dependency>
+    </dependency> -->
   </dependencies>
   <build>
     <plugins>
