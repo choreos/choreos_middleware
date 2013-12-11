@@ -1,8 +1,0 @@
-This a simple restful web service jar with a lightweight lib (restlet).
-To generate the jar, do the following steps:
-
-$ mvn eclipse:eclipse
-Import project in eclipse
-Export as runnable jar
-
-Then run with java -jar. It will be available in http://localhost:8042

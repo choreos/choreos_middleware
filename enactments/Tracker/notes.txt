@@ -1,3 +1,0 @@
-ee_rest_api
-SimpleChorEnactmentTest.java
-ModelsForTest gera o que eu terei que gerar, mas para TravelAgency

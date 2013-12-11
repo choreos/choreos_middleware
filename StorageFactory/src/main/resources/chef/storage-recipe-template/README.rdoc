@@ -1,8 +1,0 @@
-= DESCRIPTION:
-
-This is a simple cookbook to create a schema in a MySQL database.
-
-As further improvements, it should be adapted to be able to create schemas and users in 
-other databases (PostgreSQL, for instance). 
-
- 
